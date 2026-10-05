@@ -62,11 +62,16 @@ self.addEventListener('fetch', e => {
 function dataFirst(req) {
   const key = dataKey(req.url);
   const cached = () => caches.open(DATA_CACHE).then(c => c.match(key));
-  const net = fetch(req).then(async res => {
-    if (res.ok) await (await caches.open(DATA_CACHE)).put(key, res.clone());
+  let saved = Promise.resolve();
+  const net = fetch(req).then(res => {
+    if (res.ok) {
+      const copy = res.clone();
+      // Best effort: a full cache (storage quota) must not hide fresh data from the app.
+      saved = caches.open(DATA_CACHE).then(c => c.put(key, copy)).catch(() => {});
+    }
     return res;
   });
-  const done = net.catch(() => {});
+  const done = net.then(() => saved, () => {});
   const network = net.then(async res => (res.ok ? res : (await cached()) || res))
     .catch(async () => (await cached()) || Response.error());
   const timeout = new Promise(resolve => setTimeout(() => resolve(cached()), DATA_TIMEOUT_MS));

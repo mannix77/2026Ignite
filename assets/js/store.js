@@ -276,14 +276,17 @@ export function parseShare(str, idOfCode, instOfCode) {
   return out;
 }
 
-// Merge shared ratings and locks; never touch local notes.
+// Merge shared ratings and locks; never touch local notes. Validated like a backup.
 export function applyShared(picks) {
+  let n = 0;
   for (const [id, p] of Object.entries(picks)) {
+    if (!ID_RE.test(id) || !p || typeof p !== 'object') continue;
     const cur = state.picks[id] || { note: '' };
-    state.picks[id] = { ...cur, p: p.p, lock: p.lock || null, code: p.code || cur.code, at: p.at };
+    const s = sanitizePick({ ...cur, p: p.p, lock: p.lock || null, code: p.code || cur.code, at: p.at });
+    if (s) { state.picks[id] = s; n++; }
   }
   emit('picks');
-  return Object.keys(picks).length;
+  return n;
 }
 
 // Erase ratings, locks, notes and change tracking. Settings and display choices stay.

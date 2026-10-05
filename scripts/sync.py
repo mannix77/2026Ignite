@@ -139,7 +139,10 @@ def parse_iso(s):
     base, _, off = m.groups()
     if len(base) == 16:
         base += ":00"
-    t = dt.datetime.strptime(base, "%Y-%m-%dT%H:%M:%S")
+    try:
+        t = dt.datetime.strptime(base, "%Y-%m-%dT%H:%M:%S")
+    except ValueError:  # matches the pattern but isn't a real date/time (month 13, Feb 30, 24:00)
+        return None
     if off:
         off = off.replace(":", "")
         sign = 1 if off[0] == "+" else -1

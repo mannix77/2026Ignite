@@ -164,6 +164,10 @@ class EdgeCaseTests(unittest.TestCase):
         self.assertEqual(self.c["BRK805"]["speakers"], [])
         self.assertIsNone(self.c["BRK805"]["room"])
 
+    def test_impossible_dates_are_ignored_not_fatal(self):
+        for code in ("BRK810", "BRK811", "BRK812", "BRK813"):
+            self.assertIsNone(self.c[code]["start"], code)
+
     def test_levels_both_formats(self):
         self.assertEqual(self.c["BRK801"]["level"], 200)
         self.assertEqual(self.c["BRK802"]["level"], 300)

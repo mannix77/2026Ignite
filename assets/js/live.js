@@ -34,6 +34,11 @@ function parseIso(s) {
   if (!s || typeof s !== 'string') return null;
   const m = /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2})?)(\.\d+)?([+-]\d{2}:?\d{2}|Z)?$/.exec(s.trim());
   if (!m) return null;
+  // Reject impossible values the way Python's strptime does (JS would roll Feb 30 or
+  // 24:00 over into the next day).
+  const [y, mo, day, h, mi, sec = 0] = m[1].split(/[-T:]/).map(Number);
+  const dim = [31, y % 4 === 0 && (y % 100 !== 0 || y % 400 === 0) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][mo - 1];
+  if (y < 1 || !dim || day < 1 || day > dim || h > 23 || mi > 59 || sec > 59) return null;
   let off = m[3] || 'Z';
   if (off !== 'Z' && !off.includes(':')) off = `${off.slice(0, 3)}:${off.slice(3)}`;
   const d = new Date(`${m[1].length === 16 ? `${m[1]}:00` : m[1]}${off}`);

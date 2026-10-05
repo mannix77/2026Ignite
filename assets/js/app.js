@@ -1598,8 +1598,11 @@ async function refreshData(manual = false) {
   if (changed) {
     renderOrDefer();
     announce();
-  } else if (manual) {
-    toast(snapErr && app.liveError ? `Couldn't check: ${app.liveError}` : 'Already up to date');
+  } else if (app.tab === 'changes') renderOrDefer(); // refresh the sync status shown there
+  if (!changed && manual) {
+    toast(app.liveError ? `Couldn't check the Ignite site: ${app.liveError}`
+      : snapErr ? `Couldn't load the synced copy: ${snapErr.message}`
+      : 'Already up to date');
   }
   renderStatus();
   renderBadges();
@@ -1656,7 +1659,7 @@ async function boot() {
   onRoute();
   if (app.alerts.length) announce(true);
   checkLiveNow().then(() => {
-    if (applyData()) { renderOrDefer(); announce(true); }
+    if (applyData()) { renderOrDefer(); announce(true); } else if (app.tab === 'changes') renderOrDefer();
     renderStatus();
     renderBadges();
   });
