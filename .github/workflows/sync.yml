@@ -108,6 +108,11 @@ jobs:
           sed -i "s/const VERSION = 'ignite26-dev';/const VERSION = 'ignite26-$v';/" sw.js
           grep -q "ignite26-$v" sw.js
 
+      # App copies cached before the catalog moved to data/ignite2026/ still ask for the old
+      # paths until they pick up the new version; serve them the Ignite data there too.
+      - name: Keep the legacy data paths working
+        run: cp data/ignite2026/sessions.json data/ignite2026/changes.json data/ignite2026/meta.json data/
+
       - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5.0.0
 
       - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
