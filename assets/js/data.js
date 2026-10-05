@@ -60,6 +60,7 @@ function previewTiming(rec, conf) {
 // catalogs can also mark single sessions with rec.rsvp (Gartner's seat reservations).
 export function buildModel(doc, settings, rsvp, conf, venue) {
   const overrides = settings.overrides || {};
+  const excluded = new Set(settings.excludedPrograms || []);
   const tz = conf.tz;
   const sessions = [];
   const byId = new Map();
@@ -98,6 +99,9 @@ export function buildModel(doc, settings, rsvp, conf, venue) {
     }
     s.loc = s.onlineOnly ? { label: 'Online', building: 'O', floor: null, known: true } : venue.parseLocation(room, overrides);
     s.roomLabel = s.onlineOnly ? 'Online' : (rec.roomTbd && s.timeSource !== 'preview' ? 'Room TBA' : room);
+    // Limited to a membership program you're not in: never suggested, triaged or planned.
+    s.restrictedBy = (rec.audience || []).filter(a => excluded.has(a));
+    s.restricted = s.restrictedBy.length > 0;
     s.hay = [rec.code, rec.title, rec.desc, (rec.speakers || []).map(p => `${p[0]} ${p[1]}`).join(' '),
       (rec.tags || []).join(' '), (rec.topics || []).join(' '), rec.type].join(' \u0001 ').toLowerCase();
     sessions.push(s);
@@ -115,9 +119,10 @@ export function buildModel(doc, settings, rsvp, conf, venue) {
     bump(facets.levels, rec.level);
   }
   const days = [...new Set(sessions.filter(s => s.day).map(s => s.day))].sort();
+  const restrictedCount = sessions.filter(s => s.restricted).length;
   const locations = [...new Set(sessions.filter(s => s.room && !s.roomTbd && !s.onlineOnly).map(s => s.room))].sort();
   return {
-    sessions, byId, byKey, byCode, byGroup, facets, days, locations,
+    sessions, byId, byKey, byCode, byGroup, facets, days, locations, restrictedCount,
     officialCount: official,
     hasOfficial: official > 0,
     mode: official > 0 ? 'official' : preview ? 'preview' : 'unscheduled',

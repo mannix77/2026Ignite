@@ -191,6 +191,7 @@ h3 { font-size: 15px; margin: 0 0 6px; }
 .chip.score { background: var(--want-soft); color: var(--want); }
 .chip.watch { background: var(--skip-soft); color: var(--text-2); }
 .chip.sugg { background: var(--ok-soft); color: var(--ok); }
+.chip.closed { background: var(--want-soft); color: var(--want); border-color: transparent; }
 .t-lunch { display: grid; grid-template-columns: 74px 1fr; gap: 12px; }
 .t-lunch .line { margin-left: 6px; padding: 6px 0 6px 14px; border-left: 2px dotted var(--line); font-size: 13px; color: var(--text-2); }
 @media (max-width: 640px) { .t-lunch { grid-template-columns: 62px 1fr; gap: 8px; } }

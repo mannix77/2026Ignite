@@ -86,6 +86,8 @@ export const CONFERENCES = {
     // Conference Navigator (login) is where seats are reserved; the public agenda has no per-session links.
     sessionUrl: () => 'https://cn.gartner.com/SYM36/fullagenda',
     siteName: 'Conference Navigator',
+    programs: true,                // "Tailored Programming" facet = membership programs
+    excludedPrograms: ['CIO Circle Program'],   // not a member: those sessions are hidden by default
     // Meals run 11:45–2:45; the grid leaves 1:00–1:45 (Wed 1:00–2:15) free.
     lunch: { from: 705, to: 885 },
     hint: 'Times and rooms are final. Reserve seats for reservation-required sessions in Conference Navigator, then mark them here.',
