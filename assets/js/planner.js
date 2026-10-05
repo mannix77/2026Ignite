@@ -1,9 +1,13 @@
 // Scheduling brain: travel-aware conflict detection and an exact per-day optimizer.
 //
 // An "item" is one scheduled instance of a session you're interested in:
-//   { key, id, code, title, type, day, startMin, endMin, loc, recorded, priority (1-3), locked }
-// `id` groups repeat runs of the same session (attend at most one). Pseudo-items (lunch,
-// blocked time) carry `pseudo` and a fixed `weight`.
+//   { key, id, code, title, type, day, startMin, endMin, loc, recorded, priority (1-3),
+//     score?, locked }
+// `id` groups repeat runs of the same session (attend at most one). `score` (your own
+// ranking, e.g. from a workbook) overrides the priority-tier weights. Blocked time is a
+// pseudo-item with a real location, `pseudo: 'block'`, a fixed `weight` and `locked`.
+// Lunch is not an item: it's taken in a gap of the chain that is long enough for the walk
+// *and* the meal, so it never hides travel time.
 // A day's plan is a chain, so the best plan is the max-weight path through a DAG where
 // a -> b exists when you can leave a and still reach b's room in time.
 
@@ -18,6 +22,7 @@ export const DEFAULT_PLANNER = {
   keynoteExtra: 15,   // extra time to get into a keynote (security, seating, Chase Center)
   weights: {
     3: 100, 2: 50, 1: 20,
+    scoreScale: 10,        // points per point of your own score (a workbook score of 9 = 90)
     recordedPenalty: 15,   // "I can watch this one later"
     notRecordedBonus: 10,  // only chance to see it
     handsOnBonus: 10,      // labs / table talks don't translate to a recording
@@ -27,7 +32,8 @@ export const DEFAULT_PLANNER = {
 
 const HANDS_ON = new Set(['Lab', 'Table Talk', 'Workshop']);
 const LOCK = 100000;
-const EXACT_LIMIT = 256; // repeat-instance combinations searched exhaustively
+const EXACT_LIMIT = 256; // repeat-run combinations searched exhaustively
+const NEG = -Infinity;
 
 export function overlaps(a, b) {
   return a.day === b.day && a.startMin < b.endMin && b.startMin < a.endMin;
@@ -35,17 +41,16 @@ export function overlaps(a, b) {
 
 // Extra minutes needed to get into b beyond walking (keynote security and seating).
 export function arrivalExtra(b, ctx = DEFAULT_PLANNER) {
-  return b && (b.type === 'Keynote' || b.loc?.building === 'C') ? (ctx.keynoteExtra ?? 0) : 0;
+  return b && !b.pseudo && (b.type === 'Keynote' || b.loc?.building === 'C') ? (ctx.keynoteExtra ?? 0) : 0;
 }
 
 // Moving from a (earlier) to b (later) on the same day. Staying in the same room needs
 // no walk and no buffer.
 export function transition(a, b, ctx = DEFAULT_PLANNER) {
   const stay = sameRoom(a.loc, b.loc);
-  const flexible = a.loc?.building === '*' || b.loc?.building === '*'; // e.g. lunch: eat near the next room
   const walk = stay ? 0 : walkMinutes(a.loc, b.loc, ctx.walk);
   const gap = b.startMin - a.endMin;
-  const need = stay || flexible ? 0 : walk + ctx.buffer + arrivalExtra(b, ctx);
+  const need = stay ? 0 : walk + ctx.buffer + arrivalExtra(b, ctx);
   const slack = gap - need;
   const shorter = Math.min(a.endMin - a.startMin, b.endMin - b.startMin);
   const allowed = Math.min(ctx.tolerance, Math.floor(shorter / 4));
@@ -69,6 +74,11 @@ export function weigh(item, ctx = DEFAULT_PLANNER) {
   if (item.weight != null) {
     score = item.weight;
     why = [item.title || 'Blocked time'];
+  } else if (Number.isFinite(item.score)) {
+    // Your own ranking already weighs recordings and formats, so nothing else is added.
+    const k = w.scoreScale ?? 10;
+    score = item.score * k;
+    why = [`your score ${item.score} (×${k} = ${score})`];
   } else {
     score = w[item.priority] ?? 0;
     why = [`${PRIORITY[item.priority] || 'Unrated'} (+${w[item.priority] ?? 0})`];
@@ -90,28 +100,96 @@ export function weigh(item, ctx = DEFAULT_PLANNER) {
   return { score, why };
 }
 
-// Exact max-weight chain for one day. Returns chosen items in time order.
-export function optimizeDay(items, ctx = DEFAULT_PLANNER) {
+// ---------------------------------------------------------------- lunch
+
+// lunch: { from, to, length, weight } in minutes after midnight; null = don't plan one.
+export function lunchConfig(l) {
+  if (!l || l.on === false) return null;
+  const len = Number(l.length), from = Number(l.from), to = Number(l.to);
+  if (!(len > 0) || !(to - from >= len)) return null;
+  return { from, to, length: len, weight: Math.max(0, Number(l.weight) || 0) };
+}
+
+const slot = (start, L) => ({ start, end: start + L.length });
+
+// Latest slot that ends before the first session of the day.
+function lunchBefore(first, L) {
+  const t = Math.min(L.to, first.startMin) - L.length;
+  return t >= L.from ? slot(t, L) : null;
+}
+
+// Earliest slot after the last session of the day.
+function lunchAfter(last, L) {
+  const t = Math.max(last.endMin, L.from);
+  return t + L.length <= L.to ? slot(t, L) : null;
+}
+
+// A slot between a and b that leaves room for the walk (before or after eating).
+function lunchBetween(a, b, t, L) {
+  const eatThenWalk = Math.max(a.endMin, L.from);
+  if (eatThenWalk + L.length <= Math.min(L.to, b.startMin - t.need)) return slot(eatThenWalk, L);
+  const walkThenEat = Math.max(a.endMin + t.need, L.from);
+  if (walkThenEat + L.length <= Math.min(L.to, b.startMin)) return slot(walkThenEat, L);
+  return null;
+}
+
+// ---------------------------------------------------------------- one day
+
+// Exact max-weight chain for one day, with at most one lunch taken in a gap that fits it
+// alongside the walking. Returns { chosen (time order), total, lunch: slot | null }.
+export function optimizeDay(items, ctx = DEFAULT_PLANNER, lunch = null) {
   const xs = items.slice().sort((a, b) => a.startMin - b.startMin || a.endMin - b.endMin || cmpKey(a, b));
   const n = xs.length;
   const wt = xs.map(x => weigh(x, ctx).score);
-  const best = new Array(n).fill(0);
-  const prev = new Array(n).fill(-1);
+  const L = lunch;
+  const lw = L ? L.weight : 0;
+  // best[i][s]: best chain ending at i; s = 1 once lunch has been taken.
+  const best = xs.map(() => [NEG, NEG]);
+  const prev = xs.map(() => [null, null]);
   for (let i = 0; i < n; i++) {
-    best[i] = wt[i];
+    best[i][0] = wt[i];
+    prev[i][0] = { j: -1, s: 0, lunch: null };
+    const before = L ? lunchBefore(xs[i], L) : null;
+    if (before) { best[i][1] = wt[i] + lw; prev[i][1] = { j: -1, s: 0, lunch: before }; }
     for (let j = 0; j < i; j++) {
       if (xs[j].startMin >= xs[i].startMin) continue;
       const t = transition(xs[j], xs[i], ctx);
       if (t.status === 'conflict') continue;
-      const v = best[j] + wt[i] - t.miss * ctx.weights.tightPerMin;
-      if (v > best[i]) { best[i] = v; prev[i] = j; }
+      const step = wt[i] - t.miss * ctx.weights.tightPerMin;
+      for (const s of [0, 1]) {
+        if (best[j][s] === NEG) continue;
+        const v = best[j][s] + step;
+        if (v > best[i][s]) { best[i][s] = v; prev[i][s] = { j, s, lunch: null }; }
+      }
+      if (L && best[j][0] !== NEG) {
+        const between = lunchBetween(xs[j], xs[i], t, L);
+        if (between) {
+          const v = best[j][0] + step + lw;
+          if (v > best[i][1]) { best[i][1] = v; prev[i][1] = { j, s: 0, lunch: between }; }
+        }
+      }
     }
   }
-  let end = -1;
-  for (let i = 0; i < n; i++) if (end < 0 || best[i] > best[end]) end = i;
+  // The empty chain (just lunch) is a candidate too: a lone low-value pick that covers
+  // the whole lunch window loses to eating when lunch is worth more.
+  let end = { i: -1, s: 0 }, endTotal = L ? lw : 0, endLunch = L ? slot(L.from, L) : null;
+  for (let i = 0; i < n; i++) {
+    for (const s of [0, 1]) {
+      if (best[i][s] === NEG) continue;
+      let v = best[i][s], after = null;
+      if (s === 0 && L) { after = lunchAfter(xs[i], L); if (after) v += lw; }
+      if (v > endTotal) { end = { i, s }; endTotal = v; endLunch = after; }
+    }
+  }
   const chosen = [];
-  for (let i = end; i >= 0; i = prev[i]) chosen.unshift(xs[i]);
-  return { chosen, total: end < 0 ? 0 : best[end] };
+  let lunchSlot = endLunch;
+  for (let cur = end; cur && cur.i >= 0;) {
+    chosen.unshift(xs[cur.i]);
+    const p = prev[cur.i][cur.s];
+    if (p.lunch) lunchSlot = p.lunch;
+    cur = p.j >= 0 ? { i: p.j, s: p.s } : null;
+  }
+  return { chosen, total: endTotal, lunch: lunchSlot };
 }
 
 function cmpKey(a, b) {
@@ -120,10 +198,12 @@ function cmpKey(a, b) {
 
 const valid = x => x.day && Number.isFinite(x.startMin) && Number.isFinite(x.endMin) && x.endMin > x.startMin;
 
+// ---------------------------------------------------------------- all days
+
 // Full plan across days. A session with repeat runs is attended at most once: we choose
 // which run is "allowed" for every repeated session (exhaustively when the combinations
 // are few, otherwise by coordinate descent), and each day is then solved exactly.
-export function optimize(items, ctx = DEFAULT_PLANNER) {
+export function optimize(items, ctx = DEFAULT_PLANNER, lunch = null) {
   const scheduled = items.filter(valid);
   const byId = new Map();
   for (const x of scheduled) {
@@ -139,7 +219,7 @@ export function optimize(items, ctx = DEFAULT_PLANNER) {
   const allowed = new Map(multi.map(g => [g.id, g.options[0].key]));
   const days = [...new Set(scheduled.map(x => x.day))].sort();
   const isIn = x => !allowed.has(x.id) || allowed.get(x.id) === x.key;
-  const solve = day => optimizeDay(scheduled.filter(x => x.day === day && isIn(x)), ctx);
+  const solve = day => optimizeDay(scheduled.filter(x => x.day === day && isIn(x)), ctx, lunch);
   let result = Object.fromEntries(days.map(d => [d, solve(d)]));
   const sum = r => days.reduce((a, d) => a + r[d].total, 0);
   const free = multi.filter(g => g.options.length > 1);
@@ -161,7 +241,7 @@ export function optimize(items, ctx = DEFAULT_PLANNER) {
     // Start each repeated session on the run the unconstrained plan liked best, then
     // switch one session at a time while that improves the whole plan.
     for (const g of free) {
-      const liked = g.options.find(x => solveFree(scheduled, x.day, ctx).some(c => c.key === x.key));
+      const liked = g.options.find(x => optimizeDay(scheduled.filter(y => y.day === x.day), ctx, lunch).chosen.some(c => c.key === x.key));
       if (liked) allowed.set(g.id, liked.key);
     }
     result = Object.fromEntries(days.map(d => [d, solve(d)]));
@@ -187,9 +267,10 @@ export function optimize(items, ctx = DEFAULT_PLANNER) {
   }
 
   const chosenKeys = new Set();
-  const plan = {};
+  const plan = {}, lunches = {};
   for (const d of days) {
     plan[d] = result[d].chosen;
+    lunches[d] = result[d].lunch;
     for (const x of plan[d]) chosenKeys.add(x.key);
   }
   const chosenIds = new Set(scheduled.filter(x => chosenKeys.has(x.key)).map(x => x.id));
@@ -198,11 +279,8 @@ export function optimize(items, ctx = DEFAULT_PLANNER) {
     .map(x => ({ item: x, reason: explainDrop(x, plan[x.day] || [], ctx, chosenIds) }));
   const lockedConflicts = scheduled.filter(x => x.locked && !chosenKeys.has(x.key));
   const unscheduled = items.filter(x => !valid(x));
-  return { plan, dropped, lockedConflicts, unscheduled };
-}
-
-function solveFree(scheduled, day, ctx) {
-  return optimizeDay(scheduled.filter(x => x.day === day), ctx).chosen;
+  const value = days.reduce((a, d) => a + chainValue(plan[d], ctx) + (lunches[d] ? (lunch?.weight || 0) : 0), 0);
+  return { plan, lunch: lunches, dropped, lockedConflicts, unscheduled, value };
 }
 
 export function explainDrop(x, dayPlan, ctx = DEFAULT_PLANNER, chosenIds = new Set()) {
@@ -213,8 +291,11 @@ export function explainDrop(x, dayPlan, ctx = DEFAULT_PLANNER, chosenIds = new S
       : { kind: 'repeat', clash: false, text: 'You\'re attending another run of this session' };
   }
   if (!blocker) return { kind: 'other', text: 'Lower value than the rest of the day' };
+  if (blocker.pseudo === 'block') {
+    return { kind: 'block', other: blocker, text: `During ${blocker.title} (blocked time)` };
+  }
   if (overlaps(blocker, x)) {
-    return { kind: 'overlap', other: blocker, text: `Same time as ${blocker.code}${blocker.pseudo ? '' : ` (${PRIORITY[blocker.priority] || ''})`}` };
+    return { kind: 'overlap', other: blocker, text: `Same time as ${blocker.code} (${PRIORITY[blocker.priority] || ''})` };
   }
   const [a, b] = blocker.startMin <= x.startMin ? [blocker, x] : [x, blocker];
   const t = transition(a, b, ctx);
@@ -293,15 +374,20 @@ export function fillers(dayPlan, candidates, ctx = DEFAULT_PLANNER) {
   });
 }
 
+const LUNCH_ITEM = s => ({ key: 'lunch', pseudo: 'lunch', code: 'Lunch', title: 'Lunch break', startMin: s.start, endMin: s.end });
+
 // Where you are now and what's next, for the conference-day view. `origin` is where the
-// day starts (hotel / first building) when nothing has happened yet.
-export function nowNext(dayPlan, nowMin, ctx = DEFAULT_PLANNER, origin = null) {
+// day starts (hotel / first building) when nothing has happened yet. Lunch (a slot, not
+// an item) can be "current" or "next", but never the place you walk from.
+export function nowNext(dayPlan, nowMin, ctx = DEFAULT_PLANNER, origin = null, lunch = null) {
   const plan = dayPlan.slice().sort((a, b) => a.startMin - b.startMin);
-  const current = plan.find(p => p.startMin <= nowMin && nowMin < p.endMin) || null;
-  const next = plan.find(p => p.startMin > nowMin) || null;
-  let leaveBy = null, walk = null, extra = 0;
+  let current = plan.find(p => p.startMin <= nowMin && nowMin < p.endMin) || null;
+  let next = plan.find(p => p.startMin > nowMin) || null;
   const from = current || [...plan].reverse().find(p => p.endMin <= nowMin) || (origin ? { key: 'origin', loc: origin } : null);
-  if (next) {
+  if (lunch && !current && lunch.start <= nowMin && nowMin < lunch.end) current = LUNCH_ITEM(lunch);
+  if (lunch && lunch.start > nowMin && (!next || lunch.start < next.startMin)) next = LUNCH_ITEM(lunch);
+  let leaveBy = null, walk = null, extra = 0;
+  if (next && !next.pseudo) {
     const stay = from ? sameRoom(from.loc, next.loc) : false;
     walk = from ? (stay ? 0 : walkMinutes(from.loc, next.loc, ctx.walk)) : null;
     extra = arrivalExtra(next, ctx);
@@ -321,13 +407,13 @@ export function chainValue(chain, ctx = DEFAULT_PLANNER) {
   return v;
 }
 
-// "If I go to X, what does the rest of my day look like?" Locks inside `release`
-// (the other options of the same decision) are ignored for this what-if, and repeat
-// runs on the same day still count only once.
-export function whatIf(dayItems, forcedKey, release = new Set(), ctx = DEFAULT_PLANNER) {
-  const xs = dayItems.map(x => ({ ...x, forced: x.key === forcedKey, locked: x.key !== forcedKey && !release.has(x.key) && x.locked }));
-  const { plan } = optimize(xs, ctx);
-  const chosen = Object.values(plan).flat();
+// "If I go to X, what does the rest of my plan look like?" Runs over every day, so a
+// session that moves to its repeat shows up as attended, not missed. Locks inside
+// `release` are ignored for this what-if.
+export function whatIf(items, forcedKey, release = new Set(), ctx = DEFAULT_PLANNER, lunch = null) {
+  const xs = items.map(x => ({ ...x, forced: x.key === forcedKey, locked: x.key !== forcedKey && !release.has(x.key) && x.locked }));
+  const res = optimize(xs, ctx, lunch);
+  const chosen = Object.values(res.plan).flat();
   const feasible = chosen.some(x => x.key === forcedKey);
-  return { chosen, feasible, value: chainValue(chosen, ctx) };
+  return { plan: res.plan, lunch: res.lunch, chosen, feasible, value: res.value };
 }

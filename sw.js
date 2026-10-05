@@ -2,17 +2,19 @@
 // - The app shell is installed atomically per version and served from that version only,
 //   so modules from two deploys never mix. CI stamps VERSION with a hash of the shell files.
 // - Catalog data is network-first with a short timeout, falling back to the last good copy
-//   (also on HTTP errors). It lives in its own cache that survives app updates.
+//   (also on HTTP errors). It lives in its own cache that survives app updates. When the
+//   timeout served a cached copy and the fresh one lands later, open pages are told.
 const VERSION = 'ignite26-dev';
 const SHELL_CACHE = `shell-${VERSION}`;
 const DATA_CACHE = 'data-v1';
 const SHELL = [
   './', 'index.html', 'manifest.webmanifest', 'assets/css/app.css',
-  'assets/js/app.js', 'assets/js/data.js', 'assets/js/live.js', 'assets/js/planner.js', 'assets/js/store.js',
-  'assets/js/time.js', 'assets/js/ui.js', 'assets/js/venue.js',
+  'assets/js/app.js', 'assets/js/conferences.js', 'assets/js/data.js', 'assets/js/live.js', 'assets/js/planner.js',
+  'assets/js/store.js', 'assets/js/suggest.js', 'assets/js/time.js', 'assets/js/ui.js', 'assets/js/venue.js',
   'assets/icons/icon.svg', 'assets/icons/icon-180.png', 'assets/icons/icon-512.png',
 ];
-const DATA = ['data/sessions.json', 'data/changes.json', 'data/meta.json'];
+const DATA = ['data/ignite2026/sessions.json', 'data/ignite2026/changes.json', 'data/ignite2026/meta.json', 'data/ignite2026/favorites.json',
+  'data/gartner2026/sessions.json', 'data/gartner2026/changes.json', 'data/gartner2026/meta.json', 'data/gartner2026/favorites.json'];
 const DATA_TIMEOUT_MS = 3500;
 
 const dataKey = url => { const u = new URL(url, self.location); return u.origin + u.pathname; };
@@ -59,22 +61,31 @@ self.addEventListener('fetch', e => {
   })());
 });
 
+function notifyClients(path) {
+  return self.clients.matchAll({ type: 'window' }).then(cs => cs.forEach(c => c.postMessage({ type: 'data-updated', path })));
+}
+
 function dataFirst(req) {
   const key = dataKey(req.url);
   const cached = () => caches.open(DATA_CACHE).then(c => c.match(key));
+  let servedCache = false;
   let saved = Promise.resolve();
   const net = fetch(req).then(res => {
     if (res.ok) {
       const copy = res.clone();
       // Best effort: a full cache (storage quota) must not hide fresh data from the app.
-      saved = caches.open(DATA_CACHE).then(c => c.put(key, copy)).catch(() => {});
+      saved = caches.open(DATA_CACHE).then(c => c.put(key, copy)).then(() => { if (servedCache) return notifyClients(key); }).catch(() => {});
     }
     return res;
   });
   const done = net.then(() => saved, () => {});
   const network = net.then(async res => (res.ok ? res : (await cached()) || res))
     .catch(async () => (await cached()) || Response.error());
-  const timeout = new Promise(resolve => setTimeout(() => resolve(cached()), DATA_TIMEOUT_MS));
+  const timeout = new Promise(resolve => setTimeout(async () => {
+    const c = await cached();
+    if (c) servedCache = true;
+    resolve(c);
+  }, DATA_TIMEOUT_MS));
   // Whichever comes first: fresh data, or (on slow Wi-Fi) the cached copy.
   const response = Promise.race([network, timeout]).then(r => r || network);
   return { response, done };

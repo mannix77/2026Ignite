@@ -347,5 +347,104 @@
 "title": "Impossible date: Hour 24",
 "startDateTime": "2026-11-18T24:00:00Z",
 "endDateTime": "2026-11-18T24:00:00Z"
+},
+{
+"sessionType": {
+"displayValue": "Breakout"
+},
+"deliveryTypes": [
+{
+"displayValue": "In-person"
+}
+],
+"topic": [],
+"tags": [],
+"audienceTypes": [],
+"sessionId": "e20",
+"sessionInstanceId": "e20-a",
+"sessionCode": "BRK820",
+"title": "Float minutes",
+"startDateTime": "2026-11-18T18:00:00Z",
+"endDateTime": "2026-11-18T19:30:00Z",
+"durationInMinutes": 45.0,
+"location": "Moscone West, Level 2, Room 2001"
+},
+{
+"sessionType": {
+"displayValue": "Breakout"
+},
+"deliveryTypes": [
+{
+"displayValue": "In-person"
+}
+],
+"topic": [],
+"tags": [],
+"audienceTypes": [],
+"sessionId": "e21",
+"sessionInstanceId": "e21-a",
+"sessionCode": "BRK821",
+"title": "End before start",
+"startDateTime": "2026-11-18T18:00:00Z",
+"endDateTime": "2026-11-18T17:00:00Z",
+"durationInMinutes": true,
+"TimeSlot": "10:00 - 10:45",
+"location": "Moscone West, Level 2, Room 2002"
+},
+{
+"sessionType": {
+"displayValue": "Breakout"
+},
+"deliveryTypes": [
+{
+"displayValue": "In-person"
+}
+],
+"topic": [],
+"tags": [],
+"audienceTypes": [],
+"sessionId": "e22",
+"sessionInstanceId": "e22-a",
+"sessionCode": "BRK822",
+"title": "Junk shapes",
+"endDateTime": "2026-11-18T19:00:00Z",
+"durationInMinutes": "45",
+"viewingOptions": {
+"displayValue": "Will be recorded"
+},
+"relatedSessionCodes": {
+"code": "BRK801"
+},
+"repeatedSessions": "BRK801",
+"speakerIds": [
+{
+"id": "x"
+},
+7
+],
+"location": " zTest1 ",
+"sessionLevel": "Advanced (300)"
+},
+{
+"sessionType": {
+"displayValue": "Breakout"
+},
+"deliveryTypes": [
+{
+"displayValue": "In-person"
+}
+],
+"topic": [],
+"tags": [],
+"audienceTypes": [],
+"sessionId": 23,
+"sessionInstanceId": "",
+"sessionCode": "BRK823",
+"title": "Numeric id",
+"startDateTime": " 2026-11-19T17:00:00+00:00 ",
+"durationInMinutes": 20000,
+"location": [
+"Moscone South, Level 1, Room 101"
+]
 }
 ]

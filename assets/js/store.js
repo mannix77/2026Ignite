@@ -1,23 +1,24 @@
 // User state: picks, settings, and what you've already seen. Lives in localStorage
-// (per browser / per Home Screen app); backups and share links move it between devices.
+// (per browser / per Home Screen app, per conference); backups and share links move it
+// between devices.
 
 import { DEFAULT_PLANNER } from './planner.js';
-import { BUILDING } from './venue.js';
 
 const BASE_KEY = 'ignite26.planner.v1';
 let KEY = BASE_KEY;
+let validBuilding = id => typeof id === 'string' && /^[A-Z]$/.test(id);
 
 export const DEFAULT_SETTINGS = {
   buffer: DEFAULT_PLANNER.buffer,
   tolerance: DEFAULT_PLANNER.tolerance,
   keynoteExtra: DEFAULT_PLANNER.keynoteExtra,
-  walk: clone(DEFAULT_PLANNER.walk),
+  walk: null,           // per-conference walking matrix; null = the conference default
   weights: clone(DEFAULT_PLANNER.weights),
   overrides: {},        // location label -> building id ('' = automatic)
   preview: false,       // simulate days/rooms before the real schedule is published
   hideOnline: false,    // hide online-only sessions in Browse
-  startFrom: 'W',       // where each day starts (for "leave by" before the first session)
-  lunch: { on: true, from: 690, to: 810, length: 30, weight: 60 }, // protect a lunch break
+  startFrom: null,      // where each day starts (building id); null = conference default
+  lunch: { on: true, from: 690, to: 810, length: 30, weight: 40 }, // protect a lunch break
   blocks: [],           // [{ id, day, start, end, label, building }] meetings, booth duty…
   repo: 'mannix77/2026Ignite',
 };
@@ -29,7 +30,7 @@ function clone(o) {
 function blank() {
   return {
     v: 1,
-    picks: {},          // sessionId -> { p: 0-3|null, lock: instKey|null, lockMode, reserved, note, g, code, at }
+    picks: {},          // sessionId -> { p, lock, lockMode, reserved, score, mode, note, g, code, at }
     prefs: {},          // only the settings the user changed; defaults fill the rest
     known: {},          // instKey -> snapshot of fields we alert on, for picked sessions
     seenBatch: null,    // timestamp of newest change batch already viewed
@@ -47,10 +48,20 @@ function merge(base, extra) {
 
 let state = blank();
 let cachedSettings = null;
+let conferenceDefaults = {};
 const listeners = new Set();
 let saveTimer = null;
 
-// `namespace` keeps test data (?data=…) from touching your real picks.
+// Conference-specific defaults (walking matrix, start building) and the building ids
+// that settings may reference.
+export function configure({ defaults = {}, buildingIds = [] } = {}) {
+  conferenceDefaults = clone(defaults);
+  const ids = new Set(buildingIds);
+  validBuilding = id => typeof id === 'string' && ids.has(id);
+  cachedSettings = null;
+}
+
+// `namespace` keeps each conference (and test data) in its own storage.
 export function load(namespace = '') {
   KEY = namespace ? `${BASE_KEY}:${namespace}` : BASE_KEY;
   state = blank();
@@ -72,6 +83,8 @@ export function load(namespace = '') {
   return state;
 }
 
+export function namespace() { return KEY === BASE_KEY ? '' : KEY.slice(BASE_KEY.length + 1); }
+
 function persist() {
   clearTimeout(saveTimer);
   saveTimer = setTimeout(() => {
@@ -84,7 +97,7 @@ if (typeof window !== 'undefined') {
   window.addEventListener('storage', e => {
     if (e.key !== KEY || e.newValue == null) return;
     clearTimeout(saveTimer);
-    load(KEY === BASE_KEY ? '' : KEY.slice(BASE_KEY.length + 1));
+    load(namespace());
     for (const fn of listeners) fn('reset');
   });
 }
@@ -98,7 +111,7 @@ function askPersistent() {
 
 export function get() { return state; }
 export function settings() {
-  return (cachedSettings ||= merge(clone(DEFAULT_SETTINGS), clone(state.prefs)));
+  return (cachedSettings ||= merge(merge(clone(DEFAULT_SETTINGS), clone(conferenceDefaults)), clone(state.prefs)));
 }
 
 export function subscribe(fn) { listeners.add(fn); return () => listeners.delete(fn); }
@@ -106,23 +119,23 @@ function emit(what) { persist(); for (const fn of listeners) fn(what); }
 
 export function pick(id) { return state.picks[id] || null; }
 
+const alive = p => p.p != null || p.note || p.lock || p.reserved;
+
 // Batch edit of picks (repeat groups span several records); emits once. Records with no
 // rating, lock, reservation or note are dropped; a note alone keeps a record alive.
 export function mutatePicks(fn) {
   fn(state.picks);
-  for (const [id, p] of Object.entries(state.picks)) {
-    if (p.p == null && !p.note && !p.lock && !p.reserved) delete state.picks[id];
-  }
+  for (const [id, p] of Object.entries(state.picks)) if (!alive(p)) delete state.picks[id];
   if (Object.values(state.picks).some(p => p.p > 0)) askPersistent();
   emit('picks');
 }
 
-export function setNote(id, note, meta = {}) {
-  const cur = state.picks[id];
-  if (!cur && !note) return;
-  state.picks[id] = { p: null, lock: null, ...meta, ...cur, note, at: Date.now() };
-  const p = state.picks[id];
-  if (!note && p.p == null && !p.lock && !p.reserved) delete state.picks[id];
+// One note per repeat group: it lives on `holder`; the other records' notes are cleared.
+export function setGroupNote(ids, holder, note, meta = {}) {
+  if (!state.picks[holder] && !note) return;
+  for (const id of ids) if (id !== holder && state.picks[id]) state.picks[id].note = '';
+  state.picks[holder] = { p: null, lock: null, ...meta, ...state.picks[holder], note, at: Date.now() };
+  for (const id of new Set([...ids, holder])) if (state.picks[id] && !alive(state.picks[id])) delete state.picks[id];
   emit('note');
 }
 
@@ -166,11 +179,13 @@ function sanitizePick(p) {
     note: typeof p.note === 'string' ? p.note.slice(0, 4000) : '',
     at: Number.isFinite(p.at) ? p.at : Date.now(),
   };
-  if (p.lockMode === 'preview') out.lockMode = 'preview';
+  if (p.lockMode === 'preview' && out.lock) out.lockMode = 'preview';
   if (typeof p.reserved === 'string' && ID_RE.test(p.reserved)) out.reserved = p.reserved;
+  if (Number.isFinite(p.score) && p.score >= 0 && p.score <= 100) out.score = Math.round(p.score * 10) / 10;
+  if (p.mode === 'watch') out.mode = 'watch';
   if (typeof p.g === 'string' && ID_RE.test(p.g)) out.g = p.g;
   if (typeof p.code === 'string' && ID_RE.test(p.code)) out.code = p.code;
-  return out.p == null && !out.note && !out.lock && !out.reserved ? null : out;
+  return alive(out) ? out : null;
 }
 
 function sanitizePicks(picks) {
@@ -194,7 +209,10 @@ function sanitizePrefs(src) {
     for (const k of ['sameRoom', 'sameFloor', 'diffFloor', 'unknown']) if (num(src.walk[k], 0, 240) !== undefined) out.walk[k] = src.walk[k];
     if (src.walk.pairs && typeof src.walk.pairs === 'object') {
       out.walk.pairs = {};
-      for (const k of Object.keys(d.walk.pairs)) if (num(src.walk.pairs[k], 0, 240) !== undefined) out.walk.pairs[k] = src.walk.pairs[k];
+      for (const [k, v] of Object.entries(src.walk.pairs)) {
+        const [a, b] = k.split('|');
+        if (validBuilding(a) && validBuilding(b) && num(v, 0, 240) !== undefined) out.walk.pairs[k] = v;
+      }
     }
   }
   if (src.weights && typeof src.weights === 'object') {
@@ -203,10 +221,10 @@ function sanitizePrefs(src) {
   }
   if (src.overrides && typeof src.overrides === 'object') {
     out.overrides = {};
-    for (const [label, b] of Object.entries(src.overrides)) if (label.length < 300 && (b === '' || (BUILDING[b] && /^[A-Z]$/.test(b)))) out.overrides[label] = b;
+    for (const [label, b] of Object.entries(src.overrides)) if (label.length < 300 && (b === '' || validBuilding(b))) out.overrides[label] = b;
   }
   for (const k of ['preview', 'hideOnline']) if (typeof src[k] === 'boolean') out[k] = src[k];
-  if (typeof src.startFrom === 'string' && /^[A-Z]$/.test(src.startFrom) && BUILDING[src.startFrom]) out.startFrom = src.startFrom;
+  if (validBuilding(src.startFrom)) out.startFrom = src.startFrom;
   if (src.lunch && typeof src.lunch === 'object') {
     const l = src.lunch;
     out.lunch = {
@@ -221,7 +239,7 @@ function sanitizePrefs(src) {
       .slice(0, 50).map((b, i) => ({
         id: typeof b.id === 'string' && ID_RE.test(b.id) ? b.id : `b${i}`, day: b.day, start: b.start, end: b.end,
         label: typeof b.label === 'string' ? b.label.slice(0, 80) : 'Busy',
-        building: typeof b.building === 'string' && /^[A-Z]$/.test(b.building) && BUILDING[b.building] ? b.building : 'W',
+        building: validBuilding(b.building) ? b.building : null,
       }));
   }
   if (typeof src.repo === 'string' && /^[\w.-]+\/[\w.-]+$/.test(src.repo)) out.repo = src.repo;
@@ -231,7 +249,7 @@ function sanitizePrefs(src) {
 // ---- moving picks between devices
 
 export function exportData() {
-  return { app: 'ignite26-planner', v: 1, exportedAt: new Date().toISOString(), picks: state.picks, settings: state.prefs };
+  return { app: 'ignite26-planner', v: 1, conference: namespace() || 'ignite2026', exportedAt: new Date().toISOString(), picks: state.picks, settings: state.prefs };
 }
 
 export function importData(obj, { replace = false } = {}) {
@@ -247,9 +265,10 @@ export function importData(obj, { replace = false } = {}) {
   return Object.keys(incoming).length;
 }
 
-// Compact share string: CODE.p, or CODE.p!LOCKEDCODE when a specific run is locked.
-const CODE = '[A-Za-z]+\\d+[A-Za-z]?(?:-[A-Z]\\d+)?';
-const TOKEN = new RegExp(`^(${CODE})\\.([0-3])(?:!(${CODE})?)?$`);
+// Compact share token per pick: CODE.p[sSCORE][w][!LOCKCODE | *LOCKCODE]
+//   sN  your own score     w  watch the recording instead     !  locked run     *  locked in preview
+const CODE = '[A-Za-z0-9_]{1,24}(?:-[A-Z]\\d+)?'; // BRK101, BRK101-R1, Gartner's 11b / 33jES
+const TOKEN = new RegExp(`^(${CODE})\\.([0-3])(?:s(\\d{1,3}(?:\\.\\d)?))?(w)?(?:([!*])(${CODE}))?$`);
 
 export function shareString(codeOf, lockCodeOf) {
   return Object.entries(state.picks)
@@ -258,7 +277,8 @@ export function shareString(codeOf, lockCodeOf) {
       const c = codeOf(id);
       if (!c) return null;
       const lc = v.lock ? lockCodeOf(v.lock) : null;
-      return `${c}.${v.p}${v.lock ? `!${lc || ''}` : ''}`;
+      const score = Number.isFinite(v.score) ? `s${v.score}` : '';
+      return `${c}.${v.p}${score}${v.mode === 'watch' ? 'w' : ''}${lc ? `${v.lockMode === 'preview' ? '*' : '!'}${lc}` : ''}`;
     })
     .filter(Boolean)
     .join('~');
@@ -271,27 +291,36 @@ export function parseShare(str, idOfCode, instOfCode) {
     if (!m) continue;
     const id = idOfCode(m[1]);
     if (!id) continue;
-    out[id] = { p: Number(m[2]), lock: m[3] ? instOfCode(m[3]) : tok.includes('!') ? instOfCode(m[1]) : null, code: m[1], at: Date.now() };
+    const rec = { p: Number(m[2]), lock: m[6] ? instOfCode(m[6]) : null, code: m[1], at: Date.now() };
+    if (m[3]) rec.score = Number(m[3]);
+    if (m[4]) rec.mode = 'watch';
+    if (rec.lock && m[5] === '*') rec.lockMode = 'preview';
+    out[id] = rec;
   }
   return out;
 }
 
-// Merge shared ratings and locks; never touch local notes. Validated like a backup.
+// Merge shared ratings, scores and locks; never touch local notes or reserved seats.
 export function applyShared(picks) {
   let n = 0;
   for (const [id, p] of Object.entries(picks)) {
     if (!ID_RE.test(id) || !p || typeof p !== 'object') continue;
     const cur = state.picks[id] || { note: '' };
-    const s = sanitizePick({ ...cur, p: p.p, lock: p.lock || null, code: p.code || cur.code, at: p.at });
+    const lock = cur.reserved ? (cur.lock || cur.reserved) : (p.lock || null);
+    const s = sanitizePick({
+      ...cur, p: p.p, lock, lockMode: lock && !cur.reserved ? p.lockMode : undefined,
+      score: p.score, mode: p.mode, code: p.code || cur.code, at: p.at,
+    });
     if (s) { state.picks[id] = s; n++; }
   }
   emit('picks');
   return n;
 }
 
-// Erase ratings, locks, notes and change tracking. Settings and display choices stay.
+// Erase ratings, locks, notes and change tracking. Settings, display choices and the
+// "already seen" marker for the change history stay.
 export function resetAll() {
-  state = { ...blank(), prefs: state.prefs, ui: { ...state.ui } };
+  state = { ...blank(), prefs: state.prefs, ui: { ...state.ui }, seenBatch: state.seenBatch };
   cachedSettings = null;
   emit('reset');
 }

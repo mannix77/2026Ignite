@@ -6,8 +6,9 @@ live Ignite catalog through scripts/sync.py.
     python3 scripts/serve.py --port 9000
     python3 scripts/serve.py --lan        # also reachable from your phone on the same Wi-Fi
 
-Local syncs write to .local-data/ (git-ignored, seeded from data/), so they never collide
-with the catalog commits the GitHub Action makes. On a phone, prefer the GitHub Pages
+Local syncs write to .local-data/ignite2026/ (git-ignored, seeded from data/ignite2026/), so
+they never collide with the catalog commits the GitHub Action makes. Other conferences'
+folders (data/gartner2026/) are served as committed. On a phone, prefer the GitHub Pages
 deployment: it's HTTPS (offline mode works) and its address never changes.
 """
 import argparse
@@ -25,18 +26,31 @@ import urllib.parse
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SYNC = os.path.join(ROOT, "scripts", "sync.py")
-LOCAL_DATA = os.path.join(ROOT, ".local-data")
+LOCAL_DATA = os.path.join(ROOT, ".local-data", "ignite2026")
+COMMITTED = os.path.join(ROOT, "data", "ignite2026")
 ALLOWED_FILES = {"/", "/index.html", "/sw.js", "/manifest.webmanifest"}
 ALLOWED_PREFIXES = ("/assets/", "/data/", "/tests/fixtures/")
 _lock = threading.Lock()
 
 
+def _generated(path):
+    try:
+        with open(path, encoding="utf-8") as f:
+            return json.load(f).get("generatedAt") or ""
+    except (OSError, ValueError, AttributeError):
+        return ""
+
+
 def seed_local_data():
-    """Start the local history from the committed snapshot the first time."""
+    """Start the local history from the committed snapshot, and take a newer committed
+    catalog (e.g. after git pull) over a stale local copy."""
     os.makedirs(LOCAL_DATA, exist_ok=True)
     for name in ("sessions.json", "changes.json", "meta.json", "watchlist.json"):
-        src, dst = os.path.join(ROOT, "data", name), os.path.join(LOCAL_DATA, name)
-        if os.path.exists(src) and not os.path.exists(dst):
+        src, dst = os.path.join(COMMITTED, name), os.path.join(LOCAL_DATA, name)
+        if not os.path.exists(src):
+            continue
+        newer = name in ("sessions.json", "meta.json") and _generated(src) > _generated(dst)
+        if not os.path.exists(dst) or newer:
             shutil.copy2(src, dst)
 
 
@@ -50,7 +64,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 
     def translate_path(self, path):
         clean = urllib.parse.urlsplit(path).path
-        if clean.startswith("/data/") and os.path.isdir(LOCAL_DATA):
+        if clean.startswith("/data/ignite2026/") and os.path.isdir(LOCAL_DATA):
             local = os.path.join(LOCAL_DATA, os.path.basename(clean))
             if os.path.exists(local):
                 return local

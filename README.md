@@ -1,40 +1,58 @@
-# Ignite 2026 Planner
+# Conference Planner
 
-An unofficial personal planner for **Microsoft Ignite 2026** (Nov 17–20, Moscone Center, San Francisco). It keeps itself up to date from the Ignite session catalog and helps you decide quickly what to attend. When two sessions clash, or there isn't time to get from one building to another, it shows what you'd gain and lose with each choice.
+An unofficial personal planner for **Microsoft Ignite 2026** (Nov 17–20, Moscone Center, San Francisco) and **Gartner IT Symposium/Xpo 2026** (Oct 18–22, Swan & Dolphin, Orlando). Switch between them from the title bar; each keeps its own catalog, picks, notes and settings. It helps you decide quickly what to attend: when two sessions clash, or there isn't time to get from one building to another, it shows what you'd gain and lose with each choice.
 
-> Not affiliated with Microsoft. Session data comes from the public Ignite catalog feeds.
+> Not affiliated with Microsoft or Gartner. Ignite data comes from the public Ignite catalog feeds; Gartner data from your own Conference Navigator export.
 
 ## What it does
 
 | | |
 |---|---|
-| **Stays current** | Each time you open the app (and every 10 minutes while it's open) it checks the Ignite site directly. A GitHub Action also syncs the catalog every 30 minutes to 2 hours. It logs every addition, removal, time change and room move, and posts a summary to a GitHub issue so you get notified. |
-| **Spots publication** | Times and rooms aren't public yet. The sync watches for them in the data and also watches the site's own switches (`showSessionTimeSlots`, `showLocations`). It raises a 🚨 milestone as soon as they flip. |
+| **Stays current (Ignite)** | Each time you open the app (and every 10 minutes while it's open) it checks the Ignite site directly. A GitHub Action also syncs the catalog every 30 minutes to 2 hours. It logs every addition, removal, time change and room move, and posts a summary to a GitHub issue so you get notified. |
+| **Spots publication** | Ignite times and rooms aren't public yet. The sync watches for them in the data and also watches the site's own switches (`showSessionTimeSlots`, `showLocations`). It raises a 🚨 milestone as soon as they flip. |
+| **Your workbook ranking** | Favorites and scores from your spreadsheet are shipped with the app (`data/<conference>/favorites.json`) and imported on first launch. A **score** outranks the Must/Want/Maybe tiers in every clash, so the plan follows your ranking. Sessions you marked “watch later” stay off the live plan on a **Watch later** list. |
+| **Suggests what you missed** | From what you've picked (tracks, topics, programs, formats, speakers, vendors and the wording of titles and descriptions) it ranks the rest of the catalog: **Suggested for you** on My plan and in Browse, each with its reasons and whether it fits your plan. Triage shows the most likely ones first. |
 | **Fast triage** | Rate sessions **Must / Want / Maybe / Skip** one at a time with keys `1 2 3 0` (undo `U`, later `→`). Filter by topic, type, level, audience, recorded or not, and "new this week". |
-| **Plans around walking time** | Once times and rooms are out, it builds the best plan for each day. The day's choices are optimized exactly, and repeat runs are chosen across days. Moving between Moscone West, South, North, the Marriott Marquis and Chase Center costs real time, including the badge and bag checks at each entrance and getting into keynotes. |
-| **Lunch & blocked time** | Protects a lunch break (default: 30 min somewhere between 11:30 and 1:30). Meetings, booth duty or a flight can be blocked out with a location, and the plan includes walking to and from them. |
-| **Makes the sacrifice obvious** | Each clash compares whole-day outcomes: "go to X → you also make Y, you miss Z (12 min walk, 5 min gap)". Recorded sessions are discounted ("watch later"), labs and table talks get a boost (in person only), and ties are labelled as ties. If a session repeats, it moves you to the repeat instead of dropping it. |
-| **Conference-day mode** | **Now** shows where you should be and when to leave, counting from where your day starts before the first session. It also shows what's starting nearby if a room is full. |
-| **RSVP reminders** | Labs, lightning talks and table talks need an RSVP (opens Oct 25, 5 PM PT). The plan lists which of your picks need one until you mark them **I reserved a seat**. That also locks the reserved run into your plan. |
+| **Plans around walking time** | Once times and rooms are out, it builds the best plan for each day. The day's choices are optimized exactly, and repeat runs are chosen across days. Moving between buildings costs real time: Moscone West, South, North, the Marriott Marquis and Chase Center at Ignite (badge and bag checks, keynote entry); the Dolphin, Swan, Swan Reserve and Yacht & Beach Club convention center at Gartner. |
+| **Lunch & blocked time** | Protects a lunch break (30 min somewhere in a window: 11:30–1:30 at Ignite, 11:45–2:45 at Gartner). Meetings, booth duty or a flight can be blocked out with a location, and the plan includes walking to and from them. |
+| **Makes the sacrifice obvious** | Each clash compares whole-plan outcomes: "go to X → you also make Y, Z moves to its repeat, you miss W (12 min walk, 5 min gap)". Recorded sessions are discounted ("watch later"), labs and table talks get a boost (in person only), and ties are labelled as ties. |
+| **Conference-day mode** | **Now** shows where you should be and when to leave, counting from where your day starts before the first session. It also shows what's starting nearby if a room is full, ranked by your priorities and interests. |
+| **Seat reservations** | Ignite labs, lightning talks and table talks need an RSVP (opens Oct 25, 5 PM PT); Gartner marks individual sessions as reservation-required. The plan lists which of your picks need one until you mark them **I reserved a seat**, which also pins that run into your plan. |
 | **Change alerts** | Every run of every session you picked is watched. If one moves, is retitled or is cancelled, you see exactly what changed and whether it's the run you're attending. You also hear when a new run is added. |
 | **Offline & portable** | Installable PWA that works on bad conference Wi-Fi. Export your plan to your calendar (`.ics`). Move picks between devices with a link or a backup file. |
 
-Before the real schedule is published you can turn on **Preview** (Settings, or the button on My plan) to rehearse with a clearly labelled simulated schedule.
+Before the real Ignite schedule is published you can turn on **Preview** (Settings, or the button on My plan) to rehearse with a clearly labelled simulated schedule.
 
 ## Use it
 
 **On your iPhone (recommended):** open the GitHub Pages address in Safari, then tap **Share → Add to Home Screen** *before* you start rating. The installed app keeps its own copy of your picks (separate from Safari's) and works offline at the venue. To move picks from another device, use **Settings → Copy link to my picks** there, then **Settings → Import picks from a link** in the installed app. **Save a backup** opens the share sheet, so you can keep a copy in Files.
 
+**Switching conference:** the dropdown in the title bar, or `?conf=gartner2026` / `?conf=ignite2026` in the address. The app remembers your last choice.
+
+**Your workbook favorites** are imported automatically the first time you open a conference on a device with no picks. Later, **Settings → Import my workbook favorites** re-applies ratings, scores and watch-later marks (your notes are kept). The committed `favorites.json` holds only codes, tiers and scores; the version with your notes is the backup file the import script writes to `~/Downloads` (restore it with **Settings → Restore backup**, or AirDrop it to the phone and open it from Files).
+
 **Locally:**
 
 ```bash
-python3 scripts/serve.py          # http://localhost:8026, refreshes the catalog first
+python3 scripts/serve.py          # http://localhost:8026, refreshes the Ignite catalog first
 python3 scripts/serve.py --lan    # also reachable from your phone on the same Wi-Fi
 ```
 
-Local syncs write to `.local-data/` (git-ignored), so they never conflict with the Action's commits. The local server only serves the app's own files. On a phone, prefer the HTTPS Pages address: offline mode needs HTTPS, and the address never changes.
+Local Ignite syncs write to `.local-data/ignite2026/` (git-ignored), so they never conflict with the Action's commits. The local server only serves the app's own files. On a phone, prefer the HTTPS Pages address: offline mode needs HTTPS, and the address never changes.
 
 No build step and no dependencies: plain HTML/CSS/JS modules plus Python 3 standard library.
+
+## Updating the Gartner agenda
+
+Gartner has no public API (Conference Navigator needs a login), so the catalog is a normalized copy of your export. After downloading a fresh export, run:
+
+```bash
+python3 scripts/import_gartner.py ~/Downloads/gartner_sym2026_sessions.json --workbook ~/Downloads/gartner_sym2026_sessions.xlsx
+```
+
+It rewrites `data/gartner2026/sessions.json`, logs the differences in `changes.json` (shown under Changes, with your picks highlighted), regenerates `favorites.json` from the workbook's **My Favorites** sheet, and writes the backup with notes to `~/Downloads/gartner-2026-picks.json`. Commit `data/gartner2026/` and push; Pages redeploys. Private strategic-account meetings (`SM*`/`SAM*`) are left out.
+
+The Ignite favorites were imported the same way from the `My Favorites` sheet of the Ignite workbook into `data/ignite2026/favorites.json` (tiers from Attend Mode, scores from Score; "Watch recording later" picks are watch-later; "Delegate"/"Skip" picks are skipped).
 
 ## One-time GitHub setup
 
@@ -42,30 +60,36 @@ No build step and no dependencies: plain HTML/CSS/JS modules plus Python 3 stand
 2. **Settings → Pages → Build and deployment → Source: GitHub Actions.**
 3. **Actions → "Sync Ignite catalog & deploy" → Run workflow** (or wait for the schedule). The app is published at `https://<user>.github.io/<repo>/`.
 4. To get notified, **watch** the repo or subscribe to the "Ignite 2026 catalog changes" issue the workflow opens.
-5. Optional: in the app, **Settings → Copy watchlist**, then paste the result into `data/watchlist.json`. Changes to those sessions get a ⭐ and are listed first.
+5. Optional: in the app, **Settings → Copy watchlist**, then paste the result into `data/ignite2026/watchlist.json`. Changes to those sessions get a ⭐ and are listed first.
 
 ## How it works
 
 ```
-Ignite catalog API ─┐                        ┌─> data/sessions.json  (normalized catalog, committed)
-CDN fallback copy ──┼─> scripts/sync.py ─────┼─> data/changes.json   (change log, committed)
-site settings ──────┘   (GitHub Action)      ├─> data/meta.json      (status, deployed only)
-                                             └─> issue comment       (notification)
+Ignite catalog API ─┐                        ┌─> data/ignite2026/sessions.json  (normalized catalog, committed)
+CDN fallback copy ──┼─> scripts/sync.py ─────┼─> data/ignite2026/changes.json   (change log, committed)
+site settings ──────┘   (GitHub Action)      ├─> data/ignite2026/meta.json      (status, deployed only)
+                                             └─> issue comment                  (notification)
 
-Browser ── data/*.json (snapshot + history)
-        └─ CDN fallback copy (live check, CORS-enabled) ── assets/js/live.js
+Conference Navigator export ─> scripts/import_gartner.py ─> data/gartner2026/{sessions,changes,favorites}.json
+
+Browser ── data/<conference>/*.json (snapshot + history + favorites)
+        └─ CDN fallback copy (Ignite live check, CORS-enabled) ── assets/js/live.js
 ```
 
-- `scripts/sync.py`: fetches the CDN copy the official site uses (falling back to the API), normalizes it, diffs it against the last snapshot by run, and records milestones. It refuses to overwrite good data with a partial catalog, and records any failure in `meta.json` instead of failing silently.
-- `assets/js/live.js`: the same normalization in the browser, against the CDN copy the official site uses. `tests/test_sync.py` checks that the Python and JS versions produce identical output.
-- `assets/js/planner.js`: travel-aware conflict detection, the optimizer (exact per day; repeat runs chosen exhaustively when few, by coordinate descent otherwise), what-if comparisons and free-slot fillers. A randomized test checks it against brute force.
-- `sw.js`: offline support. The app shell installs atomically per version; CI stamps the version from a hash of the code. Catalog data falls back to the cached copy after 3.5 s on slow Wi-Fi.
-- `assets/js/venue.js`: location parsing ("Moscone West, Level 3, Room 3016") and the walking-time model. Every number can be changed in Settings.
+- `assets/js/conferences.js`: the conference definitions (days, timezone, data folder, venue model, lunch window, where seats are reserved). Adding a conference means adding an entry here plus a `data/<id>/` folder in the same shape.
+- `scripts/sync.py`: fetches the CDN copy the official Ignite site uses (falling back to the API), normalizes it, diffs it against the last snapshot by run, and records milestones. It refuses to overwrite good data with a partial catalog, and records any failure in `meta.json` instead of failing silently. `changedAt` only moves when something the app shows changed.
+- `assets/js/live.js`: the same normalization in the browser, against the CDN copy. `tests/test_sync.py` checks that the Python and JS versions produce identical output, including on malformed records.
+- `assets/js/planner.js`: travel-aware conflict detection, the optimizer (exact per day with the lunch break as part of the search; repeat runs chosen exhaustively when few, by coordinate descent otherwise), whole-plan what-if comparisons and free-slot fillers. A randomized test checks it against brute force.
+- `assets/js/suggest.js`: the recommender. It builds an interest profile from your picks, weighted by score, and scores every unrated session against it (tracks, topics, programs, formats, speakers, vendors and TF-IDF cosine similarity of the text).
+- `sw.js`: offline support. The app shell installs atomically per version; CI stamps the version from a hash of the code. Catalog data falls back to the cached copy after 3.5 s on slow Wi-Fi and tells the page when the fresh copy lands.
+- `assets/js/venue.js`: location parsing ("Moscone West, Level 3, Room 3016", "Stage 1, IT Xpo, Atlantic Hall, WDW Dolphin Hotel") and the walking-time model. Every number can be changed in Settings. The Swan & Dolphin numbers come from the hotels' floor plans, measured routes and attendee reports; treat them as estimates until you've walked them.
 
-**Things the catalog taught us** (from Ignite 2025 and Build 2026, same platform):
+**Things the Ignite catalog taught us** (from Ignite 2025 and Build 2026, same platform):
 - Real times arrive as `startDateTime`/`endDateTime` (UTC). The 2026 feed already contains placeholder times, all on Nov 14, and `zTest` rooms. These are ignored: only times inside the event window count.
 - `TimeSlot` was Pacific time in 2025 but is UTC in 2026, so it's never used for real times.
 - Repeat runs appear either as `BRK101-R1` records linked by `repeatedSessions`, or as records that share a `sessionId`. Both are grouped.
+
+**Gartner specifics:** times and rooms are final in the export (`America/New_York`). Keynotes, Signature Series and track sessions are assumed to be replayable; Xpo stage talks, roundtables, workshops and clinics are not. Sessions with the same title and type under different codes (clinics, repeated roundtables) are treated as repeat runs.
 
 ## Tests
 

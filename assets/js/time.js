@@ -1,29 +1,34 @@
 // Conference-local time helpers. Everything in the planner is expressed as
-// { day: 'YYYY-MM-DD', min: minutes since local midnight } in the event timezone,
+// { day: 'YYYY-MM-DD', min: minutes since local midnight } in the conference's timezone,
 // so the plan reads correctly no matter what timezone the phone is set to.
 
-export const TZ = 'America/Los_Angeles';
+export const DEFAULT_TZ = 'America/Los_Angeles';
 
-const partsFmt = new Intl.DateTimeFormat('en-US', {
-  timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit',
-  hour: '2-digit', minute: '2-digit', hourCycle: 'h23',
-});
+const fmts = new Map();
+function partsFmt(tz) {
+  if (!fmts.has(tz)) {
+    fmts.set(tz, new Intl.DateTimeFormat('en-US', {
+      timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23',
+    }));
+  }
+  return fmts.get(tz);
+}
 
-export function localParts(date) {
+export function localParts(date, tz = DEFAULT_TZ) {
   const p = {};
-  for (const { type, value } of partsFmt.formatToParts(date)) p[type] = value;
+  for (const { type, value } of partsFmt(tz).formatToParts(date)) p[type] = value;
   return { day: `${p.year}-${p.month}-${p.day}`, min: (Number(p.hour) % 24) * 60 + Number(p.minute) };
 }
 
-export function fromISO(iso) {
+export function fromISO(iso, tz = DEFAULT_TZ) {
   if (!iso) return null;
   const d = new Date(iso);
-  return Number.isNaN(d.getTime()) ? null : localParts(d);
+  return Number.isNaN(d.getTime()) ? null : localParts(d, tz);
 }
 
-export function nowLocal(sim) {
+export function nowLocal(sim, tz = DEFAULT_TZ) {
   if (sim && sim.day && Number.isFinite(sim.min)) return { day: sim.day, min: sim.min };
-  return localParts(new Date());
+  return localParts(new Date(), tz);
 }
 
 // "19:50 - 21:20" -> { start: 1190, end: 1280 } (end may exceed 1440 when it wraps midnight)

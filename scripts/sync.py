@@ -6,10 +6,10 @@ Stdlib only (runs on the macOS system Python 3.9 and in GitHub Actions).
     python3 scripts/sync.py                     # fetch the live catalog, update data/
     python3 scripts/sync.py --from-file x.json  # use a saved API response instead of the network
 
-Outputs (relative to the repo root):
-    data/sessions.json  normalized catalog the app reads (committed)
-    data/changes.json   newest-first log of change batches (committed)
-    data/meta.json      last check time and status for the app (regenerated every run, not committed)
+Outputs (relative to the repo root, under data/ignite2026/):
+    sessions.json  normalized catalog the app reads (committed)
+    changes.json   newest-first log of change batches (committed)
+    meta.json      last check time and status for the app (regenerated every run, not committed)
 
 The browser app (assets/js/live.js) applies the same normalization to the public CDN
 copy of the catalog; keep the two in step (tests/test_sync.py cross-checks them).
@@ -36,7 +36,7 @@ SOURCES = {
     "settings": [CDN + "/settings.json", API + "/settings"],
 }
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DATA = os.path.join(ROOT, "data")
+DATA = os.path.join(ROOT, "data", "ignite2026")
 MAX_BATCHES = 400
 # Used when the site settings can't be fetched. Times outside the event window are
 # treated as placeholders (the 2026 index already holds fake times on Nov 14).
@@ -46,7 +46,8 @@ TRACKED = ["title", "code", "type", "start", "end", "dur", "room", "speakers",
            "level", "delivery", "recorded", "desc"]
 # The catalog has spelled these differently across years ("In person" vs "In-person").
 DELIVERY_NAMES = {"inperson": "In-person", "online": "Online", "ondemand": "On-demand"}
-PLACEHOLDER_ROOM = re.compile(r"^\s*(ztest\S*|tbd|tba|)\s*$", re.I)
+PLACEHOLDER_ROOM = re.compile(r"^(ztest\S*|tbd|tba|)$", re.I)
+MAX_DUR = 1440
 # Whitespace trimmed from text fields; must match TRIM in assets/js/live.js.
 TRIM = re.compile("^[ \t\n\r\x0b\x0c\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]+|"
                   "[ \t\n\r\x0b\x0c\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]+$")
@@ -106,12 +107,17 @@ def fetch_first(kind):
     raise RuntimeError("; ".join(errors))
 
 
+def list_of(v):
+    """A list, a single value, or junk -> list (mirrors listOf in live.js)."""
+    return v if isinstance(v, list) else ([v] if v else [])
+
+
 def vals(lst):
-    """[{displayValue: x}, ...] -> [x, ...] (deduped, order kept)."""
+    """[{displayValue: x}, ...] -> [x, ...] (non-empty strings, deduped, order kept)."""
     out = []
-    for v in lst or []:
+    for v in list_of(lst):
         s = v.get("displayValue") if isinstance(v, dict) else v
-        if s and s not in out:
+        if isinstance(s, str) and s and s not in out:
             out.append(s)
     return out
 
@@ -132,8 +138,8 @@ def parse_iso(s):
     """Parse the API's ISO timestamps (with Z or offset) -> aware UTC datetime, else None."""
     if not s or not isinstance(s, str):
         return None
-    s = s.strip().replace("Z", "+00:00")
-    m = re.match(r"^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2})?)(\.\d+)?([+-]\d{2}:?\d{2})?$", s)
+    s = text(s)
+    m = re.match(r"^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2})?)(\.\d+)?([+-]\d{2}:?\d{2}|Z)?$", s)
     if not m:
         return None
     base, _, off = m.groups()
@@ -141,12 +147,12 @@ def parse_iso(s):
         base += ":00"
     try:
         t = dt.datetime.strptime(base, "%Y-%m-%dT%H:%M:%S")
-    except ValueError:  # matches the pattern but isn't a real date/time (month 13, Feb 30, 24:00)
+        if off and off != "Z":
+            off = off.replace(":", "")
+            sign = 1 if off[0] == "+" else -1
+            t = t - sign * dt.timedelta(hours=int(off[1:3]), minutes=int(off[3:5]))
+    except (ValueError, OverflowError):  # matches the pattern but isn't a real date/time (month 13, Feb 30, 24:00)
         return None
-    if off:
-        off = off.replace(":", "")
-        sign = 1 if off[0] == "+" else -1
-        t = t - sign * dt.timedelta(hours=int(off[1:3]), minutes=int(off[3:5]))
     return t.replace(tzinfo=dt.timezone.utc)
 
 
@@ -176,6 +182,13 @@ def window_bounds(window):
     return a, b
 
 
+def whole_minutes(dur):
+    """True for a positive whole number of minutes (45 or 45.0, not True/NaN/'45'), at most a day."""
+    if isinstance(dur, bool) or not isinstance(dur, (int, float)):
+        return False
+    return dur == dur and dur != float("inf") and dur == int(dur) and 0 < dur <= MAX_DUR
+
+
 def is_test(s, title):
     return (title.lower() in ("test", "testing", "test session")
             or str(s.get("sessionTimeId") or "").lower().endswith("test"))
@@ -188,29 +201,34 @@ def normalize(raw_sessions, raw_speakers, window=DEFAULT_WINDOW, by_name=None):
     draft_times = 0
     for s in raw_sessions:
         title = text(s.get("title"))
-        if not s.get("sessionId") or is_test(s, title):
-            dropped.append(s.get("sessionCode") or s.get("sessionId"))
+        sid = "" if s.get("sessionId") in (None, "") else str(s.get("sessionId"))
+        if not sid or is_test(s, title):
+            dropped.append(text(s.get("sessionCode")) or sid)
             continue
         start = parse_iso(s.get("startDateTime"))
         end = parse_iso(s.get("endDateTime"))
         if start and not (lo <= start < hi):
             draft_times += 1  # placeholder/test schedule: don't present it as real
             start = end = None
+        if end and (not start or end < start):
+            end = None  # an end on its own, or before the start, is noise
         slot = text(s.get("TimeSlot") or s.get("timeSlot"))
         sm = slot_minutes(slot)
         dur = s.get("durationInMinutes")
-        if not isinstance(dur, int) or dur <= 0:
+        if not whole_minutes(dur):
             if start and end:
                 dur = int((end - start).total_seconds() // 60)
             else:
                 dur = sm[2] if sm else None
+        else:
+            dur = int(dur)
         if start and not end and dur:
             end = start + dt.timedelta(minutes=dur)
         # speakerNames is the complete list; the speaker feed (via speakerIds) adds company/title
         # but can lag behind, so never drop a name just because its record is missing.
         known = {}
-        for sid in s.get("speakerIds") or []:
-            p = spk.get(sid)
+        for spk_id in list_of(s.get("speakerIds")):
+            p = spk.get(spk_id) if isinstance(spk_id, str) else None
             if p and text(p.get("displayName")):
                 known[text(p["displayName"])] = [text(p["displayName"]), text(p.get("company")), text(p.get("jobTitle"))]
         names = [text(n) for n in text(s.get("speakerNames")).split(",") if text(n)]
@@ -223,8 +241,8 @@ def normalize(raw_sessions, raw_speakers, window=DEFAULT_WINDOW, by_name=None):
         elif any("record" in v for v in viewing):
             recorded = True
         out.append({
-            "id": s["sessionId"],
-            "inst": s.get("sessionInstanceId") or s["sessionId"],
+            "id": sid,
+            "inst": text(str(s.get("sessionInstanceId") if s.get("sessionInstanceId") is not None else "")) or sid,
             "code": text(s.get("sessionCode")),
             "title": title,
             "desc": text(s.get("description")),
@@ -243,9 +261,9 @@ def normalize(raw_sessions, raw_speakers, window=DEFAULT_WINDOW, by_name=None):
             "room": room or None,
             "roomTbd": bool(PLACEHOLDER_ROOM.match(room)),
             "popular": bool(s.get("isPopular")),
-            "related": [c for c in (s.get("relatedSessionCodes") or []) if isinstance(c, str)],
-            "_links": [r.get("sessionCode") for r in (s.get("repeatedSessions") or [])
-                       if isinstance(r, dict) and r.get("sessionCode")],
+            "related": [c for c in list_of(s.get("relatedSessionCodes")) if isinstance(c, str) and c],
+            "_links": [r.get("sessionCode") for r in list_of(s.get("repeatedSessions"))
+                       if isinstance(r, dict) and isinstance(r.get("sessionCode"), str) and r.get("sessionCode")],
         })
     assign_groups(out)
     out.sort(key=lambda r: (r["code"], r["inst"]))
@@ -514,12 +532,18 @@ def run(args):
     ps, cs = stats(prev), stats(cur, draft)
     ms = milestones(ps, cs, prev_flags, flags) if prev else []
     generated = (prev_doc or {}).get("generatedAt")
-    if (not prev_doc) or prev != cur or prev_doc.get("dropped") != dropped or prev_doc.get("siteFlags") != flags:
-        dump(spath, {"generatedAt": iso(now), "source": src, "dropped": dropped, "siteFlags": flags,
-                     "stats": cs, "sessions": cur}, compact=True)
+    # "Last changed" means a change the app shows (sessions added/removed/retimed/moved or a
+    # milestone), not untracked churn such as popularity flags or firstSeen stamps.
+    changed_at = (prev_doc or {}).get("changedAt") or generated
+    if (not prev_doc) or added or removed or changed or ms:
+        changed_at = iso(now)
+    if (not prev_doc) or prev != cur or prev_doc.get("dropped") != dropped or prev_doc.get("siteFlags") != flags \
+            or prev_doc.get("changedAt") != changed_at:
+        dump(spath, {"generatedAt": iso(now), "changedAt": changed_at, "source": src, "dropped": dropped,
+                     "siteFlags": flags, "stats": cs, "sessions": cur}, compact=True)
         generated = iso(now)
     # meta.json isn't committed, so derive "last change" from committed data, not from now.
-    meta["lastChanged"] = generated
+    meta["lastChanged"] = changed_at
     batch = None
     if added or removed or changed or ms:
         batch = {"at": iso(now), "milestones": ms, "added": added, "removed": removed, "changed": changed}
@@ -552,7 +576,7 @@ def main():
     ap.add_argument("--event-window", help="FIRST:LAST conference days (YYYY-MM-DD:YYYY-MM-DD); "
                                            "default: from the site settings")
     ap.add_argument("--summary-out", help="write a markdown change summary here when something changed")
-    ap.add_argument("--data-dir", help="output directory (default: data/ in the repo)")
+    ap.add_argument("--data-dir", help="output directory (default: data/ignite2026/ in the repo)")
     args = ap.parse_args()
     try:
         code, changed = run(args)

@@ -29,6 +29,7 @@ jobs:
     outputs:
       changed: ${{ steps.sync.outputs.changed }}
       outcome: ${{ steps.sync.outcome }}
+      notify: ${{ steps.notify.outcome }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
 
@@ -53,11 +54,46 @@ jobs:
         timeout-minutes: 6
         run: python3 scripts/sync.py --summary-out "$RUNNER_TEMP/summary.md"
 
+      # Posts this run's summary and any summary a previous run failed to post. A failure
+      # leaves the summary in data/ignite2026/pending-summary.md (committed below) so the
+      # notification is retried next time instead of being lost.
+      - name: Post the change summary to the tracking issue
+        id: notify
+        if: steps.sync.outputs.changed == 'true' || hashFiles('data/ignite2026/pending-summary.md') != ''
+        continue-on-error: true   # never block the deploy on a GitHub API hiccup
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -e
+          pending=data/ignite2026/pending-summary.md
+          new="$RUNNER_TEMP/summary.md"
+          body="$RUNNER_TEMP/post.md"
+          : > "$body"
+          [ -s "$pending" ] && { echo "_Delayed summary from an earlier sync:_" >> "$body"; cat "$pending" >> "$body"; echo >> "$body"; }
+          [ -s "$new" ] && cat "$new" >> "$body"
+          [ -s "$body" ] || exit 0
+          post() {
+            gh label create ignite-changes --color 0f766e --description "Ignite catalog change log" 2>/dev/null || true
+            num=$(gh issue list --label ignite-changes --state open --limit 1 --json number --jq '.[0].number // empty')
+            if [ -z "$num" ]; then
+              url=$(gh issue create --label ignite-changes --title "Ignite 2026 catalog changes" \
+                --body "The scheduled sync adds a comment here whenever the Ignite session catalog changes (new, removed, retimed or moved sessions, and when dates/rooms are published). Subscribe to this issue to get notified. Starred (⭐) entries are on your watchlist (data/ignite2026/watchlist.json).")
+              num="${url##*/}"
+            fi
+            gh issue comment "$num" --body-file "$body"
+          }
+          if post; then
+            rm -f "$pending"
+          else
+            cp "$body" "$pending"
+            exit 1
+          fi
+
       - name: Commit catalog changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/sessions.json data/changes.json
+          git add -A data/ignite2026/sessions.json data/ignite2026/changes.json data/ignite2026/pending-summary.md 2>/dev/null || git add -A data/ignite2026/
           if git diff --cached --quiet; then
             echo "No catalog changes."
           else
@@ -65,21 +101,6 @@ jobs:
             git pull --rebase --autostash
             git push
           fi
-
-      - name: Post the change summary to the tracking issue
-        if: steps.sync.outputs.changed == 'true'
-        continue-on-error: true   # never block the deploy on a GitHub API hiccup
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh label create ignite-changes --color 0f766e --description "Ignite catalog change log" 2>/dev/null || true
-          num=$(gh issue list --label ignite-changes --state open --limit 1 --json number --jq '.[0].number // empty')
-          if [ -z "$num" ]; then
-            url=$(gh issue create --label ignite-changes --title "Ignite 2026 catalog changes" \
-              --body "The scheduled sync adds a comment here whenever the Ignite session catalog changes (new, removed, retimed or moved sessions, and when dates/rooms are published). Subscribe to this issue to get notified. Starred (⭐) entries are on your watchlist (data/watchlist.json).")
-            num="${url##*/}"
-          fi
-          gh issue comment "$num" --body-file "$RUNNER_TEMP/summary.md"
 
       - name: Stamp the app version for offline caching
         run: |
@@ -108,11 +129,15 @@ jobs:
 
   report:
     needs: [sync, deploy]
-    if: always() && needs.sync.outputs.outcome == 'failure'
+    if: always() && (needs.sync.outputs.outcome == 'failure' || needs.sync.outputs.notify == 'failure')
     runs-on: ubuntu-latest
     permissions: {}
     steps:
-      - name: Sync failed
+      - name: Sync or notification failed
         run: |
-          echo "::error::The catalog sync failed; the site is serving the last good data. See the 'Sync the catalog' step log."
+          if [ "${{ needs.sync.outputs.outcome }}" = "failure" ]; then
+            echo "::error::The catalog sync failed; the site is serving the last good data. See the 'Sync the catalog' step log."
+          else
+            echo "::error::The catalog changed but the issue comment could not be posted; it is kept in data/ignite2026/pending-summary.md and will be retried next run."
+          fi
           exit 1
