@@ -17,6 +17,7 @@ copy of the catalog; keep the two in step (tests/test_sync.py cross-checks them)
 import argparse
 import datetime as dt
 import hashlib
+import http.client
 import json
 import os
 import re
@@ -27,10 +28,12 @@ import urllib.request
 
 API = "https://api-v2.ignite.microsoft.com/api"
 CDN = "https://eventtools.event.microsoft.com/ignite2026-prod/fallback"
+# The CDN copy (what the official site and this app's live check read) first, so the
+# snapshot and the browser compare like with like; the API is the fallback.
 SOURCES = {
-    "sessions": [API + "/session/all/en-US", CDN + "/session-all-en-us.json"],
-    "speakers": [API + "/speaker/all/en-US", CDN + "/speaker-all-en-us.json"],
-    "settings": [API + "/settings", CDN + "/settings.json"],
+    "sessions": [CDN + "/session-all-en-us.json", API + "/session/all/en-US"],
+    "speakers": [CDN + "/speaker-all-en-us.json", API + "/speaker/all/en-US"],
+    "settings": [CDN + "/settings.json", API + "/settings"],
 }
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(ROOT, "data")
@@ -44,6 +47,9 @@ TRACKED = ["title", "code", "type", "start", "end", "dur", "room", "speakers",
 # The catalog has spelled these differently across years ("In person" vs "In-person").
 DELIVERY_NAMES = {"inperson": "In-person", "online": "Online", "ondemand": "On-demand"}
 PLACEHOLDER_ROOM = re.compile(r"^\s*(ztest\S*|tbd|tba|)\s*$", re.I)
+# Whitespace trimmed from text fields; must match TRIM in assets/js/live.js.
+TRIM = re.compile("^[ \t\n\r\x0b\x0c\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]+|"
+                  "[ \t\n\r\x0b\x0c\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]+$")
 REPEAT_SUFFIX = re.compile(r"-R\d+$", re.I)
 # Site settings that reveal the schedule going live (see README "How publication is detected").
 FLAGS = {
@@ -80,11 +86,12 @@ def fetch_json(url, attempts=3):
                 "User-Agent": "Mozilla/5.0 (ignite-planner sync; personal use)",
                 "Accept": "application/json",
             })
-            with urllib.request.urlopen(req, timeout=60) as r:
+            with urllib.request.urlopen(req, timeout=30) as r:
                 return json.loads(r.read().decode("utf-8"))
-        except (urllib.error.URLError, OSError, ValueError) as e:
+        except (urllib.error.URLError, OSError, ValueError, http.client.HTTPException) as e:
             last = e
-            time.sleep(2 ** i)
+            if i < attempts - 1:
+                time.sleep(2 ** i)
     raise RuntimeError("fetch failed for %s: %s" % (url, last))
 
 
@@ -110,9 +117,15 @@ def vals(lst):
 
 
 def one(v):
+    if isinstance(v, list):
+        v = v[0] if v else ""
     if isinstance(v, dict):
-        return v.get("displayValue") or ""
-    return v or ""
+        v = v.get("displayValue") or ""
+    return v if isinstance(v, str) else ""
+
+
+def text(v):
+    return TRIM.sub("", v) if isinstance(v, str) else ""
 
 
 def parse_iso(s):
@@ -145,8 +158,9 @@ def slot_minutes(slot):
 
 
 def level_num(levels):
+    # "(200) Intermediate" in 2026, "Intermediate (200)" in Ignite 2025's published catalog.
     for v in levels:
-        m = re.match(r"\((\d+)\)", v)
+        m = re.search(r"\((\d{3})\)", v)
         if m:
             return int(m.group(1))
     return None
@@ -170,7 +184,7 @@ def normalize(raw_sessions, raw_speakers, window=DEFAULT_WINDOW, by_name=None):
     out, dropped = [], []
     draft_times = 0
     for s in raw_sessions:
-        title = (s.get("title") or "").strip()
+        title = text(s.get("title"))
         if not s.get("sessionId") or is_test(s, title):
             dropped.append(s.get("sessionCode") or s.get("sessionId"))
             continue
@@ -179,7 +193,7 @@ def normalize(raw_sessions, raw_speakers, window=DEFAULT_WINDOW, by_name=None):
         if start and not (lo <= start < hi):
             draft_times += 1  # placeholder/test schedule: don't present it as real
             start = end = None
-        slot = (s.get("TimeSlot") or s.get("timeSlot") or "").strip()
+        slot = text(s.get("TimeSlot") or s.get("timeSlot"))
         sm = slot_minutes(slot)
         dur = s.get("durationInMinutes")
         if not isinstance(dur, int) or dur <= 0:
@@ -194,11 +208,11 @@ def normalize(raw_sessions, raw_speakers, window=DEFAULT_WINDOW, by_name=None):
         known = {}
         for sid in s.get("speakerIds") or []:
             p = spk.get(sid)
-            if p and p.get("displayName"):
-                known[p["displayName"].strip()] = [p["displayName"].strip(), p.get("company") or "", p.get("jobTitle") or ""]
-        names = [n.strip() for n in (s.get("speakerNames") or "").split(",") if n.strip()]
+            if p and text(p.get("displayName")):
+                known[text(p["displayName"])] = [text(p["displayName"]), text(p.get("company")), text(p.get("jobTitle"))]
+        names = [text(n) for n in text(s.get("speakerNames")).split(",") if text(n)]
         speakers = [known.get(n) or (by_name or {}).get(n) or [n, "", ""] for n in names] or list(known.values())
-        room = one(s.get("location")).strip()
+        room = text(one(s.get("location")))
         viewing = [v.lower() for v in vals(s.get("viewingOptions"))]
         recorded = None
         if any("not" in v and "record" in v for v in viewing):
@@ -208,9 +222,9 @@ def normalize(raw_sessions, raw_speakers, window=DEFAULT_WINDOW, by_name=None):
         out.append({
             "id": s["sessionId"],
             "inst": s.get("sessionInstanceId") or s["sessionId"],
-            "code": (s.get("sessionCode") or "").strip(),
+            "code": text(s.get("sessionCode")),
             "title": title,
-            "desc": (s.get("description") or "").strip(),
+            "desc": text(s.get("description")),
             "type": one(s.get("sessionType")),
             "level": level_num(vals(s.get("sessionLevel"))),
             "topics": vals(s.get("topic")),
@@ -275,7 +289,7 @@ def assign_groups(recs):
 def comparable(rec, field):
     v = rec.get(field)
     if field == "speakers":
-        return [p[0] for p in v or []]
+        return sorted(p[0] for p in v or [])  # reordering isn't a change
     if field == "desc":
         return hashlib.sha1((v or "").encode("utf-8")).hexdigest()[:10]
     return v
@@ -297,24 +311,34 @@ def diff(prev, cur):
     def brief(r):
         return {"id": r["id"], "inst": r["inst"], "code": r["code"], "title": r["title"]}
 
+    def compare(o, r):
+        f = {}
+        for field in TRACKED:
+            a, b = comparable(o, field), comparable(r, field)
+            if a != b:
+                f[field] = True if field == "desc" else [a, b]
+        if f:
+            changed.append(dict(brief(r), f=f))
+
     for sid, recs in cg.items():
         olds = pg.get(sid)
         if not olds:
             added.extend(brief(r) for r in recs)
             continue
-        for i, r in enumerate(recs):
-            if i >= len(olds):
-                added.append(dict(brief(r), repeat=True))
-                continue
-            f = {}
-            for field in TRACKED:
-                a, b = comparable(olds[i], field), comparable(r, field)
-                if a != b:
-                    f[field] = True if field == "desc" else [a, b]
-            if f:
-                changed.append(dict(brief(r), f=f))
-        for o in olds[len(recs):]:
-            removed.append(dict(brief(o), repeat=True))
+        # Runs keep their instance id; pair leftovers by time only if ids were regenerated.
+        old_by_inst = {o["inst"]: o for o in olds}
+        left_new = []
+        for r in recs:
+            o = old_by_inst.pop(r["inst"], None)
+            if o is None:
+                left_new.append(r)
+            else:
+                compare(o, r)
+        left_old = [o for o in olds if o["inst"] in old_by_inst]
+        for o, r in zip(left_old, left_new):
+            compare(o, r)
+        added.extend(dict(brief(r), repeat=len(recs) > 1) for r in left_new[len(left_old):])
+        removed.extend(dict(brief(o), repeat=len(olds) > 1) for o in left_old[len(left_new):])
     for sid, recs in pg.items():
         if sid not in cg:
             removed.extend(brief(r) for r in recs)
@@ -455,7 +479,9 @@ def run(args):
                 flags = meta.get("siteFlags")
         if not isinstance(raw, list):
             raise RuntimeError("unexpected catalog payload (not a list)")
-        cur, dropped, draft = normalize(raw, raw_spk, event_window(args, flags or {}))
+        # If the speaker feed is down, keep companies/titles from the last snapshot.
+        by_name = {p[0]: p for r in prev for p in r.get("speakers") or [] if p[1] or p[2]}
+        cur, dropped, draft = normalize(raw, raw_spk, event_window(args, flags or {}), by_name)
         # Guard: an outage or partial index must not look like hundreds of cancellations.
         if len(cur) < 50 or (prev and len(cur) < 0.6 * len(prev)):
             raise RuntimeError("catalog returned %d sessions (previously %d); keeping last good data"
@@ -484,10 +510,13 @@ def run(args):
     added, removed, changed = diff(prev, cur) if prev else ([], [], [])
     ps, cs = stats(prev), stats(cur, draft)
     ms = milestones(ps, cs, prev_flags, flags) if prev else []
+    generated = (prev_doc or {}).get("generatedAt")
     if (not prev_doc) or prev != cur or prev_doc.get("dropped") != dropped or prev_doc.get("siteFlags") != flags:
         dump(spath, {"generatedAt": iso(now), "source": src, "dropped": dropped, "siteFlags": flags,
                      "stats": cs, "sessions": cur}, compact=True)
-        meta["lastChanged"] = iso(now)
+        generated = iso(now)
+    # meta.json isn't committed, so derive "last change" from committed data, not from now.
+    meta["lastChanged"] = generated
     batch = None
     if added or removed or changed or ms:
         batch = {"at": iso(now), "milestones": ms, "added": added, "removed": removed, "changed": changed}
@@ -499,7 +528,7 @@ def run(args):
     meta.update({"ok": True, "error": None, "stats": cs, "source": src})
     if flags:
         meta["siteFlags"] = flags
-    meta.setdefault("lastChanged", iso(now))
+    meta["lastLogged"] = changes["batches"][0]["at"] if changes["batches"] else None
     dump(mpath, meta)
 
     watch = set(load(os.path.join(data, "watchlist.json"), {}).get("codes", []))
@@ -522,7 +551,18 @@ def main():
     ap.add_argument("--summary-out", help="write a markdown change summary here when something changed")
     ap.add_argument("--data-dir", help="output directory (default: data/ in the repo)")
     args = ap.parse_args()
-    code, changed = run(args)
+    try:
+        code, changed = run(args)
+    except Exception as e:  # never leave CI green-but-silent on an unexpected payload
+        code, changed = 3, False
+        data = os.path.abspath(args.data_dir) if args.data_dir else DATA
+        mpath = os.path.join(data, "meta.json")
+        meta = load(mpath, {})
+        meta.update({"ok": False, "error": "%s: %s" % (type(e).__name__, e), "lastChecked": iso(utcnow())})
+        os.makedirs(data, exist_ok=True)
+        dump(mpath, meta)
+        import traceback
+        traceback.print_exc()
     gh_out = os.environ.get("GITHUB_OUTPUT")
     if gh_out:
         with open(gh_out, "a") as f:

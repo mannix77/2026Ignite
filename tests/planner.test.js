@@ -2,8 +2,8 @@
 //   /System/Library/Frameworks/JavaScriptCore.framework/Versions/Current/Helpers/jsc -m tests/planner.test.js
 // or with Node:  node tests/planner.test.js
 
-import { transition, canBoth, optimize, optimizeDay, decisionGroups, fillers, nowNext, weigh, whatIf, chainValue, DEFAULT_PLANNER } from '../assets/js/planner.js';
-import { parseLocation, walkMinutes, DEFAULT_WALK } from '../assets/js/venue.js';
+import { transition, canBoth, optimize, optimizeDay, decisionGroups, isResolved, fillers, nowNext, weigh, whatIf, chainValue, DEFAULT_PLANNER } from '../assets/js/planner.js';
+import { parseLocation, walkMinutes, sameRoom, ANYWHERE, DEFAULT_WALK } from '../assets/js/venue.js';
 import { localParts, fromISO, parseSlot, fmtTime, fmtDay, addDays } from '../assets/js/time.js';
 
 const log = typeof print === 'function' && typeof window === 'undefined' ? print : console.log;
@@ -214,6 +214,171 @@ test('whatIf releases locks on the competing options only', () => {
   const L = item(H(9.5), H(10.5), S1, { priority: 1, locked: true }); // unrelated lock that clashes with B
   eq(whatIf([A, B], B.key, new Set([A.key])).feasible, true);
   eq(whatIf([A, B, L], B.key, new Set([A.key])).feasible, false);
+});
+
+// --- regressions from the adversarial review
+
+// Brute force: best set of items with at most one run per id, each day a feasible chain.
+function bruteForce(items, ctx = DEFAULT_PLANNER, mustKey = null) {
+  let best = -Infinity;
+  const n = items.length;
+  for (let m = 0; m < 1 << n; m++) {
+    const sel = items.filter((_, i) => (m >> i) & 1);
+    if (mustKey && !sel.some(x => x.key === mustKey)) continue;
+    const ids = sel.map(x => x.id);
+    if (new Set(ids).size !== ids.length) continue;
+    let v = 0, ok = true;
+    for (const day of new Set(sel.map(x => x.day))) {
+      const chain = sel.filter(x => x.day === day).sort((a, b) => a.startMin - b.startMin);
+      for (let i = 1; i < chain.length && ok; i++) {
+        if (chain[i].startMin === chain[i - 1].startMin || transition(chain[i - 1], chain[i], ctx).status === 'conflict') ok = false;
+      }
+      if (!ok) break;
+      v += chainValue(chain, ctx);
+    }
+    if (ok && v > best) best = v;
+  }
+  return Math.max(0, best);
+}
+const planValue = (res, ctx = DEFAULT_PLANNER) => Object.values(res.plan).reduce((a, chain) => a + chainValue(chain, ctx), 0);
+
+test('repeat runs: no group is dropped when one of its runs fits (review p1)', () => {
+  const D1 = '2026-11-18', D2 = '2026-11-19';
+  const items = [
+    item(H(9), H(10), W2, { id: 'A', code: 'A', key: 'a1', day: D1 }),
+    item(H(9), H(10), W3, { id: 'Z', code: 'Z', key: 'z1', day: D1, priority: 1, recorded: false }),
+    item(H(13), H(14), W2, { id: 'B', code: 'B', key: 'b1', day: D1 }),
+    item(H(9), H(10), W2, { id: 'A', code: 'A-R1', key: 'a2', day: D2 }),
+    item(H(10.25), H(11), W2, { id: 'B', code: 'B-R1', key: 'b2', day: D2 }),
+    item(H(9.5), H(10.75), W3, { id: 'L', code: 'LAB', key: 'w2', day: D2, type: 'Lab', recorded: false }),
+  ];
+  const res = optimize(items);
+  eq(planValue(res), bruteForce(items));
+  ok(Object.values(res.plan).flat().some(x => x.id === 'A'), 'A attended');
+});
+
+test('optimizer matches brute force on 400 random small instances', () => {
+  let seed = 12345;
+  const rnd = k => { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed % k; };
+  const locs = [W2, W3, S1, N, parseLocation('Marriott Marquis, Yerba Buena Ballroom, BO1')];
+  for (let t = 0; t < 400; t++) {
+    const n0 = 3 + rnd(7);
+    const items = [];
+    for (let i = 0; i < n0; i++) {
+      const start = H(9) + rnd(16) * 15;
+      const dur = [15, 25, 30, 45, 75][rnd(5)];
+      items.push(item(start, start + dur, locs[rnd(locs.length)], {
+        id: `g${rnd(Math.max(2, n0 - 2))}`, day: rnd(2) ? '2026-11-18' : '2026-11-19',
+        priority: 1 + rnd(3), recorded: [true, false, null][rnd(3)], type: rnd(4) ? 'Breakout' : 'Lab',
+      }));
+    }
+    const res = optimize(items);
+    const ids = Object.values(res.plan).flat().map(x => x.id);
+    if (new Set(ids).size !== ids.length) throw new Error(`instance ${t}: a session attended twice`);
+    const got = planValue(res), want = bruteForce(items);
+    if (Math.abs(got - want) > 1e-9) throw new Error(`instance ${t}: optimizer ${got} vs brute force ${want}`);
+  }
+});
+
+test('large repeat sets (heuristic branch) stay valid and near-optimal', () => {
+  let seed = 777;
+  const rnd = k => { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed % k; };
+  const locs = [W2, W3, S1, N];
+  let worst = 1;
+  for (let t = 0; t < 6; t++) {
+    const items = [];
+    for (let g = 0; g < 9; g++) {
+      for (let r = 0; r < 2; r++) {
+        const start = H(9) + rnd(12) * 15;
+        items.push(item(start, start + [30, 45, 75][rnd(3)], locs[rnd(4)], {
+          id: `G${g}`, day: rnd(2) ? '2026-11-18' : '2026-11-19', priority: 1 + rnd(3), recorded: [true, false][rnd(2)],
+        }));
+      }
+    }
+    const res = optimize(items);
+    const ids = Object.values(res.plan).flat().map(x => x.id);
+    eq(new Set(ids).size, ids.length, 'no session twice');
+    worst = Math.min(worst, planValue(res) / bruteForce(items));
+  }
+  ok(worst >= 0.95, `heuristic reached ${Math.round(worst * 100)}% of optimum`);
+});
+
+test('whatIf counts a same-day repeat only once (review p4)', () => {
+  const lab1 = item(H(9), H(10.25), W3, { id: 'LAB', code: 'LAB512', type: 'Lab', recorded: false });
+  const brk1 = item(H(10), H(10.75), W2, { id: 'B1', priority: 3 });
+  const key = item(H(11.25), H(12.25), parseLocation('Chase Center'), { id: 'K', priority: 3, type: 'Keynote' });
+  const brk2 = item(H(12.5), H(13.5), W2, { id: 'B2', priority: 3 });
+  const lab2 = item(H(13.25), H(14.5), W3, { id: 'LAB', code: 'LAB512-R1', type: 'Lab', recorded: false });
+  const day = [lab1, brk1, key, brk2, lab2];
+  const r = whatIf(day, key.key, new Set(day.map(x => x.key)));
+  eq(r.chosen.filter(x => x.id === 'LAB').length, 1);
+  eq(r.value, bruteForce(day, DEFAULT_PLANNER, key.key));
+  ok(r.value < bruteForce(day), 'going to the keynote is worse than the best plan');
+});
+
+test('staying in the same room needs no buffer (review p3)', () => {
+  const a = item(H(10), H(10.5), W2), b = item(H(10.5), H(11), W2);
+  const t = transition(a, b);
+  eq([t.status, t.miss, t.stay], ['ok', 0, true]);
+  const wide = { ...DEFAULT_PLANNER, buffer: 10 };
+  eq(transition(a, b, wide).status, 'ok');
+  eq(nowNext([a, b], H(10.4)).leaveBy, H(10.5));
+});
+
+test('placeholder rooms are never "the same room" (review p6)', () => {
+  const z = parseLocation('zTest78');
+  eq(sameRoom(z, z), false);
+  eq(walkMinutes(z, z), DEFAULT_WALK.unknown);
+  const a = item(H(10), H(10.75), z), b = item(H(10.75), H(11.5), z);
+  eq(transition(a, b).status, 'conflict');
+  const odd = parseLocation('Gateway Pavilion, Level 2, Theater 1'); // real room, unknown building
+  eq([odd.known, sameRoom(odd, odd), walkMinutes(odd, odd)], [false, true, 0]);
+});
+
+test('decisionGroups finds clashes caused by long walks (review p2 case 2)', () => {
+  const C = parseLocation('Chase Center');
+  const ctx = { ...DEFAULT_PLANNER, walk: { ...DEFAULT_WALK, pairs: { ...DEFAULT_WALK.pairs, 'C|W': 70 } } };
+  const k = item(H(9), H(10.5), C, { type: 'Keynote', priority: 3 });
+  const b = item(H(11.5) + 1, H(12.25), W2);
+  eq(canBoth(k, b, ctx), false);
+  eq(decisionGroups([k, b], ctx).length, 1);
+});
+
+test('a lock settles a clash chain only if nothing else still conflicts (review p2 case 3)', () => {
+  const A = item(H(9), H(10), W2, { locked: true, priority: 3 });
+  const B = item(H(9.5), H(10.5), W2);
+  const C = item(H(10.25), H(11), W2);
+  const D = item(H(10.75), H(11.5), S1);
+  const g = decisionGroups([A, B, C, D]);
+  eq(g.length, 1);
+  eq(g[0].resolved, false, 'C vs D still open');
+  eq(isResolved([A, B]), true);
+});
+
+test('explainDrop distinguishes a clashing repeat from a free one (review p8)', () => {
+  const r1 = item(H(9), H(10), W2, { id: 'R', code: 'BRK9' });
+  const r2 = item(H(9), H(10), W2, { id: 'R', code: 'BRK9-R1', day: '2026-11-19' });
+  const res = optimize([r1, r2]);
+  const d = res.dropped[0];
+  eq([d.reason.kind, d.reason.clash], ['repeat', false]);
+  ok(!/clash/i.test(d.reason.text), d.reason.text);
+});
+
+test('nowNext uses the start-of-day origin and keynote entry time', () => {
+  const C = parseLocation('Chase Center');
+  const key = item(H(9), H(11), C, { type: 'Keynote' });
+  const r = nowNext([key], H(8), DEFAULT_PLANNER, parseLocation('Moscone West'));
+  eq(r.walk, DEFAULT_WALK.pairs['C|W']);
+  eq(r.leaveBy, H(9) - DEFAULT_WALK.pairs['C|W'] - DEFAULT_PLANNER.buffer - DEFAULT_PLANNER.keynoteExtra);
+});
+
+test('pseudo items (lunch) use their own weight and cost no walking', () => {
+  const lunch = { key: 'lunch1', id: 'lunch:d', code: 'Lunch', title: 'Lunch', pseudo: 'lunch', weight: 60, day: '2026-11-18', startMin: H(12), endMin: H(12.5), loc: ANYWHERE, priority: 0 };
+  eq(weigh(lunch).score, 60);
+  const a = item(H(11.25), H(12), S1), b = item(H(12.5), H(13.25), W2);
+  eq(transition(a, lunch).status, 'ok');
+  eq(transition(lunch, b).status, 'ok');
+  eq(decisionGroups([lunch, item(H(12), H(12.75), W2)]).length, 0, 'pseudo items are not decisions');
 });
 
 log(`${pass} passed, ${fail} failed`);

@@ -2,9 +2,9 @@ name: Sync Ignite catalog & deploy
 
 on:
   schedule:
-    - cron: "17 */2 * * *"        # every 2 hours, year-round
-    - cron: "*/30 * 20-31 10 *"   # every 30 min from Oct 20 (the schedule is expected ~Oct 26-30)
-    - cron: "*/30 * 1-21 11 *"    # every 30 min through the event (Nov 17-20)
+    - cron: "17 */2 * * *"          # every 2 hours, year-round
+    - cron: "13,43 * 20-31 10 *"    # twice an hour from Oct 20 (the schedule is expected ~Oct 26-30)
+    - cron: "13,43 * 1-21 11 *"     # twice an hour through the event (Nov 17-20)
   workflow_dispatch:
   push:
     branches: [main]
@@ -23,9 +23,10 @@ concurrency:
 jobs:
   sync:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     outputs:
       changed: ${{ steps.sync.outputs.changed }}
+      outcome: ${{ steps.sync.outcome }}
     steps:
       - uses: actions/checkout@v4
 
@@ -44,8 +45,10 @@ jobs:
 
       - name: Sync the catalog
         id: sync
-        # A failed fetch keeps the last good data; the app shows the error from data/meta.json.
+        # A failed fetch keeps the last good data; the app shows the error from data/meta.json,
+        # and the "report" job below fails the run so GitHub notifies you.
         continue-on-error: true
+        timeout-minutes: 6
         run: python3 scripts/sync.py --summary-out "$RUNNER_TEMP/summary.md"
 
       - name: Commit catalog changes
@@ -63,6 +66,7 @@ jobs:
 
       - name: Post the change summary to the tracking issue
         if: steps.sync.outputs.changed == 'true'
+        continue-on-error: true   # never block the deploy on a GitHub API hiccup
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -74,6 +78,12 @@ jobs:
             num="${url##*/}"
           fi
           gh issue comment "$num" --body-file "$RUNNER_TEMP/summary.md"
+
+      - name: Stamp the app version for offline caching
+        run: |
+          v=$(cat index.html manifest.webmanifest assets/css/*.css assets/js/*.js | sha256sum | cut -c1-12)
+          sed -i "s/const VERSION = 'ignite26-dev';/const VERSION = 'ignite26-$v';/" sw.js
+          grep -q "ignite26-$v" sw.js
 
       - uses: actions/configure-pages@v5
 
@@ -90,3 +100,13 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  report:
+    needs: [sync, deploy]
+    if: always() && needs.sync.outputs.outcome == 'failure'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sync failed
+        run: |
+          echo "::error::The catalog sync failed; the site is serving the last good data. See the 'Sync the catalog' step log."
+          exit 1

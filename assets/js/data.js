@@ -12,17 +12,18 @@ export const EVENT = {
   rsvp: { 'Lab': '2026-10-26T08:00:00+08:00', 'Lightning Talk': '2026-10-26T08:00:00+08:00', 'Table Talk': '2026-10-26T08:00:00+08:00', 'Invite Only': '2026-10-26T08:00:00+08:00' },
 };
 
-// ?data=<dir> loads a different snapshot directory (used for testing with past events).
-const DATA_DIR = (() => {
+// ?data=<dir> loads a different snapshot directory (testing with past events). Only plain
+// relative paths on this site are accepted.
+export const DATA_DIR = (() => {
   const d = new URLSearchParams(location.search).get('data');
-  return d && /^[\w./-]+$/.test(d) && !d.includes('..') ? d.replace(/\/$/, '') : 'data';
+  return d && /^[\w-]+(\/[\w.-]+)*\/?$/.test(d) && !d.split('/').includes('..') ? d.replace(/\/$/, '') : 'data';
 })();
 
 export const CUSTOM_DATA = DATA_DIR !== 'data';
 
 async function getJSON(path) {
   path = path.replace(/^data\//, `${DATA_DIR}/`);
-  const res = await fetch(`${path}?t=${Math.floor(Date.now() / 60000)}`, { cache: 'no-cache' });
+  const res = await fetch(path, { cache: 'no-cache' }); // revalidates with ETag: cheap 304s
   if (!res.ok) throw new Error(`${path}: HTTP ${res.status}`);
   return res.json();
 }
@@ -71,6 +72,10 @@ export function buildModel(doc, settings, rsvp = EVENT.rsvp) {
   const facets = { topics: new Map(), types: new Map(), levels: new Map(), audience: new Map(), tags: new Map() };
   const bump = (m, k) => k != null && k !== '' && m.set(k, (m.get(k) || 0) + 1);
   let official = 0;
+  // Preview only runs while nothing official exists, so simulated times can never mix
+  // with a real (even partially published) schedule.
+  const anyOfficial = (doc.sessions || []).some(r => r.start && r.dur !== 0);
+  const preview = settings.preview && !anyOfficial;
 
   for (const rec of doc.sessions || []) {
     const s = { ...rec, key: rec.inst };
@@ -86,7 +91,7 @@ export function buildModel(doc, settings, rsvp = EVENT.rsvp) {
       s.endMin = en ? en.min + (en.day !== st.day ? 1440 : 0) : st.min + (rec.dur || 45);
       s.timeSource = 'official';
       official++;
-    } else if (settings.preview && s.inPerson && rec.dur !== 0) {
+    } else if (preview && s.inPerson && rec.dur !== 0) {
       const p = previewTiming(rec);
       Object.assign(s, { day: p.day, startMin: p.startMin, endMin: p.endMin, timeSource: 'preview' });
       if (rec.roomTbd) room = p.room;
@@ -117,32 +122,37 @@ export function buildModel(doc, settings, rsvp = EVENT.rsvp) {
     sessions, byId, byKey, byCode, byGroup, facets, days, locations,
     officialCount: official,
     hasOfficial: official > 0,
-    mode: official > 0 ? 'official' : settings.preview ? 'preview' : 'unscheduled',
+    mode: official > 0 ? 'official' : preview ? 'preview' : 'unscheduled',
   };
 }
 
-// The fields we watch on sessions you've picked, so we can tell you what moved.
+// The fields we watch on every run of the sessions you've picked, keyed by instance.
 export function snapshot(s) {
-  return { title: s.title, code: s.code, start: s.start, end: s.end, room: s.roomTbd ? null : s.room };
+  return { inst: s.key, g: s.group, code: s.code, title: s.title, start: s.start, end: s.end, room: s.roomTbd ? null : s.room };
 }
 
-export function diffKnown(model, picks, known) {
+// groups: repeat-group codes you've picked. Returns alerts for runs that moved, were
+// retitled or disappeared since you last acknowledged, plus the new snapshot.
+export function diffKnown(model, groups, known) {
   const alerts = [];
   const next = {};
-  for (const [id, pick] of Object.entries(picks)) {
-    if (!(pick.p > 0)) continue;
-    const inst = model.byId.get(id);
-    if (!inst) {
-      if (known[id]) alerts.push({ id, kind: 'removed', title: known[id].title, code: known[id].code });
-      continue;
-    }
-    const cur = snapshot(inst[0]);
-    next[id] = cur;
-    const old = known[id];
+  for (const g of groups) for (const s of model.byGroup.get(g) || []) next[s.key] = snapshot(s);
+  for (const [inst, cur] of Object.entries(next)) {
+    const old = known[inst];
     if (!old) continue;
     const fields = {};
     for (const k of ['start', 'end', 'room', 'title', 'code']) if ((old[k] ?? null) !== (cur[k] ?? null)) fields[k] = [old[k] ?? null, cur[k] ?? null];
-    if (Object.keys(fields).length) alerts.push({ id, kind: 'changed', title: cur.title, code: cur.code, fields });
+    if (Object.keys(fields).length) alerts.push({ kind: 'changed', inst, g: cur.g, code: cur.code, title: cur.title, fields });
+  }
+  const knownGroups = new Set(Object.values(known).map(k => k.g));
+  for (const [inst, cur] of Object.entries(next)) {
+    // A new run of a session you'd already picked: another chance to fit it in.
+    if (!known[inst] && knownGroups.has(cur.g)) alerts.push({ kind: 'run-added', inst, g: cur.g, code: cur.code, title: cur.title });
+  }
+  for (const [inst, old] of Object.entries(known)) {
+    if (next[inst] || !groups.has(old.g)) continue;
+    const left = model.byGroup.get(old.g) || [];
+    alerts.push({ kind: left.length ? 'run-removed' : 'removed', inst, g: old.g, code: old.code, title: old.title, remaining: left.map(r => r.code) });
   }
   return { alerts, next };
 }

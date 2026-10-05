@@ -18,6 +18,8 @@ export const BUILDINGS = [
 
 export const BUILDING = Object.fromEntries(BUILDINGS.map(b => [b.id, b]));
 BUILDING.U = { id: 'U', name: 'Location TBA', short: 'TBA' };
+BUILDING['*'] = { id: '*', name: 'Wherever you are', short: 'Any' }; // lunch and similar breaks
+export const ANYWHERE = { label: '', building: '*', floor: null, known: true };
 
 // Door-to-door minutes at a changeover, including the badge/ID/bag check Ignite 2025 ran at
 // every building entrance and the crowds on 4th St / Howard St (typical, not worst case:
@@ -41,7 +43,7 @@ export const PAIR_KEYS = Object.keys(DEFAULT_WALK.pairs);
 export function parseLocation(label, overrides = {}) {
   const raw = (label || '').trim();
   if (!raw || /^ztest/i.test(raw) || /^(tbd|tba)$/i.test(raw)) {
-    return { label: raw, building: 'U', floor: null, known: false };
+    return { label: raw, building: 'U', floor: null, known: false, placeholder: true };
   }
   let building = overrides[raw] || null;
   if (!building) {
@@ -60,10 +62,17 @@ export function parseLocation(label, overrides = {}) {
   return { label: raw, building: building || 'U', floor, known: !!building && building !== 'U' };
 }
 
+// Same physical room: identical real room names. Placeholders like "zTest78" are shared by
+// many unrelated sessions, so they never count. (A real room in a building we don't
+// recognize still counts.)
+export function sameRoom(a, b) {
+  return !!(a && b && !a.placeholder && !b.placeholder && a.building !== '*' && a.label && a.label === b.label);
+}
+
 export function walkMinutes(a, b, walk = DEFAULT_WALK) {
   if (!a || !b) return walk.unknown;
-  if (a.building === 'O' || b.building === 'O') return 0;
-  if (a.label && a.label === b.label) return walk.sameRoom;
+  if (a.building === 'O' || b.building === 'O' || a.building === '*' || b.building === '*') return 0;
+  if (sameRoom(a, b)) return walk.sameRoom;
   if (!a.known || !b.known) return walk.unknown;
   if (a.building === b.building) {
     if (a.building === 'H') return walk.pairs['H|H'] ?? walk.unknown;

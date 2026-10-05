@@ -139,6 +139,71 @@ class ParityTests(unittest.TestCase):
     def test_parity_2025(self):
         self.check("raw_2025_sample.json", None, W25)
 
+    def test_parity_edge_cases(self):
+        self.check("raw_edge_cases.json", None, W26)
+
+
+class EdgeCaseTests(unittest.TestCase):
+    def setUp(self):
+        self.recs, self.dropped, self.draft = sync.normalize(load("raw_edge_cases.json"), [], W26)
+        self.c = by_code(self.recs)
+
+    def test_timestamp_shapes(self):
+        self.assertEqual(self.c["BRK801"]["start"], "2026-11-18T17:00:00Z")   # naive = UTC
+        self.assertEqual(self.c["BRK802"]["start"], "2026-11-18T17:00:00Z")   # -0800
+        self.assertEqual(self.c["BRK803"]["start"], "2026-11-19T10:15:00Z")   # millis + offset
+        self.assertIsNone(self.c["BRK804"]["start"])                         # placeholder day
+        self.assertIsNone(self.c["BRK805"]["start"])
+        self.assertEqual(self.draft, 1)
+
+    def test_text_cleanup_and_shapes(self):
+        self.assertEqual(self.c["BRK801"]["title"], "Naive time")
+        self.assertEqual([p[0] for p in self.c["BRK801"]["speakers"]], ["Ada Lovelace", "Grace Hopper"])
+        self.assertEqual(self.c["BRK802"]["room"], "Moscone South, The Hub, Theater A")   # list-shaped location
+        self.assertEqual(self.c["BRK803"]["room"], "Marriott Marquis, Yerba Buena Ballroom, BO2")
+        self.assertEqual(self.c["BRK805"]["speakers"], [])
+        self.assertIsNone(self.c["BRK805"]["room"])
+
+    def test_levels_both_formats(self):
+        self.assertEqual(self.c["BRK801"]["level"], 200)
+        self.assertEqual(self.c["BRK802"]["level"], 300)
+
+    def test_test_time_id_dropped_and_zero_length_kept(self):
+        self.assertIn("BRK807", self.dropped)
+        self.assertEqual(self.c["LTG808"]["dur"], 0)
+        self.assertEqual(self.c["LTG808"]["delivery"], ["In-person", "Online"])
+        self.assertIs(self.c["LTG808"]["recorded"], False)
+
+    def test_shared_session_id_runs_are_one_group(self):
+        runs = [r for r in self.recs if r["id"] == "e6"]
+        self.assertEqual(len(runs), 2)
+        self.assertEqual({r["group"] for r in runs}, {"BRK806"})
+
+
+class DiffTests(unittest.TestCase):
+    def rec(self, inst, start, room, sid="S"):
+        return {"id": sid, "inst": inst, "code": "BRK1", "title": "T", "type": "Breakout", "start": start, "end": None,
+                "dur": 45, "room": room, "speakers": [], "level": 200, "delivery": [], "recorded": True, "desc": ""}
+
+    def test_new_earlier_run_is_only_an_addition(self):
+        prev = [self.rec("T1", "2026-11-18T18:00:00Z", "W3006"), self.rec("T2", "2026-11-19T22:00:00Z", "S207")]
+        cur = [self.rec("T0", "2026-11-17T17:00:00Z", "N121")] + prev
+        added, removed, changed = sync.diff(prev, cur)
+        self.assertEqual([a["inst"] for a in added], ["T0"])
+        self.assertEqual((removed, changed), ([], []))
+
+    def test_cancelled_run_is_only_a_removal(self):
+        prev = [self.rec("T1", "2026-11-18T18:00:00Z", "W3006"), self.rec("T2", "2026-11-19T22:00:00Z", "S207")]
+        added, removed, changed = sync.diff(prev, prev[1:])
+        self.assertEqual([r["inst"] for r in removed], ["T1"])
+        self.assertEqual((added, changed), ([], []))
+
+    def test_moved_run_is_a_change(self):
+        prev = [self.rec("T1", "2026-11-18T18:00:00Z", "W3006")]
+        cur = [self.rec("T1", "2026-11-18T19:00:00Z", "S207")]
+        _, _, changed = sync.diff(prev, cur)
+        self.assertEqual(set(changed[0]["f"]), {"start", "room"})
+
 
 class RunTests(unittest.TestCase):
     def setUp(self):
@@ -221,6 +286,38 @@ class RunTests(unittest.TestCase):
         meta = self.data("meta.json")
         self.assertFalse(meta["ok"])
         self.assertIn("keeping last good data", meta["error"])
+
+    def test_speaker_feed_outage_keeps_companies(self):
+        raw = load("raw_2026_sample.json")
+        spk_path = self.write("spk.json", load("speakers_2026_sample.json"))
+        args = types.SimpleNamespace(from_file=self.write("raw.json", raw), speakers_file=spk_path, settings_file=None,
+                                     event_window="%s:%s" % W26, summary_out=None, data_dir=os.path.join(self.tmp, "data"))
+        sync.run(args)
+        before = sum(1 for r in self.data("sessions.json")["sessions"] for p in r["speakers"] if p[1])
+        args.speakers_file = None  # feed down
+        sync.run(args)
+        after = sum(1 for r in self.data("sessions.json")["sessions"] for p in r["speakers"] if p[1])
+        self.assertGreater(before, 0)
+        self.assertEqual(before, after)
+
+    def test_unexpected_payload_is_recorded_not_silent(self):
+        path = self.write("raw.json", [None, 42])
+        out = os.path.join(self.tmp, "data")
+        proc = subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "sync.py"), "--from-file", path,
+                               "--data-dir", out, "--event-window", "2026-11-17:2026-11-20"],
+                              capture_output=True, text=True)
+        self.assertEqual(proc.returncode, 3)
+        meta = self.data("meta.json")
+        self.assertFalse(meta["ok"])
+        self.assertTrue(meta["error"])
+
+    def test_last_changed_comes_from_committed_data(self):
+        raw = load("raw_2026_sample.json")
+        self.run_sync(raw, W26)
+        first = self.data("sessions.json")["generatedAt"]
+        os.remove(os.path.join(self.tmp, "data", "meta.json"))  # as in CI, where meta.json isn't committed
+        self.run_sync(raw, W26)
+        self.assertEqual(self.data("meta.json")["lastChanged"], first)
 
     def test_site_flag_flip_is_a_milestone(self):
         raw = load("raw_2026_sample.json")

@@ -15,9 +15,9 @@ export function icon(name, cls = '') {
 }
 
 export function bldgChip(loc) {
-  const b = loc?.building || 'U';
+  const b = BUILDING[loc?.building] && /^[A-Z*]$/.test(loc.building) ? loc.building : 'U';
   const name = (BUILDING[b] || BUILDING.U).name;
-  return `<span class="chip bldg" style="--bc: var(--b-${b})" title="${attr(name)}">${esc(buildingLabel(loc))}</span>`;
+  return `<span class="chip bldg" style="--bc: var(--b-${b === '*' ? 'O' : b})" title="${attr(name)}">${esc(buildingLabel(loc))}</span>`;
 }
 
 export function rsvpChip(s) {
@@ -35,8 +35,10 @@ export function recChip(s) {
   return '';
 }
 
+const prioClass = p => ([0, 1, 2, 3].includes(p) ? `p-${p}` : '');
+
 export function prioPill(p) {
-  if (p == null) return '';
+  if (![0, 1, 2, 3].includes(p)) return '';
   return `<span class="pill p-${p}">${PRIORITY[p]}</span>`;
 }
 
@@ -46,10 +48,11 @@ export function whenText(s) {
   return `${fmtDay(s.day)} · ${fmtTime(s.startMin)}–${fmtTime(s.endMin)}`;
 }
 
-export function prioControl(id, p, big = false) {
+// key: any instance key of the session; ratings apply to all of its repeat runs.
+export function prioControl(key, p, big = false) {
   const opts = [[3, 'Must'], [2, 'Want'], [1, 'Maybe'], [0, 'Skip']];
   return `<div class="prio${big ? ' big' : ''}" role="group" aria-label="Priority">${opts.map(([v, label]) =>
-    `<button type="button" class="p-${v}" data-act="prio" data-id="${attr(id)}" data-p="${v}" aria-pressed="${p === v}">${label}</button>`).join('')}</div>`;
+    `<button type="button" class="p-${v}" data-act="prio" data-key="${attr(key)}" data-p="${v}" aria-pressed="${p === v}">${label}</button>`).join('')}</div>`;
 }
 
 export function speakersLine(s, max = 3) {
@@ -59,19 +62,23 @@ export function speakersLine(s, max = 3) {
   return esc(names.join(', ') + (sp.length > max ? ` +${sp.length - max}` : ''));
 }
 
-// A session card. opts: { p, isNew, extra (html), compact }
+export function cardClass(p) {
+  return ['card', 's-card', prioClass(p), p === 0 ? 'skipped' : ''].join(' ');
+}
+
+// A session card. opts: { p, isNew, reserved, extra (html), compact, noActions }
 export function sessionCard(s, opts = {}) {
   const p = opts.p ?? null;
-  const cls = ['card', 's-card', p != null ? `p-${p}` : '', p === 0 ? 'skipped' : ''].join(' ');
+  const cls = cardClass(p);
   const timeChip = s.timeSource === 'preview' ? '<span class="chip preview" title="Simulated time/room (preview mode)">Preview</span>' : '';
-  return `<article class="${cls}" data-card="${attr(s.id)}">
+  return `<article class="${cls}" data-card="${attr(s.key)}">
     <div class="top"><span class="code">${esc(s.code)}</span>·<span>${esc(s.type)}</span>${s.level ? `·<span>${esc(s.level)}</span>` : ''}${s.dur ? `·<span>${fmtDuration(s.dur)}</span>` : ''}
       ${opts.isNew ? '<span class="chip new">New</span>' : ''}${s.repeats?.length ? `<span class="chip" title="Also runs as ${attr(s.repeats.join(', '))}">Repeats</span>` : ''}</div>
     <a class="title" href="#/session/${encodeURIComponent(s.code)}" data-act="open" data-key="${attr(s.key)}">${esc(s.title)}</a>
-    <div class="meta">${timeChip}<span>${esc(whenText(s))}</span>${!s.onlineOnly ? `${s.loc.known ? bldgChip(s.loc) : ''}<span class="muted">${esc(s.roomLabel || '')}</span>` : ''}${recChip(s)}${rsvpChip(s)}</div>
+    <div class="meta">${timeChip}<span>${esc(whenText(s))}</span>${!s.onlineOnly ? `${s.loc.known ? bldgChip(s.loc) : ''}<span class="muted">${esc(s.roomLabel || '')}</span>` : ''}${recChip(s)}${opts.reserved ? '<span class="chip new" title="You reserved a seat">Reserved</span>' : rsvpChip(s)}</div>
     ${!opts.compact && s.speakers?.length ? `<div class="who">${speakersLine(s)}</div>` : ''}
     ${opts.extra || ''}
-    ${opts.noActions ? '' : `<div class="actions">${prioControl(s.id, p)}</div>`}
+    ${opts.noActions ? '' : `<div class="actions">${prioControl(s.key, p)}</div>`}
   </article>`;
 }
 
