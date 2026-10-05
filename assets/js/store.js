@@ -21,7 +21,6 @@ export const DEFAULT_SETTINGS = {
   startFrom: null,      // where each day starts (building id); null = conference default
   lunch: { on: true, from: 690, to: 810, length: 30, weight: 40 }, // protect a lunch break
   blocks: [],           // [{ id, day, start, end, label, building }] meetings, booth duty…
-  excludedPrograms: [], // programs you're not part of; sessions limited to them are hidden
   repo: 'mannix77/2026Ignite',
 };
 
@@ -245,7 +244,6 @@ function sanitizePrefs(src) {
       }));
   }
   if (typeof src.repo === 'string' && /^[\w.-]+\/[\w.-]+$/.test(src.repo)) out.repo = src.repo;
-  if (Array.isArray(src.excludedPrograms)) out.excludedPrograms = [...new Set(src.excludedPrograms.filter(p => typeof p === 'string' && p && p.length <= 100))].slice(0, 50);
   return out;
 }
 
