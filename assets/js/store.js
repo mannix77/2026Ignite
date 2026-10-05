@@ -3,8 +3,9 @@
 // between devices.
 
 import { DEFAULT_PLANNER } from './planner.js';
+import { nsKey } from './instance.js';
 
-const BASE_KEY = 'ignite26.planner.v1';
+const BASE_KEY = nsKey('ignite26.planner.v1');
 let KEY = BASE_KEY;
 let validBuilding = id => typeof id === 'string' && /^[A-Z]$/.test(id);
 

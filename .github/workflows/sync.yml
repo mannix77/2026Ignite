@@ -113,6 +113,25 @@ jobs:
       - name: Keep the legacy data paths working
         run: cp data/ignite2026/sessions.json data/ignite2026/changes.json data/ignite2026/meta.json data/
 
+      # One extra copy of the site per instances/<name>/ (e.g. /gino/): same catalogs, its own
+      # picks (storage is namespaced), no pre-loaded favorites unless the folder provides them.
+      - name: Publish copies for colleagues
+        run: |
+          for dir in instances/*/; do
+            [ -d "$dir" ] || continue
+            name=$(basename "$dir")
+            case "$name" in *[!a-z0-9-]*) echo "::error::instance folder '$name' must be lowercase letters, digits or -"; exit 1;; esac
+            rm -rf "$name" && mkdir -p "$name"
+            cp -R index.html manifest.webmanifest sw.js assets data "$name/"
+            find "$name/data" -name favorites.json -delete
+            [ -d "$dir/data" ] && cp -R "$dir/data/." "$name/data/"
+            sed -i "s|<meta name=\"planner-instance\" content=\"\">|<meta name=\"planner-instance\" content=\"$name\">|" "$name/index.html"
+            grep -q "content=\"$name\"" "$name/index.html"
+            label="$(printf '%s' "${name:0:1}" | tr a-z A-Z)${name:1}"
+            sed -i "s|\"name\": \"Conference Planner\"|\"name\": \"Conference Planner ($label)\"|; s|\"short_name\": \"Planner\"|\"short_name\": \"Planner $label\"|" "$name/manifest.webmanifest"
+            echo "published /$name/ ($(find "$name/data" -name favorites.json | wc -l | tr -d ' ') favorites file(s))"
+          done
+
       - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5.0.0
 
       - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1

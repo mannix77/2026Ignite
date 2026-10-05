@@ -8,6 +8,7 @@ import { fmtTime, fmtDay, fmtDuration, relTime, nowLocal, addDays } from './time
 import { createVenue, setVenue, walkMinutes } from './venue.js';
 import { CONFERENCES, currentConferenceId, rememberConference, conferenceList } from './conferences.js';
 import { buildSuggester } from './suggest.js';
+import { INSTANCE_LABEL, nsKey } from './instance.js';
 import { esc, attr, icon, bldgChip, recChip, rsvpChip, prioPill, scoreChip, whenText, prioControl, sessionCard, cardClass, toast, shareOrDownload, copyText, speakersLine } from './ui.js';
 
 const $ = (sel, root = document) => root.querySelector(sel);
@@ -485,7 +486,7 @@ function renderStatus() {
   else if (app.live) src = `${app.live.stale ? 'Live copy' : `Live from ${app.conf.siteName}`} · ${relTime(app.live.at)}`;
   else { src = `${app.liveError ? 'Offline copy' : 'Synced'} · ${relTime(meta.lastChecked || app.raw.doc.generatedAt)}`; ok = meta.ok !== false && !app.liveError; }
   if (app.live?.stale) ok = false;
-  el.innerHTML = `<span class="dot${ok ? '' : ' err'}"></span>${esc(src)} · ${Number(app.model.sessions.length)} sessions · ${esc(sched)}`;
+  el.innerHTML = `<span class="dot${ok ? '' : ' err'}"></span>${INSTANCE_LABEL ? `${esc(INSTANCE_LABEL)}'s copy · ` : ''}${esc(src)} · ${Number(app.model.sessions.length)} sessions · ${esc(sched)}`;
   el.title = [app.live ? `Live check ${app.live.at}${app.live.same ? ' (matches the last sync)' : ' (newer than the last sync)'}${app.live.stale ? ' — the latest check failed' : ''}` : '',
     app.liveError ? `Live check failed: ${app.liveError}` : '',
     `Sync ${meta.lastChecked || '?'}${meta.error ? ` (${meta.error})` : ''}`].filter(Boolean).join(' · ');
@@ -1776,12 +1777,12 @@ function onClick(e) {
       const d = $('#sim-day').value;
       const min = fromHHMM($('#sim-time').value) ?? 600;
       app.simNow = { day: d, min };
-      try { sessionStorage.setItem('ignite26.simNow', JSON.stringify(app.simNow)); } catch { /* private mode */ }
+      try { sessionStorage.setItem(nsKey('ignite26.simNow'), JSON.stringify(app.simNow)); } catch { /* private mode */ }
       render();
     },
     'sim-off': () => {
       app.simNow = null;
-      try { sessionStorage.removeItem('ignite26.simNow'); } catch { /* private mode */ }
+      try { sessionStorage.removeItem(nsKey('ignite26.simNow')); } catch { /* private mode */ }
       render();
     },
     ack: () => { store.setKnown(app.nextKnown); app.alerts = []; render(); },
@@ -2057,7 +2058,7 @@ function announce(initial = false) {
   if (liveDiffers()) app.announcedLive = app.live.at;
 }
 
-const LIVE_KEY = () => `ignite26.planner.live:${app.conf.id}`;
+const LIVE_KEY = () => nsKey(`ignite26.planner.live:${app.conf.id}`);
 
 async function persistLive(r) {
   try {
@@ -2090,7 +2091,7 @@ async function checkLiveNow(force = false) {
     app.live = r;
     app.liveError = null;
     app.lastLiveCheck = Date.now();
-    try { localStorage.setItem(`ignite26.planner.liveAt:${app.conf.id}`, String(app.lastLiveCheck)); } catch { /* ignore */ }
+    try { localStorage.setItem(nsKey(`ignite26.planner.liveAt:${app.conf.id}`), String(app.lastLiveCheck)); } catch { /* ignore */ }
     persistLive(r);
   } catch (err) {
     app.liveError = err.name === 'AbortError' ? 'timed out' : err.message;
@@ -2163,7 +2164,7 @@ function fillConferenceSwitch() {
   const sel = $('#conf-switch');
   sel.innerHTML = conferenceList().map(cf => `<option value="${attr(cf.id)}" ${cf.id === app.conf.id ? 'selected' : ''}>${esc(cf.name)}</option>`).join('');
   sel.onchange = () => switchConference(sel.value);
-  document.title = `${app.conf.short} Planner`;
+  document.title = `${app.conf.short} Planner${INSTANCE_LABEL ? ` · ${INSTANCE_LABEL}` : ''}`;
 }
 
 async function boot() {
@@ -2174,10 +2175,10 @@ async function boot() {
   store.load(CUSTOM_DATA ? `test:${DATA_OVERRIDE}` : app.conf.namespace);
   fillConferenceSwitch();
   applyTheme(store.get().ui.theme);
-  try { app.simNow = JSON.parse(sessionStorage.getItem('ignite26.simNow') || 'null'); } catch { app.simNow = null; }
+  try { app.simNow = JSON.parse(sessionStorage.getItem(nsKey('ignite26.simNow')) || 'null'); } catch { app.simNow = null; }
   const hs = store.get().ui.here;
   app.hereManual = hs && hs.day === nowLocal(app.simNow, app.conf.tz).day && typeof hs.building === 'string' ? hs.building : null;
-  try { app.lastLiveCheck = Number(localStorage.getItem(`ignite26.planner.liveAt:${app.conf.id}`)) || 0; } catch { app.lastLiveCheck = 0; }
+  try { app.lastLiveCheck = Number(localStorage.getItem(nsKey(`ignite26.planner.liveAt:${app.conf.id}`))) || 0; } catch { app.lastLiveCheck = 0; }
   try {
     app.snapshot = await fetchAll(app.conf.dataDir);
   } catch (err) {

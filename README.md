@@ -55,6 +55,10 @@ It rewrites `data/gartner2026/sessions.json`, logs the differences in `changes.j
 
 The Ignite favorites were imported the same way from the `My Favorites` sheet of the Ignite workbook into `data/ignite2026/favorites.json` (tiers from Attend Mode, scores from Score; "Watch recording later" picks are watch-later; "Delegate"/"Skip" picks are skipped).
 
+## Copies for colleagues
+
+The deploy publishes the app once at the site root and once per folder under `instances/` — `instances/gino/` becomes `https://mannix77.github.io/2026Ignite/gino/`. A copy has the same catalogs and updates but its own picks, notes and settings (storage is namespaced, so even a phone with both installed keeps them apart) and no pre-loaded favorites. Anything in `instances/<name>/data/` is laid over the copy, so a colleague can ship their own `data/<conference>/favorites.json` (build it with `scripts/import_gartner.py … --favorites-only --favorites-out instances/<name>/data/gartner2026/favorites.json`). Add a folder, commit, and the next deploy publishes it. To change the app itself, fork the repo and enable Pages on the fork.
+
 ## One-time GitHub setup
 
 1. Push this repo to `main`.

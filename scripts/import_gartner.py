@@ -204,6 +204,9 @@ def main():
     ap.add_argument("--workbook", help="xlsx with a 'My Favorites' sheet")
     ap.add_argument("--data-dir", default=DATA)
     ap.add_argument("--backup-dir", default=os.path.expanduser("~/Downloads"))
+    ap.add_argument("--favorites-out", help="where to write favorites.json (default: <data-dir>/favorites.json); "
+                                            "e.g. instances/gino/data/gartner2026/favorites.json for a colleague's copy")
+    ap.add_argument("--favorites-only", action="store_true", help="only build favorites from the workbook; leave the catalog alone")
     args = ap.parse_args()
     now = sync.utcnow()
     raw = sync.load(args.export_json, None)
@@ -213,6 +216,11 @@ def main():
     data = os.path.abspath(args.data_dir)
     os.makedirs(data, exist_ok=True)
     spath, cpath, mpath = (os.path.join(data, n) for n in ("sessions.json", "changes.json", "meta.json"))
+    if args.favorites_only:
+        if not args.workbook:
+            raise SystemExit("--favorites-only needs --workbook")
+        write_favorites(args, cur, now)
+        return
     prev_doc = sync.load(spath, None)
     prev = prev_doc["sessions"] if prev_doc else []
     seen = {r["inst"]: r.get("firstSeen") for r in prev}
@@ -237,18 +245,24 @@ def main():
           % (len(cur), len(dropped), len(excluded), len(added), len(removed), len(changed)))
 
     if args.workbook:
-        rows = read_sheet(args.workbook, "My Favorites")
-        now_ms = int(time.time() * 1000)
-        picks, local_picks, missing = favorites(rows, cur, now_ms)
-        version = "%s-%d" % (now.strftime("%Y%m%d"), len(picks))
-        sync.dump(os.path.join(data, "favorites.json"), {
-            "app": "ignite26-planner", "v": 1, "conference": "gartner2026", "version": version,
-            "source": "Conference Navigator favorites + workbook ranking", "picks": picks})
-        os.makedirs(args.backup_dir, exist_ok=True)
-        bpath = os.path.join(args.backup_dir, "gartner-2026-picks.json")
-        sync.dump(bpath, {"app": "ignite26-planner", "v": 1, "conference": "gartner2026", "exportedAt": sync.iso(now),
-                          "picks": local_picks, "settings": {}})
-        print("favorites: %d (missing from export: %s) -> favorites.json; backup with notes -> %s" % (len(picks), missing or "none", bpath))
+        write_favorites(args, cur, now)
+
+
+def write_favorites(args, cur, now):
+    rows = read_sheet(args.workbook, "My Favorites")
+    now_ms = int(time.time() * 1000)
+    picks, local_picks, missing = favorites(rows, cur, now_ms)
+    version = "%s-%d" % (now.strftime("%Y%m%d"), len(picks))
+    fpath = os.path.abspath(args.favorites_out or os.path.join(args.data_dir, "favorites.json"))
+    os.makedirs(os.path.dirname(fpath), exist_ok=True)
+    sync.dump(fpath, {
+        "app": "ignite26-planner", "v": 1, "conference": "gartner2026", "version": version,
+        "source": "Conference Navigator favorites + workbook ranking", "picks": picks})
+    os.makedirs(args.backup_dir, exist_ok=True)
+    bpath = os.path.join(args.backup_dir, "gartner-2026-picks.json")
+    sync.dump(bpath, {"app": "ignite26-planner", "v": 1, "conference": "gartner2026", "exportedAt": sync.iso(now),
+                      "picks": local_picks, "settings": {}})
+    print("favorites: %d (missing from export: %s) -> %s; backup with notes -> %s" % (len(picks), missing or "none", fpath, bpath))
 
 
 if __name__ == "__main__":
