@@ -73,14 +73,14 @@ export function cardClass(p) {
   return ['card', 's-card', prioClass(p), p === 0 ? 'skipped' : ''].join(' ');
 }
 
-// A session card. opts: { p, isNew, reserved, score, watch, extra (html), compact, noActions }
+// A session card. opts: { p, isNew, reserved, score, watch, restricted [programs], extra (html), compact, noActions }
 export function sessionCard(s, opts = {}) {
   const p = opts.p ?? null;
   const cls = cardClass(p);
   const timeChip = s.timeSource === 'preview' ? '<span class="chip preview" title="Simulated time/room (preview mode)">Preview</span>' : '';
   return `<article class="${cls}" data-card="${attr(s.key)}">
     <div class="top"><span class="code">${esc(s.code)}</span>·<span>${esc(s.type)}</span>${s.level ? `·<span>${esc(s.level)}</span>` : ''}${s.dur ? `·<span>${fmtDuration(s.dur)}</span>` : ''}
-      ${opts.isNew ? '<span class="chip new">New</span>' : ''}${s.repeats?.length ? `<span class="chip" title="Also runs as ${attr(s.repeats.join(', '))}">Repeats</span>` : ''}${scoreChip(opts.score)}${opts.watch ? '<span class="chip watch" title="On your watch-later list, not in the live plan">Watch later</span>' : ''}</div>
+      ${opts.isNew ? '<span class="chip new">New</span>' : ''}${s.repeats?.length ? `<span class="chip" title="Also runs as ${attr(s.repeats.join(', '))}">Repeats</span>` : ''}${scoreChip(opts.score)}${opts.watch ? '<span class="chip watch" title="On your watch-later list, not in the live plan">Watch later</span>' : ''}${opts.restricted?.length ? `<span class="chip closed" title="Limited to: ${attr(opts.restricted.join(', '))}">Not open to you</span>` : ''}</div>
     <a class="title" href="#/session/${encodeURIComponent(s.code)}" data-act="open" data-key="${attr(s.key)}">${esc(s.title)}</a>
     <div class="meta">${timeChip}<span>${esc(whenText(s))}</span>${!s.onlineOnly ? `${s.loc.known ? bldgChip(s.loc) : ''}<span class="muted">${esc(s.roomLabel || '')}</span>` : ''}${recChip(s)}${opts.reserved ? '<span class="chip new" title="You reserved a seat for this run">Reserved</span>' : rsvpChip(s)}</div>
     ${!opts.compact && s.speakers?.length ? `<div class="who">${speakersLine(s)}</div>` : ''}

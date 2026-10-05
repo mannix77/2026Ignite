@@ -36,6 +36,9 @@ RECORDED_TYPES = {"Keynote", "Signature Series", "Track Sessions"}   # replay as
 # Daily logistics that repeat by title but aren't "attend once" sessions.
 NO_GROUP_TYPES = {"Operating Hours", "Meals", "Engagement Zones", "Exclusive Opportunities",
                   "Receptions and Special Event", "CIO Lunch", "Conference Orientation"}
+# Membership programs: a session named after one is limited to its members even when the
+# export's "Tailored Programming" facet doesn't say so (e.g. CIO Circle lunches/think tanks).
+MEMBER_PROGRAMS = [("CIO Circle Program", re.compile(r"\bCIO Circle\b", re.I))]
 
 
 def local(s):
@@ -63,17 +66,22 @@ def normalize(raw):
         if remote:
             desc = (desc + "\n\nRemote viewing: " + remote).strip()
         vendors = [sync.text(v) for v in (r.get("ex") or []) if sync.text(v)]
+        title = sync.text(r.get("t"))
+        audience = [sync.text(x) for x in f.get("Tailored Programming", []) + f.get("Industries", [])]
+        for name, rx in MEMBER_PROGRAMS:
+            if name not in audience and (rx.search(title) or rx.search(typ)):
+                audience.append(name)
         out.append({
             "id": str(r["id"]),
             "inst": str(r["id"]),
             "code": code,
-            "title": sync.text(r.get("t")),
+            "title": title,
             "desc": desc,
             "type": typ,
             "level": None,
             "topics": [sync.text(x) for x in f.get("Topic", [])],
             "tags": [sync.text(x) for x in f.get("Tracks", [])] + vendors,
-            "audience": [sync.text(x) for x in f.get("Tailored Programming", []) + f.get("Industries", [])],
+            "audience": audience,
             "delivery": ["In-person"],
             "recorded": True if typ in RECORDED_TYPES else (None if typ in NO_GROUP_TYPES else False),
             "speakers": [[sync.text(p[0]), sync.text(p[2] if len(p) > 2 else ""), sync.text(p[1] if len(p) > 1 else "")]
