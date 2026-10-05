@@ -2,6 +2,7 @@
 // venue model and storage namespace; the planner itself is conference-agnostic.
 
 import { MOSCONE_DEF } from './venue.js';
+import { nsKey } from './instance.js';
 
 // Walt Disney World Swan & Dolphin (Gartner IT Symposium/Xpo). Rooms look like
 //   "Upper Peninsula 4, WDW Dolphin Hotel"   "Stage 1, IT Xpo, Atlantic Hall, WDW Dolphin Hotel"
@@ -94,7 +95,7 @@ export const CONFERENCES = {
 };
 
 export const DEFAULT_CONFERENCE = 'ignite2026';
-const PREF_KEY = 'ignite26.planner.conference';
+const PREF_KEY = nsKey('ignite26.planner.conference');
 
 export function conferenceList() { return Object.values(CONFERENCES); }
 
