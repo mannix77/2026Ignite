@@ -36,9 +36,10 @@ RECORDED_TYPES = {"Keynote", "Signature Series", "Track Sessions"}   # replay as
 # Daily logistics that repeat by title but aren't "attend once" sessions.
 NO_GROUP_TYPES = {"Operating Hours", "Meals", "Engagement Zones", "Exclusive Opportunities",
                   "Receptions and Special Event", "CIO Lunch", "Conference Orientation"}
-# Membership programs: a session named after one is limited to its members even when the
-# export's "Tailored Programming" facet doesn't say so (e.g. CIO Circle lunches/think tanks).
-MEMBER_PROGRAMS = [("CIO Circle Program", re.compile(r"\bCIO Circle\b", re.I))]
+# Membership programs you're not part of: their sessions are left out of the catalog. A
+# session named after the program counts even when the export's "Tailored Programming"
+# facet doesn't say so (e.g. CIO Circle lunches/think tanks).
+EXCLUDED_PROGRAMS = [("CIO Circle Program", re.compile(r"\bCIO Circle\b", re.I))]
 
 
 def local(s):
@@ -47,7 +48,7 @@ def local(s):
 
 
 def normalize(raw):
-    out, dropped = [], []
+    out, dropped, excluded = [], [], []
     for r in raw:
         code = sync.text(r.get("code"))
         if not code or not r.get("id") or PRIVATE.match(code):
@@ -55,6 +56,11 @@ def normalize(raw):
             continue
         f = r.get("f") or {}
         typ = (f.get("Session Type") or [""])[0]
+        title = sync.text(r.get("t"))
+        audience = [sync.text(x) for x in f.get("Tailored Programming", []) + f.get("Industries", [])]
+        if any(name in audience or rx.search(title) or rx.search(typ) for name, rx in EXCLUDED_PROGRAMS):
+            excluded.append(code)
+            continue
         start, end = local(r["s"]), local(r["e"])
         loc = sync.text(r.get("loc"))
         live, remote = loc, ""
@@ -66,11 +72,6 @@ def normalize(raw):
         if remote:
             desc = (desc + "\n\nRemote viewing: " + remote).strip()
         vendors = [sync.text(v) for v in (r.get("ex") or []) if sync.text(v)]
-        title = sync.text(r.get("t"))
-        audience = [sync.text(x) for x in f.get("Tailored Programming", []) + f.get("Industries", [])]
-        for name, rx in MEMBER_PROGRAMS:
-            if name not in audience and (rx.search(title) or rx.search(typ)):
-                audience.append(name)
         out.append({
             "id": str(r["id"]),
             "inst": str(r["id"]),
@@ -112,7 +113,7 @@ def normalize(raw):
             rec["group"] = group
             rec["repeats"] = sorted(x["code"] for x in recs if x is not rec)
     out.sort(key=lambda x: (x["start"], x["code"]))
-    return out, dropped
+    return out, dropped, excluded
 
 
 def read_sheet(path, name):
@@ -208,7 +209,7 @@ def main():
     raw = sync.load(args.export_json, None)
     if not isinstance(raw, list):
         raise SystemExit("expected a JSON array of sessions")
-    cur, dropped = normalize(raw)
+    cur, dropped, excluded = normalize(raw)
     data = os.path.abspath(args.data_dir)
     os.makedirs(data, exist_ok=True)
     spath, cpath, mpath = (os.path.join(data, n) for n in ("sessions.json", "changes.json", "meta.json"))
@@ -232,8 +233,8 @@ def main():
         sync.dump(cpath, changes)
     sync.dump(mpath, {"lastChecked": sync.iso(now), "lastChanged": changed_at, "ok": True, "error": None, "stats": cs,
                       "source": "Conference Navigator export"})
-    print("gartner: sessions=%d (dropped %d private) | added=%d removed=%d changed=%d"
-          % (len(cur), len(dropped), len(added), len(removed), len(changed)))
+    print("gartner: sessions=%d (dropped %d private, %d program-only) | added=%d removed=%d changed=%d"
+          % (len(cur), len(dropped), len(excluded), len(added), len(removed), len(changed)))
 
     if args.workbook:
         rows = read_sheet(args.workbook, "My Favorites")

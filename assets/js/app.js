@@ -249,7 +249,7 @@ function suggestions(limit = 12, min = 25) {
   const seen = new Set();
   const out = [];
   for (const s of app.model.sessions) {
-    if (seen.has(s.group) || s.restricted || prioOf(s) != null || s.dur === 0) continue;
+    if (seen.has(s.group) || prioOf(s) != null || s.dur === 0) continue;
     seen.add(s.group);
     const r = sg.score(s);
     if (r.score >= min) out.push({ s, ...r });
@@ -431,14 +431,13 @@ function blockItems() {
 
 function computePlan() {
   if (app.plan) return app.plan;
-  const items = [], online = [], tba = [], watch = [], restricted = [];
+  const items = [], online = [], tba = [], watch = [];
   let groupCount = 0;
   for (const g of app.picks.byGroup.keys()) {
     const gp = groupPick(g);
     if (!(gp.p > 0)) continue;
     groupCount++;
     const runs = app.model.byGroup.get(g) || [];
-    if (runs.length && runs.every(s => s.restricted)) { restricted.push({ id: g, s: runs[0], priority: gp.p, score: gp.score }); continue; }
     if (gp.mode === 'watch') { if (runs[0]) watch.push({ id: g, s: runs[0], priority: gp.p, score: gp.score }); continue; }
     for (const s of runs) {
       const it = {
@@ -465,7 +464,7 @@ function computePlan() {
   const decisions = decisionGroups(contested, c);
   const oneEach = list => [...new Map(list.map(x => [x.id, x])).values()];
   app.plan = {
-    items, blocks, res, chosen, chosenGroups, decisions, contested, blockedKeys, lunch: L, watch, restricted,
+    items, blocks, res, chosen, chosenGroups, decisions, contested, blockedKeys, lunch: L, watch,
     online: oneEach(online).filter(x => !chosenGroups.has(x.id)),
     tba: oneEach(tba).filter(x => !chosenGroups.has(x.id) && !items.some(i => i.id === x.id)),
     groupCount,
@@ -511,7 +510,7 @@ function renderBadges() {
 
 function filtersState() {
   const f = store.get().ui.filters || {};
-  return { q: '', topics: [], types: [], levels: [], audience: [], days: [], buildings: [], inPerson: false, notRecorded: false, unrated: false, mine: false, fresh: false, suggested: false, restricted: false, soon: false, sort: 'smart', ...f };
+  return { q: '', topics: [], types: [], levels: [], audience: [], days: [], buildings: [], inPerson: false, notRecorded: false, unrated: false, mine: false, fresh: false, suggested: false, soon: false, sort: 'smart', ...f };
 }
 
 function applyFilters(f, { forTriage = false } = {}) {
@@ -528,8 +527,6 @@ function applyFilters(f, { forTriage = false } = {}) {
   for (const s of app.model.sessions) {
     const p = prioOf(s);
     if (forTriage && p != null) continue;
-    // Sessions closed to you stay out of the way unless you ask to see them.
-    if (f.restricted ? !s.restricted : s.restricted) continue;
     if (f.inPerson && !s.inPerson) continue;
     if (hideOnline && s.onlineOnly) continue;
     if (f.notRecorded && s.recorded !== false) continue;
@@ -580,7 +577,7 @@ function facetBox(name, label, entries, selected, fmt = v => v) {
 
 function card(s, opts = {}) {
   const gp = groupPick(s.group);
-  return sessionCard(s, { p: gp?.p ?? null, reserved: gp?.reserved === s.key, score: gp?.score ?? null, watch: gp?.mode === 'watch', restricted: s.restrictedBy, isNew: isNew(s), ...opts });
+  return sessionCard(s, { p: gp?.p ?? null, reserved: gp?.reserved === s.key, score: gp?.score ?? null, watch: gp?.mode === 'watch', isNew: isNew(s), ...opts });
 }
 
 function favoritesBanner() {
@@ -600,7 +597,7 @@ function renderBrowse() {
   const sortDesc = m => [...m.entries()].sort((a, b) => b[1] - a[1]);
   const levelName = { 100: '100 Foundational', 200: '200 Intermediate', 300: '300 Advanced', 400: '400 Expert' };
   const activeCount = ['topics', 'types', 'levels', 'audience', 'days', 'buildings'].reduce((a, k) => a + (f[k]?.length || 0), 0);
-  const quick = [['suggested', 'Suggested for you'], ['inPerson', 'In person'], ['notRecorded', 'Not recorded'], ['unrated', 'Not rated yet'], ['mine', 'My picks'], ['fresh', 'New this week'], ...(app.model.restrictedCount ? [['restricted', `Not open to me (${app.model.restrictedCount})`]] : [])];
+  const quick = [['suggested', 'Suggested for you'], ['inPerson', 'In person'], ['notRecorded', 'Not recorded'], ['unrated', 'Not rated yet'], ['mine', 'My picks'], ['fresh', 'New this week']];
   const dayEntries = app.model.days.map(d => [d, app.model.sessions.filter(s => s.day === d).length]);
   const bldEntries = [...app.venue.buildings, app.venue.BUILDING.U].map(b => [b.id, app.model.sessions.filter(s => s.loc.building === b.id).length]).filter(e => e[1]);
   const chips = [];
@@ -832,12 +829,6 @@ function watchSection(plan) {
       <a class="btn small ghost" href="${attr(app.conf.sessionUrl(x.s))}" target="_blank" rel="noopener">On ${esc(app.conf.siteName)} ${icon('ext')}</a></div>` })).join('')}</div></section>`;
 }
 
-function restrictedSection(plan) {
-  if (!plan.restricted.length) return '';
-  return `<section><h2>Not open to you (${plan.restricted.length})</h2><p class="lede small">Limited to ${esc([...new Set(plan.restricted.flatMap(x => x.s.restrictedBy))].join(', '))}. They're left out of the plan; change the programs you're part of in <a href="#/settings">Settings</a>.</p>
-    <div class="list">${plan.restricted.map(x => card(x.s, { compact: true })).join('')}</div></section>`;
-}
-
 function suggestedSection(limit = 8) {
   const list = suggestions(limit);
   if (!list.length) return '';
@@ -869,7 +860,6 @@ function renderShortlist(plan) {
   ${groups.map(g => g.list.length ? `<section class="prio-group"><h2>${prioPill(g.p)} ${g.list.length} session${g.list.length > 1 ? 's' : ''}</h2>
     <div class="list">${g.list.map(s => card(s, { compact: true })).join('')}</div></section>` : '').join('')}
   ${watchSection(plan)}
-  ${restrictedSection(plan)}
   ${suggestedSection()}
   ${plan.online.length ? `<section><h2>Online / on demand</h2><div class="list">${plan.online.map(x => card(x.s, { compact: true })).join('')}</div></section>` : ''}`;
 }
@@ -978,7 +968,6 @@ function renderSchedule(plan) {
     parts.push(`<h2>Picks without a time yet</h2><div class="list">${plan.tba.map(x => card(x.s, { compact: true })).join('')}</div>`);
   }
   parts.push(watchSection(plan));
-  parts.push(restrictedSection(plan));
   parts.push(suggestedSection());
   if (plan.online.length) {
     parts.push(`<h2>Online / on demand</h2><div class="list">${plan.online.map(x => card(x.s, { compact: true })).join('')}</div>`);
@@ -1027,7 +1016,7 @@ function renderFree(day, from, to, c) {
 function renderFillers(day, around, c, between = false) {
   const sg = suggester();
   const cands = app.model.sessions
-    .filter(s => s.day === day && s.inPerson && !s.restricted && Number.isFinite(s.startMin) && s.endMin > s.startMin)
+    .filter(s => s.day === day && s.inPerson && Number.isFinite(s.startMin) && s.endMin > s.startMin)
     .filter(s => { const p = prioOf(s); return p == null || (p > 0 && !app.plan.chosenGroups.has(s.group)); })
     .map(s => ({ key: s.key, id: s.group, code: s.code, type: s.type, day: s.day, startMin: s.startMin, endMin: s.endMin, loc: s.loc, s }));
   let fit = fillers(around, cands, c);
@@ -1183,7 +1172,7 @@ function renderNow() {
   const sg = suggester();
   const fromLoc = nn.from?.loc || null;
   const soon = m.sessions
-    .filter(x => x.day === t.day && x.inPerson && !x.restricted && x.endMin > t.min && x.startMin <= t.min + 90 && prioOf(x) !== 0 && !plan.chosen.has(x.key))
+    .filter(x => x.day === t.day && x.inPerson && x.endMin > t.min && x.startMin <= t.min + 90 && prioOf(x) !== 0 && !plan.chosen.has(x.key))
     .map(x => ({ s: x, walk: h ? hereWalk(x.loc, h, c) : fromLoc ? walkMinutes(fromLoc, x.loc, c.walk) : null, p: prioOf(x) ?? 0, i: sg.ready ? sg.score(x).score : 0, fit: fitVerdict(x) }))
     .filter(x => x.walk == null || t.min + x.walk <= Math.max(x.s.startMin + c.tolerance, x.s.endMin - 15))
     .sort((a, b) => (b.fit.ok - a.fit.ok) || b.p - a.p || b.i - a.i || (a.walk ?? 99) - (b.walk ?? 99) || a.s.startMin - b.s.startMin)
@@ -1384,9 +1373,6 @@ function renderSettings() {
         <select id="conf-select">${conferenceList().map(cf => `<option value="${attr(cf.id)}" ${cf.id === app.conf.id ? 'selected' : ''}>${esc(cf.name)}</option>`).join('')}</select></div>
       <p class="small muted">${esc(app.conf.hint)} Picks, settings and notes are kept separately for each conference.</p>
       ${favN ? `<div class="row"><button class="btn small" data-act="favorites-import">Import my workbook favorites (${favN})</button></div><p class="small muted">Ratings, scores and watch-later marks from your spreadsheet. Importing replaces ratings for those sessions and keeps your notes.</p>` : ''}
-      ${app.conf.programs ? `<h3 style="margin-top:14px">Programs I'm not part of</h3>
-      <p class="small muted">Sessions limited to a ticked program are hidden from Browse, Triage, suggestions and your plan (${app.model.restrictedCount} hidden now).</p>
-      ${[...app.model.facets.audience.entries()].sort((a, b) => a[0].localeCompare(b[0])).map(([name, n]) => `<label class="toggle"><input type="checkbox" data-program="${attr(name)}" ${(s.excludedPrograms || []).includes(name) ? 'checked' : ''}><span>${esc(name)}<small>${n} session${n === 1 ? '' : 's'}</small></span></label>`).join('')}` : ''}
     </section>
     <section class="panel"><h3>Getting between rooms</h3>
       ${numField('buffer', 'Buffer per move (min)', s.buffer, 'Finding the room, grabbing a seat')}
@@ -1503,7 +1489,6 @@ function renderDetail(s) {
     </div>
     <div class="d-body">
       ${s.timeSource === 'preview' ? `<div class="banner warn">${icon('warn')}<div><b>Simulated time and room</b><p>Preview mode. The real schedule hasn't been published.</p></div></div>` : ''}
-      ${s.restricted ? `<div class="banner bad">${icon('warn')}<div><b>Not open to you</b><p>Limited to ${esc(s.restrictedBy.join(', '))}. It's left out of your plan and suggestions (Settings → programs).</p></div></div>` : ''}
       ${sugg?.score >= 25 ? suggestExtra({ s, ...sugg }) : ''}
       <dl>
         <dt>When</dt><dd>${esc(whenText(s))}</dd>
@@ -1761,7 +1746,7 @@ function onClick(e) {
     quick: () => setFilters({ [el.dataset.k]: !filtersState()[el.dataset.k] }),
     'browse-suggested': () => { e.preventDefault(); setFilters({ suggested: true, mine: false, unrated: false }, false); location.hash = '#/browse'; if (app.tab === 'browse') render(); },
     unfacet: () => { const f = filtersState(); setFilters({ [el.dataset.k]: (f[el.dataset.k] || []).filter(v => String(v) !== el.dataset.v) }); },
-    clearfilters: () => setFilters({ topics: [], types: [], levels: [], audience: [], days: [], buildings: [], q: '', inPerson: false, notRecorded: false, unrated: false, mine: false, fresh: false, suggested: false, restricted: false, soon: false }),
+    clearfilters: () => setFilters({ topics: [], types: [], levels: [], audience: [], days: [], buildings: [], q: '', inPerson: false, notRecorded: false, unrated: false, mine: false, fresh: false, suggested: false, soon: false }),
     quickday: () => { const f = filtersState(); setFilters({ days: f.days?.length === 1 && f.days[0] === el.dataset.day ? [] : [el.dataset.day] }); },
     'geo-on': () => { store.updateSettings({ useLocation: true }); toast('Using your location while the app is open'); },
     'geo-off': () => { store.updateSettings({ useLocation: false }); app.geo = null; render(); },
@@ -1897,11 +1882,7 @@ main.addEventListener('change', e => {
     if (v == null || !Number.isFinite(v)) return;
     store.updateSettings({ lunch: { [k]: v } });
   } else if (t.id === 'lunch-on') store.updateSettings({ lunch: { on: t.checked } });
-  else if (t.dataset.program !== undefined) {
-    const set = new Set(store.settings().excludedPrograms || []);
-    if (t.checked) set.add(t.dataset.program); else set.delete(t.dataset.program);
-    store.updateSettings({ excludedPrograms: [...set] });
-  } else if (t.dataset.pref) store.updateSettings({ [t.dataset.pref]: t.value });
+  else if (t.dataset.pref) store.updateSettings({ [t.dataset.pref]: t.value });
   else if (t.dataset.toggle) store.updateSettings({ [t.dataset.toggle]: t.checked });
   else if (t.dataset.override !== undefined) {
     store.updateSettings({ overrides: { [t.dataset.override]: t.value } }); // '' = automatic
@@ -2006,7 +1987,7 @@ function computeAlerts() {
 
 function modelKey() {
   const s = store.settings();
-  return JSON.stringify([s.preview, s.overrides, s.excludedPrograms]);
+  return JSON.stringify([s.preview, s.overrides]);
 }
 
 function rsvpConfig() {
@@ -2189,7 +2170,7 @@ async function boot() {
   app.conf = CONFERENCES[currentConferenceId()];
   app.venue = createVenue(app.conf.venue);
   setVenue(app.venue);
-  store.configure({ defaults: { startFrom: app.venue.startFrom, lunch: app.conf.lunch, excludedPrograms: app.conf.excludedPrograms || [] }, buildingIds: app.venue.ids });
+  store.configure({ defaults: { startFrom: app.venue.startFrom, lunch: app.conf.lunch }, buildingIds: app.venue.ids });
   store.load(CUSTOM_DATA ? `test:${DATA_OVERRIDE}` : app.conf.namespace);
   fillConferenceSwitch();
   applyTheme(store.get().ui.theme);
