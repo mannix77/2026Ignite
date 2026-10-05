@@ -1,0 +1,351 @@
+[
+{
+"sessionType": {
+"displayValue": "Breakout"
+},
+"deliveryTypes": [
+{
+"displayValue": "In-person"
+}
+],
+"viewingOptions": [
+{
+"displayValue": "Will be recorded"
+}
+],
+"topic": [],
+"tags": [],
+"audienceTypes": [],
+"sessionId": "e1",
+"sessionInstanceId": "e1-a",
+"sessionCode": "BRK801",
+"title": "  Naive time ﻿",
+"startDateTime": "2026-11-18T17:00:00",
+"endDateTime": "2026-11-18T17:45:00",
+"location": "Moscone West, Level 3, Room 3001",
+"sessionLevel": [
+{
+"displayValue": "Intermediate (200)"
+}
+],
+"speakerNames": " Ada Lovelace ,  Grace Hopper "
+},
+{
+"sessionType": {
+"displayValue": "Breakout"
+},
+"deliveryTypes": [
+{
+"displayValue": "In-person"
+}
+],
+"viewingOptions": [
+{
+"displayValue": "Will be recorded"
+}
+],
+"topic": [],
+"tags": [],
+"audienceTypes": [],
+"sessionId": "e2",
+"sessionInstanceId": "e2-a",
+"sessionCode": "BRK802",
+"title": "Offset without colon",
+"startDateTime": "2026-11-18T09:00:00-0800",
+"endDateTime": "2026-11-18T09:45:00-0800",
+"location": [
+{
+"displayValue": "Moscone South, The Hub, Theater A"
+}
+],
+"sessionLevel": [
+{
+"displayValue": "(300) Advanced"
+}
+]
+},
+{
+"sessionType": {
+"displayValue": "Breakout"
+},
+"deliveryTypes": [
+{
+"displayValue": "In-person"
+}
+],
+"viewingOptions": [
+{
+"displayValue": "Will be recorded"
+}
+],
+"topic": [],
+"tags": [],
+"audienceTypes": [],
+"sessionId": "e3",
+"sessionInstanceId": "e3-a",
+"sessionCode": "BRK803",
+"title": "Millis and offset",
+"startDateTime": "2026-11-19T10:15:00.000+00:00",
+"endDateTime": "2026-11-19T11:00:00.000+00:00",
+"location": {
+"displayValue": " Marriott Marquis, Yerba Buena Ballroom, BO2 "
+},
+"durationInMinutes": 45
+},
+{
+"sessionType": {
+"displayValue": "Breakout"
+},
+"deliveryTypes": [
+{
+"displayValue": "In-person"
+}
+],
+"viewingOptions": [
+{
+"displayValue": "Will be recorded"
+}
+],
+"topic": [],
+"tags": [],
+"audienceTypes": [],
+"sessionId": "e4",
+"sessionInstanceId": "e4-a",
+"sessionCode": "BRK804",
+"title": "Fake day (placeholder)",
+"startDateTime": "2026-11-14T07:00:00Z",
+"endDateTime": "2026-11-14T07:45:00Z",
+"location": {
+"displayValue": "zTest4"
+},
+"TimeSlot": "07:00 - 07:45"
+},
+{
+"sessionType": {
+"displayValue": "Breakout"
+},
+"deliveryTypes": [
+{
+"displayValue": "In-person"
+}
+],
+"viewingOptions": [
+{
+"displayValue": "Will be recorded"
+}
+],
+"topic": [],
+"tags": [],
+"audienceTypes": [],
+"sessionId": "e5",
+"sessionInstanceId": "e5-a",
+"sessionCode": "BRK805",
+"title": "Garbage date",
+"startDateTime": "not a date",
+"location": null,
+"speakerNames": null,
+"sessionLevel": null
+},
+{
+"sessionType": {
+"displayValue": "Breakout"
+},
+"deliveryTypes": [
+{
+"displayValue": "In-person"
+}
+],
+"viewingOptions": [
+{
+"displayValue": "Will be recorded"
+}
+],
+"topic": [],
+"tags": [],
+"audienceTypes": [],
+"sessionId": "e6",
+"sessionInstanceId": "e6-a",
+"sessionCode": "BRK806",
+"title": "Shared id run 1",
+"startDateTime": "2026-11-18T18:00:00Z",
+"endDateTime": "2026-11-18T18:45:00Z",
+"location": "Moscone West, Level 2, Room 2001"
+},
+{
+"sessionType": {
+"displayValue": "Breakout"
+},
+"deliveryTypes": [
+{
+"displayValue": "In-person"
+}
+],
+"viewingOptions": [
+{
+"displayValue": "Will be recorded"
+}
+],
+"topic": [],
+"tags": [],
+"audienceTypes": [],
+"sessionId": "e6",
+"sessionInstanceId": "e6-b",
+"sessionCode": "BRK806",
+"title": "Shared id run 1",
+"startDateTime": "2026-11-19T18:00:00Z",
+"endDateTime": "2026-11-19T18:45:00Z",
+"location": "Moscone West, Level 2, Room 2002"
+},
+{
+"sessionType": {
+"displayValue": "Breakout"
+},
+"deliveryTypes": [
+{
+"displayValue": "In-person"
+}
+],
+"viewingOptions": [
+{
+"displayValue": "Will be recorded"
+}
+],
+"topic": [],
+"tags": [],
+"audienceTypes": [],
+"sessionId": "e7",
+"sessionInstanceId": "e7-a",
+"sessionTimeId": "xyztest",
+"sessionCode": "BRK807",
+"title": "Real title, test time id"
+},
+{
+"sessionType": {
+"displayValue": "Breakout"
+},
+"deliveryTypes": [
+{
+"displayValue": "In person"
+},
+{
+"displayValue": "Online"
+}
+],
+"viewingOptions": [
+{
+"displayValue": "Not recorded"
+}
+],
+"topic": [],
+"tags": [],
+"audienceTypes": [],
+"sessionId": "e8",
+"sessionInstanceId": "e8-a",
+"sessionCode": "LTG808",
+"title": "Zero length",
+"startDateTime": "2026-11-18T20:00:00Z",
+"endDateTime": "2026-11-18T20:00:00Z",
+"durationInMinutes": 0,
+"location": "Moscone South, Level 3, Room 301"
+},
+{
+"sessionType": {
+"displayValue": "Breakout"
+},
+"deliveryTypes": [
+{
+"displayValue": "In-person"
+}
+],
+"viewingOptions": [
+{
+"displayValue": "Will be recorded"
+}
+],
+"topic": [],
+"tags": [],
+"audienceTypes": [],
+"location": "Moscone West, Level 2, Room 2001",
+"sessionId": "bad0",
+"sessionInstanceId": "bad0-a",
+"sessionCode": "BRK810",
+"title": "Impossible date: Month 13",
+"startDateTime": "2026-13-01T10:00:00Z",
+"endDateTime": "2026-13-01T10:00:00Z"
+},
+{
+"sessionType": {
+"displayValue": "Breakout"
+},
+"deliveryTypes": [
+{
+"displayValue": "In-person"
+}
+],
+"viewingOptions": [
+{
+"displayValue": "Will be recorded"
+}
+],
+"topic": [],
+"tags": [],
+"audienceTypes": [],
+"location": "Moscone West, Level 2, Room 2001",
+"sessionId": "bad1",
+"sessionInstanceId": "bad1-a",
+"sessionCode": "BRK811",
+"title": "Impossible date: Feb 30",
+"startDateTime": "2026-02-30T10:00:00Z",
+"endDateTime": "2026-02-30T10:00:00Z"
+},
+{
+"sessionType": {
+"displayValue": "Breakout"
+},
+"deliveryTypes": [
+{
+"displayValue": "In-person"
+}
+],
+"viewingOptions": [
+{
+"displayValue": "Will be recorded"
+}
+],
+"topic": [],
+"tags": [],
+"audienceTypes": [],
+"location": "Moscone West, Level 2, Room 2001",
+"sessionId": "bad2",
+"sessionInstanceId": "bad2-a",
+"sessionCode": "BRK812",
+"title": "Impossible date: Year zero",
+"startDateTime": "0000-00-00T00:00:00",
+"endDateTime": "0000-00-00T00:00:00"
+},
+{
+"sessionType": {
+"displayValue": "Breakout"
+},
+"deliveryTypes": [
+{
+"displayValue": "In-person"
+}
+],
+"viewingOptions": [
+{
+"displayValue": "Will be recorded"
+}
+],
+"topic": [],
+"tags": [],
+"audienceTypes": [],
+"location": "Moscone West, Level 2, Room 2001",
+"sessionId": "bad3",
+"sessionInstanceId": "bad3-a",
+"sessionCode": "BRK813",
+"title": "Impossible date: Hour 24",
+"startDateTime": "2026-11-18T24:00:00Z",
+"endDateTime": "2026-11-18T24:00:00Z"
+}
+]

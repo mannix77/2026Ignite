@@ -1,0 +1,9 @@
+{
+  "name": "ignite26-planner",
+  "private": true,
+  "type": "module",
+  "description": "No build step and no dependencies. package.json only marks the JS files as ES modules so the tests also run under Node.",
+  "scripts": {
+    "test": "node tests/planner.test.js && python3 -m unittest discover -s tests"
+  }
+}
