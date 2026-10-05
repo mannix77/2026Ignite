@@ -3,8 +3,8 @@
 import * as store from './store.js';
 import { fetchAll, buildModel, diffKnown, snapshot, CUSTOM_DATA, DATA_OVERRIDE } from './data.js';
 import { checkLive, diff as liveDiff } from './live.js';
-import { optimize, decisionGroups, transitions, fillers, nowNext, weigh, canBoth, overlaps, transition, whatIf, lunchConfig, PRIORITY } from './planner.js';
-import { fmtTime, fmtDay, fmtDuration, relTime, nowLocal } from './time.js';
+import { optimize, decisionGroups, transitions, fillers, nowNext, weigh, canBoth, overlaps, transition, whatIf, lunchConfig, arrivalExtra, PRIORITY } from './planner.js';
+import { fmtTime, fmtDay, fmtDuration, relTime, nowLocal, addDays } from './time.js';
 import { createVenue, setVenue, walkMinutes } from './venue.js';
 import { CONFERENCES, currentConferenceId, rememberConference, conferenceList } from './conferences.js';
 import { buildSuggester } from './suggest.js';
@@ -49,6 +49,9 @@ const app = {
   announcedLive: null,
   favoritesOffer: null,
   simNow: null,     // rehearsal clock: this tab only, never saved
+  geo: null,        // last GPS fix: { lat, lon, accuracy, at, fix: { building, distance, inside, approach }, error }
+  hereManual: null, // building id you told us you're in (today only)
+  leaveAlerted: null,
 };
 
 // ---------------------------------------------------------------- helpers
@@ -273,6 +276,146 @@ function suggestExtra(x) {
   return `<div class="reason ok">${icon('check')}<span><span class="chip sugg">Suggested ${x.score}%</span> ${esc(x.reasons.join(' · '))}${fit ? ` · <b>fits your plan ${esc(fmtDay(fit.day))} ${fmtTime(fit.startMin)}</b>` : app.model.mode !== 'unscheduled' ? ' · clashes with your plan' : ''}</span></div>`;
 }
 
+// ---------------------------------------------------------------- where you are
+
+const EARTH_M = 6371000;
+const WALK_M_PER_MIN = 75; // conference pace, outdoors
+function haversine([a1, o1], [a2, o2]) {
+  const r = Math.PI / 180;
+  const h = Math.sin(((a2 - a1) * r) / 2) ** 2 + Math.cos(a1 * r) * Math.cos(a2 * r) * Math.sin(((o2 - o1) * r) / 2) ** 2;
+  return 2 * EARTH_M * Math.asin(Math.sqrt(h));
+}
+
+// Nearest building to a GPS point. Outside every building, the extra minutes to reach the
+// nearest one are added to walks from here ("approach").
+function locate(lat, lon) {
+  let best = null;
+  for (const b of app.venue.buildings) {
+    if (!b.geo) continue;
+    const d = haversine([lat, lon], b.geo);
+    if (b.offsite && d > app.venue.geoRadius) continue; // the off-site catch-all only counts when you're there
+    if (!best || d < best.distance) best = { building: b.id, distance: d };
+  }
+  if (!best) return null;
+  const inside = best.distance <= app.venue.geoRadius;
+  return { building: best.building, distance: Math.round(best.distance), inside, approach: inside ? 0 : Math.ceil(best.distance / WALK_M_PER_MIN), geo: [lat, lon] };
+}
+
+function startFromId() {
+  const s = store.settings();
+  return s.startFrom && app.venue.BUILDING[s.startFrom] ? s.startFrom : app.venue.startFrom;
+}
+
+// Where you are: what you told us today, else a fresh GPS fix. null = unknown (walks count
+// from your plan or the building your day starts in).
+function here() {
+  const m = app.hereManual;
+  if (m && app.venue.BUILDING[m]) return { source: 'manual', building: m, inside: true, approach: 0, loc: { label: '', building: m, floor: null, known: true } };
+  const g = app.geo;
+  if (g?.fix && Date.now() - g.at < 15 * 60000) return { source: 'gps', ...g.fix, accuracy: Math.round(g.accuracy || 0), loc: { label: '', building: g.fix.building, floor: null, known: true } };
+  // (g.fix.geo carries the raw position for walks measured from outside the venue)
+  return null;
+}
+
+// Minutes from where you are to a session's room (null when we don't know where you are).
+// Inside the venue it's the building matrix; outside, the distance to that building plus
+// finding the room.
+function hereWalk(loc, h = here(), c = ctx()) {
+  if (!h) return null;
+  const b = app.venue.BUILDING[loc?.building];
+  if (!h.inside && h.geo && b?.geo && loc.known) return Math.ceil(haversine(h.geo, b.geo) / WALK_M_PER_MIN) + c.walk.sameFloor;
+  return walkMinutes(h.loc, loc, c.walk) + h.approach;
+}
+
+// When to leave for the next planned item, from where you are (or from the plan).
+function leaveFor(nn, h, c) {
+  if (!nn.next || nn.next.pseudo || nn.leaveBy == null) return null;
+  if (h && !h.inside) {
+    const walk = hereWalk(nn.next.loc, h, c);
+    return { walk, leaveBy: nn.next.startMin - walk - c.buffer - nn.extra };
+  }
+  return { walk: nn.walk, leaveBy: nn.leaveBy };
+}
+
+// What going to `s` would do to the rest of that day's plan: the commitment it clashes with,
+// or the one you'd be back for and with how much to spare.
+function fitVerdict(s) {
+  const plan = computePlan();
+  const c = ctx();
+  const chain = (plan.res.plan[s.day] || []).filter(x => x.id !== s.group).sort((a, b) => a.startMin - b.startMin);
+  if (!chain.length) return { ok: true, text: 'Nothing else planned that day' };
+  const me = { key: s.key, id: s.group, day: s.day, startMin: s.startMin, endMin: s.endMin, loc: s.loc, type: s.type };
+  const prev = chain.filter(x => x.startMin <= me.startMin).pop();
+  const next = chain.find(x => x.startMin > me.startMin);
+  const name = x => (x.pseudo ? x.title : x.code);
+  if (prev && !canBoth(prev, me, c)) {
+    return { ok: false, text: overlaps(prev, me) ? `Clashes with ${name(prev)} (until ${fmtTime(prev.endMin)})` : `Can't get here from ${name(prev)} in time (${transition(prev, me, c).walk} min walk, ends ${fmtTime(prev.endMin)})` };
+  }
+  if (next && !canBoth(me, next, c)) {
+    const t = transition(me, next, c);
+    return { ok: false, text: overlaps(me, next) ? `Clashes with ${name(next)} at ${fmtTime(next.startMin)}` : `You'd miss ${name(next)} at ${fmtTime(next.startMin)}: ${t.walk} min walk to ${B(next.loc.building).short}, ${Math.max(0, t.gap)} min gap` };
+  }
+  if (next) {
+    const t = transition(me, next, c);
+    return { ok: true, text: `Back for ${name(next)} at ${B(next.loc.building).short} (${fmtTime(next.startMin)}) with ${t.slack} min to spare${t.status === 'tight' ? ', tight' : ''}` };
+  }
+  return { ok: true, text: `Last thing of the day; nothing after it` };
+}
+
+function fitLine(s, h) {
+  const v = fitVerdict(s);
+  const w = hereWalk(s.loc, h);
+  return `<div class="reason ${v.ok ? 'ok' : ''}">${icon(v.ok ? 'walk' : 'warn')}<span>${w != null ? `${w} min walk from here · ` : ''}${esc(v.text)}</span></div>`;
+}
+
+let geoWatch = null;
+function startGeo() {
+  if (geoWatch != null) return;
+  if (!('geolocation' in navigator)) { app.geo = { error: 'not available on this device', at: Date.now() }; return; }
+  let lastRender = 0;
+  geoWatch = navigator.geolocation.watchPosition(pos => {
+    const { latitude: lat, longitude: lon, accuracy } = pos.coords;
+    const fix = locate(lat, lon);
+    const prev = app.geo?.fix;
+    app.geo = { lat, lon, accuracy, at: Date.now(), fix, error: null };
+    const moved = !prev || prev.building !== fix?.building || Math.abs(prev.approach - (fix?.approach || 0)) >= 2;
+    if ((moved || Date.now() - lastRender > 60000) && ['now', 'browse'].includes(app.tab) && !dialog.open && !document.activeElement?.closest?.('.sim')) {
+      lastRender = Date.now();
+      render();
+    }
+  }, err => {
+    app.geo = { ...(app.geo || {}), at: Date.now(), error: err.code === 1 ? 'permission denied (check Settings → Privacy → Location)' : err.code === 2 ? 'position unavailable' : 'timed out' };
+    if (app.tab === 'now') render();
+  }, { enableHighAccuracy: true, maximumAge: 20000, timeout: 30000 });
+}
+function stopGeo() {
+  if (geoWatch != null && 'geolocation' in navigator) navigator.geolocation.clearWatch(geoWatch);
+  geoWatch = null;
+}
+function syncGeo() {
+  if (store.settings().useLocation && document.visibilityState === 'visible') startGeo(); else stopGeo();
+}
+
+// Nag once when it's time to leave for the next thing in your plan, whatever tab is open.
+function leaveAlertTick() {
+  if (!app.model || app.model.mode === 'unscheduled' || document.visibilityState !== 'visible') return;
+  const t = nowLocal(app.simNow, app.conf.tz);
+  const plan = computePlan();
+  const dayPlan = plan.res.plan[t.day];
+  if (!dayPlan?.length) return;
+  const h = here();
+  const c = ctx();
+  const origin = h ? { ...h.loc, live: true } : { label: '', building: startFromId(), floor: null, known: true };
+  const nn = nowNext(dayPlan, t.min, c, origin, plan.res.lunch?.[t.day] || null);
+  const lv = leaveFor(nn, h, c);
+  if (!lv) return;
+  const left = lv.leaveBy - t.min;
+  if (left <= 5 && left >= -10 && app.leaveAlerted !== nn.next.key) {
+    app.leaveAlerted = nn.next.key;
+    toast(`Time to leave for ${nn.next.code}: ${lv.walk ?? 0} min to ${B(nn.next.loc.building).name}, starts ${fmtTime(nn.next.startMin)}`, { label: 'Now', run: () => { location.hash = '#/now'; } });
+  }
+}
+
 // ---------------------------------------------------------------- plan model
 
 function blockItems() {
@@ -368,11 +511,14 @@ function renderBadges() {
 
 function filtersState() {
   const f = store.get().ui.filters || {};
-  return { q: '', topics: [], types: [], levels: [], audience: [], days: [], buildings: [], inPerson: false, notRecorded: false, unrated: false, mine: false, fresh: false, suggested: false, restricted: false, sort: 'smart', ...f };
+  return { q: '', topics: [], types: [], levels: [], audience: [], days: [], buildings: [], inPerson: false, notRecorded: false, unrated: false, mine: false, fresh: false, suggested: false, restricted: false, soon: false, sort: 'smart', ...f };
 }
 
 function applyFilters(f, { forTriage = false } = {}) {
   const toks = (f.q || '').toLowerCase().split(/\s+/).filter(Boolean);
+  const t = nowLocal(app.simNow, app.conf.tz);
+  const h = here();
+  const c = ctx();
   const set = a => (a && a.length ? new Set(a.map(String)) : null);
   const topics = set(f.topics), types = set(f.types), levels = set(f.levels), aud = set(f.audience), days = set(f.days), blds = set(f.buildings);
   const hideOnline = store.settings().hideOnline;
@@ -390,6 +536,7 @@ function applyFilters(f, { forTriage = false } = {}) {
     if (f.unrated && p != null) continue;
     if (f.mine && !(p > 0)) continue;
     if (f.fresh && !isNew(s)) continue;
+    if (f.soon && !(s.day === t.day && s.endMin > t.min && s.startMin <= t.min + 120)) continue;
     if (topics && !(s.topics || []).some(t => topics.has(t))) continue;
     if (types && !types.has(s.type)) continue;
     if (levels && !levels.has(String(s.level))) continue;
@@ -417,6 +564,7 @@ function applyFilters(f, { forTriage = false } = {}) {
     };
     out.sort((a, b) => score(b) - score(a) || a.code.localeCompare(b.code));
   } else if (sort === 'time') out.sort(byTime);
+  else if (sort === 'nearby') out.sort((a, b) => (hereWalk(a.loc, h, c) ?? 999) - (hereWalk(b.loc, h, c) ?? 999) || byTime(a, b));
   else if (sort === 'title') out.sort((a, b) => a.title.localeCompare(b.title));
   else if (sort === 'priority') out.sort((a, b) => (prioOf(b) ?? -1) - (prioOf(a) ?? -1) || byTime(a, b));
   else out.sort((a, b) => a.code.localeCompare(b.code));
@@ -461,6 +609,15 @@ function renderBrowse() {
     chips.push(`<button type="button" class="chip removable" data-act="unfacet" data-k="${attr(k)}" data-v="${attr(v)}">${esc(label)} ${icon('x')}</button>`);
   }
   const shown = results.slice(0, app.browseLimit);
+  const t = nowLocal(app.simNow, app.conf.tz);
+  const tomorrow = addDays(t.day, 1);
+  const h = here();
+  const dayLabel = d => (d === t.day ? 'Today' : d === tomorrow ? 'Tomorrow' : fmtDay(d));
+  const dayRow = app.model.days.length ? `<div class="quick" role="group" aria-label="Day">
+    ${app.model.days.map(d => `<button type="button" class="chip btn-chip" data-act="quickday" data-day="${attr(d)}" aria-pressed="${f.days?.length === 1 && f.days[0] === d}">${esc(dayLabel(d))}</button>`).join('')}
+    ${app.model.days.includes(t.day) ? `<button type="button" class="chip btn-chip" data-act="quick" data-k="soon" aria-pressed="${!!f.soon}">Next 2 hours</button>` : ''}</div>` : '';
+  // Today's sessions get "from here" and what they'd do to the rest of your day.
+  const showFit = app.model.mode !== 'unscheduled' && (h || f.soon || (f.days?.length === 1 && f.days[0] === t.day) || f.sort === 'nearby');
   const started = Object.keys(store.get().picks).length > 0 || store.get().ui.introDismissed;
   const intro = started ? '' : `<div class="banner install">${icon('cards')}<div><b>How this works</b>
     <p>1. Rate sessions <b>Must / Want / Maybe / Skip</b> here or in <a href="#/triage">Triage</a>.<br>
@@ -468,7 +625,7 @@ function renderBrowse() {
     3. Settle the clashes it flags. At the venue, <b>Now</b> tells you where to go next.</p></div>
     <button class="btn ghost small x" data-act="intro-dismiss" aria-label="Dismiss">${icon('x')}</button></div>`;
   const sg = results.sugg;
-  const extraFor = s => (f.suggested && sg?.get(s.key)?.score > 0 ? suggestExtra({ s, ...sg.get(s.key) }) : '');
+  const extraFor = s => (f.suggested && sg?.get(s.key)?.score > 0 ? suggestExtra({ s, ...sg.get(s.key) }) : '') + (showFit && s.day === t.day && prioOf(s) !== 0 ? fitLine(s, h) : '');
   return `${installBanner()}${favoritesBanner()}${intro}
   <div class="searchbar">
     <label class="search">${icon('search')}<span class="sr-only">Search sessions</span>
@@ -477,6 +634,7 @@ function renderBrowse() {
   <div class="quick" role="group" aria-label="Quick filters">
     ${quick.map(([k, l]) => `<button type="button" class="chip btn-chip" data-act="quick" data-k="${k}" aria-pressed="${!!f[k]}">${l}</button>`).join('')}
   </div>
+  ${dayRow}
   ${f.suggested && !suggester().ready ? `<p class="small muted">Rate at least two sessions first, then suggestions appear here ranked by how much they resemble your picks.</p>` : ''}
   <details class="filters" ${store.get().ui.filtersOpen ? 'open' : ''} id="filters">
     <summary>${icon('search')} More filters${activeCount ? ` (${activeCount})` : ''}</summary>
@@ -494,7 +652,7 @@ function renderBrowse() {
     <span><b>${results.length}</b> of ${app.model.sessions.length} sessions</span>
     <span class="spacer"></span>
     <label>Sort <select id="sort">
-      ${[['smart', 'Best match'], ['time', 'Time'], ['code', 'Code'], ['title', 'Title'], ['priority', 'My priority'], ...(suggester().ready ? [['suggested', 'Most like my picks']] : [])].map(([v, l]) => `<option value="${v}" ${f.sort === v ? 'selected' : ''}>${l}</option>`).join('')}
+      ${[['smart', 'Best match'], ['time', 'Date & time'], ...(h ? [['nearby', 'Nearest to me']] : []), ['code', 'Code'], ['title', 'Title'], ['priority', 'My priority'], ...(suggester().ready ? [['suggested', 'Most like my picks']] : [])].map(([v, l]) => `<option value="${v}" ${f.sort === v ? 'selected' : ''}>${l}</option>`).join('')}
     </select></label>
     ${results.length ? `<a class="btn small" href="#/triage">${icon('cards')}Triage these</a>` : ''}
   </div>
@@ -955,8 +1113,22 @@ function renderDecision(d, plan, c) {
 
 // ---------------------------------------------------------------- now
 
-function renderNow() {
+function hereBar(h) {
   const s = store.settings();
+  const opts = app.venue.buildings.filter(b => b.id !== 'O').map(b => `<option value="${attr(b.id)}" ${h?.source === 'manual' && h.building === b.id ? 'selected' : ''}>${esc(b.name)}</option>`).join('');
+  let status;
+  if (h?.source === 'gps') {
+    status = h.inside ? `You're at <b>${esc(B(h.building).name)}</b> <span class="muted">(GPS, ±${h.accuracy} m)</span>`
+      : `You're <b>${h.distance >= 1000 ? `${(h.distance / 1000).toFixed(1)} km` : `${h.distance} m`}</b> from ${esc(B(h.building).name)} <span class="muted">(about ${h.approach} min on foot)</span>`;
+  } else if (h?.source === 'manual') status = `You're at <b>${esc(B(h.building).name)}</b> <span class="muted">(set by you)</span>`;
+  else if (s.useLocation) status = app.geo?.error ? `<span style="color:var(--bad)">Location unavailable: ${esc(app.geo.error)}</span>` : 'Locating…';
+  else status = `Walking times count from your plan (day starts at ${esc(B(startFromId()).short)}).`;
+  return `<div class="panel here-bar"><div class="row">${icon('walk')}<span>${status}</span><span class="spacer"></span>
+    <label class="small">I'm at <select id="here-select" aria-label="Where you are"><option value="">${h?.source === 'gps' ? 'GPS' : 'Not set'}</option>${opts}</select></label>
+    ${s.useLocation ? `<button class="btn small ghost" data-act="geo-off">Stop GPS</button>` : `<button class="btn small" data-act="geo-on">Use my location</button>`}</div></div>`;
+}
+
+function renderNow() {
   const t = nowLocal(app.simNow, app.conf.tz);
   const plan = computePlan();
   const c = ctx();
@@ -974,11 +1146,11 @@ function renderNow() {
     return `<h1>Now</h1>${simBanner}${clock}<div class="panel empty"><h3>Available once the schedule is out</h3><p>At the conference this screen shows where you should be, when to leave, and what's starting nearby if a room is full. You can rehearse it with the simulated preview schedule.</p>
       <button class="btn primary" data-act="preview-on">Turn on preview</button></div>`;
   }
+  const h = here();
   const dayPlan = plan.res.plan[t.day] || [];
-  const startFrom = s.startFrom && app.venue.BUILDING[s.startFrom] ? s.startFrom : app.venue.startFrom;
-  const origin = { label: '', building: startFrom, floor: null, known: true };
+  const origin = h ? { ...h.loc, live: true } : { label: '', building: startFromId(), floor: null, known: true };
   const nn = nowNext(dayPlan, t.min, c, origin, plan.res.lunch?.[t.day] || null);
-  const parts = [`<h1>Now</h1>${simBanner}${previewBanner()}${clock}`];
+  const parts = [`<h1>Now</h1>${simBanner}${previewBanner()}${clock}${hereBar(h)}`];
   if (!m.days.includes(t.day)) {
     parts.push(`<div class="panel empty"><h3>No sessions today</h3><p>The conference runs ${esc(fmtDay(m.days[0]))} to ${esc(fmtDay(m.days[m.days.length - 1]))}.</p></div>`);
     parts.push(sim);
@@ -991,28 +1163,36 @@ function renderNow() {
   }
   if (nn.next) {
     cards.push(`<div class="card now-card"><div class="label">Next · ${fmtTime(nn.next.startMin)} (in ${fmtDuration(nn.next.startMin - t.min)})</div>${show(nn.next)}`);
-    if (!nn.next.pseudo) {
-      const left = nn.leaveBy - t.min;
+    const lv = leaveFor(nn, h, c);
+    if (lv) {
+      const leaveBy = lv.leaveBy;
+      const left = leaveBy - t.min;
       const cls = left < 0 ? 'late' : left <= 5 ? 'soon' : '';
-      const fromText = nn.from?.key === 'origin' ? ` from ${B(origin.building).short}` : '';
-      const walkText = nn.walk != null ? ` · ${nn.walk} min walk${fromText}${nn.extra ? ` + ${nn.extra} min to get in` : ''}` : '';
-      const msg = left < 0 ? `You should have left ${fmtDuration(-left)} ago${walkText}` : `Leave by ${fmtTime(nn.leaveBy)}, ${left ? `in ${fmtDuration(left)}` : 'now'}${walkText}`;
-      cards.push(`<div class="leave ${cls}">${icon('walk')}<span>${esc(msg)}</span></div>`);
+      const fromText = nn.from?.key === 'origin' ? (h ? ' from here' : ` from ${B(origin.building).short}`) : nn.from?.code ? ` from ${nn.from.code}` : '';
+      const walkText = lv.walk != null ? ` · ${lv.walk} min walk${fromText}${nn.extra ? ` + ${nn.extra} min to get in` : ''}` : '';
+      const msg = left < 0 ? `You should have left ${fmtDuration(-left)} ago${walkText}` : `Leave by ${fmtTime(leaveBy)}, ${left ? `in ${fmtDuration(left)}` : 'now'}${walkText}`;
+      const inside = `Be inside ${B(nn.next.loc.building).name} by ${fmtTime(nn.next.startMin - c.buffer - nn.extra)}${nn.next.s?.roomLabel ? ` · ${nn.next.s.roomLabel}` : ''}`;
+      cards.push(`<div class="leave ${cls}">${icon('walk')}<span>${esc(msg)}<small>${esc(inside)}</small></span></div>`);
     }
     cards.push('</div>');
   } else if (!nn.current) {
-    cards.push(`<div class="panel"><h3>Nothing else planned today</h3><p class="muted">See what's starting soon, or check tomorrow's plan.</p></div>`);
+    cards.push(`<div class="panel"><h3>Nothing else planned today</h3><p class="muted">See what's nearby, or check tomorrow's plan.</p></div>`);
   }
-  // Starting soon, ranked by priority, likeness to your picks, then distance from where you are.
+  // Nearby now: what you can still reach in the next 90 minutes, and what each would do to
+  // the rest of your day. Things that keep your plan intact come first.
   const sg = suggester();
-  const here = nn.from;
+  const fromLoc = nn.from?.loc || null;
   const soon = m.sessions
-    .filter(x => x.day === t.day && x.inPerson && !x.restricted && x.startMin >= t.min - 5 && x.startMin <= t.min + 45 && prioOf(x) !== 0)
-    .map(x => ({ s: x, walk: here ? walkMinutes(here.loc, x.loc, c.walk) : null, p: prioOf(x) ?? 0, i: sg.ready ? sg.score(x).score : 0 }))
-    .sort((a, b) => b.p - a.p || b.i - a.i || (a.walk ?? 99) - (b.walk ?? 99))
-    .slice(0, 10);
-  const soonHtml = `<div><h2 style="margin-top:0">Starting soon nearby</h2><p class="small muted">Backups if a room is full, ranked by your priorities and interests, then distance.</p>
-    <div class="list">${soon.map(x => card(x.s, { compact: true, extra: x.walk != null ? `<div class="reason ok">${icon('walk')}<span>${x.walk} min walk · starts ${fmtTime(x.s.startMin)}${x.i >= 25 ? ` · ${x.i}% like your picks` : ''}</span></div>` : '' })).join('') || '<p class="muted">Nothing starting in the next 45 minutes.</p>'}</div></div>`;
+    .filter(x => x.day === t.day && x.inPerson && !x.restricted && x.endMin > t.min && x.startMin <= t.min + 90 && prioOf(x) !== 0 && !plan.chosen.has(x.key))
+    .map(x => ({ s: x, walk: h ? hereWalk(x.loc, h, c) : fromLoc ? walkMinutes(fromLoc, x.loc, c.walk) : null, p: prioOf(x) ?? 0, i: sg.ready ? sg.score(x).score : 0, fit: fitVerdict(x) }))
+    .filter(x => x.walk == null || t.min + x.walk <= Math.max(x.s.startMin + c.tolerance, x.s.endMin - 15))
+    .sort((a, b) => (b.fit.ok - a.fit.ok) || b.p - a.p || b.i - a.i || (a.walk ?? 99) - (b.walk ?? 99) || a.s.startMin - b.s.startMin)
+    .slice(0, 12);
+  const soonHtml = `<div><h2 style="margin-top:0">Nearby now</h2><p class="small muted">In the next 90 minutes, reachable${h ? ' from here' : nn.from?.code ? ` from ${esc(nn.from.code)}` : ''}, and what each would do to the rest of your day. Backups if a room is full.</p>
+    <div class="list">${soon.map(x => {
+      const when = x.s.startMin <= t.min ? `started ${fmtDuration(t.min - x.s.startMin)} ago` : `starts ${fmtTime(x.s.startMin)} (in ${fmtDuration(x.s.startMin - t.min)})`;
+      return card(x.s, { compact: true, extra: `<div class="reason ${x.fit.ok ? 'ok' : ''}">${icon(x.fit.ok ? 'walk' : 'warn')}<span>${x.walk != null ? `${x.walk} min walk · ` : ''}${when}${x.i >= 25 ? ` · ${x.i}% like your picks` : ''}<br>${esc(x.fit.text)}</span></div>` });
+    }).join('') || '<p class="muted">Nothing you can still reach in the next 90 minutes.</p>'}</div></div>`;
   parts.push(`<div class="now-grid"><div class="stack">${cards.join('')}${sim}</div>${soonHtml}</div>`);
   return parts.join('');
 }
@@ -1252,6 +1432,7 @@ function renderSettings() {
     <section class="panel"><h3>Display</h3>
       ${app.conf.live ? `<label class="toggle"><input type="checkbox" data-toggle="preview" ${s.preview ? 'checked' : ''}><span>Preview with a simulated schedule<small>Only works until the real times are published, then switches itself off. Clearly marked “Preview”.</small></span></label>` : ''}
       <label class="toggle"><input type="checkbox" data-toggle="hideOnline" ${s.hideOnline ? 'checked' : ''}><span>Hide online-only sessions</span></label>
+      <label class="toggle"><input type="checkbox" data-toggle="useLocation" ${s.useLocation ? 'checked' : ''}><span>Use my location (GPS)<small>At the venue, walking times, “leave by” and the Nearby list count from where you are. Only while the app is open; nothing leaves your phone. You can also pick “I'm at…” on the Now tab.</small></span></label>
       <div class="field"><label for="theme">Theme</label><select id="theme">${['auto', 'light', 'dark'].map(t => `<option ${theme === t ? 'selected' : ''}>${t}</option>`).join('')}</select></div>
     </section>
     <section class="panel"><h3>Your data</h3>
@@ -1396,14 +1577,32 @@ function exportIcs() {
     return;
   }
   const stamp = icsDate(new Date().toISOString());
+  const c = ctx();
+  // A "leave now" alarm per session: the walk from the previous planned item (or where the
+  // day starts), the buffer and any keynote entry time, plus 5 minutes' warning.
+  const leave = new Map();
+  for (const chain of Object.values(plan.res.plan)) {
+    const sorted = chain.slice().sort((a, b) => a.startMin - b.startMin);
+    const tr = transitions(sorted, c);
+    sorted.forEach((x, i) => {
+      if (x.pseudo) return;
+      const prev = i > 0 ? sorted[i - 1] : null;
+      const walk = prev ? tr[i - 1].walk : walkMinutes({ label: '', building: startFromId(), floor: null, known: true }, x.loc, c.walk);
+      const need = prev ? tr[i - 1].need : walk + c.buffer + arrivalExtra(x, c);
+      leave.set(x.key, { minutes: need + 5, walk, from: prev ? prev.code : B(startFromId()).short });
+    });
+  }
   const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//ignite26-planner//EN', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', `X-WR-CALNAME:${icsEscape(app.conf.short)} plan`];
   for (const x of items) {
     const s = x.s;
+    const l = leave.get(x.key);
     lines.push('BEGIN:VEVENT', `UID:${s.inst}@${app.conf.id}.ignite26-planner`, `DTSTAMP:${stamp}`, `DTSTART:${icsDate(s.start)}`,
       `DTEND:${icsDate(s.end || new Date(new Date(s.start).getTime() + (s.dur || 45) * 60000).toISOString())}`,
       `SUMMARY:${icsEscape(`[${s.code}] ${s.title}`)}`, `LOCATION:${icsEscape(s.room || '')}`,
       `DESCRIPTION:${icsEscape(`${PRIORITY[x.priority]} · ${s.recorded ? 'recorded' : s.recorded === false ? 'not recorded' : ''}\n${app.conf.sessionUrl(s)}\n\n${s.desc}`)}`,
-      `URL:${app.conf.sessionUrl(s)}`, 'END:VEVENT');
+      `URL:${app.conf.sessionUrl(s)}`);
+    if (l) lines.push('BEGIN:VALARM', 'ACTION:DISPLAY', `DESCRIPTION:${icsEscape(`Leave for ${s.code}: ${l.walk} min walk to ${B(s.loc.building).name} from ${l.from}`)}`, `TRIGGER:-PT${l.minutes}M`, 'END:VALARM');
+    lines.push('END:VEVENT');
   }
   lines.push('END:VCALENDAR');
   shareOrDownload(`${app.conf.id}-plan.ics`, lines.map(icsFold).join('\r\n') + '\r\n', 'text/calendar')
@@ -1562,7 +1761,10 @@ function onClick(e) {
     quick: () => setFilters({ [el.dataset.k]: !filtersState()[el.dataset.k] }),
     'browse-suggested': () => { e.preventDefault(); setFilters({ suggested: true, mine: false, unrated: false }, false); location.hash = '#/browse'; if (app.tab === 'browse') render(); },
     unfacet: () => { const f = filtersState(); setFilters({ [el.dataset.k]: (f[el.dataset.k] || []).filter(v => String(v) !== el.dataset.v) }); },
-    clearfilters: () => setFilters({ topics: [], types: [], levels: [], audience: [], days: [], buildings: [], q: '', inPerson: false, notRecorded: false, unrated: false, mine: false, fresh: false, suggested: false, restricted: false }),
+    clearfilters: () => setFilters({ topics: [], types: [], levels: [], audience: [], days: [], buildings: [], q: '', inPerson: false, notRecorded: false, unrated: false, mine: false, fresh: false, suggested: false, restricted: false, soon: false }),
+    quickday: () => { const f = filtersState(); setFilters({ days: f.days?.length === 1 && f.days[0] === el.dataset.day ? [] : [el.dataset.day] }); },
+    'geo-on': () => { store.updateSettings({ useLocation: true }); toast('Using your location while the app is open'); },
+    'geo-off': () => { store.updateSettings({ useLocation: false }); app.geo = null; render(); },
     more: () => { app.browseLimit += PAGE; render(); },
     't-rate': () => triageRate(Number(el.dataset.p)),
     't-undo': () => triageUndo(),
@@ -1674,6 +1876,11 @@ main.addEventListener('change', e => {
     setFilters({ [k]: [...set] });
   } else if (t.id === 'sort') setFilters({ sort: t.value });
   else if (t.id === 'conf-select') switchConference(t.value);
+  else if (t.id === 'here-select') {
+    app.hereManual = t.value || null;
+    store.setUI({ here: t.value ? { building: t.value, day: nowLocal(app.simNow, app.conf.tz).day } : null });
+    render();
+  }
   else if (t.dataset.set) {
     if (t.value === '') return;
     const v = Math.max(0, Number(t.value));
@@ -1750,6 +1957,7 @@ store.subscribe(what => {
   if (what === 'seen' || what === 'known') { renderBadges(); return; }
   if (what === 'note') { indexPicks(); renderBadges(); return; }
   if (what === 'settings' || what === 'reset') {
+    syncGeo();
     if (modelKey() !== app.modelKey) rebuildModel();
     if (what === 'reset') { applyTheme(store.get().ui.theme); app.triage = null; }
   }
@@ -1986,6 +2194,8 @@ async function boot() {
   fillConferenceSwitch();
   applyTheme(store.get().ui.theme);
   try { app.simNow = JSON.parse(sessionStorage.getItem('ignite26.simNow') || 'null'); } catch { app.simNow = null; }
+  const hs = store.get().ui.here;
+  app.hereManual = hs && hs.day === nowLocal(app.simNow, app.conf.tz).day && typeof hs.building === 'string' ? hs.building : null;
   try { app.lastLiveCheck = Number(localStorage.getItem(`ignite26.planner.liveAt:${app.conf.id}`)) || 0; } catch { app.lastLiveCheck = 0; }
   try {
     app.snapshot = await fetchAll(app.conf.dataDir);
@@ -2018,7 +2228,9 @@ async function boot() {
   if (LOCAL_HOST) fetch('api/status').then(r => (r.ok ? r.json() : null)).then(j => { if (j?.local) { app.local = true; if (app.tab === 'changes') render(); } }).catch(() => {});
   setInterval(() => refreshData(false), REFRESH_MS);
   setInterval(renderStatus, 60000);
-  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') refreshData(false); });
+  document.addEventListener('visibilitychange', () => { syncGeo(); if (document.visibilityState === 'visible') refreshData(false); });
+  syncGeo();
+  setInterval(leaveAlertTick, 30000);
   registerServiceWorker();
 }
 

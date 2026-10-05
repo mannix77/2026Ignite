@@ -192,6 +192,10 @@ h3 { font-size: 15px; margin: 0 0 6px; }
 .chip.watch { background: var(--skip-soft); color: var(--text-2); }
 .chip.sugg { background: var(--ok-soft); color: var(--ok); }
 .chip.closed { background: var(--want-soft); color: var(--want); border-color: transparent; }
+.quick + .quick { margin-top: -4px; }
+.here-bar { margin: 10px 0 14px; }
+.here-bar select { font-size: 16px; max-width: 46vw; }
+.leave small { display: block; font-weight: 400; opacity: .85; margin-top: 2px; }
 .t-lunch { display: grid; grid-template-columns: 74px 1fr; gap: 12px; }
 .t-lunch .line { margin-left: 6px; padding: 6px 0 6px 14px; border-left: 2px dotted var(--line); font-size: 13px; color: var(--text-2); }
 @media (max-width: 640px) { .t-lunch { grid-template-columns: 62px 1fr; gap: 8px; } }

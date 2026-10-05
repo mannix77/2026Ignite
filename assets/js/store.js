@@ -17,6 +17,7 @@ export const DEFAULT_SETTINGS = {
   overrides: {},        // location label -> building id ('' = automatic)
   preview: false,       // simulate days/rooms before the real schedule is published
   hideOnline: false,    // hide online-only sessions in Browse
+  useLocation: false,   // GPS: walking times and "leave by" count from where you are
   startFrom: null,      // where each day starts (building id); null = conference default
   lunch: { on: true, from: 690, to: 810, length: 30, weight: 40 }, // protect a lunch break
   blocks: [],           // [{ id, day, start, end, label, building }] meetings, booth duty…
@@ -155,7 +156,7 @@ export function setSetting(key, value) {
 
 // Restores planner tuning; keeps display choices, room overrides, blocks and lunch.
 export function resetSettings() {
-  const keep = ['preview', 'hideOnline', 'repo', 'overrides', 'blocks', 'lunch', 'startFrom'];
+  const keep = ['preview', 'hideOnline', 'useLocation', 'repo', 'overrides', 'blocks', 'lunch', 'startFrom'];
   state.prefs = Object.fromEntries(Object.entries(state.prefs).filter(([k]) => keep.includes(k)));
   cachedSettings = null;
   emit('settings');
@@ -224,7 +225,7 @@ function sanitizePrefs(src) {
     out.overrides = {};
     for (const [label, b] of Object.entries(src.overrides)) if (label.length < 300 && (b === '' || validBuilding(b))) out.overrides[label] = b;
   }
-  for (const k of ['preview', 'hideOnline']) if (typeof src[k] === 'boolean') out[k] = src[k];
+  for (const k of ['preview', 'hideOnline', 'useLocation']) if (typeof src[k] === 'boolean') out[k] = src[k];
   if (validBuilding(src.startFrom)) out.startFrom = src.startFrom;
   if (src.lunch && typeof src.lunch === 'object') {
     const l = src.lunch;

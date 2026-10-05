@@ -61,7 +61,7 @@ export function createVenue(def) {
   const buildingLabel = loc => (BUILDING[loc?.building] || BUILDING.U).short;
   return {
     id: def.id, buildings, BUILDING, walk: JSON.parse(JSON.stringify(def.walk)), startFrom: def.startFrom,
-    ids: buildings.map(b => b.id), parseLocation, buildingLabel, notes: def.notes || '',
+    ids: buildings.map(b => b.id), parseLocation, buildingLabel, notes: def.notes || '', geoRadius: def.geoRadius || 220,
   };
 }
 
@@ -74,12 +74,12 @@ export function createVenue(def) {
 export const MOSCONE_DEF = {
   id: 'moscone',
   buildings: [
-    { id: 'W', name: 'Moscone West', short: 'West', re: /moscone\s*west|^west\b/i },
-    { id: 'S', name: 'Moscone South', short: 'South', re: /moscone\s*south|^south\b|esplanade/i },
-    { id: 'N', name: 'Moscone North', short: 'North', re: /moscone\s*north|^north\b/i },
-    { id: 'M', name: 'Marriott Marquis', short: 'Marriott', re: /marriott|marquis/i },
-    { id: 'C', name: 'Chase Center', short: 'Chase Ctr', re: /chase\s*center/i },
-    { id: 'H', name: 'Other off-site', short: 'Off-site', re: /intercontinental|hilton|hyatt|westin|park central|four seasons|st\.? regis|yerba buena (center|gardens)|metreon|sfmoma|\bw hotel/i },
+    { id: 'W', name: 'Moscone West', short: 'West', re: /moscone\s*west|^west\b/i, geo: [37.78306, -122.40410] },
+    { id: 'S', name: 'Moscone South', short: 'South', re: /moscone\s*south|^south\b|esplanade/i, geo: [37.78360, -122.40120] },
+    { id: 'N', name: 'Moscone North', short: 'North', re: /moscone\s*north|^north\b/i, geo: [37.78470, -122.40250] },
+    { id: 'M', name: 'Marriott Marquis', short: 'Marriott', re: /marriott|marquis/i, geo: [37.78543, -122.40449] },
+    { id: 'C', name: 'Chase Center', short: 'Chase Ctr', re: /chase\s*center/i, geo: [37.76790, -122.38742] },
+    { id: 'H', name: 'Other off-site', short: 'Off-site', re: /intercontinental|hilton|hyatt|westin|park central|four seasons|st\.? regis|yerba buena (center|gardens)|metreon|sfmoma|\bw hotel/i, offsite: true },
     { id: 'O', name: 'Online only', short: 'Online', re: /^(online|virtual|on[- ]demand$)/i },
   ],
   // Door-to-door minutes at a changeover, including the badge/ID/bag check Ignite 2025 ran
@@ -99,6 +99,7 @@ export const MOSCONE_DEF = {
     unknown: 12,      // room not published yet: assume a building change
   },
   startFrom: 'W',
+  geoRadius: 180,   // metres from a building's centre that still counts as "at" it
   notes: 'Includes the badge/bag check at building entrances. Moscone North and South connect inside; West is across 4th St; the Marriott Marquis is a block north of West; Chase Center (keynotes) is about 2 miles away, so plan on the shuttle.',
 };
 
