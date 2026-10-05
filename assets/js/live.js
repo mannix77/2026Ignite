@@ -4,21 +4,25 @@
 //
 // normalize() mirrors scripts/sync.py's normalize(); tests/test_sync.py cross-checks them.
 
-const CDN = 'https://eventtools.event.microsoft.com/ignite2026-prod/fallback';
+const cdnBase = event => `https://eventtools.event.microsoft.com/${event}/fallback`;
+const DEFAULT_EVENT = 'ignite2026-prod';
 const DEFAULT_WINDOW = ['2026-11-17', '2026-11-20'];
 const DELIVERY_NAMES = { inperson: 'In-person', online: 'Online', ondemand: 'On-demand' };
-const PLACEHOLDER_ROOM = /^\s*(ztest\S*|tbd|tba|)\s*$/i;
+const MAX_DUR = 1440;
+const PLACEHOLDER_ROOM = /^(ztest\S*|tbd|tba|)$/i;
 const REPEAT_SUFFIX = /-R\d+$/i;
 // Must match TRIM in scripts/sync.py.
 const TRIM = /^[ \t\n\r\x0b\x0c\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]+|[ \t\n\r\x0b\x0c\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]+$/g;
 const text = v => (typeof v === 'string' ? v.replace(TRIM, '') : '');
 export const TRACKED = ['title', 'code', 'type', 'start', 'end', 'dur', 'room', 'speakers', 'level', 'delivery', 'recorded', 'desc'];
 
+// Accepts a list, a single value, or junk; keeps non-empty strings, deduped, order kept.
+const listOf = v => (Array.isArray(v) ? v : v ? [v] : []);
 function vals(lst) {
   const out = [];
-  for (const v of lst || []) {
+  for (const v of listOf(lst)) {
     const s = v && typeof v === 'object' ? v.displayValue : v;
-    if (s && !out.includes(s)) out.push(s);
+    if (typeof s === 'string' && s && !out.includes(s)) out.push(s);
   }
   return out;
 }
@@ -32,7 +36,7 @@ const isoZ = d => d.toISOString().replace(/\.\d{3}Z$/, 'Z');
 // Same accepted shapes as sync.py's parse_iso; a missing offset means UTC.
 function parseIso(s) {
   if (!s || typeof s !== 'string') return null;
-  const m = /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2})?)(\.\d+)?([+-]\d{2}:?\d{2}|Z)?$/.exec(s.trim());
+  const m = /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2})?)(\.\d+)?([+-]\d{2}:?\d{2}|Z)?$/.exec(text(s));
   if (!m) return null;
   // Reject impossible values the way Python's strptime does (JS would roll Feb 30 or
   // 24:00 over into the next day).
@@ -71,21 +75,23 @@ export function normalize(rawSessions, rawSpeakers, window = DEFAULT_WINDOW, spe
   let draft = 0;
   for (const s of rawSessions) {
     const title = text(s.title);
-    if (!s.sessionId || isTest(s, title)) { dropped.push(s.sessionCode || s.sessionId); continue; }
+    const sid = s.sessionId == null || s.sessionId === '' ? '' : String(s.sessionId);
+    if (!sid || isTest(s, title)) { dropped.push(text(s.sessionCode) || sid); continue; }
     let start = parseIso(s.startDateTime), end = parseIso(s.endDateTime);
     if (start && !(start.getTime() >= lo && start.getTime() < hi)) { draft++; start = end = null; }
+    if (end && (!start || end < start)) end = null; // an end on its own, or before the start, is noise
     const slot = text(s.TimeSlot || s.timeSlot);
     const sm = slotMinutes(slot);
     let dur = s.durationInMinutes;
-    if (!Number.isInteger(dur) || dur <= 0) {
+    if (!(Number.isInteger(dur) && dur > 0 && dur <= MAX_DUR)) {
       if (start && end) dur = Math.floor((end - start) / 60000);
       else dur = sm ? sm[2] : null;
     }
     if (start && !end && dur) end = new Date(start.getTime() + dur * 60000);
     // speakerNames is the complete list; speaker records add company/title when available.
     const known = new Map();
-    for (const sid of s.speakerIds || []) {
-      const p = spk.get(sid);
+    for (const spkId of listOf(s.speakerIds)) {
+      const p = typeof spkId === 'string' ? spk.get(spkId) : null;
       if (p && text(p.displayName)) known.set(text(p.displayName), [text(p.displayName), text(p.company), text(p.jobTitle)]);
     }
     const names = text(s.speakerNames).split(',').map(text).filter(Boolean);
@@ -98,8 +104,8 @@ export function normalize(rawSessions, rawSpeakers, window = DEFAULT_WINDOW, spe
     else if (viewing.some(v => v.includes('record'))) recorded = true;
     const lv = vals(s.sessionLevel).map(v => /\((\d{3})\)/.exec(v)).find(Boolean);
     out.push({
-      id: s.sessionId,
-      inst: s.sessionInstanceId || s.sessionId,
+      id: sid,
+      inst: text(String(s.sessionInstanceId ?? '')) || sid,
       code: text(s.sessionCode),
       title,
       desc: text(s.description),
@@ -118,8 +124,8 @@ export function normalize(rawSessions, rawSpeakers, window = DEFAULT_WINDOW, spe
       room: room || null,
       roomTbd: PLACEHOLDER_ROOM.test(room),
       popular: !!s.isPopular,
-      related: (s.relatedSessionCodes || []).filter(c => typeof c === 'string'),
-      _links: (s.repeatedSessions || []).filter(r => r && typeof r === 'object' && r.sessionCode).map(r => r.sessionCode),
+      related: listOf(s.relatedSessionCodes).filter(c => typeof c === 'string' && c),
+      _links: listOf(s.repeatedSessions).filter(r => r && typeof r === 'object' && typeof r.sessionCode === 'string' && r.sessionCode).map(r => r.sessionCode),
     });
   }
   assignGroups(out);
@@ -200,12 +206,12 @@ export function diff(prev, cur) {
   return { added, removed, changed };
 }
 
-async function getCdn(name, timeoutMs = 25000) {
+async function getCdn(base, name, timeoutMs = 25000) {
   const bucket = Math.floor(Date.now() / 300000) * 300000; // same 5-minute bucketing as the official site
   const ctl = new AbortController();
   const t = setTimeout(() => ctl.abort(), timeoutMs);
   try {
-    const res = await fetch(`${CDN}/${name}.json?${bucket}`, { signal: ctl.signal, cache: 'no-cache' });
+    const res = await fetch(`${base}/${name}.json?${bucket}`, { signal: ctl.signal, cache: 'no-cache' });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     return await res.json();
   } finally {
@@ -213,15 +219,17 @@ async function getCdn(name, timeoutMs = 25000) {
   }
 }
 
-// Compare the live catalog against the synced snapshot. Returns null if live is unreachable.
-export async function checkLive(snapshotDoc) {
-  const [raw, settings] = await Promise.all([getCdn('session-all-en-us'), getCdn('settings', 15000).catch(() => null)]);
+// Compare the live catalog against the synced snapshot. Throws if live is unreachable.
+// conf.cdn names the event folder on the CDN (conferences.js).
+export async function checkLive(snapshotDoc, conf = {}) {
+  const base = cdnBase(conf.cdn || DEFAULT_EVENT);
+  const [raw, settings] = await Promise.all([getCdn(base, 'session-all-en-us'), getCdn(base, 'settings', 15000).catch(() => null)]);
   if (!Array.isArray(raw) || raw.length < 50) throw new Error('unexpected live catalog');
   const prev = snapshotDoc.sessions || [];
   const byName = new Map();
   for (const r of prev) for (const p of r.speakers || []) if (p[1] || p[2]) byName.set(p[0], p);
-  const window = settings?.eventStartDate && settings?.eventEndDate
-    ? [settings.eventStartDate.slice(0, 10), settings.eventEndDate.slice(0, 10)] : DEFAULT_WINDOW;
+  const window = typeof settings?.eventStartDate === 'string' && typeof settings?.eventEndDate === 'string' && settings.eventStartDate.length >= 10 && settings.eventEndDate.length >= 10
+    ? [settings.eventStartDate.slice(0, 10), settings.eventEndDate.slice(0, 10)] : (conf.days?.length ? [conf.days[0], conf.days[conf.days.length - 1]] : DEFAULT_WINDOW);
   const { sessions, dropped, draft } = normalize(raw, null, window, byName);
   if (prev.length && sessions.length < 0.6 * prev.length) throw new Error(`live catalog looks partial (${sessions.length} sessions)`);
   const seenInst = new Map(prev.map(r => [r.inst, r.firstSeen]));
@@ -239,7 +247,7 @@ export async function checkLive(snapshotDoc) {
     showLocations: settings.showLocations ?? null,
     showRoomsToAnonymousUsers: settings.showRoomsToAnonymousUsers ?? null,
     enableMySchedule: settings.enableMySchedule ?? null,
-    rsvp: Object.fromEntries((settings.rsvpConfiguration || []).filter(r => r && r.sessionTypeName).map(r => [r.sessionTypeName, r.opensAt || null])),
+    rsvp: Object.fromEntries(listOf(settings.rsvpConfiguration).filter(r => r && typeof r === 'object' && typeof r.sessionTypeName === 'string').map(r => [r.sessionTypeName, typeof r.opensAt === 'string' ? r.opensAt : null])),
   } : null;
   const stats = {
     sessions: sessions.length,

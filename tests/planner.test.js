@@ -3,7 +3,7 @@
 // or with Node:  node tests/planner.test.js
 
 import { transition, canBoth, optimize, optimizeDay, decisionGroups, isResolved, fillers, nowNext, weigh, whatIf, chainValue, DEFAULT_PLANNER } from '../assets/js/planner.js';
-import { parseLocation, walkMinutes, sameRoom, ANYWHERE, DEFAULT_WALK } from '../assets/js/venue.js';
+import { parseLocation, walkMinutes, sameRoom, DEFAULT_WALK } from '../assets/js/venue.js';
 import { localParts, fromISO, parseSlot, fmtTime, fmtDay, addDays } from '../assets/js/time.js';
 
 const log = typeof print === 'function' && typeof window === 'undefined' ? print : console.log;
@@ -372,13 +372,100 @@ test('nowNext uses the start-of-day origin and keynote entry time', () => {
   eq(r.leaveBy, H(9) - DEFAULT_WALK.pairs['C|W'] - DEFAULT_PLANNER.buffer - DEFAULT_PLANNER.keynoteExtra);
 });
 
-test('pseudo items (lunch) use their own weight and cost no walking', () => {
-  const lunch = { key: 'lunch1', id: 'lunch:d', code: 'Lunch', title: 'Lunch', pseudo: 'lunch', weight: 60, day: '2026-11-18', startMin: H(12), endMin: H(12.5), loc: ANYWHERE, priority: 0 };
-  eq(weigh(lunch).score, 60);
-  const a = item(H(11.25), H(12), S1), b = item(H(12.5), H(13.25), W2);
-  eq(transition(a, lunch).status, 'ok');
-  eq(transition(lunch, b).status, 'ok');
-  eq(decisionGroups([lunch, item(H(12), H(12.75), W2)]).length, 0, 'pseudo items are not decisions');
+test('blocked time is a chain item with a real location', () => {
+  const M = parseLocation('Marriott Marquis, Yerba Buena Ballroom, BO1');
+  const blk = { key: 'block:1', id: 'block:1', code: 'Meeting', title: 'Customer meeting', pseudo: 'block', weight: 1e7, locked: true, priority: 0, day: '2026-11-18', startMin: H(12), endMin: H(13), loc: M };
+  const a = item(H(11), H(11.5), S1);          // S -> M: 14 + 2 = 16 <= 30 min gap
+  const b = item(H(13.25), H(14), W2);         // M -> W: 13 + 2 = 15 <= 15 min gap
+  const res = optimize([blk, a, b]);
+  eq(res.plan['2026-11-18'].map(x => x.key), [a.key, blk.key, b.key]);
+  eq(transition(a, blk).walk, DEFAULT_WALK.pairs['M|S']);
+  eq(weigh(blk).score > 1e7, true);
+  const during = item(H(12), H(12.75), W2);
+  eq(decisionGroups([blk, during]).length, 0, 'blocks are not decisions');
+  eq(optimize([blk, during]).dropped[0].reason.kind, 'block');
+});
+
+// --- lunch: a slot in a gap, never a place
+
+const LUNCH = { from: H(11.5), to: H(13.5), length: 30, weight: 40 };
+const D = '2026-11-18';
+
+test('lunch never hides the walk between the sessions around it (review)', () => {
+  const key = item(H(12), H(13), parseLocation('Chase Center'), { type: 'Keynote', priority: 3 });
+  const thr = item(H(13.5), H(14), W3, { priority: 3 });
+  const res = optimize([key, thr], DEFAULT_PLANNER, LUNCH);
+  eq(Object.values(res.plan).flat().length, 1, '40 min walk + 2 + 15 keynote entry > 30 min gap');
+});
+
+test('lunch is taken only in a gap long enough for walking and eating', () => {
+  const a = item(H(11), H(12), W2), b = item(H(12.75), H(13.5), parseLocation('Moscone West, Level 2, Room 2005'));
+  const res = optimize([a, b], DEFAULT_PLANNER, LUNCH);
+  const l = res.lunch[D];
+  ok(l && l.start >= H(12) && l.end + DEFAULT_WALK.sameFloor + 2 <= H(12.75), `slot ${JSON.stringify(l)}`);
+  eq(res.value, chainValue([a, b]) + 40);
+  const c = item(H(12.25), H(13.25), S1);      // 15 min gap from a, 14 needed: no room to eat
+  const r2 = optimize([a, c], DEFAULT_PLANNER, LUNCH);
+  eq(Object.values(r2.plan).flat().length, 2);
+  eq(r2.lunch[D], null);
+});
+
+test('lunch before the first or after the last session', () => {
+  eq(optimize([item(H(13.5), H(14.25), W2)], DEFAULT_PLANNER, LUNCH).lunch[D], { start: H(13), end: H(13.5) });
+  eq(optimize([item(H(9), H(10), W2)], DEFAULT_PLANNER, LUNCH).lunch[D], { start: H(11.5), end: H(12) });
+});
+
+test('lunch outranks only what it is worth more than', () => {
+  const a = item(H(11.5), H(12.25), W2), b = item(H(12.5), H(13.25), W2); // same room, 15 min gap: no lunch
+  const res = optimize([a, b], DEFAULT_PLANNER, LUNCH);
+  eq([Object.values(res.plan).flat().length, res.lunch[D]], [2, null], 'two Wants (100) beat lunch (40)');
+  const maybe = item(H(11.5), H(13.5), W2, { priority: 1 });
+  const r2 = optimize([maybe], DEFAULT_PLANNER, LUNCH);
+  eq([Object.values(r2.plan).flat().length, !!r2.lunch[D]], [0, true], 'a Maybe (20) over the whole window loses to lunch (40)');
+});
+
+test('lunch does not multiply the repeat-run search (review e5)', () => {
+  const A = item(H(9), H(10), W2, { id: 'A', code: 'A', day: '2026-11-17' });
+  const B = item(H(9), H(10), W2, { id: 'B', code: 'B', day: D });
+  const C = item(H(9), H(10), W3, { id: 'C', code: 'C', day: D });
+  const C1 = item(H(9), H(10), W3, { id: 'C', code: 'C-R1', day: '2026-11-19' });
+  const E = item(H(10.25), H(11), W3, { id: 'E', code: 'E', day: '2026-11-19' });
+  const res = optimize([A, B, C, C1, E], DEFAULT_PLANNER, LUNCH);
+  const chosen = Object.values(res.plan).flat();
+  ok(chosen.some(x => x.key === C1.key), 'C attended via its repeat');
+  eq(chosen.length, 4);
+  eq(Object.values(res.lunch).filter(Boolean).length, 3, 'lunch on all three days');
+});
+
+test('whatIf compares the whole plan: a session that moves to its repeat is not missed', () => {
+  const b1 = item(H(9), H(10), W2, { id: 'BRK1', code: 'BRK1', priority: 3, day: '2026-11-17' });
+  const b2 = item(H(9), H(10), S1, { id: 'BRK2', code: 'BRK2', priority: 3, day: '2026-11-17' });
+  const b3 = item(H(10) + 5, H(10.75), S1, { id: 'BRK3', code: 'BRK3', day: '2026-11-17' }); // reachable from BRK2 only
+  const b3r = item(H(10), H(11), W2, { id: 'BRK3', code: 'BRK3-R1', day: D });
+  const all = [b1, b2, b3, b3r];
+  const w1 = whatIf(all, b1.key, new Set(all.map(x => x.key)));
+  const w2 = whatIf(all, b2.key, new Set(all.map(x => x.key)));
+  eq([w1.feasible, w2.feasible], [true, true]);
+  eq(w1.value, w2.value, 'a real toss-up');
+  ok(w1.chosen.some(x => x.key === b3r.key), 'BRK3 moves to Wed when BRK1 is chosen');
+});
+
+test('nowNext treats lunch as a slot, never as a place to walk from', () => {
+  const a = item(H(11), H(12), W2), b = item(H(13), H(13.75), S1);
+  const l = { start: H(12), end: H(12.5) };
+  const r = nowNext([a, b], H(12) + 10, DEFAULT_PLANNER, null, l);
+  eq([r.current.pseudo, r.next.key, r.from.key, r.walk], ['lunch', b.key, a.key, SW]);
+  eq(r.leaveBy, H(13) - SW - DEFAULT_PLANNER.buffer);
+  const r2 = nowNext([a, b], H(11.5), DEFAULT_PLANNER, null, l);
+  eq([r2.current.key, r2.next.pseudo, r2.leaveBy], [a.key, 'lunch', null]);
+});
+
+test('your own score overrides the tier weights', () => {
+  const a = item(H(9), H(10), W2, { priority: 1, score: 13 });
+  eq(weigh(a).score, 130);
+  ok(/your score 13/.test(weigh(a).why[0]));
+  const b = item(H(9), H(10), W3, { priority: 3 });
+  eq(optimizeDay([a, b]).chosen[0].key, a.key);
 });
 
 log(`${pass} passed, ${fail} failed`);

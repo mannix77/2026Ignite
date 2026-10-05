@@ -2,7 +2,7 @@
 // interpolated value goes through esc() (or attr()) first.
 
 import { fmtTime, fmtDay, fmtDuration } from './time.js';
-import { BUILDING, buildingLabel } from './venue.js';
+import { venue } from './venue.js';
 import { PRIORITY } from './planner.js';
 
 export function esc(v) {
@@ -14,18 +14,21 @@ export function icon(name, cls = '') {
   return `<svg class="${cls}" aria-hidden="true"><use href="#i-${name}"/></svg>`;
 }
 
+const BLDG_COLORS = ['W', 'S', 'N', 'M', 'C', 'H', 'O', 'U', 'D', 'R', 'Y', 'B'];
 export function bldgChip(loc) {
-  const b = BUILDING[loc?.building] && /^[A-Z*]$/.test(loc.building) ? loc.building : 'U';
-  const name = (BUILDING[b] || BUILDING.U).name;
-  return `<span class="chip bldg" style="--bc: var(--b-${b === '*' ? 'O' : b})" title="${attr(name)}">${esc(buildingLabel(loc))}</span>`;
+  const v = venue();
+  const b = v.BUILDING[loc?.building] && /^[A-Z]$/.test(loc.building) ? loc.building : 'U';
+  const name = (v.BUILDING[b] || v.BUILDING.U).name;
+  const color = BLDG_COLORS.includes(b) ? b : 'U';
+  return `<span class="chip bldg" style="--bc: var(--b-${color})" title="${attr(name)}">${esc(v.buildingLabel(loc))}</span>`;
 }
 
 export function rsvpChip(s) {
   if (!s.rsvp) return '';
   const when = typeof s.rsvp === 'string' ? new Date(s.rsvp) : null;
   const t = when && !Number.isNaN(when.getTime())
-    ? `RSVP required. Seats are limited; RSVPs open ${when.toLocaleString('en-US', { timeZone: 'America/Los_Angeles', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })} PT`
-    : 'RSVP required. Seats are limited';
+    ? `Reservation required. Seats are limited; reservations open ${when.toLocaleString('en-US', { timeZone: 'America/Los_Angeles', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })} PT`
+    : 'Reservation required. Seats are limited';
   return `<span class="chip rsvp" title="${attr(t)}">RSVP</span>`;
 }
 
@@ -40,6 +43,10 @@ const prioClass = p => ([0, 1, 2, 3].includes(p) ? `p-${p}` : '');
 export function prioPill(p) {
   if (![0, 1, 2, 3].includes(p)) return '';
   return `<span class="pill p-${p}">${PRIORITY[p]}</span>`;
+}
+
+export function scoreChip(score) {
+  return Number.isFinite(score) ? `<span class="chip score" title="Your score from the workbook (overrides Must/Want weighting)">★ ${esc(score)}</span>` : '';
 }
 
 export function whenText(s) {
@@ -58,7 +65,7 @@ export function prioControl(key, p, big = false) {
 export function speakersLine(s, max = 3) {
   const sp = s.speakers || [];
   if (!sp.length) return '';
-  const names = sp.slice(0, max).map(p => p[1] && p[1] !== 'Microsoft' ? `${p[0]} (${p[1]})` : p[0]);
+  const names = sp.slice(0, max).map(p => p[1] && !/^(microsoft|gartner)$/i.test(p[1]) ? `${p[0]} (${p[1]})` : p[0]);
   return esc(names.join(', ') + (sp.length > max ? ` +${sp.length - max}` : ''));
 }
 
@@ -66,30 +73,40 @@ export function cardClass(p) {
   return ['card', 's-card', prioClass(p), p === 0 ? 'skipped' : ''].join(' ');
 }
 
-// A session card. opts: { p, isNew, reserved, extra (html), compact, noActions }
+// A session card. opts: { p, isNew, reserved, score, watch, extra (html), compact, noActions }
 export function sessionCard(s, opts = {}) {
   const p = opts.p ?? null;
   const cls = cardClass(p);
   const timeChip = s.timeSource === 'preview' ? '<span class="chip preview" title="Simulated time/room (preview mode)">Preview</span>' : '';
   return `<article class="${cls}" data-card="${attr(s.key)}">
     <div class="top"><span class="code">${esc(s.code)}</span>·<span>${esc(s.type)}</span>${s.level ? `·<span>${esc(s.level)}</span>` : ''}${s.dur ? `·<span>${fmtDuration(s.dur)}</span>` : ''}
-      ${opts.isNew ? '<span class="chip new">New</span>' : ''}${s.repeats?.length ? `<span class="chip" title="Also runs as ${attr(s.repeats.join(', '))}">Repeats</span>` : ''}</div>
+      ${opts.isNew ? '<span class="chip new">New</span>' : ''}${s.repeats?.length ? `<span class="chip" title="Also runs as ${attr(s.repeats.join(', '))}">Repeats</span>` : ''}${scoreChip(opts.score)}${opts.watch ? '<span class="chip watch" title="On your watch-later list, not in the live plan">Watch later</span>' : ''}</div>
     <a class="title" href="#/session/${encodeURIComponent(s.code)}" data-act="open" data-key="${attr(s.key)}">${esc(s.title)}</a>
-    <div class="meta">${timeChip}<span>${esc(whenText(s))}</span>${!s.onlineOnly ? `${s.loc.known ? bldgChip(s.loc) : ''}<span class="muted">${esc(s.roomLabel || '')}</span>` : ''}${recChip(s)}${opts.reserved ? '<span class="chip new" title="You reserved a seat">Reserved</span>' : rsvpChip(s)}</div>
+    <div class="meta">${timeChip}<span>${esc(whenText(s))}</span>${!s.onlineOnly ? `${s.loc.known ? bldgChip(s.loc) : ''}<span class="muted">${esc(s.roomLabel || '')}</span>` : ''}${recChip(s)}${opts.reserved ? '<span class="chip new" title="You reserved a seat for this run">Reserved</span>' : rsvpChip(s)}</div>
     ${!opts.compact && s.speakers?.length ? `<div class="who">${speakersLine(s)}</div>` : ''}
     ${opts.extra || ''}
     ${opts.noActions ? '' : `<div class="actions">${prioControl(s.key, p)}</div>`}
   </article>`;
 }
 
-let toastTimer = null;
+// Toasts queue up instead of overwriting each other.
+const toastQueue = [];
+let toastBusy = false, toastTimer = null;
 export function toast(msg, action) {
+  toastQueue.push({ msg, action });
+  if (!toastBusy) nextToast();
+}
+function nextToast() {
+  const t = toastQueue.shift();
   const el = document.getElementById('toast');
-  el.innerHTML = esc(msg) + (action ? ` <button type="button">${esc(action.label)}</button>` : '');
-  if (action) el.querySelector('button').onclick = () => { el.classList.remove('show'); action.run(); };
+  if (!t || !el) { toastBusy = false; return; }
+  toastBusy = true;
+  el.innerHTML = esc(t.msg) + (t.action ? ` <button type="button">${esc(t.action.label)}</button>` : '');
+  const done = () => { clearTimeout(toastTimer); el.classList.remove('show'); setTimeout(nextToast, 250); };
+  if (t.action) el.querySelector('button').onclick = () => { done(); t.action.run(); };
   el.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.classList.remove('show'), action ? 6000 : 3000);
+  toastTimer = setTimeout(done, t.action ? 6000 : 3000);
 }
 
 // On iPhone, plain downloads are unreliable inside a Home Screen app; the share sheet

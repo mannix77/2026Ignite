@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Ignite 2026 Planner</title>
-  <meta name="description" content="Unofficial personal planner for Microsoft Ignite 2026: track catalog changes, triage sessions, and resolve travel-time conflicts between buildings.">
+  <title>Conference Planner</title>
+  <meta name="description" content="Unofficial personal conference planner (Microsoft Ignite 2026, Gartner IT Symposium/Xpo 2026): track catalog changes, triage sessions, and resolve travel-time conflicts between buildings.">
   <meta name="theme-color" content="#0f766e" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0b1416" media="(prefers-color-scheme: dark)">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="format-detection" content="telephone=no">
-  <meta name="apple-mobile-web-app-title" content="Ignite Plan">
+  <meta name="apple-mobile-web-app-title" content="Planner">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="assets/icons/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="assets/icons/icon-180.png">
@@ -23,7 +23,7 @@
     <div class="brand">
       <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><use href="assets/icons/icon.svg#mark"/></svg>
       <div>
-        <div class="brand-title">Ignite 2026 Planner</div>
+        <label class="brand-title"><span class="sr-only">Conference</span><select id="conf-switch" aria-label="Conference"></select></label>
         <div class="brand-sub" id="sync-status">Loading catalog…</div>
       </div>
     </div>

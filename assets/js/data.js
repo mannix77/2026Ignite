@@ -1,55 +1,48 @@
-// Loads the synced catalog and turns it into the in-memory model the views use.
+// Loads a conference's synced catalog and turns it into the in-memory model the views use.
 
 import { fromISO, parseSlot, hash } from './time.js';
-import { parseLocation } from './venue.js';
-
-export const EVENT = {
-  name: 'Microsoft Ignite 2026',
-  days: ['2026-11-17', '2026-11-18', '2026-11-19', '2026-11-20'],
-  // The site resolves both the instance id (canonical) and the session code.
-  sessionUrl: s => `https://ignite.microsoft.com/en-US/sessions/${encodeURIComponent(s.inst || s.code)}`,
-  // Session types that need an RSVP, and when RSVPs open (site settings; used if the live value is missing).
-  rsvp: { 'Lab': '2026-10-26T08:00:00+08:00', 'Lightning Talk': '2026-10-26T08:00:00+08:00', 'Table Talk': '2026-10-26T08:00:00+08:00', 'Invite Only': '2026-10-26T08:00:00+08:00' },
-};
 
 // ?data=<dir> loads a different snapshot directory (testing with past events). Only plain
 // relative paths on this site are accepted.
-export const DATA_DIR = (() => {
+export const DATA_OVERRIDE = (() => {
   const d = new URLSearchParams(location.search).get('data');
-  return d && /^[\w-]+(\/[\w.-]+)*\/?$/.test(d) && !d.split('/').includes('..') ? d.replace(/\/$/, '') : 'data';
+  return d && /^[\w-]+(\/[\w.-]+)*\/?$/.test(d) && !d.split('/').includes('..') ? d.replace(/\/$/, '') : null;
 })();
-
-export const CUSTOM_DATA = DATA_DIR !== 'data';
+export const CUSTOM_DATA = !!DATA_OVERRIDE;
 
 async function getJSON(path) {
-  path = path.replace(/^data\//, `${DATA_DIR}/`);
   const res = await fetch(path, { cache: 'no-cache' }); // revalidates with ETag: cheap 304s
   if (!res.ok) throw new Error(`${path}: HTTP ${res.status}`);
   return res.json();
 }
 
-export async function fetchAll() {
-  const [doc, meta, changes] = await Promise.all([
-    getJSON('data/sessions.json'),
-    getJSON('data/meta.json').catch(() => ({})),
-    getJSON('data/changes.json').catch(() => ({ batches: [] })),
+export async function fetchAll(dataDir) {
+  const dir = DATA_OVERRIDE || dataDir;
+  const [doc, meta, changes, favorites] = await Promise.all([
+    getJSON(`${dir}/sessions.json`),
+    getJSON(`${dir}/meta.json`).catch(() => ({})),
+    getJSON(`${dir}/changes.json`).catch(() => ({ batches: [] })),
+    getJSON(`${dir}/favorites.json`).catch(() => null),
   ]);
-  return { doc, meta, changes };
+  // The service worker can hand back a cached sessions.json next to a fresh meta/changes
+  // (slow Wi-Fi). Flag it so the app refreshes once the newer copy has landed.
+  const newest = [meta.lastChanged, changes.batches?.[0]?.at].filter(Boolean).sort().pop();
+  const stale = !!(newest && doc.generatedAt && newest > doc.generatedAt);
+  return { doc, meta, changes, favorites, stale };
 }
 
 // Preview mode only: deterministic fake day/room so the planner can be rehearsed
-// before Microsoft publishes the real schedule. Never shown without a "Preview" label.
-const PREVIEW_BUILDINGS = [
-  ['Moscone West', 2], ['Moscone West', 3], ['Moscone West', 3],
-  ['Moscone South', 1], ['Moscone South', 2], ['Marriott Marquis', 'B2'],
-];
-
-// Session hours per day from the official agenda (minutes after midnight, PT).
+// before a schedule is published. Never shown without a "Preview" label.
+const PREVIEW_ROOMS = {
+  moscone: [['Moscone West', 2], ['Moscone West', 3], ['Moscone West', 3], ['Moscone South', 1], ['Moscone South', 2], ['Marriott Marquis', 'B2']],
+  'swan-dolphin': [['WDW Dolphin', 1], ['WDW Dolphin', 2], ['WDW Swan', 1], ["Disney's Yacht & Beach Resort", 1]],
+};
+// Session hours per day from the official Ignite agenda (minutes after midnight, PT).
 const PREVIEW_HOURS = { '2026-11-17': [840, 1080], '2026-11-18': [510, 1035], '2026-11-19': [540, 1080], '2026-11-20': [540, 735] };
 
-function previewTiming(rec) {
+function previewTiming(rec, conf) {
   const h = hash(rec.id);
-  const day = EVENT.days[h % EVENT.days.length];
+  const day = conf.days[h % conf.days.length];
   const [open, close] = PREVIEW_HOURS[day] || [540, 1080];
   const slot = parseSlot(rec.slot);
   const dur = Math.min(rec.dur || (slot ? slot.end - slot.start : 45), close - open);
@@ -57,13 +50,17 @@ function previewTiming(rec) {
   const seed = slot ? slot.start : (h >>> 4) % 1440;
   let start = open + (seed % Math.max(1, close - open - dur));
   start = Math.round(start / 5) * 5;
-  const [bName, floor] = PREVIEW_BUILDINGS[(h >>> 8) % PREVIEW_BUILDINGS.length];
+  const rooms = PREVIEW_ROOMS[conf.venue.id] || PREVIEW_ROOMS.moscone;
+  const [bName, floor] = rooms[(h >>> 8) % rooms.length];
   const room = `${bName}, Level ${floor}, Room ${floor}0${String((h >>> 12) % 24 + 1).padStart(2, '0')}`;
   return { day, startMin: start, endMin: start + dur, room };
 }
 
-export function buildModel(doc, settings, rsvp = EVENT.rsvp) {
+// rsvp: { type -> opensAt } for conferences where the session type decides (Ignite);
+// catalogs can also mark single sessions with rec.rsvp (Gartner's seat reservations).
+export function buildModel(doc, settings, rsvp, conf, venue) {
   const overrides = settings.overrides || {};
+  const tz = conf.tz;
   const sessions = [];
   const byId = new Map();
   const byKey = new Map();
@@ -80,25 +77,26 @@ export function buildModel(doc, settings, rsvp = EVENT.rsvp) {
   for (const rec of doc.sessions || []) {
     const s = { ...rec, key: rec.inst };
     s.inPerson = (rec.delivery || []).some(d => /^in[- ]?person$/i.test(d));
-    s.rsvp = s.inPerson && rsvp && rsvp[rec.type] !== undefined ? (rsvp[rec.type] || true) : null;
     s.onlineOnly = !s.inPerson && (rec.delivery || []).length > 0;
+    if (rec.rsvp === true) s.rsvp = rec.rsvpOpens || true;
+    else s.rsvp = s.inPerson && rsvp && rsvp[rec.type] !== undefined ? (rsvp[rec.type] || true) : null;
     let room = rec.room;
-    const st = fromISO(rec.start);
+    const st = fromISO(rec.start, tz);
     if (st && rec.dur !== 0) {
-      const en = fromISO(rec.end);
+      const en = fromISO(rec.end, tz);
       s.day = st.day;
       s.startMin = st.min;
       s.endMin = en ? en.min + (en.day !== st.day ? 1440 : 0) : st.min + (rec.dur || 45);
       s.timeSource = 'official';
       official++;
     } else if (preview && s.inPerson && rec.dur !== 0) {
-      const p = previewTiming(rec);
+      const p = previewTiming(rec, conf);
       Object.assign(s, { day: p.day, startMin: p.startMin, endMin: p.endMin, timeSource: 'preview' });
       if (rec.roomTbd) room = p.room;
     } else {
       s.day = null; s.startMin = null; s.endMin = null; s.timeSource = null;
     }
-    s.loc = s.onlineOnly ? { label: 'Online', building: 'O', floor: null, known: true } : parseLocation(room, overrides);
+    s.loc = s.onlineOnly ? { label: 'Online', building: 'O', floor: null, known: true } : venue.parseLocation(room, overrides);
     s.roomLabel = s.onlineOnly ? 'Online' : (rec.roomTbd && s.timeSource !== 'preview' ? 'Room TBA' : room);
     s.hay = [rec.code, rec.title, rec.desc, (rec.speakers || []).map(p => `${p[0]} ${p[1]}`).join(' '),
       (rec.tags || []).join(' '), (rec.topics || []).join(' '), rec.type].join(' \u0001 ').toLowerCase();
@@ -144,9 +142,11 @@ export function diffKnown(model, groups, known) {
     for (const k of ['start', 'end', 'room', 'title', 'code']) if ((old[k] ?? null) !== (cur[k] ?? null)) fields[k] = [old[k] ?? null, cur[k] ?? null];
     if (Object.keys(fields).length) alerts.push({ kind: 'changed', inst, g: cur.g, code: cur.code, title: cur.title, fields });
   }
+  // A group counts as tracked by its old key or by any run we already snapshotted, so a
+  // renamed/regrouped session still reports new and cancelled runs.
   const knownGroups = new Set(Object.values(known).map(k => k.g));
+  for (const [inst, cur] of Object.entries(next)) if (known[inst]) knownGroups.add(cur.g);
   for (const [inst, cur] of Object.entries(next)) {
-    // A new run of a session you'd already picked: another chance to fit it in.
     if (!known[inst] && knownGroups.has(cur.g)) alerts.push({ kind: 'run-added', inst, g: cur.g, code: cur.code, title: cur.title });
   }
   for (const [inst, old] of Object.entries(known)) {

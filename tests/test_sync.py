@@ -3,6 +3,7 @@
     python3 -m unittest discover -s tests -v
 """
 import copy
+import datetime as dt
 import json
 import os
 import shutil
@@ -178,6 +179,28 @@ class EdgeCaseTests(unittest.TestCase):
         self.assertEqual(self.c["LTG808"]["delivery"], ["In-person", "Online"])
         self.assertIs(self.c["LTG808"]["recorded"], False)
 
+    def test_junk_shapes_are_tolerated(self):
+        c = self.c
+        self.assertEqual(c["BRK820"]["dur"], 45)                                   # 45.0 counts as whole minutes
+        self.assertEqual(c["BRK820"]["end"], "2026-11-18T19:30:00Z")
+        self.assertEqual(c["BRK821"]["end"], "2026-11-18T18:45:00Z")           # end before start -> from the slot
+        self.assertEqual(c["BRK821"]["dur"], 45)                                   # True is not a duration
+        self.assertIsNone(c["BRK822"]["start"])
+        self.assertIsNone(c["BRK822"]["end"])                                      # an end on its own is noise
+        self.assertIsNone(c["BRK822"]["dur"])
+        self.assertIs(c["BRK822"]["recorded"], True)                               # single object, not a list
+        self.assertEqual(c["BRK822"]["related"], [])
+        self.assertEqual(c["BRK822"]["repeats"], [])
+        self.assertEqual(c["BRK822"]["speakers"], [])
+        self.assertEqual(c["BRK822"]["room"], "zTest1")
+        self.assertTrue(c["BRK822"]["roomTbd"])
+        self.assertEqual(c["BRK822"]["level"], 300)
+        self.assertEqual(c["BRK823"]["id"], "23")
+        self.assertEqual(c["BRK823"]["inst"], "23")
+        self.assertEqual(c["BRK823"]["start"], "2026-11-19T17:00:00Z")           # NBSP-padded timestamp
+        self.assertIsNone(c["BRK823"]["dur"])                                      # 20000 minutes is not a session
+        self.assertEqual(c["BRK823"]["room"], "Moscone South, Level 1, Room 101")
+
     def test_shared_session_id_runs_are_one_group(self):
         runs = [r for r in self.recs if r["id"] == "e6"]
         self.assertEqual(len(runs), 2)
@@ -322,6 +345,29 @@ class RunTests(unittest.TestCase):
         os.remove(os.path.join(self.tmp, "data", "meta.json"))  # as in CI, where meta.json isn't committed
         self.run_sync(raw, W26)
         self.assertEqual(self.data("meta.json")["lastChanged"], first)
+
+    def test_untracked_churn_does_not_move_last_changed(self):
+        raw = load("raw_2026_sample.json")
+        # Runs are seconds apart in CI; give each its own clock minute.
+        base = sync.utcnow()
+        clock = iter(base + dt.timedelta(minutes=i) for i in range(1, 10))
+        self.addCleanup(setattr, sync, "utcnow", sync.utcnow)
+        sync.utcnow = lambda: next(clock)
+        self.run_sync(raw, W26)
+        first = self.data("sessions.json")["changedAt"]
+        self.assertEqual(first, self.data("sessions.json")["generatedAt"])
+        noisy = copy.deepcopy(raw)
+        noisy[0]["isPopular"] = not noisy[0].get("isPopular")
+        _, changed = self.run_sync(noisy, W26)
+        self.assertFalse(changed)
+        self.assertEqual(self.data("sessions.json")["changedAt"], first)
+        self.assertEqual(self.data("meta.json")["lastChanged"], first)
+        moved = copy.deepcopy(noisy)
+        moved[1]["title"] = moved[1]["title"] + " (renamed)"
+        _, changed = self.run_sync(moved, W26)
+        self.assertTrue(changed)
+        self.assertNotEqual(self.data("sessions.json")["changedAt"], first)
+        self.assertEqual(self.data("meta.json")["lastChanged"], self.data("sessions.json")["changedAt"])
 
     def test_site_flag_flip_is_a_milestone(self):
         raw = load("raw_2026_sample.json")

@@ -22,6 +22,7 @@
   --bad: #b91c1c;  --bad-soft: #fde2e2;
 
   --b-W: #2563eb; --b-S: #c2410c; --b-N: #15803d; --b-M: #7c3aed; --b-C: #be185d; --b-H: #92400e; --b-O: #475569; --b-U: #6b7280;
+  --b-D: #0369a1; --b-R: #7c3aed; --b-Y: #b45309; --b-B: #be185d;
 
   --radius: 12px;
   --radius-sm: 8px;
@@ -41,6 +42,7 @@
     --maybe: #8ab4e8; --maybe-soft: #172a3d; --skip: #9ca3af; --skip-soft: #23292e;
     --ok: #4ade80; --ok-soft: #12301d; --tight: #facc15; --tight-soft: #352c0b; --bad: #f87171; --bad-soft: #3a1515;
     --b-W: #60a5fa; --b-S: #fb923c; --b-N: #4ade80; --b-M: #a78bfa; --b-C: #f472b6; --b-H: #d6a26b; --b-O: #94a3b8; --b-U: #9ca3af;
+    --b-D: #38bdf8; --b-R: #a78bfa; --b-Y: #fbbf24; --b-B: #f472b6;
     --shadow: 0 1px 2px rgb(0 0 0 / .4), 0 4px 14px rgb(0 0 0 / .25);
     color-scheme: dark;
   }
@@ -53,6 +55,7 @@
   --maybe: #8ab4e8; --maybe-soft: #172a3d; --skip: #9ca3af; --skip-soft: #23292e;
   --ok: #4ade80; --ok-soft: #12301d; --tight: #facc15; --tight-soft: #352c0b; --bad: #f87171; --bad-soft: #3a1515;
   --b-W: #60a5fa; --b-S: #fb923c; --b-N: #4ade80; --b-M: #a78bfa; --b-C: #f472b6; --b-H: #d6a26b; --b-O: #94a3b8; --b-U: #9ca3af;
+  --b-D: #38bdf8; --b-R: #a78bfa; --b-Y: #fbbf24; --b-B: #f472b6;
   --shadow: 0 1px 2px rgb(0 0 0 / .4), 0 4px 14px rgb(0 0 0 / .25);
   color-scheme: dark;
 }
@@ -81,7 +84,13 @@ svg { width: 1em; height: 1em; flex: none; }
 .brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
 .brand > div { min-width: 0; }
 .brand-mark { width: 30px; height: 30px; color: var(--accent); }
-.brand-title { font-weight: 700; letter-spacing: -.01em; }
+.brand-title { font-weight: 700; letter-spacing: -.01em; display: block; }
+.brand-title select {
+  font: inherit; font-weight: 700; letter-spacing: -.01em; border: 0; background: transparent; color: var(--text); padding: 0 18px 0 0;
+  appearance: none; -webkit-appearance: none; cursor: pointer; max-width: 70vw;
+  background-image: linear-gradient(45deg, transparent 50%, var(--text-3) 50%), linear-gradient(135deg, var(--text-3) 50%, transparent 50%);
+  background-position: calc(100% - 9px) 55%, calc(100% - 4px) 55%; background-size: 5px 5px; background-repeat: no-repeat;
+}
 .brand-sub { font-size: 12.5px; color: var(--text-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .brand-sub .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--ok); margin-right: 5px; vertical-align: 1px; }
 .brand-sub .dot.err { background: var(--bad); }
@@ -179,6 +188,12 @@ h3 { font-size: 15px; margin: 0 0 6px; }
 .chip.rec { background: transparent; border-color: var(--line); }
 .chip.norec { background: var(--want-soft); color: var(--want); }
 .chip.rsvp { background: var(--maybe-soft); color: var(--maybe); }
+.chip.score { background: var(--want-soft); color: var(--want); }
+.chip.watch { background: var(--skip-soft); color: var(--text-2); }
+.chip.sugg { background: var(--ok-soft); color: var(--ok); }
+.t-lunch { display: grid; grid-template-columns: 74px 1fr; gap: 12px; }
+.t-lunch .line { margin-left: 6px; padding: 6px 0 6px 14px; border-left: 2px dotted var(--line); font-size: 13px; color: var(--text-2); }
+@media (max-width: 640px) { .t-lunch { grid-template-columns: 62px 1fr; gap: 8px; } }
 .chip.btn-chip { cursor: pointer; border-color: var(--line); background: var(--surface); }
 .chip.btn-chip[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
 .chip.removable { cursor: pointer; background: var(--accent-soft); color: var(--accent); }
@@ -413,7 +428,7 @@ dialog#detail::backdrop { background: rgb(8 14 12 / .5); }
   .filter-grid label { padding: 8px 0; }
 }
 dialog#detail { max-height: min(88dvh, 900px); overscroll-behavior: contain; }
-@media (max-width: 640px) { dialog#detail { max-height: 92dvh; padding-bottom: env(safe-area-inset-bottom); } }
+@media (max-width: 640px) { dialog#detail { max-height: 92dvh; } dialog#detail .d-body { padding-bottom: calc(18px + env(safe-area-inset-bottom)); } }
 body:has(dialog[open]) { overflow: hidden; }
 .install { position: relative; padding-right: 48px; }
 .banner details { margin-top: 4px; }
