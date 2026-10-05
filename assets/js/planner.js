@@ -377,13 +377,15 @@ export function fillers(dayPlan, candidates, ctx = DEFAULT_PLANNER) {
 const LUNCH_ITEM = s => ({ key: 'lunch', pseudo: 'lunch', code: 'Lunch', title: 'Lunch break', startMin: s.start, endMin: s.end });
 
 // Where you are now and what's next, for the conference-day view. `origin` is where the
-// day starts (hotel / first building) when nothing has happened yet. Lunch (a slot, not
-// an item) can be "current" or "next", but never the place you walk from.
+// day starts (hotel / first building) when nothing has happened yet; with `origin.live`
+// (GPS or "I'm at") it is where you are, whatever the plan says. Lunch (a slot, not an
+// item) can be "current" or "next", but never the place you walk from.
 export function nowNext(dayPlan, nowMin, ctx = DEFAULT_PLANNER, origin = null, lunch = null) {
   const plan = dayPlan.slice().sort((a, b) => a.startMin - b.startMin);
   let current = plan.find(p => p.startMin <= nowMin && nowMin < p.endMin) || null;
   let next = plan.find(p => p.startMin > nowMin) || null;
-  const from = current || [...plan].reverse().find(p => p.endMin <= nowMin) || (origin ? { key: 'origin', loc: origin } : null);
+  const from = (origin && origin.live ? { key: 'origin', loc: origin } : null)
+    || current || [...plan].reverse().find(p => p.endMin <= nowMin) || (origin ? { key: 'origin', loc: origin } : null);
   if (lunch && !current && lunch.start <= nowMin && nowMin < lunch.end) current = LUNCH_ITEM(lunch);
   if (lunch && lunch.start > nowMin && (!next || lunch.start < next.startMin)) next = LUNCH_ITEM(lunch);
   let leaveBy = null, walk = null, extra = 0;

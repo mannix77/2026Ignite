@@ -13,12 +13,12 @@ import { MOSCONE_DEF } from './venue.js';
 export const SWAN_DOLPHIN_DEF = {
   id: 'swan-dolphin',
   buildings: [
-    { id: 'D', name: 'WDW Dolphin', short: 'Dolphin', re: /dolphin|atlantic hall|pacific (hall|terrace)|hemisphere|central pavilion|(upper|lower) peninsula|peninsula|oceanic|\b(asia|europe|australia)\s*\d|\bamericas\b|\bbay room\b|it ?xpo/i },
-    { id: 'R', name: 'Swan Reserve', short: 'Reserve', re: /swan\s*reserve|\boasis\b|\binlet\b|\breef\b|\blagoon\b|\bvue\b|\bharbor\s*[1-5]\b/i },
-    { id: 'S', name: 'WDW Swan', short: 'Swan', re: /\bswan\b|\b(lark|mockingbird|osprey|pelican|toucan|macaw|parrot|peacock|cockatoo|hummingbird)\b|\b(dove|egret|heron|ibis|sandpiper|teal)\b|eagle boardroom|lake view/i },
-    { id: 'Y', name: "Yacht & Beach Club", short: 'Yacht&Beach', re: /yacht|beach (club|resort)|grand harbor|\b(asbury|cape cod|newport|hampton|saybrook|seaview|bourne|stonington|wellfleet|eastham|nantucket|martha)\b/i },
-    { id: 'B', name: 'BoardWalk Inn', short: 'BoardWalk', re: /boardwalk/i },
-    { id: 'H', name: 'Other off-site', short: 'Off-site', re: /hollywood studios|epcot|magic kingdom|animal kingdom|disney springs|west pavill?ion/i },
+    { id: 'D', name: 'WDW Dolphin', short: 'Dolphin', re: /dolphin|atlantic hall|pacific (hall|terrace)|hemisphere|central pavilion|(upper|lower) peninsula|peninsula|oceanic|\b(asia|europe|australia)\s*\d|\bamericas\b|\bbay room\b|it ?xpo/i, geo: [28.36727, -81.56047] },
+    { id: 'R', name: 'Swan Reserve', short: 'Reserve', re: /swan\s*reserve|\boasis\b|\binlet\b|\breef\b|\blagoon\b|\bvue\b|\bharbor\s*[1-5]\b/i, geo: [28.36453, -81.56182] },
+    { id: 'S', name: 'WDW Swan', short: 'Swan', re: /\bswan\b|\b(lark|mockingbird|osprey|pelican|toucan|macaw|parrot|peacock|cockatoo|hummingbird)\b|\b(dove|egret|heron|ibis|sandpiper|teal)\b|eagle boardroom|lake view/i, geo: [28.36531, -81.55984] },
+    { id: 'Y', name: "Yacht & Beach Club", short: 'Yacht&Beach', re: /yacht|beach (club|resort)|grand harbor|\b(asbury|cape cod|newport|hampton|saybrook|seaview|bourne|stonington|wellfleet|eastham|nantucket|martha)\b/i, geo: [28.37120, -81.55830] },
+    { id: 'B', name: 'BoardWalk Inn', short: 'BoardWalk', re: /boardwalk/i, geo: [28.36720, -81.55563] },
+    { id: 'H', name: 'Other off-site', short: 'Off-site', re: /hollywood studios|epcot|magic kingdom|animal kingdom|disney springs|west pavill?ion/i, geo: [28.35725, -81.56062], offsite: true },
     { id: 'O', name: 'Online only', short: 'Online', re: /^(online|virtual|on[- ]demand$)/i },
   ],
   // Minutes door to door at a changeover, from the hotels' floor plans, measured routes
@@ -47,6 +47,7 @@ export const SWAN_DOLPHIN_DEF = {
     [/oceanic|\b(asia|europe|australia)\s*\d|central pavilion|meal pavilion/i, 'Lobby'],
   ],
   startFrom: 'D',
+  geoRadius: 260,   // the Dolphin alone is ~300 m long
   notes: 'Swan and Dolphin: 7–10 min across the covered causeway (10–15 from the Xpo level). Swan Reserve: across the street from the Swan. Yacht & Beach Club convention center: 12–20 min around Crescent Lake on an exposed path (the Friendship boats are no faster). Add a few minutes at keynote and lunch changeovers; October afternoons are hot and showery.',
 };
 
