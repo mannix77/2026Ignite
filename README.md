@@ -57,7 +57,7 @@ The Ignite favorites were imported the same way from the `My Favorites` sheet of
 
 ## Copies for colleagues
 
-The deploy publishes the app once at the site root and once per folder under `instances/` — `instances/gino/` becomes `https://mannix77.github.io/2026Ignite/gino/`. A copy has the same catalogs and updates but its own picks, notes and settings (storage is namespaced, so even a phone with both installed keeps them apart) and no pre-loaded favorites. Anything in `instances/<name>/data/` is laid over the copy, so a colleague can ship their own `data/<conference>/favorites.json` (build it with `scripts/import_gartner.py … --favorites-only --favorites-out instances/<name>/data/gartner2026/favorites.json`). Add a folder, commit, and the next deploy publishes it. To change the app itself, fork the repo and enable Pages on the fork.
+The deploy publishes the app once at the site root and once per folder under `instances/` — `instances/gino/` becomes `https://mannix77.github.io/2026Ignite/gino/`. A copy has the same catalogs and updates but its own picks, notes and settings (storage is namespaced, so even a phone with both installed keeps them apart) and no pre-loaded favorites. Anything in `instances/<name>/data/` is laid over the copy, so a colleague can ship their own `data/<conference>/favorites.json` (build it with `scripts/import_gartner.py … --favorites-only --favorites-out instances/<name>/data/gartner2026/favorites.json`). Add a folder, commit, and the next deploy publishes it. A file `instances/<name>/conference` holding a conference id (`gartner2026` or `ignite2026`) makes the copy open on that conference by default; Gino's opens on Gartner. To change the app itself, fork the repo and enable Pages on the fork.
 
 ## One-time GitHub setup
 
