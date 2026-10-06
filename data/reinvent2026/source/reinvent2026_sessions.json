@@ -1,7 +1,7 @@
 {
  "source": "https://catalog.awsevents.com/api/sessions",
  "event": "reinvent2026",
- "fetchedAt": "2026-10-06T07:01:35Z",
+ "fetchedAt": "2026-10-06T12:56:25Z",
  "count": 2177,
  "sessions": [
   {
@@ -37384,108 +37384,6 @@
    ]
   },
   {
-   "sessionID": "1780442228975001c3Pi",
-   "code": "IND350-R",
-   "title": "Build an Agentic AI Marketing Engine Powered by Amazon Bedrock",
-   "abstract": "In this hands-on builder session, construct a multi-agent AI system that automates the full marketing lifecycle—plan, launch, and optimize. Build specialized agents on Amazon Bedrock (planner, media buyer, analyst, and creative) that turn campaign parameters into data-driven recommendations: audience targeting, budget allocation, performance forecasts, and localized creative assets grounded in your brand guidelines and historical data. Activate campaigns through Amazon Ads DSP, then deploy an optimizer agent with human-in-the-loop approvals to reallocate budget across channels as performance shifts. Leave with a working blueprint for agentic marketing workflows using Amazon Bedrock and AWS Marketplace solutions—and become the marketeer of the future.",
-   "type": "Builders' session",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-06T02:44:41Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Builders' session"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Artificial Intelligence",
-     "Industry Solutions"
-    ],
-    "AreaofInterest": [
-     "Generative AI",
-     "Innovation & Transformation",
-     "Agentic AI"
-    ],
-    "Industry": [
-     "Advertising & Marketing"
-    ],
-    "Role": [
-     "Business Executive",
-     "Developer / Engineer",
-     "Tech Explorer"
-    ],
-    "Services": [
-     "Amazon Bedrock"
-    ],
-    "Venue": [
-     "Caesars Forum"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Kiranpreet Chawla",
-     "title": "Senior Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Jeremy Bartosiewicz",
-     "title": "Principal Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Hari Radhakrishnan",
-     "title": "Sr. Solutions Architect - AWS Industrials – Retail / Consumer Product Goods",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Vanessa Ji",
-     "title": "Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Sanhawat Taongern",
-     "title": "Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025509626001CUUm",
-     "date": "2026-12-01",
-     "startTime": "16:00",
-     "endTime": "17:00",
-     "utcStartTime": "2026/12/02 00:00:00",
-     "utcEndTime": "2026/12/02 01:00:00",
-     "length": 60,
-     "room": "Caesars Forum | Level 1 | Alliance 311",
-     "roomId": "1789591919636004boBN",
-     "capacity": "50",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358235274001irGi",
    "code": "IND350-R1",
    "title": "Build an Agentic AI Marketing Engine Powered by Amazon Bedrock",
@@ -37539,8 +37437,20 @@
    },
    "speakers": [
     {
+     "name": "Vanessa Ji",
+     "title": "Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
      "name": "Kiranpreet Chawla",
      "title": "Senior Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Sanhawat Taongern",
+     "title": "Solutions Architect",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
     },
@@ -37553,18 +37463,6 @@
     {
      "name": "Hari Radhakrishnan",
      "title": "Sr. Solutions Architect - AWS Industrials – Retail / Consumer Product Goods",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Vanessa Ji",
-     "title": "Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Sanhawat Taongern",
-     "title": "Solutions Architect",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
     }
@@ -37580,6 +37478,108 @@
      "length": 60,
      "room": "Caesars Forum | Level 1 | Forum 120 | Content Hub | Builders' Session 1",
      "roomId": "1789591919735004bsN5",
+     "capacity": "50",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442228975001c3Pi",
+   "code": "IND350-R",
+   "title": "Build an Agentic AI Marketing Engine Powered by Amazon Bedrock",
+   "abstract": "In this hands-on builder session, construct a multi-agent AI system that automates the full marketing lifecycle—plan, launch, and optimize. Build specialized agents on Amazon Bedrock (planner, media buyer, analyst, and creative) that turn campaign parameters into data-driven recommendations: audience targeting, budget allocation, performance forecasts, and localized creative assets grounded in your brand guidelines and historical data. Activate campaigns through Amazon Ads DSP, then deploy an optimizer agent with human-in-the-loop approvals to reallocate budget across channels as performance shifts. Leave with a working blueprint for agentic marketing workflows using Amazon Bedrock and AWS Marketplace solutions—and become the marketeer of the future.",
+   "type": "Builders' session",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-06T02:44:41Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Builders' session"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Artificial Intelligence",
+     "Industry Solutions"
+    ],
+    "AreaofInterest": [
+     "Generative AI",
+     "Innovation & Transformation",
+     "Agentic AI"
+    ],
+    "Industry": [
+     "Advertising & Marketing"
+    ],
+    "Role": [
+     "Business Executive",
+     "Developer / Engineer",
+     "Tech Explorer"
+    ],
+    "Services": [
+     "Amazon Bedrock"
+    ],
+    "Venue": [
+     "Caesars Forum"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Vanessa Ji",
+     "title": "Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Kiranpreet Chawla",
+     "title": "Senior Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Sanhawat Taongern",
+     "title": "Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Jeremy Bartosiewicz",
+     "title": "Principal Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Hari Radhakrishnan",
+     "title": "Sr. Solutions Architect - AWS Industrials – Retail / Consumer Product Goods",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025509626001CUUm",
+     "date": "2026-12-01",
+     "startTime": "16:00",
+     "endTime": "17:00",
+     "utcStartTime": "2026/12/02 00:00:00",
+     "utcEndTime": "2026/12/02 01:00:00",
+     "length": 60,
+     "room": "Caesars Forum | Level 1 | Alliance 311",
+     "roomId": "1789591919636004boBN",
      "capacity": "50",
      "inPersonTime": true,
      "virtualTime": false,
@@ -37758,7 +37758,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-05T20:07:14Z",
+   "modified": "2026-10-06T02:13:06Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -37795,16 +37795,16 @@
    },
    "speakers": [
     {
-     "name": "Jeff Bascle",
-     "title": "Research Director, AI Enablement",
-     "company": "Lockheed Martin Corporation",
-     "role": "External Speaker"
-    },
-    {
      "name": "Taylor Riggan",
      "title": "Principal Graph Architect, Amazon Neptune",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
+    },
+    {
+     "name": "Jeff Bascle",
+     "title": "Research Director, AI Enablement",
+     "company": "Lockheed Martin Corporation",
+     "role": "External Speaker"
     }
    ],
    "times": [
@@ -58768,83 +58768,6 @@
    ]
   },
   {
-   "sessionID": "1780442253159001cbeT",
-   "code": "API317-R",
-   "title": "Coding event-driven retry patterns that prevent outages",
-   "abstract": "In this code talk, you'll instrument an event-driven integration layer with the patterns that contain failure: exponential backoff with jitter, circuit breakers, poison-pill isolation, and replay-from-archive - all live, in code. See how jittered retries prevent thundering herds, how circuit breakers protect healthy services from impaired ones, and how idempotency makes every replay safe. By the end, you'll have hands-on patterns for EventBridge and Step Functions that shrink your blast radius from total outage to graceful degradation.",
-   "type": "Code talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-06T02:44:29Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Code talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Application Integration"
-    ],
-    "AreaofInterest": [
-     "Event-Driven Architecture"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon EventBridge",
-     "AWS Step Functions"
-    ],
-    "Venue": [
-     "Caesars Forum"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Patrick Meiler",
-     "title": "Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Dirk Fröhner",
-     "title": "Principal Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790033114643001qBFk",
-     "date": "2026-12-02",
-     "startTime": "12:00",
-     "endTime": "13:00",
-     "utcStartTime": "2026/12/02 20:00:00",
-     "utcEndTime": "2026/12/02 21:00:00",
-     "length": 60,
-     "room": "Caesars Forum | Level 1 | Forum 120 | Content Hub | Code Talk",
-     "roomId": "1789591919752004bpPI",
-     "capacity": "120",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358254049001iaV4",
    "code": "API317-R1",
    "title": "Coding event-driven retry patterns that prevent outages",
@@ -58915,6 +58838,83 @@
      "room": "Caesars Palace | Promenade South | Octavius 4 | Content Hub | Code Talk",
      "roomId": "1789591920119001bHvX",
      "capacity": "80",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442253159001cbeT",
+   "code": "API317-R",
+   "title": "Coding event-driven retry patterns that prevent outages",
+   "abstract": "In this code talk, you'll instrument an event-driven integration layer with the patterns that contain failure: exponential backoff with jitter, circuit breakers, poison-pill isolation, and replay-from-archive - all live, in code. See how jittered retries prevent thundering herds, how circuit breakers protect healthy services from impaired ones, and how idempotency makes every replay safe. By the end, you'll have hands-on patterns for EventBridge and Step Functions that shrink your blast radius from total outage to graceful degradation.",
+   "type": "Code talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-06T07:58:51Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Code talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Application Integration"
+    ],
+    "AreaofInterest": [
+     "Event-Driven Architecture"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon EventBridge",
+     "AWS Step Functions"
+    ],
+    "Venue": [
+     "Caesars Forum"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Patrick Meiler",
+     "title": "Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Dirk Fröhner",
+     "title": "Principal Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790033114643001qBFk",
+     "date": "2026-12-02",
+     "startTime": "12:00",
+     "endTime": "13:00",
+     "utcStartTime": "2026/12/02 20:00:00",
+     "utcEndTime": "2026/12/02 21:00:00",
+     "length": 60,
+     "room": "Caesars Forum | Level 1 | Forum 120 | Content Hub | Code Talk",
+     "roomId": "1789591919752004bpPI",
+     "capacity": "120",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -61581,7 +61581,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-05T20:07:14Z",
+   "modified": "2026-10-06T07:59:54Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -68969,82 +68969,6 @@
    ]
   },
   {
-   "sessionID": "1790358253859001ikiW",
-   "code": "DVT306-R1",
-   "title": "Deploy without drama: Safe, automated releases on AWS",
-   "abstract": "Releasing software shouldn't mean holding your breath. In this chalk talk, explore how AWS CodePipeline, CodeBuild, and AppConfig help you automate safe, hands-off deployments to Amazon EC2, ECS, and Lambda across accounts and Regions. Learn to apply canary and linear traffic-shifting strategies, wire CloudWatch alarms for automatic rollback, and use stage-level conditions to gate promotions on integration tests. Whether you're deploying a single service or orchestrating hundreds, leave with patterns for zero-downtime releases you can trust.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-06T02:44:38Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Cloud Operations",
-     "Developer Tools"
-    ],
-    "AreaofInterest": [
-     "Management & Governance",
-     "Automation",
-     "DevOps"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "DevOps Engineer",
-     "IT Administrator"
-    ],
-    "Services": [
-     "AWS AppConfig",
-     "AWS CodeBuild",
-     "AWS CodePipeline"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Michael Michael",
-     "title": "Sr Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360387480001AmhL",
-     "date": "2026-12-01",
-     "startTime": "14:30",
-     "endTime": "15:30",
-     "utcStartTime": "2026/12/01 22:30:00",
-     "utcEndTime": "2026/12/01 23:30:00",
-     "length": 60,
-     "room": "MGM Grand | Level 3 | Room 306",
-     "roomId": "1789591920562001bMpT",
-     "capacity": "82",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780441499753001Gs1c",
    "code": "DVT306-R",
    "title": "Deploy without drama: Safe, automated releases on AWS",
@@ -69114,6 +69038,82 @@
      "room": "Caesars Forum | Level 1 | Alliance 305",
      "roomId": "1789591919601004bywY",
      "capacity": "88",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358253859001ikiW",
+   "code": "DVT306-R1",
+   "title": "Deploy without drama: Safe, automated releases on AWS",
+   "abstract": "Releasing software shouldn't mean holding your breath. In this chalk talk, explore how AWS CodePipeline, CodeBuild, and AppConfig help you automate safe, hands-off deployments to Amazon EC2, ECS, and Lambda across accounts and Regions. Learn to apply canary and linear traffic-shifting strategies, wire CloudWatch alarms for automatic rollback, and use stage-level conditions to gate promotions on integration tests. Whether you're deploying a single service or orchestrating hundreds, leave with patterns for zero-downtime releases you can trust.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-06T07:59:54Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Cloud Operations",
+     "Developer Tools"
+    ],
+    "AreaofInterest": [
+     "Management & Governance",
+     "Automation",
+     "DevOps"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "DevOps Engineer",
+     "IT Administrator"
+    ],
+    "Services": [
+     "AWS AppConfig",
+     "AWS CodeBuild",
+     "AWS CodePipeline"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Michael Michael",
+     "title": "Sr Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360387480001AmhL",
+     "date": "2026-12-01",
+     "startTime": "14:30",
+     "endTime": "15:30",
+     "utcStartTime": "2026/12/01 22:30:00",
+     "utcEndTime": "2026/12/01 23:30:00",
+     "length": 60,
+     "room": "MGM Grand | Level 3 | Room 306",
+     "roomId": "1789591920562001bMpT",
+     "capacity": "82",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -69676,7 +69676,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-06T06:22:40Z",
+   "modified": "2026-10-06T07:59:54Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -71052,107 +71052,6 @@
    ]
   },
   {
-   "sessionID": "1780442231560001chVC",
-   "code": "SVS325-R",
-   "title": "Distributed transactions with Step Functions and durable functions",
-   "abstract": "Distributed transactions across microservices break in ways monoliths never did: partial failures, inconsistent state, rollbacks that don't roll back. In this builders' session, build a payment processing using saga pattern that orchestrates multiple serverless microservices using AWS Step Functions and Lambda durable functions. You'll implement compensation mechanisms that handle partial failures, compare orchestration approaches for short-lived versus long-running transactions, and monitor transaction flows across distributed services. Walk away with working saga patterns and the observability setup to troubleshoot them in production. Bring your laptop.",
-   "type": "Builders' session",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-06T02:44:51Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Builders' session"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Application Integration",
-     "Serverless"
-    ],
-    "AreaofInterest": [
-     "Event-Driven Architecture",
-     "Lambda-Based Applications",
-     "Resilience"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "DevOps Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon DynamoDB",
-     "AWS Lambda",
-     "AWS Step Functions"
-    ],
-    "Venue": [
-     "Caesars Forum"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Roberto Perillo",
-     "title": "Enterprise Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Hugo Dominguez",
-     "title": "Sr. Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Leticia Dornelas",
-     "title": "Senior Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Victor Kazuyuki Shinya",
-     "title": "Enterprise Solutions Architect",
-     "company": "Amazon Web Services (AWS)",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Ricardo Marques",
-     "title": "Principal Specialist Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025502464001CzkK",
-     "date": "2026-12-01",
-     "startTime": "12:00",
-     "endTime": "13:00",
-     "utcStartTime": "2026/12/01 20:00:00",
-     "utcEndTime": "2026/12/01 21:00:00",
-     "length": 60,
-     "room": "Caesars Forum | Level 1 | Forum 120 | Content Hub | Builders' Session 1",
-     "roomId": "1789591919735004bsN5",
-     "capacity": "50",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358222919001idKG",
    "code": "SVS325-R1",
    "title": "Distributed transactions with Step Functions and durable functions",
@@ -71246,6 +71145,107 @@
      "length": 60,
      "room": "Caesars Palace | Promenade South | Octavius 4 | Content Hub | Builders' Session",
      "roomId": "1789591920108001bzg8",
+     "capacity": "50",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442231560001chVC",
+   "code": "SVS325-R",
+   "title": "Distributed transactions with Step Functions and durable functions",
+   "abstract": "Distributed transactions across microservices break in ways monoliths never did: partial failures, inconsistent state, rollbacks that don't roll back. In this builders' session, build a payment processing using saga pattern that orchestrates multiple serverless microservices using AWS Step Functions and Lambda durable functions. You'll implement compensation mechanisms that handle partial failures, compare orchestration approaches for short-lived versus long-running transactions, and monitor transaction flows across distributed services. Walk away with working saga patterns and the observability setup to troubleshoot them in production. Bring your laptop.",
+   "type": "Builders' session",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-06T07:58:51Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Builders' session"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Application Integration",
+     "Serverless"
+    ],
+    "AreaofInterest": [
+     "Event-Driven Architecture",
+     "Lambda-Based Applications",
+     "Resilience"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "DevOps Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon DynamoDB",
+     "AWS Lambda",
+     "AWS Step Functions"
+    ],
+    "Venue": [
+     "Caesars Forum"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Leticia Dornelas",
+     "title": "Senior Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Ricardo Marques",
+     "title": "Principal Specialist Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Roberto Perillo",
+     "title": "Enterprise Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Hugo Dominguez",
+     "title": "Sr. Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Victor Kazuyuki Shinya",
+     "title": "Enterprise Solutions Architect",
+     "company": "Amazon Web Services (AWS)",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025502464001CzkK",
+     "date": "2026-12-01",
+     "startTime": "12:00",
+     "endTime": "13:00",
+     "utcStartTime": "2026/12/01 20:00:00",
+     "utcEndTime": "2026/12/01 21:00:00",
+     "length": 60,
+     "room": "Caesars Forum | Level 1 | Forum 120 | Content Hub | Builders' Session 1",
+     "roomId": "1789591919735004bsN5",
      "capacity": "50",
      "inPersonTime": true,
      "virtualTime": false,
@@ -76593,103 +76593,6 @@
    ]
   },
   {
-   "sessionID": "1780442223763001cG3t",
-   "code": "ARC404-R",
-   "title": "Event storming: Find your service boundaries before production does",
-   "abstract": "Split a system in the wrong place and you get a distributed monolith: coupled services with network hops instead of function calls. This session tackles the problem most teams get wrong, where to draw the boundary, using Event Storming. Together we map a real domain, trace information flow between actors, and identify natural division points, deciding ownership, data locality, transaction scope, and deployment independence at each boundary. Every decision is evidence based, grounded in observed event flow rather than intuition. Then you go hands on, taking one boundary and deploying it as an independent service on AWS. Leave with a repeatable method for boundary definition plus working code you built yourself. Bring your laptop.",
-   "type": "Builders' session",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-06T02:44:29Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Builders' session"
-    ],
-    "Level": [
-     "400 – Expert"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Architecture",
-     "Serverless"
-    ],
-    "AreaofInterest": [
-     "Event-Driven Architecture"
-    ],
-    "Role": [
-     "DevOps Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon EventBridge",
-     "AWS Lambda"
-    ],
-    "Venue": [
-     "Caesars Forum"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Yongzhe Ren",
-     "title": "solutions architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Ramesh Chidirala",
-     "title": "Senior Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Jim Fernandes",
-     "title": "Sr. Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Vaibhav Sabharwal",
-     "title": "Principal Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "John Dougherty",
-     "title": "Sr Solution Architect",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025548389001CuV3",
-     "date": "2026-12-03",
-     "startTime": "15:00",
-     "endTime": "16:00",
-     "utcStartTime": "2026/12/03 23:00:00",
-     "utcEndTime": "2026/12/04 00:00:00",
-     "length": 60,
-     "room": "Caesars Forum | Level 1 | Forum 120 | Content Hub | Builders' Session 1",
-     "roomId": "1789591919735004bsN5",
-     "capacity": "50",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358234280001iCkw",
    "code": "ARC404-R1",
    "title": "Event storming: Find your service boundaries before production does",
@@ -76779,6 +76682,103 @@
      "length": 60,
      "room": "MGM Grand | Level 3 | Room 304",
      "roomId": "1789591920550004bDgg",
+     "capacity": "50",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442223763001cG3t",
+   "code": "ARC404-R",
+   "title": "Event storming: Find your service boundaries before production does",
+   "abstract": "Split a system in the wrong place and you get a distributed monolith: coupled services with network hops instead of function calls. This session tackles the problem most teams get wrong, where to draw the boundary, using Event Storming. Together we map a real domain, trace information flow between actors, and identify natural division points, deciding ownership, data locality, transaction scope, and deployment independence at each boundary. Every decision is evidence based, grounded in observed event flow rather than intuition. Then you go hands on, taking one boundary and deploying it as an independent service on AWS. Leave with a repeatable method for boundary definition plus working code you built yourself. Bring your laptop.",
+   "type": "Builders' session",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-06T07:59:54Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Builders' session"
+    ],
+    "Level": [
+     "400 – Expert"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Architecture",
+     "Serverless"
+    ],
+    "AreaofInterest": [
+     "Event-Driven Architecture"
+    ],
+    "Role": [
+     "DevOps Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon EventBridge",
+     "AWS Lambda"
+    ],
+    "Venue": [
+     "Caesars Forum"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Vaibhav Sabharwal",
+     "title": "Principal Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Ramesh Chidirala",
+     "title": "Senior Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Jim Fernandes",
+     "title": "Sr. Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "John Dougherty",
+     "title": "Sr Solution Architect",
+     "company": "Amazon",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Yongzhe Ren",
+     "title": "solutions architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025548389001CuV3",
+     "date": "2026-12-03",
+     "startTime": "15:00",
+     "endTime": "16:00",
+     "utcStartTime": "2026/12/03 23:00:00",
+     "utcEndTime": "2026/12/04 00:00:00",
+     "length": 60,
+     "room": "Caesars Forum | Level 1 | Forum 120 | Content Hub | Builders' Session 1",
+     "roomId": "1789591919735004bsN5",
      "capacity": "50",
      "inPersonTime": true,
      "virtualTime": false,
@@ -96670,7 +96670,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-05T20:07:14Z",
+   "modified": "2026-10-06T02:13:06Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -96694,10 +96694,10 @@
    },
    "speakers": [
     {
-     "name": "Jeff Grant",
-     "title": "Senior Technology Consultant",
-     "company": "Southwest Airlines",
-     "role": "External Speaker"
+     "name": "Ayesha Borker",
+     "title": "Principal Solution Architect",
+     "company": "Amazon",
+     "role": "Internal Speaker"
     },
     {
      "name": "Ryan Clayborn",
@@ -96706,10 +96706,10 @@
      "role": "External Speaker"
     },
     {
-     "name": "Ayesha Borker",
-     "title": "Principal Solution Architect",
-     "company": "Amazon",
-     "role": "Internal Speaker"
+     "name": "Jeff Grant",
+     "title": "Senior Technology Consultant",
+     "company": "Southwest Airlines",
+     "role": "External Speaker"
     }
    ],
    "times": [
@@ -106456,7 +106456,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-06T02:43:25Z",
+   "modified": "2026-10-06T07:59:54Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -107570,7 +107570,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-06T05:55:19Z",
+   "modified": "2026-10-06T07:54:27Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -121845,88 +121845,6 @@
    ]
   },
   {
-   "sessionID": "1780442254032001cbI5",
-   "code": "COP314-R",
-   "title": "Orchestrate failover and failback for effective Disaster Recovery",
-   "abstract": "Failing over one app is easy — orchestrating failover and fail back across interdependent apps is where DR plans break. Real recovery requires dependency-aware orchestration across your entire stack. In this code talk, we live-code full-stack Region failover using Amazon Application Recovery Controller (ARC) Region switch: building sequenced workflows so databases switch before app tiers, validating steps with health checks, rehearsing with practice runs, and safely reversing the sequence for fail back. Leave ready to replace your paper DR plan with coded, repeatable recovery and measured RTO to prove it.",
-   "type": "Code talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-06T02:44:35Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Code talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Architecture",
-     "Cloud Operations"
-    ],
-    "AreaofInterest": [
-     "Disaster Response & Recovery",
-     "Resilience",
-     "DevOps"
-    ],
-    "Role": [
-     "DevOps Engineer",
-     "Solution / Systems Architect",
-     "System Administrator"
-    ],
-    "Services": [
-     "Amazon API Gateway",
-     "Amazon Aurora for PostgreSQL",
-     "Amazon Application Recovery Controller"
-    ],
-    "Venue": [
-     "Wynn/Encore"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Jason Brown",
-     "title": "Sr. Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Ashish Panwar",
-     "title": "Senior Technical Account Manager",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025478495001CItJ",
-     "date": "2026-11-30",
-     "startTime": "10:30",
-     "endTime": "11:30",
-     "utcStartTime": "2026/11/30 18:30:00",
-     "utcEndTime": "2026/11/30 19:30:00",
-     "length": 60,
-     "room": "Wynn/Encore | Convention Promenade | Margaux 1",
-     "roomId": "1789591921003001bQQi",
-     "capacity": "84",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358229095001i0TG",
    "code": "COP314-R1",
    "title": "Orchestrate failover and failback for effective Disaster Recovery",
@@ -122002,6 +121920,88 @@
      "room": "Caesars Palace | Promenade South | Octavius 4 | Content Hub | Code Talk",
      "roomId": "1789591920119001bHvX",
      "capacity": "80",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442254032001cbI5",
+   "code": "COP314-R",
+   "title": "Orchestrate failover and failback for effective Disaster Recovery",
+   "abstract": "Failing over one app is easy — orchestrating failover and fail back across interdependent apps is where DR plans break. Real recovery requires dependency-aware orchestration across your entire stack. In this code talk, we live-code full-stack Region failover using Amazon Application Recovery Controller (ARC) Region switch: building sequenced workflows so databases switch before app tiers, validating steps with health checks, rehearsing with practice runs, and safely reversing the sequence for fail back. Leave ready to replace your paper DR plan with coded, repeatable recovery and measured RTO to prove it.",
+   "type": "Code talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-06T07:59:54Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Code talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Architecture",
+     "Cloud Operations"
+    ],
+    "AreaofInterest": [
+     "Disaster Response & Recovery",
+     "Resilience",
+     "DevOps"
+    ],
+    "Role": [
+     "DevOps Engineer",
+     "Solution / Systems Architect",
+     "System Administrator"
+    ],
+    "Services": [
+     "Amazon API Gateway",
+     "Amazon Aurora for PostgreSQL",
+     "Amazon Application Recovery Controller"
+    ],
+    "Venue": [
+     "Wynn/Encore"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Jason Brown",
+     "title": "Sr. Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Ashish Panwar",
+     "title": "Senior Technical Account Manager",
+     "company": "Amazon",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025478495001CItJ",
+     "date": "2026-11-30",
+     "startTime": "10:30",
+     "endTime": "11:30",
+     "utcStartTime": "2026/11/30 18:30:00",
+     "utcEndTime": "2026/11/30 19:30:00",
+     "length": 60,
+     "room": "Wynn/Encore | Convention Promenade | Margaux 1",
+     "roomId": "1789591921003001bQQi",
+     "capacity": "84",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -123487,87 +123487,6 @@
    ]
   },
   {
-   "sessionID": "1780442253269001cDSp",
-   "code": "ARC319-R",
-   "title": "Patterns for embedding FinOps into cloud architectural decisions",
-   "abstract": "Every architectural decision carries a cost implication, yet cost is typically discovered in monthly bills rather than design reviews. In this code talk, we demonstrate how to shift FinOps left, optimising before you deploy rather than reacting after. Through two personas, a FinOps engineer and a builder, you will see live how to embed cost governance into infrastructure-as-code, tackle real architectural trade-offs then show how AI coding assistants accelerate this at scale. You will leave with deployable CloudFormation examples and a decision framework for choosing the right cost governance level for your organisation.",
-   "type": "Code talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-06T02:43:25Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Code talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Architecture",
-     "Cloud Operations"
-    ],
-    "AreaofInterest": [
-     "Well-Architected Framework",
-     "Cost Optimization"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "IT Executive",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "AWS Billing and Cost Management",
-     "AWS CloudFormation",
-     "AWS Organizations"
-    ],
-    "Venue": [
-     "Wynn/Encore"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Nataliya Godunok",
-     "title": "Sr Solutions Architect, AWS Well-Architected",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Steph Gooch",
-     "title": "Principal Tech Advocate",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025475941001CSsj",
-     "date": "2026-11-30",
-     "startTime": "09:00",
-     "endTime": "10:00",
-     "utcStartTime": "2026/11/30 17:00:00",
-     "utcEndTime": "2026/11/30 18:00:00",
-     "length": 60,
-     "room": "Wynn/Encore | Convention Promenade | Margaux 1",
-     "roomId": "1789591921003001bQQi",
-     "capacity": "84",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358221298001ioWj",
    "code": "ARC319-R1",
    "title": "Patterns for embedding FinOps into cloud architectural decisions",
@@ -123642,6 +123561,87 @@
      "room": "Caesars Palace | Promenade South | Octavius 4 | Content Hub | Code Talk",
      "roomId": "1789591920119001bHvX",
      "capacity": "80",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442253269001cDSp",
+   "code": "ARC319-R",
+   "title": "Patterns for embedding FinOps into cloud architectural decisions",
+   "abstract": "Every architectural decision carries a cost implication, yet cost is typically discovered in monthly bills rather than design reviews. In this code talk, we demonstrate how to shift FinOps left, optimising before you deploy rather than reacting after. Through two personas, a FinOps engineer and a builder, you will see live how to embed cost governance into infrastructure-as-code, tackle real architectural trade-offs then show how AI coding assistants accelerate this at scale. You will leave with deployable CloudFormation examples and a decision framework for choosing the right cost governance level for your organisation.",
+   "type": "Code talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-06T07:59:54Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Code talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Architecture",
+     "Cloud Operations"
+    ],
+    "AreaofInterest": [
+     "Well-Architected Framework",
+     "Cost Optimization"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "IT Executive",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "AWS Billing and Cost Management",
+     "AWS CloudFormation",
+     "AWS Organizations"
+    ],
+    "Venue": [
+     "Wynn/Encore"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Nataliya Godunok",
+     "title": "Sr Solutions Architect, AWS Well-Architected",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Steph Gooch",
+     "title": "Principal Tech Advocate",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025475941001CSsj",
+     "date": "2026-11-30",
+     "startTime": "09:00",
+     "endTime": "10:00",
+     "utcStartTime": "2026/11/30 17:00:00",
+     "utcEndTime": "2026/11/30 18:00:00",
+     "length": 60,
+     "room": "Wynn/Encore | Convention Promenade | Margaux 1",
+     "roomId": "1789591921003001bQQi",
+     "capacity": "84",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -138159,86 +138159,6 @@
    ]
   },
   {
-   "sessionID": "1790358246558001iY0C",
-   "code": "SEC321-R1",
-   "title": "Securing AI Coding Agents: Defense in Depth Across the Development Lifecycle",
-   "abstract": "AI coding agents optimise for task completion, not security, generating code faster than humans can review. This chalk talk presents a defence-in-depth framework spanning five phases - pre-generation, authoring, PR, pipeline, and deployment - with three lines of defence at each: deterministic controls, AI screening, and human judgment. We cover author-time techniques (steering, specs, scoped MCP, hooks) and build-time gates (SAST, SCA, IaC scanning, AI-assisted review, approval) using Kiro, AWS Security Agent, and CodePipeline. Leave with a layered model you can apply on Monday.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-06T02:44:46Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Security & Identity"
-    ],
-    "AreaofInterest": [
-     "Application Security",
-     "DevSecOps",
-     "Agentic AI"
-    ],
-    "Role": [
-     "Cloud Security Specialist",
-     "Developer / Engineer"
-    ],
-    "Services": [
-     "AWS CodePipeline",
-     "Kiro",
-     "AWS Security Agent"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Alex Waddell",
-     "title": "Principal Security Specialist SA",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Mac Stevens",
-     "title": "Sr. Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360383904001AEOS",
-     "date": "2026-12-01",
-     "startTime": "16:00",
-     "endTime": "17:00",
-     "utcStartTime": "2026/12/02 00:00:00",
-     "utcEndTime": "2026/12/02 01:00:00",
-     "length": 60,
-     "room": "MGM Grand | Level 3 | Premier 311",
-     "roomId": "1789591920480001bvoL",
-     "capacity": "78",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442249832001ch8t",
    "code": "SEC321-R",
    "title": "Securing AI Coding Agents: Defense in Depth Across the Development Lifecycle",
@@ -138311,6 +138231,86 @@
      "length": 60,
      "room": "Wynn/Encore | Level 1 | Debussy 1",
      "roomId": "1789591921139004bOia",
+     "capacity": "78",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358246558001iY0C",
+   "code": "SEC321-R1",
+   "title": "Securing AI Coding Agents: Defense in Depth Across the Development Lifecycle",
+   "abstract": "AI coding agents optimise for task completion, not security, generating code faster than humans can review. This chalk talk presents a defence-in-depth framework spanning five phases - pre-generation, authoring, PR, pipeline, and deployment - with three lines of defence at each: deterministic controls, AI screening, and human judgment. We cover author-time techniques (steering, specs, scoped MCP, hooks) and build-time gates (SAST, SCA, IaC scanning, AI-assisted review, approval) using Kiro, AWS Security Agent, and CodePipeline. Leave with a layered model you can apply on Monday.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-06T07:59:54Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Security & Identity"
+    ],
+    "AreaofInterest": [
+     "Application Security",
+     "DevSecOps",
+     "Agentic AI"
+    ],
+    "Role": [
+     "Cloud Security Specialist",
+     "Developer / Engineer"
+    ],
+    "Services": [
+     "AWS CodePipeline",
+     "Kiro",
+     "AWS Security Agent"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Alex Waddell",
+     "title": "Principal Security Specialist SA",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Mac Stevens",
+     "title": "Sr. Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360383904001AEOS",
+     "date": "2026-12-01",
+     "startTime": "16:00",
+     "endTime": "17:00",
+     "utcStartTime": "2026/12/02 00:00:00",
+     "utcEndTime": "2026/12/02 01:00:00",
+     "length": 60,
+     "room": "MGM Grand | Level 3 | Premier 311",
+     "roomId": "1789591920480001bvoL",
      "capacity": "78",
      "inPersonTime": true,
      "virtualTime": false,
@@ -141409,7 +141409,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-05T20:07:14Z",
+   "modified": "2026-10-06T02:20:43Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -141451,21 +141451,9 @@
    },
    "speakers": [
     {
-     "name": "Franklin Aguinaldo",
+     "name": "Matt Kahn",
      "title": "Sr. Solutions Architect",
      "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Diego Casas",
-     "title": "Senior Solutions Architect",
-     "company": "Amazon Web Services Colombia",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Nikita Tibrewal",
-     "title": "Software Development Manager",
-     "company": "Amazon",
      "role": "Internal Speaker"
     },
     {
@@ -141475,9 +141463,21 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Matt Kahn",
+     "name": "Diego Casas",
+     "title": "Senior Solutions Architect",
+     "company": "Amazon Web Services Colombia",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Franklin Aguinaldo",
      "title": "Sr. Solutions Architect",
      "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Nikita Tibrewal",
+     "title": "Software Development Manager",
+     "company": "Amazon",
      "role": "Internal Speaker"
     }
    ],
@@ -141870,7 +141870,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-06T02:44:49Z",
+   "modified": "2026-10-06T07:59:54Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -144834,7 +144834,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-05T20:07:14Z",
+   "modified": "2026-10-06T07:59:54Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -148304,87 +148304,6 @@
    ]
   },
   {
-   "sessionID": "1780442251182001cAGd",
-   "code": "SVS329-R",
-   "title": "Testing serverless and event-driven applications",
-   "abstract": "You're shipping faster with serverless, but your testing strategy hasn't kept up. Local mocks drift from cloud behavior. Integration tests require full deployments. Contract changes between services break downstream consumers silently. In this chalk talk, whiteboard testing approaches that match how serverless developers actually work: unit testing business logic in isolation, integration testing service interactions without deploying everything, and contract testing event schemas between producers and consumers. We cover local versus cloud testing tradeoffs, when each makes sense, and chaos engineering techniques like injecting message delays, duplicates, and out-of-order delivery to catch failures before your users do.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-06T02:44:51Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Serverless"
-    ],
-    "AreaofInterest": [
-     "Event-Driven Architecture",
-     "Lambda-Based Applications",
-     "DevOps"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "DevOps Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon EventBridge",
-     "AWS Lambda",
-     "AWS Step Functions"
-    ],
-    "Venue": [
-     "Caesars Forum"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Brian Krygsman",
-     "title": "WW Senior Specialist SA, Serverless",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Dan Fox",
-     "title": "Head of Worldwide Solutions Architects, Containers and Serverless",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025487084001C6xu",
-     "date": "2026-11-30",
-     "startTime": "13:00",
-     "endTime": "14:00",
-     "utcStartTime": "2026/11/30 21:00:00",
-     "utcEndTime": "2026/11/30 22:00:00",
-     "length": 60,
-     "room": "Caesars Forum | Level 1 | Academy 417",
-     "roomId": "1789591919593004bmGP",
-     "capacity": "88",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358253399001i0ub",
    "code": "SVS329-R1",
    "title": "Testing serverless and event-driven applications",
@@ -148458,6 +148377,87 @@
      "length": 60,
      "room": "Wynn/Encore | Level 1 | Chopin 4",
      "roomId": "1789591921128001bJpf",
+     "capacity": "88",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442251182001cAGd",
+   "code": "SVS329-R",
+   "title": "Testing serverless and event-driven applications",
+   "abstract": "You're shipping faster with serverless, but your testing strategy hasn't kept up. Local mocks drift from cloud behavior. Integration tests require full deployments. Contract changes between services break downstream consumers silently. In this chalk talk, whiteboard testing approaches that match how serverless developers actually work: unit testing business logic in isolation, integration testing service interactions without deploying everything, and contract testing event schemas between producers and consumers. We cover local versus cloud testing tradeoffs, when each makes sense, and chaos engineering techniques like injecting message delays, duplicates, and out-of-order delivery to catch failures before your users do.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-06T07:58:51Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Serverless"
+    ],
+    "AreaofInterest": [
+     "Event-Driven Architecture",
+     "Lambda-Based Applications",
+     "DevOps"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "DevOps Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon EventBridge",
+     "AWS Lambda",
+     "AWS Step Functions"
+    ],
+    "Venue": [
+     "Caesars Forum"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Dan Fox",
+     "title": "Head of Worldwide Solutions Architects, Containers and Serverless",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Brian Krygsman",
+     "title": "WW Senior Specialist SA, Serverless",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025487084001C6xu",
+     "date": "2026-11-30",
+     "startTime": "13:00",
+     "endTime": "14:00",
+     "utcStartTime": "2026/11/30 21:00:00",
+     "utcEndTime": "2026/11/30 22:00:00",
+     "length": 60,
+     "room": "Caesars Forum | Level 1 | Academy 417",
+     "roomId": "1789591919593004bmGP",
      "capacity": "88",
      "inPersonTime": true,
      "virtualTime": false,
@@ -151656,89 +151656,6 @@
    ]
   },
   {
-   "sessionID": "1780442237917001cE9g",
-   "code": "COM316-R",
-   "title": "Think Beyond DevOps: SRE, SOC, and Compliance in One AWS DevOps Agent",
-   "abstract": "As AI speeds up releases, continuous security control assurance and detecting threats in millions of telemetry signals get harder. We transformed AWS DevOps Agent into one agent for SRE, SOC and compliance, effectively addressing AI-era cloud security challenges in production. With AWS Config Conformance Packs for compliance-as-code and security MCP for finding triage, it produces point-in-time compliance and well-architected assessments, and drives alarm-triggered agentic SOC investigations within a controlled agent space, automating responses and keeping human-in-the-loop on high-risk mitigations only. You'll learn the methodology to design an agentic compliance and SOC solution that ports seamlessly into your own environment. ",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-06T02:44:32Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Community-led",
-     "Discussion"
-    ],
-    "Topic": [
-     "Artificial Intelligence",
-     "Security & Identity"
-    ],
-    "AreaofInterest": [
-     "Threat Detection & Incident Response",
-     "Governance, Risk & Compliance",
-     "Agentic AI"
-    ],
-    "Role": [
-     "Cloud Security Specialist",
-     "DevOps Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Bedrock",
-     "AWS Config",
-     "AWS Security Hub"
-    ],
-    "Venue": [
-     "Wynn/Encore"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Richard Fan",
-     "title": "Security Engineer",
-     "company": "ExpressVPN",
-     "role": "External Speaker"
-    },
-    {
-     "name": "Shaoyi Li",
-     "title": "Lead Cloud Engineer",
-     "company": "Pax Technology",
-     "role": "External Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025490786001ChUQ",
-     "date": "2026-11-30",
-     "startTime": "14:30",
-     "endTime": "15:30",
-     "utcStartTime": "2026/11/30 22:30:00",
-     "utcEndTime": "2026/11/30 23:30:00",
-     "length": 60,
-     "room": "Wynn/Encore | Convention Promenade | Montrachet 1",
-     "roomId": "1789591921019001bmgQ",
-     "capacity": "78",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358245087001iXUn",
    "code": "COM316-R1",
    "title": "Think Beyond DevOps: SRE, SOC, and Compliance in One AWS DevOps Agent",
@@ -151791,15 +151708,15 @@
    },
    "speakers": [
     {
-     "name": "Richard Fan",
-     "title": "Security Engineer",
-     "company": "ExpressVPN",
-     "role": "External Speaker"
-    },
-    {
      "name": "Shaoyi Li",
      "title": "Lead Cloud Engineer",
      "company": "Pax Technology",
+     "role": "External Speaker"
+    },
+    {
+     "name": "Richard Fan",
+     "title": "Security Engineer",
+     "company": "ExpressVPN",
      "role": "External Speaker"
     }
    ],
@@ -151815,6 +151732,89 @@
      "room": "Caesars Palace | Promenade Level | Trevi",
      "roomId": "1789591919983001bGDi",
      "capacity": "70",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442237917001cE9g",
+   "code": "COM316-R",
+   "title": "Think Beyond DevOps: SRE, SOC, and Compliance in One AWS DevOps Agent",
+   "abstract": "As AI speeds up releases, continuous security control assurance and detecting threats in millions of telemetry signals get harder. We transformed AWS DevOps Agent into one agent for SRE, SOC and compliance, effectively addressing AI-era cloud security challenges in production. With AWS Config Conformance Packs for compliance-as-code and security MCP for finding triage, it produces point-in-time compliance and well-architected assessments, and drives alarm-triggered agentic SOC investigations within a controlled agent space, automating responses and keeping human-in-the-loop on high-risk mitigations only. You'll learn the methodology to design an agentic compliance and SOC solution that ports seamlessly into your own environment. ",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-06T02:44:32Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Community-led",
+     "Discussion"
+    ],
+    "Topic": [
+     "Artificial Intelligence",
+     "Security & Identity"
+    ],
+    "AreaofInterest": [
+     "Threat Detection & Incident Response",
+     "Governance, Risk & Compliance",
+     "Agentic AI"
+    ],
+    "Role": [
+     "Cloud Security Specialist",
+     "DevOps Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Bedrock",
+     "AWS Config",
+     "AWS Security Hub"
+    ],
+    "Venue": [
+     "Wynn/Encore"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Shaoyi Li",
+     "title": "Lead Cloud Engineer",
+     "company": "Pax Technology",
+     "role": "External Speaker"
+    },
+    {
+     "name": "Richard Fan",
+     "title": "Security Engineer",
+     "company": "ExpressVPN",
+     "role": "External Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025490786001ChUQ",
+     "date": "2026-11-30",
+     "startTime": "14:30",
+     "endTime": "15:30",
+     "utcStartTime": "2026/11/30 22:30:00",
+     "utcEndTime": "2026/11/30 23:30:00",
+     "length": 60,
+     "room": "Wynn/Encore | Convention Promenade | Montrachet 1",
+     "roomId": "1789591921019001bmgQ",
+     "capacity": "78",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -161420,7 +161420,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-06T02:43:25Z",
+   "modified": "2026-10-06T07:59:54Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -161456,14 +161456,14 @@
    },
    "speakers": [
     {
-     "name": "Damian Niezgoda",
-     "title": "Senior Solutions Architect",
+     "name": "Shubhankar Sumar",
+     "title": "Sr. Solutions Architect",
      "company": "AWS",
      "role": "Internal Speaker"
     },
     {
-     "name": "Shubhankar Sumar",
-     "title": "Sr. Solutions Architect",
+     "name": "Damian Niezgoda",
+     "title": "Senior Solutions Architect",
      "company": "AWS",
      "role": "Internal Speaker"
     }
@@ -161703,82 +161703,6 @@
    ]
   },
   {
-   "sessionID": "1780442233886001cc67",
-   "code": "ARC202-R",
-   "title": "Where do agents fit? A capability-first approach to agentic AI",
-   "abstract": "Not every workflow needs an agent, and applying agentic AI where it doesn’t fit adds nondeterminism, cost, and failure modes a deterministic design would have avoided. This chalk talk introduces a capability-first methodology for architects and engineering leaders evaluating agentic paths in their workflows, manual or software-driven. We’ll ideate on a scoring framework that assesses the inherent nature of the work to reveal where agentic approaches thrive. You’ll apply the PERCEIVE-REASON-ACT pattern for isolating AI reasoning from orchestration, and walk away with a repeatable rubric your teams can adopt immediately. ",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-06T02:44:29Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "200 – Intermediate"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Architecture",
-     "Artificial Intelligence"
-    ],
-    "AreaofInterest": [
-     "Generative AI",
-     "Agentic AI"
-    ],
-    "Role": [
-     "Business Executive",
-     "IT Executive",
-     "Solution / Systems Architect"
-    ],
-    "Venue": [
-     "Wynn/Encore"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Sushanth Mangalore",
-     "title": "Sr. Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Mukund Rao",
-     "title": "WW BCAP PSA",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025515174001CbeV",
-     "date": "2026-12-02",
-     "startTime": "10:00",
-     "endTime": "11:00",
-     "utcStartTime": "2026/12/02 18:00:00",
-     "utcEndTime": "2026/12/02 19:00:00",
-     "length": 60,
-     "room": "Wynn/Encore | Convention Promenade | Montrachet 1",
-     "roomId": "1789591921019001bmgQ",
-     "capacity": "78",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358254147001iOyq",
    "code": "ARC202-R1",
    "title": "Where do agents fit? A capability-first approach to agentic AI",
@@ -161924,6 +161848,82 @@
      "room": "Caesars Palace | Promenade Level | Neopolitan I",
      "roomId": "1789591919948004bXPv",
      "capacity": "70",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442233886001cc67",
+   "code": "ARC202-R",
+   "title": "Where do agents fit? A capability-first approach to agentic AI",
+   "abstract": "Not every workflow needs an agent, and applying agentic AI where it doesn’t fit adds nondeterminism, cost, and failure modes a deterministic design would have avoided. This chalk talk introduces a capability-first methodology for architects and engineering leaders evaluating agentic paths in their workflows, manual or software-driven. We’ll ideate on a scoring framework that assesses the inherent nature of the work to reveal where agentic approaches thrive. You’ll apply the PERCEIVE-REASON-ACT pattern for isolating AI reasoning from orchestration, and walk away with a repeatable rubric your teams can adopt immediately. ",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-06T07:59:54Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "200 – Intermediate"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Architecture",
+     "Artificial Intelligence"
+    ],
+    "AreaofInterest": [
+     "Generative AI",
+     "Agentic AI"
+    ],
+    "Role": [
+     "Business Executive",
+     "IT Executive",
+     "Solution / Systems Architect"
+    ],
+    "Venue": [
+     "Wynn/Encore"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Mukund Rao",
+     "title": "WW BCAP PSA",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Sushanth Mangalore",
+     "title": "Sr. Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025515174001CbeV",
+     "date": "2026-12-02",
+     "startTime": "10:00",
+     "endTime": "11:00",
+     "utcStartTime": "2026/12/02 18:00:00",
+     "utcEndTime": "2026/12/02 19:00:00",
+     "length": 60,
+     "room": "Wynn/Encore | Convention Promenade | Montrachet 1",
+     "roomId": "1789591921019001bmgQ",
+     "capacity": "78",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
