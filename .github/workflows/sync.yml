@@ -135,7 +135,7 @@ jobs:
             conf=""
             if [ -f "$dir/conference" ]; then
               conf=$(tr -d '[:space:]' < "$dir/conference")
-              grep -q "id: '$conf'," assets/js/conferences.js || { echo "::error::instances/$name/conference names an unknown conference '$conf'"; exit 1; }
+              node scripts/conference_id.js "$conf" || { echo "::error::instances/$name/conference names an unknown conference '$conf'"; exit 1; }
               sed -i "s|<meta name=\"planner-default-conference\" content=\"\">|<meta name=\"planner-default-conference\" content=\"$conf\">|" "$name/index.html"
               grep -q "planner-default-conference\" content=\"$conf\"" "$name/index.html"
             fi
