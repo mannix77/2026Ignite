@@ -166,7 +166,15 @@ const PREF_KEY = nsKey('ignite26.planner.conference');
 
 export function conferenceList() { return Object.values(CONFERENCES); }
 
-// Which conference to show: ?conf= in the URL, then the saved choice, then the default.
+// A colleague's copy can open on another conference by default: instances/<name>/conference
+// holds the id, and the deploy writes it into the planner-default-conference meta tag.
+function instanceDefaultConference() {
+  const meta = typeof document !== 'undefined' ? document.querySelector('meta[name="planner-default-conference"]') : null;
+  const id = (meta?.content || '').trim();
+  return CONFERENCES[id] ? id : DEFAULT_CONFERENCE;
+}
+
+// Which conference to show: ?conf= in the URL, then the saved choice, then the copy's default.
 export function currentConferenceId() {
   const q = new URLSearchParams(location.search).get('conf');
   if (q && CONFERENCES[q]) return q;
@@ -174,7 +182,7 @@ export function currentConferenceId() {
     const saved = localStorage.getItem(PREF_KEY);
     if (saved && CONFERENCES[saved]) return saved;
   } catch { /* storage blocked */ }
-  return DEFAULT_CONFERENCE;
+  return instanceDefaultConference();
 }
 
 export function rememberConference(id) {

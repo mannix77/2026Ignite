@@ -2,6 +2,8 @@
 
 Published at `https://mannix77.github.io/2026Ignite/gino/` by the same deploy that publishes the main site. It has the same catalogs and updates, but its own picks, notes and settings (even on a phone that also has the main app installed), and no pre-loaded favorites.
 
+The `conference` file makes this copy open on the Gartner IT Symposium (`gartner2026`) by default; the title-bar dropdown or `?conf=ignite2026` still switches to Ignite, and the choice is remembered.
+
 Anything in `data/` here is copied over the published copy, so you can add your own:
 
 - `data/gartner2026/favorites.json` and/or `data/ignite2026/favorites.json` — your workbook ranking, imported on first launch (and from Settings). Build one with

@@ -257,6 +257,21 @@ class SummaryTests(unittest.TestCase):
         self.assertIn("title: Old name → New name", self.summary("Old name", "New name"))
 
 
+@unittest.skipUnless(shutil.which("node"), "needs node")
+class InstanceConferenceTests(unittest.TestCase):
+    """The deploy checks instances/<name>/conference with scripts/conference_id.js before stamping it."""
+
+    def check(self, conf):
+        return subprocess.run(["node", os.path.join(ROOT, "scripts", "conference_id.js"), conf],
+                              cwd=ROOT, capture_output=True).returncode
+
+    def test_should_accept_a_conference_id(self):
+        self.assertEqual(self.check("reinvent2026"), 0)
+
+    def test_should_reject_a_venue_id(self):
+        self.assertNotEqual(self.check("las-vegas"), 0)
+
+
 class RunTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.mkdtemp()

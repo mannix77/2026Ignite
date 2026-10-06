@@ -132,9 +132,16 @@ jobs:
             [ -d "$dir/data" ] && cp -R "$dir/data/." "$name/data/"
             sed -i "s|<meta name=\"planner-instance\" content=\"\">|<meta name=\"planner-instance\" content=\"$name\">|" "$name/index.html"
             grep -q "content=\"$name\"" "$name/index.html"
+            conf=""
+            if [ -f "$dir/conference" ]; then
+              conf=$(tr -d '[:space:]' < "$dir/conference")
+              node scripts/conference_id.js "$conf" || { echo "::error::instances/$name/conference names an unknown conference '$conf'"; exit 1; }
+              sed -i "s|<meta name=\"planner-default-conference\" content=\"\">|<meta name=\"planner-default-conference\" content=\"$conf\">|" "$name/index.html"
+              grep -q "planner-default-conference\" content=\"$conf\"" "$name/index.html"
+            fi
             label="$(printf '%s' "${name:0:1}" | tr a-z A-Z)${name:1}"
             sed -i "s|\"name\": \"Conference Planner\"|\"name\": \"Conference Planner ($label)\"|; s|\"short_name\": \"Planner\"|\"short_name\": \"Planner $label\"|" "$name/manifest.webmanifest"
-            echo "published /$name/ ($(find "$name/data" -name favorites.json | wc -l | tr -d ' ') favorites file(s))"
+            echo "published /$name/ ($(find "$name/data" -name favorites.json | wc -l | tr -d ' ') favorites file(s), opens on ${conf:-the default conference})"
           done
 
       - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5.0.0
