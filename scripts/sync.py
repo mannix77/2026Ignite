@@ -429,6 +429,19 @@ def short(v):
     return s if len(s) <= 60 else s[:57] + "…"
 
 
+def short_pair(old, new):
+    """short() both sides of a change. When either is a string long enough to be clipped, drop the
+    shared opening words first, so a title that only gained a suffix still shows the difference."""
+    if not (isinstance(old, str) and isinstance(new, str)) or max(len(old), len(new)) <= 60:
+        return short(old), short(new)
+    n = len(os.path.commonprefix([old, new]))
+    cut = old.rfind(" ", 0, n) + 1
+    if n - cut > 40:  # no word break near the difference: keep the 20 characters before it
+        cut = n - 20
+    lead = "…" if cut else ""
+    return short(lead + old[cut:]), short(lead + new[cut:])
+
+
 def summary_markdown(batch, watch):
     lines = ["### 🚨 " + m for m in batch["milestones"]]
     hit = [x for x in batch["added"] + batch["removed"] + batch["changed"] if x["code"] in watch]
@@ -450,7 +463,7 @@ def summary_markdown(batch, watch):
         lines.append("\n**Changed**")
         rows = sorted(batch["changed"], key=lambda x: (x["code"] not in watch, x["code"]))
         for x in rows[:80]:
-            parts = [k if v is True else "%s: %s → %s" % (k, short(v[0]), short(v[1])) for k, v in x["f"].items()]
+            parts = [k if v is True else "%s: %s → %s" % ((k,) + short_pair(*v)) for k, v in x["f"].items()]
             lines.append("- %s — %s" % (fmt(x), "; ".join(parts)))
         if len(rows) > 80:
             lines.append("- …and %d more" % (len(rows) - 80))

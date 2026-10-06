@@ -232,6 +232,31 @@ class DiffTests(unittest.TestCase):
         self.assertEqual(set(changed[0]["f"]), {"start", "room"})
 
 
+class SummaryTests(unittest.TestCase):
+    """The change summary posted to the issue and the changelog."""
+    LONG = "Edge-to-Action: Powering Agentic AI via Cloudera's Anywhere Cloud"
+
+    def summary(self, old, new):
+        batch = {"milestones": [], "added": [], "removed": [],
+                 "changed": [{"code": "AIM101-S", "title": new, "f": {"title": [old, new]}}]}
+        return sync.summary_markdown(batch, set())
+
+    def test_should_show_where_two_long_titles_differ(self):
+        self.assertIn("→ …Cloud (sponsored by Cloudera)", self.summary(self.LONG, self.LONG + " (sponsored by Cloudera)"))
+
+    def test_should_show_a_suffix_that_makes_a_short_title_long(self):
+        self.assertIn("→ …SecOps (sponsored by Splunk", self.summary(
+            "Turn AWS Security Signals into Action with AI-First SecOps",
+            "Turn AWS Security Signals into Action with AI-First SecOps (sponsored by Splunk, a Cisco Company)"))
+
+    def test_should_show_a_difference_after_a_long_unbroken_word(self):
+        word = "x" * 70
+        self.assertIn("→ …" + "x" * 20 + "-v2", self.summary(word, word + "-v2"))
+
+    def test_should_keep_a_short_title_change_whole(self):
+        self.assertIn("title: Old name → New name", self.summary("Old name", "New name"))
+
+
 class RunTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.mkdtemp()

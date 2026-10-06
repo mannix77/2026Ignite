@@ -1,0 +1,149 @@
+name: Sync re:Invent catalog
+
+# A separate workflow so a re:Invent failure can never block the Ignite sync or the Pages
+# deploy (sync.yml). It commits only when the catalog changed, then asks sync.yml to
+# redeploy: pushes made with the workflow token don't trigger workflows on their own.
+on:
+  schedule:
+    - cron: "41 */6 * 10 *"          # every 6 hours in October
+    - cron: "41 */6 1-28 11 *"       # ... through Nov 28
+    - cron: "41 * 29,30 11 *"        # hourly from Nov 29 (UTC) ...
+    - cron: "41 * 1-4 12 *"          # ... through the event (Nov 30 - Dec 4)
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Its own group: sharing "sync" could replace a pending Ignite run. The data folders don't
+# overlap, so racing pushes are settled by rebasing.
+concurrency:
+  group: reinvent-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write   # commit catalog changes
+      issues: write     # post change summaries
+      actions: write    # dispatch sync.yml to redeploy Pages
+    outputs:
+      outcome: ${{ steps.sync.outcome }}
+      notify: ${{ steps.notify.outcome }}
+    steps:
+      - name: Stop after the event
+        id: window
+        run: |
+          if [ "$(date -u +%Y%m%d)" -gt 20261205 ]; then
+            echo "re:Invent 2026 is over; nothing to sync."
+            echo "active=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "active=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        if: steps.window.outputs.active == 'true'
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        if: steps.window.outputs.active == 'true'
+        with:
+          python-version: "3.12"
+
+      - name: Test the importer
+        if: steps.window.outputs.active == 'true'
+        run: python3 -m unittest tests.test_import_reinvent
+
+      - name: Fetch and import the catalog
+        id: sync
+        if: steps.window.outputs.active == 'true'
+        # A failed fetch (or one under 90% of the last count) keeps the last good data;
+        # the "report" job below fails the run so GitHub notifies you.
+        continue-on-error: true
+        timeout-minutes: 8
+        run: python3 scripts/import_reinvent.py --fetch --summary-out "$RUNNER_TEMP/summary.md"
+
+      # Same retry scheme as the Ignite job: a summary that can't be posted is kept in
+      # data/reinvent2026/pending-summary.md (committed below) and retried next run.
+      - name: Post the change summary to the tracking issue
+        id: notify
+        if: steps.window.outputs.active == 'true' && (steps.sync.outputs.changed == 'true' || hashFiles('data/reinvent2026/pending-summary.md') != '')
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          LOG_URL: ${{ github.server_url }}/${{ github.repository }}/blob/main/data/reinvent2026/changelog.md
+        run: |
+          set -e
+          pending=data/reinvent2026/pending-summary.md
+          new="$RUNNER_TEMP/summary.md"
+          body="$RUNNER_TEMP/post.md"
+          : > "$body"
+          [ -s "$pending" ] && { echo "_Delayed summary from an earlier sync:_" >> "$body"; cat "$pending" >> "$body"; echo >> "$body"; }
+          [ -s "$new" ] && cat "$new" >> "$body"
+          [ -s "$body" ] || exit 0
+          echo >> "$body"
+          echo "_Full history: [changelog.md]($LOG_URL)_" >> "$body"
+          post() {
+            gh label create reinvent-changes --color ff9900 --description "re:Invent catalog change log" 2>/dev/null || true
+            num=$(gh issue list --label reinvent-changes --state open --limit 1 --json number --jq '.[0].number // empty')
+            if [ -z "$num" ]; then
+              url=$(gh issue create --label reinvent-changes --title "re:Invent 2026 catalog changes" \
+                --body "The scheduled re:Invent sync adds a comment here whenever the session catalog changes (new, removed, retimed or moved sessions). Subscribe to this issue to get notified. The full history is in data/reinvent2026/changelog.md.")
+              num="${url##*/}"
+            fi
+            gh issue comment "$num" --body-file "$body"
+          }
+          if post; then
+            rm -f "$pending"
+          else
+            cp "$body" "$pending"
+            exit 1
+          fi
+
+      # Commit only on changes. A fresh snapshot differs on every fetch (fetchedAt, raw
+      # fields the app ignores), so it's kept only when the normalized catalog changed.
+      - name: Commit catalog changes
+        id: commit
+        if: steps.window.outputs.active == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          d=data/reinvent2026
+          if git diff --quiet -- "$d/sessions.json" "$d/changes.json"; then
+            git checkout -- "$d/source" 2>/dev/null || true
+          fi
+          git add -A "$d/sessions.json" "$d/changes.json" "$d/changelog.md" "$d/source" "$d/pending-summary.md" 2>/dev/null || git add -A "$d"
+          if git diff --cached --quiet; then
+            echo "No catalog changes."
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git commit -m "re:Invent catalog update $(date -u +%Y-%m-%dT%H:%MZ)"
+          for i in 1 2 3; do
+            git pull --rebase --autostash && git push && { echo "pushed=true" >> "$GITHUB_OUTPUT"; exit 0; }
+            sleep $((i * 10))
+          done
+          echo "::error::Could not push the re:Invent catalog update"
+          exit 1
+
+      - name: Redeploy the site
+        if: steps.commit.outputs.pushed == 'true'
+        continue-on-error: true   # the next scheduled Ignite run deploys it anyway
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run sync.yml --ref main
+
+  report:
+    needs: sync
+    if: always() && (needs.sync.outputs.outcome == 'failure' || needs.sync.outputs.notify == 'failure')
+    runs-on: ubuntu-latest
+    permissions: {}
+    steps:
+      - name: Sync or notification failed
+        run: |
+          if [ "${{ needs.sync.outputs.outcome }}" = "failure" ]; then
+            echo "::error::The re:Invent catalog sync failed; the site keeps the last good data. See the 'Fetch and import the catalog' step log."
+          else
+            echo "::error::The re:Invent catalog changed but the issue comment could not be posted; it is kept in data/reinvent2026/pending-summary.md and will be retried next run."
+          fi
+          exit 1
