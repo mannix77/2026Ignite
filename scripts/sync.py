@@ -434,7 +434,10 @@ def short_pair(old, new):
     shared opening words first, so a title that only gained a suffix still shows the difference."""
     if not (isinstance(old, str) and isinstance(new, str)) or max(len(old), len(new)) <= 60:
         return short(old), short(new)
-    cut = old.rfind(" ", 0, len(os.path.commonprefix([old, new]))) + 1
+    n = len(os.path.commonprefix([old, new]))
+    cut = old.rfind(" ", 0, n) + 1
+    if n - cut > 40:  # no word break near the difference: keep the 20 characters before it
+        cut = n - 20
     lead = "…" if cut else ""
     return short(lead + old[cut:]), short(lead + new[cut:])
 

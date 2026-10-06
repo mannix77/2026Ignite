@@ -249,6 +249,10 @@ class SummaryTests(unittest.TestCase):
             "Turn AWS Security Signals into Action with AI-First SecOps",
             "Turn AWS Security Signals into Action with AI-First SecOps (sponsored by Splunk, a Cisco Company)"))
 
+    def test_should_show_a_difference_after_a_long_unbroken_word(self):
+        word = "x" * 70
+        self.assertIn("→ …" + "x" * 20 + "-v2", self.summary(word, word + "-v2"))
+
     def test_should_keep_a_short_title_change_whole(self):
         self.assertIn("title: Old name → New name", self.summary("Old name", "New name"))
 
