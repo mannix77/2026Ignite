@@ -99,5 +99,34 @@ await test('should add an undated backup pick for a session not in the plan', as
 });
 await sleep(SAVE);
 
+// ---- "Erase all your ratings, locks and notes … Settings are kept." (app.js reset-all)
+async function planWithSettings(ns) {
+  store.load(ns);
+  store.mutatePicks(p => { p.S1 = { p: 3, lock: 'S1', note: 'bring laptop', at: 1 }; });
+  store.setSetting('custom', [{ id: 'c1', title: 'Partner dinner', day: '2026-10-20', start: 1140, end: 1260, building: 'D' }]);
+  store.setSetting('blocks', [{ id: 'b1', day: '2026-10-20', start: 600, end: 660, label: 'Booth duty' }]);
+  store.updateSettings({ buffer: 7, lunch: { on: false } });
+  store.updateProfile({ roles: ['architect'] });
+  store.resetAll();
+  await sleep(SAVE);
+  store.load(ns);
+}
+
+await test('should erase every pick when the plan is reset', async () => {
+  await planWithSettings('reset-picks');
+  eq(store.get().picks, {});
+});
+
+await test('should keep settings, added sessions and blocked time when the plan is reset', async () => {
+  await planWithSettings('reset-settings-kept');
+  const s = store.settings();
+  eq([s.buffer, s.lunch.on, s.custom.length, s.blocks.length], [7, false, 1, 1]);
+});
+
+await test('should keep quick-start preferences when the plan is reset', async () => {
+  await planWithSettings('reset-profile-kept');
+  eq(store.profile().roles, ['architect']);
+});
+
 console.log(`${pass} passed, ${fail} failed`);
 if (fail) process.exit(1);
