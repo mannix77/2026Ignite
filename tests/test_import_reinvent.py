@@ -104,6 +104,12 @@ class ScheduledSessionTests(unittest.TestCase):
     def test_should_require_a_seat_for_a_scheduled_session(self):
         self.assertTrue(imported()["DVT212-S"]["rsvp"])
 
+    def test_should_say_when_seat_reservations_open(self):
+        self.assertEqual(imported()["DVT212-S"]["rsvpOpens"], "2026-10-06T16:00:00Z")
+
+    def test_should_not_give_an_untimed_session_a_reservation_date(self):
+        self.assertNotIn("rsvpOpens", imported()["GHJ205-R"])
+
     def test_should_convert_the_utc_start_to_iso(self):
         self.assertEqual(imported()["DVT212-S"]["start"], "2026-12-01T00:30:00Z")
 
@@ -307,6 +313,43 @@ class ImportRunTests(unittest.TestCase):
         self.write_snapshot(sample())
         self.run_import()
         self.assertIsNotNone(by_code(self.data("sessions.json")["sessions"])["ANT319-R"]["firstSeen"])
+
+
+KEYNOTE = {"code": "KEY001", "title": "CEO keynote", "start": "2026-12-01T16:00:00Z", "end": "2026-12-01T18:30:00Z",
+           "room": "Venetian | Level 2 | Hall D", "speakers": [["A. Speaker", "AWS", "CEO"]]}
+
+
+class KeynoteTests(unittest.TestCase):
+    """Keynotes aren't in the AWS catalog; data/reinvent2026/keynotes.json adds them by hand."""
+
+    def keynotes(self, entries):
+        return by_code(ri.keynote_records({"keynotes": entries}))
+
+    def test_should_add_a_hand_entered_keynote_as_a_keynote_session(self):
+        self.assertEqual(self.keynotes([KEYNOTE])["KEY001"]["type"], "Keynote")
+
+    def test_should_keep_the_keynote_time(self):
+        self.assertEqual(self.keynotes([KEYNOTE])["KEY001"]["dur"], 150)
+
+    def test_should_give_a_keynote_a_stable_id(self):
+        self.assertEqual(self.keynotes([KEYNOTE])["KEY001"]["id"], "keynote-KEY001")
+
+    def test_should_skip_a_keynote_without_a_valid_time(self):
+        self.assertEqual(self.keynotes([dict(KEYNOTE, start="TBA")]), {})
+
+    def test_should_add_nothing_for_the_empty_placeholder(self):
+        self.assertEqual(ri.keynote_records({"keynotes": []}), [])
+
+    def test_should_merge_keynotes_into_the_imported_catalog(self):
+        d = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, d)
+        with open(os.path.join(d, "keynotes.json"), "w", encoding="utf-8") as f:
+            json.dump({"keynotes": [KEYNOTE]}, f)
+        snap = os.path.join(d, "snap.json")
+        with open(snap, "w", encoding="utf-8") as f:
+            json.dump(SNAP, f)
+        ri.run(types.SimpleNamespace(snapshot=snap, fetch=False, data_dir=d, summary_out=None, snapshot_out=None))
+        self.assertIn("KEY001", by_code(load_path(os.path.join(d, "sessions.json"))["sessions"]))
 
 
 def load_path(path):

@@ -16,6 +16,8 @@ Outputs (relative to the repo root, under data/reinvent2026/):
     changes.json   newest-first log of change batches the app reads (committed)
     changelog.md   the same log as readable markdown, newest first, from the baseline on (committed)
     meta.json      last check time and status for the app (regenerated every run, not committed)
+
+Input kept by hand: keynotes.json (keynotes aren't in the AWS catalog; see keynote_records).
 """
 import argparse
 import datetime as dt
@@ -27,6 +29,7 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
+from zoneinfo import ZoneInfo
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import sync  # noqa: E402
@@ -35,6 +38,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(ROOT, "data", "reinvent2026")
 SNAPSHOT = os.path.join(DATA, "source", "reinvent2026_sessions.json")
 EVENT = "reinvent2026"
+PACIFIC = ZoneInfo("America/Los_Angeles")
 
 # Public widget config embedded in the catalog page (no login). If these stop working,
 # watch the catalog page's request to /api/sessions for the new values.
@@ -61,6 +65,8 @@ SPONSORED_BY = re.compile(r"\(sponsored by ([^)]+)\)", re.I)
 # Assumption (unconfirmed): AWS posts breakouts to YouTube after the event; chalk talks,
 # workshops, builders' sessions and the other interactive formats aren't recorded.
 RECORDED_TYPES = {"Breakout session"}
+# Reserved seating opened 2026-10-06 09:00 PT; the app shows this until it passes.
+RSVP_OPENS = "2026-10-06T16:00:00Z"
 
 
 def num(v):
@@ -233,6 +239,8 @@ def normalize(raw):
             "capacity": num(t.get("capacity")) if isinstance(num(t.get("capacity")), int) else None,
             "features": strs(attrs, "Features"),
         })
+        if out[-1]["rsvp"]:
+            out[-1]["rsvpOpens"] = RSVP_OPENS
     members = {}
     for rec in out:
         members.setdefault(REPEAT.sub("", rec["code"]) or rec["code"], []).append(rec)
@@ -242,6 +250,31 @@ def normalize(raw):
             rec["repeats"] = sorted(x["code"] for x in recs if x is not rec)
     out.sort(key=lambda x: (x["start"] is None, x["start"] or "", x["code"]))
     return out, dropped
+
+
+def keynote_records(doc):
+    """Keynotes aren't in the AWS catalog. data/reinvent2026/keynotes.json lists them by hand once
+    AWS publishes them: {"keynotes": [{code, title, start, end (ISO UTC), room?, speakers?, desc?}]}.
+    Entries without a valid start and end are skipped (never guess a keynote time)."""
+    out = []
+    for k in (doc or {}).get("keynotes") or []:
+        code = sync.text(k.get("code"))
+        start, end = sync.parse_iso(k.get("start")), sync.parse_iso(k.get("end"))
+        if not code or not start or not end or end <= start:
+            print("warning: keynote %r skipped (needs code, start and end)" % (code or k.get("title")), file=sys.stderr)
+            continue
+        room = sync.text(k.get("room")) or None
+        out.append({
+            "id": "keynote-" + code, "inst": "keynote-" + code, "code": code, "title": sync.text(k.get("title")),
+            "desc": sync.text(k.get("desc")), "type": "Keynote", "level": None, "topics": [], "tags": [], "audience": [],
+            "delivery": ["In-person"], "recorded": True,
+            "speakers": [[sync.text(x) for x in (p + ["", "", ""])[:3]] for p in k.get("speakers") or [] if p],
+            "start": sync.iso(start), "end": sync.iso(end),
+            "slot": "%s - %s" % tuple(t.astimezone(PACIFIC).strftime("%H:%M") for t in (start, end)),
+            "dur": int((end - start).total_seconds() // 60), "room": room, "roomTbd": not room,
+            "popular": False, "related": [], "rsvp": False, "vendors": [], "group": code, "repeats": [],
+        })
+    return out
 
 
 # ---------------------------------------------------------------- run
@@ -304,6 +337,7 @@ def run(args):
                 raise RuntimeError("%s: not a re:Invent snapshot (no sessions list)" % args.snapshot)
             raw, source = doc["sessions"], os.path.basename(args.snapshot)
         cur, dropped = normalize(raw)
+        cur += keynote_records(sync.load(os.path.join(data, "keynotes.json"), None))
         if not cur or (prev and len(cur) < MIN_KEEP * len(prev)):
             raise RuntimeError("catalog returned %d sessions (previously %d); keeping last good data"
                                % (len(cur), len(prev)))
