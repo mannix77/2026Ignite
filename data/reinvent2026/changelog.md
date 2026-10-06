@@ -3,6 +3,20 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-10-06T07:01:35Z · https://catalog.awsevents.com/api/sessions
+
+Added 1 · removed 1 · changed 2
+
+**Added**
+- `WOC101` Managing Bots, Mentoring Brains: The Future of Hybrid Leadership
+
+**Removed**
+- `COM337` The memory of an agent: running RAG on EKS at scale
+
+**Changed**
+- `AIM3315` Optimize agentic AI costs with EC2 Capacity Blocks and Spot Instances — start: — → 2026-12-04T20:00:00Z; end: — → 2026-12-04T20:20:00Z; dur: 0 → 20; room: — → Wynn/Encore | Upper Convention Promenade | Cristal 2 | Co…
+- `HMC325` How 3M does multicloud incident management with AWS DevOps Agent — start: — → 2026-12-02T01:00:00Z; end: — → 2026-12-02T01:20:00Z; dur: 0 → 20; room: — → Wynn/Encore | Upper Convention Promenade | Cristal 2 | Co…
+
 ## 2026-10-06T02:26:15Z · https://catalog.awsevents.com/api/sessions
 
 Added 9 · removed 1 · changed 25
