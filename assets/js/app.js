@@ -9,7 +9,7 @@ import { createVenue, setVenue, walkMinutes } from './venue.js';
 import { CONFERENCES, currentConferenceId, rememberConference, conferenceList } from './conferences.js';
 import { buildSuggester } from './suggest.js';
 import { INSTANCE_LABEL, nsKey } from './instance.js';
-import { esc, attr, icon, bldgChip, recChip, rsvpChip, prioPill, scoreChip, whenText, prioControl, sessionCard, cardClass, toast, shareOrDownload, copyText, speakersLine } from './ui.js';
+import { esc, attr, icon, bldgChip, recChip, rsvpChip, prioPill, scoreChip, whenText, prioControl, sessionCard, cardClass, toast, shareOrDownload, copyText, speakersLine, setHostCompany } from './ui.js';
 
 const $ = (sel, root = document) => root.querySelector(sel);
 const main = $('#main');
@@ -71,7 +71,7 @@ function walkCfg() {
 
 function ctx() {
   const s = store.settings();
-  return { walk: walkCfg(), buffer: num(s.buffer, 2), tolerance: num(s.tolerance, 5), keynoteExtra: num(s.keynoteExtra, 15), weights: s.weights };
+  return { walk: walkCfg(), buffer: num(s.buffer, 2), tolerance: num(s.tolerance, 5), keynoteExtra: num(s.keynoteExtra, 15), keynoteBuildings: app.venue.keynoteBuildings, weights: s.weights };
 }
 const lunch = () => lunchConfig(store.settings().lunch);
 
@@ -482,7 +482,7 @@ function renderStatus() {
   const sched = app.model.hasOfficial ? `${app.model.officialCount} timed` : 'dates & rooms not published yet';
   let src, ok = true;
   if (CUSTOM_DATA) src = 'Test data';
-  else if (!app.conf.live) src = `From your export · ${relTime(app.raw.doc.generatedAt)}`;
+  else if (!app.conf.live) src = `${app.conf.sourceLabel || 'From your export'} · ${relTime(app.raw.doc.generatedAt)}`;
   else if (app.live) src = `${app.live.stale ? 'Live copy' : `Live from ${app.conf.siteName}`} · ${relTime(app.live.at)}`;
   else { src = `${app.liveError ? 'Offline copy' : 'Synced'} · ${relTime(meta.lastChecked || app.raw.doc.generatedAt)}`; ok = meta.ok !== false && !app.liveError; }
   if (app.live?.stale) ok = false;
@@ -596,7 +596,7 @@ function renderBrowse() {
   const results = applyFilters(f);
   const fc = app.model.facets;
   const sortDesc = m => [...m.entries()].sort((a, b) => b[1] - a[1]);
-  const levelName = { 100: '100 Foundational', 200: '200 Intermediate', 300: '300 Advanced', 400: '400 Expert' };
+  const levelName = { 100: '100 Foundational', 200: '200 Intermediate', 300: '300 Advanced', 400: '400 Expert', 500: '500 Distinguished' };
   const activeCount = ['topics', 'types', 'levels', 'audience', 'days', 'buildings'].reduce((a, k) => a + (f[k]?.length || 0), 0);
   const quick = [['suggested', 'Suggested for you'], ['inPerson', 'In person'], ['notRecorded', 'Not recorded'], ['unrated', 'Not rated yet'], ['mine', 'My picks'], ['fresh', 'New this week']];
   const dayEntries = app.model.days.map(d => [d, app.model.sessions.filter(s => s.day === d).length]);
@@ -1291,6 +1291,8 @@ function renderChanges() {
   const parts = [`<h1>Changes</h1>`];
   if (app.conf.live) {
     parts.push(`<p class="lede">The app checks ${esc(app.conf.siteName)} directly whenever you open it. A scheduled cloud sync also logs every difference here and posts it to GitHub, which can email you. Changes to your picks are highlighted.</p>`);
+  } else if (app.conf.catalogNote) {
+    parts.push(`<p class="lede">${app.conf.catalogNote(esc(fmtStamp(app.raw.doc.generatedAt)))}</p>`);
   } else {
     parts.push(`<p class="lede">This catalog comes from your ${esc(app.conf.siteName)} export (${esc(fmtStamp(app.raw.doc.generatedAt))}). Re-run <code>scripts/import_gartner.py</code> with a new export to update it; differences are logged here and changes to your picks are highlighted.</p>`);
   }
@@ -1441,7 +1443,7 @@ function renderSettings() {
       ${ov(unknown)}
       <details><summary class="small">All ${auto.length} locations</summary>${ov(auto.filter(x => !unknown.includes(x)))}</details></section>` : ''}
   </div>
-  <p class="small muted" style="margin-top:20px">Unofficial personal tool, not affiliated with Microsoft or Gartner. Session data comes from each conference's catalog.</p>`;
+  <p class="small muted" style="margin-top:20px">Unofficial personal tool, not affiliated with Microsoft, Gartner or Amazon Web Services. Session data comes from each conference's catalog.</p>`;
 }
 
 // ---------------------------------------------------------------- detail dialog
@@ -2171,6 +2173,7 @@ async function boot() {
   app.conf = CONFERENCES[currentConferenceId()];
   app.venue = createVenue(app.conf.venue);
   setVenue(app.venue);
+  setHostCompany(app.conf.hostCompany);
   store.configure({ defaults: { startFrom: app.venue.startFrom, lunch: app.conf.lunch }, buildingIds: app.venue.ids });
   store.load(CUSTOM_DATA ? `test:${DATA_OVERRIDE}` : app.conf.namespace);
   fillConferenceSwitch();

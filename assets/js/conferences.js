@@ -52,6 +52,52 @@ export const SWAN_DOLPHIN_DEF = {
   notes: 'Swan and Dolphin: 7–10 min across the covered causeway (10–15 from the Xpo level). Swan Reserve: across the street from the Swan. Yacht & Beach Club convention center: 12–20 min around Crescent Lake on an exposed path (the Friendship boats are no faster). Add a few minutes at keynote and lunch changeovers; October afternoons are hot and showery.',
 };
 
+// Las Vegas Strip resorts (AWS re:Invent). Rooms are "<Venue> | <Floor> | <Room>", with two more
+// segments for theaters inside a Content Hub or the Expo:
+//   "MGM Grand | Level 1 | Grand 122"          "Caesars Palace | Promenade Level | Roman I"
+//   "Caesars Forum | Level 1 | Forum 120 | Content Hub | Purple Theater"
+//   "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Blue Theater"
+//   "Venetian | Level 2 | Hall B | Expo | Industry Theater"
+// The building is the first segment (anchored, so Caesars Forum never reads as the Palace); the
+// floor is "Level N" or one of the named levels below. Theaters in one hub or Expo hall are a
+// ~2-minute walk apart: same floor, different room.
+export const LAS_VEGAS_DEF = {
+  id: 'las-vegas',
+  buildings: [
+    // Coordinates are approximate (resort centres from public maps); verify on site.
+    { id: 'V', name: 'Venetian / Palazzo (Venetian Expo)', short: 'Venetian', re: /^\s*(venetian|palazzo)/i, geo: [36.1215, -115.1696] },
+    { id: 'W', name: 'Wynn / Encore', short: 'Wynn', re: /^\s*(wynn|encore)/i, geo: [36.1265, -115.1657] },
+    { id: 'C', name: 'Caesars Palace', short: 'Caesars', re: /^\s*caesars\s+palace/i, geo: [36.1162, -115.1745] },
+    { id: 'F', name: 'Caesars Forum', short: 'Forum', re: /^\s*caesars\s+forum/i, geo: [36.1180, -115.1688] },
+    { id: 'M', name: 'MGM Grand', short: 'MGM', re: /^\s*mgm/i, geo: [36.1024, -115.1700] },
+    { id: 'O', name: 'Online only', short: 'Online', re: /^(online|virtual|on[- ]demand$)/i },
+  ],
+  // Door-to-door minutes at a changeover: editable estimates, not measurements. Venetian,
+  // Wynn, Caesars Palace and Caesars Forum are a walk (skybridges, casino floors); the MGM
+  // Grand is ~2 miles south, so any move to or from it means the re:Invent shuttle.
+  walk: {
+    sameRoom: 0,
+    sameFloor: 5,     // these resorts are huge: hallways alone run several minutes
+    diffFloor: 8,
+    pairs: {
+      'V|W': 15, 'F|V': 15, 'C|F': 10, 'C|V': 15, 'C|W': 25, 'F|W': 20,
+      'C|M': 35, 'F|M': 35, 'M|V': 35, 'M|W': 35,
+    },
+    unknown: 15,
+  },
+  floorHints: [
+    [/upper convention promenade/i, 'Upper Convention Promenade'],
+    [/lower convention promenade/i, 'Lower Convention Promenade'],
+    [/convention promenade/i, 'Convention Promenade'],
+    [/promenade south/i, 'Promenade South'],
+    [/promenade level/i, 'Promenade Level'],
+    [/emperors level/i, 'Emperors Level'],
+  ],
+  startFrom: 'V',
+  geoRadius: 350,   // a resort plus its convention wing runs 500 m+
+  notes: 'Estimates for re:Invent 2026, not measured: Venetian–Wynn, Venetian–Forum and Caesars–Venetian ~15 min, Caesars Palace–Forum ~10, Forum–Wynn ~20, Caesars Palace–Wynn ~25. The MGM Grand is ~2 miles south of the others: allow ~35 min by shuttle each way, so MGM to anywhere north is a serious cost. Inside one resort allow 5 min on a floor and 8 between floors. Content Hub and Expo theaters are ~2 min apart. Refine in Settings.',
+};
+
 export const CONFERENCES = {
   ignite2026: {
     id: 'ignite2026',
@@ -91,6 +137,27 @@ export const CONFERENCES = {
     // Meals run 11:45–2:45; the grid leaves 1:00–1:45 (Wed 1:00–2:15) free.
     lunch: { from: 705, to: 885 },
     hint: 'Times and rooms are final. Reserve seats for reservation-required sessions in Conference Navigator, then mark them here.',
+  },
+  reinvent2026: {
+    id: 'reinvent2026',
+    name: 'AWS re:Invent 2026',
+    short: 're:Invent',
+    place: 'Las Vegas',
+    tz: 'America/Los_Angeles',
+    days: ['2026-11-30', '2026-12-01', '2026-12-02', '2026-12-03', '2026-12-04'],
+    dataDir: 'data/reinvent2026',
+    namespace: 'reinvent2026',
+    venue: LAS_VEGAS_DEF,
+    live: false,                   // refreshed by scripts/import_reinvent.py (scheduled sync)
+    rsvp: null,                    // per-session flag in the catalog (reserved seating)
+    sessionUrl: s => `https://registration.awsevents.com/flow/awsevents/reinvent2026/eventcatalog/page/eventcatalog?search=${encodeURIComponent(s.code)}`,
+    siteName: 'the re:Invent catalog',
+    sourceLabel: 'Catalog snapshot',
+    hostCompany: /^(aws|amazon|amazon web services|amazon\.com|amazon web services,? inc\.?)$/i,
+    lunch: { from: 660, to: 840 },  // 11:00-14:00
+    hint: 'Times and rooms are published. Reserve seats in the re:Invent portal, then mark them here.',
+    // Changes page: where this catalog comes from (stamp is pre-escaped).
+    catalogNote: stamp => `This catalog is a snapshot of the public re:Invent catalog (${stamp}), refreshed by a scheduled sync. Differences are logged here and posted to GitHub, and changes to your picks are highlighted. Keynotes aren't in the AWS catalog: block their time out in Settings until AWS publishes them.`,
   },
 };
 

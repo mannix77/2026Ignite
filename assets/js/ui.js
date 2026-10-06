@@ -14,7 +14,7 @@ export function icon(name, cls = '') {
   return `<svg class="${cls}" aria-hidden="true"><use href="#i-${name}"/></svg>`;
 }
 
-const BLDG_COLORS = ['W', 'S', 'N', 'M', 'C', 'H', 'O', 'U', 'D', 'R', 'Y', 'B'];
+const BLDG_COLORS = ['W', 'S', 'N', 'M', 'C', 'H', 'O', 'U', 'D', 'R', 'Y', 'B', 'V', 'F'];
 export function bldgChip(loc) {
   const v = venue();
   const b = v.BUILDING[loc?.building] && /^[A-Z]$/.test(loc.building) ? loc.building : 'U';
@@ -62,10 +62,15 @@ export function prioControl(key, p, big = false) {
     `<button type="button" class="p-${v}" data-act="prio" data-key="${attr(key)}" data-p="${v}" aria-pressed="${p === v}">${label}</button>`).join('')}</div>`;
 }
 
+// The organiser's own staff aren't labelled with their company (a conference can name its own).
+const DEFAULT_HOST = /^(microsoft|gartner)$/i;
+let host = DEFAULT_HOST;
+export function setHostCompany(re) { host = re || DEFAULT_HOST; }
+
 export function speakersLine(s, max = 3) {
   const sp = s.speakers || [];
   if (!sp.length) return '';
-  const names = sp.slice(0, max).map(p => p[1] && !/^(microsoft|gartner)$/i.test(p[1]) ? `${p[0]} (${p[1]})` : p[0]);
+  const names = sp.slice(0, max).map(p => p[1] && !host.test(p[1]) ? `${p[0]} (${p[1]})` : p[0]);
   return esc(names.join(', ') + (sp.length > max ? ` +${sp.length - max}` : ''));
 }
 
