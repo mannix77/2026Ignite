@@ -316,6 +316,8 @@ export function exportData() {
 export function importData(obj, { replace = false } = {}) {
   if (!obj || obj.app !== 'ignite26-planner' || !obj.picks || typeof obj.picks !== 'object') throw new Error('Not an Ignite planner backup file');
   const incoming = sanitizePicks(obj.picks);
+  // Checked before anything changes: a backup from another format must not empty the plan.
+  if (Object.keys(obj.picks).length && !Object.keys(incoming).length) throw new Error('This backup has no picks this planner can read; nothing was changed');
   if (replace) state.picks = {};
   for (const [id, p] of Object.entries(incoming)) {
     const cur = state.picks[id];
