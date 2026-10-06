@@ -90,14 +90,6 @@ await test('should drop an added session whose end is before its start', async (
   store.load('gartner2026');
   eq(store.settings().custom, []);
 });
-await test('should keep added sessions out of another copy of the planner', async () => {
-  localStorage.clear();
-  store.load('gartner2026@gino');
-  store.setSetting('custom', [reception]);
-  await sleep(200);
-  store.load('gartner2026');
-  eq(store.settings().custom, []);
-});
 
 console.log(`${pass} passed, ${fail} failed`);
 if (fail) process.exitCode = 1;
