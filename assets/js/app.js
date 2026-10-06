@@ -1887,7 +1887,8 @@ function importShare(str) {
 function importFavorites() {
   const f = app.snapshot?.favorites;
   if (!f) return;
-  const n = store.importData(f, { replace: false });
+  let n;
+  try { n = store.importData(f, { replace: false }); } catch (err) { toast(`Couldn't import your workbook favorites: ${err.message}`); return; }
   store.setUI({ favoritesVersion: f.version });
   app.favoritesOffer = null;
   toast(`Imported ${n} favorites from your workbook`);

@@ -41,5 +41,35 @@ await test('should drop a saved pick with no rating, lock, seat or note on reloa
   eq(store.pick('S3'), null);
 });
 
+// ---- restoring a backup (specs/features/backups.feature)
+const BACKUP = 'ignite26-planner';
+const ratedPlan = n => Object.fromEntries(Array.from({ length: n }, (_, i) => [`S${i}`, { p: 2, lock: null, note: '', at: 1 }]));
+function throws(fn) {
+  try { fn(); } catch (e) { return e.message; }
+  throw new Error('expected an error, but none was thrown');
+}
+
+await test('should refuse a Replace backup whose ratings cannot be read', async () => {
+  store.load('restore-unreadable');
+  store.mutatePicks(p => Object.assign(p, ratedPlan(12)));
+  const msg = throws(() => store.importData({ app: BACKUP, picks: { S9: { p: 'Must' } } }, { replace: true }));
+  eq(/no picks/i.test(msg), true);
+});
+
+await test('should keep every current pick when a Replace backup is refused', async () => {
+  store.load('restore-unreadable-kept');
+  store.mutatePicks(p => Object.assign(p, ratedPlan(12)));
+  try { store.importData({ app: BACKUP, picks: { S9: { p: 'Must' } } }, { replace: true }); } catch { /* refused */ }
+  eq(Object.keys(store.get().picks).length, 12);
+});
+
+await test('should replace the plan with a readable backup', async () => {
+  store.load('restore-readable');
+  store.mutatePicks(p => Object.assign(p, ratedPlan(12)));
+  store.importData({ app: BACKUP, picks: { A: { p: 3, at: 2 }, B: { p: 1, at: 2 }, C: { p: 0, at: 2 } } }, { replace: true });
+  eq(Object.keys(store.get().picks).sort(), ['A', 'B', 'C']);
+});
+await sleep(SAVE);
+
 console.log(`${pass} passed, ${fail} failed`);
 if (fail) process.exit(1);
