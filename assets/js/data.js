@@ -65,10 +65,10 @@ export function cacheUrl(name, base = location.href) {
   return new URL(`__planner-cache__/${encodeURIComponent(name)}`, base).href;
 }
 
-// A catalog copied from someone's export (not checked live) is flagged once it is a day
-// old. Returns null when it's fine, else { hours, days }.
+// A catalog copied from someone's export (conf.export; not a live or scheduled sync) is
+// flagged once it is a day old. Returns null when it's fine, else { hours, days }.
 export function exportAge(conf, generatedAt, now = new Date(), limitHours = 24) {
-  if (conf.live || !generatedAt) return null;
+  if (!conf.export || !generatedAt) return null;
   const hours = (now.getTime() - new Date(generatedAt).getTime()) / 3600000;
   if (!(hours >= limitHours)) return null;
   return { hours: Math.floor(hours), days: Math.floor(hours / 24) };
@@ -77,8 +77,10 @@ export function exportAge(conf, generatedAt, now = new Date(), limitHours = 24) 
 // Sessions you added because they're missing from the catalog (Settings → custom) become
 // catalog records of their own, marked `custom`.
 export function customRecords(list, conf) {
-  return (list || []).map((c, i) => ({
-    id: `my-${c.id}`, inst: `my-${c.id}`, code: `MY${i + 1}`, group: `my-${c.id}`, custom: true,
+  return (list || []).map(c => ({
+    // The code comes from the id, never the list position: removing one added session must
+    // not renumber the others (picks, links and change alerts key on it).
+    id: `my-${c.id}`, inst: `my-${c.id}`, code: `MY-${c.id}`, group: `my-${c.id}`, custom: true,
     title: c.title, desc: c.note || 'Added by you: not in the catalog.', type: 'Added by you',
     start: toISO(c.day, c.start, conf.tz), end: toISO(c.day, c.end, conf.tz), dur: c.end - c.start,
     room: c.room || '', building: c.building, delivery: ['In-person'], recorded: false, speakers: [], topics: [], tags: [], audience: [],

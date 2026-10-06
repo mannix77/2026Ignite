@@ -41,6 +41,11 @@ await test('should rank an Enterprise architect role match first at Gartner', ()
   eq(rank(p, ea, 'gartner2026').score > rank(p, session({ tags: ['E: Talent, Skills & AI Literacy'] }), 'gartner2026').score, true);
 });
 
+await test('should rank an architect-audience session first for an Enterprise architect at re:Invent', () => {
+  const p = profile({ roles: ['Enterprise architect'] });
+  eq(rank(p, session({ audience: ['Solution / Systems Architect'] }), 'reinvent2026').score > rank(p, session({ audience: ['Data Scientist'] }), 'reinvent2026').score, true);
+});
+
 // ---- skipping a whole group hides sessions without rating them
 await test('should hide a session in a skipped group', () => {
   eq(rank(profile({ groups: { 'topic:Windows': -1 } }), session({ topics: ['Windows'] })).hidden, 'group');

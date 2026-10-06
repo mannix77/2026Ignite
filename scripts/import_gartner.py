@@ -61,7 +61,17 @@ def normalize(raw):
     exact duplicates dropped, otherwise a distinct inst. Prints a warning count to stderr."""
     out, dropped, excluded = [], [], []
     warnings = []
-    seen_raw, inst_count = [], {}
+    seen_raw, used_inst = [], set()
+    # Ids shared by different records get instance keys from the record itself (id + code,
+    # then start), so a later export listing them in another order keys them the same way.
+    distinct = []
+    for r in raw:
+        if isinstance(r, dict) and r not in distinct:
+            distinct.append(r)
+    id_count = {}
+    for r in distinct:
+        if r.get("id"):
+            id_count[str(r["id"])] = id_count.get(str(r["id"]), 0) + 1
     for r in raw:
         if not isinstance(r, dict):
             warnings.append("skipped a non-object record (%r)" % (r,))
@@ -92,10 +102,16 @@ def normalize(raw):
             warnings.append("%s: ends before it starts, end dropped" % code)
             end = None
         sid = str(r["id"])
-        inst_count[sid] = inst_count.get(sid, 0) + 1
-        inst = sid if inst_count[sid] == 1 else "%s-%d" % (sid, inst_count[sid])
-        if inst != sid:
+        inst = sid
+        if id_count.get(sid, 0) > 1:
+            inst = "%s-%s" % (sid, code)
+            if inst in used_inst:
+                inst = "%s-%s" % (inst, re.sub(r"\D", "", str(r.get("s") or "")) or "x")
+            base, n = inst, 2
+            while inst in used_inst:  # identical id, code and start: order is all that's left
+                inst, n = "%s-%d" % (base, n), n + 1
             warnings.append("%s: id %s repeated, instance key %s" % (code, sid, inst))
+        used_inst.add(inst)
         loc = sync.text(r.get("loc"))
         live, remote = loc, ""
         if "|" in loc:
@@ -120,7 +136,7 @@ def normalize(raw):
             "delivery": ["In-person"],
             "recorded": True if typ in RECORDED_TYPES else (None if typ in NO_GROUP_TYPES else False),
             "speakers": [[sync.text(p[0]), sync.text(p[2] if len(p) > 2 else ""), sync.text(p[1] if len(p) > 1 else "")]
-                         for p in (r.get("sp") or []) if p and sync.text(p[0])],
+                         for p in (r.get("sp") or []) if isinstance(p, (list, tuple)) and p and sync.text(p[0])],
             "start": sync.iso(start.astimezone(dt.timezone.utc)) if start else None,
             "end": sync.iso(end.astimezone(dt.timezone.utc)) if end else None,
             "slot": "%s - %s" % (start.strftime("%H:%M"), end.strftime("%H:%M")) if end else None,

@@ -479,6 +479,10 @@ class WithdrawalGuardTests(unittest.TestCase):
     def renamed(self, old, new):
         return [{(new if k == old else k): v for k, v in s.items()} for s in self.published]
 
+    def test_should_refuse_a_feed_whose_entries_are_largely_malformed(self):
+        self.run_sync([None if i % 4 == 0 else s for i, s in enumerate(self.published)])
+        self.assertIn("malformed", self.data("meta.json")["error"])
+
     def test_should_refuse_a_catalog_whose_times_vanished(self):
         self.assertEqual(self.run_sync(self.renamed("startDateTime", "startTime")), (3, False))
 

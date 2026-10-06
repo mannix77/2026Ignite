@@ -7,6 +7,7 @@ const { buildModel, diffKnown, cacheUrl } = await import('../assets/js/data.js')
 const { CONFERENCES } = await import('../assets/js/conferences.js');
 const { createVenue } = await import('../assets/js/venue.js');
 const { compareOptions, DEFAULT_PLANNER } = await import('../assets/js/planner.js');
+const { checkLive } = await import('../assets/js/live.js');
 
 let pass = 0, fail = 0;
 async function test(name, fn) {
@@ -84,6 +85,16 @@ await test('should run at most the cap of what-if plans for a large clash', () =
   }));
   const out = compareOptions(items, items, { ...DEFAULT_PLANNER, walk: venue.walk }, null, { cap: 4 });
   eq(out.outcomes.size, 4);
+});
+
+// ---- a live feed that is largely malformed is refused, not read as removals
+await test('should refuse a live catalog whose entries are largely malformed', async () => {
+  const raw = Array.from({ length: 100 }, (_, i) => (i % 5 === 0 ? null : { sessionId: `s${i}`, title: `T${i}`, sessionCode: `C${i}` }));
+  const realFetch = globalThis.fetch;
+  globalThis.fetch = async u => ({ ok: true, json: async () => (String(u).includes('settings') ? {} : raw) });
+  let err = null;
+  try { await checkLive({ sessions: raw.filter(Boolean) }, ignite); } catch (e) { err = e.message; } finally { globalThis.fetch = realFetch; }
+  eq(/malformed/.test(err || ''), true);
 });
 
 console.log(`${pass} passed, ${fail} failed`);

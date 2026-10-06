@@ -227,12 +227,17 @@ async function getCdn(base, name, timeoutMs = 25000) {
   }
 }
 
+const MALFORMED_SHARE = 0.05;
+
 // Compare the live catalog against the synced snapshot. Throws if live is unreachable.
 // conf.cdn names the event folder on the CDN (conferences.js).
 export async function checkLive(snapshotDoc, conf = {}) {
   const base = cdnBase(conf.cdn || DEFAULT_EVENT);
   const [raw, settings] = await Promise.all([getCdn(base, 'session-all-en-us'), getCdn(base, 'settings', 15000).catch(() => null)]);
   if (!Array.isArray(raw) || raw.length < 50) throw new Error('unexpected live catalog');
+  // Many non-session entries mean a broken feed, not cancellations (same limit as sync.py).
+  const bad = raw.filter(s => !s || typeof s !== 'object' || Array.isArray(s)).length;
+  if (bad > MALFORMED_SHARE * raw.length) throw new Error(`live catalog has ${bad} malformed entries`);
   const prev = snapshotDoc.sessions || [];
   const byName = new Map();
   for (const r of prev) for (const p of r.speakers || []) if (p[1] || p[2]) byName.set(p[0], p);

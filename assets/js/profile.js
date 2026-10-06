@@ -77,6 +77,33 @@ const CONFIG = {
       return out;
     },
   },
+  reinvent2026: {
+    roles: [
+      { id: 'Enterprise architect', audience: ['Solution / Systems Architect', 'IT Executive'] },
+      { id: 'Developer / engineer', audience: ['Developer / Engineer', 'DevOps Engineer'] },
+      { id: 'IT / business leader', audience: ['IT Executive', 'IT Professional / Technical Manager', 'Business Executive'] },
+      { id: 'Security', audience: ['Cloud Security Specialist'] },
+      { id: 'Data & analytics', audience: ['Data Engineer', 'Data Scientist'] },
+    ],
+    levels: true,
+    defaultOffTypes: ['Exam prep'],
+    groups: [
+      { key: 'topic', label: 'Topics', get: s => s.topics },
+      { key: 'tag', label: 'Services & themes', get: s => s.tags, top: 30 },
+      { key: 'type', label: 'Formats', get: s => [s.type] },
+      { key: 'level', label: 'Levels', get: s => (s.level ? [String(s.level)] : []), sort: 'name' },
+      { key: 'aud', label: 'Audience', get: s => s.audience, top: 20 },
+    ],
+    signals(s) {
+      const out = [];
+      if (s.type === 'Keynote') out.push([4, 'Keynote']);
+      const cust = (s.speakers || []).find(p => p?.[1] && !/\baws\b|amazon/i.test(p[1]));
+      if (cust) out.push([0.5, `Speaker from ${cust[1]}`]);
+      if (s.sponsored) out.push([-0.5, 'Sponsored']);
+      if (['Workshop', "Builders' session", 'Code talk', 'Lab', 'Chalk talk'].includes(s.type)) out.push([0.5, 'Interactive, in person only']);
+      return out;
+    },
+  },
 };
 
 // A conference without its own entry gets roles from its audience values and plain groups.

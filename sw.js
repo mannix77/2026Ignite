@@ -22,7 +22,7 @@ const SHELL = [
 ];
 const DATA = ['data/ignite2026/sessions.json', 'data/ignite2026/changes.json', 'data/ignite2026/meta.json', 'data/ignite2026/favorites.json', 'data/ignite2026/profile.json',
   'data/gartner2026/sessions.json', 'data/gartner2026/changes.json', 'data/gartner2026/meta.json', 'data/gartner2026/favorites.json', 'data/gartner2026/profile.json',
-  'data/reinvent2026/sessions.json', 'data/reinvent2026/changes.json', 'data/reinvent2026/meta.json'];
+  'data/reinvent2026/sessions.json', 'data/reinvent2026/changes.json', 'data/reinvent2026/meta.json', 'data/reinvent2026/profile.json'];
 const DATA_TIMEOUT_MS = 3500;
 
 const dataKey = url => { const u = new URL(url, self.location); return u.origin + u.pathname; };

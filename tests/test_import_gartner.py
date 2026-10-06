@@ -54,6 +54,16 @@ class ImportRobustnessTests(unittest.TestCase):
         got = normalize(dict(OK, code="T6"))
         self.assertNotEqual(got["T1"]["inst"], got["T6"]["inst"])
 
+    def test_should_keep_instance_keys_when_repeated_ids_change_order(self):
+        a, b = dict(OK, id=9, code="R1"), dict(OK, id=9, code="R2", t="Other talk")
+        keys = lambda recs: {r["code"]: r["inst"] for r in g.normalize(recs)[0]}
+        with contextlib.redirect_stderr(io.StringIO()):
+            self.assertEqual(keys([a, b]), keys([b, a]))
+
+    def test_should_skip_a_malformed_speaker_entry(self):
+        got = normalize(dict(OK, id=8, code="T8", sp=[7, ["Ann Lee", "Analyst", "Gartner"]]))
+        self.assertEqual([p[0] for p in got["T8"]["speakers"]], ["Ann Lee"])
+
     def test_should_drop_an_exact_duplicate_record(self):
         with contextlib.redirect_stderr(io.StringIO()):
             out, _, _ = g.normalize([OK, dict(OK)])

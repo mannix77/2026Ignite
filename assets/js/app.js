@@ -973,10 +973,10 @@ function staleBanner() {
   const seen = store.get().ui.staleSeen;
   if (seen && seen.at === app.raw.doc.generatedAt && seen.days >= age.days) return '';
   const old = age.days >= 1 ? `${age.days} day${age.days > 1 ? 's' : ''} old` : `${age.hours} hours old`;
-  const who = app.conf.maintainer;
+  const who = app.conf.export.maintainer;
   const fix = INSTANCE_LABEL
     ? `Ask ${esc(who || 'whoever runs this planner')} for a fresh ${esc(app.conf.siteName)} export.`
-    : `Download a fresh export from ${esc(app.conf.siteName)} and run <code>scripts/import_gartner.py</code>; colleagues' copies update on the next deploy.`;
+    : `Download a fresh export from ${esc(app.conf.siteName)} and run <code>${esc(app.conf.export.script)}</code>; colleagues' copies update on the next deploy.`;
   return `<div class="banner warn">${icon('warn')}<div><b>This catalog is ${old}</b>
     <p>It's a copy of ${INSTANCE_LABEL && who ? `${esc(who)}'s` : 'your'} ${esc(app.conf.siteName)} export from ${esc(fmtStamp(app.raw.doc.generatedAt))}. Sessions may have been retitled, moved or added since. ${fix}</p>
     <p>Registered for something that isn't here? <a href="#/settings" data-act="goto-custom">Add it to your plan</a>.</p>

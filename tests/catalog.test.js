@@ -33,7 +33,10 @@ await test('should never flag the live Ignite catalog as an old export', () => {
   eq(exportAge(ignite, exported, at(72)), null);
 });
 await test('should name who can refresh the Gartner export', () => {
-  eq(typeof gartner.maintainer, 'string');
+  eq(typeof gartner.export.maintainer, 'string');
+});
+await test('should not flag a catalog refreshed by a scheduled sync as an old export', () => {
+  eq(exportAge(CONFERENCES.reinvent2026, exported, at(72)), null);
 });
 
 // ---- sessions missing from the catalog
@@ -62,6 +65,11 @@ await test('should find an added session that a fresh export now lists on the sa
 await test('should not match a catalog session on another day', () => {
   const official = { id: '99', inst: '99', code: 'HLB2', title: 'Healthcare and Life Sciences Networking Reception', type: 'Meals', start: '2026-10-20T11:30:00Z', end: '2026-10-20T12:30:00Z', delivery: ['In-person'] };
   eq(catalogMatch(reception, model([official], [])), null);
+});
+
+await test('should keep an added session\'s code when an earlier one is removed', () => {
+  const later = { ...reception, id: 'r2', title: 'Vendor dinner' };
+  eq(customRecords([later], gartner)[0].code, customRecords([reception, later], gartner)[1].code);
 });
 
 // ---- added sessions are personal settings

@@ -502,6 +502,9 @@ def withdrawal(ps, cs):
     return None
 
 
+MALFORMED_SHARE = 0.05  # same limit in live.js
+
+
 def run(args):
     now = utcnow()
     data = os.path.abspath(args.data_dir) if args.data_dir else DATA
@@ -535,6 +538,10 @@ def run(args):
                 flags = meta.get("siteFlags")
         if not isinstance(raw, list):
             raise RuntimeError("unexpected catalog payload (not a list)")
+        # A feed with many non-session entries is broken, not a list of cancellations.
+        bad = sum(1 for s in raw if not isinstance(s, dict))
+        if raw and bad > MALFORMED_SHARE * len(raw):
+            raise RuntimeError("%d of %d catalog entries are malformed; keeping last good data" % (bad, len(raw)))
         # If the speaker feed is down, keep companies/titles from the last snapshot.
         by_name = {p[0]: p for r in prev for p in r.get("speakers") or [] if p[1] or p[2]}
         cur, dropped, draft = normalize(raw, raw_spk, event_window(args, flags or {}), by_name)
