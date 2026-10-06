@@ -539,7 +539,8 @@ def run(args):
         if not isinstance(raw, list):
             raise RuntimeError("unexpected catalog payload (not a list)")
         # A feed with many non-session entries is broken, not a list of cancellations.
-        bad = sum(1 for s in raw if not isinstance(s, dict))
+        # (Test sessions are dropped on purpose later; an entry with no session id isn't one.)
+        bad = sum(1 for s in raw if not isinstance(s, dict) or s.get("sessionId") in (None, ""))
         if raw and bad > MALFORMED_SHARE * len(raw):
             raise RuntimeError("%d of %d catalog entries are malformed; keeping last good data" % (bad, len(raw)))
         # If the speaker feed is down, keep companies/titles from the last snapshot.

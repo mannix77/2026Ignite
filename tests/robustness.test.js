@@ -87,6 +87,15 @@ await test('should run at most the cap of what-if plans for a large clash', () =
   eq(out.outcomes.size, 4);
 });
 
+await test('should refuse a live catalog whose entries largely lack session ids', async () => {
+  const raw = Array.from({ length: 100 }, (_, i) => (i % 5 === 0 ? { title: `T${i}` } : { sessionId: `s${i}`, title: `T${i}`, sessionCode: `C${i}` }));
+  const realFetch = globalThis.fetch;
+  globalThis.fetch = async u => ({ ok: true, json: async () => (String(u).includes('settings') ? {} : raw) });
+  let err = null;
+  try { await checkLive({ sessions: [] }, ignite); } catch (e) { err = e.message; } finally { globalThis.fetch = realFetch; }
+  eq(/malformed/.test(err || ''), true);
+});
+
 // ---- a live feed that is largely malformed is refused, not read as removals
 await test('should refuse a live catalog whose entries are largely malformed', async () => {
   const raw = Array.from({ length: 100 }, (_, i) => (i % 5 === 0 ? null : { sessionId: `s${i}`, title: `T${i}`, sessionCode: `C${i}` }));

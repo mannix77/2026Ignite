@@ -483,6 +483,10 @@ class WithdrawalGuardTests(unittest.TestCase):
         self.run_sync([None if i % 4 == 0 else s for i, s in enumerate(self.published)])
         self.assertIn("malformed", self.data("meta.json")["error"])
 
+    def test_should_refuse_a_feed_whose_entries_largely_lack_session_ids(self):
+        self.run_sync([{k: v for k, v in s.items() if k != "sessionId"} if i % 4 == 0 else s for i, s in enumerate(self.published)])
+        self.assertIn("malformed", self.data("meta.json")["error"])
+
     def test_should_refuse_a_catalog_whose_times_vanished(self):
         self.assertEqual(self.run_sync(self.renamed("startDateTime", "startTime")), (3, False))
 

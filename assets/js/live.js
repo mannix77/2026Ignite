@@ -236,7 +236,7 @@ export async function checkLive(snapshotDoc, conf = {}) {
   const [raw, settings] = await Promise.all([getCdn(base, 'session-all-en-us'), getCdn(base, 'settings', 15000).catch(() => null)]);
   if (!Array.isArray(raw) || raw.length < 50) throw new Error('unexpected live catalog');
   // Many non-session entries mean a broken feed, not cancellations (same limit as sync.py).
-  const bad = raw.filter(s => !s || typeof s !== 'object' || Array.isArray(s)).length;
+  const bad = raw.filter(s => !s || typeof s !== 'object' || Array.isArray(s) || s.sessionId == null || s.sessionId === '').length;
   if (bad > MALFORMED_SHARE * raw.length) throw new Error(`live catalog has ${bad} malformed entries`);
   const prev = snapshotDoc.sessions || [];
   const byName = new Map();
