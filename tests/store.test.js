@@ -69,6 +69,34 @@ await test('should replace the plan with a readable backup', async () => {
   store.importData({ app: BACKUP, picks: { A: { p: 3, at: 2 }, B: { p: 1, at: 2 }, C: { p: 0, at: 2 } } }, { replace: true });
   eq(Object.keys(store.get().picks).sort(), ['A', 'B', 'C']);
 });
+const MORNING = Date.now() - 3 * 3600e3; // earlier today: older than "now", newer than any undated pick
+await test('should keep a newer local pick when a backup pick has no time', async () => {
+  store.load('merge-undated');
+  store.mutatePicks(p => { p.ICE = { p: 3, lock: 'ICE', note: '', at: MORNING }; });
+  store.importData({ app: BACKUP, picks: { ICE: { p: 0 } } });
+  const s = store.pick('ICE');
+  eq([s.p, s.lock], [3, 'ICE']);
+});
+
+await test('should take a backup pick made after the local one', async () => {
+  store.load('merge-newer');
+  store.mutatePicks(p => { p.ICE = { p: 3, lock: null, note: '', at: MORNING }; });
+  store.importData({ app: BACKUP, picks: { ICE: { p: 0, at: MORNING + 3600e3 } } });
+  eq(store.pick('ICE').p, 0);
+});
+
+await test('should keep an undated local pick when a second undated backup is merged', async () => {
+  store.load('merge-undated-twice');
+  store.importData({ app: BACKUP, picks: { ICE: { p: 3, lock: 'ICE' } } });
+  store.importData({ app: BACKUP, picks: { ICE: { p: 0 } } });
+  eq(store.pick('ICE').p, 3);
+});
+
+await test('should add an undated backup pick for a session not in the plan', async () => {
+  store.load('merge-undated-new');
+  store.importData({ app: BACKUP, picks: { ICE: { p: 2 } } });
+  eq(store.pick('ICE')?.p, 2);
+});
 await sleep(SAVE);
 
 console.log(`${pass} passed, ${fail} failed`);

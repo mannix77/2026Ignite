@@ -216,13 +216,14 @@ export function setSeenBatch(at) { state.seenBatch = at; emit('seen'); }
 // ---- validation (backups, share links and old saves are untrusted input)
 
 const ID_RE = /^[\w.:-]{1,120}$/;
-function sanitizePick(p) {
+// `undatedAt` is the time given to a pick that doesn't say when it was made.
+function sanitizePick(p, undatedAt = Date.now()) {
   if (!p || typeof p !== 'object') return null;
   const out = {
     p: [0, 1, 2, 3].includes(p.p) ? p.p : null,
     lock: typeof p.lock === 'string' && ID_RE.test(p.lock) ? p.lock : null,
     note: typeof p.note === 'string' ? p.note.slice(0, 4000) : '',
-    at: Number.isFinite(p.at) ? p.at : Date.now(),
+    at: Number.isFinite(p.at) ? p.at : undatedAt,
   };
   if (p.lockMode === 'preview' && out.lock) out.lockMode = 'preview';
   if (typeof p.reserved === 'string' && ID_RE.test(p.reserved)) out.reserved = p.reserved;
@@ -233,11 +234,11 @@ function sanitizePick(p) {
   return alive(out) ? out : null;
 }
 
-function sanitizePicks(picks) {
+function sanitizePicks(picks, undatedAt) {
   const out = {};
   for (const [id, p] of Object.entries(picks || {})) {
     if (!ID_RE.test(id)) continue;
-    const s = sanitizePick(p);
+    const s = sanitizePick(p, undatedAt);
     if (s) out[id] = s;
   }
   return out;
@@ -315,13 +316,13 @@ export function exportData() {
 
 export function importData(obj, { replace = false } = {}) {
   if (!obj || obj.app !== 'ignite26-planner' || !obj.picks || typeof obj.picks !== 'object') throw new Error('Not an Ignite planner backup file');
-  const incoming = sanitizePicks(obj.picks);
+  const incoming = sanitizePicks(obj.picks, 0); // undated backup picks are older than anything here
   // Checked before anything changes: a backup from another format must not empty the plan.
   if (Object.keys(obj.picks).length && !Object.keys(incoming).length) throw new Error('This backup has no picks this planner can read; nothing was changed');
   if (replace) state.picks = {};
   for (const [id, p] of Object.entries(incoming)) {
     const cur = state.picks[id];
-    if (!cur || p.at >= (cur.at || 0)) state.picks[id] = { ...p, note: p.note || cur?.note || '' };
+    if (!cur || p.at > (cur.at || 0)) state.picks[id] = { ...p, note: p.note || cur?.note || '' };
   }
   if (obj.settings && replace) { state.prefs = sanitizePrefs(obj.settings); cachedSettings = null; }
   if (obj.profile && (replace || !state.profile)) state.profile = sanitizeProfile(obj.profile);
