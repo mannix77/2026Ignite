@@ -329,7 +329,8 @@ export function importData(obj, { replace = false } = {}) {
 
 // Compact share token per pick: CODE.p[sSCORE][w][!LOCKCODE | *LOCKCODE]
 //   sN  your own score     w  watch the recording instead     !  locked run     *  locked in preview
-const CODE = '[A-Za-z0-9_]{1,24}(?:-[A-Z]\\d+)?'; // BRK101, BRK101-R1, Gartner's 11b / 33jES
+// BRK101, BRK101-R1, Gartner's 11b / 33jES, re:Invent's DVT212-S, ANT319-R, INV002-S-R1
+const CODE = '[A-Za-z0-9_]{1,24}(?:-[A-Z]\\d*){0,3}';
 const TOKEN = new RegExp(`^(${CODE})\\.([0-3])(?:s(\\d{1,3}(?:\\.\\d)?))?(w)?(?:([!*])(${CODE}))?$`);
 
 export function shareString(codeOf, lockCodeOf) {

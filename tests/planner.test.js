@@ -5,6 +5,10 @@
 import { transition, canBoth, optimize, optimizeDay, decisionGroups, isResolved, fillers, nowNext, weigh, whatIf, chainValue, DEFAULT_PLANNER } from '../assets/js/planner.js';
 import { parseLocation, walkMinutes, sameRoom, DEFAULT_WALK } from '../assets/js/venue.js';
 import { localParts, fromISO, parseSlot, fmtTime, fmtDay, addDays } from '../assets/js/time.js';
+import { createVenue } from '../assets/js/venue.js';
+import { CONFERENCES, LAS_VEGAS_DEF } from '../assets/js/conferences.js';
+import { parseShare } from '../assets/js/store.js';
+import { arrivalExtra } from '../assets/js/planner.js';
 
 const log = typeof print === 'function' && typeof window === 'undefined' ? print : console.log;
 let pass = 0, fail = 0;
@@ -466,6 +470,70 @@ test('your own score overrides the tier weights', () => {
   ok(/your score 13/.test(weigh(a).why[0]));
   const b = item(H(9), H(10), W3, { priority: 3 });
   eq(optimizeDay([a, b]).chosen[0].key, a.key);
+});
+
+// --- Las Vegas (re:Invent)
+const LV = createVenue(LAS_VEGAS_DEF);
+const lv = r => LV.parseLocation(r);
+const LVW = LV.walk;
+test('Las Vegas: the building comes from the first segment', () => {
+  eq(['MGM Grand | Level 1 | Grand 122', 'Wynn/Encore | Level 1 | Chopin 4', 'Caesars Palace | Promenade Level | Roman I',
+    'Caesars Forum | Level 1 | Forum 120 | Content Hub | Purple Theater', 'Venetian | Level 2 | Hall B | Expo | Industry Theater']
+    .map(r => lv(r).building), ['M', 'W', 'C', 'F', 'V']);
+});
+test('Las Vegas: Caesars Forum is not Caesars Palace', () => {
+  eq(lv('Caesars Forum | Level 1 | Forum 120').building, 'F');
+});
+test('Las Vegas: numbered levels parse as floors', () => {
+  eq(lv('MGM Grand | Level 3 | Premier 311').floor, '3');
+});
+test('Las Vegas: named promenades parse as floors', () => {
+  eq(['Caesars Palace | Promenade Level | Roman I', 'Caesars Palace | Promenade South | Milano I',
+    'Wynn/Encore | Convention Promenade | Lafite 4', 'Wynn/Encore | Upper Convention Promenade | Cristal 5',
+    'Wynn/Encore | Lower Convention Promenade | Fleurie', 'Caesars Palace | Emperors Level | Palace Ballroom I']
+    .map(r => lv(r).floor), ['Promenade Level', 'Promenade South', 'Convention Promenade', 'Upper Convention Promenade',
+    'Lower Convention Promenade', 'Emperors Level']);
+});
+test('Las Vegas: two theaters in one Content Hub are a same-floor walk, not the same room', () => {
+  eq(walkMinutes(lv('Caesars Forum | Level 1 | Forum 120 | Content Hub | Purple Theater'),
+    lv('Caesars Forum | Level 1 | Forum 120 | Content Hub | Red Theater'), LVW), LVW.sameFloor);
+});
+test('Las Vegas: MGM Grand to the Venetian is a shuttle ride', () => {
+  eq(walkMinutes(lv('MGM Grand | Level 1 | Grand 122'), lv('Venetian | Level 2 | Hall B'), LVW), 35);
+});
+test('Las Vegas: Caesars Palace to Caesars Forum is a short walk', () => {
+  eq(walkMinutes(lv('Caesars Palace | Promenade Level | Roman I'), lv('Caesars Forum | Level 1 | Forum 120'), LVW), 10);
+});
+test('Las Vegas: changing floors in one resort takes the diffFloor estimate', () => {
+  eq(walkMinutes(lv('MGM Grand | Level 1 | Grand 122'), lv('MGM Grand | Level 3 | Premier 311'), LVW), LVW.diffFloor);
+});
+test('Las Vegas: every building pair has a walking estimate', () => {
+  const ids = LV.ids.filter(id => id !== 'O');
+  const missing = ids.flatMap(a => ids.filter(b => a < b).map(b => `${a}|${b}`)).filter(k => LVW.pairs[k] == null);
+  eq(missing, []);
+});
+test('a session at Caesars Palace gets no keynote entry time', () => {
+  const ctx = { ...DEFAULT_PLANNER, keynoteBuildings: LV.keynoteBuildings };
+  eq(arrivalExtra(item(H(9), H(10), lv('Caesars Palace | Promenade Level | Roman I')), ctx), 0);
+});
+test('a re:Invent keynote still gets keynote entry time', () => {
+  const ctx = { ...DEFAULT_PLANNER, keynoteBuildings: LV.keynoteBuildings };
+  eq(arrivalExtra(item(H(9), H(10), lv('Venetian | Level 2 | Hall D'), { type: 'Keynote' }), ctx), ctx.keynoteExtra);
+});
+test('Chase Center still gets keynote entry time at Ignite', () => {
+  eq(arrivalExtra(item(H(9), H(10), parseLocation('Chase Center')), DEFAULT_PLANNER), DEFAULT_PLANNER.keynoteExtra);
+});
+test('re:Invent is listed with its Las Vegas days and timezone', () => {
+  const c = CONFERENCES.reinvent2026;
+  eq([c.tz, c.days[0], c.days[c.days.length - 1], c.dataDir], ['America/Los_Angeles', '2026-11-30', '2026-12-04', 'data/reinvent2026']);
+});
+test('re:Invent session links search the catalog by code', () => {
+  eq(CONFERENCES.reinvent2026.sessionUrl({ code: 'DVT212-S' }),
+    'https://registration.awsevents.com/flow/awsevents/reinvent2026/eventcatalog/page/eventcatalog?search=DVT212-S');
+});
+test('share links accept re:Invent session codes', () => {
+  const ids = { 'DVT212-S': 'a', 'ANT319-R': 'b', 'INV002-S-R1': 'c' };
+  eq(Object.keys(parseShare('DVT212-S.3~ANT319-R.2!ANT319-R~INV002-S-R1.1', c => ids[c], c => ids[c])), ['a', 'b', 'c']);
 });
 
 log(`${pass} passed, ${fail} failed`);

@@ -62,6 +62,7 @@ export function createVenue(def) {
   return {
     id: def.id, buildings, BUILDING, walk: JSON.parse(JSON.stringify(def.walk)), startFrom: def.startFrom,
     ids: buildings.map(b => b.id), parseLocation, buildingLabel, notes: def.notes || '', geoRadius: def.geoRadius || 220,
+    keynoteBuildings: buildings.filter(b => b.keynote).map(b => b.id),   // entering one costs keynoteExtra
   };
 }
 
@@ -78,7 +79,7 @@ export const MOSCONE_DEF = {
     { id: 'S', name: 'Moscone South', short: 'South', re: /moscone\s*south|^south\b|esplanade/i, geo: [37.78360, -122.40120] },
     { id: 'N', name: 'Moscone North', short: 'North', re: /moscone\s*north|^north\b/i, geo: [37.78470, -122.40250] },
     { id: 'M', name: 'Marriott Marquis', short: 'Marriott', re: /marriott|marquis/i, geo: [37.78543, -122.40449] },
-    { id: 'C', name: 'Chase Center', short: 'Chase Ctr', re: /chase\s*center/i, geo: [37.76790, -122.38742] },
+    { id: 'C', name: 'Chase Center', short: 'Chase Ctr', re: /chase\s*center/i, geo: [37.76790, -122.38742], keynote: true },
     { id: 'H', name: 'Other off-site', short: 'Off-site', re: /intercontinental|hilton|hyatt|westin|park central|four seasons|st\.? regis|yerba buena (center|gardens)|metreon|sfmoma|\bw hotel/i, offsite: true },
     { id: 'O', name: 'Online only', short: 'Online', re: /^(online|virtual|on[- ]demand$)/i },
   ],

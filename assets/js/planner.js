@@ -20,6 +20,7 @@ export const DEFAULT_PLANNER = {
   buffer: 2,          // minutes to find the room and grab a seat
   tolerance: 5,       // minutes you'll accept missing (leave early / arrive late)
   keynoteExtra: 15,   // extra time to get into a keynote (security, seating, Chase Center)
+  keynoteBuildings: ['C'],   // keynote-only venues (the venue model's keynote: true; Moscone's Chase Center)
   weights: {
     3: 100, 2: 50, 1: 20,
     scoreScale: 10,        // points per point of your own score (a workbook score of 9 = 90)
@@ -30,7 +31,8 @@ export const DEFAULT_PLANNER = {
   },
 };
 
-const HANDS_ON = new Set(['Lab', 'Table Talk', 'Workshop']);
+// Ignite: Lab, Table Talk, Workshop. re:Invent adds its hands-on formats (Workshop and Lab overlap).
+const HANDS_ON = new Set(['Lab', 'Table Talk', 'Workshop', "Builders' session", 'Bootcamp', 'Gamified learning']);
 const LOCK = 100000;
 const EXACT_LIMIT = 256; // repeat-run combinations searched exhaustively
 const NEG = -Infinity;
@@ -41,7 +43,7 @@ export function overlaps(a, b) {
 
 // Extra minutes needed to get into b beyond walking (keynote security and seating).
 export function arrivalExtra(b, ctx = DEFAULT_PLANNER) {
-  return b && !b.pseudo && (b.type === 'Keynote' || b.loc?.building === 'C') ? (ctx.keynoteExtra ?? 0) : 0;
+  return b && !b.pseudo && (b.type === 'Keynote' || (ctx.keynoteBuildings ?? DEFAULT_PLANNER.keynoteBuildings).includes(b.loc?.building)) ? (ctx.keynoteExtra ?? 0) : 0;
 }
 
 // Moving from a (earlier) to b (later) on the same day. Staying in the same room needs
