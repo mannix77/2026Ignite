@@ -337,6 +337,9 @@ class KeynoteTests(unittest.TestCase):
     def test_should_skip_a_keynote_without_a_valid_time(self):
         self.assertEqual(self.keynotes([dict(KEYNOTE, start="TBA")]), {})
 
+    def test_should_keep_only_the_first_keynote_with_a_repeated_code(self):
+        self.assertEqual(self.keynotes([KEYNOTE, dict(KEYNOTE, title="Copy")])["KEY001"]["title"], "CEO keynote")
+
     def test_should_add_nothing_for_the_empty_placeholder(self):
         self.assertEqual(ri.keynote_records({"keynotes": []}), [])
 

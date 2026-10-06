@@ -255,14 +255,19 @@ def normalize(raw):
 def keynote_records(doc):
     """Keynotes aren't in the AWS catalog. data/reinvent2026/keynotes.json lists them by hand once
     AWS publishes them: {"keynotes": [{code, title, start, end (ISO UTC), room?, speakers?, desc?}]}.
-    Entries without a valid start and end are skipped (never guess a keynote time)."""
-    out = []
+    Entries without a valid start and end are skipped (never guess a keynote time); a repeated
+    code keeps the first entry, since the code becomes the session id."""
+    out, seen = [], set()
     for k in (doc or {}).get("keynotes") or []:
         code = sync.text(k.get("code"))
         start, end = sync.parse_iso(k.get("start")), sync.parse_iso(k.get("end"))
         if not code or not start or not end or end <= start:
             print("warning: keynote %r skipped (needs code, start and end)" % (code or k.get("title")), file=sys.stderr)
             continue
+        if code in seen:
+            print("warning: keynote %r skipped (duplicate code)" % code, file=sys.stderr)
+            continue
+        seen.add(code)
         room = sync.text(k.get("room")) or None
         out.append({
             "id": "keynote-" + code, "inst": "keynote-" + code, "code": code, "title": sync.text(k.get("title")),
