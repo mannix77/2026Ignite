@@ -44,6 +44,9 @@ jobs:
       - name: Run tests
         run: |
           node tests/planner.test.js
+          node tests/robustness.test.js
+          node tests/profile.test.js
+          node tests/catalog.test.js
           python3 -m unittest discover -s tests
 
       - name: Sync the catalog
@@ -128,7 +131,7 @@ jobs:
             case "$name" in *[!a-z0-9-]*) echo "::error::instance folder '$name' must be lowercase letters, digits or -"; exit 1;; esac
             rm -rf "$name" && mkdir -p "$name"
             cp -R index.html manifest.webmanifest sw.js assets data "$name/"
-            find "$name/data" -name favorites.json -delete
+            find "$name/data" \( -name favorites.json -o -name profile.json \) -delete
             [ -d "$dir/data" ] && cp -R "$dir/data/." "$name/data/"
             sed -i "s|<meta name=\"planner-instance\" content=\"\">|<meta name=\"planner-instance\" content=\"$name\">|" "$name/index.html"
             grep -q "content=\"$name\"" "$name/index.html"

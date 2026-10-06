@@ -1,13 +1,14 @@
 // Conference Planner — views, routing and event handling.
 
 import * as store from './store.js';
-import { fetchAll, buildModel, diffKnown, snapshot, CUSTOM_DATA, DATA_OVERRIDE } from './data.js';
+import { fetchAll, buildModel, diffKnown, snapshot, cacheUrl, exportAge, customRecords, catalogMatch, CUSTOM_DATA, DATA_OVERRIDE } from './data.js';
 import { checkLive, diff as liveDiff } from './live.js';
-import { optimize, decisionGroups, transitions, fillers, nowNext, weigh, canBoth, overlaps, transition, whatIf, lunchConfig, arrivalExtra, PRIORITY } from './planner.js';
+import { optimize, decisionGroups, transitions, fillers, nowNext, weigh, canBoth, overlaps, transition, compareOptions, lunchConfig, arrivalExtra, PRIORITY } from './planner.js';
 import { fmtTime, fmtDay, fmtDuration, relTime, nowLocal, addDays } from './time.js';
 import { createVenue, setVenue, walkMinutes } from './venue.js';
 import { CONFERENCES, currentConferenceId, rememberConference, conferenceList } from './conferences.js';
 import { buildSuggester } from './suggest.js';
+import { createRanker, partition, profileConfig, profileGroups, GOALS } from './profile.js';
 import { INSTANCE_LABEL, nsKey } from './instance.js';
 import { esc, attr, icon, bldgChip, recChip, rsvpChip, prioPill, scoreChip, whenText, prioControl, sessionCard, cardClass, toast, shareOrDownload, copyText, speakersLine, setHostCompany } from './ui.js';
 
@@ -39,6 +40,7 @@ const app = {
   tab: 'browse',
   browseLimit: PAGE,
   triage: null,
+  ranker: null,     // preferences scorer (profile.js), rebuilt when they change
   openFill: null,
   nowTimer: null,
   dialogKey: null,
@@ -78,6 +80,9 @@ const lunch = () => lunchConfig(store.settings().lunch);
 function safeDecode(v) {
   try { return decodeURIComponent(v); } catch { return v; }
 }
+
+// Sessions you added yourself have no page on the conference site.
+const urlOf = s => (s.custom ? '' : app.conf.sessionUrl(s));
 
 function groupOf(s) { return app.model.byGroup.get(s.group) || [s]; }
 function sessionById(id) { return app.model.byId.get(id)?.[0] || null; }
@@ -250,7 +255,7 @@ function suggestions(limit = 12, min = 25) {
   const seen = new Set();
   const out = [];
   for (const s of app.model.sessions) {
-    if (seen.has(s.group) || prioOf(s) != null || s.dur === 0) continue;
+    if (seen.has(s.group) || prioOf(s) != null || s.dur === 0 || ranker().evaluate(s).hidden) continue;
     seen.add(s.group);
     const r = sg.score(s);
     if (r.score >= min) out.push({ s, ...r });
@@ -511,7 +516,7 @@ function renderBadges() {
 
 function filtersState() {
   const f = store.get().ui.filters || {};
-  return { q: '', topics: [], types: [], levels: [], audience: [], days: [], buildings: [], inPerson: false, notRecorded: false, unrated: false, mine: false, fresh: false, suggested: false, soon: false, sort: 'smart', ...f };
+  return { q: '', topics: [], types: [], levels: [], audience: [], days: [], buildings: [], inPerson: false, notRecorded: false, unrated: false, mine: false, fresh: false, suggested: false, soon: false, showHidden: false, sort: 'smart', ...f };
 }
 
 function applyFilters(f, { forTriage = false } = {}) {
@@ -522,12 +527,19 @@ function applyFilters(f, { forTriage = false } = {}) {
   const set = a => (a && a.length ? new Set(a.map(String)) : null);
   const topics = set(f.topics), types = set(f.types), levels = set(f.levels), aud = set(f.audience), days = set(f.days), blds = set(f.buildings);
   const hideOnline = store.settings().hideOnline;
-  const sg = f.suggested || forTriage ? suggester() : null;
+  const rk = ranker();
+  // "Best match": preference order before the schedule is out, unless you're searching.
+  let sort = f.sort;
+  if (sort === 'smart' && !f.suggested && !toks.length && app.model.mode === 'unscheduled' && store.get().profile) sort = 'fit';
+  const sg = f.suggested || forTriage || sort === 'fit' ? suggester() : null;
   const sugg = new Map();
   const out = [];
+  let hiddenCount = 0;
   for (const s of app.model.sessions) {
     const p = prioOf(s);
     if (forTriage && p != null) continue;
+    // Sessions your group choices hide stay unrated; Browse can show them on request.
+    if (!forTriage && !f.showHidden && p == null && rk.evaluate(s).hidden) { hiddenCount++; continue; }
     if (f.inPerson && !s.inPerson) continue;
     if (hideOnline && s.onlineOnly) continue;
     if (f.notRecorded && s.recorded !== false) continue;
@@ -550,7 +562,6 @@ function applyFilters(f, { forTriage = false } = {}) {
   const bySugg = (a, b) => (sugg.get(b.key)?.score || 0) - (sugg.get(a.key)?.score || 0) || byTime(a, b);
   // "Best match": suggestion order when you've asked for suggestions (or in Triage once there
   // are enough picks), relevance for a search, otherwise time or code. Explicit sorts always win.
-  let sort = f.sort;
   if (forTriage && sg?.ready) sort = 'suggested';
   else if (sort === 'smart' || (sort === 'suggested' && !sg?.ready)) sort = f.suggested && sg?.ready ? 'suggested' : toks.length ? 'relevance' : app.model.mode !== 'unscheduled' ? 'time' : 'code';
   if (sort === 'suggested') out.sort(bySugg);
@@ -565,8 +576,13 @@ function applyFilters(f, { forTriage = false } = {}) {
   else if (sort === 'nearby') out.sort((a, b) => (hereWalk(a.loc, h, c) ?? 999) - (hereWalk(b.loc, h, c) ?? 999) || byTime(a, b));
   else if (sort === 'title') out.sort((a, b) => a.title.localeCompare(b.title));
   else if (sort === 'priority') out.sort((a, b) => (prioOf(b) ?? -1) - (prioOf(a) ?? -1) || byTime(a, b));
+  else if (sort === 'fit') {
+    const fit = s => rk.evaluate(s).score + (sg?.ready ? (sugg.get(s.key)?.score || 0) / 10 : 0);
+    out.sort((a, b) => fit(b) - fit(a) || byTime(a, b));
+  }
   else out.sort((a, b) => a.code.localeCompare(b.code));
   out.sugg = sugg;
+  out.hiddenCount = hiddenCount;
   return out;
 }
 
@@ -624,7 +640,7 @@ function renderBrowse() {
     <button class="btn ghost small x" data-act="intro-dismiss" aria-label="Dismiss">${icon('x')}</button></div>`;
   const sg = results.sugg;
   const extraFor = s => (f.suggested && sg?.get(s.key)?.score > 0 ? suggestExtra({ s, ...sg.get(s.key) }) : '') + (showFit && s.day === t.day && prioOf(s) !== 0 ? fitLine(s, h) : '');
-  return `${installBanner()}${favoritesBanner()}${intro}
+  return `${installBanner()}${staleBanner()}${favoritesBanner()}${intro}
   <div class="searchbar">
     <label class="search">${icon('search')}<span class="sr-only">Search sessions</span>
       <input id="q" type="search" placeholder="Search titles, speakers, tags, codes…" value="${attr(f.q)}" autocomplete="off" enterkeyhint="search"></label>
@@ -647,10 +663,10 @@ function renderBrowse() {
   </details>
   ${chips.length ? `<div class="row" style="margin-bottom:8px">${chips.join('')}<button type="button" class="btn ghost small" data-act="clearfilters">Clear all</button></div>` : ''}
   <div class="result-meta">
-    <span><b>${results.length}</b> of ${app.model.sessions.length} sessions</span>
+    <span><b>${results.length}</b> of ${app.model.sessions.length} sessions${results.hiddenCount ? ` · <button type="button" class="linkish" data-act="quick" data-k="showHidden">show ${results.hiddenCount} hidden by your preferences</button>` : f.showHidden ? ` · <button type="button" class="linkish" data-act="quick" data-k="showHidden">hide the ones your preferences skip</button>` : ''}</span>
     <span class="spacer"></span>
     <label>Sort <select id="sort">
-      ${[['smart', 'Best match'], ['time', 'Date & time'], ...(h ? [['nearby', 'Nearest to me']] : []), ['code', 'Code'], ['title', 'Title'], ['priority', 'My priority'], ...(suggester().ready ? [['suggested', 'Most like my picks']] : [])].map(([v, l]) => `<option value="${v}" ${f.sort === v ? 'selected' : ''}>${l}</option>`).join('')}
+      ${[['smart', 'Best match'], ['fit', 'Best for me'], ['time', 'Date & time'], ...(h ? [['nearby', 'Nearest to me']] : []), ['code', 'Code'], ['title', 'Title'], ['priority', 'My priority'], ...(suggester().ready ? [['suggested', 'Most like my picks']] : [])].map(([v, l]) => `<option value="${v}" ${f.sort === v ? 'selected' : ''}>${l}</option>`).join('')}
     </select></label>
     ${results.length ? `<a class="btn small" href="#/triage">${icon('cards')}Triage these</a>` : ''}
   </div>
@@ -668,19 +684,34 @@ function setFilters(patch, rerender = true) {
 }
 
 // ---------------------------------------------------------------- triage
+//
+// Three steps so a 900-session catalog doesn't have to be rated one by one:
+//   Quick start  role, interests, goals, levels and formats rank the whole catalog;
+//   By group     "Want all" / "Skip all" on topics, tracks, formats… (a skipped group is
+//                hidden, never rated);
+//   Shortlist    only the best-ranked unrated sessions, one card at a time (swipe or keys).
 
-// Unrated sessions, most-like-your-picks first once you've rated a few.
+const LEVEL_NAME = { 100: '100 Foundational', 200: '200 Intermediate', 300: '300 Advanced', 400: '400 Expert' };
+const SECONDS_PER_CARD = 6;
+
+// Scores are memoized per session until your preferences change.
+function ranker() {
+  if (!app.ranker) {
+    const r = createRanker(store.profile(), app.conf.id);
+    const memo = new Map();
+    app.ranker = { ...r, evaluate: s => { let v = memo.get(s.key); if (!v) memo.set(s.key, (v = r.evaluate(s))); return v; } };
+  }
+  return app.ranker;
+}
+
+// The shortlist: unrated sessions matching your Browse filters, not hidden by your
+// preferences, best first (preferences plus resemblance to your picks), cut at its size.
 function triageQueue() {
   if (app.triage) return app.triage;
-  const seenGroups = new Set();
-  const queue = [];
   const results = applyFilters(filtersState(), { forTriage: true });
-  for (const s of results) {
-    if (seenGroups.has(s.group)) continue;
-    seenGroups.add(s.group);
-    queue.push(s.key);
-  }
-  app.triage = { queue, idx: 0, history: [], sugg: results.sugg };
+  const sg = results.sugg;
+  const part = partition(results, ranker(), { isRated: () => false, size: store.profile().size, bonus: s => (sg.get(s.key)?.score || 0) / 10 });
+  app.triage = { queue: part.shortlist.map(e => e.s.key), idx: 0, history: [], sugg: sg, ev: new Map(part.shortlist.map(e => [e.s.key, e])), parked: part.parked.length };
   return app.triage;
 }
 
@@ -695,30 +726,89 @@ function triageCurrent() {
   return null;
 }
 
-function renderTriage() {
+// Where the whole catalog stands: rated, hidden by your choices, shortlisted, parked.
+function triageStats() {
+  const part = partition(app.model.sessions, ranker(), { isRated: s => prioOf(s) != null, size: store.profile().size });
+  const by = p => part.rated.filter(e => prioOf(e.s) === p).length;
+  const st = { must: by(3), want: by(2), maybe: by(1), skip: by(0), hidden: part.hidden.length, shortlist: part.shortlist.length, parked: part.parked.length };
+  st.total = part.rated.length + st.hidden + st.shortlist + st.parked;
+  st.decided = part.rated.length + st.hidden;
+  return st;
+}
+
+function triageMeter(st) {
+  const segs = [['Must', st.must, 'var(--must)'], ['Want', st.want, 'var(--want)'], ['Maybe', st.maybe, 'var(--maybe)'], ['Skip', st.skip, 'var(--skip)'],
+    ['Hidden by your choices', st.hidden, 'var(--hidden-seg)'], ['Shortlist', st.shortlist, 'var(--accent)']];
+  const mins = Math.ceil((st.shortlist * SECONDS_PER_CARD) / 60);
+  return `<div class="meter">
+    <div class="meter-bar" role="img" aria-label="${st.decided} of ${st.total} sessions decided">${segs.map(([, v, c]) => `<i style="width:${(v / Math.max(1, st.total)) * 100}%;background:${c}"></i>`).join('')}</div>
+    <div class="meter-legend">${segs.map(([l, v, c]) => `<span><i style="background:${c}"></i>${esc(l)} <b>${v}</b></span>`).join('')}<span>Parked below the cut <b>${st.parked}</b></span></div>
+    <p class="small muted"><b>${st.decided}</b> of ${st.total} decided${st.shortlist ? ` · shortlist about <b>${mins} min</b> at ${SECONDS_PER_CARD} s a card` : ''}</p></div>`;
+}
+
+const prefChip = (act, v, pressed, label = v, n = null) =>
+  `<button type="button" class="chip btn-chip" data-act="${act}" data-v="${attr(v)}" aria-pressed="${!!pressed}">${esc(label)}${n != null ? ` <span class="n">${Number(n)}</span>` : ''}</button>`;
+
+function triageSetup() {
+  const p = store.profile();
+  const cfg = profileConfig(app.conf.id);
+  const fc = app.model.facets;
+  const off = new Set(p.offTypes ?? cfg.defaultOffTypes);
+  const desc = m => [...m.entries()].sort((a, b) => b[1] - a[1]);
+  return `<section class="panel prefs">
+    ${cfg.roles.length ? `<h3>Your role</h3><div class="chips">${cfg.roles.map(r => prefChip('pf-role', r.id, p.roles.includes(r.id))).join('')}</div>` : ''}
+    <h3>What you came for</h3><div class="chips">${desc(fc.topics).map(([t, n]) => prefChip('pf-interest', t, p.interests.includes(t), t, n)).join('')}</div>
+    <h3>Your goals</h3><p class="small muted">Matched against titles and descriptions.</p><div class="chips">${GOALS.map(g => prefChip('pf-goal', g.id, p.goals.includes(g.id), g.label)).join('')}</div>
+    ${cfg.levels && fc.levels.size ? `<h3>Levels you'd attend <span class="small muted">(none picked = any)</span></h3><div class="chips">${[...fc.levels.entries()].filter(([l]) => l).sort((a, b) => a[0] - b[0]).map(([l, n]) => prefChip('pf-level', l, p.levels.includes(Number(l)), LEVEL_NAME[l] || l, n)).join('')}</div>` : ''}
+    <h3>Formats you'd attend</h3><div class="chips">${desc(fc.types).map(([t, n]) => prefChip('pf-type', t, !off.has(t), t, n)).join('')}</div>
+    <div class="row" style="margin-top:16px"><button class="btn primary" data-act="t-view" data-view="rate">${icon('cards')}Rate my shortlist</button><button class="btn" data-act="t-view" data-view="groups">Fine-tune by group</button></div>
+  </section>`;
+}
+
+function triageGroups() {
+  const p = store.profile();
+  const groups = profileGroups(profileConfig(app.conf.id), app.model.sessions);
+  const row = (g, v, n) => {
+    const k = `${g.key}:${v}`;
+    const r = p.groups[k] || 0;
+    const label = g.key === 'level' ? LEVEL_NAME[v] || v : v;
+    return `<div class="grow ${r === 1 ? 'want' : r === -1 ? 'skip' : ''}"><div class="gname">${esc(label)}<span class="n">${Number(n)}</span></div>
+      <div class="seg" role="group" aria-label="${attr(label)}">
+        <button type="button" class="w" data-act="t-group" data-k="${attr(k)}" data-v="1" aria-pressed="${r === 1}">Want all</button>
+        <button type="button" class="s" data-act="t-group" data-k="${attr(k)}" data-v="-1" aria-pressed="${r === -1}">Skip all</button>
+      </div></div>`;
+  };
+  return `<p class="lede small"><b>Want all</b> lifts every session in the group up your shortlist. <b>Skip all</b> hides them (they stay unrated) unless a group you want also matches: skip a product but want Security and its security sessions stay. Tap again to undo. A session you rate yourself always keeps its rating.</p>
+    ${groups.map(g => `<h3>${esc(g.label)}</h3><div class="grows">${g.items.map(([v, n]) => row(g, v, n)).join('')}</div>`).join('')}
+    <div class="row" style="margin-top:16px"><button class="btn primary" data-act="t-view" data-view="rate">${icon('cards')}Rate my shortlist</button></div>`;
+}
+
+function triageRateView() {
   const t = triageQueue();
   const s = triageCurrent();
   const f = filtersState();
-  const rated = [...app.picks.byGroup.keys()].filter(g => groupPick(g).p != null).length;
+  const size = store.profile().size;
   const activeFilters = ['topics', 'types', 'levels', 'audience', 'days', 'buildings'].some(k => f[k]?.length) || f.q || f.inPerson || f.notRecorded || f.fresh;
-  const ordered = suggester().ready;
-  const head = `<h1>Triage</h1>
-    <p class="lede">Rate sessions one at a time to get through the catalog quickly. ${ordered ? 'The ones most like your picks come first. ' : ''}${activeFilters ? `Using your Browse filters (<a href="#/browse">change</a>).` : `Tip: narrow it first in <a href="#/browse">Browse</a> (e.g. by topic), then come back.`}</p>`;
+  const sizeSel = `<label class="small">Shortlist size <select id="t-size">${[...new Set([50, 100, 150, 200, 300, size])].sort((a, b) => a - b).map(n => `<option ${n === size ? 'selected' : ''}>${n}</option>`).join('')}</select></label>`;
+  const more = t.parked ? `<button class="btn small" data-act="t-more">Add ${Math.min(50, t.parked)} more from the ${t.parked} parked</button>` : '';
+  const head = `<div class="row small muted">${activeFilters ? `<span>Using your Browse filters (<a href="#/browse">change</a>)</span>` : ''}<span class="spacer"></span>${sizeSel}</div>`;
   if (!s) {
-    return `${head}<div class="panel empty"><h3 tabindex="-1" id="t-focus">All caught up</h3><p>${t.queue.length ? `You rated ${t.history.length} session(s) this round.` : 'Nothing unrated matches your filters.'} You've rated ${rated} sessions in total.</p>
-      <div class="row" style="justify-content:center">${t.history.length ? `<button class="btn" data-act="t-undo">Undo last</button>` : ''}<a class="btn primary" href="#/plan">See my plan</a></div></div>`;
+    return `${head}<div class="panel empty"><h3 tabindex="-1" id="t-focus">Shortlist done</h3><p>${t.queue.length ? `You rated ${t.history.length} session(s) this round.` : 'Nothing unrated is left in your shortlist.'}${t.parked ? ` ${t.parked} lower-ranked sessions are parked below the cut.` : ''}</p>
+      <div class="row" style="justify-content:center">${t.history.length ? `<button class="btn" data-act="t-undo">Undo last</button>` : ''}${more}<a class="btn primary" href="#/plan">See my plan</a></div></div>`;
   }
   const pct = Math.round((t.idx / Math.max(1, t.queue.length)) * 100);
   const sp = speakersLine(s, 8);
   const sg = t.sugg?.get(s.key);
+  const ev = t.ev.get(s.key);
   return `${head}
   <div class="triage">
-    <div class="row small muted"><span>${t.idx + 1} of ${t.queue.length}</span><span class="spacer"></span><span>${rated} rated overall</span></div>
+    <div class="row small muted"><span>${t.idx + 1} of ${t.queue.length} in your shortlist</span><span class="spacer"></span><span class="swipe-hint">Swipe right: Want · left: Skip</span></div>
     <div class="progress" aria-hidden="true"><i style="width:${pct}%"></i></div>
-    <article class="card t-card">
+    <article class="card t-card" data-swipe-key="${attr(s.key)}">
       <div class="row small muted"><span class="code" style="font-family:var(--mono);font-weight:600">${esc(s.code)}</span>·${esc(s.type)}${s.level ? ` · ${esc(s.level)}` : ''}${s.dur ? ` · ${fmtDuration(s.dur)}` : ''} ${isNew(s) ? '<span class="chip new">New</span>' : ''}</div>
       <h2 tabindex="-1" id="t-focus">${esc(s.title)}</h2>
       <div class="row">${s.timeSource === 'preview' ? '<span class="chip preview">Preview</span>' : ''}<span class="small">${esc(whenText(s))}</span>${!s.onlineOnly && s.day ? bldgChip(s.loc) : ''}${recChip(s)}${rsvpChip(s)}</div>
+      ${ev?.why.length ? `<div class="why-chips">${ev.why.slice(0, 5).map(w => `<span class="chip fit">${esc(w)}</span>`).join('')}</div>` : ''}
       ${sg?.score > 0 ? suggestExtra({ s, ...sg }) : ''}
       <p class="desc">${esc(s.desc)}</p>
       ${sp ? `<p class="small muted">${sp}</p>` : ''}
@@ -735,7 +825,70 @@ function renderTriage() {
       <button class="btn small" data-act="t-later">Decide later <kbd>→</kbd></button>
       <button class="btn small" data-act="open" data-key="${attr(s.key)}">Details</button>
     </div>
+    ${t.parked && t.idx >= t.queue.length - 5 ? `<p class="small muted" style="text-align:center">${more}</p>` : ''}
   </div>`;
+}
+
+function triageView() {
+  const v = store.get().ui.triageView;
+  if (['setup', 'groups', 'rate'].includes(v)) return v;
+  return store.get().profile ? 'rate' : 'setup'; // first visit: start with the quick start
+}
+
+function renderTriage() {
+  const view = triageView();
+  const st = triageStats();
+  const nGroups = Object.keys(store.profile().groups).length;
+  const tabs = [['setup', 'Quick start'], ['groups', `By group${nGroups ? ` (${nGroups})` : ''}`], ['rate', `Shortlist (${st.shortlist})`]];
+  const intro = { setup: 'Answer these once. They rank the whole catalog and hide formats you never attend.', groups: 'Decide whole topics, tracks or formats at once.', rate: 'Rate the best matches one at a time. Everything below the cut stays parked, never lost.' }[view];
+  return `<h1>Triage</h1>
+    ${triageMeter(st)}
+    <div class="segtabs" role="tablist" aria-label="Triage steps">${tabs.map(([k, l], i) => `<button type="button" role="tab" data-act="t-view" data-view="${k}" aria-selected="${view === k}"><span class="step">${i + 1}</span>${esc(l)}</button>`).join('')}</div>
+    <p class="lede">${intro}</p>
+    ${view === 'setup' ? triageSetup() : view === 'groups' ? triageGroups() : triageRateView()}`;
+}
+
+// Profile edits from the quick start.
+function toggleIn(list, v) { return list.includes(v) ? list.filter(x => x !== v) : [...list, v]; }
+function editProfile(act, v) {
+  const p = store.profile();
+  if (act === 'pf-role') store.updateProfile({ roles: toggleIn(p.roles, v) });
+  else if (act === 'pf-interest') store.updateProfile({ interests: toggleIn(p.interests, v) });
+  else if (act === 'pf-goal') store.updateProfile({ goals: toggleIn(p.goals, v) });
+  else if (act === 'pf-level') store.updateProfile({ levels: toggleIn(p.levels, Number(v)) });
+  else if (act === 'pf-type') store.updateProfile({ offTypes: toggleIn(p.offTypes ?? profileConfig(app.conf.id).defaultOffTypes, v) });
+}
+
+// Swipe the card: right = Want, left = Skip (up = Must with a mouse; touch scrolls instead).
+function bindSwipe() {
+  const card = main.querySelector('.t-card[data-swipe-key]');
+  if (!card) return;
+  let on = false, moved = false, x0 = 0, y0 = 0, dx = 0, dy = 0, pid = null;
+  const choice = () => (dy < -90 && Math.abs(dy) > Math.abs(dx) ? 3 : dx > 90 ? 2 : dx < -90 ? 0 : null);
+  const reset = () => { on = false; card.classList.remove('dragging'); card.style.transform = ''; delete card.dataset.swipe; };
+  card.addEventListener('pointerdown', e => {
+    if (e.button || e.target.closest('a, button, summary')) return;
+    on = true; moved = false; pid = e.pointerId; x0 = e.clientX; y0 = e.clientY; dx = dy = 0;
+  });
+  card.addEventListener('pointermove', e => {
+    if (!on) return;
+    dx = e.clientX - x0; dy = e.clientY - y0;
+    if (!moved && Math.hypot(dx, dy) < 10) return;
+    if (!moved) { moved = true; try { card.setPointerCapture(pid); } catch { /* already released */ } card.classList.add('dragging'); }
+    card.style.transform = `translate(${dx}px, ${Math.min(dy, 0)}px) rotate(${dx / 30}deg)`;
+    const c = choice();
+    if (c == null) delete card.dataset.swipe; else card.dataset.swipe = String(c);
+  });
+  card.addEventListener('pointerup', () => {
+    if (!on) return;
+    const c = moved ? choice() : null;
+    if (c == null) { reset(); return; }
+    on = false;
+    card.style.transform = `translate(${c === 0 ? -700 : c === 2 ? 700 : 0}px, ${c === 3 ? -700 : 0}px) rotate(${c === 0 ? -12 : c === 2 ? 12 : 0}deg)`;
+    card.style.opacity = '0';
+    setTimeout(() => triageRate(c), 150);
+  });
+  card.addEventListener('pointercancel', reset);
 }
 
 function snapshotGroup(g) {
@@ -813,6 +966,23 @@ function installBanner() {
     <button class="btn ghost small x" data-act="install-dismiss" aria-label="Dismiss">${icon('x')}</button></div>`;
 }
 
+// The catalog is someone's export (Gartner): say when it's a day old and who can refresh it.
+function staleBanner() {
+  const age = exportAge(app.conf, app.raw?.doc?.generatedAt);
+  if (!age || CUSTOM_DATA) return '';
+  const seen = store.get().ui.staleSeen;
+  if (seen && seen.at === app.raw.doc.generatedAt && seen.days >= age.days) return '';
+  const old = age.days >= 1 ? `${age.days} day${age.days > 1 ? 's' : ''} old` : `${age.hours} hours old`;
+  const who = app.conf.export.maintainer;
+  const fix = INSTANCE_LABEL
+    ? `Ask ${esc(who || 'whoever runs this planner')} for a fresh ${esc(app.conf.siteName)} export.`
+    : `Download a fresh export from ${esc(app.conf.siteName)} and run <code>${esc(app.conf.export.script)}</code>; colleagues' copies update on the next deploy.`;
+  return `<div class="banner warn">${icon('warn')}<div><b>This catalog is ${old}</b>
+    <p>It's a copy of ${INSTANCE_LABEL && who ? `${esc(who)}'s` : 'your'} ${esc(app.conf.siteName)} export from ${esc(fmtStamp(app.raw.doc.generatedAt))}. Sessions may have been retitled, moved or added since. ${fix}</p>
+    <p>Registered for something that isn't here? <a href="#/settings" data-act="goto-custom">Add it to your plan</a>.</p>
+    <button class="btn small ghost" data-act="stale-dismiss">Got it</button></div></div>`;
+}
+
 function missingPicksBanner() {
   const gone = app.picks.orphans.filter(o => o.p > 0);
   if (!gone.length) return '';
@@ -827,7 +997,7 @@ function watchSection(plan) {
   const list = plan.watch.slice().sort((a, b) => (b.score ?? 0) - (a.score ?? 0) || b.priority - a.priority);
   return `<section><h2>Watch later (${list.length})</h2><p class="lede small">Kept out of the live plan; catch the recordings. Tap <b>Attend live</b> to put one back.</p>
     <div class="list">${list.map(x => card(x.s, { compact: true, extra: `<div class="row" style="margin-top:8px"><button class="btn small ghost" data-act="attend-live" data-key="${attr(x.s.key)}">Attend live instead</button>
-      <a class="btn small ghost" href="${attr(app.conf.sessionUrl(x.s))}" target="_blank" rel="noopener">On ${esc(app.conf.siteName)} ${icon('ext')}</a></div>` })).join('')}</div></section>`;
+      ${urlOf(x.s) ? `<a class="btn small ghost" href="${attr(urlOf(x.s))}" target="_blank" rel="noopener">On ${esc(app.conf.siteName)} ${icon('ext')}</a>` : ''}</div>` })).join('')}</div></section>`;
 }
 
 function suggestedSection(limit = 8) {
@@ -848,7 +1018,7 @@ function renderShortlist(plan) {
   const minutes = plan.tba.reduce((a, x) => a + (x.s.dur || 0), 0);
   const notRec = plan.tba.filter(x => x.s.recorded === false && x.priority >= 2).length;
   const rec = plan.tba.filter(x => x.s.recorded === true).length;
-  return `<h1>My plan</h1>${installBanner()}${favoritesBanner()}${missingPicksBanner()}${rsvpBanner(plan)}
+  return `<h1>My plan</h1>${installBanner()}${staleBanner()}${favoritesBanner()}${missingPicksBanner()}${rsvpBanner(plan)}
   <div class="banner">${icon('clock')}<div><b>Waiting for dates and rooms to be published.</b>
     <p>The catalog is checked automatically (last checked ${esc(relTime(app.live?.at || meta.lastChecked || app.raw.doc.generatedAt))}). Once times appear, your plan builds itself. It flags sessions you can't reach in time and suggests what to give up. Want to try it now?</p>
     <button class="btn small" data-act="preview-on">Rehearse with a simulated schedule</button></div></div>
@@ -898,7 +1068,7 @@ function renderSchedule(plan) {
   const sacrificed = new Set(plan.res.dropped.filter(d => real(d) && !plan.chosenGroups.has(d.item.id)).map(d => d.item.id)).size;
 
   const parts = [];
-  parts.push(`<h1>My plan</h1>${installBanner()}${favoritesBanner()}${previewBanner()}${missingPicksBanner()}${rsvpBanner(plan)}`);
+  parts.push(`<h1>My plan</h1>${installBanner()}${staleBanner()}${favoritesBanner()}${previewBanner()}${missingPicksBanner()}${rsvpBanner(plan)}`);
   const lockedConflicts = plan.res.lockedConflicts.filter(x => !x.pseudo);
   if (lockedConflicts.length) {
     parts.push(`<div class="banner bad">${icon('warn')}<div><b>Some sessions you locked can't all happen.</b><p>${lockedConflicts.map(x => esc(x.code)).join(', ')} clash with other locked sessions or blocked time. Unlock one of them.</p></div></div>`);
@@ -976,7 +1146,8 @@ function renderSchedule(plan) {
   parts.push(`<div class="row" style="margin-top:18px">
     <button class="btn" data-act="ics">${icon('plan')}Add plan to calendar (.ics)</button>
     <button class="btn ghost" data-act="unlock-all">Clear all locks</button>
-    <a class="btn ghost" href="#/settings">Lunch &amp; blocked time</a></div>
+    <a class="btn ghost" href="#/settings">Lunch &amp; blocked time</a>
+    <a class="btn ghost" href="#/settings" data-act="goto-custom">Add a session not in the catalog</a></div>
     <p class="legend" style="margin-top:12px">Walking estimates use your Settings (buffer ${c.buffer} min, keynote entry ${c.keynoteExtra} min, accept missing up to ${c.tolerance} min).
     ${app.venue.buildings.filter(b => b.id !== 'O').map(b => `<span>${bldgChip({ building: b.id })} ${esc(b.name)}</span>`).join('')}</p>`);
   return parts.join('');
@@ -1018,7 +1189,7 @@ function renderFillers(day, around, c, between = false) {
   const sg = suggester();
   const cands = app.model.sessions
     .filter(s => s.day === day && s.inPerson && Number.isFinite(s.startMin) && s.endMin > s.startMin)
-    .filter(s => { const p = prioOf(s); return p == null || (p > 0 && !app.plan.chosenGroups.has(s.group)); })
+    .filter(s => { const p = prioOf(s); return p == null ? !ranker().evaluate(s).hidden : p > 0 && !app.plan.chosenGroups.has(s.group); })
     .map(s => ({ key: s.key, id: s.group, code: s.code, type: s.type, day: s.day, startMin: s.startMin, endMin: s.endMin, loc: s.loc, s }));
   let fit = fillers(around, cands, c);
   if (between) fit = fit.filter(x => x.startMin >= around[0].endMin && x.endMin <= around[1].startMin);
@@ -1048,21 +1219,24 @@ function missSummary(missed, chain, c) {
   return parts.join(' · ');
 }
 
+// Options compared with a whole-plan what-if per clash; the rest are listed by their weight.
+const OPTION_CAP = 6;
+
 function renderDecision(d, plan, c) {
-  const allItems = [...plan.items, ...plan.blocks];
-  const releaseFor = x => new Set([x.key, ...d.items.filter(o => !o.locked).map(o => o.key), ...d.items.filter(o => o.locked && o.id !== x.id && !canBoth(o, x, c)).map(o => o.key)]);
-  const outcome = new Map(d.items.map(x => [x.key, whatIf(allItems, x.key, releaseFor(x), c, plan.lunch)]));
-  const feasibleVals = d.items.map(x => outcome.get(x.key)).filter(o => o.feasible).map(o => o.value);
+  // Outcomes depend only on the plan, so they're kept until the next pick change.
+  plan.compare ||= new Map();
+  const ck = d.items.map(x => x.key).join('|');
+  if (!plan.compare.has(ck)) plan.compare.set(ck, compareOptions([...plan.items, ...plan.blocks], d.items, c, plan.lunch, { cap: OPTION_CAP }));
+  const { outcomes: outcome, order: opts } = plan.compare.get(ck); // best outcome first
+  const feasibleVals = [...outcome.values()].filter(o => o.feasible).map(o => o.value);
   const best = feasibleVals.length ? Math.max(...feasibleVals) : 0;
-  const isBest = x => outcome.get(x.key).feasible && outcome.get(x.key).value >= best - 0.5;
+  const isBest = x => !!outcome.get(x.key)?.feasible && outcome.get(x.key).value >= best - 0.5;
   const ties = d.items.filter(isBest).length;
   const decided = d.resolved ? d.items.find(x => x.locked) : null;
   const lockedOthers = x => d.items.filter(o => o.locked && o.id !== x.id && !canBoth(o, x, c)).map(o => o.id);
-  // Best outcome first so the decision can be made at a glance.
-  const opts = d.items.slice().sort((a, b) => (b.locked - a.locked) || (outcome.get(b.key).value - outcome.get(a.key).value) || a.startMin - b.startMin);
   const preview = app.model.mode === 'preview';
   const row = x => {
-    const o = outcome.get(x.key);
+    const o = outcome.get(x.key) || { feasible: true, unrated: true, chosen: [], value: 0 };
     const keysX = new Set(o.chosen.map(y => y.key));
     const groupsX = new Set(o.chosen.map(y => y.id));
     const also = d.items.filter(y => y !== x && keysX.has(y.key));
@@ -1079,7 +1253,7 @@ function renderDecision(d, plan, c) {
         <div class="row small"><b>${fmtTime(x.startMin)}–${fmtTime(x.endMin)}</b>${prioPill(x.priority)}${scoreChip(x.score)}${bldgChip(x.loc)}${recChip(x)}</div>
         <a class="title" href="#/session/${encodeURIComponent(x.code)}" data-act="open" data-key="${attr(x.key)}" style="font-weight:700;display:block;margin:4px 0;color:var(--text);text-decoration:none">${esc(x.code)} · ${esc(x.title)}</a>
         <div class="why">${w.why.map(esc).join(' · ')}</div>
-        ${!o.feasible ? `<div class="lose">Not possible with the sessions or blocked time you've locked</div>` : `
+        ${o.unrated ? `<div class="why">Lower priority than the options above, so not compared. <b>Go to this</b> shows what it would change.</div>` : !o.feasible ? `<div class="lose">Not possible with the sessions or blocked time you've locked</div>` : `
         ${also.length ? `<div class="why">${icon('check')} Then you also make ${esc(also.map(y => y.code).join(', '))}</div>` : ''}
         ${moved.length ? `<div class="why">${icon('check')} ${moved.map(m => `${esc(m.y.code)} moves to ${esc(m.to.code)} ${esc(fmtDay(m.to.day))} ${fmtTime(m.to.startMin)}`).join(' · ')}</div>` : ''}
         ${miss.length ? `<div class="lose">You'd miss ${esc(missSummary(miss, o.chosen, c))}</div>` : ''}
@@ -1347,6 +1521,31 @@ function buildingOptions(selected) {
   return app.venue.buildings.filter(b => b.id !== 'O').map(b => `<option value="${attr(b.id)}" ${selected === b.id ? 'selected' : ''}>${esc(b.name)}</option>`).join('');
 }
 
+// Sessions missing from the catalog (a registration-only reception, a vendor briefing): they
+// join your plan like any other session, with walking time. Only on this device and copy.
+function customSection(days) {
+  const list = (store.settings().custom || []).slice().sort((a, b) => (a.day < b.day ? -1 : a.day > b.day ? 1 : a.start - b.start));
+  const row = c => {
+    const now = catalogMatch(c, app.model);
+    return `<div class="inst"><b>${esc(fmtDay(c.day))} ${fmtTime(c.start)}–${fmtTime(c.end)}</b><span>${esc(c.title)}</span>${c.building ? bldgChip({ building: c.building }) : ''}<span class="spacer"></span>
+      <button class="btn small ghost" data-act="custom-del" data-id="${attr(c.id)}">Remove</button>
+      ${now ? `<p class="small" style="flex-basis:100%;margin:4px 0 0;color:var(--ok)">Now in the catalog as <a href="#/session/${encodeURIComponent(now.code)}" data-act="open" data-key="${attr(now.key)}">${esc(now.code)}</a>. Rate that one and remove your copy.</p>` : ''}</div>`;
+  };
+  return `<section class="panel" id="custom-sessions"><h3>Sessions not in the catalog</h3>
+    <p class="small muted">Registered for something the ${esc(app.conf.short)} catalog doesn't list? Add it and it joins your plan with walking time, like any session. It stays on this device, in your copy of the planner.</p>
+    ${list.map(row).join('') || '<p class="small muted">Nothing added yet.</p>'}
+    <div class="stack" style="margin-top:8px">
+      <input id="cu-title" type="text" maxlength="160" placeholder="Session name (e.g. Healthcare & Life Sciences Networking Reception)" aria-label="Session name" class="text-input">
+      <div class="row"><select id="cu-day" aria-label="Day">${days.map(d => `<option value="${attr(d)}">${esc(fmtDay(d))}</option>`).join('')}</select>
+        <input id="cu-start" type="time" value="18:00" aria-label="From"> <input id="cu-end" type="time" value="19:00" aria-label="To"></div>
+      <div class="row"><select id="cu-bldg" aria-label="Building" style="flex:1;min-width:0">${buildingOptions(app.venue.startFrom)}</select>
+        <input id="cu-room" type="text" maxlength="120" placeholder="Room (optional)" aria-label="Room" class="text-input" style="flex:1;min-width:0"></div>
+      <div class="row"><select id="cu-prio" aria-label="Rating"><option value="3">Must</option><option value="2">Want</option><option value="1">Maybe</option></select>
+        <button class="btn small" data-act="custom-add">Add to my plan</button></div>
+    </div>
+  </section>`;
+}
+
 function renderSettings() {
   const s = store.settings();
   const walk = walkCfg();
@@ -1407,6 +1606,7 @@ function renderSettings() {
           <button class="btn small" data-act="block-add">Add block</button></div>
       </div>
     </section>
+    ${customSection(days)}
     <section class="panel"><h3>How to break ties</h3>
       ${numField('weights.3', 'Points for a Must', s.weights[3], '', 0, 1000)}
       ${numField('weights.2', 'Points for a Want', s.weights[2], '', 0, 1000)}
@@ -1514,7 +1714,7 @@ function renderDetail(s) {
       <label class="toggle"><input type="checkbox" data-watch-key="${attr(s.key)}" ${gp?.mode === 'watch' ? 'checked' : ''}><span>Watch the recording instead of attending<small>${s.recorded === false ? 'Careful: this session is not recorded.' : 'Kept out of the live plan and listed under Watch later.'}</small></span></label>
       <h3 style="margin-top:14px"><label for="note">My notes</label></h3>
       <textarea id="note" data-note-key="${attr(s.key)}" placeholder="Questions to ask, why it matters…">${esc(gp?.note || '')}</textarea>
-      <div class="row" style="margin-top:12px"><a class="btn small" href="${attr(app.conf.sessionUrl(s))}" target="_blank" rel="noopener">View on ${esc(app.conf.siteName)} ${icon('ext')}</a></div>
+      ${urlOf(s) ? `<div class="row" style="margin-top:12px"><a class="btn small" href="${attr(urlOf(s))}" target="_blank" rel="noopener">View on ${esc(app.conf.siteName)} ${icon('ext')}</a></div>` : ''}
     </div>`;
 }
 
@@ -1559,7 +1759,7 @@ function icsDate(iso) { return iso.replace(/[-:]/g, '').replace(/\.\d+/, '').rep
 
 function exportIcs() {
   const plan = computePlan();
-  const items = Object.values(plan.res.plan).flat().filter(x => !x.pseudo && x.s.timeSource === 'official' && x.s.start);
+  const items = Object.values(plan.res.plan).flat().filter(x => !x.pseudo && (x.s.timeSource === 'official' || x.s.timeSource === 'custom') && x.s.start);
   if (!items.length) {
     toast(app.model.mode === 'preview' ? 'Preview times are simulated. Calendar export unlocks once the real schedule is published.' : 'Nothing with an official time in your plan yet');
     return;
@@ -1587,8 +1787,8 @@ function exportIcs() {
     lines.push('BEGIN:VEVENT', `UID:${s.inst}@${app.conf.id}.ignite26-planner`, `DTSTAMP:${stamp}`, `DTSTART:${icsDate(s.start)}`,
       `DTEND:${icsDate(s.end || new Date(new Date(s.start).getTime() + (s.dur || 45) * 60000).toISOString())}`,
       `SUMMARY:${icsEscape(`[${s.code}] ${s.title}`)}`, `LOCATION:${icsEscape(s.room || '')}`,
-      `DESCRIPTION:${icsEscape(`${PRIORITY[x.priority]} · ${s.recorded ? 'recorded' : s.recorded === false ? 'not recorded' : ''}\n${app.conf.sessionUrl(s)}\n\n${s.desc}`)}`,
-      `URL:${app.conf.sessionUrl(s)}`);
+      `DESCRIPTION:${icsEscape(`${PRIORITY[x.priority]} · ${s.recorded ? 'recorded' : s.recorded === false ? 'not recorded' : ''}\n${urlOf(s)}\n\n${s.desc}`)}`);
+    if (urlOf(s)) lines.push(`URL:${urlOf(s)}`);
     if (l) lines.push('BEGIN:VALARM', 'ACTION:DISPLAY', `DESCRIPTION:${icsEscape(`Leave for ${s.code}: ${l.walk} min walk to ${B(s.loc.building).name} from ${l.from}`)}`, `TRIGGER:-PT${l.minutes}M`, 'END:VALARM');
     lines.push('END:VEVENT');
   }
@@ -1626,6 +1826,7 @@ function render() {
   for (const [k, top] of scrolls) { const e = main.querySelector(`[data-scroll="${CSS.escape(k)}"]`); if (e) e.scrollTop = top; }
   if (fk) main.querySelector(fk)?.focus({ preventScroll: true });
   if (app.tab === 'triage' && app.triageFocus) { app.triageFocus = false; $('#t-focus')?.focus({ preventScroll: true }); }
+  if (app.tab === 'triage') bindSwipe();
   for (const a of document.querySelectorAll('#tabs a')) a.setAttribute('aria-current', a.dataset.tab === app.tab ? 'page' : 'false');
   if (app.tab === 'now' && !app.simNow) {
     app.nowTimer = setInterval(() => {
@@ -1749,7 +1950,7 @@ function onClick(e) {
     quick: () => setFilters({ [el.dataset.k]: !filtersState()[el.dataset.k] }),
     'browse-suggested': () => { e.preventDefault(); setFilters({ suggested: true, mine: false, unrated: false }, false); location.hash = '#/browse'; if (app.tab === 'browse') render(); },
     unfacet: () => { const f = filtersState(); setFilters({ [el.dataset.k]: (f[el.dataset.k] || []).filter(v => String(v) !== el.dataset.v) }); },
-    clearfilters: () => setFilters({ topics: [], types: [], levels: [], audience: [], days: [], buildings: [], q: '', inPerson: false, notRecorded: false, unrated: false, mine: false, fresh: false, suggested: false, soon: false }),
+    clearfilters: () => setFilters({ topics: [], types: [], levels: [], audience: [], days: [], buildings: [], q: '', inPerson: false, notRecorded: false, unrated: false, mine: false, fresh: false, suggested: false, soon: false, showHidden: false }),
     quickday: () => { const f = filtersState(); setFilters({ days: f.days?.length === 1 && f.days[0] === el.dataset.day ? [] : [el.dataset.day] }); },
     'geo-on': () => { store.updateSettings({ useLocation: true }); toast('Using your location while the app is open'); },
     'geo-off': () => { store.updateSettings({ useLocation: false }); app.geo = null; render(); },
@@ -1757,6 +1958,14 @@ function onClick(e) {
     't-rate': () => triageRate(Number(el.dataset.p)),
     't-undo': () => triageUndo(),
     't-later': () => { triageQueue().idx++; app.triageFocus = true; render(); },
+    't-view': () => { store.setUI({ triageView: el.dataset.view }); render(); window.scrollTo(0, 0); },
+    't-group': () => { const v = Number(el.dataset.v); store.setProfileGroup(el.dataset.k, store.profile().groups[el.dataset.k] === v ? 0 : v); },
+    't-more': () => store.updateProfile({ size: store.profile().size + 50 }),
+    'pf-role': () => editProfile(act, el.dataset.v),
+    'pf-interest': () => editProfile(act, el.dataset.v),
+    'pf-goal': () => editProfile(act, el.dataset.v),
+    'pf-level': () => editProfile(act, el.dataset.v),
+    'pf-type': () => editProfile(act, el.dataset.v),
     day: () => { e.preventDefault(); store.setUI({ day: el.dataset.day }); app.openFill = null; render(); },
     lock: () => { if (s) lockRun(s, el); },
     unlock: () => {
@@ -1823,6 +2032,29 @@ function onClick(e) {
       store.setSetting('blocks', blocks);
       toast('Blocked. Your plan now works around it');
     },
+    'custom-add': () => {
+      const title = ($('#cu-title').value || '').trim().slice(0, 160);
+      const day = $('#cu-day').value, start = fromHHMM($('#cu-start').value), end = fromHHMM($('#cu-end').value);
+      if (!title) { toast('Give it a name'); return; }
+      if (start == null || end == null || end <= start) { toast('Pick a start and an end time'); return; }
+      const id = Date.now().toString(36);
+      const p = Number($('#cu-prio').value) || 3;
+      store.setSetting('custom', [...(store.settings().custom || []), { id, title, day, start, end, building: $('#cu-bldg').value, room: ($('#cu-room').value || '').trim().slice(0, 120), note: '' }]);
+      const added = sessionById(`my-${id}`);
+      if (added) setGroupPriority(added, p);
+      toast(`Added ${title} to your plan as ${PRIORITY[p]}`);
+    },
+    'custom-del': () => {
+      const id = el.dataset.id;
+      store.mutatePicks(picks => { delete picks[`my-${id}`]; });
+      store.setSetting('custom', (store.settings().custom || []).filter(c => c.id !== id));
+    },
+    'goto-custom': () => {
+      e.preventDefault();
+      if (app.tab !== 'settings') location.hash = '#/settings';
+      setTimeout(() => { const box = $('#custom-sessions'); box?.scrollIntoView({ behavior: 'smooth', block: 'start' }); $('#cu-title')?.focus({ preventScroll: true }); }, 60);
+    },
+    'stale-dismiss': () => { const a = exportAge(app.conf, app.raw.doc.generatedAt); store.setUI({ staleSeen: { at: app.raw.doc.generatedAt, days: a?.days ?? 0 } }); render(); },
     'block-del': () => store.setSetting('blocks', (store.settings().blocks || []).filter(b => b.id !== el.dataset.id)),
     'reset-settings': () => { store.resetSettings(); toast('Settings restored'); },
     'reset-all': () => { if (confirm(`Erase all your ${app.conf.short} ratings, locks and notes on this device? Settings are kept.`)) { store.resetAll(); toast('Erased'); } },
@@ -1863,6 +2095,7 @@ main.addEventListener('change', e => {
     if (t.checked) set.add(t.value); else set.delete(t.value);
     setFilters({ [k]: [...set] });
   } else if (t.id === 'sort') setFilters({ sort: t.value });
+  else if (t.id === 't-size') store.updateProfile({ size: Number(t.value) });
   else if (t.id === 'conf-select') switchConference(t.value);
   else if (t.id === 'here-select') {
     app.hereManual = t.value || null;
@@ -1925,7 +2158,7 @@ dialog.addEventListener('change', e => {
 });
 
 document.addEventListener('keydown', e => {
-  if (app.tab !== 'triage' || dialog.open || e.metaKey || e.ctrlKey || e.altKey || e.repeat) return;
+  if (app.tab !== 'triage' || triageView() !== 'rate' || dialog.open || e.metaKey || e.ctrlKey || e.altKey || e.repeat) return;
   const t = e.target;
   if (/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName) || t.isContentEditable) return;
   if ((e.key === ' ' || e.key === 'Enter') && t.closest?.('button, a, summary, [role="button"]')) return; // let controls work
@@ -1937,13 +2170,20 @@ document.addEventListener('keydown', e => {
 
 // Store changes -> keep views and badges in sync.
 store.subscribe(what => {
+  if (what === 'save-error' || what === 'save-ok') { $('#save-error').hidden = what === 'save-ok'; return; }
   if (!app.model) return;
+  if (what === 'profile') {
+    // Preferences rank and hide sessions; they never change ratings or the plan.
+    app.ranker = null; app.triage = null;
+    renderOrDefer();
+    return;
+  }
   if (what === 'seen' || what === 'known') { renderBadges(); return; }
   if (what === 'note') { indexPicks(); renderBadges(); return; }
   if (what === 'settings' || what === 'reset') {
     syncGeo();
     if (modelKey() !== app.modelKey) rebuildModel();
-    if (what === 'reset') { applyTheme(store.get().ui.theme); app.triage = null; }
+    if (what === 'reset') { applyTheme(store.get().ui.theme); app.triage = null; app.ranker = null; }
   }
   indexPicks();
   if (what === 'picks' || what === 'reset') { trackNewPicks(); computeAlerts(); }
@@ -1990,7 +2230,7 @@ function computeAlerts() {
 
 function modelKey() {
   const s = store.settings();
-  return JSON.stringify([s.preview, s.overrides]);
+  return JSON.stringify([s.preview, s.overrides, s.custom]);
 }
 
 function rsvpConfig() {
@@ -1999,9 +2239,12 @@ function rsvpConfig() {
 }
 
 function rebuildModel() {
-  app.model = buildModel(app.raw.doc, store.settings(), rsvpConfig(), app.conf, app.venue);
+  const doc = app.raw.doc;
+  const added = customRecords(store.settings().custom, app.conf); // sessions you added yourself
+  app.model = buildModel(added.length ? { ...doc, sessions: [...(doc.sessions || []), ...added] } : doc, store.settings(), rsvpConfig(), app.conf, app.venue);
   app.modelKey = modelKey();
   app.triage = null;
+  app.ranker = null;
   indexPicks();
   invalidate();
 }
@@ -2060,7 +2303,7 @@ function announce(initial = false) {
   if (liveDiffers()) app.announcedLive = app.live.at;
 }
 
-const LIVE_KEY = () => nsKey(`ignite26.planner.live:${app.conf.id}`);
+const LIVE_KEY = () => cacheUrl(nsKey(`ignite26.planner.live:${app.conf.id}`));
 
 async function persistLive(r) {
   try {
@@ -2193,14 +2436,23 @@ async function boot() {
   app.lastRefresh = Date.now();
   app.lastBatchAt = app.snapshot.changes?.batches?.[0]?.at || null;
   await restoreLive();
-  applyData();
-  trackNewPicks();
-  computeAlerts();
-  offerFavorites();
-  renderStatus();
-  window.addEventListener('hashchange', onRoute);
-  if (!location.hash) history.replaceState(null, '', `#/${store.get().ui.tab || 'browse'}`);
-  onRoute();
+  store.seedProfile(app.snapshot.profile); // starting preferences, on a device that has none yet
+  try {
+    applyData();
+    trackNewPicks();
+    computeAlerts();
+    offerFavorites();
+    renderStatus();
+    window.addEventListener('hashchange', onRoute);
+    if (!location.hash) history.replaceState(null, '', `#/${store.get().ui.tab || 'browse'}`);
+    onRoute();
+  } catch (err) {
+    // A catalog the app can't read must say so instead of leaving a blank page.
+    console.error(err);
+    main.innerHTML = `<div class="panel empty"><h3>Something in the session catalog couldn't be read</h3><p>${esc(err.message)}</p><p class="small">Your picks are safe on this device. Try again in a few minutes, or <a href="?conf=${attr(app.conf.id)}#/settings">open Settings</a> to save a backup.</p><button class="btn primary" data-act="reload">Try again</button></div>`;
+    main.querySelector('[data-act="reload"]').onclick = () => location.reload();
+    return;
+  }
   // Alerts are announced once, after the live check, so a cold start never reports
   // changes the live copy has already superseded.
   checkLiveNow().then(() => {

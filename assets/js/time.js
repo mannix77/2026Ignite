@@ -26,6 +26,20 @@ export function fromISO(iso, tz = DEFAULT_TZ) {
   return Number.isNaN(d.getTime()) ? null : localParts(d, tz);
 }
 
+// Conference-local day + minutes -> UTC ISO string (the inverse of fromISO).
+export function toISO(day, min, tz = DEFAULT_TZ) {
+  const [y, m, d] = day.split('-').map(Number);
+  let t = Date.UTC(y, m - 1, d, 0, min);
+  for (let i = 0; i < 3; i++) {
+    const p = localParts(new Date(t), tz);
+    const [py, pm, pd] = p.day.split('-').map(Number);
+    const drift = (Date.UTC(py, pm - 1, pd) - Date.UTC(y, m - 1, d)) / 60000 + p.min - min;
+    if (!drift) break;
+    t -= drift * 60000;
+  }
+  return new Date(t).toISOString();
+}
+
 export function nowLocal(sim, tz = DEFAULT_TZ) {
   if (sim && sim.day && Number.isFinite(sim.min)) return { day: sim.day, min: sim.min };
   return localParts(new Date(), tz);

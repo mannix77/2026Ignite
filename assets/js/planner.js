@@ -421,3 +421,18 @@ export function whatIf(items, forcedKey, release = new Set(), ctx = DEFAULT_PLAN
   const feasible = chosen.some(x => x.key === forcedKey);
   return { plan: res.plan, lunch: res.lunch, chosen, feasible, value: res.value };
 }
+
+// Whole-plan outcomes for the options of one clash. Each outcome re-plans every day, so a
+// big clash (busy days chain into one group) would freeze the page: only the `cap` most
+// valuable options (locked ones always) are compared; the rest come back unevaluated, in
+// order of their own weight. `outcomes` maps option key -> whatIf result.
+export function compareOptions(items, options, ctx = DEFAULT_PLANNER, lunch = null, { cap = 6 } = {}) {
+  const releaseFor = x => new Set([x.key, ...options.filter(o => !o.locked).map(o => o.key),
+    ...options.filter(o => o.locked && o.id !== x.id && !canBoth(o, x, ctx)).map(o => o.key)]);
+  const byWeight = options.slice().sort((a, b) => (b.locked - a.locked) || weigh(b, ctx).score - weigh(a, ctx).score || a.startMin - b.startMin);
+  const evaluate = byWeight.filter((x, i) => x.locked || i < cap);
+  const outcomes = new Map(evaluate.map(x => [x.key, whatIf(items, x.key, releaseFor(x), ctx, lunch)]));
+  const rest = byWeight.filter(x => !outcomes.has(x.key));
+  const ranked = evaluate.slice().sort((a, b) => (b.locked - a.locked) || outcomes.get(b.key).value - outcomes.get(a.key).value || a.startMin - b.startMin);
+  return { outcomes, order: [...ranked, ...rest] };
+}

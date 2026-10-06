@@ -43,25 +43,75 @@ EXCLUDED_PROGRAMS = [("CIO Circle Program", re.compile(r"\bCIO Circle\b", re.I))
 
 
 def local(s):
-    t = dt.datetime.strptime(s, "%m/%d/%Y %H:%M:%S").replace(tzinfo=TZ)
-    return t
+    """'10/19/2026 10:00:00' (Eastern) -> aware datetime; None when missing or unparseable (TBD)."""
+    try:
+        return dt.datetime.strptime(sync.text(s), "%m/%d/%Y %H:%M:%S").replace(tzinfo=TZ)
+    except (TypeError, ValueError):
+        return None
+
+
+def facet(f, name):
+    """A facet list from the export's "f" map; null/scalar/junk -> list of strings."""
+    return [x for x in sync.list_of(f.get(name)) if isinstance(x, str)]
 
 
 def normalize(raw):
+    """-> (sessions, dropped codes, excluded codes). Bad records are repaired or skipped, never
+    fatal: no/unparseable times -> unscheduled, end before start -> no end/dur, repeated id ->
+    exact duplicates dropped, otherwise a distinct inst. Prints a warning count to stderr."""
     out, dropped, excluded = [], [], []
+    warnings = []
+    seen_raw, used_inst = [], set()
+    # Ids shared by different records get instance keys from the record itself (id + code,
+    # then start), so a later export listing them in another order keys them the same way.
+    distinct = []
     for r in raw:
+        if isinstance(r, dict) and r not in distinct:
+            distinct.append(r)
+    id_count = {}
+    for r in distinct:
+        if r.get("id"):
+            id_count[str(r["id"])] = id_count.get(str(r["id"]), 0) + 1
+    for r in raw:
+        if not isinstance(r, dict):
+            warnings.append("skipped a non-object record (%r)" % (r,))
+            continue
         code = sync.text(r.get("code"))
         if not code or not r.get("id") or PRIVATE.match(code):
             dropped.append(code or str(r.get("id")))
             continue
-        f = r.get("f") or {}
-        typ = (f.get("Session Type") or [""])[0]
+        if r in seen_raw:
+            warnings.append("%s: exact duplicate record dropped" % code)
+            continue
+        seen_raw.append(r)
+        f = r.get("f") if isinstance(r.get("f"), dict) else {}
+        typ = (facet(f, "Session Type") or [""])[0]
         title = sync.text(r.get("t"))
-        audience = [sync.text(x) for x in f.get("Tailored Programming", []) + f.get("Industries", [])]
+        audience = [sync.text(x) for x in facet(f, "Tailored Programming") + facet(f, "Industries")]
         if any(name in audience or rx.search(title) or rx.search(typ) for name, rx in EXCLUDED_PROGRAMS):
             excluded.append(code)
             continue
-        start, end = local(r["s"]), local(r["e"])
+        start, end = local(r.get("s")), local(r.get("e"))
+        if not start:
+            if r.get("s") or r.get("e"):
+                warnings.append("%s: unusable times %r-%r, kept unscheduled" % (code, r.get("s"), r.get("e")))
+            else:
+                warnings.append("%s: no times, kept unscheduled" % code)
+            start = end = None
+        elif end and end < start:
+            warnings.append("%s: ends before it starts, end dropped" % code)
+            end = None
+        sid = str(r["id"])
+        inst = sid
+        if id_count.get(sid, 0) > 1:
+            inst = "%s-%s" % (sid, code)
+            if inst in used_inst:
+                inst = "%s-%s" % (inst, re.sub(r"\D", "", str(r.get("s") or "")) or "x")
+            base, n = inst, 2
+            while inst in used_inst:  # identical id, code and start: order is all that's left
+                inst, n = "%s-%d" % (base, n), n + 1
+            warnings.append("%s: id %s repeated, instance key %s" % (code, sid, inst))
+        used_inst.add(inst)
         loc = sync.text(r.get("loc"))
         live, remote = loc, ""
         if "|" in loc:
@@ -73,24 +123,24 @@ def normalize(raw):
             desc = (desc + "\n\nRemote viewing: " + remote).strip()
         vendors = [sync.text(v) for v in (r.get("ex") or []) if sync.text(v)]
         out.append({
-            "id": str(r["id"]),
-            "inst": str(r["id"]),
+            "id": sid,
+            "inst": inst,
             "code": code,
             "title": title,
             "desc": desc,
             "type": typ,
             "level": None,
-            "topics": [sync.text(x) for x in f.get("Topic", [])],
-            "tags": [sync.text(x) for x in f.get("Tracks", [])] + vendors,
+            "topics": [sync.text(x) for x in facet(f, "Topic")],
+            "tags": [sync.text(x) for x in facet(f, "Tracks")] + vendors,
             "audience": audience,
             "delivery": ["In-person"],
             "recorded": True if typ in RECORDED_TYPES else (None if typ in NO_GROUP_TYPES else False),
             "speakers": [[sync.text(p[0]), sync.text(p[2] if len(p) > 2 else ""), sync.text(p[1] if len(p) > 1 else "")]
-                         for p in (r.get("sp") or []) if p and sync.text(p[0])],
-            "start": sync.iso(start.astimezone(dt.timezone.utc)),
-            "end": sync.iso(end.astimezone(dt.timezone.utc)),
-            "slot": "%s - %s" % (start.strftime("%H:%M"), end.strftime("%H:%M")),
-            "dur": int((end - start).total_seconds() // 60),
+                         for p in (r.get("sp") or []) if isinstance(p, (list, tuple)) and p and sync.text(p[0])],
+            "start": sync.iso(start.astimezone(dt.timezone.utc)) if start else None,
+            "end": sync.iso(end.astimezone(dt.timezone.utc)) if end else None,
+            "slot": "%s - %s" % (start.strftime("%H:%M"), end.strftime("%H:%M")) if end else None,
+            "dur": int((end - start).total_seconds() // 60) if end else None,
             "room": live or None,
             "roomTbd": not live,
             "popular": False,
@@ -98,7 +148,7 @@ def normalize(raw):
             "rsvp": bool(r.get("srr")),
             "remote": bool(r.get("rv")),
             "vendors": vendors,
-            "speakerType": (f.get("Speaker Type") or [""])[0],
+            "speakerType": (facet(f, "Speaker Type") or [""])[0],
         })
     # Repeats: the same title and type under different codes (e.g. the contract
     # negotiation clinics run several times). Attend at most one.
@@ -107,12 +157,16 @@ def normalize(raw):
         key = (re.sub(r"\s+", " ", rec["title"]).lower(), rec["type"]) if rec["type"] not in NO_GROUP_TYPES else (rec["code"],)
         members.setdefault(key, []).append(rec)
     for recs in members.values():
-        recs.sort(key=lambda x: x["start"])
+        recs.sort(key=lambda x: (x["start"] is None, x["start"] or ""))
         group = recs[0]["code"]
         for rec in recs:
             rec["group"] = group
             rec["repeats"] = sorted(x["code"] for x in recs if x is not rec)
-    out.sort(key=lambda x: (x["start"], x["code"]))
+    out.sort(key=lambda x: (x["start"] is None, x["start"] or "", x["code"]))  # unscheduled last
+    if warnings:
+        print("gartner: warning: %d record(s) skipped or repaired:" % len(warnings), file=sys.stderr)
+        for w in warnings:
+            print("  - " + w, file=sys.stderr)
     return out, dropped, excluded
 
 

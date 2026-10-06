@@ -4,6 +4,7 @@
 
 import { DEFAULT_PLANNER } from './planner.js';
 import { nsKey } from './instance.js';
+import { blankProfile, sanitizeProfile } from './profile.js';
 
 const BASE_KEY = nsKey('ignite26.planner.v1');
 let KEY = BASE_KEY;
@@ -22,6 +23,7 @@ export const DEFAULT_SETTINGS = {
   startFrom: null,      // where each day starts (building id); null = conference default
   lunch: { on: true, from: 690, to: 810, length: 30, weight: 40 }, // protect a lunch break
   blocks: [],           // [{ id, day, start, end, label, building }] meetings, booth duty…
+  custom: [],           // [{ id, title, day, start, end, building, room, note }] sessions missing from the catalog
   repo: 'mannix77/2026Ignite',
 };
 
@@ -36,6 +38,7 @@ function blank() {
     prefs: {},          // only the settings the user changed; defaults fill the rest
     known: {},          // instKey -> snapshot of fields we alert on, for picked sessions
     seenBatch: null,    // timestamp of newest change batch already viewed
+    profile: null,      // quick-start answers and group choices (profile.js); null = never set
     ui: { tab: 'browse', filters: {}, day: null },
   };
 }
@@ -75,8 +78,10 @@ export function load(namespace = '') {
       if (saved.prefs) delete saved.prefs.simNow;
       if (saved.known && Object.values(saved.known).some(k => k && !k.inst)) saved.known = {}; // pre-release keying
       state = merge(blank(), saved);
+      state.known = sanitizeKnown(state.known);
       state.picks = sanitizePicks(state.picks);
       state.prefs = sanitizePrefs(state.prefs);
+      state.profile = saved.profile ? sanitizeProfile(saved.profile) : null;
     }
   } catch (e) {
     console.warn('Could not read saved state', e);
@@ -87,10 +92,22 @@ export function load(namespace = '') {
 
 export function namespace() { return KEY === BASE_KEY ? '' : KEY.slice(BASE_KEY.length + 1); }
 
+// A failed save (storage full, blocked or private mode) is reported to subscribers as
+// 'save-error' so the page can say so; the next successful save reports 'save-ok'.
+let saveFailed = false;
+export function saveFailing() { return saveFailed; }
+
 function persist() {
   clearTimeout(saveTimer);
   saveTimer = setTimeout(() => {
-    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { console.warn('Could not save state', e); }
+    try {
+      localStorage.setItem(KEY, JSON.stringify(state));
+      if (saveFailed) { saveFailed = false; for (const fn of listeners) fn('save-ok'); }
+    } catch (e) {
+      console.warn('Could not save state', e);
+      saveFailed = true;
+      for (const fn of listeners) fn('save-error');
+    }
   }, 150);
 }
 
@@ -156,7 +173,7 @@ export function setSetting(key, value) {
 
 // Restores planner tuning; keeps display choices, room overrides, blocks and lunch.
 export function resetSettings() {
-  const keep = ['preview', 'hideOnline', 'useLocation', 'repo', 'overrides', 'blocks', 'lunch', 'startFrom'];
+  const keep = ['preview', 'hideOnline', 'useLocation', 'repo', 'overrides', 'blocks', 'custom', 'lunch', 'startFrom'];
   state.prefs = Object.fromEntries(Object.entries(state.prefs).filter(([k]) => keep.includes(k)));
   cachedSettings = null;
   emit('settings');
@@ -165,6 +182,32 @@ export function resetSettings() {
 export function setUI(patch) {
   Object.assign(state.ui, patch);
   persist();
+}
+
+// ---- preferences (profile.js)
+
+export function profile() { return state.profile || blankProfile(); }
+
+// Replaces the given top-level fields (lists are replaced, not merged).
+export function updateProfile(patch) {
+  state.profile = sanitizeProfile({ ...profile(), ...patch });
+  emit('profile');
+}
+
+// value: 1 = want the whole group, -1 = hide it, 0 = no choice.
+export function setProfileGroup(key, value) {
+  const groups = { ...profile().groups };
+  if (value === 1 || value === -1) groups[key] = value; else delete groups[key];
+  updateProfile({ groups });
+}
+
+// The conference can ship starting preferences (data/<conf>/profile.json). They apply only
+// on a device that has never saved any.
+export function seedProfile(file) {
+  if (state.profile || !file?.profile) return false;
+  state.profile = sanitizeProfile(file.profile);
+  emit('profile');
+  return true;
 }
 
 export function setKnown(known) { state.known = known; emit('known'); }
@@ -200,6 +243,12 @@ function sanitizePicks(picks) {
   return out;
 }
 
+function sanitizeKnown(known) {
+  const out = {};
+  for (const [inst, k] of Object.entries(known || {})) if (k && typeof k === 'object' && typeof k.inst === 'string') out[inst] = k;
+  return out;
+}
+
 const num = (v, lo, hi) => (Number.isFinite(v) && v >= lo && v <= hi ? v : undefined);
 function sanitizePrefs(src) {
   const d = DEFAULT_SETTINGS;
@@ -227,13 +276,13 @@ function sanitizePrefs(src) {
   }
   for (const k of ['preview', 'hideOnline', 'useLocation']) if (typeof src[k] === 'boolean') out[k] = src[k];
   if (validBuilding(src.startFrom)) out.startFrom = src.startFrom;
+  // Only the lunch fields you changed are kept; the conference's own window fills the rest.
   if (src.lunch && typeof src.lunch === 'object') {
     const l = src.lunch;
-    out.lunch = {
-      on: l.on !== false,
-      from: num(l.from, 0, 1440) ?? d.lunch.from, to: num(l.to, 0, 1440) ?? d.lunch.to,
-      length: num(l.length, 5, 240) ?? d.lunch.length, weight: num(l.weight, 0, 5000) ?? d.lunch.weight,
-    };
+    const lunch = {};
+    if (typeof l.on === 'boolean') lunch.on = l.on;
+    for (const [k, lo, hi] of [['from', 0, 1440], ['to', 0, 1440], ['length', 5, 240], ['weight', 0, 5000]]) if (num(l[k], lo, hi) !== undefined) lunch[k] = l[k];
+    if (Object.keys(lunch).length) out.lunch = lunch;
   }
   if (Array.isArray(src.blocks)) {
     out.blocks = src.blocks
@@ -244,6 +293,16 @@ function sanitizePrefs(src) {
         building: validBuilding(b.building) ? b.building : null,
       }));
   }
+  if (Array.isArray(src.custom)) {
+    out.custom = src.custom
+      .filter(c => c && typeof c.title === 'string' && c.title.trim() && /^\d{4}-\d{2}-\d{2}$/.test(c.day)
+        && num(c.start, 0, 1440) !== undefined && num(c.end, 0, 1440) !== undefined && c.end > c.start)
+      .slice(0, 50).map((c, i) => ({
+        id: typeof c.id === 'string' && /^[\w-]{1,40}$/.test(c.id) ? c.id : `c${i}`, title: c.title.trim().slice(0, 160), day: c.day, start: c.start, end: c.end,
+        building: validBuilding(c.building) ? c.building : null, room: typeof c.room === 'string' ? c.room.slice(0, 120) : '',
+        note: typeof c.note === 'string' ? c.note.slice(0, 1000) : '',
+      }));
+  }
   if (typeof src.repo === 'string' && /^[\w.-]+\/[\w.-]+$/.test(src.repo)) out.repo = src.repo;
   return out;
 }
@@ -251,7 +310,7 @@ function sanitizePrefs(src) {
 // ---- moving picks between devices
 
 export function exportData() {
-  return { app: 'ignite26-planner', v: 1, conference: namespace() || 'ignite2026', exportedAt: new Date().toISOString(), picks: state.picks, settings: state.prefs };
+  return { app: 'ignite26-planner', v: 1, conference: namespace() || 'ignite2026', exportedAt: new Date().toISOString(), picks: state.picks, settings: state.prefs, profile: profile() };
 }
 
 export function importData(obj, { replace = false } = {}) {
@@ -263,6 +322,7 @@ export function importData(obj, { replace = false } = {}) {
     if (!cur || p.at >= (cur.at || 0)) state.picks[id] = { ...p, note: p.note || cur?.note || '' };
   }
   if (obj.settings && replace) { state.prefs = sanitizePrefs(obj.settings); cachedSettings = null; }
+  if (obj.profile && (replace || !state.profile)) state.profile = sanitizeProfile(obj.profile);
   emit(replace ? 'reset' : 'picks');
   return Object.keys(incoming).length;
 }
@@ -323,7 +383,7 @@ export function applyShared(picks) {
 // Erase ratings, locks, notes and change tracking. Settings, display choices and the
 // "already seen" marker for the change history stay.
 export function resetAll() {
-  state = { ...blank(), prefs: state.prefs, ui: { ...state.ui }, seenBatch: state.seenBatch };
+  state = { ...blank(), prefs: state.prefs, profile: state.profile, ui: { ...state.ui }, seenBatch: state.seenBatch };
   cachedSettings = null;
   emit('reset');
 }
