@@ -49,13 +49,14 @@ await test("should keep a session added in a colleague's copy out of the main si
   store.load('gartner2026');
   store.setSetting('custom', [{ id: 'c1', title: 'Partner reception', day: '2026-10-20', start: 1140, end: 1260, building: 'Y' }]);
   await sleep(SAVE);
-  eq(localStorage.getItem(MAIN_SITE_PLAN), null);
+  const copyPlan = JSON.parse(localStorage.getItem('ignite26.planner.v1@gino:gartner2026') || '{}');
+  eq([localStorage.getItem(MAIN_SITE_PLAN), copyPlan.prefs?.custom?.[0]?.title], [null, 'Partner reception']);
 });
 
 await test("should remember a colleague's conference choice only for that copy", () => {
   localStorage.clear();
   rememberConference('gartner2026');
-  eq(localStorage.getItem('ignite26.planner.conference'), null);
+  eq([localStorage.getItem('ignite26.planner.conference'), localStorage.getItem('ignite26.planner.conference@gino')], [null, 'gartner2026']);
 });
 
 console.log(`${pass} passed, ${fail} failed`);
