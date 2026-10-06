@@ -3,6 +3,65 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-10-06T18:51:35Z · https://catalog.awsevents.com/api/sessions
+
+Added 15 · removed 0 · changed 36
+
+**Added**
+- `GHJ207-R1` Agentic AI Governance Tabletop Experience
+- `GHJ308-S-R1` Agentic AI Jam - sponsored by Nvidia
+- `DVT332-R2` Under the hood of Kiro Crew: orchestration, memory, and safe autonomy
+- `DVT413-R2` Apply Amazon's frontier team playbook to your organization
+- `DVT207-R2` Learn new AI development skills with Kiro
+- `DVT415-R2` Mastering agentic development: skills, custom agents, and steering
+- `GHJ210-R1` Incident Response Tabletop: Supply Chain
+- `DVT323-R1` Tech debt anonymous: bring your worst code to this chalk talk
+- `GHJ201-R1` Cloud Migration Journey Tabletop Experience
+- `GHJ205-R1` 3rd Party Risk Management Tabletop Experience
+- `DVT406-R1` Make the agent code while you sleep
+- `DVT409-R2` Build your own crew: hands-on with Kiro Crew
+- `GHJ207-R2` Agentic AI Governance Tabletop Experience
+- `DVT301-R2` Bring your tech debt: build a custom transformation that fixes it
+- `GHJ203-R1` Post-Quantum Cryptography Tabletop Experience
+
+**Changed**
+- `CMP101` Cutting manual accounts payable work — level: — → 100; desc
+- `GHJ201-R` Cloud Migration Journey Tabletop Experience — start: — → 2026-11-30T16:30:00Z; end: — → 2026-11-30T18:30:00Z; dur: 0 → 120; room: — → Wynn/Encore | Upper Convention Promenade | Bollinger
+- `GHJ203-R` Post-Quantum Cryptography Tabletop Experience — start: — → 2026-12-01T20:00:00Z; end: — → 2026-12-01T22:00:00Z; dur: 0 → 120; room: — → Wynn/Encore | Upper Convention Promenade | Bollinger
+- `GHJ205-R` 3rd Party Risk Management Tabletop Experience — start: — → 2026-11-30T23:00:00Z; end: — → 2026-12-01T01:00:00Z; dur: 0 → 120; room: — → Wynn/Encore | Upper Convention Promenade | Bollinger
+- `GHJ207-R` Agentic AI Governance Tabletop Experience — start: — → 2026-11-30T20:30:00Z; end: — → 2026-11-30T22:30:00Z; dur: 0 → 120; room: — → Wynn/Encore | Upper Convention Promenade | Bollinger
+- `GHJ210-R` Incident Response Tabletop: Supply Chain — start: — → 2026-12-01T22:30:00Z; end: — → 2026-12-02T00:30:00Z; dur: 0 → 120; room: — → Wynn/Encore | Upper Convention Promenade | Bollinger
+- `GHJ212` AWS AI League: Build agents with AgentCore (Agentic Football Cup) — start: — → 2026-12-01T20:00:00Z; end: — → 2026-12-01T22:00:00Z; dur: 0 → 120; room: — → Caesars Forum | Level 1 | Forum 110
+- `GHJ314` AWS AI League: Train with RLVR on SageMaker, deploy in AgentCore — start: — → 2026-11-30T16:00:00Z; end: — → 2026-11-30T18:00:00Z; dur: 0 → 120; room: — → Caesars Forum | Level 1 | Forum 110
+- `GHJ315` AWS AI League: Build domain specific AI with Forge — start: — → 2026-12-02T16:00:00Z; end: — → 2026-12-02T18:00:00Z; dur: 0 → 120; room: — → Caesars Forum | Level 1 | Forum 110
+- `IND3337` The Trade Desk's Cloud Journey: AI-Assisted Optimization to AI Agents — desc
+- `IND350-R` Build an Agentic AI Marketing Engine Powered by Amazon Bedrock — desc
+- `IND355-R` Healthcare & Life Sciences AI Agents: From Spec to Demo in 120 Min — desc
+- `IND355-R1` Healthcare & Life Sciences AI Agents: From Spec to Demo in 120 Min — desc
+- `IND373` Build a Research Co-Scientist Using Amazon Quick — desc
+- `IND377-R` Agentic AI in Production: Natera Saves Lives, Cuts Costs, Grows Revenue — desc
+- `IND377-R1` Agentic AI in Production: Natera Saves Lives, Cuts Costs, Grows Revenue — desc
+- `IND391` How Bayer Designed 50K Proteins on Amazon Bio Discovery — title: How Bayer designed 50K proteins on Amazon Bio Discovery → How Bayer Designed 50K Proteins on Amazon Bio Discovery; desc
+- `IND415` Build Bidstream Agents and Simulate Auction with AgentCore — desc
+- `IND419` Monetize AI Bot Traffic: Agent-Ready Media with AWS WAF & AI Analysis — desc
+- `PEX217` Sell to AI agents through AWS Marketplace — desc
+- `SEC106-S` AI Under Fire: How to Stop AI-Powered Attacks and Secure AI Coding — title: …Coding (sponsored by Palo Alto Networks) → …Coding; desc
+- `SEC202` Track cross-domain attack vectors with AWS Security Hub extended — title: …Cross-Domain Attack Vectors with AWS Security Hub Extended → …cross-domain attack vectors with AWS Security Hub extended
+- `SEC205` Journey to post-quantum (PQ) authentication in AWS — title: Journey to Post Quantum (PQ) Authentication in AWS → Journey to post-quantum (PQ) authentication in AWS
+- `SEC234` EU operational autonomy in action: AWS European Sovereign Cloud — title: …Operational Autonomy in Action: AWS European Sovereign C… → …operational autonomy in action: AWS European Sovereign C…
+- `SEC303` Network security innovations for agentic workloads — title: Network Security Innovations for Agentic Workloads → Network security innovations for agentic workloads
+- `SEC304` From commit to secure: catch vulnerabilities at machine speed with AWS Continuum — title: …Commit to Secure: Catch vulnerabilities at machine speed… → …commit to secure: catch vulnerabilities at machine speed…
+- `SEC310` Building production-ready agents securely: lessons from AWS at scale — title: …Production-Ready Agents Securely: Lessons from AWS at Scale → …production-ready agents securely: lessons from AWS at scale
+- `SEC311` Closing the loop: using frontier agents for continuous governance — title: …Loop: Using Frontier Agents for Continuous Governance → …loop: using frontier agents for continuous governance
+- `SEC315-R` Advanced AWS network security: defending against emerging threats — title: …Network Security: Defending Against Emerging Threats → …network security: defending against emerging threats
+- `SEC315-R1` Advanced AWS network security: defending against emerging threats — title: …Network Security: Defending Against Emerging Threats → …network security: defending against emerging threats
+- `SEC340` Good fences make good neighbors: a network perimeter approach to data perimeters — title: …Fences Make Good Neighbours: A Network perimeter approac… → …fences make good neighbors: a network perimeter approach…
+- `SEC350-R` Shared judgment: security culture for the agentic era — title: Shared Judgment: Security Culture for the Agentic Era → Shared judgment: security culture for the agentic era
+- `SEC350-R1` Shared judgment: security culture for the agentic era — title: Shared Judgment: Security Culture for the Agentic Era → Shared judgment: security culture for the agentic era
+- `SEC357` Quantum-proof your IoT fleet: migrate devices to Post-quantum cryptography OTA — title: Quantum-Proof Your IoT Fleet: Migrate Devices to Post-Qua… → Quantum-proof your IoT fleet: migrate devices to Post-qua…
+- `SEC360` Innovation in identity security: how we protect the cloud & help you do it too — title: …Identity Security: How We Protect the Cloud & Help You D… → …identity security: how we protect the cloud & help you d…
+- `SNR306` A leader’s guide to governing AI, on behalf of humans — title: A leader's guide to why your AI governance can't keep up → A leader’s guide to governing AI, on behalf of humans; desc
+
 ## 2026-10-06T07:01:35Z · https://catalog.awsevents.com/api/sessions
 
 Added 1 · removed 1 · changed 2
