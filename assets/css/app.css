@@ -492,3 +492,8 @@ body:has(dialog[open]) { overflow: hidden; }
   .t-time { font-size: 12px; white-space: nowrap; }
 }
 .text-input { width: 100%; border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; background: var(--surface); color: var(--text); font: inherit; }
+.storage-status { display: flex; gap: 8px; align-items: flex-start; padding: 8px 10px; border-radius: var(--radius-sm); margin: 0 0 8px; font-size: 14px; }
+.storage-status svg { width: 18px; height: 18px; flex: none; margin-top: 1px; }
+.storage-status.installed, .storage-status.protected { background: var(--ok-soft); color: var(--ok); }
+.storage-status.at-risk { background: var(--tight-soft); color: var(--tight); }
+.storage-status.not-saved { background: var(--bad-soft); color: var(--bad); }

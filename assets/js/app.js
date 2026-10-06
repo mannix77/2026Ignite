@@ -9,6 +9,7 @@ import { createVenue, setVenue, walkMinutes } from './venue.js';
 import { CONFERENCES, currentConferenceId, rememberConference, conferenceList } from './conferences.js';
 import { buildSuggester } from './suggest.js';
 import { createRanker, partition, profileConfig, profileGroups, GOALS } from './profile.js';
+import { storageStatus, backupReminder, backupAge } from './health.js';
 import { INSTANCE_LABEL, nsKey } from './instance.js';
 import { esc, attr, icon, bldgChip, recChip, rsvpChip, prioPill, scoreChip, whenText, prioControl, sessionCard, cardClass, toast, shareOrDownload, copyText, speakersLine, setHostCompany } from './ui.js';
 
@@ -41,6 +42,8 @@ const app = {
   browseLimit: PAGE,
   triage: null,
   ranker: null,     // preferences scorer (profile.js), rebuilt when they change
+  persisted: false, // the browser promised not to clear this site's storage
+  installEvent: null, // Android/Chrome install prompt, offered from the install banner
   openFill: null,
   nowTimer: null,
   dialogKey: null,
@@ -640,7 +643,7 @@ function renderBrowse() {
     <button class="btn ghost small x" data-act="intro-dismiss" aria-label="Dismiss">${icon('x')}</button></div>`;
   const sg = results.sugg;
   const extraFor = s => (f.suggested && sg?.get(s.key)?.score > 0 ? suggestExtra({ s, ...sg.get(s.key) }) : '') + (showFit && s.day === t.day && prioOf(s) !== 0 ? fitLine(s, h) : '');
-  return `${installBanner()}${staleBanner()}${favoritesBanner()}${intro}
+  return `${installBanner()}${backupBanner()}${staleBanner()}${favoritesBanner()}${intro}
   <div class="searchbar">
     <label class="search">${icon('search')}<span class="sr-only">Search sessions</span>
       <input id="q" type="search" placeholder="Search titles, speakers, tags, codes…" value="${attr(f.q)}" autocomplete="off" enterkeyhint="search"></label>
@@ -841,7 +844,7 @@ function renderTriage() {
   const nGroups = Object.keys(store.profile().groups).length;
   const tabs = [['setup', 'Quick start'], ['groups', `By group${nGroups ? ` (${nGroups})` : ''}`], ['rate', `Shortlist (${st.shortlist})`]];
   const intro = { setup: 'Answer these once. They rank the whole catalog and hide formats you never attend.', groups: 'Decide whole topics, tracks or formats at once.', rate: 'Rate the best matches one at a time. Everything below the cut stays parked, never lost.' }[view];
-  return `<h1>Triage</h1>
+  return `<h1>Triage</h1>${installBanner()}${backupBanner()}
     ${triageMeter(st)}
     <div class="segtabs" role="tablist" aria-label="Triage steps">${tabs.map(([k, l], i) => `<button type="button" role="tab" data-act="t-view" data-view="${k}" aria-selected="${view === k}"><span class="step">${i + 1}</span>${esc(l)}</button>`).join('')}</div>
     <p class="lede">${intro}</p>
@@ -956,14 +959,57 @@ function previewBanner() {
 const IS_IOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 const STANDALONE = navigator.standalone === true || matchMedia('(display-mode: standalone)').matches;
 
-// iPhone: a Home Screen app has its own storage (and Safari may wipe site data after 7 days
-// without a visit), so nudge people to install before they invest time rating sessions.
+const IS_ANDROID = /Android/i.test(navigator.userAgent);
+
+function health() {
+  return storageStatus({ standalone: STANDALONE, persisted: app.persisted, saveFailing: store.saveFailing() });
+}
+
+// Picks are kept only where the planner runs. iPhone: a Home Screen app has its own storage
+// and Safari may clear a tab's data after 7 days without a visit. Android: an installed app
+// is far more likely to get storage Chrome won't clean up. Nudge before people invest time.
 function installBanner() {
-  if (!IS_IOS || STANDALONE || store.get().ui.installDismissed) return '';
-  return `<div class="banner install">${icon('plan')}<div><b>Add to your Home Screen first</b>
-    <p>Tap <b>Share → Add to Home Screen</b>. The installed app keeps its own copy of your picks and works offline.</p>
+  if (STANDALONE || store.get().ui.installDismissed) return '';
+  if (IS_IOS) {
+    return `<div class="banner install">${icon('plan')}<div><b>Add to your Home Screen first</b>
+    <p>Tap <b>Share → Add to Home Screen</b>, then open the planner from that icon. The installed app keeps its own copy of your picks, Safari won't clear it, and it works offline.</p>
     <details><summary class="small">Already rated some in Safari?</summary><p class="small">Here: Settings → <b>Copy link to my picks</b>. In the installed app: Settings → <b>Import picks from a link</b>.</p></details></div>
     <button class="btn ghost small x" data-act="install-dismiss" aria-label="Dismiss">${icon('x')}</button></div>`;
+  }
+  if (IS_ANDROID && !app.persisted) {
+    return `<div class="banner install">${icon('plan')}<div><b>Install the planner to keep your picks</b>
+    <p>Chrome may clear a website's data when the phone runs low on space; an installed app is protected.</p>
+    ${app.installEvent ? `<button class="btn small primary" data-act="install-app">Install app</button>` : `<p>Tap <b>⋮ → Install app</b> (or <b>Add to Home screen</b>).</p>`}</div>
+    <button class="btn ghost small x" data-act="install-dismiss" aria-label="Dismiss">${icon('x')}</button></div>`;
+  }
+  return '';
+}
+
+const BACKUP_WHY = { never: "You haven't saved a backup yet.", changes: "You've changed a lot of picks since your last backup.", age: 'Your last backup is over a week old.', conference: `${'{conf}'} starts soon, and your latest picks aren't in a backup.` };
+function backupWhere() {
+  return IS_IOS ? 'In the share sheet choose <b>Save to Files → iCloud Drive</b> (e.g. a "Planner backups" folder) so it\'s there if you change phones.'
+    : IS_ANDROID ? 'Save it to <b>Google Drive</b> so it\'s there if you change phones.'
+    : 'Keep it somewhere that is backed up (iCloud Drive, OneDrive, Google Drive).';
+}
+
+function backupBanner() {
+  const b = store.backupState();
+  const hasPicks = Object.values(store.get().picks).some(p => p.p != null);
+  const r = backupReminder({ hasPicks, at: b.at, changes: b.changes, dismissed: b.dismissed, now: Date.now(), conferenceStart: app.conf.days[0], today: nowLocal(null, app.conf.tz).day });
+  if (!r) return '';
+  return `<div class="banner">${icon('refresh')}<div><b>Save a backup of your picks</b>
+    <p>${BACKUP_WHY[r.reason].replace('{conf}', esc(app.conf.short))} ${backupWhere()}</p>
+    <div class="row"><button class="btn small primary" data-act="export">Save a backup</button><button class="btn small ghost" data-act="backup-dismiss">Not now</button></div></div></div>`;
+}
+
+// Ask the browser to protect this site's storage once there are picks, and remember the answer.
+async function refreshPersisted() {
+  try {
+    if (Object.keys(store.get().picks).length) await navigator.storage?.persist?.();
+    const was = app.persisted;
+    app.persisted = !!(await navigator.storage?.persisted?.());
+    if (was !== app.persisted && app.model) renderOrDefer();
+  } catch { /* not supported */ }
 }
 
 // The catalog is someone's export (Gartner): say when it's a day old and who can refresh it.
@@ -1018,7 +1064,7 @@ function renderShortlist(plan) {
   const minutes = plan.tba.reduce((a, x) => a + (x.s.dur || 0), 0);
   const notRec = plan.tba.filter(x => x.s.recorded === false && x.priority >= 2).length;
   const rec = plan.tba.filter(x => x.s.recorded === true).length;
-  return `<h1>My plan</h1>${installBanner()}${staleBanner()}${favoritesBanner()}${missingPicksBanner()}${rsvpBanner(plan)}
+  return `<h1>My plan</h1>${installBanner()}${backupBanner()}${staleBanner()}${favoritesBanner()}${missingPicksBanner()}${rsvpBanner(plan)}
   <div class="banner">${icon('clock')}<div><b>Waiting for dates and rooms to be published.</b>
     <p>The catalog is checked automatically (last checked ${esc(relTime(app.live?.at || meta.lastChecked || app.raw.doc.generatedAt))}). Once times appear, your plan builds itself. It flags sessions you can't reach in time and suggests what to give up. Want to try it now?</p>
     <button class="btn small" data-act="preview-on">Rehearse with a simulated schedule</button></div></div>
@@ -1068,7 +1114,7 @@ function renderSchedule(plan) {
   const sacrificed = new Set(plan.res.dropped.filter(d => real(d) && !plan.chosenGroups.has(d.item.id)).map(d => d.item.id)).size;
 
   const parts = [];
-  parts.push(`<h1>My plan</h1>${installBanner()}${staleBanner()}${favoritesBanner()}${previewBanner()}${missingPicksBanner()}${rsvpBanner(plan)}`);
+  parts.push(`<h1>My plan</h1>${installBanner()}${backupBanner()}${staleBanner()}${favoritesBanner()}${previewBanner()}${missingPicksBanner()}${rsvpBanner(plan)}`);
   const lockedConflicts = plan.res.lockedConflicts.filter(x => !x.pseudo);
   if (lockedConflicts.length) {
     parts.push(`<div class="banner bad">${icon('warn')}<div><b>Some sessions you locked can't all happen.</b><p>${lockedConflicts.map(x => esc(x.code)).join(', ')} clash with other locked sessions or blocked time. Unlock one of them.</p></div></div>`);
@@ -1625,6 +1671,9 @@ function renderSettings() {
       <div class="field"><label for="theme">Theme</label><select id="theme">${['auto', 'light', 'dark'].map(t => `<option ${theme === t ? 'selected' : ''}>${t}</option>`).join('')}</select></div>
     </section>
     <section class="panel"><h3>Your data</h3>
+      ${(() => { const h = health(); const b = store.backupState(); return `<p class="storage-status ${h.level}" id="storage-status">${icon(h.level === 'installed' || h.level === 'protected' ? 'check' : 'warn')}<span>${esc(h.text)}</span></p>
+      ${h.level === 'at-risk' ? `<p class="small">${IS_IOS ? 'To install: <b>Share → Add to Home Screen</b>, then open the planner from that icon.' : IS_ANDROID ? 'To install: <b>⋮ → Install app</b> (or <b>Add to Home screen</b>).' : 'Install it from your browser\'s menu (Install app / Add to Home screen).'}</p>` : ''}
+      <p class="small">Last backup: <b id="last-backup">${esc(backupAge(b.at, Date.now()))}</b>${b.changes && b.at ? ` · ${b.changes} change${b.changes > 1 ? 's' : ''} since` : ''}. ${backupWhere()}</p>`; })()}
       <p class="small muted">Picks live on this device${STANDALONE ? ' (in this Home Screen app)' : ''}. Use a backup file or a share link to move them between devices.</p>
       <div class="row"><button class="btn small" data-act="export">Save a backup</button>
         <label class="btn small">Restore backup<input type="file" accept="application/json,.json" id="import-file" hidden></label>
@@ -1999,7 +2048,19 @@ function onClick(e) {
     ack: () => { store.setKnown(app.nextKnown); app.alerts = []; render(); },
     refresh: () => refreshData(true),
     'sync-local': () => syncLocal(el),
-    export: () => shareOrDownload(`${app.conf.id}-picks-${new Date().toISOString().slice(0, 10)}.json`, JSON.stringify(store.exportData(), null, 1), 'application/json'),
+    export: async () => {
+      const r = await shareOrDownload(`${app.conf.id}-picks-${new Date().toISOString().slice(0, 10)}.json`, JSON.stringify(store.exportData(), null, 1), 'application/json');
+      if (r !== 'cancelled') { store.markBackup(); toast('Backup saved. Keep it somewhere that is backed up'); }
+    },
+    'backup-dismiss': () => store.dismissBackupReminder(),
+    'install-app': async () => {
+      const ev = app.installEvent;
+      if (!ev) return;
+      app.installEvent = null;
+      try { await ev.prompt(); await ev.userChoice; } catch { /* dismissed */ }
+      refreshPersisted();
+      render();
+    },
     'import-code': () => {
       const raw = ($('#import-code')?.value || '').trim();
       importShare(safeDecode(raw.includes('#/import/') ? raw.split('#/import/')[1] : raw));
@@ -2170,7 +2231,8 @@ document.addEventListener('keydown', e => {
 
 // Store changes -> keep views and badges in sync.
 store.subscribe(what => {
-  if (what === 'save-error' || what === 'save-ok') { $('#save-error').hidden = what === 'save-ok'; return; }
+  if (what === 'save-error' || what === 'save-ok') { $('#save-error').hidden = what === 'save-ok'; if (app.tab === 'settings') renderOrDefer(); return; }
+  if (what === 'backup') { if (app.model) renderOrDefer(); return; }
   if (!app.model) return;
   if (what === 'profile') {
     // Preferences rank and hide sessions; they never change ratings or the plan.
@@ -2469,6 +2531,9 @@ async function boot() {
   syncGeo();
   setInterval(leaveAlertTick, 30000);
   registerServiceWorker();
+  refreshPersisted();
+  window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); app.installEvent = e; if (app.model) renderOrDefer(); });
+  window.addEventListener('appinstalled', () => { app.installEvent = null; refreshPersisted(); });
 }
 
 boot();

@@ -39,6 +39,7 @@ function blank() {
     known: {},          // instKey -> snapshot of fields we alert on, for picked sessions
     seenBatch: null,    // timestamp of newest change batch already viewed
     profile: null,      // quick-start answers and group choices (profile.js); null = never set
+    backup: { at: null, changes: 0, dismissed: null }, // last backup, pick edits since, reminder dismissal
     ui: { tab: 'browse', filters: {}, day: null },
   };
 }
@@ -82,6 +83,7 @@ export function load(namespace = '') {
       state.picks = sanitizePicks(state.picks);
       state.prefs = sanitizePrefs(state.prefs);
       state.profile = saved.profile ? sanitizeProfile(saved.profile) : null;
+      state.backup = sanitizeBackup(saved.backup);
     }
   } catch (e) {
     console.warn('Could not read saved state', e);
@@ -144,6 +146,7 @@ const alive = p => p.p != null || p.note || p.lock || p.reserved;
 // rating, lock, reservation or note are dropped; a note alone keeps a record alive.
 export function mutatePicks(fn) {
   fn(state.picks);
+  state.backup.changes++;
   for (const [id, p] of Object.entries(state.picks)) if (!alive(p)) delete state.picks[id];
   if (Object.values(state.picks).some(p => p.p > 0)) askPersistent();
   emit('picks');
@@ -208,6 +211,27 @@ export function seedProfile(file) {
   state.profile = sanitizeProfile(file.profile);
   emit('profile');
   return true;
+}
+
+// ---- backups (health.js decides when to remind)
+
+export function backupState() { return state.backup; }
+export function markBackup(at = Date.now()) {
+  state.backup = { at, changes: 0, dismissed: null };
+  emit('backup');
+}
+export function dismissBackupReminder(at = Date.now()) {
+  state.backup.dismissed = { at, changes: state.backup.changes };
+  emit('backup');
+}
+
+function sanitizeBackup(b) {
+  const out = { at: null, changes: 0, dismissed: null };
+  if (!b || typeof b !== 'object') return out;
+  if (Number.isFinite(b.at) && b.at > 0) out.at = b.at;
+  if (Number.isInteger(b.changes) && b.changes >= 0) out.changes = Math.min(b.changes, 100000);
+  if (b.dismissed && Number.isFinite(b.dismissed.at) && Number.isInteger(b.dismissed.changes)) out.dismissed = { at: b.dismissed.at, changes: b.dismissed.changes };
+  return out;
 }
 
 export function setKnown(known) { state.known = known; emit('known'); }
@@ -383,7 +407,7 @@ export function applyShared(picks) {
 // Erase ratings, locks, notes and change tracking. Settings, display choices and the
 // "already seen" marker for the change history stay.
 export function resetAll() {
-  state = { ...blank(), prefs: state.prefs, profile: state.profile, ui: { ...state.ui }, seenBatch: state.seenBatch };
+  state = { ...blank(), prefs: state.prefs, profile: state.profile, ui: { ...state.ui }, seenBatch: state.seenBatch, backup: state.backup };
   cachedSettings = null;
   emit('reset');
 }
