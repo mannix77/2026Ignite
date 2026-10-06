@@ -322,7 +322,7 @@ export function importData(obj, { replace = false } = {}) {
   if (replace) state.picks = {};
   for (const [id, p] of Object.entries(incoming)) {
     const cur = state.picks[id];
-    if (!cur || p.at >= (cur.at || 0)) state.picks[id] = { ...p, note: p.note || cur?.note || '' };
+    if (!cur || p.at > (cur.at || 0)) state.picks[id] = { ...p, note: p.note || cur?.note || '' };
   }
   if (obj.settings && replace) { state.prefs = sanitizePrefs(obj.settings); cachedSettings = null; }
   if (obj.profile && (replace || !state.profile)) state.profile = sanitizeProfile(obj.profile);

@@ -85,6 +85,13 @@ await test('should take a backup pick made after the local one', async () => {
   eq(store.pick('ICE').p, 0);
 });
 
+await test('should keep an undated local pick when a second undated backup is merged', async () => {
+  store.load('merge-undated-twice');
+  store.importData({ app: BACKUP, picks: { ICE: { p: 3, lock: 'ICE' } } });
+  store.importData({ app: BACKUP, picks: { ICE: { p: 0 } } });
+  eq(store.pick('ICE').p, 3);
+});
+
 await test('should add an undated backup pick for a session not in the plan', async () => {
   store.load('merge-undated-new');
   store.importData({ app: BACKUP, picks: { ICE: { p: 2 } } });
