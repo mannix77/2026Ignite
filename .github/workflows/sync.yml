@@ -113,6 +113,11 @@ jobs:
       - name: Keep the legacy data paths working
         run: cp data/ignite2026/sessions.json data/ignite2026/changes.json data/ignite2026/meta.json data/
 
+      # The re:Invent source snapshot (~5 MB) is the importer's input; the app never reads it.
+      # Removed after the commit step, before the site (and each colleague copy) is assembled.
+      - name: Leave the re:Invent source snapshot out of the site
+        run: rm -rf data/reinvent2026/source
+
       # One extra copy of the site per instances/<name>/ (e.g. /gino/): same catalogs, its own
       # picks (storage is namespaced), no pre-loaded favorites unless the folder provides them.
       - name: Publish copies for colleagues
