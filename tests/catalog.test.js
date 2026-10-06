@@ -91,5 +91,17 @@ await test('should drop an added session whose end is before its start', async (
   eq(store.settings().custom, []);
 });
 
+// Minesh's main site must not pick up a session Gino added in his copy (/gino/). Under
+// Node there is no planner-instance meta tag, so this file runs as the main site; the
+// copy's side is tested in tests/instance.test.js.
+await test("should keep a session added in a colleague's copy out of the main site", () => {
+  localStorage.clear();
+  const plan = title => JSON.stringify({ v: 1, picks: {}, prefs: { custom: [{ ...reception, title }] } });
+  localStorage.setItem('ignite26.planner.v1@gino:gartner2026', plan('Gino reception'));
+  localStorage.setItem('ignite26.planner.v1:gartner2026', plan('Minesh dinner'));
+  store.load('gartner2026');
+  eq(store.settings().custom.map(c => c.title), ['Minesh dinner']);
+});
+
 console.log(`${pass} passed, ${fail} failed`);
 if (fail) process.exitCode = 1;
