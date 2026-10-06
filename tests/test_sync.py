@@ -381,5 +381,93 @@ class RunTests(unittest.TestCase):
         self.assertIn("switched on session times", self.data("changes.json")["batches"][0]["milestones"][0])
 
 
+class EventWindowTests(unittest.TestCase):
+    """The site settings' eventStartDate/eventEndDate can be blank or a placeholder."""
+
+    def window(self, start, end):
+        return sync.event_window(types.SimpleNamespace(event_window=None), {"eventStart": start, "eventEnd": end})
+
+    def test_should_fall_back_to_the_default_window_when_event_dates_are_empty(self):
+        self.assertEqual(self.window("", ""), sync.DEFAULT_WINDOW)
+
+    def test_should_fall_back_to_the_default_window_when_event_dates_are_not_dates(self):
+        self.assertEqual(self.window("TBD", "TBD"), sync.DEFAULT_WINDOW)
+
+    def test_should_fall_back_to_the_default_window_when_only_the_end_is_unusable(self):
+        self.assertEqual(self.window("2026-11-17T08:00:00-08:00", "2026-13-40"), sync.DEFAULT_WINDOW)
+
+    def test_should_take_the_window_from_iso_event_dates(self):
+        self.assertEqual(self.window("2026-11-16T08:00:00-08:00", "2026-11-19T17:00:00-08:00"),
+                         ("2026-11-16", "2026-11-19"))
+
+
+class MalformedRecordTests(unittest.TestCase):
+    """One junk record in the feed must not block every future sync."""
+
+    def test_should_skip_a_null_record_in_the_catalog(self):
+        raw = load("raw_2026_sample.json")
+        recs, _, _ = sync.normalize(raw + [None], [], W26)
+        self.assertEqual(recs, sync.normalize(raw, [], W26)[0])
+
+    def test_should_skip_non_object_records_without_reporting_them_as_dropped(self):
+        _, dropped, _ = sync.normalize([None, 42, "junk", True, [], [{"sessionId": "x"}]], [], W26)
+        self.assertEqual(dropped, [])
+
+
+class WithdrawalGuardTests(unittest.TestCase):
+    """A renamed time/room field must not be committed as 'dates withdrawn'."""
+
+    def setUp(self):
+        self.tmp = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, self.tmp)
+        self.published = load("raw_2025_sample.json")
+        self.run_sync(self.published)
+
+    def run_sync(self, raw, allow_withdrawal=False):
+        path = os.path.join(self.tmp, "raw.json")
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(raw, f)
+        args = types.SimpleNamespace(from_file=path, speakers_file=None, settings_file=None,
+                                     event_window="%s:%s" % W25, summary_out=None,
+                                     data_dir=os.path.join(self.tmp, "data"), allow_withdrawal=allow_withdrawal)
+        return sync.run(args)
+
+    def data(self, name):
+        with open(os.path.join(self.tmp, "data", name), encoding="utf-8") as f:
+            return json.load(f)
+
+    def renamed(self, old, new):
+        return [{(new if k == old else k): v for k, v in s.items()} for s in self.published]
+
+    def test_should_refuse_a_catalog_whose_times_vanished(self):
+        self.assertEqual(self.run_sync(self.renamed("startDateTime", "startTime")), (3, False))
+
+    def test_should_keep_last_good_times_when_they_vanish(self):
+        before = self.data("sessions.json")["stats"]["withDates"]
+        self.run_sync(self.renamed("startDateTime", "startTime"))
+        self.assertEqual(self.data("sessions.json")["stats"]["withDates"], before)
+
+    def test_should_record_vanished_times_in_meta(self):
+        self.run_sync(self.renamed("startDateTime", "startTime"))
+        self.assertIn("keeping last good data", self.data("meta.json")["error"])
+
+    def test_should_refuse_a_catalog_whose_rooms_vanished(self):
+        self.assertEqual(self.run_sync(self.renamed("location", "venue")), (3, False))
+
+    def test_should_accept_a_withdrawal_when_explicitly_allowed(self):
+        self.run_sync(self.renamed("startDateTime", "startTime"), allow_withdrawal=True)
+        self.assertIn("Session dates were withdrawn from the catalog",
+                      self.data("changes.json")["batches"][0]["milestones"])
+
+    def test_should_accept_a_withdrawal_flag_on_the_command_line(self):
+        path = os.path.join(self.tmp, "renamed.json")
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(self.renamed("startDateTime", "startTime"), f)
+        proc = subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "sync.py"), "--from-file", path,
+                               "--data-dir", os.path.join(self.tmp, "data"), "--event-window", "%s:%s" % W25,
+                               "--allow-withdrawal"], capture_output=True, text=True)
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+
+
 if __name__ == "__main__":
     unittest.main()

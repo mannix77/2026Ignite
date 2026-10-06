@@ -200,6 +200,8 @@ def normalize(raw_sessions, raw_speakers, window=DEFAULT_WINDOW, by_name=None):
     out, dropped = [], []
     draft_times = 0
     for s in raw_sessions:
+        if not isinstance(s, dict):
+            continue  # null/number/list in the feed: not a session (skipped the same way in live.js)
         title = text(s.get("title"))
         sid = "" if s.get("sessionId") in (None, "") else str(s.get("sessionId"))
         if not sid or is_test(s, title):
@@ -457,14 +459,34 @@ def summary_markdown(batch, watch):
     return "\n".join(lines) + "\n"
 
 
+def day_or_none(v):
+    """'2026-11-17T08:00:00-08:00' -> '2026-11-17'; None for blanks/placeholders ('', 'TBD')."""
+    if not isinstance(v, str) or not re.match(r"^\d{4}-\d{2}-\d{2}", v):
+        return None
+    try:
+        dt.datetime.strptime(v[:10], "%Y-%m-%d")
+    except ValueError:
+        return None
+    return v[:10]
+
+
 def event_window(args, flags):
     if args.event_window:
         a, b = args.event_window.split(":")
         return a, b
-    try:
-        return flags["eventStart"][:10], flags["eventEnd"][:10]
-    except (TypeError, KeyError):
-        return DEFAULT_WINDOW
+    # Like live.js: unusable site dates mean the configured default, never a crash.
+    a, b = day_or_none((flags or {}).get("eventStart")), day_or_none((flags or {}).get("eventEnd"))
+    return (a, b) if a and b else DEFAULT_WINDOW
+
+
+def withdrawal(ps, cs):
+    """Why the new catalog looks like a broken feed rather than a real withdrawal, or None.
+    A renamed time/room field keeps the session count but empties those fields."""
+    for key, what in (("withDates", "dates"), ("withRooms", "rooms")):
+        if ps[key] > 0 and cs[key] < 0.5 * ps[key]:
+            return ("sessions with %s fell from %d to %d; keeping last good data "
+                    "(rerun with --allow-withdrawal if this is real)" % (what, ps[key], cs[key]))
+    return None
 
 
 def run(args):
@@ -507,6 +529,9 @@ def run(args):
         if len(cur) < 50 or (prev and len(cur) < 0.6 * len(prev)):
             raise RuntimeError("catalog returned %d sessions (previously %d); keeping last good data"
                                % (len(cur), len(prev)))
+        why = withdrawal(stats(prev), stats(cur)) if prev and not getattr(args, "allow_withdrawal", False) else None
+        if why:
+            raise RuntimeError(why)
     except RuntimeError as e:
         meta.update({"ok": False, "error": str(e)})
         dump(mpath, meta)
@@ -577,6 +602,8 @@ def main():
                                            "default: from the site settings")
     ap.add_argument("--summary-out", help="write a markdown change summary here when something changed")
     ap.add_argument("--data-dir", help="output directory (default: data/ignite2026/ in the repo)")
+    ap.add_argument("--allow-withdrawal", action="store_true",
+                    help="accept a catalog in which more than half of the published dates/rooms disappeared")
     args = ap.parse_args()
     try:
         code, changed = run(args)

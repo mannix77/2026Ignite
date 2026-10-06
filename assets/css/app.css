@@ -278,6 +278,47 @@ h3 { font-size: 15px; margin: 0 0 6px; }
 .t-actions button:hover { background: var(--pcs); }
 .t-actions kbd { display: block; font-size: 11px; font-weight: 600; color: var(--text-3); font-family: var(--mono); }
 .t-sub { display: flex; gap: 8px; justify-content: center; margin-top: 10px; }
+
+/* ---------- triage: preferences, group choices, swipe ---------- */
+:root { --hidden-seg: color-mix(in srgb, var(--skip) 40%, var(--surface-3)); }
+.meter { margin: 4px 0 12px; }
+.meter-bar { display: flex; height: 10px; border-radius: 99px; overflow: hidden; background: var(--surface-3); }
+.meter-bar i { display: block; height: 100%; transition: width .25s; }
+.meter-legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12.5px; color: var(--text-2); margin-top: 6px; }
+.meter-legend i { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 5px; }
+.meter-legend b { color: var(--text); font-variant-numeric: tabular-nums; }
+.meter p { margin: 6px 0 0; }
+.segtabs { display: flex; gap: 6px; margin: 4px 0 12px; overflow-x: auto; }
+.segtabs button { border: 1px solid var(--line); background: var(--surface); color: var(--text); border-radius: 99px; padding: 8px 14px; font: inherit; font-weight: 600; white-space: nowrap; cursor: pointer; }
+.segtabs button[aria-selected="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.segtabs .step { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: var(--surface-3); color: var(--text-2); font-size: 12px; margin-right: 6px; }
+.segtabs button[aria-selected="true"] .step { background: var(--accent-ink); color: var(--accent); }
+.prefs h3 { margin: 14px 0 6px; }
+.prefs h3:first-child { margin-top: 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip .n { opacity: .65; font-weight: 400; margin-left: 2px; font-variant-numeric: tabular-nums; }
+.grows { display: grid; gap: 6px; }
+.grow { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 8px 10px; }
+.grow.want { border-color: var(--want); background: var(--want-soft); }
+.grow.skip { border-color: var(--skip); background: var(--skip-soft); }
+.grow.skip .gname { color: var(--text-3); text-decoration: line-through; }
+.gname { min-width: 0; overflow-wrap: anywhere; font-size: 14px; }
+.gname .n { color: var(--text-3); font-size: 12px; margin-left: 6px; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 99px; overflow: hidden; background: var(--surface); }
+.seg button { border: 0; background: none; color: var(--text); padding: 6px 12px; font: inherit; font-size: 13px; cursor: pointer; min-height: 36px; }
+.seg button + button { border-left: 1px solid var(--line); }
+.seg .w[aria-pressed="true"] { background: var(--want); color: #fff; }
+.seg .s[aria-pressed="true"] { background: var(--skip); color: #fff; }
+@media (max-width: 520px) { .grow { grid-template-columns: 1fr; } }
+.why-chips { display: flex; flex-wrap: wrap; gap: 5px; margin: 8px 0 0; }
+.chip.fit { background: var(--accent-soft); color: var(--text); }
+.t-card[data-swipe-key] { touch-action: pan-y; transition: transform .18s ease, opacity .18s ease, border-color .1s; }
+.t-card.dragging { transition: none; user-select: none; cursor: grabbing; }
+.t-card[data-swipe="2"] { border-color: var(--want); box-shadow: 0 0 0 2px var(--want-soft); }
+.t-card[data-swipe="0"] { border-color: var(--skip); box-shadow: 0 0 0 2px var(--skip-soft); }
+.t-card[data-swipe="3"] { border-color: var(--must); box-shadow: 0 0 0 2px var(--must-soft); }
+@media (hover: hover) { .swipe-hint { display: none; } }
+.linkish { background: none; border: 0; padding: 0; font: inherit; color: var(--accent); text-decoration: underline; cursor: pointer; }
 kbd { font-family: var(--mono); font-size: 12px; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 4px; background: var(--surface-2); }
 
 /* ---------- plan ---------- */
@@ -413,7 +454,11 @@ dialog#detail::backdrop { background: rgb(8 14 12 / .5); }
 }
 #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
 #toast button { margin-left: 10px; background: none; border: 0; color: var(--accent-soft); font-weight: 800; cursor: pointer; text-decoration: underline; }
-@media (min-width: 900px) { #toast { bottom: 24px; } }
+/* Toasts drop in from the top: the bottom holds the phone nav and the sticky triage buttons. */
+#toast { top: calc(env(safe-area-inset-top) + 10px); bottom: auto; transform: translateX(-50%) translateY(-20px); }
+#toast.show { transform: translateX(-50%) translateY(0); }
+.save-error { position: sticky; top: 0; z-index: 55; background: var(--bad-soft); color: var(--bad); border-bottom: 1px solid var(--bad); padding: 10px 16px; font-weight: 600; font-size: 14px; }
+.save-error a { color: inherit; }
 
 .legend { display: flex; gap: 8px; flex-wrap: wrap; font-size: 12.5px; color: var(--text-3); align-items: center; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
@@ -446,3 +491,4 @@ body:has(dialog[open]) { overflow: hidden; }
   .t-item, .t-move, .t-free { grid-template-columns: 62px 1fr; gap: 8px; }
   .t-time { font-size: 12px; white-space: nowrap; }
 }
+.text-input { width: 100%; border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; background: var(--surface); color: var(--text); font: inherit; }

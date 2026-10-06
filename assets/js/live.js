@@ -56,6 +56,13 @@ function slotMinutes(slot) {
   return [a, b, (((b - a) % 1440) + 1440) % 1440];
 }
 
+// '2026-11-17T08:00:00-08:00' -> '2026-11-17'; null for blanks/placeholders (same rule as sync.py's day_or_none).
+function dayOrNull(v) {
+  if (typeof v !== 'string' || !/^\d{4}-\d{2}-\d{2}/.test(v)) return null;
+  const d = new Date(`${v.slice(0, 10)}T00:00:00Z`);
+  return !Number.isNaN(d.getTime()) && d.toISOString().slice(0, 10) === v.slice(0, 10) ? v.slice(0, 10) : null;
+}
+
 function windowBounds([first, last]) {
   const lo = Date.parse(`${first}T00:00:00Z`) - 86400000;
   const hi = Date.parse(`${last}T00:00:00Z`) + 2 * 86400000;
@@ -74,6 +81,7 @@ export function normalize(rawSessions, rawSpeakers, window = DEFAULT_WINDOW, spe
   const out = [], dropped = [];
   let draft = 0;
   for (const s of rawSessions) {
+    if (!s || typeof s !== 'object' || Array.isArray(s)) continue; // null/number/list: not a session (as in sync.py)
     const title = text(s.title);
     const sid = s.sessionId == null || s.sessionId === '' ? '' : String(s.sessionId);
     if (!sid || isTest(s, title)) { dropped.push(text(s.sessionCode) || sid); continue; }
@@ -228,8 +236,8 @@ export async function checkLive(snapshotDoc, conf = {}) {
   const prev = snapshotDoc.sessions || [];
   const byName = new Map();
   for (const r of prev) for (const p of r.speakers || []) if (p[1] || p[2]) byName.set(p[0], p);
-  const window = typeof settings?.eventStartDate === 'string' && typeof settings?.eventEndDate === 'string' && settings.eventStartDate.length >= 10 && settings.eventEndDate.length >= 10
-    ? [settings.eventStartDate.slice(0, 10), settings.eventEndDate.slice(0, 10)] : (conf.days?.length ? [conf.days[0], conf.days[conf.days.length - 1]] : DEFAULT_WINDOW);
+  const first = dayOrNull(settings?.eventStartDate), last = dayOrNull(settings?.eventEndDate);
+  const window = first && last ? [first, last] : (conf.days?.length ? [conf.days[0], conf.days[conf.days.length - 1]] : DEFAULT_WINDOW);
   const { sessions, dropped, draft } = normalize(raw, null, window, byName);
   if (prev.length && sessions.length < 0.6 * prev.length) throw new Error(`live catalog looks partial (${sessions.length} sessions)`);
   const seenInst = new Map(prev.map(r => [r.inst, r.firstSeen]));

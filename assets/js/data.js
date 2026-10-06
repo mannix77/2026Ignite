@@ -1,6 +1,6 @@
 // Loads a conference's synced catalog and turns it into the in-memory model the views use.
 
-import { fromISO, parseSlot, hash } from './time.js';
+import { fromISO, toISO, parseSlot, hash } from './time.js';
 
 // ?data=<dir> loads a different snapshot directory (testing with past events). Only plain
 // relative paths on this site are accepted.
@@ -18,17 +18,18 @@ async function getJSON(path) {
 
 export async function fetchAll(dataDir) {
   const dir = DATA_OVERRIDE || dataDir;
-  const [doc, meta, changes, favorites] = await Promise.all([
+  const [doc, meta, changes, favorites, profile] = await Promise.all([
     getJSON(`${dir}/sessions.json`),
     getJSON(`${dir}/meta.json`).catch(() => ({})),
     getJSON(`${dir}/changes.json`).catch(() => ({ batches: [] })),
     getJSON(`${dir}/favorites.json`).catch(() => null),
+    getJSON(`${dir}/profile.json`).catch(() => null), // starting preferences (profile.js)
   ]);
   // The service worker can hand back a cached sessions.json next to a fresh meta/changes
   // (slow Wi-Fi). Flag it so the app refreshes once the newer copy has landed.
   const newest = [meta.lastChanged, changes.batches?.[0]?.at].filter(Boolean).sort().pop();
   const stale = !!(newest && doc.generatedAt && newest > doc.generatedAt);
-  return { doc, meta, changes, favorites, stale };
+  return { doc, meta, changes, favorites, profile, stale };
 }
 
 // Preview mode only: deterministic fake day/room so the planner can be rehearsed
@@ -56,6 +57,51 @@ function previewTiming(rec, conf) {
   return { day, startMin: start, endMin: start + dur, room };
 }
 
+// The model is built from catalog files that can be malformed; list fields are always arrays.
+const list = v => (Array.isArray(v) ? v.filter(x => x != null && x !== '') : typeof v === 'string' && v ? [v] : []);
+
+// A URL the Cache API accepts as a key (it rejects anything that isn't http(s)).
+export function cacheUrl(name, base = location.href) {
+  return new URL(`__planner-cache__/${encodeURIComponent(name)}`, base).href;
+}
+
+// A catalog copied from someone's export (not checked live) is flagged once it is a day
+// old. Returns null when it's fine, else { hours, days }.
+export function exportAge(conf, generatedAt, now = new Date(), limitHours = 24) {
+  if (conf.live || !generatedAt) return null;
+  const hours = (now.getTime() - new Date(generatedAt).getTime()) / 3600000;
+  if (!(hours >= limitHours)) return null;
+  return { hours: Math.floor(hours), days: Math.floor(hours / 24) };
+}
+
+// Sessions you added because they're missing from the catalog (Settings → custom) become
+// catalog records of their own, marked `custom`.
+export function customRecords(list, conf) {
+  return (list || []).map((c, i) => ({
+    id: `my-${c.id}`, inst: `my-${c.id}`, code: `MY${i + 1}`, group: `my-${c.id}`, custom: true,
+    title: c.title, desc: c.note || 'Added by you: not in the catalog.', type: 'Added by you',
+    start: toISO(c.day, c.start, conf.tz), end: toISO(c.day, c.end, conf.tz), dur: c.end - c.start,
+    room: c.room || '', building: c.building, delivery: ['In-person'], recorded: false, speakers: [], topics: [], tags: [], audience: [],
+  }));
+}
+
+// The catalog session an added one turned into after a fresh export: same day, same title
+// give or take wording ("&" vs "and", punctuation).
+const words = t => new Set(String(t || '').toLowerCase().replace(/&/g, ' and ').split(/[^a-z0-9]+/).filter(w => w.length > 1));
+export function catalogMatch(custom, model) {
+  const want = words(custom.title);
+  if (!want.size) return null;
+  let best = null;
+  for (const s of model.sessions) {
+    if (s.custom || s.day !== custom.day) continue;
+    const have = words(s.title);
+    const shared = [...want].filter(w => have.has(w)).length;
+    const score = shared / Math.max(want.size, have.size);
+    if (score >= 0.8 && (!best || score > best.score)) best = { score, s };
+  }
+  return best ? best.s : null;
+}
+
 // rsvp: { type -> opensAt } for conferences where the session type decides (Ignite);
 // catalogs can also mark single sessions with rec.rsvp (Gartner's seat reservations).
 export function buildModel(doc, settings, rsvp, conf, venue) {
@@ -71,13 +117,19 @@ export function buildModel(doc, settings, rsvp, conf, venue) {
   let official = 0;
   // Preview only runs while nothing official exists, so simulated times can never mix
   // with a real (even partially published) schedule.
-  const anyOfficial = (doc.sessions || []).some(r => r.start && r.dur !== 0);
+  const anyOfficial = (Array.isArray(doc.sessions) ? doc.sessions : []).some(r => r?.start && r.dur !== 0 && !r.custom);
   const preview = settings.preview && !anyOfficial;
 
-  for (const rec of doc.sessions || []) {
-    const s = { ...rec, key: rec.inst };
-    s.inPerson = (rec.delivery || []).some(d => /^in[- ]?person$/i.test(d));
-    s.onlineOnly = !s.inPerson && (rec.delivery || []).length > 0;
+  for (const rec of Array.isArray(doc.sessions) ? doc.sessions : []) {
+    if (!rec || typeof rec !== 'object' || !rec.id) continue;
+    const s = { ...rec, key: rec.inst || rec.id };
+    for (const k of ['topics', 'tags', 'audience', 'delivery', 'vendors']) s[k] = list(rec[k]);
+    s.speakers = Array.isArray(rec.speakers) ? rec.speakers.filter(Array.isArray) : [];
+    s.code = typeof rec.code === 'string' && rec.code ? rec.code : String(rec.id);
+    s.title = typeof rec.title === 'string' ? rec.title : '';
+    s.desc = typeof rec.desc === 'string' ? rec.desc : '';
+    s.inPerson = s.delivery.some(d => /^in[- ]?person$/i.test(d));
+    s.onlineOnly = !s.inPerson && s.delivery.length > 0;
     if (rec.rsvp === true) s.rsvp = rec.rsvpOpens || true;
     else s.rsvp = s.inPerson && rsvp && rsvp[rec.type] !== undefined ? (rsvp[rec.type] || true) : null;
     let room = rec.room;
@@ -87,8 +139,9 @@ export function buildModel(doc, settings, rsvp, conf, venue) {
       s.day = st.day;
       s.startMin = st.min;
       s.endMin = en ? en.min + (en.day !== st.day ? 1440 : 0) : st.min + (rec.dur || 45);
-      s.timeSource = 'official';
-      official++;
+      if (!(s.endMin > s.startMin)) s.endMin = st.min + (rec.dur > 0 ? rec.dur : 45); // end before start: trust the duration
+      s.timeSource = rec.custom ? 'custom' : 'official';
+      if (!rec.custom) official++;
     } else if (preview && s.inPerson && rec.dur !== 0) {
       const p = previewTiming(rec, conf);
       Object.assign(s, { day: p.day, startMin: p.startMin, endMin: p.endMin, timeSource: 'preview' });
@@ -96,21 +149,23 @@ export function buildModel(doc, settings, rsvp, conf, venue) {
     } else {
       s.day = null; s.startMin = null; s.endMin = null; s.timeSource = null;
     }
-    s.loc = s.onlineOnly ? { label: 'Online', building: 'O', floor: null, known: true } : venue.parseLocation(room, overrides);
+    s.loc = s.onlineOnly ? { label: 'Online', building: 'O', floor: null, known: true }
+      : rec.custom && rec.building ? { label: room || '', building: rec.building, floor: null, known: true }
+      : venue.parseLocation(room, overrides);
     s.roomLabel = s.onlineOnly ? 'Online' : (rec.roomTbd && s.timeSource !== 'preview' ? 'Room TBA' : room);
-    s.hay = [rec.code, rec.title, rec.desc, (rec.speakers || []).map(p => `${p[0]} ${p[1]}`).join(' '),
-      (rec.tags || []).join(' '), (rec.topics || []).join(' '), rec.type].join(' \u0001 ').toLowerCase();
+    s.hay = [s.code, s.title, s.desc, s.speakers.map(p => `${p[0] ?? ''} ${p[1] ?? ''}`).join(' '),
+      s.tags.join(' '), s.topics.join(' '), rec.type].join(' \u0001 ').toLowerCase();
     sessions.push(s);
     byKey.set(s.key, s);
     if (!byId.has(s.id)) byId.set(s.id, []);
     byId.get(s.id).push(s);
     if (!byCode.has(s.code)) byCode.set(s.code, s);
-    s.group = rec.group || rec.code;
+    s.group = rec.group || s.code;
     if (!byGroup.has(s.group)) byGroup.set(s.group, []);
     byGroup.get(s.group).push(s);
-    (rec.topics || []).forEach(t => bump(facets.topics, t));
-    (rec.tags || []).forEach(t => bump(facets.tags, t));
-    (rec.audience || []).forEach(t => bump(facets.audience, t));
+    s.topics.forEach(t => bump(facets.topics, t));
+    s.tags.forEach(t => bump(facets.tags, t));
+    s.audience.forEach(t => bump(facets.audience, t));
     bump(facets.types, rec.type);
     bump(facets.levels, rec.level);
   }
@@ -131,7 +186,8 @@ export function snapshot(s) {
 
 // groups: repeat-group codes you've picked. Returns alerts for runs that moved, were
 // retitled or disappeared since you last acknowledged, plus the new snapshot.
-export function diffKnown(model, groups, known) {
+export function diffKnown(model, groups, knownIn) {
+  const known = Object.fromEntries(Object.entries(knownIn || {}).filter(([, k]) => k && typeof k === 'object'));
   const alerts = [];
   const next = {};
   for (const g of groups) for (const s of model.byGroup.get(g) || []) next[s.key] = snapshot(s);
