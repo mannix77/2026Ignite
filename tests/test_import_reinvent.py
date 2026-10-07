@@ -96,6 +96,12 @@ class SponsoredTests(unittest.TestCase):
         rec["title"], rec["speakers"] = "DevOps Jam \u2013 sponsored by LaunchDarkly ", []
         self.assertEqual(by_code(ri.normalize(raw)[0])["GHJ308-S-R"]["vendors"], ["LaunchDarkly"])
 
+    def test_should_take_the_vendor_from_a_title_with_an_em_dash(self):
+        raw = sample()
+        rec = by_code(raw)["GHJ308-S-R"]
+        rec["title"], rec["speakers"] = "Security Jam \u2014 Sponsored by Fortinet", []
+        self.assertEqual(by_code(ri.normalize(raw)[0])["GHJ308-S-R"]["vendors"], ["Fortinet"])
+
     def test_should_keep_a_sponsored_session_whose_speaker_entry_is_garbled(self):
         raw = sample()
         by_code(raw)["DVT212-S"]["speakers"].insert(0, "garbled")
