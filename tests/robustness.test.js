@@ -132,13 +132,15 @@ async function liveCheck(raw) {
   try { await checkLive({ sessions: [] }, ignite); return null; } catch (e) { return e.message; } finally { globalThis.fetch = realFetch; }
 }
 const liveFeed = (every, bad) => Array.from({ length: 100 }, (_, i) => (i % every === 0 ? bad(i) : { sessionId: `s${i}`, title: `T${i}`, sessionCode: `C${i}` }));
-for (const [name, raw, refused] of [
-  ['a fifth of entries null', liveFeed(5, () => null), true],
-  ['a fifth of entries without a session id', liveFeed(5, i => ({ title: `T${i}` })), true],
-  ['one entry in 25 null (4%)', liveFeed(25, () => null), false],
+// [name, feed, verb, expected [refused as malformed, completed without any error]]
+for (const [name, raw, verb, want] of [
+  ['a fifth of entries null', liveFeed(5, () => null), 'refuse', [true, false]],
+  ['a fifth of entries without a session id', liveFeed(5, i => ({ title: `T${i}` })), 'refuse', [true, false]],
+  ['one entry in 25 null (4%)', liveFeed(25, () => null), 'accept', [false, true]],
 ]) {
-  await test(`should ${refused ? 'refuse' : 'accept'} a live catalog with ${name}`, async () => {
-    eq(/malformed/.test(await liveCheck(raw) || ''), refused);
+  await test(`should ${verb} a live catalog with ${name}`, async () => {
+    const err = await liveCheck(raw);
+    eq([/malformed/.test(err || ''), err === null], want);
   });
 }
 
