@@ -3,6 +3,22 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-10-07T18:54:03Z · https://catalog.awsevents.com/api/sessions
+
+Added 1 · removed 0 · changed 7
+
+**Added**
+- `JPN101` Japan Wrap-up Session
+
+**Changed**
+- `BIZ103` How A Customer Met Surge Hiring in Hours, Not Weeks — desc
+- `BIZ107` How EchoStar Turned CX and IT Into One Team to Ship AI Experiences — title: From Pilot to Production in weeks with the Agentic CX Des… → How EchoStar Turned CX and IT Into One Team to Ship AI Ex…; desc
+- `BIZ215` From Pilot to Enterprise Scale with Amazon Quick — desc
+- `COP338` High latency! Is it the code, the container, or the host? — title: Correlate app signals to infra root cause in hybrid envir… → High latency! Is it the code, the container, or the host?
+- `SNR301` A leader's guide to predicting and proving AI value — title: A leader's guide to why your AI economics are wrong → A leader's guide to predicting and proving AI value; desc
+- `SNR306` A leader’s guide to governing AI, on behalf of humans — desc
+- `SNR316` A leader's guide to moving from AI investment gridlock to acceleration — title: …the hardest investment decision in AI → …moving from AI investment gridlock to acceleration; desc
+
 ## 2026-10-07T13:00:04Z · https://catalog.awsevents.com/api/sessions
 
 Added 0 · removed 0 · changed 20
