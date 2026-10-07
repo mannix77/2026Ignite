@@ -54,7 +54,7 @@ The re:Invent catalog syncs itself from the public AWS catalog, but your favorit
 python3 scripts/import_reinvent_favorites.py ~/Downloads/reinvent2026-my-sessions-v2.json
 ```
 
-It writes `data/reinvent2026/favorites.json` (reserved seats → Must, pinned to that run; favorites with seats to reserve or walk-up only → Want; full or waitlisted → Maybe) and `data/reinvent2026/seats.json` (availability, capacity and seats left per session), plus a restorable backup in `~/Downloads`. Nothing personal is published. Sessions that aren't in the public catalog (invitation-only evenings) are skipped and listed.
+It writes `data/reinvent2026/favorites.json` (reserved seats → Must, pinned to that run; favorites with seats to reserve or walk-up only → Want; full or waitlisted → Maybe) and `data/reinvent2026/seats.json` (availability, capacity and seats left per session), plus a restorable backup in `~/Downloads`. The committed files hold your picks, which runs you reserved, and seat counts; your notes are never published. Sessions that aren't in the public catalog (invitation-only evenings) are skipped and listed. An export that is mostly junk, or empty, is refused and the existing files are kept.
 
 ## Updating the Gartner agenda
 

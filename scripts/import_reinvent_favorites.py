@@ -18,6 +18,7 @@ Writes (no personal notes, so the files can be committed):
 import argparse
 import datetime as dt
 import json
+import math
 import os
 import sys
 
@@ -30,11 +31,56 @@ CONFERENCE = "reinvent2026"
 # Tier for a favorite by what the portal says about seats; a reserved seat is always Must.
 TIER = {"reserve_a_seat": 2, "walk_up_only": 2, "session_full": 1, "waitlist": 1}
 AVAILABILITY = set(TIER) | {"reserved"}
+# Guard: an export that is mostly junk, or holds no sessions, must not replace good files.
+MAX_JUNK_SHARE = 0.1
 
 
 def usable_id(v):
     """The export's and the catalog's ids are non-blank strings; anything else is unusable."""
     return v.strip() if isinstance(v, str) and v.strip() else None
+
+
+def flag(v):
+    """A portal flag is a real Boolean (missing counts as False); anything else is junk."""
+    if v is None:
+        return False
+    if isinstance(v, bool):
+        return v
+    raise ValueError("flag")
+
+
+def count(v):
+    """A whole, finite, non-negative seat count; anything else is left out."""
+    if isinstance(v, bool) or not isinstance(v, (int, float)) or not math.isfinite(v) or v < 0 or v != int(v):
+        return None
+    return int(v)
+
+
+def read_session(s):
+    """The usable parts of one exported session, or None for junk."""
+    if not isinstance(s, dict):
+        return None
+    sid = usable_id(s.get("id"))
+    times = s.get("times") if s.get("times") is not None else []
+    if not sid or not isinstance(times, list):
+        return None
+    availability = s.get("availability")
+    if availability is not None and not isinstance(availability, str):
+        return None
+    try:
+        favorite, reserved = flag(s.get("favorite")), flag(s.get("reserved"))
+        slots = [t for t in times if isinstance(t, dict)]
+        for t in slots:
+            flag(t.get("reserved"))
+    except ValueError:
+        return None
+    reserved = reserved or any(t.get("reserved") is True for t in slots)
+    # Seat counts come from the slot the pick stands for: the reserved one, else the first.
+    slot = next((t for t in slots if t.get("reserved") is True), slots[0] if slots else {})
+    return {"id": sid, "code": sync.text(s.get("code")), "favorite": favorite, "reserved": reserved,
+            "availability": availability if availability in AVAILABILITY else None,
+            "few": s.get("few_seats_left") is True,
+            "capacity": count(slot.get("capacity")), "seatsRemaining": count(slot.get("seatsRemaining"))}
 
 
 def favorites(export, catalog, now):
@@ -47,44 +93,50 @@ def favorites(export, catalog, now):
     now_ms = int(now.timestamp() * 1000)
     picks, seats = {}, {}
     skipped = {"unknown": [], "junk": 0, "unmarked": 0}
-    for s in export.get("sessions") or []:
-        if not isinstance(s, dict):
+    for raw in export.get("sessions") or []:
+        s = read_session(raw)
+        if s is None:
             skipped["junk"] += 1
             continue
-        sid = usable_id(s.get("id"))
-        if not sid:
-            skipped["junk"] += 1
-            continue
-        rec = by_id.get(sid)
+        rec = by_id.get(s["id"])
         if rec is None:
-            skipped["unknown"].append(sync.text(s.get("code")) or sid)
+            skipped["unknown"].append(s["code"] or s["id"])
             continue
-        times = [t for t in (s.get("times") or []) if isinstance(t, dict)]
-        reserved = bool(s.get("reserved")) or any(t.get("reserved") is True for t in times)
-        if not reserved and not s.get("favorite"):
+        if not s["reserved"] and not s["favorite"]:
             skipped["unmarked"] += 1
             continue
-        availability = s.get("availability") if s.get("availability") in AVAILABILITY else None
-        if reserved:
-            availability = "reserved"
-        p = 3 if reserved else TIER.get(availability, 2)
-        pick = {"p": p, "lock": rec["inst"] if reserved else None, "note": "", "at": now_ms,
+        availability = "reserved" if s["reserved"] else s["availability"]
+        p = 3 if s["reserved"] else TIER.get(availability, 2)
+        pick = {"p": p, "lock": rec["inst"] if s["reserved"] else None, "note": "", "at": now_ms,
                 "g": rec.get("group") or rec["code"], "code": rec["code"]}
-        if reserved:
+        if s["reserved"]:
             pick["reserved"] = rec["inst"]
-        picks[sid] = pick
-        t = times[0] if times else {}
-        seat = {"availability": availability, "fewSeatsLeft": bool(s.get("few_seats_left"))}
-        for src, dst in (("capacity", "capacity"), ("seatsRemaining", "seatsRemaining")):
-            v = t.get(src)
-            if isinstance(v, (int, float)) and not isinstance(v, bool) and v == int(v) and v >= 0:
-                seat[dst] = int(v)
-        seats[sid] = seat
+        picks[s["id"]] = pick
+        seat = {"availability": availability, "fewSeatsLeft": s["few"]}
+        for k in ("capacity", "seatsRemaining"):
+            if s[k] is not None:
+                seat[k] = s[k]
+        seats[s["id"]] = seat
     return picks, seats, skipped
+
+
+def check_export(export, picks, skipped):
+    """The reason to refuse this export, or None. Fixed thresholds: the data can't lower them."""
+    total = len(export.get("sessions") or [])
+    if total == 0:
+        return "the export holds no sessions; nothing replaced"
+    if skipped["junk"] > MAX_JUNK_SHARE * total:
+        return "%d of %d records are junk (more than %d%%); nothing replaced" % (skipped["junk"], total, round(MAX_JUNK_SHARE * 100))
+    if not picks:
+        return "no favorite or reserved session in the export matches the catalog; nothing replaced"
+    return None
 
 
 def write(args, export, catalog, now):
     picks, seats, skipped = favorites(export, catalog, now)
+    problem = check_export(export, picks, skipped)
+    if problem:
+        raise SystemExit("refusing the export: " + problem)
     exported_at = export.get("exported_at") if isinstance(export.get("exported_at"), str) else None
     version = "%s-%d" % (now.strftime("%Y%m%d"), len(picks))
     data = os.path.abspath(args.data_dir)

@@ -47,6 +47,13 @@ EXPORT = {"exported_at": "2026-10-07T13:53:05.967Z", "sessions": [
     {"id": "  ", "code": "JUNK1", "favorite": True},
     "not a session",
 ]}
+JUNK = [
+    dict(export_session("j1", "JUNK2"), times=7),                                   # times isn't a list
+    dict(export_session("j2", "JUNK3"), availability=["session_full"]),              # availability isn't a string
+    dict(export_session("j3", "JUNK4"), reserved="false"),                            # a string flag
+    dict(export_session("j4", "JUNK5"), favorite="yes"),                              # a string flag
+    {"id": "j5", "code": "JUNK6", "favorite": True, "times": [{"timeId": "x", "reserved": "no"}]},
+]
 
 
 class FavoritesTests(unittest.TestCase):
@@ -88,7 +95,26 @@ class FavoritesTests(unittest.TestCase):
         self.assertEqual(sorted(self.picks), ["c1", "i1", "p1", "s1", "s2", "w1"])
 
     def test_should_publish_no_personal_notes(self):
+        self.assertEqual(len(self.picks), 6)
         self.assertTrue(all(pk["note"] == "" for pk in self.picks.values()))
+
+    def test_should_count_malformed_fields_as_junk_without_aborting(self):
+        catalog = CATALOG + [catalog_rec("JUNK%d" % n, "j%d" % n) for n in range(1, 6)]
+        picks, seats, skipped = rf.favorites({"sessions": JUNK + [export_session("s1", "SVS304-R")]}, catalog, NOW)
+        self.assertEqual((sorted(picks), skipped["junk"]), (["s1"], 5))
+
+    def test_should_leave_out_seat_counts_that_are_not_whole_numbers(self):
+        odd = export_session("s1", "SVS304-R")
+        odd["times"][0].update(capacity=1e309, seatsRemaining=-2)
+        picks, seats, _ = rf.favorites({"sessions": [odd]}, CATALOG, NOW)
+        self.assertEqual((picks["s1"]["p"], seats["s1"]), (2, {"availability": "reserve_a_seat", "fewSeatsLeft": False}))
+
+    def test_should_take_seat_counts_from_the_reserved_slot(self):
+        two = export_session("p1", "PEX403-R1", reserved=True, availability="reserved", capacity=50, remaining=5)
+        two["times"] = [{"timeId": "p1-a", "reserved": False, "capacity": 50, "seatsRemaining": 5},
+                        {"timeId": "p1-b", "reserved": True, "capacity": 120, "seatsRemaining": 0}]
+        picks, seats, _ = rf.favorites({"sessions": [two]}, CATALOG, NOW)
+        self.assertEqual((picks["p1"]["reserved"], seats["p1"]["capacity"], seats["p1"]["seatsRemaining"]), ("p1", 120, 0))
 
 
 class EntryPointTests(unittest.TestCase):
@@ -102,8 +128,11 @@ class EntryPointTests(unittest.TestCase):
         with open(os.path.join(self.data, "sessions.json"), "w", encoding="utf-8") as f:
             json.dump({"generatedAt": "2026-10-07T13:00:04Z", "sessions": CATALOG}, f)
         self.export = os.path.join(self.tmp, "export.json")
+        # The real entry point refuses an export that is mostly junk; keep the two junk records
+        # for the function tests above and give the entry point the clean sessions only.
+        clean = {"exported_at": EXPORT["exported_at"], "sessions": [x for x in EXPORT["sessions"] if isinstance(x, dict) and x.get("id", "").strip()]}
         with open(self.export, "w", encoding="utf-8") as f:
-            json.dump(EXPORT, f)
+            json.dump(clean, f)
         self.backup = os.path.join(self.tmp, "backup")
 
     def run_main(self, *extra):
@@ -127,7 +156,31 @@ class EntryPointTests(unittest.TestCase):
         backup = self.read(self.backup, "reinvent-2026-picks.json")
         self.assertEqual((backup["conference"], backup["exportedAt"], backup["picks"]), ("reinvent2026", "2026-10-07T14:00:00Z", fav["picks"]))
         self.assertEqual(result["skipped"]["unknown"], ["ESES26"])
-        self.assertIn("6 picks (Must 2 incl. 2 reserved, Want 3, Maybe 1); skipped: 1 not in the catalog (ESES26), 1 not favorited, 2 junk", out)
+        self.assertIn("6 picks (Must 2 incl. 2 reserved, Want 3, Maybe 1); skipped: 1 not in the catalog (ESES26), 1 not favorited, 0 junk", out)
+
+    def test_should_refuse_a_mostly_junk_export_and_keep_the_existing_files(self):
+        self.run_main()
+        before = (self.read(self.data, "favorites.json"), self.read(self.data, "seats.json"), self.read(self.backup, "reinvent-2026-picks.json"))
+        with open(self.export, "w", encoding="utf-8") as f:
+            json.dump({"exported_at": "2026-10-08T09:00:00Z", "sessions": [export_session("s1", "SVS304-R")] + ["junk"] * 2}, f)
+        with self.assertRaises(SystemExit) as cm:
+            self.run_main()
+        self.assertIn("2 of 3 records are junk", str(cm.exception))
+        after = (self.read(self.data, "favorites.json"), self.read(self.data, "seats.json"), self.read(self.backup, "reinvent-2026-picks.json"))
+        self.assertEqual(after, before)
+
+    def test_should_accept_junk_just_inside_the_threshold(self):
+        with open(self.export, "w", encoding="utf-8") as f:
+            json.dump({"sessions": [export_session("s1", "SVS304-R")] * 9 + ["junk"]}, f)
+        result, _ = self.run_main()
+        self.assertEqual((result["picks"], result["skipped"]["junk"]), (1, 1))
+
+    def test_should_refuse_an_empty_export(self):
+        with open(self.export, "w", encoding="utf-8") as f:
+            json.dump({"sessions": []}, f)
+        with self.assertRaises(SystemExit):
+            self.run_main()
+        self.assertFalse(os.path.exists(os.path.join(self.data, "favorites.json")))
 
     def test_should_refuse_an_export_of_the_wrong_shape(self):
         with open(self.export, "w", encoding="utf-8") as f:
