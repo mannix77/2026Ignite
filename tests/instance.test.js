@@ -4,12 +4,14 @@
 // fakes the page of Gino's copy before importing anything.
 import { sleep } from './shim.js';
 
+let copyDefault = ''; // the planner-default-conference meta tag the deploy stamps on the copy
 globalThis.document = {
-  querySelector: sel => (sel === 'meta[name="planner-instance"]' ? { content: ' Gino ' } : null),
+  querySelector: sel => (sel === 'meta[name="planner-instance"]' ? { content: ' Gino ' }
+    : sel === 'meta[name="planner-default-conference"]' ? { content: copyDefault } : null),
 };
 const { INSTANCE } = await import('../assets/js/instance.js');
 const store = await import('../assets/js/store.js');
-const { rememberConference } = await import('../assets/js/conferences.js');
+const { rememberConference, currentConferenceId } = await import('../assets/js/conferences.js');
 
 let pass = 0, fail = 0;
 async function test(name, fn) {
@@ -58,6 +60,48 @@ await test("should remember a colleague's conference choice only for that copy",
   rememberConference('gartner2026');
   eq([localStorage.getItem('ignite26.planner.conference'), localStorage.getItem('ignite26.planner.conference@gino')], [null, 'gartner2026']);
 });
+
+// ---- which conference opens: ?conf= in the link, then the saved choice, then the copy's default
+function opens({ link = '', saved = null, pageDefault = '' } = {}) {
+  localStorage.clear();
+  if (saved) rememberConference(saved);
+  location.search = link;
+  copyDefault = pageDefault;
+  return currentConferenceId();
+}
+
+await test('should open the conference named in the link over the saved choice', () => {
+  eq(opens({ link: '?conf=reinvent2026', saved: 'gartner2026' }), 'reinvent2026');
+});
+
+await test('should open the saved choice when the link names no conference', () => {
+  eq(opens({ saved: 'gartner2026', pageDefault: 'reinvent2026' }), 'gartner2026');
+});
+
+await test('should ignore an unknown conference in the link', () => {
+  eq(opens({ link: '?conf=ignite2025', saved: 'gartner2026' }), 'gartner2026');
+});
+
+await test('should ignore a link naming a property every object has', () => {
+  eq(opens({ link: '?conf=toString', saved: 'gartner2026' }), 'gartner2026');
+});
+
+await test("should open the copy's default conference when nothing is saved", () => {
+  eq(opens({ pageDefault: 'gartner2026' }), 'gartner2026');
+});
+
+await test("should open the copy's default when the saved choice no longer exists", () => {
+  eq(opens({ saved: 'ignite2025', pageDefault: 'gartner2026' }), 'gartner2026');
+});
+
+await test('should ignore a saved choice naming a property every object has', () => {
+  eq(opens({ saved: 'constructor', pageDefault: 'gartner2026' }), 'gartner2026');
+});
+
+await test('should open Ignite when the copy has no default and nothing is saved', () => {
+  eq(opens(), 'ignite2026');
+});
+location.search = '';
 
 console.log(`${pass} passed, ${fail} failed`);
 if (fail) process.exit(1);
