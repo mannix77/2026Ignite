@@ -75,6 +75,17 @@ await test('should keep the rest of the change tracking when one entry has no ru
   eq(loadSaved('mixed-known', { v: 1, picks: {}, known: { S1: { g: 'G', code: 'BRK1' }, S2: kept } }).known, { S2: kept });
 });
 
+// ---- saved state that is damaged must not lock the user out or vanish
+await test('should start normally when the saved display settings are null', () => {
+  eq(loadSaved('ui-null', { v: 1, picks: {}, ui: null }).ui.tab, 'browse');
+});
+
+await test('should keep a copy of saved data it cannot read', () => {
+  localStorage.setItem('ignite26.planner.v1:corrupt-json', '{"v":1,"picks":{"S1":');
+  store.load('corrupt-json');
+  eq([localStorage.getItem('ignite26.planner.v1:corrupt-json#unreadable'), store.get().picks], ['{"v":1,"picks":{"S1":', {}]);
+});
+
 // ---- a change is saved even when you leave straight away (specs/features/saving.feature)
 const saved = ns => JSON.parse(localStorage.getItem(`ignite26.planner.v1:${ns}`) || '{"picks":{}}').picks;
 
@@ -157,6 +168,55 @@ await test('should add an undated backup pick for a session not in the plan', as
   store.load('merge-undated-new');
   store.importData({ app: BACKUP, picks: { ICE: { p: 2 } } });
   eq(store.pick('ICE')?.p, 2);
+});
+await sleep(SAVE);
+
+const damaged = '{"v":1,"picks":{"S1":' + 'x'.repeat(5000); // unreadable, and too big to copy under the quota below
+await test('should not overwrite unreadable data it could not copy', async () => {
+  localStorage.setItem('ignite26.planner.v1:uncopyable', damaged);
+  globalThis.__quota = 2000;
+  store.load('uncopyable');
+  store.mutatePicks(p => { p.S1 = { p: 3, lock: null, note: '', at: 1 }; });
+  await sleep(SAVE);
+  globalThis.__quota = null;
+  eq(localStorage.getItem('ignite26.planner.v1:uncopyable'), damaged);
+});
+
+await test('should copy unreadable data first, then save, once storage allows it', async () => {
+  localStorage.setItem('ignite26.planner.v1:copy-later', damaged);
+  globalThis.__quota = 2000;
+  store.load('copy-later');
+  globalThis.__quota = null;
+  store.mutatePicks(p => { p.S1 = { p: 3, lock: null, note: '', at: 1 }; });
+  await sleep(SAVE);
+  eq([localStorage.getItem('ignite26.planner.v1:copy-later#unreadable') === damaged, store.get().picks.S1?.p,
+    JSON.parse(localStorage.getItem('ignite26.planner.v1:copy-later')).picks.S1?.p], [true, 3, 3]);
+});
+
+await test('should restore "preferences never set" when replacing from such a backup', () => {
+  store.load('profile-replace-null');
+  store.updateProfile({ roles: ['architect'] });
+  store.importData({ app: BACKUP, picks: {}, profile: null }, { replace: true });
+  eq(store.get().profile, null);
+});
+
+await test('should refuse a backup whose picks are a list', () => {
+  store.load('restore-list');
+  eq(/backup/i.test(throws(() => store.importData({ app: BACKUP, picks: [{ p: 3 }, { p: 2 }] }))), true);
+});
+
+await test('should report how many picks a merge actually applied', () => {
+  store.load('restore-count');
+  store.mutatePicks(p => { p.A = { p: 3, lock: null, note: '', at: Date.now() }; });
+  eq(store.importData({ app: BACKUP, picks: { A: { p: 1, at: 1 }, B: { p: 2, at: 1 } } }), 1); // A is newer here
+});
+
+await test('should leave preferences unset on a fresh device restored from a backup that never set them', () => {
+  store.load('profile-unset-from');
+  const backup = store.exportData();
+  store.load('profile-unset-to');
+  store.importData(backup, { replace: true });
+  eq(store.seedProfile({ profile: { roles: ['architect'] } }), true);
 });
 await sleep(SAVE);
 

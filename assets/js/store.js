@@ -67,22 +67,31 @@ export function configure({ defaults = {}, buildingIds = [] } = {}) {
 }
 
 // `namespace` keeps each conference (and test data) in its own storage.
+// Saved text that couldn't be read and couldn't yet be copied aside: it must not be
+// overwritten until the copy succeeds (writeNow retries it before every save).
+let unreadable = null;
+
 export function load(namespace = '') {
   KEY = namespace ? `${BASE_KEY}:${namespace}` : BASE_KEY;
   state = blank();
+  unreadable = null;
   try {
     const raw = localStorage.getItem(KEY);
     if (raw) {
       const saved = JSON.parse(raw);
       delete saved.settings; // pre-release format stored every default
       state = merge(blank(), saved);
+      if (!state.ui || typeof state.ui !== 'object' || Array.isArray(state.ui)) state.ui = blank().ui; // startup reads ui.*
       state.known = sanitizeKnown(state.known); // also drops pre-release entries, which had no run id
       state.picks = sanitizePicks(state.picks);
       state.prefs = sanitizePrefs(state.prefs);
       state.profile = saved.profile ? sanitizeProfile(saved.profile) : null;
     }
   } catch (e) {
-    console.warn('Could not read saved state', e);
+    // Unreadable (truncated or corrupt): keep a copy before the next save replaces it.
+    console.warn('Could not read saved state; a copy is kept under', `${KEY}#unreadable`, e);
+    let raw = null;
+    try { raw = localStorage.getItem(KEY); if (raw) localStorage.setItem(`${KEY}#unreadable`, raw); } catch { unreadable = raw; }
   }
   cachedSettings = null;
   return state;
@@ -99,6 +108,7 @@ function writeNow() {
   clearTimeout(saveTimer);
   saveTimer = null;
   try {
+    if (unreadable != null) { localStorage.setItem(`${KEY}#unreadable`, unreadable); unreadable = null; } // copy first, or don't save
     localStorage.setItem(KEY, JSON.stringify(state));
     if (saveFailed) { saveFailed = false; for (const fn of listeners) fn('save-ok'); }
   } catch (e) {
@@ -327,23 +337,26 @@ function sanitizePrefs(src) {
 // ---- moving picks between devices
 
 export function exportData() {
-  return { app: 'ignite26-planner', v: 1, conference: namespace() || 'ignite2026', exportedAt: new Date().toISOString(), picks: state.picks, settings: state.prefs, profile: profile() };
+  return { app: 'ignite26-planner', v: 1, conference: namespace() || 'ignite2026', exportedAt: new Date().toISOString(), picks: state.picks, settings: state.prefs, profile: state.profile }; // null: never set
 }
 
 export function importData(obj, { replace = false } = {}) {
-  if (!obj || obj.app !== 'ignite26-planner' || !obj.picks || typeof obj.picks !== 'object') throw new Error('Not an Ignite planner backup file');
+  if (!obj || obj.app !== 'ignite26-planner' || !obj.picks || typeof obj.picks !== 'object' || Array.isArray(obj.picks)) throw new Error('Not an Ignite planner backup file');
   const incoming = sanitizePicks(obj.picks, 0); // undated backup picks are older than anything here
   // Checked before anything changes: a backup from another format must not empty the plan.
   if (Object.keys(obj.picks).length && !Object.keys(incoming).length) throw new Error('This backup has no picks this planner can read; nothing was changed');
   if (replace) state.picks = {};
+  let applied = 0;
   for (const [id, p] of Object.entries(incoming)) {
     const cur = state.picks[id];
-    if (!cur || p.at > (cur.at || 0)) state.picks[id] = { ...p, note: p.note || cur?.note || '' };
+    if (!cur || p.at > (cur.at || 0)) { state.picks[id] = { ...p, note: p.note || cur?.note || '' }; applied++; }
   }
   if (obj.settings && replace) { state.prefs = sanitizePrefs(obj.settings); cachedSettings = null; }
-  if (obj.profile && (replace || !state.profile)) state.profile = sanitizeProfile(obj.profile);
+  // Replacing restores the backup's preferences, including "never set" (null); merging only fills in.
+  if (replace && 'profile' in obj) state.profile = obj.profile ? sanitizeProfile(obj.profile) : null;
+  else if (obj.profile && !state.profile) state.profile = sanitizeProfile(obj.profile);
   emit(replace ? 'reset' : 'picks');
-  return Object.keys(incoming).length;
+  return applied;
 }
 
 // Compact share token per pick: CODE.p[sSCORE][w][!LOCKCODE | *LOCKCODE]
