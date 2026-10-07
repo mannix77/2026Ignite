@@ -165,8 +165,10 @@ const MAIN = 'https://example.github.io/2026Ignite/';
 
 await test('should list every app file for offline use, and only files that exist', () => {
   const { SHELL } = worker(MAIN).consts;
-  const onDisk = ['index.html', 'manifest.webmanifest', ...['assets/css', 'assets/js', 'assets/icons']
-    .flatMap(d => fs.readdirSync(path.join(ROOT, d)).map(f => `${d}/${f}`))].sort();
+  const onDisk = [
+    ...['index.html', 'manifest.webmanifest'].filter(f => fs.existsSync(path.join(ROOT, f))),
+    ...['assets/css', 'assets/js', 'assets/icons'].flatMap(d => fs.readdirSync(path.join(ROOT, d)).map(f => `${d}/${f}`)),
+  ].sort();
   eq(SHELL.filter(p => p !== './').sort(), onDisk);
 });
 
