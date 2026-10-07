@@ -128,5 +128,50 @@ await test('should keep quick-start preferences when the plan is reset', async (
   eq(store.profile().roles, ['architect']);
 });
 
+// ---- share links: "Ratings and locks for sessions you've already rated will be replaced;
+// notes and reserved seats are kept." (app.js importShare)
+const same = x => x; // these tests use session codes as ids and run keys
+function share(picks) {
+  store.load('share-from');
+  store.mutatePicks(p => Object.assign(p, picks));
+  return store.shareString(same, same);
+}
+function receive(link, local = {}) {
+  store.load('share-to');
+  store.mutatePicks(p => { for (const k of Object.keys(p)) delete p[k]; Object.assign(p, local); });
+  store.applyShared(store.parseShare(link, same, same));
+  return store.get().picks;
+}
+
+await test('should carry ratings, scores, watch choices and locks through a share link', async () => {
+  const got = receive(share({
+    BRK1: { p: 3, lock: 'BRK1', note: '', at: 1 },
+    BRK2: { p: 2, score: 72.5, mode: 'watch', lock: null, note: '', at: 1 },
+    BRK3: { p: 1, lock: 'BRK3-R1', lockMode: 'preview', note: '', at: 1 },
+  }));
+  eq([got.BRK1.p, got.BRK1.lock, got.BRK2.score, got.BRK2.mode, got.BRK3.lock, got.BRK3.lockMode],
+    [3, 'BRK1', 72.5, 'watch', 'BRK3-R1', 'preview']);
+});
+
+await test('should keep my note when a share link rates the same session', async () => {
+  const got = receive('BRK1.3', { BRK1: { p: 1, lock: null, note: 'ask about pricing', at: 1 } });
+  eq([got.BRK1.p, got.BRK1.note], [3, 'ask about pricing']);
+});
+
+await test('should keep my reserved seat when a share link locks another run', async () => {
+  const got = receive('BRK1.3!BRK1-R1', { BRK1: { p: 2, lock: 'BRK1', reserved: 'BRK1', note: '', at: 1 } });
+  eq([got.BRK1.reserved, got.BRK1.lock], ['BRK1', 'BRK1']);
+});
+
+await test('should replace my rating and score when a share link rates the same session', async () => {
+  const got = receive('BRK1.0s10', { BRK1: { p: 3, score: 95, lock: null, note: '', at: 1 } });
+  eq([got.BRK1.p, got.BRK1.score], [0, 10]);
+});
+
+await test('should ignore share-link tokens it cannot read', async () => {
+  eq(Object.keys(store.parseShare('BRK1.3~BRK2.9~not a token~~BRK3.2x', same, same)), ['BRK1']);
+});
+await sleep(SAVE);
+
 console.log(`${pass} passed, ${fail} failed`);
 if (fail) process.exit(1);
