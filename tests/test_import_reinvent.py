@@ -232,6 +232,10 @@ class FetchTests(unittest.TestCase):
         self.pages[1]["items"] = [None, "junk"] + self.pages[1]["items"]
         self.assertEqual(codes(ri.fetch_catalog(self.post)), ["DVT212-S", "ANT319-R", "ANT203-S"])
 
+    def test_should_skip_a_page_item_with_an_unusable_session_id(self):
+        self.pages[1]["items"] = [{"sessionID": ["x"], "code": "BAD1"}] + self.pages[1]["items"]
+        self.assertEqual(codes(ri.fetch_catalog(self.post)), ["DVT212-S", "ANT319-R", "ANT203-S"])
+
     def test_should_collect_items_from_the_first_and_later_page_shapes(self):
         self.assertEqual(codes(ri.fetch_catalog(self.post)), ["DVT212-S", "ANT319-R", "ANT203-S"])
 
@@ -339,6 +343,16 @@ class MalformedRecordTests(ImportDir, unittest.TestCase):
         raw = sample()
         del raw[0]["sessionID"]
         self.assertEqual(ri.normalize([None, "junk"] + raw)[1]["malformed"], 3)
+
+    def test_should_count_blank_or_non_text_session_ids_as_malformed(self):
+        raw = sample()[:3]
+        raw[0]["sessionID"], raw[1]["sessionID"], raw[2]["sessionID"] = "   ", ["x"], {"id": 1}
+        self.assertEqual(ri.normalize(raw)[1]["malformed"], 3)
+
+    def test_should_use_the_trimmed_session_id(self):
+        raw = sample()[:1]
+        raw[0]["sessionID"] = "  %s\n" % raw[0]["sessionID"]
+        self.assertEqual(ri.normalize(raw)[0][0]["id"], raw[0]["sessionID"].strip())
 
     def test_should_keep_a_session_whose_speaker_entry_is_garbled(self):
         raw = sample()

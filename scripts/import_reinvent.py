@@ -105,6 +105,11 @@ def page_items(page):
     return sections[0].get("items") or []
 
 
+def session_id(v):
+    """A usable session id: non-blank text, trimmed; anything else (blank, a list, an object) is None."""
+    return v.strip() or None if isinstance(v, str) else None
+
+
 def slim(r):
     """Raw API record (~10 KB) -> the snapshot shape (one run, its facets, speakers and slot)."""
     attrs = {}
@@ -115,7 +120,7 @@ def slim(r):
         if k and k not in SKIP_ATTRS:
             attrs.setdefault(k, []).append(a.get("value"))
     return {
-        "sessionID": r.get("sessionID"),
+        "sessionID": session_id(r.get("sessionID")),
         "code": r.get("code"),
         "title": r.get("title"),
         "abstract": r.get("abstract"),
@@ -190,7 +195,8 @@ def normalize(raw):
     out = []
     dropped = {"test": 0, "notAccepted": 0, "unpublished": 0, "malformed": 0}
     for r in raw:
-        if not isinstance(r, dict) or not r.get("sessionID"):
+        sid = session_id(r.get("sessionID")) if isinstance(r, dict) else None
+        if not sid:
             dropped["malformed"] += 1
             continue
         if r.get("testRecord"):
@@ -218,8 +224,8 @@ def normalize(raw):
         if end and start:
             dur = int((end - start).total_seconds() // 60)
         out.append({
-            "id": r["sessionID"],
-            "inst": r["sessionID"],
+            "id": sid,
+            "inst": sid,
             "code": code,
             "title": title,
             "desc": sync.text(r.get("abstract")),
