@@ -8,7 +8,7 @@ import { localParts, fromISO, parseSlot, fmtTime, fmtDay, addDays } from '../ass
 import { createVenue } from '../assets/js/venue.js';
 import { CONFERENCES, LAS_VEGAS_DEF, SWAN_DOLPHIN_DEF } from '../assets/js/conferences.js';
 import { parseShare } from '../assets/js/store.js';
-import { arrivalExtra, lunchConfig } from '../assets/js/planner.js';
+import { arrivalExtra, lunchConfig, compareOptions } from '../assets/js/planner.js';
 
 const log = typeof print === 'function' && typeof window === 'undefined' ? print : console.log;
 let pass = 0, fail = 0;
@@ -394,6 +394,19 @@ test('blocked time is a chain item with a real location', () => {
   const during = item(H(12), H(12.75), W2);
   eq(decisionGroups([blk, during]).length, 0, 'blocks are not decisions');
   eq(optimize([blk, during]).dropped[0].reason.kind, 'block');
+});
+
+// --- where you are now ("I'm at…" or GPS) and comparing the options of a clash
+test("leave-by counts from where you are, not from your last session's room", () => {
+  const done = item(H(9), H(10), S1), next = item(H(11), H(12), W3);
+  const here = { ...parseLocation('Moscone West, Level 2'), live: true };
+  const r = nowNext([done, next], H(10.5), DEFAULT_PLANNER, here);
+  eq([r.from.key, r.leaveBy], ['origin', H(11) - walkMinutes(here, W3) - DEFAULT_PLANNER.buffer]);
+});
+test('choosing the other side of a clash with a locked session is possible: the lock gives way', () => {
+  const locked = item(H(9), H(10), W2, { priority: 3, locked: true }), other = item(H(9.5), H(10.5), S1, { priority: 2 });
+  const { outcomes } = compareOptions([locked, other], [locked, other]);
+  eq([outcomes.get(other.key).feasible, outcomes.get(locked.key).feasible], [true, true]);
 });
 
 // --- lunch: a slot in a gap, never a place
