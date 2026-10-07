@@ -143,7 +143,8 @@ await test('should refuse a live catalog whose entries are largely malformed', a
 const fs = await import('node:fs');
 const vm = await import('node:vm');
 const path = await import('node:path');
-const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+const { fileURLToPath } = await import('node:url');
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'); // decodes %20 etc. in the checkout path
 const SW_SOURCE = fs.readFileSync(path.join(ROOT, 'sw.js'), 'utf8');
 
 // Loads sw.js as the worker for `scope`, with the named caches already present.
