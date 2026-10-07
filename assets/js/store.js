@@ -158,15 +158,16 @@ export function setGroupNote(ids, holder, note, meta = {}) {
   emit('note');
 }
 
+// Settings are cleaned as they are saved, exactly as a reload would clean them.
 export function updateSettings(patch) {
-  state.prefs = merge(state.prefs || {}, clone(patch));
+  state.prefs = sanitizePrefs(merge(state.prefs || {}, clone(patch)));
   cachedSettings = null;
   emit('settings');
 }
 
 // Replace one top-level setting outright (lists/objects where merging would keep stale keys).
 export function setSetting(key, value) {
-  state.prefs = { ...(state.prefs || {}), [key]: clone(value) };
+  state.prefs = sanitizePrefs({ ...(state.prefs || {}), [key]: clone(value) });
   cachedSettings = null;
   emit('settings');
 }
@@ -251,25 +252,27 @@ function sanitizeKnown(known) {
 }
 
 const num = (v, lo, hi) => (Number.isFinite(v) && v >= lo && v <= hi ? v : undefined);
+// Tuning numbers are held at the nearest limit, so the value shown is the value kept.
+const clamp = (v, lo, hi) => (Number.isFinite(v) ? Math.min(hi, Math.max(lo, v)) : undefined);
 function sanitizePrefs(src) {
   const d = DEFAULT_SETTINGS;
   const out = {};
   if (!src || typeof src !== 'object') return out;
-  for (const k of ['buffer', 'tolerance', 'keynoteExtra']) if (num(src[k], 0, 240) !== undefined) out[k] = src[k];
+  for (const k of ['buffer', 'tolerance', 'keynoteExtra']) if (clamp(src[k], 0, 240) !== undefined) out[k] = clamp(src[k], 0, 240);
   if (src.walk && typeof src.walk === 'object') {
     out.walk = {};
-    for (const k of ['sameRoom', 'sameFloor', 'diffFloor', 'unknown']) if (num(src.walk[k], 0, 240) !== undefined) out.walk[k] = src.walk[k];
+    for (const k of ['sameRoom', 'sameFloor', 'diffFloor', 'unknown']) if (clamp(src.walk[k], 0, 240) !== undefined) out.walk[k] = clamp(src.walk[k], 0, 240);
     if (src.walk.pairs && typeof src.walk.pairs === 'object') {
       out.walk.pairs = {};
       for (const [k, v] of Object.entries(src.walk.pairs)) {
         const [a, b] = k.split('|');
-        if (validBuilding(a) && validBuilding(b) && num(v, 0, 240) !== undefined) out.walk.pairs[k] = v;
+        if (validBuilding(a) && validBuilding(b) && clamp(v, 0, 240) !== undefined) out.walk.pairs[k] = clamp(v, 0, 240);
       }
     }
   }
   if (src.weights && typeof src.weights === 'object') {
     out.weights = {};
-    for (const k of Object.keys(d.weights)) if (num(src.weights[k], 0, 5000) !== undefined) out.weights[k] = src.weights[k];
+    for (const k of Object.keys(d.weights)) if (clamp(src.weights[k], 0, 5000) !== undefined) out.weights[k] = clamp(src.weights[k], 0, 5000);
   }
   if (src.overrides && typeof src.overrides === 'object') {
     out.overrides = {};
@@ -282,7 +285,8 @@ function sanitizePrefs(src) {
     const l = src.lunch;
     const lunch = {};
     if (typeof l.on === 'boolean') lunch.on = l.on;
-    for (const [k, lo, hi] of [['from', 0, 1440], ['to', 0, 1440], ['length', 5, 240], ['weight', 0, 5000]]) if (num(l[k], lo, hi) !== undefined) lunch[k] = l[k];
+    for (const [k, lo, hi] of [['from', 0, 1440], ['to', 0, 1440]]) if (num(l[k], lo, hi) !== undefined) lunch[k] = l[k];
+    for (const [k, lo, hi] of [['length', 5, 240], ['weight', 0, 5000]]) if (clamp(l[k], lo, hi) !== undefined) lunch[k] = clamp(l[k], lo, hi);
     if (Object.keys(lunch).length) out.lunch = lunch;
   }
   if (Array.isArray(src.blocks)) {
