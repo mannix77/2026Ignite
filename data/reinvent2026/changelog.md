@@ -3,6 +3,26 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-10-07T07:01:39Z · https://catalog.awsevents.com/api/sessions
+
+Added 4 · removed 0 · changed 8
+
+**Added**
+- `IND3336` How Hyundai Is Transforming Customer and Vehicle Experiences on AWS
+- `COM347` Beyond Prompts: Crafting Production GenAI from Scratch
+- `IND3339` Agentic advertising with privacy-enhanced data collaboration
+- `ANT427` Design an open, cost-effective and high-performant lakehouse with Apache Iceberg on
+
+**Changed**
+- `AIM457-S` From reactive operations to autonomous resilience: How Agentic AI is redefining SRE — title: How AI Is Transforming Enterprise Application Support (sp… → From reactive operations to autonomous resilience: How Ag…; desc
+- `ANT349` Cost-effective serverless data integrations and workflows for AI-ready data — code: ANT421 → ANT349
+- `HMC307` Scaling interactive generative AI at Netflix with AWS Local Zones — title: …GenerativeAI at Netflix with AWS Local Zones → …generative AI at Netflix with AWS Local Zones; desc
+- `SEC106-S` AI Under Fire: How to Stop AI-Powered Attacks and Secure AI Coding (sponsored by Palo Alto Networks) — title: …Coding → …Coding (sponsored by Palo Alto Networks)
+- `SEC232-S` Build Secure AI Agents on AWS: XAA, Bedrock AgentCore and the AI Blueprint (sponsored by Okta) — title: …Blueprint → …Blueprint (sponsored by Okta); desc
+- `SEC309-R` Network firewall deployment without the guesswork: codify, deploy, done — code: SEC309 → SEC309-R
+- `SEC3305` Faster root cause analysis for IAM access denied errors — code: SEC423-R → SEC3305
+- `SEC3306` Fix a Security Hub finding once with four layers of controls — code: SEC428 → SEC3306
+
 ## 2026-10-07T01:20:33Z · https://catalog.awsevents.com/api/sessions
 
 Added 0 · removed 2 · changed 103
