@@ -155,7 +155,8 @@ class FavoritesTests(unittest.TestCase):
 
     def test_should_keep_personal_notes_in_the_local_backup(self):
         _, backup = self.written()
-        self.assertIn("ask about our renewal", next(iter(backup["picks"].values()))["note"])
+        note = next(iter(backup["picks"].values()))["note"]
+        self.assertEqual(note.split("\n")[1:], ["Note: ask about our renewal", "Why it matters: budget cycle"])
 
 
 if __name__ == "__main__":
