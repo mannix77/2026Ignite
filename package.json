@@ -4,6 +4,6 @@
   "type": "module",
   "description": "No build step and no dependencies. package.json only marks the JS files as ES modules so the tests also run under Node.",
   "scripts": {
-    "test": "node tests/planner.test.js && node tests/robustness.test.js && node tests/profile.test.js && node tests/catalog.test.js && node tests/store.test.js && python3 -m unittest discover -s tests"
+    "test": "node tests/planner.test.js && node tests/robustness.test.js && node tests/profile.test.js && node tests/catalog.test.js && node tests/store.test.js && node tests/instance.test.js && python3 -m unittest discover -s tests"
   }
 }
