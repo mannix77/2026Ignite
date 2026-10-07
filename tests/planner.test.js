@@ -443,7 +443,8 @@ test('a lunch longer than its window plans no lunch', () => {
   eq(lunchConfig({ ...LUNCH, length: 180 }), null);
 });
 test('lunch settings saved as text still plan a lunch', () => {
-  eq(lunchConfig({ on: true, from: '690', to: '810', length: '30', weight: '40' }), { from: 690, to: 810, length: 30, weight: 40 });
+  const fromText = lunchConfig({ on: true, from: '690', to: '810', length: '30', weight: '40' });
+  eq(optimize([item(H(9), H(10), W2)], DEFAULT_PLANNER, fromText).lunch[D], { start: H(11.5), end: H(12) });
 });
 test('lunch does not multiply the repeat-run search (review e5)', () => {
   const A = item(H(9), H(10), W2, { id: 'A', code: 'A', day: '2026-11-17' });
