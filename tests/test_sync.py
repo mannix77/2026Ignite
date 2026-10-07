@@ -143,6 +143,9 @@ class ParityTests(unittest.TestCase):
     def test_parity_edge_cases(self):
         self.check("raw_edge_cases.json", None, W26)
 
+    def test_should_agree_with_the_browser_at_the_event_window_bounds(self):
+        self.check("raw_window_bounds.json", None, W25)
+
 
 class EdgeCaseTests(unittest.TestCase):
     def setUp(self):
@@ -205,6 +208,30 @@ class EdgeCaseTests(unittest.TestCase):
         runs = [r for r in self.recs if r["id"] == "e6"]
         self.assertEqual(len(runs), 2)
         self.assertEqual({r["group"] for r in runs}, {"BRK806"})
+
+
+class EventWindowBoundsTests(unittest.TestCase):
+    """Times count from midnight UTC the day before the event until midnight UTC two days
+    after its last day; anything outside is a placeholder schedule (a draft)."""
+
+    def start_of(self, code):
+        recs, _, _ = sync.normalize(load("raw_window_bounds.json"), [], W25)
+        return by_code(recs)[code]["start"]
+
+    def test_should_treat_a_session_just_before_the_pre_day_as_a_draft(self):
+        self.assertIsNone(self.start_of("WIN100"))
+
+    def test_should_keep_a_session_at_the_first_instant_of_the_pre_day(self):
+        self.assertEqual(self.start_of("WIN101"), "2025-11-17T00:00:00Z")
+
+    def test_should_keep_a_session_at_4pm_pacific_on_the_last_day(self):
+        self.assertEqual(self.start_of("WIN102"), "2025-11-22T00:00:00Z")
+
+    def test_should_keep_a_session_late_on_the_spare_day(self):
+        self.assertEqual(self.start_of("WIN103"), "2025-11-22T23:59:00Z")
+
+    def test_should_treat_a_session_at_the_end_of_the_spare_day_as_a_draft(self):
+        self.assertIsNone(self.start_of("WIN104"))
 
 
 class DiffTests(unittest.TestCase):
