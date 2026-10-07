@@ -272,7 +272,9 @@ class InstanceConferenceTests(unittest.TestCase):
         self.assertNotEqual(self.check("las-vegas"), 0)
 
 
-class RunTests(unittest.TestCase):
+class SyncDir:
+    """A temporary data directory to run the sync into."""
+
     def setUp(self):
         self.tmp = tempfile.mkdtemp()
         self.addCleanup(shutil.rmtree, self.tmp)
@@ -295,6 +297,8 @@ class RunTests(unittest.TestCase):
         with open(os.path.join(self.tmp, "data", name), encoding="utf-8") as f:
             return json.load(f)
 
+
+class RunTests(SyncDir, unittest.TestCase):
     def test_baseline_then_publication_then_moves(self):
         published = load("raw_2025_sample.json")
         unpublished = copy.deepcopy(published)
@@ -343,7 +347,7 @@ class RunTests(unittest.TestCase):
         self.assertEqual((code, changed), (0, False))
         self.assertEqual(os.path.getmtime(os.path.join(self.tmp, "data", "sessions.json")), before)
 
-    def test_partial_catalog_keeps_last_good_data(self):
+    def test_should_refuse_a_catalog_of_under_50_sessions(self):
         raw = load("raw_2025_sample.json")
         self.run_sync(raw)
         code, changed = self.run_sync(raw[:20])
@@ -419,6 +423,30 @@ class RunTests(unittest.TestCase):
         _, changed = self.run_sync(raw, W26, on)
         self.assertTrue(changed)
         self.assertIn("switched on session times", self.data("changes.json")["batches"][0]["milestones"][0])
+
+
+def catalog_of(n):
+    """n distinct published sessions in the Ignite feed format, from one sample record."""
+    base = {k: v for k, v in load("raw_2025_sample.json")[0].items() if k not in ("repeatedSessions", "relatedSessionCodes")}
+    return [dict(base, sessionId="s%03d" % i, sessionInstanceId="s%03d" % i, sessionCode="BRK%03d" % i)
+            for i in range(n)]
+
+
+class PartialCatalogTests(SyncDir, unittest.TestCase):
+    """A refresh above the 50-session floor that still loses over 40% of the catalog."""
+
+    def test_should_refuse_a_refresh_that_keeps_under_60_percent(self):
+        self.run_sync(catalog_of(200))
+        self.assertEqual(self.run_sync(catalog_of(119)), (3, False))
+
+    def test_should_keep_last_good_data_when_a_partial_refresh_is_refused(self):
+        self.run_sync(catalog_of(200))
+        self.run_sync(catalog_of(110))
+        self.assertEqual(len(self.data("sessions.json")["sessions"]), 200)
+
+    def test_should_accept_a_refresh_that_keeps_60_percent(self):
+        self.run_sync(catalog_of(200))
+        self.assertEqual(self.run_sync(catalog_of(120))[0], 0)
 
 
 class EventWindowTests(unittest.TestCase):
