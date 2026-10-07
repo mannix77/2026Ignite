@@ -119,7 +119,11 @@ jobs:
 
       - name: Stamp the app version for offline caching
         run: |
-          v=$(cat index.html manifest.webmanifest assets/css/*.css assets/js/*.js assets/icons/* | sha256sum | cut -c1-12)
+          # Colleague copies (instances/<name>/) are stamped from these files below, so their own
+          # files count too: a change only to instances/gino/conference must still update Gino's copy.
+          v=$({ cat index.html manifest.webmanifest assets/css/*.css assets/js/*.js assets/icons/*
+                [ -d instances ] && find instances -type f -print0 | LC_ALL=C sort -z | xargs -0 -r sha256sum  # one "hash  path" line per file
+              } | sha256sum | cut -c1-12)
           sed -i "s/const VERSION = 'ignite26-dev';/const VERSION = 'ignite26-$v';/" sw.js
           grep -q "ignite26-$v" sw.js
 
