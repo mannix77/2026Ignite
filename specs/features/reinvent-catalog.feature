@@ -54,6 +54,19 @@ Feature: Importing the re:Invent session catalog
       When a refresh returns every session but none of their times
       Then the saved catalog shows no session times
 
+  Rule: A broken record is skipped, never fatal
+
+    Example: The one with an empty record in the feed
+      Given the catalog feed holds an empty record among 21 sessions
+      When the catalog is imported
+      Then the 21 sessions are imported
+      And the empty record is counted as malformed
+
+    Example: The one with a garbled speaker entry
+      Given the Iceberg analytics talk lists a garbled speaker entry
+      When the catalog is imported
+      Then the talk is imported with its other speakers
+
   Rule: Every change between imports is logged
 
     Example: The one where a session moves room

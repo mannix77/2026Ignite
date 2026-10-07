@@ -210,7 +210,7 @@ class ExclusionTests(unittest.TestCase):
         raw[0]["testRecord"] = True
         raw[1]["status"] = "Cancelled"
         raw[2]["published"] = 0
-        self.assertEqual(ri.normalize(raw)[1], {"test": 1, "notAccepted": 1, "unpublished": 1})
+        self.assertEqual(ri.normalize(raw)[1], {"test": 1, "notAccepted": 1, "unpublished": 1, "malformed": 0})
 
 
 class FetchTests(unittest.TestCase):
@@ -227,6 +227,14 @@ class FetchTests(unittest.TestCase):
     def test_should_page_in_steps_of_fifty_until_an_empty_page(self):
         ri.fetch_catalog(self.post)
         self.assertEqual(self.calls, [0, 50, 100])
+
+    def test_should_skip_a_page_item_that_is_not_a_session(self):
+        self.pages[1]["items"] = [None, "junk"] + self.pages[1]["items"]
+        self.assertEqual(codes(ri.fetch_catalog(self.post)), ["DVT212-S", "ANT319-R", "ANT203-S"])
+
+    def test_should_skip_a_page_item_with_an_unusable_session_id(self):
+        self.pages[1]["items"] = [{"sessionID": ["x"], "code": "BAD1"}] + self.pages[1]["items"]
+        self.assertEqual(codes(ri.fetch_catalog(self.post)), ["DVT212-S", "ANT319-R", "ANT203-S"])
 
     def test_should_collect_items_from_the_first_and_later_page_shapes(self):
         self.assertEqual(codes(ri.fetch_catalog(self.post)), ["DVT212-S", "ANT319-R", "ANT203-S"])
@@ -318,6 +326,47 @@ class ImportRunTests(ImportDir, unittest.TestCase):
         self.write_snapshot(sample())
         self.run_import()
         self.assertIsNotNone(by_code(self.data("sessions.json")["sessions"])["ANT319-R"]["firstSeen"])
+
+
+class MalformedRecordTests(ImportDir, unittest.TestCase):
+    """One broken entry in the AWS feed must not fail every later import."""
+
+    def test_should_import_every_session_when_the_feed_holds_an_empty_record(self):
+        self.assertEqual(len(ri.normalize([None] + sample())[0]), len(ri.normalize(sample())[0]))
+
+    def test_should_skip_a_record_without_a_session_id(self):
+        raw = sample()
+        del raw[0]["sessionID"]
+        self.assertNotIn(raw[0]["code"], by_code(ri.normalize(raw)[0]))
+
+    def test_should_count_skipped_records_as_malformed(self):
+        raw = sample()
+        del raw[0]["sessionID"]
+        self.assertEqual(ri.normalize([None, "junk"] + raw)[1]["malformed"], 3)
+
+    def test_should_count_blank_or_non_text_session_ids_as_malformed(self):
+        raw = sample()[:3]
+        raw[0]["sessionID"], raw[1]["sessionID"], raw[2]["sessionID"] = "   ", ["x"], {"id": 1}
+        self.assertEqual(ri.normalize(raw)[1]["malformed"], 3)
+
+    def test_should_use_the_trimmed_session_id(self):
+        raw = sample()[:1]
+        raw[0]["sessionID"] = "  %s\n" % raw[0]["sessionID"]
+        self.assertEqual(ri.normalize(raw)[0][0]["id"], raw[0]["sessionID"].strip())
+
+    def test_should_keep_a_session_whose_speaker_entry_is_garbled(self):
+        raw = sample()
+        raw[0]["speakers"] = ["garbled", None] + raw[0]["speakers"]
+        self.assertEqual(by_code(ri.normalize(raw)[0])[raw[0]["code"]]["speakers"], by_code(ri.normalize(sample())[0])[raw[0]["code"]]["speakers"])
+
+    def test_should_keep_a_session_whose_time_entry_is_garbled_unscheduled(self):
+        raw = sample()
+        raw[0]["times"] = ["garbled"]
+        self.assertIsNone(by_code(ri.normalize(raw)[0])[raw[0]["code"]]["start"])
+
+    def test_should_complete_an_import_from_a_feed_with_an_empty_record(self):
+        self.write_snapshot([None] + sample())
+        self.assertEqual(self.run_import()[0], 0)
 
 
 def renamed(sessions, old, new):
