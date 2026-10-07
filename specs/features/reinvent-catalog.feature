@@ -67,6 +67,14 @@ Feature: Importing the re:Invent session catalog
       When the catalog is imported
       Then the talk is imported with its other speakers
 
+  Rule: A run the planner can't show is reported, not silently dropped
+
+    Example: The one where a session lists two times
+      Given the Iceberg analytics talk lists two scheduled times
+      When the catalog is imported
+      Then the talk is imported at its first time
+      And the import reports the extra run
+
   Rule: Every change between imports is logged
 
     Example: The one where a session moves room
