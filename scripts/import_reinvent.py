@@ -109,6 +109,8 @@ def slim(r):
     """Raw API record (~10 KB) -> the snapshot shape (one run, its facets, speakers and slot)."""
     attrs = {}
     for a in r.get("attributevalues") or []:
+        if not isinstance(a, dict):
+            continue
         k = a.get("attribute_id")
         if k and k not in SKIP_ATTRS:
             attrs.setdefault(k, []).append(a.get("value"))
@@ -127,8 +129,9 @@ def slim(r):
         # Some speakers only fill in the global profile (company/title blank on the event record).
         "speakers": [{"name": p.get("fullName"), "title": p.get("jobTitle") or p.get("globalJobtitle") or "",
                       "company": p.get("companyName") or p.get("globalCompany") or "",
-                      "role": p.get("roles")} for p in r.get("participants") or []],
-        "times": [{k: num(t.get(k)) if k == "length" else t.get(k) for k in TIME_KEYS} for t in r.get("times") or []],
+                      "role": p.get("roles")} for p in r.get("participants") or [] if isinstance(p, dict)],
+        "times": [{k: num(t.get(k)) if k == "length" else t.get(k) for k in TIME_KEYS}
+                  for t in r.get("times") or [] if isinstance(t, dict)],
     }
 
 
@@ -140,6 +143,8 @@ def fetch_catalog(post=post_page):
         if not items:
             return out
         for r in items:
+            if not isinstance(r, dict):
+                continue  # not a session: nothing to keep
             s = slim(r)
             if s["sessionID"] and s["sessionID"] not in seen:
                 seen.add(s["sessionID"])
@@ -180,10 +185,14 @@ def vendors_of(r, title):
 
 
 def normalize(raw):
-    """-> (records, {"test", "notAccepted", "unpublished": counts})."""
+    """-> (records, {"test", "notAccepted", "unpublished", "malformed": counts}).
+    A broken record (not an object, or no session id) is skipped and counted, never fatal."""
     out = []
-    dropped = {"test": 0, "notAccepted": 0, "unpublished": 0}
+    dropped = {"test": 0, "notAccepted": 0, "unpublished": 0, "malformed": 0}
     for r in raw:
+        if not isinstance(r, dict) or not r.get("sessionID"):
+            dropped["malformed"] += 1
+            continue
         if r.get("testRecord"):
             dropped["test"] += 1
             continue
@@ -194,12 +203,12 @@ def normalize(raw):
             dropped["unpublished"] += 1
             continue
         code = sync.text(r.get("code"))
-        attrs = r.get("attributes") or {}
+        attrs = r.get("attributes") if isinstance(r.get("attributes"), dict) else {}
         title = REPEAT_MARK.sub(" ", sync.text(r.get("title"))).strip()
         appendices = strs(attrs, "SessionAppendices")
         sponsored = bool(SPONSORED_CODE.search(code)) or "Sponsored" in appendices
         vendors = vendors_of(r, title) if sponsored else []
-        t = (r.get("times") or [None])[0] or {}
+        t = next((x for x in r.get("times") or [] if isinstance(x, dict)), {})
         start, end = utc(t.get("utcStartTime")), utc(t.get("utcEndTime"))
         if start and end and end < start:
             end = None
@@ -222,7 +231,7 @@ def normalize(raw):
             "delivery": ["In-person"],
             "recorded": sync.text(r.get("type")) in RECORDED_TYPES,
             "speakers": [[sync.text(p.get("name")), sync.text(p.get("company")), sync.text(p.get("title"))]
-                         for p in r.get("speakers") or [] if sync.text(p.get("name"))],
+                         for p in r.get("speakers") or [] if isinstance(p, dict) and sync.text(p.get("name"))],
             "start": sync.iso(start) if start else None,
             "end": sync.iso(end) if end else None,
             "slot": "%s - %s" % (t["startTime"], t["endTime"]) if scheduled and t.get("startTime") and t.get("endTime") else None,
@@ -390,10 +399,10 @@ def run(args):
     if batch and args.summary_out:
         with open(args.summary_out, "w", encoding="utf-8") as f:
             f.write(sync.summary_markdown(batch, set()))
-    print("reinvent: sessions=%d dates=%d rooms=%d (dropped %d test, %d not accepted, %d unpublished)"
+    print("reinvent: sessions=%d dates=%d rooms=%d (dropped %d test, %d not accepted, %d unpublished, %d malformed)"
           " | added=%d removed=%d changed=%d"
           % (cs["sessions"], cs["withDates"], cs["withRooms"], dropped["test"], dropped["notAccepted"],
-             dropped["unpublished"], len(added), len(removed), len(changed)))
+             dropped["unpublished"], dropped["malformed"], len(added), len(removed), len(changed)))
     return 0, bool(batch)
 
 
