@@ -150,5 +150,59 @@ for (const [id, rooms] of Object.entries(realRooms)) {
   });
 }
 
+
+// ---- seat availability from the attendee's portal export (specs/features/seat-availability.feature)
+const { seatInfo } = await import('../assets/js/data.js');
+const { availChip } = await import('../assets/js/ui.js');
+const reinvent = CONFERENCES.reinvent2026;
+const seatRec = (id, code) => ({ id, inst: id, code, title: code, type: 'Workshop', delivery: ['In-person'], rsvp: true, rsvpOpens: '2026-10-06T16:00:00Z',
+  start: '2026-12-02T16:30:00Z', end: '2026-12-02T18:30:00Z', dur: 120, room: 'Wynn/Encore | Level 1 | Encore Ballroom 1', group: code, repeats: [], capacity: 84 });
+const seatDoc = { generatedAt: '2026-10-07T13:00:04Z', sessions: [seatRec('i1', 'IND327-R'), seatRec('s2', 'SVS350'), seatRec('a1', 'ARC320-R'), seatRec('x1', 'XYZ100')] };
+const seatFile = { kind: 'seats', conference: 'reinvent2026', exportedAt: '2026-10-07T13:53:05.967Z', seats: {
+  i1: { availability: 'session_full', capacity: 140, seatsRemaining: 0, fewSeatsLeft: false },
+  s2: { availability: 'reserve_a_seat', capacity: 84, seatsRemaining: 3, fewSeatsLeft: true },
+  a1: { availability: 'walk_up_only', fewSeatsLeft: false },
+  ghost: { availability: 'session_full' },
+  x1: { availability: 'bogus', capacity: -5, seatsRemaining: 'many', fewSeatsLeft: 'yes' },
+} };
+const seatModel = seats => buildModel(seatDoc, store.settings(), null, reinvent, createVenue(reinvent.venue), seats);
+const sess = (m, id) => m.sessions.find(x => x.id === id);
+
+await test('should mark a full favorite "Session full" and stop asking for a reservation', () => {
+  const before = sess(seatModel(null), 'i1');
+  eq([before.rsvp, before.availability, availChip(before)], ['2026-10-06T16:00:00Z', undefined, '']); // the catalog alone asks for a seat
+  const s = sess(seatModel(seatFile), 'i1');
+  eq([s.availability, s.rsvp, s.capacity, s.seatsRemaining, s.fewSeatsLeft], ['session_full', null, 140, 0, false]);
+  eq(availChip(s).includes('>Session full<'), true);
+});
+
+await test('should keep asking for a reservation while seats remain, and flag few seats left', () => {
+  const s = sess(seatModel(seatFile), 's2');
+  eq([s.availability, s.rsvp, s.seatsRemaining, s.fewSeatsLeft], ['reserve_a_seat', '2026-10-06T16:00:00Z', 3, true]);
+  eq(availChip(s).includes('>Few seats left<'), true);
+});
+
+await test('should mark a walk-up-only session and ask for no reservation', () => {
+  const s = sess(seatModel(seatFile), 'a1');
+  eq([s.availability, s.rsvp, s.capacity], ['walk_up_only', null, 84]); // the catalog's capacity stays when the export has none
+  eq(availChip(s).includes('>Walk-up<'), true);
+});
+
+await test('should ignore seat records for unknown sessions and junk values', () => {
+  const m = seatModel(seatFile);
+  eq(m.sessions.map(x => x.id).includes('ghost'), false);
+  const x = sess(m, 'x1');
+  eq([x.availability, x.rsvp, x.capacity, x.seatsRemaining, x.fewSeatsLeft, availChip(x)], [undefined, '2026-10-06T16:00:00Z', 84, undefined, undefined, '']);
+  eq([seatInfo(seatFile, 'x1'), seatInfo(seatFile, 'ghost')?.availability, seatInfo(null, 'i1'), seatInfo({ seats: [] }, 'i1'), seatInfo(seatFile, '')], [null, 'session_full', null, null, null]);
+  eq(seatInfo({ seats: { toString: { availability: 'session_full' } } }, 'constructor'), null); // only own keys count
+});
+
+await test('should leave a catalog without a seat file exactly as it is', () => {
+  const a = seatModel(null).sessions.map(x => [x.id, x.rsvp, x.availability, x.capacity]);
+  const b = seatModel({ kind: 'seats', seats: {} }).sessions.map(x => [x.id, x.rsvp, x.availability, x.capacity]);
+  eq(a, b);
+  eq(a, [['i1', '2026-10-06T16:00:00Z', undefined, 84], ['s2', '2026-10-06T16:00:00Z', undefined, 84], ['a1', '2026-10-06T16:00:00Z', undefined, 84], ['x1', '2026-10-06T16:00:00Z', undefined, 84]]);
+});
+
 console.log(`${pass} passed, ${fail} failed`);
 if (fail) process.exitCode = 1;

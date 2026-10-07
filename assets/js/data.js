@@ -18,18 +18,19 @@ async function getJSON(path) {
 
 export async function fetchAll(dataDir) {
   const dir = DATA_OVERRIDE || dataDir;
-  const [doc, meta, changes, favorites, profile] = await Promise.all([
+  const [doc, meta, changes, favorites, profile, seats] = await Promise.all([
     getJSON(`${dir}/sessions.json`),
     getJSON(`${dir}/meta.json`).catch(() => ({})),
     getJSON(`${dir}/changes.json`).catch(() => ({ batches: [] })),
     getJSON(`${dir}/favorites.json`).catch(() => null),
     getJSON(`${dir}/profile.json`).catch(() => null), // starting preferences (profile.js)
+    getJSON(`${dir}/seats.json`).catch(() => null),   // seat availability from a portal export (re:Invent)
   ]);
   // The service worker can hand back a cached sessions.json next to a fresh meta/changes
   // (slow Wi-Fi). Flag it so the app refreshes once the newer copy has landed.
   const newest = [meta.lastChanged, changes.batches?.[0]?.at].filter(Boolean).sort().pop();
   const stale = !!(newest && doc.generatedAt && newest > doc.generatedAt);
-  return { doc, meta, changes, favorites, profile, stale };
+  return { doc, meta, changes, favorites, profile, seats, stale };
 }
 
 // Preview mode only: deterministic fake day/room so the planner can be rehearsed
@@ -106,7 +107,23 @@ export function catalogMatch(custom, model) {
 
 // rsvp: { type -> opensAt } for conferences where the session type decides (Ignite);
 // catalogs can also mark single sessions with rec.rsvp (Gartner's seat reservations).
-export function buildModel(doc, settings, rsvp, conf, venue) {
+//
+// Seat availability (re:Invent) comes from the attendee's portal export, not the catalog:
+// seats.json = { seats: { <session id>: { availability, capacity, seatsRemaining, fewSeatsLeft } } }.
+export const AVAILABILITY = new Set(['reserved', 'reserve_a_seat', 'session_full', 'walk_up_only', 'waitlist']);
+const NO_RESERVATION = new Set(['session_full', 'walk_up_only', 'waitlist']);
+const count = v => (Number.isInteger(v) && v >= 0 ? v : null);
+
+// The usable seat record for a session, or null: an untrusted file is read, never trusted.
+export function seatInfo(seats, id) {
+  const table = seats && typeof seats === 'object' ? seats.seats : null;
+  if (!table || typeof table !== 'object' || typeof id !== 'string' || !id || !Object.hasOwn(table, id)) return null;
+  const r = table[id];
+  if (!r || typeof r !== 'object' || !AVAILABILITY.has(r.availability)) return null;
+  return { availability: r.availability, capacity: count(r.capacity), seatsRemaining: count(r.seatsRemaining), fewSeatsLeft: r.fewSeatsLeft === true };
+}
+
+export function buildModel(doc, settings, rsvp, conf, venue, seats = null) {
   const overrides = settings.overrides || {};
   const tz = conf.tz;
   const sessions = [];
@@ -134,6 +151,14 @@ export function buildModel(doc, settings, rsvp, conf, venue) {
     s.onlineOnly = !s.inPerson && s.delivery.length > 0;
     if (rec.rsvp === true) s.rsvp = rec.rsvpOpens || true;
     else s.rsvp = s.inPerson && rsvp && rsvp[rec.type] !== undefined ? (rsvp[rec.type] || true) : null;
+    const seat = seatInfo(seats, rec.id);
+    if (seat) {
+      s.availability = seat.availability;
+      s.fewSeatsLeft = seat.fewSeatsLeft;
+      if (seat.capacity != null) s.capacity = seat.capacity;
+      if (seat.seatsRemaining != null) s.seatsRemaining = seat.seatsRemaining;
+      if (NO_RESERVATION.has(seat.availability)) s.rsvp = null; // nothing left to reserve
+    }
     let room = rec.room;
     const st = fromISO(rec.start, tz);
     if (st && rec.dur !== 0) {

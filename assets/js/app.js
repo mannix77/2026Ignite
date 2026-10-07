@@ -1698,6 +1698,7 @@ function renderDetail(s) {
         <dt>Where</dt><dd>${s.onlineOnly ? 'Online' : `${bldgChip(s.loc)} ${esc(s.roomLabel)}`}</dd>
         <dt>Recording</dt><dd>${s.recorded === true ? 'Will be recorded: you can watch it later' : s.recorded === false ? '<b>Not recorded</b>: in person only' : 'Unknown'}</dd>
         ${s.rsvp ? `<dt>Reservation</dt><dd><b>Required</b>, seats are limited${typeof s.rsvp === 'string' ? `. Opens ${esc(fmtStamp(s.rsvp))} on ${esc(app.conf.siteName)}` : ''}${gp?.reserved ? '. <b>You reserved a seat.</b>' : ''}</dd>` : ''}
+        ${s.availability ? `<dt>Seats</dt><dd>${esc({ reserved: 'You hold a reserved seat', reserve_a_seat: `Seats to reserve${s.fewSeatsLeft ? ', few left' : ''}`, session_full: 'Full: reservations are gone; a walk-up line forms before the start (arrive 15 min early)', walk_up_only: 'Walk-up only: no reservations, arrive early', waitlist: 'Full: you can join the waitlist' }[s.availability])}${Number.isInteger(s.capacity) ? ` · ${s.capacity} seats${Number.isInteger(s.seatsRemaining) ? `, ${s.seatsRemaining} left at export` : ''}` : ''}</dd>` : ''}
         <dt>Format</dt><dd>${esc((s.delivery || []).join(', ') || '—')}${s.remote ? ' · remote viewing rooms available' : ''}</dd>
         ${s.audience?.length ? `<dt>${app.conf.id === 'gartner2026' ? 'Program' : 'Audience'}</dt><dd>${esc(s.audience.join(', '))}</dd>` : ''}
         ${s.topics?.length ? `<dt>Topics</dt><dd>${esc(s.topics.join(', '))}</dd>` : ''}
@@ -2242,7 +2243,7 @@ function rsvpConfig() {
 function rebuildModel() {
   const doc = app.raw.doc;
   const added = customRecords(store.settings().custom, app.conf); // sessions you added yourself
-  app.model = buildModel(added.length ? { ...doc, sessions: [...(doc.sessions || []), ...added] } : doc, store.settings(), rsvpConfig(), app.conf, app.venue);
+  app.model = buildModel(added.length ? { ...doc, sessions: [...(doc.sessions || []), ...added] } : doc, store.settings(), rsvpConfig(), app.conf, app.venue, app.raw.seats || null);
   app.modelKey = modelKey();
   app.triage = null;
   app.ranker = null;
@@ -2254,7 +2255,8 @@ function rebuildModel() {
 // snapshot, otherwise from the snapshot (which also carries the change history).
 const liveDiffers = () => !!(app.live && !app.live.same);
 function docSig() {
-  return liveDiffers() ? `live:${app.snapshot.doc.generatedAt}:${app.live.at}` : `snap:${app.snapshot.doc.generatedAt}`;
+  const seats = app.snapshot.seats?.exportedAt || ''; // a re-exported seat file changes the model too
+  return liveDiffers() ? `live:${app.snapshot.doc.generatedAt}:${app.live.at}:${seats}` : `snap:${app.snapshot.doc.generatedAt}:${seats}`;
 }
 
 // Returns true when the catalog itself changed (and the model was rebuilt).
