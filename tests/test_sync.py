@@ -117,7 +117,7 @@ class ParityTests(unittest.TestCase):
             subprocess.run(JS_RUNNER + [os.path.join(HERE, "normalize_cli.js"), "--",
                             os.path.join(HERE, "data", raw_name),
                             os.path.join(HERE, "data", spk_name) if spk_name else "-",
-                            out, window[0], window[1]], check=True, cwd=ROOT)
+                            out, window[0], window[1]], check=True, cwd=ROOT, timeout=120)
             with open(out, encoding="utf-8") as f:
                 return json.load(f)
         finally:
@@ -290,7 +290,7 @@ class InstanceConferenceTests(unittest.TestCase):
 
     def check(self, conf):
         return subprocess.run(["node", os.path.join(ROOT, "scripts", "conference_id.js"), conf],
-                              cwd=ROOT, capture_output=True).returncode
+                              cwd=ROOT, capture_output=True, timeout=120).returncode
 
     def test_should_accept_a_conference_id(self):
         self.assertEqual(self.check("reinvent2026"), 0)
@@ -403,7 +403,7 @@ class RunTests(SyncDir, unittest.TestCase):
         out = os.path.join(self.tmp, "data")
         proc = subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "sync.py"), "--from-file", path,
                                "--data-dir", out, "--event-window", "2026-11-17:2026-11-20"],
-                              capture_output=True, text=True)
+                              capture_output=True, text=True, timeout=120)
         self.assertEqual(proc.returncode, 3)
         meta = self.data("meta.json")
         self.assertFalse(meta["ok"])
@@ -485,7 +485,7 @@ class CiSignalTests(SyncDir, unittest.TestCase):
         open(out, "w").close()
         subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "sync.py"), "--from-file", self.write("raw.json", raw),
                         "--data-dir", os.path.join(self.tmp, "data"), "--event-window", "%s:%s" % W25],
-                       env=dict(os.environ, GITHUB_OUTPUT=out), check=True, capture_output=True)
+                       env=dict(os.environ, GITHUB_OUTPUT=out), check=True, capture_output=True, timeout=120)
         with open(out, encoding="utf-8") as f:
             return f.read()
 
@@ -593,7 +593,7 @@ class WithdrawalGuardTests(unittest.TestCase):
             json.dump(self.renamed("startDateTime", "startTime"), f)
         proc = subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "sync.py"), "--from-file", path,
                                "--data-dir", os.path.join(self.tmp, "data"), "--event-window", "%s:%s" % W25,
-                               "--allow-withdrawal"], capture_output=True, text=True)
+                               "--allow-withdrawal"], capture_output=True, text=True, timeout=120)
         self.assertEqual(proc.returncode, 0, proc.stderr)
 
 

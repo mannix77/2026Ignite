@@ -117,7 +117,7 @@ class PrivacyTests(unittest.TestCase):
         with open(export, "w", encoding="utf-8") as f:
             json.dump([OK, rec("SM101"), rec("CC1", title="CIO Circle Breakfast")], f)
         subprocess.run([sys.executable, os.path.join(os.path.dirname(HERE), "scripts", "import_gartner.py"), export,
-                        "--data-dir", tmp], check=True, capture_output=True)
+                        "--data-dir", tmp], check=True, capture_output=True, timeout=120)
         with open(os.path.join(tmp, "sessions.json"), encoding="utf-8") as f:
             self.assertEqual(list(map(operator.itemgetter("code"), json.load(f)["sessions"])), ["T1"])
 

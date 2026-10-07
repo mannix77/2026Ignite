@@ -409,7 +409,7 @@ class CiSignalTests(ImportDir, unittest.TestCase):
         out = os.path.join(self.dir, "github_output")
         open(out, "w").close()
         subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "import_reinvent.py"), self.snap, "--data-dir", self.dir],
-                       env=dict(os.environ, GITHUB_OUTPUT=out), check=True, capture_output=True)
+                       env=dict(os.environ, GITHUB_OUTPUT=out), check=True, capture_output=True, timeout=120)
         with open(out, encoding="utf-8") as f:
             return f.read()
 
@@ -469,7 +469,7 @@ class WithdrawalGuardTests(ImportDir, unittest.TestCase):
     def test_should_accept_a_withdrawal_flag_on_the_command_line(self):
         self.write_snapshot(renamed(sample(), "utcStartTime", "startUtc"))
         proc = subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "import_reinvent.py"), self.snap,
-                               "--data-dir", self.dir, "--allow-withdrawal"], capture_output=True, text=True)
+                               "--data-dir", self.dir, "--allow-withdrawal"], capture_output=True, text=True, timeout=120)
         self.assertEqual(proc.returncode, 0, proc.stderr)
 
 
