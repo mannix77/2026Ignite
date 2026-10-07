@@ -143,7 +143,7 @@ class ParityTests(unittest.TestCase):
     def test_parity_edge_cases(self):
         self.check("raw_edge_cases.json", None, W26)
 
-    def test_parity_event_window_bounds(self):
+    def test_should_agree_with_the_browser_at_the_event_window_bounds(self):
         self.check("raw_window_bounds.json", None, W25)
 
 
