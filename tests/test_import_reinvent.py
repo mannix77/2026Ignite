@@ -258,6 +258,16 @@ class FetchTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "3, then 2"):
             ri.fetch_catalog(self.post)
 
+    def test_should_hold_paging_to_a_total_given_as_text(self):
+        self.pages[0]["sectionList"][0]["total"] = "3"
+        self.pages[1]["total"], self.pages[1]["items"] = "3", []
+        with self.assertRaisesRegex(RuntimeError, "2 of 3"):
+            ri.fetch_catalog(self.post)
+
+    def test_should_not_read_a_true_flag_as_a_total(self):
+        self.pages[0]["sectionList"][0]["total"] = True  # read as 1, the later pages' 3 would look like a change
+        self.assertEqual(codes(ri.fetch_catalog(self.post)), ["DVT212-S", "ANT319-R", "ANT203-S"])
+
     def test_should_collect_items_from_the_first_and_later_page_shapes(self):
         self.assertEqual(codes(ri.fetch_catalog(self.post)), ["DVT212-S", "ANT319-R", "ANT203-S"])
 

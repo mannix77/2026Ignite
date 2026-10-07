@@ -95,6 +95,12 @@ def post_page(offset, attempts=3):
     raise RuntimeError("catalog page from=%d failed: %s" % (offset, last))
 
 
+def count(v):
+    """A count from the API (3, 3.0 or "3") -> int; anything else (True, "", negative) -> None."""
+    v = num(v)
+    return v if isinstance(v, int) and not isinstance(v, bool) and v >= 0 else None
+
+
 def page_section(page):
     """The first page nests its items and total under sectionList[0]; later pages (from > 0)
     have them at the top. An error page (responseCode other than "0") is refused: treating it
@@ -152,8 +158,8 @@ def fetch_catalog(post=post_page):
     for n in range(MAX_PAGES):
         section = page_section(post(n * PAGE_SIZE))
         items = section.get("items") or []
-        reported = section.get("total")
-        if isinstance(reported, int):
+        reported = count(section.get("total"))
+        if reported is not None:
             # The first page's total is the bar; a later page that disagrees means the
             # catalog changed mid-fetch (or the API is wrong): refuse rather than lower it.
             if total is not None and reported != total:
