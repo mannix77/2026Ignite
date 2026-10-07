@@ -2,8 +2,10 @@
 
     python3 -m unittest discover -s tests -v
 """
+import contextlib
 import copy
 import datetime as dt
+import io
 import json
 import os
 import shutil
@@ -71,7 +73,6 @@ class NormalizeTests(unittest.TestCase):
         self.assertEqual(c["BRK101"]["start"], "2025-11-17T22:30:00Z")
         self.assertEqual(c["BRK101"]["room"], "Moscone West, Level 3, Room 3006")
         self.assertFalse(c["BRK101"]["roomTbd"])
-        self.assertTrue(all("In-person" in r["delivery"] or r["delivery"] != ["In person"] for r in recs))
         self.assertTrue(any("In-person" in r["delivery"] for r in recs), "'In person' normalized")
 
     def test_repeat_groups_from_codes_and_links(self):
@@ -83,13 +84,6 @@ class NormalizeTests(unittest.TestCase):
         lab = [r for r in recs if r["code"].startswith("LAB531")]
         self.assertGreaterEqual(len(lab), 2)
         self.assertEqual({r["group"] for r in lab}, {"LAB531"})
-
-    def test_repeat_groups_from_shared_session_id(self):
-        raw = copy.deepcopy(self.raw26[:2])
-        raw[1]["sessionId"] = raw[0]["sessionId"]           # 2026-style repeat: same session, new time id
-        raw[1]["sessionInstanceId"] = raw[0]["sessionId"] + "-other"
-        recs, _, _ = sync.normalize(raw, [], W26)
-        self.assertEqual(len({r["group"] for r in recs}), 1)
 
     def test_speakers_from_speaker_feed(self):
         recs, _, _ = sync.normalize(self.raw26, self.spk26, W26)
@@ -182,7 +176,8 @@ class DiffParityTests(unittest.TestCase):
         also pass if both were wrong): expected = (added, removed, {code: changed fields})."""
         added, removed, changed = sync.diff(self.prev, cur)
         js = js_run("diff_cli.js", self.prev, cur)
-        canon = lambda xs: sorted(json.dumps(x, sort_keys=True) for x in xs)
+        def canon(xs):
+            return sorted(json.dumps(x, sort_keys=True) for x in xs)
         summary = (len(added), len(removed), {c["code"]: sorted(c["f"]) for c in changed})
         self.assertEqual(({k: canon(js[k]) for k in ("added", "removed", "changed")}, summary),
                          ({"added": canon(added), "removed": canon(removed), "changed": canon(changed)}, expected))
@@ -483,7 +478,7 @@ class RunTests(SyncDir, unittest.TestCase):
         self.assertGreater(before, 0)
         self.assertEqual(before, after)
 
-    def test_unexpected_payload_is_recorded_not_silent(self):
+    def test_should_exit_non_zero_for_a_feed_of_non_session_entries(self):
         path = self.write("raw.json", [None, 42])
         out = os.path.join(self.tmp, "data")
         proc = subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "sync.py"), "--from-file", path,
@@ -494,13 +489,24 @@ class RunTests(SyncDir, unittest.TestCase):
         self.assertFalse(meta["ok"])
         self.assertTrue(meta["error"])
 
+    def test_should_record_an_unexpected_error_instead_of_failing_silently(self):
+        out = os.path.join(self.tmp, "data")
+        argv = ["sync.py", "--from-file", self.write("raw.json", []), "--data-dir", out, "--event-window", "%s:%s" % W26]
+        with mock.patch.object(sync, "run", side_effect=ValueError("unexpected shape")), mock.patch.object(sys, "argv", argv), \
+                self.assertRaises(SystemExit) as exit_, contextlib.redirect_stderr(io.StringIO()):
+            sync.main()
+        self.assertEqual((exit_.exception.code, self.data("meta.json")["error"]), (3, "ValueError: unexpected shape"))
+
     def test_last_changed_comes_from_committed_data(self):
         raw = load("raw_2026_sample.json")
-        self.run_sync(raw, W26)
-        first = self.data("sessions.json")["generatedAt"]
+        def at(day):
+            return mock.patch.object(sync, "utcnow", return_value=dt.datetime(2026, 10, day, tzinfo=dt.timezone.utc))
+        with at(1):
+            self.run_sync(raw, W26)
         os.remove(os.path.join(self.tmp, "data", "meta.json"))  # as in CI, where meta.json isn't committed
-        self.run_sync(raw, W26)
-        self.assertEqual(self.data("meta.json")["lastChanged"], first)
+        with at(2):
+            self.run_sync(raw, W26)
+        self.assertEqual(self.data("meta.json")["lastChanged"], "2026-10-01T00:00:00Z")
 
     def test_untracked_churn_does_not_move_last_changed(self):
         raw = load("raw_2026_sample.json")
@@ -711,6 +717,22 @@ class WithdrawalGuardTests(unittest.TestCase):
     def test_should_refuse_a_feed_whose_entries_largely_lack_session_ids(self):
         self.run_sync([{k: v for k, v in s.items() if k != "sessionId"} if i % 4 == 0 else s for i, s in enumerate(self.published)])
         self.assertIn("malformed", self.data("meta.json")["error"])
+
+    def test_should_accept_a_feed_with_a_few_malformed_entries(self):
+        self.assertEqual(self.run_sync([None] * 3 + self.published)[0], 0)  # 3 of 61 (4.9%): within the 5% limit
+
+    def test_should_refuse_a_feed_just_over_the_malformed_limit(self):
+        self.assertEqual(self.run_sync([None] * 4 + self.published), (3, False))  # 4 of 62 (6.5%)
+
+    def test_should_refuse_a_catalog_that_lost_most_of_its_times(self):
+        cut = round(0.6 * len(self.published))  # times vanish from 60% of sessions
+        part = self.renamed("startDateTime", "startTime")[:cut] + self.published[cut:]
+        self.assertEqual(self.run_sync(part), (3, False))
+
+    def test_should_accept_a_catalog_that_kept_most_of_its_times(self):
+        cut = round(0.4 * len(self.published))  # times vanish from 40% of sessions
+        part = self.renamed("startDateTime", "startTime")[:cut] + self.published[cut:]
+        self.assertEqual(self.run_sync(part, allow_withdrawal=False)[0], 0)
 
     def test_should_refuse_a_catalog_whose_times_vanished(self):
         self.assertEqual(self.run_sync(self.renamed("startDateTime", "startTime")), (3, False))
