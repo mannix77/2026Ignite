@@ -4,7 +4,7 @@
 
 import { transition, canBoth, optimize, optimizeDay, decisionGroups, isResolved, fillers, nowNext, weigh, whatIf, chainValue, DEFAULT_PLANNER } from '../assets/js/planner.js';
 import { parseLocation, walkMinutes, sameRoom, DEFAULT_WALK } from '../assets/js/venue.js';
-import { localParts, fromISO, parseSlot, fmtTime, fmtDay, addDays } from '../assets/js/time.js';
+import { localParts, fromISO, parseSlot, fmtTime, fmtDay, addDays, relTime, fmtDuration, fmtRange } from '../assets/js/time.js';
 import { createVenue } from '../assets/js/venue.js';
 import { CONFERENCES, LAS_VEGAS_DEF, SWAN_DOLPHIN_DEF } from '../assets/js/conferences.js';
 import { parseShare } from '../assets/js/store.js';
@@ -415,6 +415,25 @@ test('choosing the other side of a clash with a locked session is possible: the 
   const locked = item(H(9), H(10), W2, { priority: 3, locked: true }), other = item(H(9.5), H(10.5), S1, { priority: 2 });
   const { outcomes } = compareOptions([locked, other], [locked, other]);
   eq([outcomes.get(other.key).feasible, outcomes.get(locked.key).feasible], [true, true]);
+});
+
+// --- small time and venue helpers the pages show
+test('a late Eastern session belongs to its local day, not the UTC one', () => {
+  eq(fromISO('2026-10-21T01:00:00Z', 'America/New_York'), { day: '2026-10-20', min: 21 * 60 });
+});
+test('two different off-site hotels are a long walk, not a same-floor hop', () => {
+  eq(walkMinutes(parseLocation('Hilton Union Square'), parseLocation('Westin St. Francis'), DEFAULT_WALK), 12);
+});
+test('relative times read naturally', () => {
+  const now = Date.parse('2026-10-07T12:00:00Z'), ago = s => new Date(now - s * 1000).toISOString();
+  eq([ago(30), ago(5 * 60), ago(3 * 3600), ago(2 * 86400), null, 'not a date'].map(t => relTime(t, now)),
+    ['just now', '5 min ago', '3 h ago', '2 d ago', 'never', 'unknown']);
+});
+test('durations read in hours and minutes', () => {
+  eq([45, 60, 90, NaN].map(fmtDuration), ['45 min', '1 h', '1 h 30 min', '']);
+});
+test('a time range reads as start – end', () => {
+  eq(fmtRange(540, 600), '9:00 AM – 10:00 AM');
 });
 
 // --- lunch: a slot in a gap, never a place
