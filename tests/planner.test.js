@@ -163,6 +163,12 @@ test('repeat instances: attend once, choose the one that fits', () => {
   eq(kept.length, 1);
   eq(res2.dropped[0].reason.kind, 'repeat');
 });
+test('should plan only the locked run of a repeated session', () => {
+  const tue = item(H(9), H(10), W2, { id: 'rep3', code: 'BRK902', priority: 3, locked: true });
+  const thu = item(H(9), H(10), W2, { id: 'rep3', code: 'BRK902', priority: 3, day: '2026-11-20' });
+  const kept = Object.values(optimize([tue, thu]).plan).flat().filter(x => x.id === 'rep3');
+  eq(kept.map(x => x.key), [tue.key]);
+});
 test('locked conflicts are reported', () => {
   const a = item(H(9), H(10), W2, { locked: true, priority: 3 });
   const b = item(H(9.5), H(10.5), W3, { locked: true, priority: 3 });
