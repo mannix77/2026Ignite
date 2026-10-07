@@ -1225,7 +1225,7 @@ function rsvpBanner(plan) {
 }
 
 function fieldLabel(k) {
-  return { start: 'Start', end: 'End', slot: 'Time slot', dur: 'Length', room: 'Room', title: 'Title', code: 'Code', type: 'Type', speakers: 'Speakers', level: 'Level', delivery: 'Format', recorded: 'Recorded', desc: 'Description' }[k] || k;
+  return { start: 'Start', end: 'End', slot: 'Time slot', dur: 'Length', room: 'Room', title: 'Title', code: 'Code', type: 'Type', speakers: 'Speakers', level: 'Level', delivery: 'Format', recorded: 'Recorded', desc: 'Description', availability: 'Seats', seatsRemaining: 'Seats left' }[k] || k;
 }
 function fmtVal(k, v) {
   if (v == null || v === '') return '—';
@@ -1292,7 +1292,7 @@ function renderChanges() {
   if (app.conf.live) {
     parts.push(`<p class="lede">The app checks ${esc(app.conf.siteName)} directly whenever you open it. A scheduled cloud sync also logs every difference here and posts it to GitHub, which can email you. Changes to your picks are highlighted.</p>`);
   } else {
-    parts.push(`<p class="lede">This catalog comes from your ${esc(app.conf.siteName)} export (${esc(fmtStamp(app.raw.doc.generatedAt))}). Re-run <code>scripts/import_gartner.py</code> with a new export to update it; differences are logged here and changes to your picks are highlighted.</p>`);
+    parts.push(`<p class="lede">This catalog comes from your ${esc(app.conf.siteName)} export (${esc(fmtStamp(app.raw.doc.generatedAt))}). Re-run <code>${esc(app.conf.importCmd || 'the import script')}</code> with a new export to update it; differences are logged here and changes to your picks are highlighted.</p>`);
   }
   if (app.alerts.length) {
     parts.push(`<section class="card batch"><header><b>${icon('warn')} ${app.alerts.length} change${app.alerts.length > 1 ? 's' : ''} to your picks since you last looked</b><span class="spacer"></span><button class="btn small primary" data-act="ack">Got it</button></header><ul>
@@ -1496,6 +1496,7 @@ function renderDetail(s) {
         <dt>Where</dt><dd>${s.onlineOnly ? 'Online' : `${bldgChip(s.loc)} ${esc(s.roomLabel)}`}</dd>
         <dt>Recording</dt><dd>${s.recorded === true ? 'Will be recorded: you can watch it later' : s.recorded === false ? '<b>Not recorded</b>: in person only' : 'Unknown'}</dd>
         ${s.rsvp ? `<dt>Reservation</dt><dd><b>Required</b>, seats are limited${typeof s.rsvp === 'string' ? `. Opens ${esc(fmtStamp(s.rsvp))} on ${esc(app.conf.siteName)}` : ''}${gp?.reserved ? '. <b>You reserved a seat.</b>' : ''}</dd>` : ''}
+        ${s.availability ? `<dt>Seats</dt><dd>${esc({ reserved: 'You hold a reserved seat', reserve_a_seat: `Reservable${s.fewSeatsLeft ? ', few seats left' : ''}`, session_full: 'Full: reservations are gone, walk-up line only (arrive 15 min early)', walk_up_only: 'Walk-up only: no reservations, arrive early', waitlist: 'Waitlist' }[s.availability] || s.availability)}${Number.isFinite(s.capacity) ? ` · ${s.capacity} seats${Number.isFinite(s.seatsRemaining) ? `, ${s.seatsRemaining} left at export` : ''}` : ''}${s.laptop ? ' · laptop required' : ''}</dd>` : ''}
         <dt>Format</dt><dd>${esc((s.delivery || []).join(', ') || '—')}${s.remote ? ' · remote viewing rooms available' : ''}</dd>
         ${s.audience?.length ? `<dt>${app.conf.id === 'gartner2026' ? 'Program' : 'Audience'}</dt><dd>${esc(s.audience.join(', '))}</dd>` : ''}
         ${s.topics?.length ? `<dt>Topics</dt><dd>${esc(s.topics.join(', '))}</dd>` : ''}

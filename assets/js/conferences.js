@@ -52,6 +52,44 @@ export const SWAN_DOLPHIN_DEF = {
   notes: 'Swan and Dolphin: 7–10 min across the covered causeway (10–15 from the Xpo level). Swan Reserve: across the street from the Swan. Yacht & Beach Club convention center: 12–20 min around Crescent Lake on an exposed path (the Friendship boats are no faster). Add a few minutes at keynote and lunch changeovers; October afternoons are hot and showery.',
 };
 
+// Las Vegas (AWS re:Invent). Rooms look like "MGM Grand, Level 3, Chairman's 363, Content Hub,
+// Code Talk" or "Caesars Palace, Promenade Level, Milano IV". Caesars Forum is tested before
+// Caesars Palace.
+export const LAS_VEGAS_DEF = {
+  id: 'las-vegas',
+  buildings: [
+    { id: 'V', name: 'Venetian / Palazzo', short: 'Venetian', re: /venetian|palazzo|sands expo/i, geo: [36.12171, -115.16933] },
+    { id: 'W', name: 'Wynn / Encore', short: 'Wynn', re: /wynn|encore/i, geo: [36.12800, -115.16510] },
+    { id: 'F', name: 'Caesars Forum', short: 'Forum', re: /caesars forum|forum event plaza/i, geo: [36.11896, -115.16618] },
+    { id: 'P', name: 'Caesars Palace', short: 'Caesars', re: /caesars palace|\bcaesars\b/i, geo: [36.11663, -115.17675] },
+    { id: 'M', name: 'MGM Grand', short: 'MGM', re: /mgm/i, geo: [36.10279, -115.16940] },
+    { id: 'B', name: 'Mandalay Bay', short: 'Mandalay', re: /mandalay|delano|luxor/i, geo: [36.09225, -115.17582] },
+    { id: 'H', name: 'Other off-site', short: 'Off-site', re: /sphere|aria|cosmopolitan|bellagio|\bparis\b|flamingo|linq|resorts world|harrah|mirage|treasure island|t-mobile arena|fontainebleau/i, geo: [36.12121, -115.16206], offsite: true },
+    { id: 'O', name: 'Online only', short: 'Online', re: /^(online|virtual|on[- ]demand$)/i },
+  ],
+  // Door to door at a changeover, with re:Invent crowds, bridges and escalators. The Venetian,
+  // Wynn/Encore and Caesars Forum are a 15–20 minute walk from each other; Caesars Palace is
+  // across the Strip; MGM Grand and Mandalay Bay are shuttle rides (counted door to door).
+  walk: {
+    sameRoom: 0,
+    sameFloor: 5,
+    diffFloor: 8,
+    pairs: {
+      'V|W': 15, 'F|V': 15, 'P|V': 20, 'M|V': 35, 'B|V': 45,
+      'F|W': 20, 'P|W': 25, 'M|W': 45, 'B|W': 50,
+      'F|P': 18, 'F|M': 30, 'B|F': 45,
+      'M|P': 25, 'B|P': 40,
+      'B|M': 25,
+      'H|V': 25, 'H|W': 30, 'F|H': 25, 'H|P': 25, 'H|M': 35, 'B|H': 40, 'H|H': 25,
+    },
+    unknown: 20,
+  },
+  floorHints: [[/emperors/i, 'Emperors'], [/promenade/i, 'Promenade'], [/content hub/i, 'Content Hub']],
+  startFrom: 'W',
+  geoRadius: 320,   // these resorts are enormous
+  notes: 'Strip walks take longer than the map says (crowds, bridges, casino floors). Venetian, Wynn/Encore and Caesars Forum are 15–20 min apart on foot; Caesars Palace is across the Strip; MGM Grand and Mandalay Bay are shuttle rides, counted door to door. Workshops release unclaimed seats 10 minutes after the start.',
+};
+
 export const CONFERENCES = {
   ignite2026: {
     id: 'ignite2026',
@@ -88,9 +126,28 @@ export const CONFERENCES = {
     // Conference Navigator (login) is where seats are reserved; the public agenda has no per-session links.
     sessionUrl: () => 'https://cn.gartner.com/SYM36/fullagenda',
     siteName: 'Conference Navigator',
+    importCmd: 'scripts/import_gartner.py',
     // Meals run 11:45–2:45; the grid leaves 1:00–1:45 (Wed 1:00–2:15) free.
     lunch: { from: 705, to: 885 },
     hint: 'Times and rooms are final. Reserve seats for reservation-required sessions in Conference Navigator, then mark them here.',
+  },
+  reinvent2026: {
+    id: 'reinvent2026',
+    name: 'AWS re:Invent 2026',
+    short: 're:Invent',
+    place: 'Las Vegas',
+    tz: 'America/Los_Angeles',
+    days: ['2026-11-30', '2026-12-01', '2026-12-02', '2026-12-03', '2026-12-04'],
+    dataDir: 'data/reinvent2026',
+    namespace: 'reinvent2026',
+    venue: LAS_VEGAS_DEF,
+    live: false,                   // your favorites + reservations, exported from the portal
+    rsvp: null,                    // per-session: "reserve a seat" while seats remain
+    sessionUrl: s => `https://registration.awsevents.com/flow/awsevents/reinvent2026/sessioncatalog/page/sessioncatalog?search=${encodeURIComponent(String(s.code || '').replace(/-R\d*$/i, ''))}`,
+    siteName: 'the re:Invent portal',
+    importCmd: 'scripts/import_reinvent.py',
+    lunch: { from: 690, to: 810 },
+    hint: 'Built from your favorites and reservations in the portal. Reserved seats are pinned; “Session full” favorites are walk-up only (arrive 15 minutes early), so they rank as Maybe.',
   },
 };
 

@@ -23,6 +23,7 @@
 
   --b-W: #2563eb; --b-S: #c2410c; --b-N: #15803d; --b-M: #7c3aed; --b-C: #be185d; --b-H: #92400e; --b-O: #475569; --b-U: #6b7280;
   --b-D: #0369a1; --b-R: #7c3aed; --b-Y: #b45309; --b-B: #be185d;
+  --b-V: #0e7490; --b-F: #4d7c0f; --b-P: #b91c1c;
 
   --radius: 12px;
   --radius-sm: 8px;
@@ -43,6 +44,7 @@
     --ok: #4ade80; --ok-soft: #12301d; --tight: #facc15; --tight-soft: #352c0b; --bad: #f87171; --bad-soft: #3a1515;
     --b-W: #60a5fa; --b-S: #fb923c; --b-N: #4ade80; --b-M: #a78bfa; --b-C: #f472b6; --b-H: #d6a26b; --b-O: #94a3b8; --b-U: #9ca3af;
     --b-D: #38bdf8; --b-R: #a78bfa; --b-Y: #fbbf24; --b-B: #f472b6;
+    --b-V: #22d3ee; --b-F: #a3e635; --b-P: #f87171;
     --shadow: 0 1px 2px rgb(0 0 0 / .4), 0 4px 14px rgb(0 0 0 / .25);
     color-scheme: dark;
   }
@@ -56,6 +58,7 @@
   --ok: #4ade80; --ok-soft: #12301d; --tight: #facc15; --tight-soft: #352c0b; --bad: #f87171; --bad-soft: #3a1515;
   --b-W: #60a5fa; --b-S: #fb923c; --b-N: #4ade80; --b-M: #a78bfa; --b-C: #f472b6; --b-H: #d6a26b; --b-O: #94a3b8; --b-U: #9ca3af;
   --b-D: #38bdf8; --b-R: #a78bfa; --b-Y: #fbbf24; --b-B: #f472b6;
+    --b-V: #22d3ee; --b-F: #a3e635; --b-P: #f87171;
   --shadow: 0 1px 2px rgb(0 0 0 / .4), 0 4px 14px rgb(0 0 0 / .25);
   color-scheme: dark;
 }
@@ -191,6 +194,9 @@ h3 { font-size: 15px; margin: 0 0 6px; }
 .chip.score { background: var(--want-soft); color: var(--want); }
 .chip.watch { background: var(--skip-soft); color: var(--text-2); }
 .chip.sugg { background: var(--ok-soft); color: var(--ok); }
+.chip.full { background: var(--bad-soft); color: var(--bad); }
+.chip.few { background: var(--maybe-soft); color: var(--maybe); }
+.chip.walkup { background: var(--skip-soft); color: var(--text-2); }
 .quick + .quick { margin-top: -4px; }
 .here-bar { margin: 10px 0 14px; }
 .here-bar select { font-size: 16px; max-width: 46vw; }

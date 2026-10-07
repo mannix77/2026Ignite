@@ -1,8 +1,8 @@
 # Conference Planner
 
-An unofficial personal planner for **Microsoft Ignite 2026** (Nov 17–20, Moscone Center, San Francisco) and **Gartner IT Symposium/Xpo 2026** (Oct 18–22, Swan & Dolphin, Orlando). Switch between them from the title bar; each keeps its own catalog, picks, notes and settings. It helps you decide quickly what to attend: when two sessions clash, or there isn't time to get from one building to another, it shows what you'd gain and lose with each choice.
+An unofficial personal planner for **Microsoft Ignite 2026** (Nov 17–20, Moscone Center, San Francisco), **Gartner IT Symposium/Xpo 2026** (Oct 18–22, Swan & Dolphin, Orlando) and **AWS re:Invent 2026** (Nov 30–Dec 4, Las Vegas). Switch between them from the title bar; each keeps its own catalog, picks, notes and settings. It helps you decide quickly what to attend: when two sessions clash, or there isn't time to get from one building to another, it shows what you'd gain and lose with each choice.
 
-> Not affiliated with Microsoft or Gartner. Ignite data comes from the public Ignite catalog feeds; Gartner data from your own Conference Navigator export.
+> Not affiliated with Microsoft, Gartner or AWS. Ignite data comes from the public Ignite catalog feeds; Gartner and re:Invent data from your own portal exports.
 
 ## What it does
 
@@ -28,7 +28,7 @@ Before the real Ignite schedule is published you can turn on **Preview** (Settin
 
 **On your iPhone (recommended):** open the GitHub Pages address in Safari, then tap **Share → Add to Home Screen** *before* you start rating. The installed app keeps its own copy of your picks (separate from Safari's) and works offline at the venue. To move picks from another device, use **Settings → Copy link to my picks** there, then **Settings → Import picks from a link** in the installed app. **Save a backup** opens the share sheet, so you can keep a copy in Files.
 
-**Switching conference:** the dropdown in the title bar, or `?conf=gartner2026` / `?conf=ignite2026` in the address. The app remembers your last choice.
+**Switching conference:** the dropdown in the title bar, or `?conf=gartner2026` / `?conf=ignite2026` / `?conf=reinvent2026` in the address. The app remembers your last choice.
 
 **Your workbook favorites** are imported automatically the first time you open a conference on a device with no picks. Later, **Settings → Import my workbook favorites** re-applies ratings, scores and watch-later marks (your notes are kept). The committed `favorites.json` holds only codes, tiers and scores; the version with your notes is the backup file the import script writes to `~/Downloads` (restore it with **Settings → Restore backup**, or AirDrop it to the phone and open it from Files).
 
@@ -52,6 +52,16 @@ python3 scripts/import_gartner.py ~/Downloads/gartner_sym2026_sessions.json --wo
 ```
 
 It rewrites `data/gartner2026/sessions.json`, logs the differences in `changes.json` (shown under Changes, with your picks highlighted), regenerates `favorites.json` from the workbook's **My Favorites** sheet, and writes the backup with notes to `~/Downloads/gartner-2026-picks.json`. Commit `data/gartner2026/` and push; Pages redeploys. Private strategic-account meetings (`SM*`/`SAM*`) and CIO Circle members-only sessions are left out (`EXCLUDED_PROGRAMS` in the script).
+
+## Updating re:Invent
+
+The re:Invent catalog is your own **favorites + reservations** export from the portal (the planner plans among those). After changing favorites or reservations, re-export and run:
+
+```bash
+python3 scripts/import_reinvent.py ~/Downloads/reinvent2026-my-sessions-v2.json
+```
+
+It rebuilds `data/reinvent2026/` (sessions, change log including seat-availability changes, favorites). Reserved seats become Must picks pinned to that run; open or walk-up favorites become Want; "Session full" favorites become Maybe (walk-up line only). Cards show *Session full*, *Few seats left* and *Walk-up* from the export.
 
 The Ignite favorites were imported the same way from the `My Favorites` sheet of the Ignite workbook into `data/ignite2026/favorites.json` (tiers from Attend Mode, scores from Score; "Watch recording later" picks are watch-later; "Delegate"/"Skip" picks are skipped).
 
@@ -94,6 +104,8 @@ Browser ── data/<conference>/*.json (snapshot + history + favorites)
 - Real times arrive as `startDateTime`/`endDateTime` (UTC). The 2026 feed already contains placeholder times, all on Nov 14, and `zTest` rooms. These are ignored: only times inside the event window count.
 - `TimeSlot` was Pacific time in 2025 but is UTC in 2026, so it's never used for real times.
 - Repeat runs appear either as `BRK101-R1` records linked by `repeatedSessions`, or as records that share a `sessionId`. Both are grouped.
+
+**re:Invent specifics:** six Las Vegas venues (Venetian, Wynn/Encore, Caesars Forum, Caesars Palace, MGM Grand, Mandalay Bay) with long walks and shuttles; the venue model counts door to door. Breakouts are recorded; workshops, chalk talks, builders' sessions and code talks are not.
 
 **Gartner specifics:** times and rooms are final in the export (`America/New_York`). Keynotes, Signature Series and track sessions are assumed to be replayable; Xpo stage talks, roundtables, workshops and clinics are not. Sessions with the same title and type under different codes (clinics, repeated roundtables) are treated as repeat runs.
 
