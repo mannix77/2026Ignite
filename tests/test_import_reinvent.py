@@ -4,7 +4,9 @@
 
 Mirrors specs/features/reinvent-catalog.feature; edge cases live here as unit tests.
 """
+import contextlib
 import copy
+import io
 import json
 import os
 import shutil
@@ -210,7 +212,7 @@ class ExclusionTests(unittest.TestCase):
         raw[0]["testRecord"] = True
         raw[1]["status"] = "Cancelled"
         raw[2]["published"] = 0
-        self.assertEqual(ri.normalize(raw)[1], {"test": 1, "notAccepted": 1, "unpublished": 1, "malformed": 0})
+        self.assertEqual(ri.normalize(raw)[1], {"test": 1, "notAccepted": 1, "unpublished": 1, "malformed": 0, "extraRuns": 0})
 
 
 class FetchTests(unittest.TestCase):
@@ -234,6 +236,10 @@ class FetchTests(unittest.TestCase):
 
     def test_should_skip_a_page_item_with_an_unusable_session_id(self):
         self.pages[1]["items"] = [{"sessionID": ["x"], "code": "BAD1"}] + self.pages[1]["items"]
+        self.assertEqual(codes(ri.fetch_catalog(self.post)), ["DVT212-S", "ANT319-R", "ANT203-S"])
+
+    def test_should_keep_a_session_listed_on_two_pages_once(self):
+        self.pages[1]["items"] = self.pages[1]["items"] + self.pages[0]["sectionList"][0]["items"][:1]
         self.assertEqual(codes(ri.fetch_catalog(self.post)), ["DVT212-S", "ANT319-R", "ANT203-S"])
 
     def test_should_collect_items_from_the_first_and_later_page_shapes(self):
@@ -367,6 +373,32 @@ class MalformedRecordTests(ImportDir, unittest.TestCase):
     def test_should_complete_an_import_from_a_feed_with_an_empty_record(self):
         self.write_snapshot([None] + sample())
         self.assertEqual(self.run_import()[0], 0)
+
+
+class ExtraRunTests(unittest.TestCase):
+    """AWS lists repeats as separate sessions; a second time on one record has never been seen."""
+
+    def two_times(self):
+        raw = sample()
+        rec = by_code(raw)["ANT319-R"]
+        second = dict(rec["times"][0], sessionTimeID="T2", utcStartTime="2026/12/03 18:00:00", utcEndTime="2026/12/03 19:00:00")
+        rec["times"].append(second)
+        return raw
+
+    def test_should_import_the_first_time_of_a_session_with_two(self):
+        with contextlib.redirect_stderr(io.StringIO()):
+            recs = by_code(ri.normalize(self.two_times())[0])
+        self.assertEqual(recs["ANT319-R"]["start"], by_code(ri.normalize(sample())[0])["ANT319-R"]["start"])
+
+    def test_should_count_the_extra_run(self):
+        with contextlib.redirect_stderr(io.StringIO()):
+            self.assertEqual(ri.normalize(self.two_times())[1]["extraRuns"], 1)
+
+    def test_should_warn_which_session_has_an_extra_run(self):
+        err = io.StringIO()
+        with contextlib.redirect_stderr(err):
+            ri.normalize(self.two_times())
+        self.assertIn("ANT319-R", err.getvalue())
 
 
 def renamed(sessions, old, new):

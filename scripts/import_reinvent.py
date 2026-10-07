@@ -190,10 +190,12 @@ def vendors_of(r, title):
 
 
 def normalize(raw):
-    """-> (records, {"test", "notAccepted", "unpublished", "malformed": counts}).
-    A broken record (not an object, or no session id) is skipped and counted, never fatal."""
+    """-> (records, {"test", "notAccepted", "unpublished", "malformed", "extraRuns": counts}).
+    A broken record (not an object, or no session id) is skipped and counted, never fatal.
+    AWS lists repeat runs as separate sessions; a second time on one record has never been
+    seen (0 of 2,190 on 2026-10-07), so only the first is imported and the rest are reported."""
     out = []
-    dropped = {"test": 0, "notAccepted": 0, "unpublished": 0, "malformed": 0}
+    dropped = {"test": 0, "notAccepted": 0, "unpublished": 0, "malformed": 0, "extraRuns": 0}
     for r in raw:
         sid = session_id(r.get("sessionID")) if isinstance(r, dict) else None
         if not sid:
@@ -214,7 +216,11 @@ def normalize(raw):
         appendices = strs(attrs, "SessionAppendices")
         sponsored = bool(SPONSORED_CODE.search(code)) or "Sponsored" in appendices
         vendors = vendors_of(r, title) if sponsored else []
-        t = next((x for x in r.get("times") or [] if isinstance(x, dict)), {})
+        times = [x for x in r.get("times") or [] if isinstance(x, dict)]
+        t = times[0] if times else {}
+        if len(times) > 1:
+            dropped["extraRuns"] += len(times) - 1
+            print("warning: %s lists %d times; only the first is imported" % (code, len(times)), file=sys.stderr)
         start, end = utc(t.get("utcStartTime")), utc(t.get("utcEndTime"))
         if start and end and end < start:
             end = None
@@ -405,10 +411,10 @@ def run(args):
     if batch and args.summary_out:
         with open(args.summary_out, "w", encoding="utf-8") as f:
             f.write(sync.summary_markdown(batch, set()))
-    print("reinvent: sessions=%d dates=%d rooms=%d (dropped %d test, %d not accepted, %d unpublished, %d malformed)"
-          " | added=%d removed=%d changed=%d"
+    print("reinvent: sessions=%d dates=%d rooms=%d (dropped %d test, %d not accepted, %d unpublished, %d malformed,"
+          " %d extra runs) | added=%d removed=%d changed=%d"
           % (cs["sessions"], cs["withDates"], cs["withRooms"], dropped["test"], dropped["notAccepted"],
-             dropped["unpublished"], dropped["malformed"], len(added), len(removed), len(changed)))
+             dropped["unpublished"], dropped["malformed"], dropped["extraRuns"], len(added), len(removed), len(changed)))
     return 0, bool(batch)
 
 
