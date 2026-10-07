@@ -75,10 +75,8 @@ export function load(namespace = '') {
     if (raw) {
       const saved = JSON.parse(raw);
       delete saved.settings; // pre-release format stored every default
-      if (saved.prefs) delete saved.prefs.simNow;
-      if (saved.known && Object.values(saved.known).some(k => k && !k.inst)) saved.known = {}; // pre-release keying
       state = merge(blank(), saved);
-      state.known = sanitizeKnown(state.known);
+      state.known = sanitizeKnown(state.known); // also drops pre-release entries, which had no run id
       state.picks = sanitizePicks(state.picks);
       state.prefs = sanitizePrefs(state.prefs);
       state.profile = saved.profile ? sanitizeProfile(saved.profile) : null;
@@ -260,7 +258,8 @@ function sanitizePicks(picks, undatedAt) {
 
 function sanitizeKnown(known) {
   const out = {};
-  for (const [inst, k] of Object.entries(known || {})) if (k && typeof k === 'object' && typeof k.inst === 'string') out[inst] = k;
+  // Each snapshot is saved under its own run id, so a blank or different id is not a real entry.
+  for (const [inst, k] of Object.entries(known || {})) if (k && typeof k === 'object' && k.inst === inst && inst) out[inst] = k;
   return out;
 }
 
