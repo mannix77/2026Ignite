@@ -148,7 +148,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'); /
 const SW_SOURCE = fs.readFileSync(path.join(ROOT, 'sw.js'), 'utf8');
 
 // Loads sw.js as the worker for `scope`, with the named caches already present.
-function worker(scope, cacheNames = []) {
+function worker(scope, cacheNames = [], cachedPage = undefined) {
   const handlers = {};
   const existing = new Set(cacheNames);
   const deleted = [];
@@ -157,7 +157,7 @@ function worker(scope, cacheNames = []) {
     addEventListener: (type, fn) => { handlers[type] = fn; }, skipWaiting: async () => {},
   };
   const caches = { keys: async () => [...existing], delete: async k => { deleted.push(k); return existing.delete(k); },
-    open: async () => ({ match: async () => undefined, put: async () => {}, addAll: async () => {} }) };
+    open: async () => ({ match: async k => (k === 'index.html' ? cachedPage : undefined), put: async () => {}, addAll: async () => {} }) };
   vm.runInNewContext(SW_SOURCE, { self, caches, URL, Request: class { constructor(u) { this.url = u; } }, setTimeout, fetch: async () => { throw new Error('offline'); } });
   return { handlers, deleted, consts: vm.runInNewContext(`${SW_SOURCE}; ({ SHELL, DATA, VERSION, SHELL_PREFIX })`, { self, caches, URL }) };
 }
@@ -196,11 +196,12 @@ await test("should leave a colleague's copy to its own worker", () => {
   eq(answered, false);
 });
 
-await test('should answer for its own app page', () => {
-  const { handlers } = worker(MAIN);
-  let answered = false;
-  handlers.fetch({ request: { method: 'GET', url: `${MAIN}index.html`, mode: 'navigate' }, respondWith: p => { answered = true; p.catch(() => {}); } });
-  eq(answered, true);
+await test('should serve its own app page from the offline copy', async () => {
+  const page = { body: 'the app page' };
+  const { handlers } = worker(MAIN, [], page);
+  let response;
+  handlers.fetch({ request: { method: 'GET', url: `${MAIN}index.html`, mode: 'navigate' }, respondWith: p => { response = p; } });
+  eq(await response, page);
 });
 
 console.log(`${pass} passed, ${fail} failed`);
