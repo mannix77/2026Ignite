@@ -12,6 +12,7 @@ import sys
 import tempfile
 import types
 import unittest
+from unittest import mock
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
@@ -251,6 +252,17 @@ class DiffTests(unittest.TestCase):
         added, removed, changed = sync.diff(prev, prev[1:])
         self.assertEqual([r["inst"] for r in removed], ["T1"])
         self.assertEqual((added, changed), ([], []))
+
+    def test_should_pair_runs_whose_ids_were_regenerated_without_reporting_them(self):
+        prev = [self.rec("T1", "2026-11-18T18:00:00Z", "W3006"), self.rec("T2", "2026-11-19T22:00:00Z", "S207")]
+        cur = [self.rec("N1", "2026-11-18T18:00:00Z", "W3006"), self.rec("N2", "2026-11-19T22:00:00Z", "S207")]
+        self.assertEqual(sync.diff(prev, cur), ([], [], []))
+
+    def test_should_report_a_move_of_a_run_whose_id_was_regenerated(self):
+        prev = [self.rec("T1", "2026-11-18T18:00:00Z", "W3006")]
+        cur = [self.rec("N1", "2026-11-18T18:00:00Z", "S207")]
+        _, _, changed = sync.diff(prev, cur)
+        self.assertEqual([set(c["f"]) for c in changed], [{"room"}])
 
     def test_moved_run_is_a_change(self):
         prev = [self.rec("T1", "2026-11-18T18:00:00Z", "W3006")]
@@ -499,6 +511,22 @@ class CiSignalTests(SyncDir, unittest.TestCase):
         raw = load("raw_2025_sample.json")
         self.cli(raw)
         self.assertEqual(self.cli(raw), "changed=false\n")
+
+
+class FirstSeenTests(SyncDir, unittest.TestCase):
+    """firstSeen drives the app's "new" badge; it must survive a regenerated instance id."""
+
+    def sync_at(self, when, raw):
+        with mock.patch.object(sync, "utcnow", return_value=dt.datetime(2025, 10, when, tzinfo=dt.timezone.utc)):
+            self.run_sync(raw)
+        return {r["id"]: r["firstSeen"] for r in self.data("sessions.json")["sessions"]}
+
+    def test_should_keep_first_seen_when_a_session_gets_a_new_instance_id(self):
+        self.sync_at(1, catalog_of(60))
+        self.sync_at(2, catalog_of(61))  # s060 appears on the 2nd
+        regenerated = catalog_of(61)
+        regenerated[60]["sessionInstanceId"] = "s060-regenerated"
+        self.assertEqual(self.sync_at(3, regenerated)["s060"], "2025-10-02T00:00:00Z")
 
 
 class EventWindowTests(unittest.TestCase):
