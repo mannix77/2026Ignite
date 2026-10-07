@@ -4,6 +4,11 @@
 // test's pending save can't land in the next test's storage.
 import { sleep } from './shim.js';
 
+// The page events the store listens to (pagehide, visibilitychange), captured so tests can fire them.
+const pageEvents = {};
+globalThis.window = { addEventListener: (type, fn) => { (pageEvents[type] ||= []).push(fn); } };
+globalThis.document = { visibilityState: 'visible', querySelector: () => null, addEventListener: (type, fn) => { (pageEvents[type] ||= []).push(fn); } };
+const fire = type => { for (const fn of pageEvents[type] || []) fn({}); };
 const store = await import('../assets/js/store.js');
 
 let pass = 0, fail = 0;
@@ -40,6 +45,33 @@ await test('should drop a saved pick with no rating, lock, seat or note on reloa
   store.load('reload-junk');
   eq(store.pick('S3'), null);
 });
+
+// ---- a change is saved even when you leave straight away (specs/features/saving.feature)
+const saved = ns => JSON.parse(localStorage.getItem(`ignite26.planner.v1:${ns}`) || '{"picks":{}}').picks;
+
+await test('should save the change just made when the page is left', () => {
+  store.load('leave-pagehide');
+  store.mutatePicks(p => { p.S1 = { p: 3, lock: null, note: '', at: 1 }; });
+  fire('pagehide');
+  eq(saved('leave-pagehide').S1?.p, 3);
+});
+
+await test('should save the change just made when the page is hidden', () => {
+  store.load('leave-hidden');
+  store.setGroupNote(['S1'], 'S1', 'bring the laptop');
+  document.visibilityState = 'hidden';
+  fire('visibilitychange');
+  document.visibilityState = 'visible';
+  eq(saved('leave-hidden').S1?.note, 'bring the laptop');
+});
+
+await test('should not save early when the page is only shown again', () => {
+  store.load('leave-visible');
+  store.mutatePicks(p => { p.S1 = { p: 3, lock: null, note: '', at: 1 }; });
+  fire('visibilitychange');
+  eq(saved('leave-visible'), {});
+});
+await sleep(SAVE);
 
 // ---- restoring a backup (specs/features/backups.feature)
 const BACKUP = 'ignite26-planner';

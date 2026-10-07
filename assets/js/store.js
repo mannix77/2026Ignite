@@ -97,18 +97,30 @@ export function namespace() { return KEY === BASE_KEY ? '' : KEY.slice(BASE_KEY.
 let saveFailed = false;
 export function saveFailing() { return saveFailed; }
 
+function writeNow() {
+  clearTimeout(saveTimer);
+  saveTimer = null;
+  try {
+    localStorage.setItem(KEY, JSON.stringify(state));
+    if (saveFailed) { saveFailed = false; for (const fn of listeners) fn('save-ok'); }
+  } catch (e) {
+    console.warn('Could not save state', e);
+    saveFailed = true;
+    for (const fn of listeners) fn('save-error');
+  }
+}
+
 function persist() {
   clearTimeout(saveTimer);
-  saveTimer = setTimeout(() => {
-    try {
-      localStorage.setItem(KEY, JSON.stringify(state));
-      if (saveFailed) { saveFailed = false; for (const fn of listeners) fn('save-ok'); }
-    } catch (e) {
-      console.warn('Could not save state', e);
-      saveFailed = true;
-      for (const fn of listeners) fn('save-error');
-    }
-  }, 150);
+  saveTimer = setTimeout(writeNow, 150);
+}
+
+// Leaving or hiding the page (switching conference, the Reload button, locking the phone)
+// can come within the save delay: write a pending change at once instead of losing it.
+function flushPending() { if (saveTimer) writeNow(); }
+if (typeof window !== 'undefined') window.addEventListener('pagehide', flushPending);
+if (typeof document !== 'undefined' && document.addEventListener) {
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') flushPending(); });
 }
 
 // Another tab saved: adopt its state instead of overwriting it on our next save.
@@ -116,6 +128,7 @@ if (typeof window !== 'undefined') {
   window.addEventListener('storage', e => {
     if (e.key !== KEY || e.newValue == null) return;
     clearTimeout(saveTimer);
+    saveTimer = null;
     load(namespace());
     for (const fn of listeners) fn('reset');
   });
