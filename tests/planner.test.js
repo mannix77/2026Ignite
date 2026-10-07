@@ -396,6 +396,14 @@ test('blocked time is a chain item with a real location', () => {
   eq(optimize([blk, during]).dropped[0].reason.kind, 'block');
 });
 
+test('two overlapping runs of one session are not a decision to make', () => {
+  const r1 = item(H(9), H(10), W2, { id: 'rep4', code: 'BRK903' }), r2 = item(H(9.5), H(10.5), W3, { id: 'rep4', code: 'BRK903-R1' });
+  eq(decisionGroups([r1, r2]), []);
+});
+test('two overlapping different sessions are a decision to make', () => {
+  eq(decisionGroups([item(H(9), H(10), W2), item(H(9.5), H(10.5), W3)]).length, 1);
+});
+
 // --- where you are now ("I'm at…" or GPS) and comparing the options of a clash
 test("leave-by counts from where you are, not from your last session's room", () => {
   const done = item(H(9), H(10), S1), next = item(H(11), H(12), W3);
