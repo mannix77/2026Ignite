@@ -176,7 +176,8 @@ class DiffParityTests(unittest.TestCase):
         also pass if both were wrong): expected = (added, removed, {code: changed fields})."""
         added, removed, changed = sync.diff(self.prev, cur)
         js = js_run("diff_cli.js", self.prev, cur)
-        canon = lambda xs: sorted(json.dumps(x, sort_keys=True) for x in xs)
+        def canon(xs):
+            return sorted(json.dumps(x, sort_keys=True) for x in xs)
         summary = (len(added), len(removed), {c["code"]: sorted(c["f"]) for c in changed})
         self.assertEqual(({k: canon(js[k]) for k in ("added", "removed", "changed")}, summary),
                          ({"added": canon(added), "removed": canon(removed), "changed": canon(changed)}, expected))
