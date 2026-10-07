@@ -131,7 +131,8 @@ class FavoritesTests(unittest.TestCase):
     """favorites.json is committed to the repo; the backup with notes stays on the laptop."""
 
     ROW = {"Session Code": "T1", "Rank": 3, "Score": "8.5", "Attend Mode": "Must", "Plan": "Attend",
-           "My Notes": "ask about our renewal", "Why it matters": "budget cycle"}
+           "My Notes": "ask about our renewal", "Why it matters": "budget cycle",
+           "Vendor-consolidation angle": "reduce duplicate spend"}
 
     def written(self):
         """Runs write_favorites with the workbook row; -> (committed file, local backup file)."""
@@ -156,7 +157,8 @@ class FavoritesTests(unittest.TestCase):
     def test_should_keep_personal_notes_in_the_local_backup(self):
         _, backup = self.written()
         note = next(iter(backup["picks"].values()))["note"]
-        self.assertEqual(note.split("\n")[1:], ["Note: ask about our renewal", "Why it matters: budget cycle"])
+        self.assertEqual(note.split("\n")[1:], ["Note: ask about our renewal", "Why it matters: budget cycle",
+                                                "Vendor-consolidation angle: reduce duplicate spend"])
 
 
 if __name__ == "__main__":
