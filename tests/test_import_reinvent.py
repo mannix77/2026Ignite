@@ -84,6 +84,23 @@ class SponsoredTests(unittest.TestCase):
     def test_should_not_mark_an_aws_session_as_sponsored(self):
         self.assertFalse(imported()["ANT319-R"]["sponsored"])
 
+    def test_should_take_the_vendor_from_a_title_that_names_it_after_a_dash(self):
+        raw = sample()
+        rec = by_code(raw)["GHJ308-S-R"]
+        rec["title"], rec["speakers"] = "Agentic AI Jam - sponsored by Nvidia", []
+        self.assertEqual(by_code(ri.normalize(raw)[0])["GHJ308-S-R"]["vendors"], ["Nvidia"])
+
+    def test_should_take_the_vendor_from_a_title_with_an_en_dash_and_trailing_space(self):
+        raw = sample()
+        rec = by_code(raw)["GHJ308-S-R"]
+        rec["title"], rec["speakers"] = "DevOps Jam \u2013 sponsored by LaunchDarkly ", []
+        self.assertEqual(by_code(ri.normalize(raw)[0])["GHJ308-S-R"]["vendors"], ["LaunchDarkly"])
+
+    def test_should_keep_a_sponsored_session_whose_speaker_entry_is_garbled(self):
+        raw = sample()
+        by_code(raw)["DVT212-S"]["speakers"].insert(0, "garbled")
+        self.assertEqual(by_code(ri.normalize(raw)[0])["DVT212-S"]["vendors"], ["CodeRabbit Inc."])
+
     def test_should_put_vendors_in_tags_so_browse_can_filter_on_them(self):
         self.assertIn("CodeRabbit Inc.", imported()["DVT212-S"]["tags"])
 
@@ -547,6 +564,15 @@ class KeynoteTests(unittest.TestCase):
 
     def test_should_add_nothing_for_the_empty_placeholder(self):
         self.assertEqual(ri.keynote_records({"keynotes": []}), [])
+
+    def test_should_skip_a_keynote_entry_that_is_not_an_object(self):
+        with contextlib.redirect_stderr(io.StringIO()):
+            self.assertEqual(list(self.keynotes(["KEY002", KEYNOTE])), ["KEY001"])
+
+    def test_should_skip_a_keynote_speaker_given_as_text(self):
+        with contextlib.redirect_stderr(io.StringIO()):
+            got = self.keynotes([dict(KEYNOTE, speakers=["A. Speaker", ["B. Speaker", "AWS", "VP"]])])
+        self.assertEqual(got["KEY001"]["speakers"], [["B. Speaker", "AWS", "VP"]])
 
     def test_should_merge_keynotes_into_the_imported_catalog(self):
         d = tempfile.mkdtemp()

@@ -18,6 +18,12 @@ Feature: Importing the re:Invent session catalog
       When the catalog is imported
       Then the session is listed with CodeRabbit as its vendor
 
+    Example: The one where the sponsor is named after a dash
+      Given "GHJ308-S-R" is titled "Agentic AI Jam - sponsored by Nvidia"
+      And it lists no sponsor speaker
+      When the catalog is imported
+      Then the session names Nvidia as its vendor
+
   Rule: Self-paced sessions stay in the catalog without a slot
 
     Example: The one with a self-paced gamified session
