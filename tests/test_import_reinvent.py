@@ -111,6 +111,12 @@ class ScheduledSessionTests(unittest.TestCase):
     def test_should_say_when_seat_reservations_open(self):
         self.assertEqual(imported()["DVT212-S"]["rsvpOpens"], "2026-10-06T16:00:00Z")
 
+    def test_should_not_require_a_seat_for_a_virtual_only_session(self):
+        raw = sample()
+        by_code(raw)["DVT212-S"]["times"][0].update(inPersonTime=False, virtualTime=True)
+        rec = by_code(ri.normalize(raw)[0])["DVT212-S"]
+        self.assertEqual((rec["start"] is not None, rec["rsvp"], "rsvpOpens" in rec), (True, False, False))
+
     def test_should_not_give_an_untimed_session_a_reservation_date(self):
         self.assertNotIn("rsvpOpens", imported()["GHJ205-R"])
 
