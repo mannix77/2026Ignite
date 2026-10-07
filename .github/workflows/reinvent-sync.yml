@@ -112,7 +112,11 @@ jobs:
           if git diff --quiet -- "$d/sessions.json" "$d/changes.json"; then
             git checkout -- "$d/source" 2>/dev/null || true
           fi
-          git add -A "$d/sessions.json" "$d/changes.json" "$d/changelog.md" "$d/source" "$d/pending-summary.md" 2>/dev/null || git add -A "$d"
+          git add -A -- "$d/sessions.json" "$d/changes.json" "$d/changelog.md" "$d/source"
+          # The pending summary can be new, changed, deleted or absent; only an absent one is skipped.
+          if [ -e "$d/pending-summary.md" ] || git ls-files --error-unmatch -- "$d/pending-summary.md" >/dev/null 2>&1; then
+            git add -A -- "$d/pending-summary.md"
+          fi
           if git diff --cached --quiet; then
             echo "No catalog changes."
             echo "pushed=false" >> "$GITHUB_OUTPUT"
