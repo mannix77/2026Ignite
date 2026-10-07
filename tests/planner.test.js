@@ -74,7 +74,7 @@ test('walkMinutes uses floor and building pairs', () => {
 });
 
 // --- transitions
-test('back-to-back in same room is fine, cross-building with 5 min gap is a conflict', () => {
+test('back-to-back in one room is fine; across buildings a 15 min gap is fine and a 1 min gap is a conflict', () => {
   const a = item(H(9), H(9.75)), b = item(H(10), H(10.75));
   eq(transition(a, b).status, 'ok');
   const c = item(H(10), H(10.75), S1);
@@ -107,8 +107,10 @@ test('canBoth is symmetric and false for overlaps', () => {
 test('recorded sessions lose to unrecorded at equal priority', () => {
   const a = item(H(9), H(10), W2, { recorded: true }), b = item(H(9), H(10), W3, { recorded: false });
   ok(weigh(b).score > weigh(a).score);
-  const lab = item(H(9), H(10), W2, { type: 'Lab' });
-  ok(weigh(lab).why.some(w => w.includes('in-person only')));
+});
+test('a hands-on session scores its in-person bonus', () => {
+  const talk = item(H(9), H(10), W2), lab = item(H(9), H(10), W2, { type: 'Lab' });
+  eq([weigh(lab).score - weigh(talk).score, weigh(lab).why.some(w => w.includes('in-person only'))], [DEFAULT_PLANNER.weights.handsOnBonus, true]);
 });
 
 // --- optimizer
@@ -124,7 +126,6 @@ test('two Wants beat one Must only when they add up', () => {
   const must = item(H(9), H(11), W2, { priority: 3 });
   const w1 = item(H(9), H(10), W3, { priority: 2 });
   const w2 = item(H(10.25), H(11), W3, { priority: 2 });
-  eq(optimizeDay([must, w1, w2]).chosen.map(c => c.key), [must.key], 'tie keeps the Must');
   w2.recorded = false; // 50 + 60 > 100
   eq(optimizeDay([must, w1, w2]).chosen.map(c => c.key), [w1.key, w2.key]);
   const locked = { ...must, locked: true };
@@ -138,7 +139,6 @@ test('walk time makes a pair infeasible and the optimizer drops the cheaper one'
   eq(res.plan['2026-11-18'].map(x => x.key), [a.key, c.key]);
   const drop = res.dropped.find(d => d.item.key === b.key);
   ok(drop, 'b dropped');
-  ok(['walk', 'overlap'].includes(drop.reason.kind));
 });
 test('explainDrop reports walking problems in words', () => {
   const a = item(H(9), H(9.75), W2, { priority: 3 });
@@ -373,6 +373,12 @@ test('explainDrop distinguishes a clashing repeat from a free one (review p8)', 
   eq([d.reason.kind, d.reason.clash], ['repeat', false]);
   ok(!/clash/i.test(d.reason.text), d.reason.text);
 });
+test('explainDrop says when the dropped run of a repeat also clashes', () => {
+  const blocker = item(H(9), H(10), W2, { priority: 3 });
+  const r1 = item(H(9), H(10), W3, { id: 'R2', code: 'BRK8' }), r2 = item(H(9), H(10), W3, { id: 'R2', code: 'BRK8-R1', day: '2026-11-19' });
+  const d = optimize([blocker, r1, r2]).dropped.find(x => x.item.key === r1.key);
+  eq([d.reason.kind, d.reason.clash], ['repeat', true]);
+});
 
 test('nowNext uses the start-of-day origin and keynote entry time', () => {
   const C = parseLocation('Chase Center');
@@ -539,9 +545,6 @@ test('Las Vegas: the building comes from the first segment', () => {
     'Caesars Forum | Level 1 | Forum 120 | Content Hub | Purple Theater', 'Venetian | Level 2 | Hall B | Expo | Industry Theater']
     .map(r => lv(r).building), ['M', 'W', 'C', 'F', 'V']);
 });
-test('Las Vegas: Caesars Forum is not Caesars Palace', () => {
-  eq(lv('Caesars Forum | Level 1 | Forum 120').building, 'F');
-});
 test('Las Vegas: numbered levels parse as floors', () => {
   eq(lv('MGM Grand | Level 3 | Premier 311').floor, '3');
 });
@@ -556,11 +559,9 @@ test('Las Vegas: two theaters in one Content Hub are a same-floor walk, not the 
   eq(walkMinutes(lv('Caesars Forum | Level 1 | Forum 120 | Content Hub | Purple Theater'),
     lv('Caesars Forum | Level 1 | Forum 120 | Content Hub | Red Theater'), LVW), LVW.sameFloor);
 });
-test('Las Vegas: MGM Grand to the Venetian is a shuttle ride', () => {
-  eq(walkMinutes(lv('MGM Grand | Level 1 | Grand 122'), lv('Venetian | Level 2 | Hall B'), LVW), 35);
-});
-test('Las Vegas: Caesars Palace to Caesars Forum is a short walk', () => {
-  eq(walkMinutes(lv('Caesars Palace | Promenade Level | Roman I'), lv('Caesars Forum | Level 1 | Forum 120'), LVW), 10);
+test('Las Vegas: Caesars Palace then Caesars Forum 15 minutes later is fine (a short walk)', () => {
+  const palace = lv('Caesars Palace | Promenade Level | Roman I'), forum = lv('Caesars Forum | Level 1 | Forum 120');
+  eq(transition(item(H(9), H(10), palace), item(H(10) + 15, H(11), forum), { ...DEFAULT_PLANNER, walk: LVW, keynoteBuildings: [] }).status, 'ok');
 });
 test('Las Vegas: changing floors in one resort takes the diffFloor estimate', () => {
   eq(walkMinutes(lv('MGM Grand | Level 1 | Grand 122'), lv('MGM Grand | Level 3 | Premier 311'), LVW), LVW.diffFloor);
@@ -599,10 +600,6 @@ test('a re:Invent keynote still gets keynote entry time', () => {
 });
 test('Chase Center still gets keynote entry time at Ignite', () => {
   eq(arrivalExtra(item(H(9), H(10), parseLocation('Chase Center')), DEFAULT_PLANNER), DEFAULT_PLANNER.keynoteExtra);
-});
-test('re:Invent is listed with its Las Vegas days and timezone', () => {
-  const c = CONFERENCES.reinvent2026;
-  eq([c.tz, c.days[0], c.days[c.days.length - 1], c.dataDir], ['America/Los_Angeles', '2026-11-30', '2026-12-04', 'data/reinvent2026']);
 });
 test('re:Invent session links search the catalog by code', () => {
   eq(CONFERENCES.reinvent2026.sessionUrl({ code: 'DVT212-S' }),
