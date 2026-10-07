@@ -7,7 +7,7 @@ const { buildModel, diffKnown, cacheUrl } = await import('../assets/js/data.js')
 const { CONFERENCES } = await import('../assets/js/conferences.js');
 const { createVenue } = await import('../assets/js/venue.js');
 const { compareOptions, DEFAULT_PLANNER } = await import('../assets/js/planner.js');
-const { checkLive } = await import('../assets/js/live.js');
+const { checkLive, liveWindow } = await import('../assets/js/live.js');
 
 let pass = 0, fail = 0;
 async function test(name, fn) {
@@ -137,6 +137,14 @@ await test('should refuse a live catalog whose entries are largely malformed', a
   let err = null;
   try { await checkLive({ sessions: raw.filter(Boolean) }, ignite); } catch (e) { err = e.message; } finally { globalThis.fetch = realFetch; }
   eq(/malformed/.test(err || ''), true);
+});
+
+// ---- the event window the browser applies to the live catalog (same rule as sync.py)
+await test("should take the browser's event window from the site's dates", () => {
+  eq(liveWindow({ eventStartDate: '2026-11-16T08:00:00-08:00', eventEndDate: '2026-11-19T17:00:00-08:00' }, ignite), ['2026-11-16', '2026-11-19']);
+});
+await test("should fall back to the conference's days when the site's dates are reversed", () => {
+  eq(liveWindow({ eventStartDate: '2026-11-20', eventEndDate: '2026-11-17' }, ignite), [ignite.days[0], ignite.days[ignite.days.length - 1]]);
 });
 
 // ---- the service worker (sw.js), run in a sandbox with fake caches and fetch

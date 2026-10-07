@@ -97,7 +97,7 @@ def fetch_json(url, attempts=3):
 
 
 def fetch_first(kind):
-    """Try the API, then the CDN copy the official site falls back to."""
+    """Try each source in SOURCES order (the CDN copy, then the API); report every error if all fail."""
     errors = []
     for url in SOURCES[kind]:
         try:
@@ -487,9 +487,9 @@ def event_window(args, flags):
     if args.event_window:
         a, b = args.event_window.split(":")
         return a, b
-    # Like live.js: unusable site dates mean the configured default, never a crash.
+    # Like live.js liveWindow: unusable or reversed site dates mean the configured default.
     a, b = day_or_none((flags or {}).get("eventStart")), day_or_none((flags or {}).get("eventEnd"))
-    return (a, b) if a and b else DEFAULT_WINDOW
+    return (a, b) if a and b and a <= b else DEFAULT_WINDOW
 
 
 def withdrawal(ps, cs):

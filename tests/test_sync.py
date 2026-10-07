@@ -617,9 +617,53 @@ class EventWindowTests(unittest.TestCase):
     def test_should_fall_back_to_the_default_window_when_only_the_end_is_unusable(self):
         self.assertEqual(self.window("2026-11-17T08:00:00-08:00", "2026-13-40"), sync.DEFAULT_WINDOW)
 
+    def test_should_fall_back_to_the_default_window_when_event_dates_are_reversed(self):
+        self.assertEqual(self.window("2026-11-20T08:00:00-08:00", "2026-11-17T17:00:00-08:00"), sync.DEFAULT_WINDOW)
+
     def test_should_take_the_window_from_iso_event_dates(self):
         self.assertEqual(self.window("2026-11-16T08:00:00-08:00", "2026-11-19T17:00:00-08:00"),
                          ("2026-11-16", "2026-11-19"))
+
+
+class FetchFallbackTests(unittest.TestCase):
+    """Each feed is tried from the CDN copy first, then the API."""
+
+    def test_should_use_the_api_when_the_cdn_copy_fails(self):
+        def fake(url):
+            if url == sync.SOURCES["sessions"][0]:
+                raise RuntimeError("cdn down")
+            return ["from the api"]
+        with mock.patch.object(sync, "fetch_json", side_effect=fake):
+            self.assertEqual(sync.fetch_first("sessions"), (["from the api"], sync.SOURCES["sessions"][1]))
+
+    def test_should_report_both_errors_when_both_sources_fail(self):
+        with mock.patch.object(sync, "fetch_json", side_effect=[RuntimeError("cdn down"), RuntimeError("api down")]):
+            with self.assertRaisesRegex(RuntimeError, "cdn down; api down"):
+                sync.fetch_first("sessions")
+
+
+class SummaryListTests(unittest.TestCase):
+    """The change summary posted to the issue: watchlist call-outs and long lists."""
+
+    def batch(self, added=(), changed=()):
+        return {"milestones": [], "removed": [],
+                "added": [{"code": c, "title": "T"} for c in added],
+                "changed": [{"code": c, "title": "T", "f": {"room": ["A", "B"]}} for c in changed]}
+
+    def test_should_call_out_changes_to_watched_sessions(self):
+        self.assertIn("**1 change(s) affect sessions on your watchlist:** BRK2",
+                      sync.summary_markdown(self.batch(added=["BRK1"], changed=["BRK2"]), {"BRK2"}))
+
+    def test_should_star_a_watched_session(self):
+        self.assertIn("- ⭐ `BRK2` T", sync.summary_markdown(self.batch(changed=["BRK2"]), {"BRK2"}))
+
+    def test_should_shorten_a_long_list_of_added_sessions(self):
+        text = sync.summary_markdown(self.batch(added=["A%02d" % i for i in range(61)]), set())
+        self.assertEqual((text.count("\n- `A"), "- …and 1 more" in text), (60, True))
+
+    def test_should_shorten_a_long_list_of_changed_sessions(self):
+        text = sync.summary_markdown(self.batch(changed=["C%02d" % i for i in range(81)]), set())
+        self.assertEqual((text.count("\n- `C"), "- …and 1 more" in text), (80, True))
 
 
 class MalformedRecordTests(unittest.TestCase):

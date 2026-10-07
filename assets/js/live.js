@@ -229,6 +229,14 @@ async function getCdn(base, name, timeoutMs = 25000) {
 
 const MALFORMED_SHARE = 0.05;
 
+// The event days the live catalog's times are checked against: the site's dates when both
+// are usable and in order (same rule as sync.py event_window), else the conference's days.
+export function liveWindow(settings, conf = {}) {
+  const first = dayOrNull(settings?.eventStartDate), last = dayOrNull(settings?.eventEndDate);
+  if (first && last && first <= last) return [first, last];
+  return conf.days?.length ? [conf.days[0], conf.days[conf.days.length - 1]] : DEFAULT_WINDOW;
+}
+
 // Compare the live catalog against the synced snapshot. Throws if live is unreachable.
 // conf.cdn names the event folder on the CDN (conferences.js).
 export async function checkLive(snapshotDoc, conf = {}) {
@@ -241,9 +249,7 @@ export async function checkLive(snapshotDoc, conf = {}) {
   const prev = snapshotDoc.sessions || [];
   const byName = new Map();
   for (const r of prev) for (const p of r.speakers || []) if (p[1] || p[2]) byName.set(p[0], p);
-  const first = dayOrNull(settings?.eventStartDate), last = dayOrNull(settings?.eventEndDate);
-  const window = first && last ? [first, last] : (conf.days?.length ? [conf.days[0], conf.days[conf.days.length - 1]] : DEFAULT_WINDOW);
-  const { sessions, dropped, draft } = normalize(raw, null, window, byName);
+  const { sessions, dropped, draft } = normalize(raw, null, liveWindow(settings, conf), byName);
   if (prev.length && sessions.length < 0.6 * prev.length) throw new Error(`live catalog looks partial (${sessions.length} sessions)`);
   const seenInst = new Map(prev.map(r => [r.inst, r.firstSeen]));
   const seenId = new Map(prev.map(r => [r.id, r.firstSeen]));
