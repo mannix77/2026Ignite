@@ -3,6 +3,32 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-10-07T13:00:04Z · https://catalog.awsevents.com/api/sessions
+
+Added 0 · removed 0 · changed 20
+
+**Changed**
+- `HMC202` AWS wherever you need it: From the cloud to the edge — desc
+- `HMC303` Choosing the right hybrid deployment for your AI workloads — title: AI workloads from cloud to edge: Choosing the right hybri… → Choosing the right hybrid deployment for your AI workloads; desc
+- `HMC304` Real-world migrations: Lessons learned migrating to AWS Outposts — desc
+- `HMC308` VMware migration to Amazon EC2 and AWS Outposts with AWS Transform — desc
+- `HMC310-R` Gemini gets closer to traders with AWS Outposts and AWS Local Zones — desc
+- `HMC310-R1` Gemini gets closer to traders with AWS Outposts and AWS Local Zones — desc
+- `HMC311` Architecting for ultra-low latency on AWS Outposts with accelerated networking — title: Architectures for ultra-low latency with accelerated netw… → Architecting for ultra-low latency on AWS Outposts with a…; desc
+- `HMC314` Architecting for digital sovereignty: Choosing your AWS hybrid cloud infrastructure — desc
+- `HMC319` Migrate and modernize workloads with AWS Outposts — title: Modernize and migrate edge applications with AWS Outposts → Migrate and modernize workloads with AWS Outposts; desc
+- `HMC401-R` GPU orchestration using NVIDIA Run:ai across the edge — title: …at scale using NVIDIA Run:ai across the edge → …using NVIDIA Run:ai across the edge; desc
+- `HMC401-R1` GPU orchestration using NVIDIA Run:ai across the edge — title: …at scale using NVIDIA Run:ai across the edge → …using NVIDIA Run:ai across the edge; desc
+- `HMC402-R` Implementing agentic AI solutions on-premises and at the edge — desc
+- `HMC402-R1` Implementing agentic AI solutions on-premises and at the edge — desc
+- `HMC403-R` Self-managed agentic AI at the hybrid edge — title: …edge with AWS Outposts and AWS Local Zones → …edge; desc
+- `HMC403-R1` Self-managed agentic AI at the hybrid edge — title: …edge with AWS Outposts and AWS Local Zones → …edge; desc
+- `HMC404` Extend Amazon EKS clusters for on-premises and edge use cases — desc
+- `HMC406` How Amazon Robotics runs AWS Outposts across hundreds of fulfillment centers — title: AWS Outposts at scale: Amazon Robotics fulfillment → How Amazon Robotics runs AWS Outposts across hundreds of …; desc
+- `HMC409-R` Deployment strategies for highly available edge applications — desc
+- `HMC409-R1` Deployment strategies for highly available edge applications — desc
+- `IND3308-S` Rise of Autonomous Clinical Data Management: AI Agents Accelerating Drug Development — title: Uncovering Value with Velocity in Clinical Data Managemen… → Rise of Autonomous Clinical Data Management: AI Agents Ac…; desc
+
 ## 2026-10-07T07:01:39Z · https://catalog.awsevents.com/api/sessions
 
 Added 4 · removed 0 · changed 8
