@@ -41,6 +41,19 @@ Feature: Importing the re:Invent session catalog
       When a refresh returns only 1000 sessions
       Then the saved catalog still holds 2169 sessions
 
+  Rule: A catalog fetch that stops early is refused
+
+    Example: The one where a page comes back as an error
+      Given the AWS catalog reports 2169 sessions
+      When the third page of the catalog comes back as an error
+      Then the refresh is refused
+      And the saved catalog is unchanged
+
+    Example: The one where paging ends short of the total
+      Given the AWS catalog reports 2169 sessions
+      When paging ends after 2100 sessions
+      Then the refresh is refused
+
   Rule: A refresh that loses most session times or rooms is refused
 
     Example: The one where AWS renames the start-time field

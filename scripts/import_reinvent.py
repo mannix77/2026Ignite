@@ -95,14 +95,19 @@ def post_page(offset, attempts=3):
     raise RuntimeError("catalog page from=%d failed: %s" % (offset, last))
 
 
-def page_items(page):
-    """The first page nests items under sectionList[0]; later pages (from > 0) have them at the top."""
+def page_section(page):
+    """The first page nests its items and total under sectionList[0]; later pages (from > 0)
+    have them at the top. An error page (responseCode other than "0") is refused: treating it
+    as the empty page that ends paging would publish a truncated catalog."""
     if not isinstance(page, dict):
         raise RuntimeError("unexpected catalog page (not an object)")
+    if str(page.get("responseCode", "0")) != "0":
+        raise RuntimeError("catalog page error %s: %s" % (page.get("responseCode"), page.get("responseMessage")))
     if "items" in page:
-        return page["items"] or []
+        return page
     sections = page.get("sectionList") or [{}]
-    return sections[0].get("items") or []
+    return sections[0] if isinstance(sections[0], dict) else {}
+
 
 
 def session_id(v):
@@ -143,10 +148,17 @@ def slim(r):
 def fetch_catalog(post=post_page):
     """Page through the catalog until an empty page; slim and de-duplicate by sessionID."""
     out, seen = [], set()
+    listed, total = 0, None
     for n in range(MAX_PAGES):
-        items = page_items(post(n * PAGE_SIZE))
+        section = page_section(post(n * PAGE_SIZE))
+        items = section.get("items") or []
+        if isinstance(section.get("total"), int):
+            total = section["total"]
         if not items:
+            if total is not None and listed < total:
+                raise RuntimeError("catalog paging stopped at %d of %d sessions" % (listed, total))
             return out
+        listed += len(items)
         for r in items:
             if not isinstance(r, dict):
                 continue  # not a session: nothing to keep

@@ -15,6 +15,7 @@ import sys
 import tempfile
 import types
 import unittest
+from unittest import mock
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
@@ -242,6 +243,16 @@ class FetchTests(unittest.TestCase):
         self.pages[1]["items"] = self.pages[1]["items"] + self.pages[0]["sectionList"][0]["items"][:1]
         self.assertEqual(codes(ri.fetch_catalog(self.post)), ["DVT212-S", "ANT319-R", "ANT203-S"])
 
+    def test_should_refuse_a_page_that_reports_an_error(self):
+        self.pages[1] = {"responseCode": "500", "responseMessage": "Internal error"}
+        with self.assertRaisesRegex(RuntimeError, "Internal error"):
+            ri.fetch_catalog(self.post)
+
+    def test_should_refuse_paging_that_ends_short_of_the_reported_total(self):
+        self.pages[1]["items"] = []
+        with self.assertRaisesRegex(RuntimeError, "2 of 3"):
+            ri.fetch_catalog(self.post)
+
     def test_should_collect_items_from_the_first_and_later_page_shapes(self):
         self.assertEqual(codes(ri.fetch_catalog(self.post)), ["DVT212-S", "ANT319-R", "ANT203-S"])
 
@@ -423,6 +434,21 @@ class CiSignalTests(ImportDir, unittest.TestCase):
     def test_should_report_no_change_to_the_workflow(self):
         self.cli()
         self.assertEqual(self.cli(), "changed=false\n")
+
+
+class FetchRefusedTests(ImportDir, unittest.TestCase):
+    """A refused --fetch keeps the last good catalog (the scheduled workflow's path)."""
+
+    def test_should_keep_the_saved_catalog_when_a_page_reports_an_error(self):
+        self.run_import()
+        before = self.data("sessions.json")
+        pages = load("reinvent_raw_pages.json")
+        pages[1] = {"responseCode": "500", "responseMessage": "Internal error"}
+        fetch = ri.fetch_catalog
+        args = types.SimpleNamespace(snapshot=None, fetch=True, data_dir=self.dir, summary_out=None, snapshot_out=None)
+        with mock.patch.object(ri, "fetch_catalog", lambda: fetch(lambda offset: pages[offset // ri.PAGE_SIZE])), \
+                contextlib.redirect_stderr(io.StringIO()):
+            self.assertEqual((ri.run(args), self.data("sessions.json")), ((3, False), before))
 
 
 def renamed(sessions, old, new):
