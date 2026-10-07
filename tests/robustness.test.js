@@ -173,10 +173,14 @@ await test('should list every app file for offline use, and only files that exis
   eq(SHELL.filter(p => p !== './').sort(), onDisk);
 });
 
-await test("should list every conference's catalog for offline use", () => {
+// data.js fetchAll reads these per conference; favorites and profile only exist for some.
+await test("should list every conference's data files for offline use", () => {
   const { DATA } = worker(MAIN).consts;
-  const missing = Object.values(CONFERENCES).map(c => `${c.dataDir}/sessions.json`).filter(p => !DATA.includes(p));
-  eq(missing, []);
+  const wanted = Object.values(CONFERENCES).flatMap(c => [
+    ...['sessions', 'changes', 'meta'].map(f => `${c.dataDir}/${f}.json`),
+    ...['favorites', 'profile'].map(f => `${c.dataDir}/${f}.json`).filter(p => fs.existsSync(path.join(ROOT, p))),
+  ]);
+  eq(wanted.filter(p => !DATA.includes(p)), []);
 });
 
 await test("should delete only this copy's old app caches when a new version activates", async () => {
