@@ -75,10 +75,8 @@ export function load(namespace = '') {
     if (raw) {
       const saved = JSON.parse(raw);
       delete saved.settings; // pre-release format stored every default
-      if (saved.prefs) delete saved.prefs.simNow;
-      if (saved.known && Object.values(saved.known).some(k => k && !k.inst)) saved.known = {}; // pre-release keying
       state = merge(blank(), saved);
-      state.known = sanitizeKnown(state.known);
+      state.known = sanitizeKnown(state.known); // also drops pre-release entries, which had no run id
       state.picks = sanitizePicks(state.picks);
       state.prefs = sanitizePrefs(state.prefs);
       state.profile = saved.profile ? sanitizeProfile(saved.profile) : null;

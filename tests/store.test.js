@@ -46,6 +46,30 @@ await test('should drop a saved pick with no rating, lock, seat or note on reloa
   eq(store.pick('S3'), null);
 });
 
+// ---- saved state from earlier versions of the planner
+function loadSaved(ns, saved) {
+  localStorage.setItem(`ignite26.planner.v1:${ns}`, JSON.stringify(saved));
+  return store.load(ns);
+}
+
+await test('should not carry forward the pre-release block that stored every default setting', () => {
+  const state = loadSaved('old-settings', { v: 1, picks: {}, settings: { buffer: 99 } });
+  eq(['settings' in state, store.settings().buffer], [false, store.DEFAULT_SETTINGS.buffer]);
+});
+
+await test('should drop a saved simulated clock', () => {
+  eq(loadSaved('old-simnow', { v: 1, picks: {}, prefs: { simNow: 123, buffer: 7 } }).prefs, { buffer: 7 });
+});
+
+await test('should drop change tracking saved before it was keyed by run', () => {
+  eq(loadSaved('old-known', { v: 1, picks: {}, known: { S1: { g: 'G', code: 'BRK1' } } }).known, {});
+});
+
+await test('should keep the rest of the change tracking when one entry has no run id', () => {
+  const kept = { inst: 'S2', g: 'G', code: 'BRK2' };
+  eq(loadSaved('mixed-known', { v: 1, picks: {}, known: { S1: { g: 'G', code: 'BRK1' }, S2: kept } }).known, { S2: kept });
+});
+
 // ---- a change is saved even when you leave straight away (specs/features/saving.feature)
 const saved = ns => JSON.parse(localStorage.getItem(`ignite26.planner.v1:${ns}`) || '{"picks":{}}').picks;
 
