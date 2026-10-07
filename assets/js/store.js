@@ -258,7 +258,8 @@ function sanitizePicks(picks, undatedAt) {
 
 function sanitizeKnown(known) {
   const out = {};
-  for (const [inst, k] of Object.entries(known || {})) if (k && typeof k === 'object' && typeof k.inst === 'string') out[inst] = k;
+  // Each snapshot is saved under its own run id, so a blank or different id is not a real entry.
+  for (const [inst, k] of Object.entries(known || {})) if (k && typeof k === 'object' && k.inst === inst && inst) out[inst] = k;
   return out;
 }
 

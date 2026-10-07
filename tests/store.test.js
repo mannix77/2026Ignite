@@ -65,6 +65,11 @@ await test('should drop change tracking saved before it was keyed by run', () =>
   eq(loadSaved('old-known', { v: 1, picks: {}, known: { S1: { g: 'G', code: 'BRK1' } } }).known, {});
 });
 
+await test('should drop change tracking whose run id is blank or not its own', () => {
+  const kept = { inst: 'S3', g: 'G', code: 'BRK3' };
+  eq(loadSaved('bad-known', { v: 1, picks: {}, known: { S1: { inst: '', g: 'G' }, S2: { inst: 'S9', g: 'G' }, S3: kept } }).known, { S3: kept });
+});
+
 await test('should keep the rest of the change tracking when one entry has no run id', () => {
   const kept = { inst: 'S2', g: 'G', code: 'BRK2' };
   eq(loadSaved('mixed-known', { v: 1, picks: {}, known: { S1: { g: 'G', code: 'BRK1' }, S2: kept } }).known, { S2: kept });
