@@ -8,7 +8,7 @@ import { localParts, fromISO, parseSlot, fmtTime, fmtDay, addDays } from '../ass
 import { createVenue } from '../assets/js/venue.js';
 import { CONFERENCES, LAS_VEGAS_DEF, SWAN_DOLPHIN_DEF } from '../assets/js/conferences.js';
 import { parseShare } from '../assets/js/store.js';
-import { arrivalExtra } from '../assets/js/planner.js';
+import { arrivalExtra, lunchConfig } from '../assets/js/planner.js';
 
 const log = typeof print === 'function' && typeof window === 'undefined' ? print : console.log;
 let pass = 0, fail = 0;
@@ -434,6 +434,17 @@ test('lunch outranks only what it is worth more than', () => {
   eq([Object.values(r2.plan).flat().length, !!r2.lunch[D]], [0, true], 'a Maybe (20) over the whole window loses to lunch (40)');
 });
 
+test('lunch turned off in Settings keeps a Maybe that lunch would otherwise beat', () => {
+  const maybe = item(H(11.5), H(13.5), W2, { priority: 1 });
+  const res = optimize([maybe], DEFAULT_PLANNER, lunchConfig({ ...LUNCH, on: false }));
+  eq([Object.values(res.plan).flat().length, res.lunch[D] ?? null], [1, null]);
+});
+test('a lunch longer than its window plans no lunch', () => {
+  eq(lunchConfig({ ...LUNCH, length: 180 }), null);
+});
+test('lunch settings saved as text still plan a lunch', () => {
+  eq(lunchConfig({ on: true, from: '690', to: '810', length: '30', weight: '40' }), { from: 690, to: 810, length: 30, weight: 40 });
+});
 test('lunch does not multiply the repeat-run search (review e5)', () => {
   const A = item(H(9), H(10), W2, { id: 'A', code: 'A', day: '2026-11-17' });
   const B = item(H(9), H(10), W2, { id: 'B', code: 'B', day: D });
