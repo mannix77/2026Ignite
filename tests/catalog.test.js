@@ -62,6 +62,10 @@ await test('should find an added session that a fresh export now lists on the sa
   const official = { id: '99', inst: '99', code: 'HLR1', title: 'Healthcare and Life Sciences Networking Reception', type: 'Receptions and Special Event', start: '2026-10-19T22:15:00Z', end: '2026-10-20T00:00:00Z', delivery: ['In-person'] };
   eq(catalogMatch(reception, model([official], [])).code, 'HLR1');
 });
+await test('should not match an unrelated catalog session on the same day', () => {
+  const roundtable = { id: '98', inst: '98', code: 'CIO7', title: 'Healthcare Provider CIO Roundtable', type: 'Roundtable', start: '2026-10-19T22:15:00Z', end: '2026-10-20T00:00:00Z', delivery: ['In-person'] };
+  eq(catalogMatch(reception, model([roundtable], [])), null);
+});
 await test('should not match a catalog session on another day', () => {
   const official = { id: '99', inst: '99', code: 'HLB2', title: 'Healthcare and Life Sciences Networking Reception', type: 'Meals', start: '2026-10-20T11:30:00Z', end: '2026-10-20T12:30:00Z', delivery: ['In-person'] };
   eq(catalogMatch(reception, model([official], [])), null);
