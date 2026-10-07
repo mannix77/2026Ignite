@@ -76,13 +76,16 @@ export function load(namespace = '') {
       const saved = JSON.parse(raw);
       delete saved.settings; // pre-release format stored every default
       state = merge(blank(), saved);
+      if (!state.ui || typeof state.ui !== 'object' || Array.isArray(state.ui)) state.ui = blank().ui; // startup reads ui.*
       state.known = sanitizeKnown(state.known); // also drops pre-release entries, which had no run id
       state.picks = sanitizePicks(state.picks);
       state.prefs = sanitizePrefs(state.prefs);
       state.profile = saved.profile ? sanitizeProfile(saved.profile) : null;
     }
   } catch (e) {
-    console.warn('Could not read saved state', e);
+    // Unreadable (truncated or corrupt): keep a copy before the next save replaces it.
+    console.warn('Could not read saved state; a copy is kept under', `${KEY}#unreadable`, e);
+    try { const raw = localStorage.getItem(KEY); if (raw) localStorage.setItem(`${KEY}#unreadable`, raw); } catch { /* storage blocked */ }
   }
   cachedSettings = null;
   return state;
@@ -327,23 +330,24 @@ function sanitizePrefs(src) {
 // ---- moving picks between devices
 
 export function exportData() {
-  return { app: 'ignite26-planner', v: 1, conference: namespace() || 'ignite2026', exportedAt: new Date().toISOString(), picks: state.picks, settings: state.prefs, profile: profile() };
+  return { app: 'ignite26-planner', v: 1, conference: namespace() || 'ignite2026', exportedAt: new Date().toISOString(), picks: state.picks, settings: state.prefs, profile: state.profile }; // null: never set
 }
 
 export function importData(obj, { replace = false } = {}) {
-  if (!obj || obj.app !== 'ignite26-planner' || !obj.picks || typeof obj.picks !== 'object') throw new Error('Not an Ignite planner backup file');
+  if (!obj || obj.app !== 'ignite26-planner' || !obj.picks || typeof obj.picks !== 'object' || Array.isArray(obj.picks)) throw new Error('Not an Ignite planner backup file');
   const incoming = sanitizePicks(obj.picks, 0); // undated backup picks are older than anything here
   // Checked before anything changes: a backup from another format must not empty the plan.
   if (Object.keys(obj.picks).length && !Object.keys(incoming).length) throw new Error('This backup has no picks this planner can read; nothing was changed');
   if (replace) state.picks = {};
+  let applied = 0;
   for (const [id, p] of Object.entries(incoming)) {
     const cur = state.picks[id];
-    if (!cur || p.at > (cur.at || 0)) state.picks[id] = { ...p, note: p.note || cur?.note || '' };
+    if (!cur || p.at > (cur.at || 0)) { state.picks[id] = { ...p, note: p.note || cur?.note || '' }; applied++; }
   }
   if (obj.settings && replace) { state.prefs = sanitizePrefs(obj.settings); cachedSettings = null; }
   if (obj.profile && (replace || !state.profile)) state.profile = sanitizeProfile(obj.profile);
   emit(replace ? 'reset' : 'picks');
-  return Object.keys(incoming).length;
+  return applied;
 }
 
 // Compact share token per pick: CODE.p[sSCORE][w][!LOCKCODE | *LOCKCODE]
