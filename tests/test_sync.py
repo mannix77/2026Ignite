@@ -261,14 +261,14 @@ class DiffTests(unittest.TestCase):
     def test_should_report_a_move_of_a_run_whose_id_was_regenerated(self):
         prev = [self.rec("T1", "2026-11-18T18:00:00Z", "W3006")]
         cur = [self.rec("N1", "2026-11-18T18:00:00Z", "S207")]
-        _, _, changed = sync.diff(prev, cur)
-        self.assertEqual([set(c["f"]) for c in changed], [{"room"}])
+        added, removed, changed = sync.diff(prev, cur)
+        self.assertEqual((added, removed, [set(c["f"]) for c in changed]), ([], [], [{"room"}]))
 
     def test_moved_run_is_a_change(self):
         prev = [self.rec("T1", "2026-11-18T18:00:00Z", "W3006")]
         cur = [self.rec("T1", "2026-11-18T19:00:00Z", "S207")]
-        _, _, changed = sync.diff(prev, cur)
-        self.assertEqual(set(changed[0]["f"]), {"start", "room"})
+        added, removed, changed = sync.diff(prev, cur)
+        self.assertEqual((added, removed, [set(c["f"]) for c in changed]), ([], [], [{"start", "room"}]))
 
 
 class SummaryTests(unittest.TestCase):
