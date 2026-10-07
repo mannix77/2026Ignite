@@ -253,6 +253,11 @@ class FetchTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "2 of 3"):
             ri.fetch_catalog(self.post)
 
+    def test_should_refuse_paging_when_a_later_page_reports_a_different_total(self):
+        self.pages[1]["total"] = 2
+        with self.assertRaisesRegex(RuntimeError, "3, then 2"):
+            ri.fetch_catalog(self.post)
+
     def test_should_collect_items_from_the_first_and_later_page_shapes(self):
         self.assertEqual(codes(ri.fetch_catalog(self.post)), ["DVT212-S", "ANT319-R", "ANT203-S"])
 

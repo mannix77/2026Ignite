@@ -152,8 +152,13 @@ def fetch_catalog(post=post_page):
     for n in range(MAX_PAGES):
         section = page_section(post(n * PAGE_SIZE))
         items = section.get("items") or []
-        if isinstance(section.get("total"), int):
-            total = section["total"]
+        reported = section.get("total")
+        if isinstance(reported, int):
+            # The first page's total is the bar; a later page that disagrees means the
+            # catalog changed mid-fetch (or the API is wrong): refuse rather than lower it.
+            if total is not None and reported != total:
+                raise RuntimeError("catalog total changed while paging: %d, then %d" % (total, reported))
+            total = reported
         if not items:
             if total is not None and listed < total:
                 raise RuntimeError("catalog paging stopped at %d of %d sessions" % (listed, total))
