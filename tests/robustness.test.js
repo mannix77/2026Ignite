@@ -139,5 +139,65 @@ await test('should refuse a live catalog whose entries are largely malformed', a
   eq(/malformed/.test(err || ''), true);
 });
 
+// ---- the service worker (sw.js), run in a sandbox with fake caches and fetch
+const fs = await import('node:fs');
+const vm = await import('node:vm');
+const path = await import('node:path');
+const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+const SW_SOURCE = fs.readFileSync(path.join(ROOT, 'sw.js'), 'utf8');
+
+// Loads sw.js as the worker for `scope`, with the named caches already present.
+function worker(scope, cacheNames = []) {
+  const handlers = {};
+  const existing = new Set(cacheNames);
+  const deleted = [];
+  const self = {
+    registration: { scope }, location: new URL(scope), clients: { claim: async () => {}, matchAll: async () => [] },
+    addEventListener: (type, fn) => { handlers[type] = fn; }, skipWaiting: async () => {},
+  };
+  const caches = { keys: async () => [...existing], delete: async k => { deleted.push(k); return existing.delete(k); },
+    open: async () => ({ match: async () => undefined, put: async () => {}, addAll: async () => {} }) };
+  vm.runInNewContext(SW_SOURCE, { self, caches, URL, Request: class { constructor(u) { this.url = u; } }, setTimeout, fetch: async () => { throw new Error('offline'); } });
+  return { handlers, deleted, consts: vm.runInNewContext(`${SW_SOURCE}; ({ SHELL, DATA, VERSION, SHELL_PREFIX })`, { self, caches, URL }) };
+}
+const MAIN = 'https://example.github.io/2026Ignite/';
+
+await test('should list every app file for offline use, and only files that exist', () => {
+  const { SHELL } = worker(MAIN).consts;
+  const onDisk = ['index.html', 'manifest.webmanifest', ...['assets/css', 'assets/js', 'assets/icons']
+    .flatMap(d => fs.readdirSync(path.join(ROOT, d)).map(f => `${d}/${f}`))].sort();
+  eq(SHELL.filter(p => p !== './').sort(), onDisk);
+});
+
+await test("should list every conference's catalog for offline use", () => {
+  const { DATA } = worker(MAIN).consts;
+  const missing = Object.values(CONFERENCES).map(c => `${c.dataDir}/sessions.json`).filter(p => !DATA.includes(p));
+  eq(missing, []);
+});
+
+await test("should delete only this copy's old app caches when a new version activates", async () => {
+  const { consts } = worker(MAIN);
+  const mine = consts.SHELL_PREFIX;
+  const w = worker(MAIN, [`${mine}old`, `${mine}${consts.VERSION}`, 'shell-legacy', 'data-v1', 'shell:/2026Ignite/gino/:old']);
+  let done;
+  w.handlers.activate({ waitUntil: p => { done = p; } });
+  await done;
+  eq(w.deleted.sort(), [`${mine}old`, 'shell-legacy'].sort());
+});
+
+await test("should leave a colleague's copy to its own worker", () => {
+  const { handlers } = worker(MAIN);
+  let answered = false;
+  handlers.fetch({ request: { method: 'GET', url: `${MAIN}gino/index.html`, mode: 'navigate' }, respondWith: () => { answered = true; } });
+  eq(answered, false);
+});
+
+await test('should answer for its own app page', () => {
+  const { handlers } = worker(MAIN);
+  let answered = false;
+  handlers.fetch({ request: { method: 'GET', url: `${MAIN}index.html`, mode: 'navigate' }, respondWith: p => { answered = true; p.catch(() => {}); } });
+  eq(answered, true);
+});
+
 console.log(`${pass} passed, ${fail} failed`);
 if (fail) process.exitCode = 1;
