@@ -3,6 +3,97 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-10-07T01:20:33Z · https://catalog.awsevents.com/api/sessions
+
+Added 0 · removed 2 · changed 103
+
+**Removed**
+- `IND409-R` Designing the AWS Secure Research Environment: Architecture deep dive
+- `IND409-R1` Designing the AWS Secure Research Environment: Architecture Deep Dive
+
+**Changed**
+- `AIM401-R` Agents that train themselves: autonomous reinforcement learning on AWS — desc
+- `AIM401-R1` Agents that train themselves: autonomous reinforcement learning on AWS — desc
+- `AIM409-R` Build a cost optimization playbook for your AI workload — desc
+- `AIM409-R1` Build a cost optimization playbook for your AI workload — desc
+- `ANT413-R` Automating data pipelines with agentic AI and Apache Iceberg — desc
+- `ANT413-R1` Self-healing data pipelines with agentic AI and Apache Iceberg — desc
+- `ANT421` Cost-effective serverless data integrations and workflows for AI-ready data — level: 400 → 300
+- `ANT422` Accelerating Apache Spark 4.1 workloads with AWS Analytics — title: Accelerating Apache Spark 4.0 workloads with AWS Analytics → Accelerating Apache Spark 4.1 workloads with AWS Analytics; desc
+- `BIZ114` What's New in Amazon Connect Customer — level: — → 100
+- `BIZ332` ​​Every Candidate, Every Time: AI-Led Structured Interviews at Scale — level: — → 300
+- `BIZ333` Design, Simulate, Ship: End-to-End AI Agents on Connect Customer — level: — → 300
+- `BIZ334` Building Smarter Self-Service Experiences with AI — level: — → 300
+- `BIZ335` Build an AI agent that understands customer intent — level: — → 300
+- `CMP252` Running larger, higher-fidelity quantum experiments on Amazon Braket — level: — → 200
+- `CMP358` Graviton5 for data workloads — level: — → 300
+- `CMP359` Simplifying how you use AWS: automating common patterns on your behalf — level: — → 300
+- `CON207` Simplify ingress networking for applications on Amazon ECS — level: — → 200
+- `CON322-R` Deploy accelerated workloads with Amazon ECS Managed Instances — desc
+- `CON322-R1` Deploy accelerated workloads with Amazon ECS Managed Instances — desc
+- `CON345` Eliminate wasted compute capacity with Amazon ECS — level: — → 300
+- `CON346` Enhanced container image access & distribution with Amazon ECR — level: — → 300
+- `CON347` Intelligent, right-sized compute on Amazon EKS — level: — → 300
+- `CON348` Defense-in-Depth for Containers on Amazon EKS: A Layering Story — level: — → 300
+- `COP337` Wrong, Not Broken, & Why your Observability should know the difference — title: Building AI-powered, app-centric unified observability → Wrong, Not Broken, & Why your Observability should know t…; desc
+- `COP353` Take Action on Operational Issues with AWS DevOps Agent — level: — → 300
+- `COP354` Diagnose Complex Workloads with AWS DevOps Agent — level: — → 300
+- `COP355` Resolve Incidents and Validate Releases with AWS DevOps Agent — level: — → 300
+- `COP357` Monitor AI workloads and agents end to end — level: — → 300
+- `COP360` Monetizing your applications with AWS — level: — → 300
+- `COP361` Find the waste hiding in your accelerator fleetÂ — level: — → 300
+- `COP362` Troubleshoot Workloads End to End with AWS DevOps Agent — level: — → 300
+- `COP363` Investigate Incidents Across Teams with AWS DevOps Agent — level: — → 300
+- `COP366` Take control of how AWS credits are allocated across your accounts — level: — → 300
+- `COP367` End-to-end resilience for your cloud workloads — level: — → 300
+- `COP368` Recovering AWS Graviton workloads with orchestrated DR — level: — → 300
+- `DAT452` [NEW LAUNCH] Coming soon! — level: — → 400
+- `DAT453` [NEW LAUNCH] Coming soon! — level: — → 400
+- `DVT343` From code to production in seconds — building web apps that last — title: …â€” building web apps that last → …— building web apps that last; level: — → 300
+- `DVT344` Ship web apps that just work — level: — → 300
+- `HMC320` Right workload on the right cloud - multicloud workload placement — level: — → 300
+- `IND3349` From Generic to Industry Expert: The Next Era of AI — level: — → 300; desc
+- `MAM225` What's new with AWS Transform for migrations — level: — → 200
+- `MAM347` Meet Your AI Teammate for WorkSpaces Administration — level: — → 300
+- `MAM348` Provision Desktops for Builders Faster with WorkSpaces — level: — → 300
+- `MAM349` Scaling legacy app modernization with autonomous agents — level: — → 300
+- `MAM350` Faster tech debt remediation without the setup overhead — level: — → 300
+- `NET101` What's new in eero networking — level: — → 100
+- `NET338` Innovations in Elastic Load Balancing and application networking — level: — → 300
+- `NET339` AI innovations across network monitoring and operations — level: — → 300
+- `NET340` Innovations in Secure Service Edge architectures on AWS — level: — → 300
+- `NET341` Building hybrid satellite and cloud networks with Amazon Leo — level: — → 300
+- `NET342` Innovations in DNS and Amazon Route 53 — level: — → 300
+- `NET343` DDI Architecture Patterns: DNS, DHCP, and IPAM at AWS — level: — → 300
+- `NET344` DDI Architecture Patterns: DNS, DHCP, and IPAM at AWS — level: — → 300
+- `NET345` Innovations in DNS and Amazon Route 53 — level: — → 300
+- `NET408` Innovations across the AWS Backbone — level: — → 400
+- `PEX216` Co-Sell to Co-Marketing: An AI-powered, end-to-end partner motion. — level: — → 200
+- `PEX217` Sell to AI agents through AWS Marketplace — level: — → 200
+- `PEX320` AI-Powered Migrations: AWS Transform Across the Lifecycle — level: — → 300
+- `PEX321` Connecting sellers with their AWS Marketplace buyers — level: — → 300
+- `SEC204` Post-quantum readiness at scale with AWS and DXC Technology — title: Leading a post-quantum migration ahead of CNSA 2.0 deadlines → Post-quantum readiness at scale with AWS and DXC Technology; desc
+- `SEC207` Balancing trust and agility: payment cryptography in the cloud with Capital One — title: …agility - payment cryptography in the cloud with Capital… → …agility: payment cryptography in the cloud with Capital One; desc
+- `SEC232-S` Build Secure AI Agents on AWS: XAA, Bedrock AgentCore and the AI Blueprint — title: From Humans to Agents: Rethinking Identity for Your Next … → Build Secure AI Agents on AWS: XAA, Bedrock AgentCore and…; desc
+- `SEC316` Crypto escape room: race to migrate to quantum resistance — title: Crypto Escape Room: Race to migrate to quantum resistance → Crypto escape room: race to migrate to quantum resistance
+- `SEC321-R` Securing AI coding agents: defense in depth across the development lifecycle — title: …Coding Agents: Defense in Depth Across the Development L… → …coding agents: defense in depth across the development l…
+- `SEC321-R1` Securing AI coding agents: defense in depth across the development lifecycle — title: …Coding Agents: Defense in Depth Across the Development L… → …coding agents: defense in depth across the development l…
+- `SEC322` Investigating AI threats: extending IR to the generative AI layer — title: …Threats: Extending IR to the Generative AI Layer → …threats: extending IR to the generative AI layer
+- `SEC323-R` Assume breach, prove recovery: a ransomware resilience workshop — title: …Breach, Prove Recovery: A ransomware resilience workshop → …breach, prove recovery: a ransomware resilience workshop
+- `SEC323-R1` Assume breach, prove recovery: A ransomware resilience workshop — title: …Breach, Prove Recovery: A ransomware resilience workshop → …breach, prove recovery: A ransomware resilience workshop
+- `SEC3303` Conquer Suricata: simplify rule writing on AWS Network Firewall — title: …Simplify Rule Writing on AWS Network Firewall → …simplify rule writing on AWS Network Firewall
+- `SEC334` Threat technique catalog for AWS: practical controls for real TTPs — title: …Technique Catalog for AWS: Practical Controls for Real TTPs → …technique catalog for AWS: practical controls for real TTPs
+- `SEC335-R` AI-assisted incident response: preparing for AI-assisted offensive — title: AI-Assisted Incident Response: Preparing for AI-Assisted … → AI-assisted incident response: preparing for AI-assisted …
+- `SEC335-R1` AI-assisted incident response: preparing for AI-assisted offensive — title: AI-Assisted Incident Response: Preparing for AI-Assisted … → AI-assisted incident response: preparing for AI-assisted …
+- `SEC338-R` Automated memory forensics at scale with generative AI — desc
+- `SEC348` Policy to Proof: govern deployments at machine speed — speakers: Jean Velez Torres, Jerry Peter, Vinicius Elias, Welly Sia… → Jean Velez Torres, Jerry Peter, Pujah Goviel, Vinicius El…
+- `SEC372` Governing hundreds of accounts in seconds: agentic AI meets Landing Zone operations — title: …Hundreds of Accounts in Seconds: Agentic AI Meets Landin… → …hundreds of accounts in seconds: agentic AI meets Landin…
+- `SEC375` How to build an autonomous compliance environment auditors trust — desc
+- `SEC377` Protect EKS and ECS workloads without chasing pod IPs — title: Protect EKS and ECS Workloads Without Chasing Pod IPs → Protect EKS and ECS workloads without chasing pod IPs
+- `SEC381` Automated compliance evidence from day one — title: Automated Compliance Evidence from Day One → Automated compliance evidence from day one
+- `SEC387` How to use AI to develop and deploy controls from your internal policies — speakers: pujahgo pujahgo → Pujah Goviel
+- …and 23 more
+
 ## 2026-10-06T18:51:35Z · https://catalog.awsevents.com/api/sessions
 
 Added 15 · removed 0 · changed 36

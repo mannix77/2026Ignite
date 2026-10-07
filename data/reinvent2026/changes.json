@@ -1,6 +1,1259 @@
 {
  "batches": [
   {
+   "at": "2026-10-07T01:20:33Z",
+   "milestones": [],
+   "added": [],
+   "removed": [
+    {
+     "id": "1780442281286001cgYP",
+     "inst": "1780442281286001cgYP",
+     "code": "IND409-R",
+     "title": "Designing the AWS Secure Research Environment: Architecture deep dive"
+    },
+    {
+     "id": "1790358253579001i9ek",
+     "inst": "1790358253579001i9ek",
+     "code": "IND409-R1",
+     "title": "Designing the AWS Secure Research Environment: Architecture Deep Dive"
+    }
+   ],
+   "changed": [
+    {
+     "id": "1780442279896001ce9P",
+     "inst": "1780442279896001ce9P",
+     "code": "BIZ333",
+     "title": "Design, Simulate, Ship: End-to-End AI Agents on Connect Customer",
+     "f": {
+      "level": [
+       null,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1788294137064001mZqq",
+     "inst": "1788294137064001mZqq",
+     "code": "SEC391",
+     "title": "Securing your AI-accelerated software supply chain with AWS Well-Architected",
+     "f": {
+      "title": [
+       "Securing Your AI-Accelerated Software Supply Chain with AWS Well-Architected",
+       "Securing your AI-accelerated software supply chain with AWS Well-Architected"
+      ]
+     }
+    },
+    {
+     "id": "1780442223920001c4Dh",
+     "inst": "1780442223920001c4Dh",
+     "code": "AIM401-R",
+     "title": "Agents that train themselves: autonomous reinforcement learning on AWS",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442256261001cAK4",
+     "inst": "1780442256261001cAK4",
+     "code": "MAM350",
+     "title": "Faster tech debt remediation without the setup overhead",
+     "f": {
+      "level": [
+       null,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1780441462170001GiHB",
+     "inst": "1780441462170001GiHB",
+     "code": "ANT422",
+     "title": "Accelerating Apache Spark 4.1 workloads with AWS Analytics",
+     "f": {
+      "title": [
+       "Accelerating Apache Spark 4.0 workloads with AWS Analytics",
+       "Accelerating Apache Spark 4.1 workloads with AWS Analytics"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442241479001cVUQ",
+     "inst": "1780442241479001cVUQ",
+     "code": "BIZ332",
+     "title": "​​Every Candidate, Every Time: AI-Led Structured Interviews at Scale",
+     "f": {
+      "level": [
+       null,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1780442279528001cKTV",
+     "inst": "1780442279528001cKTV",
+     "code": "BIZ334",
+     "title": "Building Smarter Self-Service Experiences with AI",
+     "f": {
+      "level": [
+       null,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1780441471509001G0sH",
+     "inst": "1780441471509001G0sH",
+     "code": "COP367",
+     "title": "End-to-end resilience for your cloud workloads",
+     "f": {
+      "level": [
+       null,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1780441487977001GfBQ",
+     "inst": "1780441487977001GfBQ",
+     "code": "SEC232-S",
+     "title": "Build Secure AI Agents on AWS: XAA, Bedrock AgentCore and the AI Blueprint",
+     "f": {
+      "title": [
+       "From Humans to Agents: Rethinking Identity for Your Next Wave of Growth (sponsored by Okta)",
+       "Build Secure AI Agents on AWS: XAA, Bedrock AgentCore and the AI Blueprint"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442250286001cl5A",
+     "inst": "1780442250286001cl5A",
+     "code": "SEC335-R",
+     "title": "AI-assisted incident response: preparing for AI-assisted offensive",
+     "f": {
+      "title": [
+       "AI-Assisted Incident Response: Preparing for AI-Assisted Offensive",
+       "AI-assisted incident response: preparing for AI-assisted offensive"
+      ]
+     }
+    },
+    {
+     "id": "1780441471859001GlhT",
+     "inst": "1780441471859001GlhT",
+     "code": "CON347",
+     "title": "Intelligent, right-sized compute on Amazon EKS",
+     "f": {
+      "level": [
+       null,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1780442241644001cgxH",
+     "inst": "1780442241644001cgxH",
+     "code": "COP368",
+     "title": "Recovering AWS Graviton workloads with orchestrated DR",
+     "f": {
+      "level": [
+       null,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1780442241765001ciwG",
+     "inst": "1780442241765001ciwG",
+     "code": "CMP252",
+     "title": "Running larger, higher-fidelity quantum experiments on Amazon Braket",
+     "f": {
+      "level": [
+       null,
+       200
+      ]
+     }
+    },
+    {
+     "id": "1780442260783001cQnv",
+     "inst": "1780442260783001cQnv",
+     "code": "CON207",
+     "title": "Simplify ingress networking for applications on Amazon ECS",
+     "f": {
+      "level": [
+       null,
+       200
+      ]
+     }
+    },
+    {
+     "id": "1780442258053001cweq",
+     "inst": "1780442258053001cweq",
+     "code": "SEC427",
+     "title": "Threat modeling the agentic SDLC: from user story to deployment",
+     "f": {
+      "title": [
+       "Threat Modeling the Agentic SDLC: From User Story to Deployment",
+       "Threat modeling the agentic SDLC: from user story to deployment"
+      ]
+     }
+    },
+    {
+     "id": "1780442284727001cd1E",
+     "inst": "1780442284727001cd1E",
+     "code": "SEC416",
+     "title": "Orchestrating AI agents for continuous code security hardening",
+     "f": {
+      "title": [
+       "Orchestrating AI Agents for Continuous Code Security Hardening",
+       "Orchestrating AI agents for continuous code security hardening"
+      ]
+     }
+    },
+    {
+     "id": "1780441472515001GiTw",
+     "inst": "1780441472515001GiTw",
+     "code": "NET338",
+     "title": "Innovations in Elastic Load Balancing and application networking",
+     "f": {
+      "level": [
+       null,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1780442224363001cv3P",
+     "inst": "1780442224363001cv3P",
+     "code": "AIM409-R",
+     "title": "Build a cost optimization playbook for your AI workload",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442232512001cBoz",
+     "inst": "1780442232512001cBoz",
+     "code": "ANT413-R",
+     "title": "Automating data pipelines with agentic AI and Apache Iceberg",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441462093001G6Rs",
+     "inst": "1780441462093001G6Rs",
+     "code": "ANT421",
+     "title": "Cost-effective serverless data integrations and workflows for AI-ready data",
+     "f": {
+      "level": [
+       400,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1780441471802001GuEb",
+     "inst": "1780441471802001GuEb",
+     "code": "CON346",
+     "title": "Enhanced container image access & distribution with Amazon ECR",
+     "f": {
+      "level": [
+       null,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1780442256070001cJKF",
+     "inst": "1780442256070001cJKF",
+     "code": "CON348",
+     "title": "Defense-in-Depth for Containers on Amazon EKS: A Layering Story",
+     "f": {
+      "level": [
+       null,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1780442279644001cp1u",
+     "inst": "1780442279644001cp1u",
+     "code": "MAM348",
+     "title": "Provision Desktops for Builders Faster with WorkSpaces",
+     "f": {
+      "level": [
+       null,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1780442257930001cFqN",
+     "inst": "1780442257930001cFqN",
+     "code": "SEC372",
+     "title": "Governing hundreds of accounts in seconds: agentic AI meets Landing Zone operations",
+     "f": {
+      "title": [
+       "Governing Hundreds of Accounts in Seconds: Agentic AI Meets Landing Zone Operations",
+       "Governing hundreds of accounts in seconds: agentic AI meets Landing Zone operations"
+      ]
+     }
+    },
+    {
+     "id": "1780441472395001Gj5P",
+     "inst": "1780441472395001Gj5P",
+     "code": "NET101",
+     "title": "What's new in eero networking",
+     "f": {
+      "level": [
+       null,
+       100
+      ]
+     }
+    },
+    {
+     "id": "1780442242182001c7VA",
+     "inst": "1780442242182001c7VA",
+     "code": "NET342",
+     "title": "Innovations in DNS and Amazon Route 53",
+     "f": {
+      "level": [
+       null,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1780441472974001GsNm",
+     "inst": "1780441472974001GsNm",
+     "code": "SVS351",
+     "title": "Lambda Managed Instances: EC2 Power with Serverless Simplicity",
+     "f": {
+      "level": [
+       null,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1780441471338001Gp4a",
+     "inst": "1780441471338001Gp4a",
+     "code": "BIZ114",
+     "title": "What's New in Amazon Connect Customer",
+     "f": {
+      "level": [
+       null,
+       100
+      ]
+     }
+    },
+    {
+     "id": "1780441470615001G0wJ",
+     "inst": "1780441470615001G0wJ",
+     "code": "MAM349",
+     "title": "Scaling legacy app modernization with autonomous agents",
+     "f": {
+      "level": [
+       null,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1780441471398001GYQN",
+     "inst": "1780441471398001GYQN",
+     "code": "COP360",
+     "title": "Monetizing your applications with AWS",
+     "f": {
+      "level": [
+       null,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1780442242053001cKxl",
+     "inst": "1780442242053001cKxl",
+     "code": "MAM347",
+     "title": "Meet Your AI Teammate for WorkSpaces Administration",
+     "f": {
+      "level": [
+       null,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1780442284605001chVc",
+     "inst": "1780442284605001chVc",
+     "code": "SEC323-R",
+     "title": "Assume breach, prove recovery: a ransomware resilience workshop",
+     "f": {
+      "title": [
+       "Assume Breach, Prove Recovery: A ransomware resilience workshop",
+       "Assume breach, prove recovery: a ransomware resilience workshop"
+      ]
+     }
+    },
+    {
+     "id": "1780442241818001cusZ",
+     "inst": "1780442241818001cusZ",
+     "code": "CMP359",
+     "title": "Simplifying how you use AWS: automating common patterns on your behalf",
+     "f": {
+      "level": [
+       null,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1780442260614001cT5K",
+     "inst": "1780442260614001cT5K",
+     "code": "COP361",
+     "title": "Find the waste hiding in your accelerator fleetÂ",
+     "f": {
+      "level": [
+       null,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1780442261356001cvtZ",
+     "inst": "1780442261356001cvtZ",
+     "code": "PEX216",
+     "title": "Co-Sell to Co-Marketing: An AI-powered, end-to-end partner motion.",
+     "f": {
+      "level": [
+       null,
+       200
+      ]
+     }
+    },
+    {
+     "id": "1790358246558001iY0C",
+     "inst": "1790358246558001iY0C",
+     "code": "SEC321-R1",
+     "title": "Securing AI coding agents: defense in depth across the development lifecycle",
+     "f": {
+      "title": [
+       "Securing AI Coding Agents: Defense in Depth Across the Development Lifecycle",
+       "Securing AI coding agents: defense in depth across the development lifecycle"
+      ]
+     }
+    },
+    {
+     "id": "1780442260722001cbn8",
+     "inst": "1780442260722001cbn8",
+     "code": "COP362",
+     "title": "Troubleshoot Workloads End to End with AWS DevOps Agent",
+     "f": {
+      "level": [
+       null,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1780441472053001Gkye",
+     "inst": "1780441472053001Gkye",
+     "code": "DVT344",
+     "title": "Ship web apps that just work",
+     "f": {
+      "level": [
+       null,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1780442280072001cN7R",
+     "inst": "1780442280072001cN7R",
+     "code": "COP357",
+     "title": "Monitor AI workloads and agents end to end",
+     "f": {
+      "level": [
+       null,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1780442222644001ceqg",
+     "inst": "1780442222644001ceqg",
+     "code": "SEC425",
+     "title": "From proofs to production: Neurosymbolic AI and provable security",
+     "f": {
+      "title": [
+       "From Proofs to Production: Neurosymbolic AI and Provable Security",
+       "From proofs to production: Neurosymbolic AI and provable security"
+      ]
+     }
+    },
+    {
+     "id": "1780442260668001crLi",
+     "inst": "1780442260668001crLi",
+     "code": "COP366",
+     "title": "Take control of how AWS credits are allocated across your accounts",
+     "f": {
+      "level": [
+       null,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1780441472287001GkDj",
+     "inst": "1780441472287001GkDj",
+     "code": "HMC320",
+     "title": "Right workload on the right cloud - multicloud workload placement",
+     "f": {
+      "level": [
+       null,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1780442257822001cP5I",
+     "inst": "1780442257822001cP5I",
+     "code": "SEC338-R",
+     "title": "Automated memory forensics at scale with generative AI",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1790358224584001iSbC",
+     "inst": "1790358224584001iSbC",
+     "code": "SEC335-R1",
+     "title": "AI-assisted incident response: preparing for AI-assisted offensive",
+     "f": {
+      "title": [
+       "AI-Assisted Incident Response: Preparing for AI-Assisted Offensive",
+       "AI-assisted incident response: preparing for AI-assisted offensive"
+      ]
+     }
+    },
+    {
+     "id": "1780441473214001GAn2",
+     "inst": "1780441473214001GAn2",
+     "code": "STG368",
+     "title": "Deep dive into recent Amazon S3 launches",
+     "f": {
+      "level": [
+       null,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1780441471682001GwUd",
+     "inst": "1780441471682001GwUd",
+     "code": "CMP358",
+     "title": "Graviton5 for data workloads",
+     "f": {
+      "level": [
+       null,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1780442241871001cCVl",
+     "inst": "1780442241871001cCVl",
+     "code": "CON345",
+     "title": "Eliminate wasted compute capacity with Amazon ECS",
+     "f": {
+      "level": [
+       null,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1780442256016001cq5I",
+     "inst": "1780442256016001cq5I",
+     "code": "COP354",
+     "title": "Diagnose Complex Workloads with AWS DevOps Agent",
+     "f": {
+      "level": [
+       null,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1780442279589001ckPS",
+     "inst": "1780442279589001ckPS",
+     "code": "COP355",
+     "title": "Resolve Incidents and Validate Releases with AWS DevOps Agent",
+     "f": {
+      "level": [
+       null,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1780442261412001cARm",
+     "inst": "1780442261412001cARm",
+     "code": "PEX321",
+     "title": "Connecting sellers with their AWS Marketplace buyers",
+     "f": {
+      "level": [
+       null,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1780442242486001cXqQ",
+     "inst": "1780442242486001cXqQ",
+     "code": "SVS349",
+     "title": "Managing Lambda Runtimes at Scale for Platform Teams",
+     "f": {
+      "level": [
+       null,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1780441466902001GACP",
+     "inst": "1780441466902001GACP",
+     "code": "COP337",
+     "title": "Wrong, Not Broken, & Why your Observability should know the difference",
+     "f": {
+      "title": [
+       "Building AI-powered, app-centric unified observability",
+       "Wrong, Not Broken, & Why your Observability should know the difference"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441471747001Ga93",
+     "inst": "1780441471747001Ga93",
+     "code": "IND3349",
+     "title": "From Generic to Industry Expert: The Next Era of AI",
+     "f": {
+      "level": [
+       null,
+       300
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442261172001cEhp",
+     "inst": "1780442261172001cEhp",
+     "code": "NET345",
+     "title": "Innovations in DNS and Amazon Route 53",
+     "f": {
+      "level": [
+       null,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1780442249832001ch8t",
+     "inst": "1780442249832001ch8t",
+     "code": "SEC321-R",
+     "title": "Securing AI coding agents: defense in depth across the development lifecycle",
+     "f": {
+      "title": [
+       "Securing AI Coding Agents: Defense in Depth Across the Development Lifecycle",
+       "Securing AI coding agents: defense in depth across the development lifecycle"
+      ]
+     }
+    },
+    {
+     "id": "1780442261524001cGsq",
+     "inst": "1780442261524001cGsq",
+     "code": "SVS209",
+     "title": "Everything your web app needs in one place",
+     "f": {
+      "level": [
+       null,
+       200
+      ]
+     }
+    },
+    {
+     "id": "1790358234575001ianB",
+     "inst": "1790358234575001ianB",
+     "code": "ANT413-R1",
+     "title": "Self-healing data pipelines with agentic AI and Apache Iceberg",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442241998001cWqa",
+     "inst": "1780442241998001cWqa",
+     "code": "DVT343",
+     "title": "From code to production in seconds — building web apps that last",
+     "f": {
+      "title": [
+       "From code to production in seconds â€” building web apps that last",
+       "From code to production in seconds — building web apps that last"
+      ],
+      "level": [
+       null,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1780442261114001clV7",
+     "inst": "1780442261114001clV7",
+     "code": "NET344",
+     "title": "DDI Architecture Patterns: DNS, DHCP, and IPAM at AWS",
+     "f": {
+      "level": [
+       null,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1790358257392001iv3K",
+     "inst": "1790358257392001iv3K",
+     "code": "AIM401-R1",
+     "title": "Agents that train themselves: autonomous reinforcement learning on AWS",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1790358252087001i4fx",
+     "inst": "1790358252087001i4fx",
+     "code": "AIM409-R1",
+     "title": "Build a cost optimization playbook for your AI workload",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441472915001GpE6",
+     "inst": "1780441472915001GpE6",
+     "code": "SVS350",
+     "title": "Building Interactive Web Applications on AWS Lambda",
+     "f": {
+      "level": [
+       null,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1780442227400001cvV4",
+     "inst": "1780442227400001cvV4",
+     "code": "BIZ335",
+     "title": "Build an AI agent that understands customer intent",
+     "f": {
+      "level": [
+       null,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1780441470679001Gkaa",
+     "inst": "1780441470679001Gkaa",
+     "code": "MAM225",
+     "title": "What's new with AWS Transform for migrations",
+     "f": {
+      "level": [
+       null,
+       200
+      ]
+     }
+    },
+    {
+     "id": "1790877000123001NOUA",
+     "inst": "1790877000123001NOUA",
+     "code": "SEC323-R1",
+     "title": "Assume breach, prove recovery: A ransomware resilience workshop",
+     "f": {
+      "title": [
+       "Assume Breach, Prove Recovery: A ransomware resilience workshop",
+       "Assume breach, prove recovery: A ransomware resilience workshop"
+      ]
+     }
+    },
+    {
+     "id": "1780442261303001cWFw",
+     "inst": "1780442261303001cWFw",
+     "code": "NET341",
+     "title": "Building hybrid satellite and cloud networks with Amazon Leo",
+     "f": {
+      "level": [
+       null,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1780442283775001cNHk",
+     "inst": "1780442283775001cNHk",
+     "code": "SEC322",
+     "title": "Investigating AI threats: extending IR to the generative AI layer",
+     "f": {
+      "title": [
+       "Investigating AI Threats: Extending IR to the Generative AI Layer",
+       "Investigating AI threats: extending IR to the generative AI layer"
+      ]
+     }
+    },
+    {
+     "id": "1780441471454001GwIM",
+     "inst": "1780441471454001GwIM",
+     "code": "COP353",
+     "title": "Take Action on Operational Issues with AWS DevOps Agent",
+     "f": {
+      "level": [
+       null,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1787185292347001XNJT",
+     "inst": "1787185292347001XNJT",
+     "code": "SEC381",
+     "title": "Automated compliance evidence from day one",
+     "f": {
+      "title": [
+       "Automated Compliance Evidence from Day One",
+       "Automated compliance evidence from day one"
+      ]
+     }
+    },
+    {
+     "id": "1780442249114001cK1l",
+     "inst": "1780442249114001cK1l",
+     "code": "SEC412",
+     "title": "Crossing the kill chain: IR when attackers pivot between clouds",
+     "f": {
+      "title": [
+       "Crossing the kill chain: IR when attackers pivot between clouds.",
+       "Crossing the kill chain: IR when attackers pivot between clouds"
+      ]
+     }
+    },
+    {
+     "id": "1780441471969001GwDJ",
+     "inst": "1780441471969001GwDJ",
+     "code": "DAT452",
+     "title": "[NEW LAUNCH] Coming soon!",
+     "f": {
+      "level": [
+       null,
+       400
+      ]
+     }
+    },
+    {
+     "id": "1780442230760001crgE",
+     "inst": "1780442230760001crgE",
+     "code": "SEC348",
+     "title": "Policy to Proof: govern deployments at machine speed",
+     "f": {
+      "speakers": [
+       [
+        "Jean Velez Torres",
+        "Jerry Peter",
+        "Vinicius Elias",
+        "Welly Siauw",
+        "pujahgo pujahgo"
+       ],
+       [
+        "Jean Velez Torres",
+        "Jerry Peter",
+        "Pujah Goviel",
+        "Vinicius Elias",
+        "Welly Siauw"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441471915001GDKZ",
+     "inst": "1780441471915001GDKZ",
+     "code": "DAT453",
+     "title": "[NEW LAUNCH] Coming soon!",
+     "f": {
+      "level": [
+       null,
+       400
+      ]
+     }
+    },
+    {
+     "id": "1780442242124001cRNJ",
+     "inst": "1780442242124001cRNJ",
+     "code": "NET343",
+     "title": "DDI Architecture Patterns: DNS, DHCP, and IPAM at AWS",
+     "f": {
+      "level": [
+       null,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1780442257587001ccZV",
+     "inst": "1780442257587001ccZV",
+     "code": "SEC3303",
+     "title": "Conquer Suricata: simplify rule writing on AWS Network Firewall",
+     "f": {
+      "title": [
+       "Conquer Suricata: Simplify Rule Writing on AWS Network Firewall",
+       "Conquer Suricata: simplify rule writing on AWS Network Firewall"
+      ]
+     }
+    },
+    {
+     "id": "1780442265339001c4R2",
+     "inst": "1780442265339001c4R2",
+     "code": "SEC377",
+     "title": "Protect EKS and ECS workloads without chasing pod IPs",
+     "f": {
+      "title": [
+       "Protect EKS and ECS Workloads Without Chasing Pod IPs",
+       "Protect EKS and ECS workloads without chasing pod IPs"
+      ]
+     }
+    },
+    {
+     "id": "1780442242545001cSLr",
+     "inst": "1780442242545001cSLr",
+     "code": "STG369",
+     "title": "AWS Backup: Architecture deep dive",
+     "f": {
+      "level": [
+       null,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1780442230533001cMnA",
+     "inst": "1780442230533001cMnA",
+     "code": "SEC406",
+     "title": "Navigating the inter-workings of an agentic SOC & threat hunting analyst",
+     "f": {
+      "title": [
+       "Navigating the Inter-workings of an Agentic SOC & Threat Hunting Analyst",
+       "Navigating the inter-workings of an agentic SOC & threat hunting analyst"
+      ]
+     }
+    },
+    {
+     "id": "1780442249770001cmHP",
+     "inst": "1780442249770001cmHP",
+     "code": "SEC435",
+     "title": "Tokenomics of attacks: how AWS defends you from AI-powered threats",
+     "f": {
+      "title": [
+       "Tokenomics of Attacks: How AWS Defends You from AI-Powered Threats",
+       "Tokenomics of attacks: how AWS defends you from AI-powered threats"
+      ]
+     }
+    },
+    {
+     "id": "1780442241582001c88I",
+     "inst": "1780442241582001c88I",
+     "code": "COP363",
+     "title": "Investigate Incidents Across Teams with AWS DevOps Agent",
+     "f": {
+      "level": [
+       null,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1780441472571001Gt4N",
+     "inst": "1780441472571001Gt4N",
+     "code": "NET340",
+     "title": "Innovations in Secure Service Edge architectures on AWS",
+     "f": {
+      "level": [
+       null,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1780442227509001c83e",
+     "inst": "1780442227509001c83e",
+     "code": "PEX320",
+     "title": "AI-Powered Migrations: AWS Transform Across the Lifecycle",
+     "f": {
+      "level": [
+       null,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1780442249060001cRh3",
+     "inst": "1780442249060001cRh3",
+     "code": "SEC423-R",
+     "title": "Faster root cause analysis for IAM access denied errors",
+     "f": {
+      "level": [
+       400,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1780441473149001GtIW",
+     "inst": "1780441473149001GtIW",
+     "code": "STG206",
+     "title": "Design for resiliency in Amazon EBS",
+     "f": {
+      "level": [
+       null,
+       200
+      ]
+     }
+    },
+    {
+     "id": "1780442230419001cZLA",
+     "inst": "1780442230419001cZLA",
+     "code": "SEC404",
+     "title": "Ship permissions faster: IAM policy tools in your CI/CD pipeline",
+     "f": {
+      "title": [
+       "Ship Permissions Faster: IAM Policy Tools in Your CI/CD Pipeline",
+       "Ship permissions faster: IAM policy tools in your CI/CD pipeline"
+      ]
+     }
+    },
+    {
+     "id": "1780442265515001cujx",
+     "inst": "1780442265515001cujx",
+     "code": "SEC207",
+     "title": "Balancing trust and agility: payment cryptography in the cloud with Capital One",
+     "f": {
+      "title": [
+       "Balancing trust and agility - payment cryptography in the cloud with Capital One",
+       "Balancing trust and agility: payment cryptography in the cloud with Capital One"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441473084001GD8s",
+     "inst": "1780441473084001GD8s",
+     "code": "STG205",
+     "title": "Cost optimization techniques for Amazon EBS",
+     "f": {
+      "level": [
+       null,
+       200
+      ]
+     }
+    },
+    {
+     "id": "1780441473028001GFlX",
+     "inst": "1780441473028001GFlX",
+     "code": "STG370",
+     "title": "What's new with AWS Backup",
+     "f": {
+      "level": [
+       null,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1780441472451001GXrN",
+     "inst": "1780441472451001GXrN",
+     "code": "NET339",
+     "title": "AI innovations across network monitoring and operations",
+     "f": {
+      "level": [
+       null,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1780442249221001cyUn",
+     "inst": "1780442249221001cyUn",
+     "code": "SEC334",
+     "title": "Threat technique catalog for AWS: practical controls for real TTPs",
+     "f": {
+      "title": [
+       "Threat Technique Catalog for AWS: Practical Controls for Real TTPs",
+       "Threat technique catalog for AWS: practical controls for real TTPs"
+      ]
+     }
+    },
+    {
+     "id": "1780441481239001GfA1",
+     "inst": "1780441481239001GfA1",
+     "code": "SEC375",
+     "title": "How to build an autonomous compliance environment auditors trust",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442283716001c7a8",
+     "inst": "1780442283716001c7a8",
+     "code": "SEC403",
+     "title": "Red team CTF: when auth and guardrails aren't enough",
+     "f": {
+      "title": [
+       "Red Team CTF: When Auth and Guardrails Aren't Enough",
+       "Red team CTF: when auth and guardrails aren't enough"
+      ]
+     }
+    },
+    {
+     "id": "1780442278183001cczK",
+     "inst": "1780442278183001cczK",
+     "code": "CON322-R",
+     "title": "Deploy accelerated workloads with Amazon ECS Managed Instances",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442261056001c8FF",
+     "inst": "1780442261056001c8FF",
+     "code": "NET408",
+     "title": "Innovations across the AWS Backbone",
+     "f": {
+      "level": [
+       null,
+       400
+      ]
+     }
+    },
+    {
+     "id": "1780442283885001cNQT",
+     "inst": "1780442283885001cNQT",
+     "code": "SEC409",
+     "title": "Threat detection and IR in AgentCore workloads",
+     "f": {
+      "title": [
+       "Threat Detection and IR in AgentCore Workloads",
+       "Threat detection and IR in AgentCore workloads"
+      ]
+     }
+    },
+    {
+     "id": "1780442230366001c67e",
+     "inst": "1780442230366001c67e",
+     "code": "SEC316",
+     "title": "Crypto escape room: race to migrate to quantum resistance",
+     "f": {
+      "title": [
+       "Crypto Escape Room: Race to migrate to quantum resistance",
+       "Crypto escape room: race to migrate to quantum resistance"
+      ]
+     }
+    },
+    {
+     "id": "1786406738941001Ll1n",
+     "inst": "1786406738941001Ll1n",
+     "code": "SEC387",
+     "title": "How to use AI to develop and deploy controls from your internal policies",
+     "f": {
+      "speakers": [
+       [
+        "pujahgo pujahgo"
+       ],
+       [
+        "Pujah Goviel"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442249509001ctlq",
+     "inst": "1780442249509001ctlq",
+     "code": "SEC428",
+     "title": "Fix a Security Hub finding once with four layers of controls",
+     "f": {
+      "level": [
+       400,
+       300
+      ]
+     }
+    },
+    {
+     "id": "1780441472624001GW9v",
+     "inst": "1780441472624001GW9v",
+     "code": "PEX217",
+     "title": "Sell to AI agents through AWS Marketplace",
+     "f": {
+      "level": [
+       null,
+       200
+      ]
+     }
+    },
+    {
+     "id": "1780442261604001cIIK",
+     "inst": "1780442261604001cIIK",
+     "code": "STG101",
+     "title": "Running SAN workloads on Amazon EBS",
+     "f": {
+      "level": [
+       null,
+       100
+      ]
+     }
+    },
+    {
+     "id": "1780442242598001cOr5",
+     "inst": "1780442242598001cOr5",
+     "code": "STG422",
+     "title": "Dive deep into resilience architectures for Amazon EBS",
+     "f": {
+      "level": [
+       null,
+       400
+      ]
+     }
+    },
+    {
+     "id": "1790358241195001iUNO",
+     "inst": "1790358241195001iUNO",
+     "code": "CON322-R1",
+     "title": "Deploy accelerated workloads with Amazon ECS Managed Instances",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442222761001cmMF",
+     "inst": "1780442222761001cmMF",
+     "code": "SEC204",
+     "title": "Post-quantum readiness at scale with AWS and DXC Technology",
+     "f": {
+      "title": [
+       "Leading a post-quantum migration ahead of CNSA 2.0 deadlines",
+       "Post-quantum readiness at scale with AWS and DXC Technology"
+      ],
+      "desc": true
+     }
+    }
+   ]
+  },
+  {
    "at": "2026-10-06T18:51:35Z",
    "milestones": [],
    "added": [
