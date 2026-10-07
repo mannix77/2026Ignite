@@ -3,10 +3,17 @@
     python3 -m unittest discover -s tests -v
 """
 import contextlib
+import datetime as dt
 import io
+import json
 import os
+import shutil
+import subprocess
 import sys
+import tempfile
+import types
 import unittest
+from unittest import mock
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(HERE), "scripts"))
@@ -102,6 +109,17 @@ class PrivacyTests(unittest.TestCase):
     def test_should_leave_a_cio_circle_session_out_by_its_title(self):
         self.assertNotIn("CC2", normalize(rec("CC2", title="CIO Circle Breakfast")))
 
+    def test_should_leave_private_sessions_out_of_the_published_catalog_file(self):
+        tmp = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, tmp)
+        export = os.path.join(tmp, "export.json")
+        with open(export, "w", encoding="utf-8") as f:
+            json.dump([OK, rec("SM101"), rec("CC1", title="CIO Circle Breakfast")], f)
+        subprocess.run([sys.executable, os.path.join(os.path.dirname(HERE), "scripts", "import_gartner.py"), export,
+                        "--data-dir", tmp], check=True, capture_output=True)
+        with open(os.path.join(tmp, "sessions.json"), encoding="utf-8") as f:
+            self.assertEqual([r["code"] for r in json.load(f)["sessions"]], ["T1"])
+
     def test_should_report_excluded_program_sessions(self):
         with contextlib.redirect_stderr(io.StringIO()):
             _, _, excluded = g.normalize([OK, rec("CC1", title="CIO Circle Breakfast")])
@@ -114,18 +132,29 @@ class FavoritesTests(unittest.TestCase):
     ROW = {"Session Code": "T1", "Rank": 3, "Score": "8.5", "Attend Mode": "Must", "Plan": "Attend",
            "My Notes": "ask about our renewal", "Why it matters": "budget cycle"}
 
-    def picks(self):
+    def written(self):
+        """Runs write_favorites with the workbook row; -> (committed file, local backup file)."""
+        tmp = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, tmp)
         with contextlib.redirect_stderr(io.StringIO()):
             sessions, _, _ = g.normalize([OK])
-        return g.favorites([self.ROW], sessions, 1)
+        args = types.SimpleNamespace(workbook="unused.xlsx", favorites_out=None, data_dir=os.path.join(tmp, "repo"),
+                                     backup_dir=os.path.join(tmp, "laptop"))
+        with mock.patch.object(g, "read_sheet", return_value=[self.ROW]), contextlib.redirect_stdout(io.StringIO()):
+            g.write_favorites(args, sessions, dt.datetime(2026, 10, 7, tzinfo=dt.timezone.utc))
+        files = []
+        for path in (os.path.join(tmp, "repo", "favorites.json"), os.path.join(tmp, "laptop", "gartner-2026-picks.json")):
+            with open(path, encoding="utf-8") as f:
+                files.append(json.load(f))
+        return files
 
     def test_should_commit_favorites_without_personal_notes(self):
-        committed, _, _ = self.picks()
-        self.assertEqual(next(iter(committed.values()))["note"], "")
+        committed, _ = self.written()
+        self.assertEqual(next(iter(committed["picks"].values()))["note"], "")
 
     def test_should_keep_personal_notes_in_the_local_backup(self):
-        _, backup, _ = self.picks()
-        self.assertIn("ask about our renewal", next(iter(backup.values()))["note"])
+        _, backup = self.written()
+        self.assertIn("ask about our renewal", next(iter(backup["picks"].values()))["note"])
 
 
 if __name__ == "__main__":
