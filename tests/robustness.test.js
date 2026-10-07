@@ -59,8 +59,41 @@ await test('should ignore null entries in stored change-tracking snapshots', () 
   store.load('corrupt');
   eq(Object.keys(store.get().known), ['b']);
 });
-await test('should report alerts when a snapshot entry is malformed', () => {
+await test('should raise no alert from a null stored snapshot entry', () => {
   eq(diffKnown({ byGroup: new Map() }, new Set(), { x: null }).alerts, []);
+});
+
+// ---- change alerts on the sessions you picked (diffKnown against the last acknowledged snapshot)
+const run = (inst, patch = {}) => ({ ...rec, id: 'ICE', inst, code: inst, group: 'ANT319', title: 'Iceberg analytics',
+  start: '2026-11-18T17:00:00Z', end: '2026-11-18T18:00:00Z', room: 'Moscone West, Level 2, Room 2001', ...patch });
+const catalog = runs => buildModel({ sessions: runs }, { overrides: {} }, null, ignite, venue);
+const acknowledged = runs => diffKnown(catalog(runs), new Set(['ANT319']), {}).next;
+const alertsAfter = (before, after, picked = ['ANT319']) =>
+  diffKnown(catalog(after), new Set(picked), acknowledged(before)).alerts.map(a => [a.kind, a.code, Object.keys(a.fields || {})]);
+
+await test('should alert when a picked session moves room', () => {
+  eq(alertsAfter([run('ANT319-R')], [run('ANT319-R', { room: 'Moscone South, Room 156' })]), [['changed', 'ANT319-R', ['room']]]);
+});
+await test('should alert when a picked session is retimed', () => {
+  eq(alertsAfter([run('ANT319-R')], [run('ANT319-R', { start: '2026-11-18T19:00:00Z', end: '2026-11-18T20:00:00Z' })]),
+    [['changed', 'ANT319-R', ['start', 'end']]]);
+});
+await test('should alert when one run of a picked session is cancelled', () => {
+  eq(alertsAfter([run('ANT319-R'), run('ANT319-R1')], [run('ANT319-R')]), [['run-removed', 'ANT319-R1', []]]);
+});
+await test('should alert when a picked session is cancelled entirely', () => {
+  eq(alertsAfter([run('ANT319-R')], []), [['removed', 'ANT319-R', []]]);
+});
+await test('should alert when a picked session gains a run', () => {
+  eq(alertsAfter([run('ANT319-R')], [run('ANT319-R'), run('ANT319-R1')]), [['run-added', 'ANT319-R1', []]]);
+});
+await test('should not alert about a cancelled session you have since unpicked', () => {
+  eq(alertsAfter([run('ANT319-R')], [], []), []);
+});
+await test('should alert only for picked sessions', () => {
+  const other = (patch = {}) => run('DVT212', { id: 'DVT', group: 'DVT212', ...patch });
+  eq(alertsAfter([run('ANT319-R'), other()], [run('ANT319-R', { room: 'Moscone South, Room 156' }), other({ room: 'Moscone South, Room 160' })]),
+    [['changed', 'ANT319-R', ['room']]]);
 });
 
 // ---- failed saves are reported, not swallowed
