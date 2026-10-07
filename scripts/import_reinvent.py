@@ -61,7 +61,8 @@ TIME_KEYS = ["sessionTimeID", "date", "startTime", "endTime", "utcStartTime", "u
 REPEAT = re.compile(r"-R\d*$", re.I)
 SPONSORED_CODE = re.compile(r"-S(-R\d*)?$", re.I)
 REPEAT_MARK = re.compile(r"\s*\[REPEAT\]\s*", re.I)
-SPONSORED_BY = re.compile(r"\(sponsored by ([^)]+)\)", re.I)
+# "(sponsored by X)" anywhere, or a trailing "- sponsored by X" (hyphen, en or em dash).
+SPONSORED_BY = re.compile(r"\(sponsored by ([^)]+)\)|[-\u2013\u2014]\s*sponsored by (.+?)\s*$", re.I)
 # Assumption (unconfirmed): AWS posts breakouts to YouTube after the event; chalk talks,
 # workshops, builders' sessions and the other interactive formats aren't recorded.
 RECORDED_TYPES = {"Breakout session"}
@@ -204,11 +205,11 @@ def strs(attrs, name):
 
 def vendors_of(r, title):
     names = [sync.text(p.get("company")) for p in r.get("speakers") or []
-             if p.get("role") == "Sponsor Speaker" and sync.text(p.get("company"))]
+             if isinstance(p, dict) and p.get("role") == "Sponsor Speaker" and sync.text(p.get("company"))]
     if not names:
         m = SPONSORED_BY.search(title)
         if m:
-            names = [sync.text(m.group(1))]
+            names = [sync.text(m.group(1) or m.group(2))]
     return list(dict.fromkeys(names))
 
 
@@ -303,6 +304,9 @@ def keynote_records(doc):
     code keeps the first entry, since the code becomes the session id."""
     out, seen = [], set()
     for k in (doc or {}).get("keynotes") or []:
+        if not isinstance(k, dict):  # the file is edited by hand: a stray value must not stop the import
+            print("warning: keynote entry %r skipped (not an object)" % (k,), file=sys.stderr)
+            continue
         code = sync.text(k.get("code"))
         start, end = sync.parse_iso(k.get("start")), sync.parse_iso(k.get("end"))
         if not code or not start or not end or end <= start:
@@ -317,7 +321,8 @@ def keynote_records(doc):
             "id": "keynote-" + code, "inst": "keynote-" + code, "code": code, "title": sync.text(k.get("title")),
             "desc": sync.text(k.get("desc")), "type": "Keynote", "level": None, "topics": [], "tags": [], "audience": [],
             "delivery": ["In-person"], "recorded": True,
-            "speakers": [[sync.text(x) for x in (p + ["", "", ""])[:3]] for p in k.get("speakers") or [] if p],
+            "speakers": [[sync.text(x) for x in (p + ["", "", ""])[:3]] for p in k.get("speakers") or []
+                         if isinstance(p, list) and p],
             "start": sync.iso(start), "end": sync.iso(end),
             "slot": "%s - %s" % tuple(t.astimezone(PACIFIC).strftime("%H:%M") for t in (start, end)),
             "dur": int((end - start).total_seconds() // 60), "room": room, "roomTbd": not room,
