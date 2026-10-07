@@ -168,21 +168,24 @@ const PREF_KEY = nsKey('ignite26.planner.conference');
 
 export function conferenceList() { return Object.values(CONFERENCES); }
 
+// An exact conference id: not a name every object inherits, like 'toString' or 'constructor'.
+const isConference = id => typeof id === 'string' && Object.hasOwn(CONFERENCES, id);
+
 // A colleague's copy can open on another conference by default: instances/<name>/conference
 // holds the id, and the deploy writes it into the planner-default-conference meta tag.
 function instanceDefaultConference() {
   const meta = typeof document !== 'undefined' ? document.querySelector('meta[name="planner-default-conference"]') : null;
   const id = (meta?.content || '').trim();
-  return CONFERENCES[id] ? id : DEFAULT_CONFERENCE;
+  return isConference(id) ? id : DEFAULT_CONFERENCE;
 }
 
 // Which conference to show: ?conf= in the URL, then the saved choice, then the copy's default.
 export function currentConferenceId() {
   const q = new URLSearchParams(location.search).get('conf');
-  if (q && CONFERENCES[q]) return q;
+  if (isConference(q)) return q;
   try {
     const saved = localStorage.getItem(PREF_KEY);
-    if (saved && CONFERENCES[saved]) return saved;
+    if (isConference(saved)) return saved;
   } catch { /* storage blocked */ }
   return instanceDefaultConference();
 }
