@@ -55,10 +55,30 @@ await test('should keep a session that a wanted group also matches', () => {
   eq(rank(p, session({ topics: ['Windows', 'Security'] })).hidden, null);
 });
 await test('should list a skipped group again once the choice is cleared', () => {
-  eq(rank(profile({ groups: {} }), session({ topics: ['Windows'] })).hidden, null);
+  store.load('profile-clear-group');
+  const windows = session({ topics: ['Windows'] });
+  store.setProfileGroup('topic:Windows', -1);
+  const skipped = rank(store.profile(), windows).hidden;
+  store.setProfileGroup('topic:Windows', 0);
+  eq([skipped, rank(store.profile(), windows).hidden], ['group', null]);
+});
+// rating-preferences.feature: "none … counts as a Skip" and "A session rated Must stays in the plan"
+await test('should leave every rating untouched when a group is skipped', () => {
+  store.load('profile-skip-keeps-ratings');
+  store.mutatePicks(p => { p.WIN1 = { p: 3, lock: null, note: '', at: 1 }; });
+  const before = JSON.stringify(store.get().picks);
+  store.setProfileGroup('topic:Windows', -1);
+  eq(JSON.stringify(store.get().picks), before);
 });
 await test('should hide a session in a format you do not attend', () => {
   eq(rank(profile({ offTypes: ['Theater'] }), session({ type: 'Theater' })).hidden, 'format');
+});
+await test("should hide the conference's default formats until you choose your own", () => {
+  const prerecorded = session({ type: 'Pre-recorded' });
+  eq([rank(blankProfile(), prerecorded).hidden, rank(profile({ offTypes: [] }), prerecorded).hidden], ['format', null]);
+});
+await test('should hide exam prep by default at re:Invent', () => {
+  eq(rank(blankProfile(), session({ type: 'Exam prep' }), 'reinvent2026').hidden, 'format');
 });
 await test('should hide a session outside the levels you chose', () => {
   eq(rank(profile({ levels: [300, 400] }), session({ level: 100 })).hidden, 'level');
@@ -68,7 +88,8 @@ await test('should hide a session outside the levels you chose', () => {
 await test('should keep a rated session out of the hidden list even in a skipped group', () => {
   const s = session({ topics: ['Windows'] });
   const r = createRanker(profile({ groups: { 'topic:Windows': -1 } }), 'ignite2026');
-  eq(partition([s], r, { isRated: () => true, size: 100 }).rated.length, 1);
+  const rated = partition([s], r, { isRated: () => true, size: 100 }), unrated = partition([s], r, { isRated: () => false, size: 100 });
+  eq([rated.rated.length, rated.hidden.length, unrated.hidden.length], [1, 0, 1]); // the skip applies unless it's rated
 });
 
 // ---- only a short list is left to rate
