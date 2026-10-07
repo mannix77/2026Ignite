@@ -148,6 +148,76 @@ class ParityTests(unittest.TestCase):
         self.check("raw_window_bounds.json", None, W25)
 
 
+def js_run(cli, *args):
+    """Runs a tests/*_cli.js harness under the JS runner; -> its JSON output."""
+    tmp = tempfile.mkdtemp()
+    try:
+        paths = []
+        for i, a in enumerate(args):  # file paths pass through; data is written to a temp file
+            if not isinstance(a, str):
+                paths.append(os.path.join(tmp, "arg%d.json" % i))
+                with open(paths[-1], "w", encoding="utf-8") as f:
+                    json.dump(a, f)
+            else:
+                paths.append(a)
+        out = os.path.join(tmp, "out.json")
+        subprocess.run(JS_RUNNER + [os.path.join(HERE, cli), "--"] + paths[:2] + [out] + paths[2:],
+                       check=True, cwd=ROOT, timeout=120)
+        with open(out, encoding="utf-8") as f:
+            return json.load(f)
+    finally:
+        shutil.rmtree(tmp)
+
+
+@unittest.skipUnless(JS_RUNNER, "needs node or jsc")
+class DiffParityTests(unittest.TestCase):
+    """The browser decides "the live site has newer changes" with live.js diff(); it must
+    report exactly what sync.diff() would."""
+
+    def setUp(self):
+        self.prev = sync.normalize(load("raw_2025_sample.json"), [], W25)[0]
+
+    def agree(self, cur):
+        added, removed, changed = sync.diff(self.prev, cur)
+        js = js_run("diff_cli.js", self.prev, cur)
+        canon = lambda xs: sorted(json.dumps(x, sort_keys=True) for x in xs)
+        self.assertEqual({k: canon(js[k]) for k in ("added", "removed", "changed")},
+                         {"added": canon(added), "removed": canon(removed), "changed": canon(changed)})
+
+    def changed(self, fn):
+        cur = copy.deepcopy(self.prev)
+        fn(cur)
+        return cur
+
+    def test_should_agree_on_a_room_move(self):
+        self.agree(self.changed(lambda c: c[0].update(room="Moscone South, Room 156")))
+
+    def test_should_agree_on_a_retitle(self):
+        self.agree(self.changed(lambda c: c[1].update(title="A new title")))
+
+    def test_should_agree_that_reordered_speakers_are_no_change(self):
+        with_two = next(i for i, r in enumerate(self.prev) if len(r["speakers"]) > 1)
+        self.agree(self.changed(lambda c: c[with_two].update(speakers=list(reversed(c[with_two]["speakers"])))))
+
+    def test_should_agree_on_a_cancellation(self):
+        self.agree(self.changed(lambda c: c.pop(2)))
+
+    def test_should_agree_on_an_added_run(self):
+        self.agree(self.changed(lambda c: c.append(dict(c[0], inst=c[0]["inst"] + "-extra", start="2025-11-21T17:00:00Z"))))
+
+    def test_should_agree_on_regenerated_run_ids(self):
+        self.agree(self.changed(lambda c: [r.update(inst=r["inst"] + "-new") for r in c[:5]]))
+
+    def test_should_fill_speaker_companies_from_the_last_catalog_like_the_sync(self):
+        raw, speakers = load("raw_2026_sample.json"), load("speakers_2026_sample.json")
+        by_name = {p[0]: p for r in sync.normalize(raw, speakers, W26)[0] for p in r["speakers"] if p[1] or p[2]}
+        py = sync.normalize(raw, [], W26, by_name)[0]
+        js = js_run("normalize_cli.js", os.path.join(HERE, "data", "raw_2026_sample.json"), "-", W26[0], W26[1],
+                    list(by_name.values()))["sessions"]
+        filled = sum(1 for r in py for p in r["speakers"] if p[1])
+        self.assertEqual((js, filled > 0), (py, True))
+
+
 class EdgeCaseTests(unittest.TestCase):
     def setUp(self):
         self.recs, self.dropped, self.draft = sync.normalize(load("raw_edge_cases.json"), [], W26)
