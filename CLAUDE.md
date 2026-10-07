@@ -15,7 +15,15 @@ repo settled on, mostly learned from CodeRabbit reviews during the October 2026 
 - **Run `npm test`** (all JS suites and Python `unittest discover`) before every push.
 - **Merge gate**: tests pass, CodeRabbit's review is complete with no unresolved threads, and
   just before merging: check what landed on `main` since you branched, check `main`'s latest CI
-  runs, and run the full suite on the exact merge result (`git merge-tree --write-tree`).
+  runs, and run the full suite on the exact merge result. `git archive` takes a tree id,
+  so no temporary commit is needed:
+
+  ```sh
+  git fetch origin
+  tree=$(git merge-tree --write-tree origin/main HEAD) || exit 1   # non-zero on conflicts
+  dir=$(mktemp -d) && git archive "$tree" | tar -x -C "$dir" && (cd "$dir" && npm test)
+  ```
+
   A "success" status from a rate-limited CodeRabbit is not a review.
 - **Another agent may be working in parallel.** Check open PRs that touch the same files.
   The test-command lists in `package.json` and `.github/workflows/sync.yml` are
