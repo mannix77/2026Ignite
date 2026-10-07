@@ -3,10 +3,18 @@
     python3 -m unittest discover -s tests -v
 """
 import contextlib
+import datetime as dt
 import io
+import json
+import operator
 import os
+import shutil
+import subprocess
 import sys
+import tempfile
+import types
 import unittest
+from unittest import mock
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(HERE), "scripts"))
@@ -78,6 +86,79 @@ class ImportRobustnessTests(unittest.TestCase):
 
     def test_should_stay_quiet_for_a_clean_export(self):
         self.assertEqual(warnings_for(), "")
+
+
+def rec(code, title="Talk", **facets):
+    return dict(OK, id=code, code=code, t=title, f=dict({"Session Type": ["Track Sessions"]}, **facets))
+
+
+class PrivacyTests(unittest.TestCase):
+    """The Gartner catalog is published on a public site: private meetings and personal notes stay out."""
+
+    def test_should_leave_a_strategic_account_meeting_out_of_the_catalog(self):
+        self.assertNotIn("SM101", normalize(rec("SM101")))
+
+    def test_should_leave_a_sam_meeting_out_of_the_catalog(self):
+        self.assertNotIn("SAM12", normalize(rec("SAM12")))
+
+    def test_should_keep_a_public_session_whose_code_starts_with_sm(self):
+        self.assertIn("SMB10", normalize(rec("SMB10")))
+
+    def test_should_leave_a_cio_circle_session_out_by_its_audience(self):
+        self.assertNotIn("CC1", normalize(rec("CC1", **{"Tailored Programming": ["CIO Circle Program"]})))
+
+    def test_should_leave_a_cio_circle_session_out_by_its_title(self):
+        self.assertNotIn("CC2", normalize(rec("CC2", title="CIO Circle Breakfast")))
+
+    def test_should_publish_only_public_sessions_in_the_catalog_file(self):
+        tmp = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, tmp)
+        export = os.path.join(tmp, "export.json")
+        with open(export, "w", encoding="utf-8") as f:
+            json.dump([OK, rec("SM101"), rec("CC1", title="CIO Circle Breakfast")], f)
+        subprocess.run([sys.executable, os.path.join(os.path.dirname(HERE), "scripts", "import_gartner.py"), export,
+                        "--data-dir", tmp], check=True, capture_output=True)
+        with open(os.path.join(tmp, "sessions.json"), encoding="utf-8") as f:
+            self.assertEqual(list(map(operator.itemgetter("code"), json.load(f)["sessions"])), ["T1"])
+
+    def test_should_report_excluded_program_sessions(self):
+        with contextlib.redirect_stderr(io.StringIO()):
+            _, _, excluded = g.normalize([OK, rec("CC1", title="CIO Circle Breakfast")])
+        self.assertEqual(excluded, ["CC1"])
+
+
+class FavoritesTests(unittest.TestCase):
+    """favorites.json is committed to the repo; the backup with notes stays on the laptop."""
+
+    ROW = {"Session Code": "T1", "Rank": 3, "Score": "8.5", "Attend Mode": "Must", "Plan": "Attend",
+           "My Notes": "ask about our renewal", "Why it matters": "budget cycle",
+           "Vendor-consolidation angle": "reduce duplicate spend"}
+
+    def written(self):
+        """Runs write_favorites with the workbook row; -> (committed file, local backup file)."""
+        tmp = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, tmp)
+        with contextlib.redirect_stderr(io.StringIO()):
+            sessions, _, _ = g.normalize([OK])
+        args = types.SimpleNamespace(workbook="unused.xlsx", favorites_out=None, data_dir=os.path.join(tmp, "repo"),
+                                     backup_dir=os.path.join(tmp, "laptop"))
+        with mock.patch.object(g, "read_sheet", return_value=[self.ROW]), contextlib.redirect_stdout(io.StringIO()):
+            g.write_favorites(args, sessions, dt.datetime(2026, 10, 7, tzinfo=dt.timezone.utc))
+        files = []
+        for path in (os.path.join(tmp, "repo", "favorites.json"), os.path.join(tmp, "laptop", "gartner-2026-picks.json")):
+            with open(path, encoding="utf-8") as f:
+                files.append(json.load(f))
+        return files
+
+    def test_should_commit_favorites_without_personal_notes(self):
+        committed, _ = self.written()
+        self.assertEqual(next(iter(committed["picks"].values()))["note"], "")
+
+    def test_should_keep_personal_notes_in_the_local_backup(self):
+        _, backup = self.written()
+        note = next(iter(backup["picks"].values()))["note"]
+        self.assertEqual(note.split("\n")[1:], ["Note: ask about our renewal", "Why it matters: budget cycle",
+                                                "Vendor-consolidation angle: reduce duplicate spend"])
 
 
 if __name__ == "__main__":
