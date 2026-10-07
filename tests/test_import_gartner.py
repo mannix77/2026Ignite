@@ -80,5 +80,53 @@ class ImportRobustnessTests(unittest.TestCase):
         self.assertEqual(warnings_for(), "")
 
 
+def rec(code, title="Talk", **facets):
+    return dict(OK, id=code, code=code, t=title, f=dict({"Session Type": ["Track Sessions"]}, **facets))
+
+
+class PrivacyTests(unittest.TestCase):
+    """The Gartner catalog is published on a public site: private meetings and personal notes stay out."""
+
+    def test_should_leave_a_strategic_account_meeting_out_of_the_catalog(self):
+        self.assertNotIn("SM101", normalize(rec("SM101")))
+
+    def test_should_leave_a_sam_meeting_out_of_the_catalog(self):
+        self.assertNotIn("SAM12", normalize(rec("SAM12")))
+
+    def test_should_keep_a_public_session_whose_code_starts_with_sm(self):
+        self.assertIn("SMB10", normalize(rec("SMB10")))
+
+    def test_should_leave_a_cio_circle_session_out_by_its_audience(self):
+        self.assertNotIn("CC1", normalize(rec("CC1", **{"Tailored Programming": ["CIO Circle Program"]})))
+
+    def test_should_leave_a_cio_circle_session_out_by_its_title(self):
+        self.assertNotIn("CC2", normalize(rec("CC2", title="CIO Circle Breakfast")))
+
+    def test_should_report_excluded_program_sessions(self):
+        with contextlib.redirect_stderr(io.StringIO()):
+            _, _, excluded = g.normalize([OK, rec("CC1", title="CIO Circle Breakfast")])
+        self.assertEqual(excluded, ["CC1"])
+
+
+class FavoritesTests(unittest.TestCase):
+    """favorites.json is committed to the repo; the backup with notes stays on the laptop."""
+
+    ROW = {"Session Code": "T1", "Rank": 3, "Score": "8.5", "Attend Mode": "Must", "Plan": "Attend",
+           "My Notes": "ask about our renewal", "Why it matters": "budget cycle"}
+
+    def picks(self):
+        with contextlib.redirect_stderr(io.StringIO()):
+            sessions, _, _ = g.normalize([OK])
+        return g.favorites([self.ROW], sessions, 1)
+
+    def test_should_commit_favorites_without_personal_notes(self):
+        committed, _, _ = self.picks()
+        self.assertEqual(next(iter(committed.values()))["note"], "")
+
+    def test_should_keep_personal_notes_in_the_local_backup(self):
+        _, backup, _ = self.picks()
+        self.assertIn("ask about our renewal", next(iter(backup.values()))["note"])
+
+
 if __name__ == "__main__":
     unittest.main()
