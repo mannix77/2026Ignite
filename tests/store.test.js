@@ -128,6 +128,37 @@ await test('should keep quick-start preferences when the plan is reset', async (
   eq(store.profile().roles, ['architect']);
 });
 
+// ---- settings keep the value you see (specs/features/settings.feature)
+async function setThenReopen(ns, patch) {
+  store.load(ns);
+  store.updateSettings(patch);
+  const seen = store.settings();
+  await sleep(SAVE);
+  store.load(ns);
+  return [seen, store.settings()];
+}
+
+await test('should hold a buffer above the maximum at the maximum, before and after a reload', async () => {
+  const [seen, reopened] = await setThenReopen('settings-buffer-high', { buffer: 300 });
+  eq([seen.buffer, reopened.buffer], [240, 240]);
+});
+
+await test('should keep a buffer inside the range as entered', async () => {
+  const [seen, reopened] = await setThenReopen('settings-buffer-ok', { buffer: 7 });
+  eq([seen.buffer, reopened.buffer], [7, 7]);
+});
+
+await test('should hold a weight above the maximum at the maximum, before and after a reload', async () => {
+  const [seen, reopened] = await setThenReopen('settings-weight-high', { weights: { 3: 9000 } }); // a Must's weight
+  eq([seen.weights[3], reopened.weights[3]], [5000, 5000]);
+});
+
+await test('should still drop blocked time outside the day', async () => {
+  store.load('settings-block-bad');
+  store.setSetting('blocks', [{ id: 'b1', day: '2026-10-20', start: 1500, end: 1600, label: 'Late' }]);
+  eq(store.settings().blocks, []);
+});
+
 // ---- share links: "Ratings and locks for sessions you've already rated will be replaced;
 // notes and reserved seats are kept." (app.js importShare)
 const same = x => x; // these tests use session codes as ids and run keys
