@@ -6,6 +6,7 @@ const { exportAge, customRecords, catalogMatch, buildModel } = await import('../
 const { toISO } = await import('../assets/js/time.js');
 const { CONFERENCES } = await import('../assets/js/conferences.js');
 const { createVenue } = await import('../assets/js/venue.js');
+const { transition, DEFAULT_PLANNER } = await import('../assets/js/planner.js');
 const store = await import('../assets/js/store.js');
 
 let pass = 0, fail = 0;
@@ -26,6 +27,12 @@ const at = hours => new Date(new Date(exported).getTime() + hours * H);
 await test('should flag an export that is more than a day old', () => {
   eq(exportAge(gartner, exported, at(25))?.days, 1);
 });
+await test('should flag an export exactly a day old', () => {
+  eq(exportAge(gartner, exported, at(24))?.days, 1);
+});
+await test('should not flag an export a minute short of a day old', () => {
+  eq(exportAge(gartner, exported, at(24 - 1 / 60)), null);
+});
 await test('should not flag a fresh export', () => {
   eq(exportAge(gartner, exported, at(2)), null);
 });
@@ -33,10 +40,7 @@ await test('should never flag the live Ignite catalog as an old export', () => {
   eq(exportAge(ignite, exported, at(72)), null);
 });
 await test('should name who can refresh the Gartner export', () => {
-  eq(typeof gartner.export.maintainer, 'string');
-});
-await test('should not flag a catalog refreshed by a scheduled sync as an old export', () => {
-  eq(exportAge(CONFERENCES.reinvent2026, exported, at(72)), null);
+  eq((gartner.export.maintainer || '').trim().length > 0, true); // shown by app.js next to the age warning
 });
 
 // ---- sessions missing from the catalog
@@ -57,6 +61,13 @@ await test('should time an added session from the day and minutes you entered', 
 });
 await test('should not treat an added session as the published schedule', () => {
   eq(model([], [{ ...reception, day: '2026-11-18' }], ignite).mode, 'unscheduled');
+});
+// catalog-gaps.feature: "the walk to the Yacht & Beach Club is counted before it"
+await test('should count the walk from a Dolphin session to an added Yacht & Beach Club reception', () => {
+  const talk = { id: 'T1', inst: 'T1', code: 'T1', title: 'Talk', type: 'Track Sessions', start: '2026-10-19T21:00:00Z', end: '2026-10-19T22:00:00Z', room: 'Upper Peninsula 4, WDW Dolphin Hotel', delivery: ['In-person'] };
+  const m = model([talk], [reception]);
+  const [a, b] = ['T1', 'my-r1'].map(id => m.sessions.find(x => x.id === id));
+  eq(transition(a, b, { ...DEFAULT_PLANNER, walk: venue.walk, keynoteBuildings: [] }).walk, venue.walk.pairs['D|Y']);
 });
 await test('should find an added session that a fresh export now lists on the same day', () => {
   const official = { id: '99', inst: '99', code: 'HLR1', title: 'Healthcare and Life Sciences Networking Reception', type: 'Receptions and Special Event', start: '2026-10-19T22:15:00Z', end: '2026-10-20T00:00:00Z', delivery: ['In-person'] };

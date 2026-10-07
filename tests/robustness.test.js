@@ -39,15 +39,20 @@ const ignite = CONFERENCES.ignite2026;
 const venue = createVenue(ignite.venue);
 const rec = { id: 'X', inst: 'X', code: 'BRK1', title: 't', type: 'Breakout', delivery: ['In-person'], speakers: [], dur: 45 };
 const build = patch => buildModel({ sessions: [{ ...rec, ...patch }] }, { overrides: {} }, null, ignite, venue);
-for (const [name, patch] of [['a null speaker', { speakers: [null] }], ['a text delivery', { delivery: 'In-person' }], ['text topics', { topics: 'AI' }], ['null tags', { tags: null }]]) {
-  await test(`should build the model when a record has ${name}`, () => {
-    eq(build(patch).sessions.length, 1);
+for (const [name, patch, read, want] of [
+  ['a null speaker', { speakers: [null] }, s => s.speakers, []],
+  ['a text delivery', { delivery: 'In-person' }, s => [s.delivery, s.inPerson], [['In-person'], true]],
+  ['text topics', { topics: 'AI' }, s => s.topics, ['AI']],
+  ['null tags', { tags: null }, s => s.tags, []],
+]) {
+  await test(`should read a record that has ${name}`, () => {
+    eq(read(build(patch).sessions[0]), want);
   });
 }
 await test('should skip records that are not objects', () => {
   eq(buildModel({ sessions: [null, 7, { ...rec }] }, { overrides: {} }, null, ignite, venue).sessions.length, 1);
 });
-await test('should not schedule a session whose end comes before its start', () => {
+await test('should schedule a session whose end comes before its start by its duration', () => {
   const s = build({ start: '2026-11-18T18:00:00Z', end: '2026-11-18T17:00:00Z' }).sessions[0];
   eq(s.endMin - s.startMin, 45);
 });
@@ -120,24 +125,24 @@ await test('should run at most the cap of what-if plans for a large clash', () =
   eq(out.outcomes.size, 4);
 });
 
-await test('should refuse a live catalog whose entries largely lack session ids', async () => {
-  const raw = Array.from({ length: 100 }, (_, i) => (i % 5 === 0 ? { title: `T${i}` } : { sessionId: `s${i}`, title: `T${i}`, sessionCode: `C${i}` }));
+// ---- a live feed that is largely malformed is refused, not read as removals (same 5% limit as sync.py)
+async function liveCheck(raw) {
   const realFetch = globalThis.fetch;
   globalThis.fetch = async u => ({ ok: true, json: async () => (String(u).includes('settings') ? {} : raw) });
-  let err = null;
-  try { await checkLive({ sessions: [] }, ignite); } catch (e) { err = e.message; } finally { globalThis.fetch = realFetch; }
-  eq(/malformed/.test(err || ''), true);
-});
-
-// ---- a live feed that is largely malformed is refused, not read as removals
-await test('should refuse a live catalog whose entries are largely malformed', async () => {
-  const raw = Array.from({ length: 100 }, (_, i) => (i % 5 === 0 ? null : { sessionId: `s${i}`, title: `T${i}`, sessionCode: `C${i}` }));
-  const realFetch = globalThis.fetch;
-  globalThis.fetch = async u => ({ ok: true, json: async () => (String(u).includes('settings') ? {} : raw) });
-  let err = null;
-  try { await checkLive({ sessions: raw.filter(Boolean) }, ignite); } catch (e) { err = e.message; } finally { globalThis.fetch = realFetch; }
-  eq(/malformed/.test(err || ''), true);
-});
+  try { await checkLive({ sessions: [] }, ignite); return null; } catch (e) { return e.message; } finally { globalThis.fetch = realFetch; }
+}
+const liveFeed = (every, bad) => Array.from({ length: 100 }, (_, i) => (i % every === 0 ? bad(i) : { sessionId: `s${i}`, title: `T${i}`, sessionCode: `C${i}` }));
+// [name, feed, verb, expected [refused as malformed, completed without any error]]
+for (const [name, raw, verb, want] of [
+  ['a fifth of entries null', liveFeed(5, () => null), 'refuse', [true, false]],
+  ['a fifth of entries without a session id', liveFeed(5, i => ({ title: `T${i}` })), 'refuse', [true, false]],
+  ['one entry in 25 null (4%)', liveFeed(25, () => null), 'accept', [false, true]],
+]) {
+  await test(`should ${verb} a live catalog with ${name}`, async () => {
+    const err = await liveCheck(raw);
+    eq([/malformed/.test(err || ''), err === null], want);
+  });
+}
 
 // ---- the event window the browser applies to the live catalog (same rule as sync.py)
 await test("should take the browser's event window from the site's dates", () => {
