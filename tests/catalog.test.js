@@ -103,5 +103,25 @@ await test("should keep a session added in a colleague's copy out of the main si
   eq(store.settings().custom.map(c => c.title), ['Minesh dinner']);
 });
 
+// ---- Preview: simulated Ignite times only while nothing official is published
+const unscheduled = { id: 'P1', inst: 'P1', code: 'BRK201', title: 'Unscheduled', type: 'Breakout', delivery: ['In-person'], speakers: [], dur: 45, roomTbd: true };
+const scheduled = { ...unscheduled, id: 'P2', inst: 'P2', code: 'BRK202', title: 'Scheduled', start: '2026-11-18T17:00:00Z', end: '2026-11-18T17:45:00Z', roomTbd: false, room: 'Moscone West, Level 2, Room 2001' };
+const previewModel = (sessions, custom = []) => buildModel({ sessions: [...sessions, ...customRecords(custom, ignite)] }, { overrides: {}, preview: true }, null, ignite, createVenue(ignite.venue));
+const timing = (sessions, custom) => previewModel(sessions, custom).sessions.find(x => x.id === 'P1').timeSource;
+
+await test('should preview a time for an unscheduled session while nothing is scheduled', () => {
+  eq(timing([unscheduled]), 'preview');
+});
+
+await test('should not invent a time once any official time is published', () => {
+  eq(timing([unscheduled, scheduled]), null);
+});
+
+await test('should keep previewing when the only timed session is one the user added', () => {
+  const m = previewModel([unscheduled], [{ id: 'c1', title: 'Team dinner', day: '2026-11-18', start: 1140, end: 1260, building: 'W' }]);
+  const source = id => m.sessions.find(x => x.id === id)?.timeSource;
+  eq([source('my-c1'), source('P1')], ['custom', 'preview']); // the added session is timed, and preview still runs
+});
+
 console.log(`${pass} passed, ${fail} failed`);
 if (fail) process.exitCode = 1;
