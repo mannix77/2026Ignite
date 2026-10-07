@@ -270,7 +270,10 @@ def normalize(raw):
                          for p in r.get("speakers") or [] if isinstance(p, dict) and sync.text(p.get("name"))],
             "start": sync.iso(start) if start else None,
             "end": sync.iso(end) if end else None,
-            "slot": "%s - %s" % (t["startTime"], t["endTime"]) if scheduled and t.get("startTime") and t.get("endTime") else None,
+            # From the UTC times, like keynotes: the API's local startTime/endTime follow its
+            # browserTimezone setting and would contradict the start if that ever changed.
+            "slot": ("%s - %s" % tuple(x.astimezone(PACIFIC).strftime("%H:%M") for x in (start, end)) if start and end
+                     else "%s - %s" % (t["startTime"], t["endTime"]) if scheduled and t.get("startTime") and t.get("endTime") else None),
             "dur": dur if isinstance(dur, int) else None,
             "room": room,
             "roomTbd": not room,

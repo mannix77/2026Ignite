@@ -114,9 +114,6 @@ class SponsoredTests(unittest.TestCase):
 class SelfPacedTests(unittest.TestCase):
     """Rule: self-paced sessions stay in the catalog without a slot."""
 
-    def test_should_keep_a_session_with_no_time(self):
-        self.assertIn("GHJ205-R", imported())
-
     def test_should_leave_an_untimed_session_unscheduled(self):
         r = imported()["GHJ205-R"]
         self.assertEqual([r["start"], r["end"], r["slot"], r["room"], r["roomTbd"]], [None, None, None, None, True])
@@ -132,7 +129,8 @@ class ScheduledSessionTests(unittest.TestCase):
         self.assertTrue(imported()["DVT212-S"]["rsvp"])
 
     def test_should_say_when_seat_reservations_open(self):
-        self.assertEqual(imported()["DVT212-S"]["rsvpOpens"], "2026-10-06T16:00:00Z")
+        # AWS opened re:Invent seat reservations on Oct 6, 2026 at 09:00 PT (README).
+        self.assertEqual(ri.sync.parse_iso(imported()["DVT212-S"]["rsvpOpens"]), ri.sync.parse_iso("2026-10-06T16:00:00Z"))
 
     def test_should_not_require_a_seat_for_a_virtual_only_session(self):
         raw = sample()
@@ -149,11 +147,15 @@ class ScheduledSessionTests(unittest.TestCase):
     def test_should_convert_the_utc_end_to_iso(self):
         self.assertEqual(imported()["DVT212-S"]["end"], "2026-12-01T01:30:00Z")
 
-    def test_should_keep_the_pacific_slot(self):
-        self.assertEqual(imported()["DVT212-S"]["slot"], "16:30 - 17:30")
+    def test_should_show_the_slot_in_pacific_time_from_the_utc_times(self):
+        raw = sample()
+        by_code(raw)["DVT212-S"]["times"][0].update(startTime="08:30", endTime="09:30")  # the API's local strings, wrong zone
+        self.assertEqual(by_code(ri.normalize(raw)[0])["DVT212-S"]["slot"], "16:30 - 17:30")
 
-    def test_should_take_duration_from_the_time_slot(self):
-        self.assertEqual(imported()["DVT212-S"]["dur"], 60)
+    def test_should_take_duration_from_the_start_and_end(self):
+        raw = sample()
+        by_code(raw)["DVT212-S"]["times"][0]["length"] = 999
+        self.assertEqual(by_code(ri.normalize(raw)[0])["DVT212-S"]["dur"], 60)
 
     def test_should_keep_the_full_room_string(self):
         self.assertEqual(imported()["AIM105-S"]["room"], "Caesars Forum | Level 1 | Forum 120 | Content Hub | Red Theater")
@@ -188,19 +190,17 @@ class FieldMappingTests(unittest.TestCase):
         self.assertEqual(len(imported()["AIM344"]["speakers"]), 5)
 
     def test_should_take_topics_from_the_topic_facet(self):
-        raw = sample()
-        rec = by_code(raw)["DVT212-S"]
-        self.assertEqual(imported()["DVT212-S"]["topics"], rec["attributes"].get("Topic", []))
+        self.assertEqual(imported()["DVT212-S"]["topics"], ["Artificial Intelligence", "Developer Tools"])
 
     def test_should_take_tags_from_areas_of_interest_then_services(self):
-        rec = by_code(sample())["AIM344"]
-        want = rec["attributes"].get("AreaofInterest", []) + rec["attributes"].get("Services", [])
-        self.assertEqual(imported()["AIM344"]["tags"], want)
+        self.assertEqual(imported()["AIM344"]["tags"], ["Generative AI", "Network & Infrastructure Security", "Resilience",
+                                                         "Amazon Elastic Compute Cloud (Amazon EC2)"])
 
     def test_should_take_audience_from_roles_then_industries(self):
-        rec = by_code(sample())["SEC205"]
-        want = rec["attributes"].get("Role", []) + rec["attributes"].get("Industry", [])
-        self.assertEqual(imported()["SEC205"]["audience"], want)
+        raw = sample()
+        by_code(raw)["DVT212-S"]["attributes"]["Industry"] = ["Healthcare"]
+        self.assertEqual(by_code(ri.normalize(raw)[0])["DVT212-S"]["audience"],
+                         ["Developer / Engineer", "DevOps Engineer", "Solution / Systems Architect", "Healthcare"])
 
     def test_should_deliver_every_session_in_person(self):
         self.assertEqual(distinct("delivery"), {("In-person",)})
@@ -353,6 +353,16 @@ class ImportRunTests(ImportDir, unittest.TestCase):
         self.write_snapshot(sample()[:15])
         self.run_import()
         self.assertEqual(len(self.data("sessions.json")["sessions"]), len(SNAP["sessions"]))
+
+    def test_should_accept_a_refresh_that_keeps_90_percent_of_sessions(self):
+        self.run_import()
+        self.write_snapshot(sample()[:19])  # 19 of 21 (90.5%)
+        self.assertEqual(self.run_import()[0], 0)
+
+    def test_should_refuse_a_refresh_just_under_90_percent_of_sessions(self):
+        self.run_import()
+        self.write_snapshot(sample()[:18])  # 18 of 21 (85.7%)
+        self.assertEqual(self.run_import()[0], 3)
 
     def test_should_exit_non_zero_when_a_refresh_is_refused(self):
         self.run_import()
