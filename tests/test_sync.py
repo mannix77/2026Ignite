@@ -177,12 +177,15 @@ class DiffParityTests(unittest.TestCase):
     def setUp(self):
         self.prev = sync.normalize(load("raw_2025_sample.json"), [], W25)[0]
 
-    def agree(self, cur):
+    def agree(self, cur, expected):
+        """Both diffs agree, and the agreed result is the expected one (agreement alone would
+        also pass if both were wrong): expected = (added, removed, {code: changed fields})."""
         added, removed, changed = sync.diff(self.prev, cur)
         js = js_run("diff_cli.js", self.prev, cur)
         canon = lambda xs: sorted(json.dumps(x, sort_keys=True) for x in xs)
-        self.assertEqual({k: canon(js[k]) for k in ("added", "removed", "changed")},
-                         {"added": canon(added), "removed": canon(removed), "changed": canon(changed)})
+        summary = (len(added), len(removed), {c["code"]: sorted(c["f"]) for c in changed})
+        self.assertEqual(({k: canon(js[k]) for k in ("added", "removed", "changed")}, summary),
+                         ({"added": canon(added), "removed": canon(removed), "changed": canon(changed)}, expected))
 
     def changed(self, fn):
         cur = copy.deepcopy(self.prev)
@@ -190,23 +193,23 @@ class DiffParityTests(unittest.TestCase):
         return cur
 
     def test_should_agree_on_a_room_move(self):
-        self.agree(self.changed(lambda c: c[0].update(room="Moscone South, Room 156")))
+        self.agree(self.changed(lambda c: c[0].update(room="Moscone South, Room 156")), (0, 0, {self.prev[0]["code"]: ["room"]}))
 
     def test_should_agree_on_a_retitle(self):
-        self.agree(self.changed(lambda c: c[1].update(title="A new title")))
+        self.agree(self.changed(lambda c: c[1].update(title="A new title")), (0, 0, {self.prev[1]["code"]: ["title"]}))
 
     def test_should_agree_that_reordered_speakers_are_no_change(self):
         with_two = next(i for i, r in enumerate(self.prev) if len(r["speakers"]) > 1)
-        self.agree(self.changed(lambda c: c[with_two].update(speakers=list(reversed(c[with_two]["speakers"])))))
+        self.agree(self.changed(lambda c: c[with_two].update(speakers=list(reversed(c[with_two]["speakers"])))), (0, 0, {}))
 
     def test_should_agree_on_a_cancellation(self):
-        self.agree(self.changed(lambda c: c.pop(2)))
+        self.agree(self.changed(lambda c: c.pop(2)), (0, 1, {}))
 
     def test_should_agree_on_an_added_run(self):
-        self.agree(self.changed(lambda c: c.append(dict(c[0], inst=c[0]["inst"] + "-extra", start="2025-11-21T17:00:00Z"))))
+        self.agree(self.changed(lambda c: c.append(dict(c[0], inst=c[0]["inst"] + "-extra", start="2025-11-21T17:00:00Z"))), (1, 0, {}))
 
     def test_should_agree_on_regenerated_run_ids(self):
-        self.agree(self.changed(lambda c: [r.update(inst=r["inst"] + "-new") for r in c[:5]]))
+        self.agree(self.changed(lambda c: [r.update(inst=r["inst"] + "-new") for r in c[:5]]), (0, 0, {}))
 
     def test_should_fill_speaker_companies_from_the_last_catalog_like_the_sync(self):
         raw, speakers = load("raw_2026_sample.json"), load("speakers_2026_sample.json")
