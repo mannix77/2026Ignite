@@ -41,6 +41,19 @@ Feature: Importing the re:Invent session catalog
       When a refresh returns only 1000 sessions
       Then the saved catalog still holds 2169 sessions
 
+  Rule: A refresh that loses most session times or rooms is refused
+
+    Example: The one where AWS renames the start-time field
+      Given the last import held 20 sessions with times
+      When a refresh returns every session but none of their times
+      Then the saved catalog still shows the 20 sessions with times
+
+    Example: The one where the times really were withdrawn
+      Given the last import held 20 sessions with times
+      And the maintainer confirms the withdrawal is real
+      When a refresh returns every session but none of their times
+      Then the saved catalog shows no session times
+
   Rule: Every change between imports is logged
 
     Example: The one where a session moves room
