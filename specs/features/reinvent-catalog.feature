@@ -5,10 +5,10 @@ Feature: Importing the re:Invent session catalog
 
   Rule: Repeat runs of a session are one choice
 
-    Example: The one where a session runs three times
-      Given the Iceberg analytics talk is listed three times, at three different times
+    Example: The one where a session runs twice
+      Given the Iceberg analytics talk is listed twice, on two different days
       When the catalog is imported
-      Then the planner treats the three runs as one session to choose a time for
+      Then the planner treats the two runs as one session to choose a time for
       And no run title carries the "[REPEAT]" marker
 
   Rule: Sponsored sessions name their sponsor as a vendor
@@ -34,13 +34,13 @@ Feature: Importing the re:Invent session catalog
 
   Rule: Every scheduled in-person session needs a reserved seat
 
-    Example: The one with a scheduled chalk talk
-      Given a chalk talk is scheduled on Monday at 16:30 Pacific
+    Example: The one with a scheduled breakout
+      Given a breakout is scheduled on Monday at 16:30 Pacific
       When the catalog is imported
       Then the session needs a seat reservation
       And it starts at 00:30 UTC on Tuesday
 
-  Rule: A refresh that loses most of the catalog is refused
+  Rule: A refresh that loses more than a tenth of the catalog is refused
 
     Example: The one where the catalog comes back half empty
       Given the last import held 2169 sessions
@@ -97,6 +97,6 @@ Feature: Importing the re:Invent session catalog
   Rule: Every change between imports is logged
 
     Example: The one where a session moves room
-      Given the Iceberg analytics talk was in Grand 122 at the MGM Grand
+      Given the Iceberg analytics talk was in Premier 311 at the MGM Grand
       When a refresh shows it in Room 301 at the MGM Grand
       Then the change log records that the Iceberg analytics talk moved room
