@@ -129,7 +129,8 @@ class ScheduledSessionTests(unittest.TestCase):
         self.assertTrue(imported()["DVT212-S"]["rsvp"])
 
     def test_should_say_when_seat_reservations_open(self):
-        self.assertIsNotNone(ri.sync.parse_iso(imported()["DVT212-S"]["rsvpOpens"]))
+        # AWS opened re:Invent seat reservations on Oct 6, 2026 at 09:00 PT (README).
+        self.assertEqual(ri.sync.parse_iso(imported()["DVT212-S"]["rsvpOpens"]), ri.sync.parse_iso("2026-10-06T16:00:00Z"))
 
     def test_should_not_require_a_seat_for_a_virtual_only_session(self):
         raw = sample()
