@@ -8,6 +8,7 @@ import copy
 import json
 import os
 import shutil
+import subprocess
 import sys
 import tempfile
 import types
@@ -243,8 +244,8 @@ class FetchTests(unittest.TestCase):
         self.assertEqual([spk["company"], spk["title"]], ["Caylent", "Sr Innovation Architect"])
 
 
-class ImportRunTests(unittest.TestCase):
-    """End to end over a temporary data directory."""
+class ImportDir:
+    """A temporary data directory with a snapshot to import from."""
 
     def setUp(self):
         self.dir = tempfile.mkdtemp()
@@ -264,6 +265,10 @@ class ImportRunTests(unittest.TestCase):
 
     def data(self, name):
         return load_path(os.path.join(self.dir, name))
+
+
+class ImportRunTests(ImportDir, unittest.TestCase):
+    """End to end over a temporary data directory."""
 
     def test_should_write_the_catalog_on_first_import(self):
         self.run_import()
@@ -313,6 +318,54 @@ class ImportRunTests(unittest.TestCase):
         self.write_snapshot(sample())
         self.run_import()
         self.assertIsNotNone(by_code(self.data("sessions.json")["sessions"])["ANT319-R"]["firstSeen"])
+
+
+def renamed(sessions, old, new):
+    """The same sessions, with one field of every scheduled time renamed (a feed format change)."""
+    for r in sessions:
+        for t in r.get("times") or []:
+            if old in t:
+                t[new] = t.pop(old)
+    return sessions
+
+
+class WithdrawalGuardTests(ImportDir, unittest.TestCase):
+    """A renamed time or room field keeps every session but empties those fields."""
+
+    def setUp(self):
+        super().setUp()
+        self.run_import()
+        self.before = self.data("sessions.json")
+
+    def refresh(self, old, new, allow=False):
+        self.write_snapshot(renamed(sample(), old, new))
+        args = types.SimpleNamespace(snapshot=self.snap, fetch=False, data_dir=self.dir, summary_out=None,
+                                     snapshot_out=None, allow_withdrawal=allow)
+        return ri.run(args)
+
+    def test_should_refuse_a_refresh_whose_times_vanished(self):
+        self.assertEqual(self.refresh("utcStartTime", "startUtc"), (3, False))
+
+    def test_should_keep_last_good_times_when_they_vanish(self):
+        self.refresh("utcStartTime", "startUtc")
+        self.assertEqual(self.data("sessions.json"), self.before)
+
+    def test_should_record_why_the_refresh_was_refused(self):
+        self.refresh("utcStartTime", "startUtc")
+        self.assertIn("sessions with dates fell", self.data("meta.json")["error"])
+
+    def test_should_refuse_a_refresh_whose_rooms_vanished(self):
+        self.assertEqual(self.refresh("room", "roomName"), (3, False))
+
+    def test_should_accept_a_withdrawal_when_explicitly_allowed(self):
+        self.refresh("utcStartTime", "startUtc", allow=True)
+        self.assertEqual(self.data("sessions.json")["stats"]["withDates"], 0)
+
+    def test_should_accept_a_withdrawal_flag_on_the_command_line(self):
+        self.write_snapshot(renamed(sample(), "utcStartTime", "startUtc"))
+        proc = subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "import_reinvent.py"), self.snap,
+                               "--data-dir", self.dir, "--allow-withdrawal"], capture_output=True, text=True)
+        self.assertEqual(proc.returncode, 0, proc.stderr)
 
 
 KEYNOTE = {"code": "KEY001", "title": "CEO keynote", "start": "2026-12-01T16:00:00Z", "end": "2026-12-01T18:30:00Z",

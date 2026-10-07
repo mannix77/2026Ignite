@@ -346,6 +346,11 @@ def run(args):
         if not cur or (prev and len(cur) < MIN_KEEP * len(prev)):
             raise RuntimeError("catalog returned %d sessions (previously %d); keeping last good data"
                                % (len(cur), len(prev)))
+        # Same guard as the Ignite sync: a renamed time or room field keeps the session count
+        # but empties those fields, which must not be published as hundreds of changes.
+        why = sync.withdrawal(sync.stats(prev), sync.stats(cur)) if prev and not getattr(args, "allow_withdrawal", False) else None
+        if why:
+            raise RuntimeError(why)
     except RuntimeError as e:
         meta.update({"ok": False, "error": str(e)})
         sync.dump(mpath, meta)
@@ -399,6 +404,8 @@ def main():
     ap.add_argument("--snapshot-out", help="where --fetch saves the snapshot (default: <data-dir>/source/)")
     ap.add_argument("--data-dir", help="output directory (default: data/reinvent2026/ in the repo)")
     ap.add_argument("--summary-out", help="write a markdown change summary here when something changed")
+    ap.add_argument("--allow-withdrawal", action="store_true",
+                    help="accept a refresh that loses most session times or rooms (only when that is real)")
     ap.add_argument("--stats", action="store_true", help="print sessions/groups/type/venue counts as JSON and exit")
     args = ap.parse_args()
     if not args.fetch and not args.snapshot:
