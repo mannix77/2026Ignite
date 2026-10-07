@@ -19,7 +19,7 @@ repo settled on, mostly learned from CodeRabbit reviews during the October 2026 
   so no temporary commit is needed:
 
   ```sh
-  git fetch origin
+  git fetch origin || exit 1                                       # never test against a stale main
   tree=$(git merge-tree --write-tree origin/main HEAD) || exit 1   # non-zero on conflicts
   dir=$(mktemp -d) && git archive "$tree" | tar -x -C "$dir" && (cd "$dir" && npm test)
   ```
