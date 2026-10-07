@@ -123,5 +123,17 @@ await test('should keep previewing when the only timed session is one the user a
   eq([source('my-c1'), source('P1')], ['custom', 'preview']); // the added session is timed, and preview still runs
 });
 
+// ---- every real room maps to a building, or walking times fall back to a guess
+// A snapshot (tests/data/real_rooms.json), not the live catalog: CI runs these tests before
+// each sync, and a new room the parser doesn't know must not block catalog updates.
+const { readFileSync } = await import('node:fs');
+const realRooms = JSON.parse(readFileSync(new URL('./data/real_rooms.json', import.meta.url), 'utf8')).rooms;
+for (const [id, rooms] of Object.entries(realRooms)) {
+  await test(`should place every ${CONFERENCES[id].short || id} room in a known building`, () => {
+    const venue = createVenue(CONFERENCES[id].venue);
+    eq(rooms.filter(r => !venue.parseLocation(r).known), []);
+  });
+}
+
 console.log(`${pass} passed, ${fail} failed`);
 if (fail) process.exitCode = 1;

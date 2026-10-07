@@ -6,7 +6,7 @@ import { transition, canBoth, optimize, optimizeDay, decisionGroups, isResolved,
 import { parseLocation, walkMinutes, sameRoom, DEFAULT_WALK } from '../assets/js/venue.js';
 import { localParts, fromISO, parseSlot, fmtTime, fmtDay, addDays } from '../assets/js/time.js';
 import { createVenue } from '../assets/js/venue.js';
-import { CONFERENCES, LAS_VEGAS_DEF } from '../assets/js/conferences.js';
+import { CONFERENCES, LAS_VEGAS_DEF, SWAN_DOLPHIN_DEF } from '../assets/js/conferences.js';
 import { parseShare } from '../assets/js/store.js';
 import { arrivalExtra } from '../assets/js/planner.js';
 
@@ -517,6 +517,25 @@ test('Las Vegas: every building pair has a walking estimate', () => {
   const ids = LV.ids.filter(id => id !== 'O');
   const missing = ids.flatMap(a => ids.filter(b => a < b).map(b => `${a}|${b}`)).filter(k => LVW.pairs[k] == null);
   eq(missing, []);
+});
+// Plans at the Gartner and re:Invent venues, through their own walking times.
+const SD = createVenue(SWAN_DOLPHIN_DEF);
+const at = (venue, keynote = []) => ({ ...DEFAULT_PLANNER, walk: venue.walk, keynoteBuildings: keynote });
+const dolphin = SD.parseLocation('Upper Peninsula 4, WDW Dolphin Hotel');
+const beachClub = SD.parseLocation("Grand Harbor Salon 1, Disney's Yacht & Beach Resort");
+test('Gartner: the Dolphin then the Yacht & Beach Club 10 minutes later is a conflict', () => {
+  eq(transition(item(H(9), H(10), dolphin), item(H(10) + 10, H(11), beachClub), at(SD)).status, 'conflict');
+});
+test('Gartner: the Dolphin then the Yacht & Beach Club 20 minutes later is fine', () => {
+  eq(transition(item(H(9), H(10), dolphin), item(H(10) + 20, H(11), beachClub), at(SD)).status, 'ok');
+});
+test('Gartner: a plan keeps only one of two Musts too far apart to walk between', () => {
+  const a = item(H(9), H(10), dolphin, { priority: 3 }), b = item(H(10) + 10, H(11), beachClub, { priority: 3 });
+  eq(optimize([a, b], at(SD)).plan['2026-11-18'].length, 1);
+});
+test('Las Vegas: the MGM Grand then the Venetian 20 minutes later is a conflict', () => {
+  const mgm = lv('MGM Grand | Level 1 | Grand 122'), venetian = lv('Venetian | Level 2 | Hall B');
+  eq(transition(item(H(9), H(10), mgm), item(H(10) + 20, H(11), venetian), at(LV)).status, 'conflict');
 });
 test('a session at Caesars Palace gets no keynote entry time', () => {
   const ctx = { ...DEFAULT_PLANNER, keynoteBuildings: LV.keynoteBuildings };
