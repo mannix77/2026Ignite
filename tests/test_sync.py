@@ -476,6 +476,31 @@ class PartialCatalogTests(SyncDir, unittest.TestCase):
         self.assertEqual(self.run_sync(catalog_of(120))[0], 0)
 
 
+class CiSignalTests(SyncDir, unittest.TestCase):
+    """The workflow posts to the change issue only when sync.py reports changed=true."""
+
+    def cli(self, raw):
+        """Runs sync.py as the workflow does; -> what it wrote to GITHUB_OUTPUT."""
+        out = os.path.join(self.tmp, "github_output")
+        open(out, "w").close()
+        subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "sync.py"), "--from-file", self.write("raw.json", raw),
+                        "--data-dir", os.path.join(self.tmp, "data"), "--event-window", "%s:%s" % W25],
+                       env=dict(os.environ, GITHUB_OUTPUT=out), check=True, capture_output=True)
+        with open(out, encoding="utf-8") as f:
+            return f.read()
+
+    def test_should_report_a_change_to_the_workflow(self):
+        raw = load("raw_2025_sample.json")
+        self.cli(raw)
+        raw[0]["location"] = "Moscone South, Room 156"
+        self.assertEqual(self.cli(raw), "changed=true\n")
+
+    def test_should_report_no_change_to_the_workflow(self):
+        raw = load("raw_2025_sample.json")
+        self.cli(raw)
+        self.assertEqual(self.cli(raw), "changed=false\n")
+
+
 class EventWindowTests(unittest.TestCase):
     """The site settings' eventStartDate/eventEndDate can be blank or a placeholder."""
 

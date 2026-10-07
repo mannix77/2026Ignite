@@ -401,6 +401,30 @@ class ExtraRunTests(unittest.TestCase):
         self.assertIn("ANT319-R", err.getvalue())
 
 
+class CiSignalTests(ImportDir, unittest.TestCase):
+    """The workflow posts to the change issue only when the script reports changed=true."""
+
+    def cli(self):
+        """Runs the importer as the workflow does; -> what it wrote to GITHUB_OUTPUT."""
+        out = os.path.join(self.dir, "github_output")
+        open(out, "w").close()
+        subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "import_reinvent.py"), self.snap, "--data-dir", self.dir],
+                       env=dict(os.environ, GITHUB_OUTPUT=out), check=True, capture_output=True)
+        with open(out, encoding="utf-8") as f:
+            return f.read()
+
+    def test_should_report_a_change_to_the_workflow(self):
+        self.cli()
+        moved = sample()
+        by_code(moved)["ANT319-R"]["times"][0]["room"] = "MGM Grand | Level 3 | Room 301"
+        self.write_snapshot(moved)
+        self.assertEqual(self.cli(), "changed=true\n")
+
+    def test_should_report_no_change_to_the_workflow(self):
+        self.cli()
+        self.assertEqual(self.cli(), "changed=false\n")
+
+
 def renamed(sessions, old, new):
     """The same sessions, with one field of every scheduled time renamed (a feed format change)."""
     for r in sessions:
