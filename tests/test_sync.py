@@ -498,7 +498,8 @@ class RunTests(SyncDir, unittest.TestCase):
 
     def test_last_changed_comes_from_committed_data(self):
         raw = load("raw_2026_sample.json")
-        at = lambda day: mock.patch.object(sync, "utcnow", return_value=dt.datetime(2026, 10, day, tzinfo=dt.timezone.utc))
+        def at(day):
+            return mock.patch.object(sync, "utcnow", return_value=dt.datetime(2026, 10, day, tzinfo=dt.timezone.utc))
         with at(1):
             self.run_sync(raw, W26)
         os.remove(os.path.join(self.tmp, "data", "meta.json"))  # as in CI, where meta.json isn't committed
