@@ -67,9 +67,14 @@ export function configure({ defaults = {}, buildingIds = [] } = {}) {
 }
 
 // `namespace` keeps each conference (and test data) in its own storage.
+// Saved text that couldn't be read and couldn't yet be copied aside: it must not be
+// overwritten until the copy succeeds (writeNow retries it before every save).
+let unreadable = null;
+
 export function load(namespace = '') {
   KEY = namespace ? `${BASE_KEY}:${namespace}` : BASE_KEY;
   state = blank();
+  unreadable = null;
   try {
     const raw = localStorage.getItem(KEY);
     if (raw) {
@@ -85,7 +90,8 @@ export function load(namespace = '') {
   } catch (e) {
     // Unreadable (truncated or corrupt): keep a copy before the next save replaces it.
     console.warn('Could not read saved state; a copy is kept under', `${KEY}#unreadable`, e);
-    try { const raw = localStorage.getItem(KEY); if (raw) localStorage.setItem(`${KEY}#unreadable`, raw); } catch { /* storage blocked */ }
+    let raw = null;
+    try { raw = localStorage.getItem(KEY); if (raw) localStorage.setItem(`${KEY}#unreadable`, raw); } catch { unreadable = raw; }
   }
   cachedSettings = null;
   return state;
@@ -102,6 +108,7 @@ function writeNow() {
   clearTimeout(saveTimer);
   saveTimer = null;
   try {
+    if (unreadable != null) { localStorage.setItem(`${KEY}#unreadable`, unreadable); unreadable = null; } // copy first, or don't save
     localStorage.setItem(KEY, JSON.stringify(state));
     if (saveFailed) { saveFailed = false; for (const fn of listeners) fn('save-ok'); }
   } catch (e) {
@@ -345,7 +352,9 @@ export function importData(obj, { replace = false } = {}) {
     if (!cur || p.at > (cur.at || 0)) { state.picks[id] = { ...p, note: p.note || cur?.note || '' }; applied++; }
   }
   if (obj.settings && replace) { state.prefs = sanitizePrefs(obj.settings); cachedSettings = null; }
-  if (obj.profile && (replace || !state.profile)) state.profile = sanitizeProfile(obj.profile);
+  // Replacing restores the backup's preferences, including "never set" (null); merging only fills in.
+  if (replace && 'profile' in obj) state.profile = obj.profile ? sanitizeProfile(obj.profile) : null;
+  else if (obj.profile && !state.profile) state.profile = sanitizeProfile(obj.profile);
   emit(replace ? 'reset' : 'picks');
   return applied;
 }

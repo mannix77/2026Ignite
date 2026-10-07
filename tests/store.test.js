@@ -171,6 +171,35 @@ await test('should add an undated backup pick for a session not in the plan', as
 });
 await sleep(SAVE);
 
+const damaged = '{"v":1,"picks":{"S1":' + 'x'.repeat(5000); // unreadable, and too big to copy under the quota below
+await test('should not overwrite unreadable data it could not copy', async () => {
+  localStorage.setItem('ignite26.planner.v1:uncopyable', damaged);
+  globalThis.__quota = 2000;
+  store.load('uncopyable');
+  store.mutatePicks(p => { p.S1 = { p: 3, lock: null, note: '', at: 1 }; });
+  await sleep(SAVE);
+  globalThis.__quota = null;
+  eq(localStorage.getItem('ignite26.planner.v1:uncopyable'), damaged);
+});
+
+await test('should copy unreadable data first, then save, once storage allows it', async () => {
+  localStorage.setItem('ignite26.planner.v1:copy-later', damaged);
+  globalThis.__quota = 2000;
+  store.load('copy-later');
+  globalThis.__quota = null;
+  store.mutatePicks(p => { p.S1 = { p: 3, lock: null, note: '', at: 1 }; });
+  await sleep(SAVE);
+  eq([localStorage.getItem('ignite26.planner.v1:copy-later#unreadable') === damaged, store.get().picks.S1?.p,
+    JSON.parse(localStorage.getItem('ignite26.planner.v1:copy-later')).picks.S1?.p], [true, 3, 3]);
+});
+
+await test('should restore "preferences never set" when replacing from such a backup', () => {
+  store.load('profile-replace-null');
+  store.updateProfile({ roles: ['architect'] });
+  store.importData({ app: BACKUP, picks: {}, profile: null }, { replace: true });
+  eq(store.get().profile, null);
+});
+
 await test('should refuse a backup whose picks are a list', () => {
   store.load('restore-list');
   eq(/backup/i.test(throws(() => store.importData({ app: BACKUP, picks: [{ p: 3 }, { p: 2 }] }))), true);
