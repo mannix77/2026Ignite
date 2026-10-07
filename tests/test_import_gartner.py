@@ -6,6 +6,7 @@ import contextlib
 import datetime as dt
 import io
 import json
+import operator
 import os
 import shutil
 import subprocess
@@ -109,7 +110,7 @@ class PrivacyTests(unittest.TestCase):
     def test_should_leave_a_cio_circle_session_out_by_its_title(self):
         self.assertNotIn("CC2", normalize(rec("CC2", title="CIO Circle Breakfast")))
 
-    def test_should_leave_private_sessions_out_of_the_published_catalog_file(self):
+    def test_should_publish_only_public_sessions_in_the_catalog_file(self):
         tmp = tempfile.mkdtemp()
         self.addCleanup(shutil.rmtree, tmp)
         export = os.path.join(tmp, "export.json")
@@ -118,7 +119,7 @@ class PrivacyTests(unittest.TestCase):
         subprocess.run([sys.executable, os.path.join(os.path.dirname(HERE), "scripts", "import_gartner.py"), export,
                         "--data-dir", tmp], check=True, capture_output=True)
         with open(os.path.join(tmp, "sessions.json"), encoding="utf-8") as f:
-            self.assertEqual([r["code"] for r in json.load(f)["sessions"]], ["T1"])
+            self.assertEqual(list(map(operator.itemgetter("code"), json.load(f)["sessions"])), ["T1"])
 
     def test_should_report_excluded_program_sessions(self):
         with contextlib.redirect_stderr(io.StringIO()):
