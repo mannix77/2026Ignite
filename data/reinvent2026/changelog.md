@@ -3,6 +3,41 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-10-08T01:20:01Z · https://catalog.awsevents.com/api/sessions
+
+Added 0 · removed 0 · changed 29
+
+**Changed**
+- `AIM101-S` Edge-to-Action: Powering Agentic AI via Cloudera's Anywhere Cloud (sponsored by Cloudera) — speakers: Tony Davis → Morgan Bowling, Tony Davis
+- `AIM103-S` Small Startup. Big Data. Rare Hopes. (sponsored by Cloudera) — speakers: Morgan Bowling → Brian Martin
+- `AIM106-S` How Vanguard Scales AI Oversight Without Scaling Human Review (sponsored by Capgemini) — speakers: Piyush Saxena, Ritesh Shah → Jithin Pradeep, Piyush Saxena
+- `AIM116-S` Fuel Intelligent AI Agents with Trusted Enterprise Data (Sponsored by Informatica) — title: …Context (sponsored by Salesforce) → …Data (Sponsored by Informatica); speakers: — → Rajeev Srinivasan; desc
+- `AIM119-S` Boost Performance: Salesforce, Slack and AWS Headless Connectivity (sponsored by Salesforce) — speakers: — → Hrushikesh Gangur, Nehal Padia
+- `AIM120-S` Future-Proof Your Customer Service with Salesforce, Slack and AWS (sponsored by Salesforce) — speakers: — → Rielah De Jesus, Swati Deo
+- `AIM124-S` ServiceNow: The AI Control Tower for Business Reinvention (sponsored by ServiceNow) — speakers: — → Gian Mario Deluigi
+- `AIM131-S` How SoCalGas De-Risked a SAP Migration with Agentic AI on AWS (sponsored by Accenture) — speakers: Ben Gordon → Ben Gordon, Brent Shaffer
+- `AIM201` What's new with the AWS Sustainability service — speakers: — → Marta Fraga
+- `AIM206` AWS AI Factories: Bring production scale AI to your data center — speakers: Gareth Tucker, Pranav Chachra → Daniel Xu, Gareth Tucker, Pranav Chachra
+- `AIM211` From chips to applications: How Trainium powers the next AI frontier — speakers: Kamran Khan → Colin Brace
+- `AIM212` Best practices to build, connect and optimize agents on AgentCore — speakers: Isaac Privitera, Toshal Dudhwala → Isaac Privitera, Mike O'Rourke
+- `AIM216` Accelerate intelligent document processing with Amazon Textract — speakers: Alex Martinez, Keith Mascarenhas, Sneha Choudhury, Wrick … → Keith Mascarenhas, Sneha Choudhury, Wrick Talukdar
+- `AIM219` Agentic commerce: Use AI agents with AWS Marketplace — speakers: — → Arun Saksena
+- `AIM2202-S` Building Proprietary Multi-Agentic AI Workflows for Low Latency and High Reliability (sponsored by Capital One) — speakers: — → Kel Vanee
+- `AIM221-S` Golden Opportunities: Unlocking Business Value with Agentic AI (sponsored by Atos) — speakers: Damien VEUGEOIS, Justin Cook → Damien VEUGEOIS, Justin Cook, Mark Ross
+- `AIM342` One Service, Every Workload: Build, Customize, and Deploy with SageMaker AI — title: Build a governed enterprise AI/ML platform on SageMaker AI → One Service, Every Workload: Build, Customize, and Deploy…; desc
+- `AIM346-R` Deploy, scale, and tune AI model serving with self-managed agents — title: Deploy Agentic AI on AWS AI Infrastructure for Production… → Deploy, scale, and tune AI model serving with self-manage…; desc
+- `AIM346-R1` Deploy, scale, and tune AI model serving with self-managed agents — title: Deploy Agentic AI on AWS AI Infrastructure for Production… → Deploy, scale, and tune AI model serving with self-manage…; desc
+- `AIM360` World Models & Physical AI: The Next Frontier in Intelligent Systems — level: 300 → 200
+- `AIM453` Securing the agent loop with Amazon Bedrock Guardrails — title: Govern models and agents on any cloud with Amazon Bedrock… → Securing the agent loop with Amazon Bedrock Guardrails; desc
+- `ANT407` Govern data and AI agents with lineage and context in AWS Glue Data Catalog — title: AWS Glue Data Catalog: Govern data and AI agents with lin… → Govern data and AI agents with lineage and context in AWS…
+- `BIZ105` How a brand modernized CX Globally Across Three Regions — desc
+- `BIZ213` Accelerating AI adoption and realized value with Amazon Quick — desc
+- `DVT345` Continuous integration and continuous delivery (CI/CD) on AWS — desc
+- `HMC305-R` Workload Identity Federation in multicloud environments — desc
+- `IND3305` How Citizens Bank reimagined CX with Amazon Connect Customer & GenAI — title: …and generative AI → …Customer & GenAI; desc
+- `PEX213` The Economics of an AWS Partner: Revenue, Incentives & AWS Marketplace — title: …Marketplace → …AWS Marketplace; desc
+- `SVS338` Serverless developers in the agentic era: What changes, what doesn't — desc
+
 ## 2026-10-07T18:54:03Z · https://catalog.awsevents.com/api/sessions
 
 Added 1 · removed 0 · changed 7
