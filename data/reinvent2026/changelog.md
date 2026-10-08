@@ -3,6 +3,70 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-10-08T07:03:57Z · https://catalog.awsevents.com/api/sessions
+
+Added 0 · removed 0 · changed 58
+
+**Changed**
+- `AIM2213` How leading AI builders push the frontier with AWS Trainium — speakers: — → Kamran Khan
+- `AIM226-S` Reimagining the Operating Room: Gen AI's Impact on Surgery (sponsored by Deloitte) — speakers: Sara Siegel → Nadine Hachach-Haram, Sara Siegel
+- `AIM236-S` Making Enterprise Data AI-Ready Without the Data Engineering Overhead (sponsored by Eon) — speakers: — → Gonen Stein
+- `AIM237-S` 3 a.m. and Already Fixed: How PagerDuty’s SRE Agent Is Rewriting Incident Response (sponsored by PagerDuty) — speakers: Samrat Ghosh → Alice McElroy, Samrat Ghosh
+- `AIM262-S` One Control Plane for Every Agent: Architecture Patterns for Cost, Risk, and ROI (sponsored by Boomi) — speakers: Mani Gill → Mani Gill, Patricia Moore
+- `AIM278-S` Open source agent observability and evals with AgentCore and Langfuse (sponsored by ClickHouse) — speakers: — → Marc Klingen
+- `AIM281-S` Pushing AI Boundaries: Transform Marketing with Adobe CX Enterprise Coworker and AWS (sponsored by Adobe) — speakers: — → Siddhartha Srivastava
+- `AIM307` Turn your coding agent into an always-on dev team with AgentCore — speakers: Ryan Fox-Tyler → Eashank Kaushik
+- `AIM3300-S` Defending the Three Lanes: Preventing Toxic Agentic Combinations with Cyera and AWS (sponsored by Cyera) — speakers: — → Sean Cordero
+- `AIM3301` Make every GPU count: Maximizing GPU efficiency for inference at scale — speakers: Erik Anderson → Archana Balakrishnan, Erik Anderson
+- `AIM3310-R1` Stop the bleed: control and optimize agent costs on AgentCore — speakers: — → Mona Mona, Willie Lee
+- `AIM3311` See where every AI dollar goes on Amazon Bedrock — speakers: Ajit Mahareddy, Fahad Ahmed → Fahad Ahmed, Rahul Sharma
+- `AIM3312` Accelerate Apache Spark data processing with GPUs at lower cost — speakers: — → Vidish Mehta
+- `AIM340` Build AI agents that serve customers like your best reps on AgentCore — speakers: Bharathi Srinivasan, Ganapathi Krishnamoorthi → Bharathi Srinivasan, Ganapathi Krishnamoorthi, Murali Amb…
+- `AIM342` One Service, Every Workload: Build, Customize, and Deploy with SageMaker AI — speakers: Pooja Karadgi, Sumedha Swamy → Kanwaljit Khurmi, Sumedha Swamy
+- `AIM351-R` Build an automated evaluation pipeline for AI agents — speakers: Sam Palani, Suyin Wang, Wale Akinfaderin → Dheeraj Hegde, Sam Palani, Suyin Wang, Wale Akinfaderin
+- `AIM351-R1` Build an automated evaluation pipeline for AI agents — speakers: Sam Palani, Suyin Wang, Wale Akinfaderin → Dheeraj Hegde, Sam Palani, Suyin Wang, Wale Akinfaderin
+- `AIM355-R` Strengthen identity verification with Amazon Rekognition — speakers: Keith Mascarenhas, Sneha Choudhury, Wrick Talukdar → Divyesha Malhotra, Sneha Choudhury, Vicky Katara
+- `AIM355-R1` Strengthen identity verification with Amazon Rekognition — speakers: Keith Mascarenhas, Wrick Talukdar → Divyesha Malhotra, Sneha Choudhury, Vicky Katara
+- `AIM356` Build voice-enabled applications with Amazon Polly and Amazon Transcribe — speakers: Anuj Jauhari, Deepthi Devanira → Deepthi Devanira
+- `AIM358` Build agentic observability workflows with AI tools from AWS Marketplace — speakers: Michael Levy, Tuan Vo → Tuan Vo
+- `AIM368` How ISVs ship agent products to customers faster with AgentCore — speakers: Veena Vasudevan → Andy Kuszyk, Veena Vasudevan
+- `AIM377` The agent fabric: shipping your software into the agentic economy — speakers: Joachim Aumann, Rajeswari Malladi → Rajeswari Malladi
+- `AIM378` MCP and A2A for SaaS: making your product agent-ready — speakers: Alexander Pogorielov, Ayan Ray, Gaurav Acharya, Luca Guid… → Alexander Pogorielov, Frederic Schoenberger, Gaurav Achar…
+- `AIM385-S` Small Language Models, Total Control: Sovereign AI Agents, Lower Cost (sponsored by Boomi) — speakers: Thomas Benjamin → Chris Hallenbeck, Thomas Benjamin
+- `AIM395` Deploy agents you can trust — speakers: Erin Kraemer → Cami Novelli-Killeen, Erin Kraemer
+- `AIM399` Inside UK AISI: stress-testing frontier AI safety on Amazon Bedrock — speakers: — → Kyle McMaster
+- `AIM401-R` Agents that train themselves: autonomous reinforcement learning on AWS — speakers: Arron Bailiss, Rachit Mehta → Arron Bailiss, Bryan Lu, Gautam Sirdeshmukh, Patrick Gray…
+- `AIM401-R1` Agents that train themselves: autonomous reinforcement learning on AWS — speakers: Arron Bailiss, Rachit Mehta → Arron Bailiss, Bryan Lu, Gautam Sirdeshmukh, Patrick Gray…
+- `AIM403` Build End-to-End AI Pipelines on SageMaker HyperPod — speakers: Anoop Saha, Chakravarthy Nagarajan, Ioan CATANA, Mijanur … → Anoop Saha, Chakravarthy Nagarajan, Ioan CATANA, Tomonori…
+- `AIM405` Build agents on OSS models with blazing fast inference on SageMaker AI — speakers: Dan Ferguson, Susmitha Marupaka, Vivek Gangasani → Dan Ferguson, Piyush Daftary, Vivek Gangasani
+- `AIM418` Best practices for AI powered software development on Amazon Bedrock — speakers: Ajit Mahareddy, Alfredo Castillo, Antonio Rodriguez → Ajit Mahareddy, Alfredo Castillo
+- `AIM435` On-Policy Distillation on HyperPod EKS: Train Smarter Small Models — speakers: Chakravarthy Nagarajan, Eric Borland, Paulo Pontes Vieira… → Chakravarthy Nagarajan, Eric Borland
+- `AIM442` Evaluate, select, optimize and find your best model — speakers: Ganesh Hegde, Nicole Meyers → Nicole Meyers
+- `AIM450` Context engineering for production agents on AgentCore — speakers: Akarsha Sehwag, Talha Chattha → Akarsha Sehwag, Noor Randhawa
+- `AIM453` Securing the agent loop with Amazon Bedrock Guardrails — speakers: Felipe Lopez, Shivani Singh → Felipe Lopez, Shivani Singh, Sreedhar Gade
+- `AIM461-S` Earned autonomy: handing production over to agents (sponsored by incident.io) — speakers: Adrienne Lichten → Chris Evans
+- `ANT101-S` AI flight plan: How British Airways’ parent builds and measures AI ROI (sponsored by NTT DATA) — speakers: Luis Huerta → Charlie Doubek, Luis Huerta
+- `ANT301` Graviton. Serverless. Apache Iceberg. Your guide to a modern data warehouse strategy — speakers: Raza Hafeez → Divya Ananthanarayanan, Manikandan Paramasivan, Raza Hafeez
+- `ANT306-R` Real-time agentic architecture on AWS: from batch to real-time AI — speakers: Chinmayi Narasimhadevara → Ankita Mishra, Chinmayi Narasimhadevara
+- `ANT306-R1` Real-time agentic architecture on AWS: from batch to real-time AI — speakers: — → Ankita Mishra, Chinmayi Narasimhadevara
+- `ANT312` What's new in AWS Data Processing — speakers: — → Anjali Norwood
+- `ANT315` Advanced Optimization & Cost-Saving Strategies for Amazon Athena — speakers: Sundeep kumar → Scott Rigney, Sundeep kumar
+- `ANT316-R` From prompt to pipeline: Agentic data engineering — speakers: Kamen Sharlandjiev → Kamen Sharlandjiev, Matt Sampson
+- `ANT316-R1` From prompt to pipeline: Agentic data engineering — speakers: Kamen Sharlandjiev → Kamen Sharlandjiev, Matt Sampson
+- `ANT319-R` 10 tips for querying Apache Iceberg data with Amazon Redshift — speakers: Nita Shah → Nita Shah, Srishti Mittal
+- `ANT319-R1` 10 tips for querying Apache Iceberg data with Amazon Redshift — speakers: — → Nita Shah, Srishti Mittal
+- `ANT320-R1` Protect your analytics workloads with cross-region resilience — speakers: — → Mert Hocanin, Zach Mitchell
+- `ANT321-R` Right-size your observability: maximize signal, minimize spend — speakers: — → Kevin Fallis, Raj Ramasubbu
+- `ANT321-R1` Right-size your observability: maximize signal, minimize spend — speakers: — → Kevin Fallis, Raj Ramasubbu
+- `ANT322-R1` Build better agent retrieval with OpenSearch Service — speakers: — → Mikhail Vaynshteyn, Muthu Pitchaimani
+- `ANT330` Explore agentic data engineering in Amazon SageMaker — speakers: Saurabh Bhutyani → Saurabh Bhutyani, Varsha Velagapudi
+- `ANT331` Develop with natural language and agentic AI in Amazon SageMaker — speakers: Juan Luis Polo Garzon → Juan Luis Polo Garzon, Shreya Jain
+- `ANT336` Building high-quality data products for AI agents — speakers: — → David Victoria, Lakshmi Ramchandran Nair
+- `ANT337` Human search to agent retrieval: Rearchitecting with OpenSearch Service — speakers: Tia White → Achal Kumar, Sohaib Katariwala, Tia White
+- `ANT340` Build at scale real-time ingestion pipelines for Apache Iceberg tables — speakers: — → Pratik Patel, Umesh Chaudhari
+- `ANT349` Cost-effective serverless data integrations and workflows for AI-ready data — speakers: — → Raghuveer Reddy, Sakti Mishra, Shrey Malpani
+- `IND209-S` Computing‑Power‑Cooling Synergy: Building the Future of Global Data Infrastructure — title: …Infrastructure (sponsored by Kehua Tech) → …Infrastructure
+
 ## 2026-10-08T01:20:01Z · https://catalog.awsevents.com/api/sessions
 
 Added 0 · removed 0 · changed 29
