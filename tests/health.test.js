@@ -92,5 +92,15 @@ await test('should reset the change count when a backup is saved', async () => {
   eq([store.backupState().changes, store.backupState().at], [0, now]);
 });
 
+await test('should forget the last backup when all ratings are erased', async () => {
+  localStorage.clear();
+  store.load('health-erase');
+  store.mutatePicks(p => { p.A = { p: 3, lock: null, note: '', at: 1 }; });
+  store.markBackup(now);
+  store.resetAll();
+  store.mutatePicks(p => { p.B = { p: 2, lock: null, note: '', at: 1 }; });
+  eq([store.backupState().at, store.backupState().changes], [null, 1]);
+});
+
 console.log(`${pass} passed, ${fail} failed`);
 if (fail) process.exitCode = 1;

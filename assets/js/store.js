@@ -442,7 +442,8 @@ export function applyShared(picks) {
 // Erase ratings, locks, notes and change tracking. Settings, display choices and the
 // "already seen" marker for the change history stay.
 export function resetAll() {
-  state = { ...blank(), prefs: state.prefs, profile: state.profile, ui: { ...state.ui }, seenBatch: state.seenBatch, backup: state.backup };
+  // The last backup held the erased picks, so it no longer covers what comes next.
+  state = { ...blank(), prefs: state.prefs, profile: state.profile, ui: { ...state.ui }, seenBatch: state.seenBatch };
   cachedSettings = null;
   emit('reset');
 }
