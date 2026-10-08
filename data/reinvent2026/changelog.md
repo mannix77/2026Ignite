@@ -3,6 +3,26 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-10-08T18:53:22Z · https://catalog.awsevents.com/api/sessions
+
+Added 0 · removed 1 · changed 11
+
+**Removed**
+- `IND3329` Allianz: Scaling product reach with agentic commerce across channels
+
+**Changed**
+- `ANT337` Human search to agent retrieval: Rearchitecting with OpenSearch Service — speakers: Achal Kumar, Sohaib Katariwala, Tia White → Archal Kumar, Sohaib Katariwala, Tia White
+- `BIZ102` Taking Every Interaction from Mundane to Magic: Agentic CX with Connect Customer — title: Agentic CX with Connect Customer: Make Every Interaction … → Taking Every Interaction from Mundane to Magic: Agentic C…; desc
+- `BIZ320-R` From Reactive to Proactive: Omnichannel AI Outreach with Connect Customer — desc
+- `BIZ320-R1` From Reactive to Proactive: Omnichannel AI Outreach with Connect Customer — desc
+- `COM318` KYC in 90 Seconds: Real-Time Onboarding with AgentCore — desc
+- `IND3300` How WBD Became the First Media Company to Go Agentic Across AdTech — desc
+- `IND3302` How Prime Video Built an AI-assisted Creative Suite on AWS — desc
+- `IND421` Grounding LLMs in Truth: Build a Live Fact-Checking Pipeline — desc
+- `SEC204` Global Technical Capability Lead Key & Certificate Services — title: Post-quantum readiness at scale with AWS and DXC Technology → Global Technical Capability Lead Key & Certificate Services; desc
+- `SEC501` Next-gen threat detection: GuardDuty advanced security capabilities — code: SEC330 → SEC501; level: 300 → 500
+- `SNR303` A leader's guide to advanced teams models in an agentic world — title: …team models in an agentic world → …teams models in an agentic world; desc
+
 ## 2026-10-08T13:00:19Z · https://catalog.awsevents.com/api/sessions
 
 Added 0 · removed 0 · changed 2
