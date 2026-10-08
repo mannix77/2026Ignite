@@ -9,7 +9,7 @@ import { createVenue, setVenue, walkMinutes } from './venue.js';
 import { CONFERENCES, currentConferenceId, rememberConference, conferenceList } from './conferences.js';
 import { buildSuggester } from './suggest.js';
 import { createRanker, partition, profileConfig, profileGroups, GOALS } from './profile.js';
-import { INSTANCE_LABEL, nsKey } from './instance.js';
+import { INSTANCE_LABEL, nsKey, guideUrl } from './instance.js';
 import { esc, attr, icon, bldgChip, recChip, rsvpChip, prioPill, scoreChip, whenText, prioControl, sessionCard, cardClass, toast, shareOrDownload, copyText, speakersLine, setHostCompany } from './ui.js';
 
 const $ = (sel, root = document) => root.querySelector(sel);
@@ -1632,6 +1632,7 @@ function renderSettings() {
       <div class="field" style="grid-template-columns:1fr;margin-top:10px"><label for="import-code">Import picks from a link<small>Paste a link copied on another device (e.g. Safari → Home Screen app)</small></label></div>
       <div class="row"><input id="import-code" type="text" inputmode="url" autocomplete="off" placeholder="https://…#/import/…" style="flex:1;min-width:0;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--surface)">
         <button class="btn small" data-act="import-code">Import</button></div>
+      <p class="small muted" style="margin-top:10px">Using an AI assistant? Point it at <a href="${attr(guideUrl(location.href))}" target="_blank" rel="noopener">${esc(guideUrl(location.href))}</a>; it explains how to make an import link for you to open here.</p>
       ${app.conf.live ? `<h3 style="margin-top:14px">Email alerts for your picks</h3>
       <p class="small muted">The cloud sync posts every catalog change as a GitHub issue comment (GitHub can email you). It stars changes to codes in <code>${esc(app.conf.dataDir)}/watchlist.json</code>. Copy your Must/Want list, then paste it into that file.</p>
       <div class="row"><button class="btn small" data-act="watchlist">Copy watchlist</button>

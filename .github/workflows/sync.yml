@@ -149,6 +149,7 @@ jobs:
             cp -R index.html manifest.webmanifest sw.js assets data "$name/"
             find "$name/data" \( -name favorites.json -o -name profile.json \) -delete
             [ -d "$dir/data" ] && cp -R "$dir/data/." "$name/data/"
+            python3 scripts/instance_llms.py llms.txt "$name/llms.txt" "$name"   # the AI guide, with this copy's links
             sed -i "s|<meta name=\"planner-instance\" content=\"\">|<meta name=\"planner-instance\" content=\"$name\">|" "$name/index.html"
             grep -q "content=\"$name\"" "$name/index.html"
             conf=""

@@ -50,6 +50,9 @@ class ServedFilesTests(unittest.TestCase):
     def test_should_serve_the_app_assets(self):
         self.assertEqual(self.status("/assets/js/app.js"), 200)
 
+    def test_should_serve_the_guide_for_ai_assistants(self):
+        self.assertEqual(self.status("/llms.txt"), 200)
+
     def test_should_refuse_the_git_folder(self):
         self.assertEqual(self.status("/.git/config"), 404)
 

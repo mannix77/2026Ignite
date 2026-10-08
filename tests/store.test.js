@@ -2,6 +2,8 @@
 // Run with: node tests/store.test.js
 // Each test uses its own storage namespace and waits out the 150 ms save delay, so one
 // test's pending save can't land in the next test's storage.
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { sleep } from './shim.js';
 
 // The page events the store listens to (pagehide, visibilitychange), captured so tests can fire them.
@@ -322,6 +324,62 @@ await test('should replace my rating and score when a share link rates the same 
 
 await test('should ignore share-link tokens it cannot read', async () => {
   eq(Object.keys(store.parseShare('BRK1.3~BRK2.9~not a token~~BRK3.2x', same, same)), ['BRK1']);
+});
+
+// ---- llms.txt, the guide for AI assistants (specs/features/ai-assistant-guide.feature).
+// Its examples are what assistants copy, so each must import exactly what the guide says.
+const guide = readFileSync(fileURLToPath(new URL('../llms.txt', import.meta.url)), 'utf8');
+const importLinks = [...guide.matchAll(/https:\/\/\S+?#\/import\/([^\s`<>)]+)/g)].map(m => m[0]);
+const tokensOf = link => decodeURIComponent(link.split('#/import/')[1]);
+// The `TOKEN` bullets under a "### heading" of the guide.
+function documentedTokens(heading) {
+  const lines = guide.split('\n');
+  const at = lines.indexOf(`### ${heading}`);
+  if (at < 0) throw new Error(`llms.txt has no "### ${heading}" section`);
+  const end = lines.findIndex((l, i) => i > at && l.startsWith('#'));
+  return lines.slice(at + 1, end < 0 ? undefined : end).map(l => /^- `([^`]+)`/.exec(l)?.[1]).filter(Boolean);
+}
+const summary = picks => Object.fromEntries(Object.entries(picks).map(([id, v]) => [id, [v.p, v.score ?? null, v.mode ?? null, v.lock]]));
+
+await test("should import the guide's worked example as the guide describes it", async () => {
+  const example = importLinks.find(l => l.includes('?conf=reinvent2026#/import/AIM314-R.'));
+  eq(summary(receive(tokensOf(example))), {
+    'AIM314-R': [3, null, null, 'AIM314-R1'],   // Must, the AIM314-R1 run locked
+    'AIM326-R': [2, 87.5, null, null],          // Want, own score 87.5
+    BIZ333: [1, null, 'watch', null],            // Maybe, watch the recording later
+    'CMP323-R': [0, null, null, null],           // Skip
+  });
+});
+
+await test('should read every token of every import link in the guide', async () => {
+  const counts = importLinks.map(l => [tokensOf(l).split('~').length, Object.keys(store.parseShare(tokensOf(l), same, same)).length]);
+  eq([counts.length > 0, counts.filter(([a, b]) => a !== b)], [true, []]);
+});
+
+await test('should import each token the guide lists as accepted the way the guide says', async () => {
+  const expected = {   // [rating, own score, watch, locked run], from the guide's own words
+    'BRK201.3': [3, null, null, null],
+    'BRK201.0': [0, null, null, null],
+    'BRK201.2s0': [2, 0, null, null],
+    'BRK201.2s100': [2, 100, null, null],
+    'BRK201.2s100.5': [2, null, null, null],
+    'BRK201.1w': [1, null, 'watch', null],
+    'BRK201.3s92.5w!BRK201': [3, 92.5, 'watch', 'BRK201'],
+  };
+  const documented = documentedTokens('Accepted tokens');
+  const got = Object.fromEntries(documented.map(t => [t, summary(receive(t)).BRK201]));
+  eq(got, expected);
+});
+
+await test('should ignore each token the guide lists as ignored, and still import the rest of the link', async () => {
+  const documented = documentedTokens('Ignored tokens');
+  // Both what the import dialog counts (parseShare) and what is saved (applyShared).
+  const counted = documented.map(t => Object.keys(store.parseShare(`BRK202.3~${t}`, same, same)));
+  eq([documented, counted, documented.map(t => Object.keys(receive(`BRK202.3~${t}`)))], [
+    ['BRK201.4', 'BRK201.3s92.55', 'BRK201.3s1000', 'BRK201.Must', 'BRK201', 'BRK201.3 w'],
+    [['BRK202'], ['BRK202'], ['BRK202'], ['BRK202'], ['BRK202'], ['BRK202']],
+    [['BRK202'], ['BRK202'], ['BRK202'], ['BRK202'], ['BRK202'], ['BRK202']],
+  ]);
 });
 await sleep(SAVE);
 
