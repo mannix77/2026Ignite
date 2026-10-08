@@ -325,5 +325,70 @@ await test('should ignore share-link tokens it cannot read', async () => {
 });
 await sleep(SAVE);
 
+// ---- previewing a backup or link before it is applied (specs/features/restoring-picks.feature)
+const backupOf = picks => ({ app: 'ignite26-planner', v: 1, conference: 'gartner2026', picks });
+const seed = (ns, picks) => { store.load(ns); store.mutatePicks(p => Object.assign(p, picks)); };
+
+await test('should list changed and new picks in a backup without applying them', async () => {
+  seed('pv-list', { A: { p: 2, lock: null, note: '', at: 10 } });
+  const pv = store.previewImport(backupOf({ A: { p: 3, at: 20 }, B: { p: 2, at: 20 }, C: { p: 1, at: 20 } }), { replace: false });
+  eq([pv.changed, pv.added, pv.unchanged, pv.removed], [[{ id: 'A', from: 2, to: 3 }], ['B', 'C'], 0, []]);
+  await sleep(SAVE);
+});
+await test('should leave picks untouched while previewing a backup', async () => {
+  seed('pv-untouched', { A: { p: 2, lock: null, note: '', at: 10 } });
+  store.previewImport(backupOf({ A: { p: 3, at: 20 }, B: { p: 2, at: 20 } }), { replace: true });
+  eq([store.pick('A')?.p, store.pick('B')], [2, null]);
+  await sleep(SAVE);
+});
+await test('should apply exactly the previewed changes when adding a backup', async () => {
+  seed('pv-exact', { A: { p: 2, lock: null, note: '', at: 10 }, D: { p: 1, lock: null, note: '', at: 10 }, E: { p: 3, lock: null, note: '', at: 50 } });
+  const backup = backupOf({ A: { p: 3, at: 20 }, B: { p: 2, at: 20 }, D: { p: 1, at: 20 }, E: { p: 0, at: 30 } });
+  const pv = store.previewImport(backup, { replace: false });
+  store.importData(backup, { replace: false });
+  // A changed, B new, D same rating, E's local rating is newer and stays.
+  eq([pv.changed.map(c => c.id), pv.added, pv.unchanged, ['A', 'B', 'D', 'E'].map(id => store.pick(id)?.p)], [['A'], ['B'], 2, [3, 2, 1, 3]]);
+  await sleep(SAVE);
+});
+await test('should list the picks a replace would remove', async () => {
+  seed('pv-remove', { A: { p: 2, lock: null, note: '', at: 10 }, Z: { p: 3, lock: null, note: '', at: 10 } });
+  const pv = store.previewImport(backupOf({ A: { p: 2, at: 20 } }), { replace: true });
+  eq([pv.removed, pv.unchanged, pv.added, pv.changed], [['Z'], 1, [], []]);
+  await sleep(SAVE);
+});
+await test('should keep a note and reserved seat when adding a backup that rates the same session', async () => {
+  seed('pv-keep', { A: { p: 2, lock: 'A', reserved: 'A', note: 'bring laptop', at: 10 } });
+  store.importData(backupOf({ A: { p: 3, at: 20 } }), { replace: false });
+  const a = store.pick('A');
+  eq([a?.p, a?.note, a?.reserved], [3, 'bring laptop', 'A']);
+  await sleep(SAVE);
+});
+await test('should preview a picks link without applying it', async () => {
+  seed('pv-link', { A: { p: 1, lock: null, note: 'x', at: 10 } });
+  const link = { A: { p: 3, code: 'K1', at: 20 }, B: { p: 2, code: 'K2', at: 20 }, C: { p: 0, code: 'K3', at: 20 } };
+  const pv = store.previewShared(link);
+  eq([pv.changed, pv.added, store.pick('A')?.p, store.pick('B')], [[{ id: 'A', from: 1, to: 3 }], ['B', 'C'], 1, null]);
+  await sleep(SAVE);
+});
+await test('should count only the link\'s own sessions as already the same', async () => {
+  seed('pv-scope', { A: { p: 2, lock: null, note: '', at: 10 }, X: { p: 1, lock: null, note: '', at: 10 }, Y: { p: 3, lock: null, note: '', at: 10 } });
+  const pv = store.previewShared({ A: { p: 2, code: 'K1', at: 20 }, B: { p: 3, code: 'K2', at: 20 } });
+  eq([pv.unchanged, pv.added, pv.changed], [1, ['B'], []]);
+  await sleep(SAVE);
+});
+await test('should report link entries whose session code is not in the catalog', () => {
+  const report = {};
+  const picks = store.parseShare('K1.3~CX88.0~not-a-token', code => ({ K1: 'S1' })[code] || null, () => null, report);
+  eq([Object.keys(picks), report.unknown, report.invalid], [['S1'], ['CX88'], 1]);
+});
+await test('should apply exactly the previewed changes from a picks link', async () => {
+  seed('pv-link-exact', { A: { p: 1, lock: null, note: 'x', at: 10 }, B: { p: 2, lock: null, note: '', at: 10 } });
+  const link = { A: { p: 3, code: 'K1', at: 20 }, B: { p: 2, code: 'K2', at: 20 } };
+  const pv = store.previewShared(link);
+  store.applyShared(link);
+  eq([pv.changed.map(c => c.id), pv.unchanged, store.pick('A')?.p, store.pick('A')?.note], [['A'], 1, 3, 'x']);
+  await sleep(SAVE);
+});
+
 console.log(`${pass} passed, ${fail} failed`);
 if (fail) process.exit(1);

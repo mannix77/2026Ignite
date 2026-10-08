@@ -340,17 +340,53 @@ export function exportData() {
   return { app: 'ignite26-planner', v: 1, conference: namespace() || 'ignite2026', exportedAt: new Date().toISOString(), picks: state.picks, settings: state.prefs, profile: state.profile }; // null: never set
 }
 
-export function importData(obj, { replace = false } = {}) {
+// What a backup does to the picks here: one rule, used by both the preview and the import,
+// so what you're shown is what happens. Adding keeps the newer rating per session, and keeps
+// this device's note and reserved seat when the backup has none.
+function planImport(obj, replace) {
   if (!obj || obj.app !== 'ignite26-planner' || !obj.picks || typeof obj.picks !== 'object' || Array.isArray(obj.picks)) throw new Error('Not an Ignite planner backup file');
   const incoming = sanitizePicks(obj.picks, 0); // undated backup picks are older than anything here
   // Checked before anything changes: a backup from another format must not empty the plan.
   if (Object.keys(obj.picks).length && !Object.keys(incoming).length) throw new Error('This backup has no picks this planner can read; nothing was changed');
-  if (replace) state.picks = {};
+  const next = replace ? {} : { ...state.picks };
   let applied = 0;
+  const scope = replace ? null : Object.keys(incoming); // merging only touches the backup's sessions
   for (const [id, p] of Object.entries(incoming)) {
-    const cur = state.picks[id];
-    if (!cur || p.at > (cur.at || 0)) { state.picks[id] = { ...p, note: p.note || cur?.note || '' }; applied++; }
+    const cur = replace ? null : state.picks[id];
+    if (cur && !(p.at > (cur.at || 0))) continue;
+    const keep = cur?.reserved && !p.reserved ? { reserved: cur.reserved, lock: cur.lock || cur.reserved } : {};
+    next[id] = { ...p, note: p.note || cur?.note || '', ...keep };
+    if (keep.reserved) delete next[id].lockMode; // a pinned seat is never a preview lock
+    applied++;
   }
+  return { next, applied, scope };
+}
+
+// The fields a person can see; two picks that agree on these are the same pick.
+const SHOWN = ['p', 'score', 'mode', 'lock', 'reserved', 'note'];
+// scope: the sessions the import mentions (null = all of them, for a replace).
+function diffPicks(before, after, scope = null) {
+  const out = { added: [], changed: [], unchanged: 0, removed: [], after: {} }; // after: new picks' ratings
+  for (const id of scope || Object.keys(after)) {
+    const a = after[id], b = before[id];
+    if (!a) continue;
+    if (!b) { out.added.push(id); out.after[id] = a.p ?? null; }
+    else if (SHOWN.some(k => (a[k] ?? null) !== (b[k] ?? null))) out.changed.push({ id, from: b.p ?? null, to: a.p ?? null });
+    else out.unchanged++;
+  }
+  for (const id of Object.keys(before)) if (!(id in after)) out.removed.push(id);
+  return out;
+}
+
+// What restoring this backup would change, without changing anything.
+export function previewImport(obj, { replace = false } = {}) {
+  const { next, scope } = planImport(obj, replace);
+  return diffPicks(state.picks, next, scope);
+}
+
+export function importData(obj, { replace = false } = {}) {
+  const { next, applied } = planImport(obj, replace);
+  state.picks = next;
   if (obj.settings && replace) { state.prefs = sanitizePrefs(obj.settings); cachedSettings = null; }
   // Replacing restores the backup's preferences, including "never set" (null); merging only fills in.
   if (replace && 'profile' in obj) state.profile = obj.profile ? sanitizeProfile(obj.profile) : null;
@@ -379,13 +415,16 @@ export function shareString(codeOf, lockCodeOf) {
     .join('~');
 }
 
-export function parseShare(str, idOfCode, instOfCode) {
+// report (optional) collects what was left out: { unknown: [codes not in the catalog], invalid: n }.
+export function parseShare(str, idOfCode, instOfCode, report = null) {
   const out = {};
+  if (report) { report.unknown = []; report.invalid = 0; }
   for (const tok of (str || '').split('~')) {
+    if (!tok.trim()) continue;
     const m = TOKEN.exec(tok.trim());
-    if (!m) continue;
+    if (!m) { if (report) report.invalid++; continue; }
     const id = idOfCode(m[1]);
-    if (!id) continue;
+    if (!id) { report?.unknown.push(m[1]); continue; }
     const rec = { p: Number(m[2]), lock: m[6] ? instOfCode(m[6]) : null, code: m[1], at: Date.now() };
     if (m[3]) rec.score = Number(m[3]);
     if (m[4]) rec.mode = 'watch';
@@ -396,18 +435,33 @@ export function parseShare(str, idOfCode, instOfCode) {
 }
 
 // Merge shared ratings, scores and locks; never touch local notes or reserved seats.
-export function applyShared(picks) {
+function planShared(picks) {
+  const next = { ...state.picks };
   let n = 0;
+  const scope = [];
   for (const [id, p] of Object.entries(picks)) {
     if (!ID_RE.test(id) || !p || typeof p !== 'object') continue;
+    scope.push(id);
     const cur = state.picks[id] || { note: '' };
     const lock = cur.reserved ? (cur.lock || cur.reserved) : (p.lock || null);
     const s = sanitizePick({
       ...cur, p: p.p, lock, lockMode: lock && !cur.reserved ? p.lockMode : undefined,
       score: p.score, mode: p.mode, code: p.code || cur.code, at: p.at,
     });
-    if (s) { state.picks[id] = s; n++; }
+    if (s) { next[id] = s; n++; }
   }
+  return { next, n, scope };
+}
+
+// What applying a picks link would change, without changing anything.
+export function previewShared(picks) {
+  const { next, scope } = planShared(picks);
+  return diffPicks(state.picks, next, scope);
+}
+
+export function applyShared(picks) {
+  const { next, n } = planShared(picks);
+  state.picks = next;
   emit('picks');
   return n;
 }
