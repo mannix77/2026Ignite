@@ -31,6 +31,7 @@ Feature: Keeping picks safe on the device
 
     Scenario: A week-old backup prompts a reminder
       Given Minesh's last backup is 8 days old
+      And Minesh changed a pick since then
       When Minesh opens the planner
       Then he is reminded to save a backup
 

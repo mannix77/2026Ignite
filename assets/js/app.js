@@ -968,8 +968,14 @@ function health() {
 // Picks are kept only where the planner runs. iPhone: a Home Screen app has its own storage
 // and Safari may clear a tab's data after 7 days without a visit. Android: an installed app
 // is far more likely to get storage Chrome won't clean up. Nudge before people invest time.
+// Dismissing the install banner is per device, not per conference.
+const INSTALL_DISMISSED = nsKey('ignite26.planner.installDismissed');
+function installDismissed() {
+  try { return localStorage.getItem(INSTALL_DISMISSED) === '1' || !!store.get().ui.installDismissed; } catch { return !!store.get().ui.installDismissed; }
+}
+
 function installBanner() {
-  if (STANDALONE || store.get().ui.installDismissed) return '';
+  if (STANDALONE || installDismissed()) return '';
   if (IS_IOS) {
     return `<div class="banner install">${icon('plan')}<div><b>Add to your Home Screen first</b>
     <p>Tap <b>Share → Add to Home Screen</b>, then open the planner from that icon. The installed app keeps its own copy of your picks, Safari won't clear it, and it works offline.</p>
@@ -2052,7 +2058,7 @@ function onClick(e) {
       const r = await shareOrDownload(`${app.conf.id}-picks-${new Date().toISOString().slice(0, 10)}.json`, JSON.stringify(store.exportData(), null, 1), 'application/json');
       if (r !== 'cancelled') { store.markBackup(); toast('Backup saved. Keep it somewhere that is backed up'); }
     },
-    'backup-dismiss': () => store.dismissBackupReminder(),
+    'backup-dismiss': () => store.dismissBackupReminder(Date.now(), nowLocal(null, app.conf.tz).day),
     'install-app': async () => {
       const ev = app.installEvent;
       if (!ev) return;
@@ -2067,7 +2073,7 @@ function onClick(e) {
     },
     'favorites-import': () => { if (confirm('Import your workbook favorites? Ratings, scores and watch-later marks for those sessions will be set from the spreadsheet; your notes are kept.')) importFavorites(); },
     'favorites-dismiss': () => { store.setUI({ favoritesVersion: app.snapshot?.favorites?.version }); app.favoritesOffer = null; render(); },
-    'install-dismiss': () => { store.setUI({ installDismissed: true }); render(); },
+    'install-dismiss': () => { try { localStorage.setItem(INSTALL_DISMISSED, '1'); } catch { /* storage blocked */ } store.setUI({ installDismissed: true }); render(); },
     'intro-dismiss': () => { store.setUI({ introDismissed: true }); render(); },
     'forget-missing': () => {
       const gone = new Set(app.picks.orphans.map(o => o.id));
@@ -2248,7 +2254,7 @@ store.subscribe(what => {
     if (what === 'reset') { applyTheme(store.get().ui.theme); app.triage = null; app.ranker = null; }
   }
   indexPicks();
-  if (what === 'picks' || what === 'reset') { trackNewPicks(); computeAlerts(); }
+  if (what === 'picks' || what === 'reset') { trackNewPicks(); computeAlerts(); if (!app.persisted) setTimeout(refreshPersisted, 500); }
   invalidate();
   if (app.tab === 'browse' && what === 'picks') {
     // Update only the cards that changed, so the list doesn't jump.

@@ -220,8 +220,8 @@ export function markBackup(at = Date.now()) {
   state.backup = { at, changes: 0, dismissed: null };
   emit('backup');
 }
-export function dismissBackupReminder(at = Date.now()) {
-  state.backup.dismissed = { at, changes: state.backup.changes };
+export function dismissBackupReminder(at = Date.now(), day = null) {
+  state.backup.dismissed = { at, changes: state.backup.changes, ...(day ? { day } : {}) };
   emit('backup');
 }
 
@@ -230,7 +230,10 @@ function sanitizeBackup(b) {
   if (!b || typeof b !== 'object') return out;
   if (Number.isFinite(b.at) && b.at > 0) out.at = b.at;
   if (Number.isInteger(b.changes) && b.changes >= 0) out.changes = Math.min(b.changes, 100000);
-  if (b.dismissed && Number.isFinite(b.dismissed.at) && Number.isInteger(b.dismissed.changes)) out.dismissed = { at: b.dismissed.at, changes: b.dismissed.changes };
+  if (b.dismissed && Number.isFinite(b.dismissed.at) && Number.isInteger(b.dismissed.changes)) {
+    out.dismissed = { at: b.dismissed.at, changes: b.dismissed.changes };
+    if (typeof b.dismissed.day === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(b.dismissed.day)) out.dismissed.day = b.dismissed.day;
+  }
   return out;
 }
 

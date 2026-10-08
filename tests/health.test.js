@@ -57,6 +57,22 @@ await test('should stay quiet after a dismissal until 20 more changes', () => {
 await test('should describe a backup saved today', () => {
   eq(backupAge(now - 3600000, now), 'today');
 });
+await test('should call a backup from before midnight yesterday', () => {
+  const late = new Date(2026, 9, 9, 23, 50).getTime(), early = new Date(2026, 9, 10, 0, 10).getTime();
+  eq(backupAge(late, early), 'yesterday');
+});
+await test('should not remind about an old backup when nothing changed since', () => {
+  eq(backupReminder({ ...base, at: now - 8 * DAY, changes: 0 }), null);
+});
+await test('should let the conference-eve reminder be dismissed for that day', () => {
+  eq(backupReminder({ ...base, changes: 1, today: '2026-10-17', dismissed: { at: now, changes: 1, day: '2026-10-17' } }), null);
+});
+await test('should show the conference-eve reminder despite an earlier dismissal', () => {
+  eq(backupReminder({ ...base, changes: 1, today: '2026-10-17', dismissed: { at: now - DAY, changes: 1, day: '2026-10-16' } })?.reason, 'conference');
+});
+await test('should mention private windows when a browser tab may clear picks', () => {
+  eq(/private/i.test(storageStatus({ standalone: false, persisted: false, saveFailing: false }).text), true);
+});
 
 // ---- the store keeps track
 await test('should count pick changes since the last backup', async () => {
