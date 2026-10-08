@@ -1,6 +1,728 @@
 {
  "batches": [
   {
+   "at": "2026-10-08T04:35:53Z",
+   "milestones": [],
+   "added": [],
+   "removed": [
+    {
+     "id": "1787856695281001EHAQ",
+     "inst": "1787856695281001EHAQ-1789752024019001dDaB",
+     "code": "LTG1379",
+     "title": "AI Without New Hardware: AI-Enabled Windows 365 Cloud PCs"
+    },
+    {
+     "id": "1787856920558001hyLL",
+     "inst": "1787856920558001hyLL-1789752190963001dmdR",
+     "code": "TT1795",
+     "title": "AI Without New Hardware | AI-Enabled Windows 365 Cloud PCs"
+    }
+   ],
+   "changed": [
+    {
+     "id": "1787856609892001EgHv",
+     "inst": "1787856609892001EgHv-1789751878142001dDhs",
+     "code": "BRK242",
+     "title": "Build your self-improving AI Platform with Microsoft Foundry",
+     "f": {
+      "speakers": [
+       [
+        "Steve Sweetman"
+       ],
+       [
+        "Naomi Moneypenny",
+        "Steve Sweetman"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856610200001EYMD",
+     "inst": "1787856610200001EYMD-1789751878551001dhti",
+     "code": "BRK244",
+     "title": "Voice agents in Microsoft Foundry: Prototype to production in 45 mins",
+     "f": {
+      "speakers": [
+       [
+        "Archer Zhao",
+        "Yiwen Rong"
+       ],
+       [
+        "Ahmed Abdul Jalil Ebrahim",
+        "Archer Zhao",
+        "Li Jiannan",
+        "Yiwen Rong"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856610647001ED9l",
+     "inst": "1787856610647001ED9l-1789751879154001dK4K",
+     "code": "BRK247",
+     "title": "Token economics: Get more from your production AI budget",
+     "f": {
+      "speakers": [
+       [
+        "Chris Hoder",
+        "Steve Sweetman"
+       ],
+       [
+        "Alex Tyrrell",
+        "Cathy Rowe",
+        "Chris Hoder",
+        "Steve Sweetman"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856611240001E5kl",
+     "inst": "1787856611240001E5kl-1789751880030001dFks",
+     "code": "BRK251",
+     "title": "Agents in production: From issue detection to continuous improvement",
+     "f": {
+      "title": [
+       "Agents in production: Three failures, three fixes",
+       "Agents in production: From issue detection to continuous improvement"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1787856613787001EPg6",
+     "inst": "1787856613787001EPg6-1789751883721001d5hL",
+     "code": "BRK268",
+     "title": "Build as a team with GitHub Copilot tailored to your workflow",
+     "f": {
+      "speakers": [
+       [
+        "Harald Kirschner"
+       ],
+       [
+        "Harald Kirschner",
+        "Ross Wollman"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856614099001Ef93",
+     "inst": "1787856614099001Ef93-1789751884174001d6SS",
+     "code": "BRK270",
+     "title": "Ship more software with parallel agents in the GitHub Copilot app",
+     "f": {
+      "speakers": [
+       [
+        "Pierce Boggan"
+       ],
+       [
+        "James Clancey",
+        "Pierce Boggan"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856614396001ENAG",
+     "inst": "1787856614396001ENAG-1789751884670001dUmY",
+     "code": "BRK272",
+     "title": "From 2 days to 45 minutes: Bradesco’s agentic AI transformation",
+     "f": {
+      "title": [
+       "Roll out GitHub Copilot with the right IT controls",
+       "From 2 days to 45 minutes: Bradesco’s agentic AI transformation"
+      ],
+      "speakers": [
+       [],
+       [
+        "Bruno Borges"
+       ]
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1787856614544001E44o",
+     "inst": "1787856614544001E44o-1789751884866001dlGf",
+     "code": "BRK273",
+     "title": "Bring GitHub Copilot where you work",
+     "f": {
+      "speakers": [
+       [
+        "James Montemagno",
+        "Meagan Cojocar"
+       ],
+       [
+        "James Montemagno",
+        "Sheena Ganju"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856614835001EeAx",
+     "inst": "1787856614835001EeAx-1789751885287001d8H0",
+     "code": "BRK275",
+     "title": "What should you build when you can build anything?",
+     "f": {
+      "speakers": [
+       [
+        "Scott Hanselman"
+       ],
+       [
+        "Anthony Shaw",
+        "Katie Savage",
+        "Scott Hanselman"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856616625001EWVs",
+     "inst": "1787856616625001EWVs-1789751887762001dsYW",
+     "code": "BRK287",
+     "title": "Trusted code at scale, from legacy to AI",
+     "f": {
+      "speakers": [
+       [
+        "Eric Tooley"
+       ],
+       [
+        "Eric Tooley",
+        "Subhash Arja"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856617072001Enkq",
+     "inst": "1787856617072001Enkq-1789751888366001dLoP",
+     "code": "BRK290",
+     "title": "Humans, agents, and a game plan: AI governance with GitHub Enterprise",
+     "f": {
+      "title": [
+       "Unified governance for developers and AI agents with GitHub Enterprise",
+       "Humans, agents, and a game plan: AI governance with GitHub Enterprise"
+      ],
+      "speakers": [
+       [
+        "Greg Padak"
+       ],
+       [
+        "Amrita Yellepeddy",
+        "Greg Padak"
+       ]
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1787856618278001EIke",
+     "inst": "1787856618278001EIke-1789751889978001dcXw",
+     "code": "BRK298",
+     "title": "Bringing conversational analytics to where decisions happen",
+     "f": {
+      "speakers": [
+       [
+        "Nellie Gustafsson",
+        "Sara Vredevoogd"
+       ],
+       [
+        "Amir Jafari",
+        "Sara Vredevoogd"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856619339001E1y8",
+     "inst": "1787856619339001E1y8-1789751891439001dEvN",
+     "code": "BRK305",
+     "title": "Designing Fabric IQ for enterprise adoption",
+     "f": {
+      "speakers": [
+       [
+        "Yitzhak Kesselman"
+       ],
+       [
+        "Chafia Aouissi",
+        "Tessa Kloster",
+        "Yitzhak Kesselman"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856619486001EVFL",
+     "inst": "1787856619486001EVFL-1789751891645001dq2X",
+     "code": "BRK306",
+     "title": "Fabric IQ: Trusted business context for enterprise AI",
+     "f": {
+      "speakers": [
+       [
+        "Tessa Kloster"
+       ],
+       [
+        "Adam Lash",
+        "Chafia Aouissi",
+        "Jomit Vaghela"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856620403001EBkn",
+     "inst": "1787856620403001EBkn-1789751892866001dzE8",
+     "code": "BRK312",
+     "title": "The trust foundation for the next era of intelligence",
+     "f": {
+      "speakers": [
+       [
+        "Mohammad Abuomar",
+        "Sarah Bird"
+       ],
+       [
+        "Andrew Welch",
+        "Bogdan Demeny",
+        "Mohammad Abuomar",
+        "Sarah Bird"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856620877001EX1b",
+     "inst": "1787856620877001EX1b-1789751893501001deId",
+     "code": "BRK315",
+     "title": "Rakuten Payment IQ: From data silos to build-your-own IQ",
+     "f": {
+      "title": [
+       "Microsoft IQ Breakout Session Placeholder TBD",
+       "Rakuten Payment IQ: From data silos to build-your-own IQ"
+      ]
+     }
+    },
+    {
+     "id": "1787856627383001E4IT",
+     "inst": "1787856627383001E4IT-1789751902075001dMuG",
+     "code": "BRK357",
+     "title": "Fabric Real-Time Intelligence: From signal to action",
+     "f": {
+      "speakers": [
+       [],
+       [
+        "Yael Schuster-Davidi"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856627862001Esxb",
+     "inst": "1787856627862001Esxb-1789751902691001dxQR",
+     "code": "BRK360",
+     "title": "Use graph reasoning to power your AI agents",
+     "f": {
+      "speakers": [
+       [],
+       [
+        "Chafia Aouissi",
+        "Yael Schuster-Davidi"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856628019001EiXI",
+     "inst": "1787856628019001EiXI-1789751902897001dNtP",
+     "code": "BRK361",
+     "title": "Azure HorizonDB: Deep dive into architecture and internals",
+     "f": {
+      "speakers": [
+       [
+        "Affan Dar",
+        "Rajesh Setlem",
+        "Sandeep Lingam"
+       ],
+       [
+        "Affan Dar",
+        "RAJESH SETLEM Setlem",
+        "Sandeep Lingam"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856629569001E325",
+     "inst": "1787856629569001E325-1789751904893001dbWe",
+     "code": "BRK371",
+     "title": "Why Azure is the best cloud for SQL",
+     "f": {
+      "speakers": [
+       [
+        "Pam Lahoud",
+        "Priya Sathy"
+       ],
+       [
+        "Pam Lahoud",
+        "Priya Sathy",
+        "Raj Pillai"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856638686001EsPu",
+     "inst": "1787856638686001EsPu-1789751916869001dsmw",
+     "code": "BRK430",
+     "title": "Architecting your workloads for maximum compute flexibility",
+     "f": {
+      "speakers": [
+       [
+        "Mohamed Hassan",
+        "Rajeesh Ramachandran"
+       ],
+       [
+        "Rajeesh Ramachandran",
+        "Rohan Sacheti",
+        "Varun Shandilya"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856640822001EOGB",
+     "inst": "1787856640822001EOGB-1789751919751001dDrS",
+     "code": "BRK444",
+     "title": "How does the next wave of quantum impact scientific discovery?",
+     "f": {
+      "speakers": [
+       [
+        "Anjana Harve",
+        "John Link",
+        "Lily Kim"
+       ],
+       [
+        "Anjana Harve",
+        "David Carmona",
+        "John Link"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856645372001Euij",
+     "inst": "1787856645372001Euij-1789751925964001d0VJ",
+     "code": "BRK474",
+     "title": "How Aon scaled AI to accelerate workforce transformation",
+     "f": {
+      "speakers": [
+       [
+        "Alex Knizhnik",
+        "Lisa Stevens",
+        "Sudha Kumar"
+       ],
+       [
+        "Alex Knizhnik",
+        "Lisa Stevens",
+        "Raj Pillai",
+        "Sudha Kumar"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856645522001ESfS",
+     "inst": "1787856645522001ESfS-1789751926176001dMHB",
+     "code": "BRK475",
+     "title": "Industrial intelligence: Optimizing operations with data and AI agents",
+     "f": {
+      "speakers": [
+       [
+        "Alfonso Rodriguez",
+        "Michael MacKenzie"
+       ],
+       [
+        "Adam Raeburn-James",
+        "Alfonso Rodriguez",
+        "Michael MacKenzie"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856651272001EUOu",
+     "inst": "1787856651272001EUOu-1789751934126001d8Cv",
+     "code": "BRK513",
+     "title": "Accelerating AI Leadership with MAICPP Frontier offers",
+     "f": {
+      "title": [
+       "Accelerating AI Leadership with MAICPP Frontier offers​",
+       "Accelerating AI Leadership with MAICPP Frontier offers"
+      ]
+     }
+    },
+    {
+     "id": "1787856655493001Eeqv",
+     "inst": "1787856655493001Eeqv-1789751939830001dcwR",
+     "code": "BRK540",
+     "title": "Japan Wrap-up Session",
+     "f": {
+      "speakers": [
+       [],
+       [
+        "Tadashi Okazaki"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856873320001hIAr",
+     "inst": "1787856873320001hIAr-1789751964675001dNtp",
+     "code": "LAB672",
+     "title": "Ground agents in your business with an ontology in Fabric IQ",
+     "f": {
+      "speakers": [
+       [],
+       [
+        "Adam Lash"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856875748001hdPI",
+     "inst": "1787856875748001hdPI-1789751967527001dKv3",
+     "code": "LAB711",
+     "title": "Build an AI-Ready Secure Foundation with Zero Trust",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1787856665193001Ex1P",
+     "inst": "1787856665193001Ex1P-1789751984063001d0gh",
+     "code": "LTG1184",
+     "title": "Foundry Labs: Exploring the rise of decision models",
+     "f": {
+      "title": [
+       "Foundry Labs: Research models you can try before you leave Ignite",
+       "Foundry Labs: Exploring the rise of decision models"
+      ],
+      "speakers": [
+       [
+        "Gulsimo Osimi",
+        "Yash Lara"
+       ],
+       [
+        "Saumil Shrivastava",
+        "Sidd Iyer"
+       ]
+      ],
+      "level": [
+       200,
+       100
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1787856667527001EBGh",
+     "inst": "1787856667527001EBGh-1789751987114001dMRW",
+     "code": "LTG1199",
+     "title": "Keep GitHub Copilot agent sessions moving wherever you work",
+     "f": {
+      "speakers": [
+       [],
+       [
+        "Rob Lourens"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856669864001Eujb",
+     "inst": "1787856669864001Eujb-1789751990045001dJnA",
+     "code": "LTG1214",
+     "title": "Observability for AI with Fabric Data Agent, Foundry, and Agent 365",
+     "f": {
+      "speakers": [
+       [
+        "Mayur Jain"
+       ],
+       [
+        "Amir Jafari"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856680507001EWll",
+     "inst": "1787856680507001EWll-1789752004453001dL5c",
+     "code": "LTG1283",
+     "title": "How Azure support cut incident mitigation time by more than 50%",
+     "f": {
+      "speakers": [
+       [
+        "Kumar Gaurav"
+       ],
+       [
+        "Gaurav Gaurav"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856689681001ElmI",
+     "inst": "1787856689681001ElmI-1789752016951001d35m",
+     "code": "LTG1343",
+     "title": "Beyond deployment: Realizing the full value of AI",
+     "f": {
+      "speakers": [
+       [],
+       [
+        "Vik Singh"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856689987001ErIm",
+     "inst": "1787856689987001ErIm-1789752017350001dHXY",
+     "code": "LTG1345",
+     "title": "Turn institutional knowledge into a compounding advantage​",
+     "f": {
+      "speakers": [
+       [],
+       [
+        "John Shewchuk"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856690141001EiHk",
+     "inst": "1787856690141001EiHk-1789752017546001diRW",
+     "code": "LTG1346",
+     "title": "Security can determine whether AI scales — or doesn't",
+     "f": {
+      "speakers": [
+       [
+        "Angela Byers"
+       ],
+       [
+        "Angela Byers",
+        "Shenice Brunson"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856693914001EZv9",
+     "inst": "1787856693914001EZv9-1789752022224001d71i",
+     "code": "LTG1370",
+     "title": "So you want to become an MVP?",
+     "f": {
+      "title": [
+       "Fabric Ontology in Practice: From Data to Domain Knowledge",
+       "So you want to become an MVP?"
+      ],
+      "speakers": [
+       [
+        "Zaid Zaim"
+       ],
+       [
+        "Justin Garrett"
+       ]
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1787856593604001EHuM",
+     "inst": "1787856593604001EHuM-1789752128977001dJ9I",
+     "code": "THR973",
+     "title": "Math in Microsoft 365: Easier to Create, Share, and Understand",
+     "f": {
+      "speakers": [
+       [
+        "Clint Covington"
+       ],
+       [
+        "Peter Wu"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856912400001hhtP",
+     "inst": "1787856912400001hhtP-1789752810301001wLhV",
+     "code": "TT1745",
+     "title": "Who owns the outcome after the AI goes live?​",
+     "f": {
+      "speakers": [
+       [],
+       [
+        "Pam Maynard"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856912886001hhQy",
+     "inst": "1787856912886001hhQy-1789752810870001wM6S",
+     "code": "TT1748",
+     "title": "AI at risk: The executive decision room​",
+     "f": {
+      "speakers": [
+       [
+        "Jim Banach"
+       ],
+       [
+        "Jim Banach",
+        "Mike Palitto"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1789608496307001P3lE",
+     "inst": "1789608496307001P3lE-1789752836654001w4Ym",
+     "code": "TT2515",
+     "title": "Fabric IQ: Ask the experts",
+     "f": {
+      "speakers": [
+       [
+        "Yitzhak Kesselman"
+       ],
+       [
+        "Ansley Yeo",
+        "Chafia Aouissi",
+        "Yitzhak Kesselman"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1789608665684001K3G5",
+     "inst": "1789608665684001K3G5-1789752836844001wJV7",
+     "code": "TT2516",
+     "title": "Web IQ: Ask the experts",
+     "f": {
+      "speakers": [
+       [
+        "Roberto Carli"
+       ],
+       [
+        "Ayca Bas",
+        "Ryan Cassidy"
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
    "at": "2026-10-07T20:31:07Z",
    "milestones": [],
    "added": [],
