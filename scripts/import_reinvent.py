@@ -61,7 +61,8 @@ TIME_KEYS = ["sessionTimeID", "date", "startTime", "endTime", "utcStartTime", "u
 REPEAT = re.compile(r"-R\d*$", re.I)
 SPONSORED_CODE = re.compile(r"-S(-R\d*)?$", re.I)
 REPEAT_MARK = re.compile(r"\s*\[REPEAT\]\s*", re.I)
-SPONSORED_BY = re.compile(r"\(sponsored by ([^)]+)\)", re.I)
+# "(sponsored by X)" anywhere, or a trailing "- sponsored by X" (hyphen, en or em dash).
+SPONSORED_BY = re.compile(r"\(sponsored by ([^)]+)\)|[-\u2013\u2014]\s*sponsored by (.+?)\s*$", re.I)
 # Assumption (unconfirmed): AWS posts breakouts to YouTube after the event; chalk talks,
 # workshops, builders' sessions and the other interactive formats aren't recorded.
 RECORDED_TYPES = {"Breakout session"}
@@ -95,25 +96,43 @@ def post_page(offset, attempts=3):
     raise RuntimeError("catalog page from=%d failed: %s" % (offset, last))
 
 
-def page_items(page):
-    """The first page nests items under sectionList[0]; later pages (from > 0) have them at the top."""
+def count(v):
+    """A count from the API (3, 3.0 or "3") -> int; anything else (True, "", negative) -> None."""
+    v = num(v)
+    return v if isinstance(v, int) and not isinstance(v, bool) and v >= 0 else None
+
+
+def page_section(page):
+    """The first page nests its items and total under sectionList[0]; later pages (from > 0)
+    have them at the top. An error page (responseCode other than "0") is refused: treating it
+    as the empty page that ends paging would publish a truncated catalog."""
     if not isinstance(page, dict):
         raise RuntimeError("unexpected catalog page (not an object)")
+    if str(page.get("responseCode", "0")) != "0":
+        raise RuntimeError("catalog page error %s: %s" % (page.get("responseCode"), page.get("responseMessage")))
     if "items" in page:
-        return page["items"] or []
+        return page
     sections = page.get("sectionList") or [{}]
-    return sections[0].get("items") or []
+    return sections[0] if isinstance(sections[0], dict) else {}
+
+
+
+def session_id(v):
+    """A usable session id: non-blank text, trimmed; anything else (blank, a list, an object) is None."""
+    return v.strip() or None if isinstance(v, str) else None
 
 
 def slim(r):
     """Raw API record (~10 KB) -> the snapshot shape (one run, its facets, speakers and slot)."""
     attrs = {}
     for a in r.get("attributevalues") or []:
+        if not isinstance(a, dict):
+            continue
         k = a.get("attribute_id")
         if k and k not in SKIP_ATTRS:
             attrs.setdefault(k, []).append(a.get("value"))
     return {
-        "sessionID": r.get("sessionID"),
+        "sessionID": session_id(r.get("sessionID")),
         "code": r.get("code"),
         "title": r.get("title"),
         "abstract": r.get("abstract"),
@@ -127,19 +146,34 @@ def slim(r):
         # Some speakers only fill in the global profile (company/title blank on the event record).
         "speakers": [{"name": p.get("fullName"), "title": p.get("jobTitle") or p.get("globalJobtitle") or "",
                       "company": p.get("companyName") or p.get("globalCompany") or "",
-                      "role": p.get("roles")} for p in r.get("participants") or []],
-        "times": [{k: num(t.get(k)) if k == "length" else t.get(k) for k in TIME_KEYS} for t in r.get("times") or []],
+                      "role": p.get("roles")} for p in r.get("participants") or [] if isinstance(p, dict)],
+        "times": [{k: num(t.get(k)) if k == "length" else t.get(k) for k in TIME_KEYS}
+                  for t in r.get("times") or [] if isinstance(t, dict)],
     }
 
 
 def fetch_catalog(post=post_page):
     """Page through the catalog until an empty page; slim and de-duplicate by sessionID."""
     out, seen = [], set()
+    listed, total = 0, None
     for n in range(MAX_PAGES):
-        items = page_items(post(n * PAGE_SIZE))
+        section = page_section(post(n * PAGE_SIZE))
+        items = section.get("items") or []
+        reported = count(section.get("total"))
+        if reported is not None:
+            # The first page's total is the bar; a later page that disagrees means the
+            # catalog changed mid-fetch (or the API is wrong): refuse rather than lower it.
+            if total is not None and reported != total:
+                raise RuntimeError("catalog total changed while paging: %d, then %d" % (total, reported))
+            total = reported
         if not items:
+            if total is not None and listed < total:
+                raise RuntimeError("catalog paging stopped at %d of %d sessions" % (listed, total))
             return out
+        listed += len(items)
         for r in items:
+            if not isinstance(r, dict):
+                continue  # not a session: nothing to keep
             s = slim(r)
             if s["sessionID"] and s["sessionID"] not in seen:
                 seen.add(s["sessionID"])
@@ -171,19 +205,26 @@ def strs(attrs, name):
 
 def vendors_of(r, title):
     names = [sync.text(p.get("company")) for p in r.get("speakers") or []
-             if p.get("role") == "Sponsor Speaker" and sync.text(p.get("company"))]
+             if isinstance(p, dict) and p.get("role") == "Sponsor Speaker" and sync.text(p.get("company"))]
     if not names:
         m = SPONSORED_BY.search(title)
         if m:
-            names = [sync.text(m.group(1))]
+            names = [sync.text(m.group(1) or m.group(2))]
     return list(dict.fromkeys(names))
 
 
 def normalize(raw):
-    """-> (records, {"test", "notAccepted", "unpublished": counts})."""
+    """-> (records, {"test", "notAccepted", "unpublished", "malformed", "extraRuns": counts}).
+    A broken record (not an object, or no session id) is skipped and counted, never fatal.
+    AWS lists repeat runs as separate sessions; a second time on one record has never been
+    seen (0 of 2,190 on 2026-10-07), so only the first is imported and the rest are reported."""
     out = []
-    dropped = {"test": 0, "notAccepted": 0, "unpublished": 0}
+    dropped = {"test": 0, "notAccepted": 0, "unpublished": 0, "malformed": 0, "extraRuns": 0}
     for r in raw:
+        sid = session_id(r.get("sessionID")) if isinstance(r, dict) else None
+        if not sid:
+            dropped["malformed"] += 1
+            continue
         if r.get("testRecord"):
             dropped["test"] += 1
             continue
@@ -194,12 +235,16 @@ def normalize(raw):
             dropped["unpublished"] += 1
             continue
         code = sync.text(r.get("code"))
-        attrs = r.get("attributes") or {}
+        attrs = r.get("attributes") if isinstance(r.get("attributes"), dict) else {}
         title = REPEAT_MARK.sub(" ", sync.text(r.get("title"))).strip()
         appendices = strs(attrs, "SessionAppendices")
         sponsored = bool(SPONSORED_CODE.search(code)) or "Sponsored" in appendices
         vendors = vendors_of(r, title) if sponsored else []
-        t = (r.get("times") or [None])[0] or {}
+        times = [x for x in r.get("times") or [] if isinstance(x, dict)]
+        t = times[0] if times else {}
+        if len(times) > 1:
+            dropped["extraRuns"] += len(times) - 1
+            print("warning: %s lists %d times; only the first is imported" % (code, len(times)), file=sys.stderr)
         start, end = utc(t.get("utcStartTime")), utc(t.get("utcEndTime"))
         if start and end and end < start:
             end = None
@@ -209,8 +254,8 @@ def normalize(raw):
         if end and start:
             dur = int((end - start).total_seconds() // 60)
         out.append({
-            "id": r["sessionID"],
-            "inst": r["sessionID"],
+            "id": sid,
+            "inst": sid,
             "code": code,
             "title": title,
             "desc": sync.text(r.get("abstract")),
@@ -222,10 +267,13 @@ def normalize(raw):
             "delivery": ["In-person"],
             "recorded": sync.text(r.get("type")) in RECORDED_TYPES,
             "speakers": [[sync.text(p.get("name")), sync.text(p.get("company")), sync.text(p.get("title"))]
-                         for p in r.get("speakers") or [] if sync.text(p.get("name"))],
+                         for p in r.get("speakers") or [] if isinstance(p, dict) and sync.text(p.get("name"))],
             "start": sync.iso(start) if start else None,
             "end": sync.iso(end) if end else None,
-            "slot": "%s - %s" % (t["startTime"], t["endTime"]) if scheduled and t.get("startTime") and t.get("endTime") else None,
+            # From the UTC times, like keynotes: the API's local startTime/endTime follow its
+            # browserTimezone setting and would contradict the start if that ever changed.
+            "slot": ("%s - %s" % tuple(x.astimezone(PACIFIC).strftime("%H:%M") for x in (start, end)) if start and end
+                     else "%s - %s" % (t["startTime"], t["endTime"]) if scheduled and t.get("startTime") and t.get("endTime") else None),
             "dur": dur if isinstance(dur, int) else None,
             "room": room,
             "roomTbd": not room,
@@ -259,6 +307,9 @@ def keynote_records(doc):
     code keeps the first entry, since the code becomes the session id."""
     out, seen = [], set()
     for k in (doc or {}).get("keynotes") or []:
+        if not isinstance(k, dict):  # the file is edited by hand: a stray value must not stop the import
+            print("warning: keynote entry %r skipped (not an object)" % (k,), file=sys.stderr)
+            continue
         code = sync.text(k.get("code"))
         start, end = sync.parse_iso(k.get("start")), sync.parse_iso(k.get("end"))
         if not code or not start or not end or end <= start:
@@ -273,7 +324,8 @@ def keynote_records(doc):
             "id": "keynote-" + code, "inst": "keynote-" + code, "code": code, "title": sync.text(k.get("title")),
             "desc": sync.text(k.get("desc")), "type": "Keynote", "level": None, "topics": [], "tags": [], "audience": [],
             "delivery": ["In-person"], "recorded": True,
-            "speakers": [[sync.text(x) for x in (p + ["", "", ""])[:3]] for p in k.get("speakers") or [] if p],
+            "speakers": [[sync.text(x) for x in (p + ["", "", ""])[:3]] for p in k.get("speakers") or []
+                         if isinstance(p, list) and p],
             "start": sync.iso(start), "end": sync.iso(end),
             "slot": "%s - %s" % tuple(t.astimezone(PACIFIC).strftime("%H:%M") for t in (start, end)),
             "dur": int((end - start).total_seconds() // 60), "room": room, "roomTbd": not room,
@@ -346,6 +398,11 @@ def run(args):
         if not cur or (prev and len(cur) < MIN_KEEP * len(prev)):
             raise RuntimeError("catalog returned %d sessions (previously %d); keeping last good data"
                                % (len(cur), len(prev)))
+        # Same guard as the Ignite sync: a renamed time or room field keeps the session count
+        # but empties those fields, which must not be published as hundreds of changes.
+        why = sync.withdrawal(sync.stats(prev), sync.stats(cur)) if prev and not getattr(args, "allow_withdrawal", False) else None
+        if why:
+            raise RuntimeError(why)
     except RuntimeError as e:
         meta.update({"ok": False, "error": str(e)})
         sync.dump(mpath, meta)
@@ -385,10 +442,10 @@ def run(args):
     if batch and args.summary_out:
         with open(args.summary_out, "w", encoding="utf-8") as f:
             f.write(sync.summary_markdown(batch, set()))
-    print("reinvent: sessions=%d dates=%d rooms=%d (dropped %d test, %d not accepted, %d unpublished)"
-          " | added=%d removed=%d changed=%d"
+    print("reinvent: sessions=%d dates=%d rooms=%d (dropped %d test, %d not accepted, %d unpublished, %d malformed,"
+          " %d extra runs) | added=%d removed=%d changed=%d"
           % (cs["sessions"], cs["withDates"], cs["withRooms"], dropped["test"], dropped["notAccepted"],
-             dropped["unpublished"], len(added), len(removed), len(changed)))
+             dropped["unpublished"], dropped["malformed"], dropped["extraRuns"], len(added), len(removed), len(changed)))
     return 0, bool(batch)
 
 
@@ -399,6 +456,8 @@ def main():
     ap.add_argument("--snapshot-out", help="where --fetch saves the snapshot (default: <data-dir>/source/)")
     ap.add_argument("--data-dir", help="output directory (default: data/reinvent2026/ in the repo)")
     ap.add_argument("--summary-out", help="write a markdown change summary here when something changed")
+    ap.add_argument("--allow-withdrawal", action="store_true",
+                    help="accept a refresh that loses most session times or rooms (only when that is real)")
     ap.add_argument("--stats", action="store_true", help="print sessions/groups/type/venue counts as JSON and exit")
     args = ap.parse_args()
     if not args.fetch and not args.snapshot:

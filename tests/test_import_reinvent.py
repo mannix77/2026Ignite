@@ -4,14 +4,18 @@
 
 Mirrors specs/features/reinvent-catalog.feature; edge cases live here as unit tests.
 """
+import contextlib
 import copy
+import io
 import json
 import os
 import shutil
+import subprocess
 import sys
 import tempfile
 import types
 import unittest
+from unittest import mock
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
@@ -80,15 +84,35 @@ class SponsoredTests(unittest.TestCase):
     def test_should_not_mark_an_aws_session_as_sponsored(self):
         self.assertFalse(imported()["ANT319-R"]["sponsored"])
 
+    def test_should_take_the_vendor_from_a_title_that_names_it_after_a_dash(self):
+        raw = sample()
+        rec = by_code(raw)["GHJ308-S-R"]
+        rec["title"], rec["speakers"] = "Agentic AI Jam - sponsored by Nvidia", []
+        self.assertEqual(by_code(ri.normalize(raw)[0])["GHJ308-S-R"]["vendors"], ["Nvidia"])
+
+    def test_should_take_the_vendor_from_a_title_with_an_en_dash_and_trailing_space(self):
+        raw = sample()
+        rec = by_code(raw)["GHJ308-S-R"]
+        rec["title"], rec["speakers"] = "DevOps Jam \u2013 sponsored by LaunchDarkly ", []
+        self.assertEqual(by_code(ri.normalize(raw)[0])["GHJ308-S-R"]["vendors"], ["LaunchDarkly"])
+
+    def test_should_take_the_vendor_from_a_title_with_an_em_dash(self):
+        raw = sample()
+        rec = by_code(raw)["GHJ308-S-R"]
+        rec["title"], rec["speakers"] = "Security Jam \u2014 Sponsored by Fortinet", []
+        self.assertEqual(by_code(ri.normalize(raw)[0])["GHJ308-S-R"]["vendors"], ["Fortinet"])
+
+    def test_should_keep_a_sponsored_session_whose_speaker_entry_is_garbled(self):
+        raw = sample()
+        by_code(raw)["DVT212-S"]["speakers"].insert(0, "garbled")
+        self.assertEqual(by_code(ri.normalize(raw)[0])["DVT212-S"]["vendors"], ["CodeRabbit Inc."])
+
     def test_should_put_vendors_in_tags_so_browse_can_filter_on_them(self):
         self.assertIn("CodeRabbit Inc.", imported()["DVT212-S"]["tags"])
 
 
 class SelfPacedTests(unittest.TestCase):
     """Rule: self-paced sessions stay in the catalog without a slot."""
-
-    def test_should_keep_a_session_with_no_time(self):
-        self.assertIn("GHJ205-R", imported())
 
     def test_should_leave_an_untimed_session_unscheduled(self):
         r = imported()["GHJ205-R"]
@@ -105,7 +129,14 @@ class ScheduledSessionTests(unittest.TestCase):
         self.assertTrue(imported()["DVT212-S"]["rsvp"])
 
     def test_should_say_when_seat_reservations_open(self):
-        self.assertEqual(imported()["DVT212-S"]["rsvpOpens"], "2026-10-06T16:00:00Z")
+        # AWS opened re:Invent seat reservations on Oct 6, 2026 at 09:00 PT (README).
+        self.assertEqual(ri.sync.parse_iso(imported()["DVT212-S"]["rsvpOpens"]), ri.sync.parse_iso("2026-10-06T16:00:00Z"))
+
+    def test_should_not_require_a_seat_for_a_virtual_only_session(self):
+        raw = sample()
+        by_code(raw)["DVT212-S"]["times"][0].update(inPersonTime=False, virtualTime=True)
+        rec = by_code(ri.normalize(raw)[0])["DVT212-S"]
+        self.assertEqual((rec["start"] is not None, rec["rsvp"], "rsvpOpens" in rec), (True, False, False))
 
     def test_should_not_give_an_untimed_session_a_reservation_date(self):
         self.assertNotIn("rsvpOpens", imported()["GHJ205-R"])
@@ -116,11 +147,15 @@ class ScheduledSessionTests(unittest.TestCase):
     def test_should_convert_the_utc_end_to_iso(self):
         self.assertEqual(imported()["DVT212-S"]["end"], "2026-12-01T01:30:00Z")
 
-    def test_should_keep_the_pacific_slot(self):
-        self.assertEqual(imported()["DVT212-S"]["slot"], "16:30 - 17:30")
+    def test_should_show_the_slot_in_pacific_time_from_the_utc_times(self):
+        raw = sample()
+        by_code(raw)["DVT212-S"]["times"][0].update(startTime="08:30", endTime="09:30")  # the API's local strings, wrong zone
+        self.assertEqual(by_code(ri.normalize(raw)[0])["DVT212-S"]["slot"], "16:30 - 17:30")
 
-    def test_should_take_duration_from_the_time_slot(self):
-        self.assertEqual(imported()["DVT212-S"]["dur"], 60)
+    def test_should_take_duration_from_the_start_and_end(self):
+        raw = sample()
+        by_code(raw)["DVT212-S"]["times"][0]["length"] = 999
+        self.assertEqual(by_code(ri.normalize(raw)[0])["DVT212-S"]["dur"], 60)
 
     def test_should_keep_the_full_room_string(self):
         self.assertEqual(imported()["AIM105-S"]["room"], "Caesars Forum | Level 1 | Forum 120 | Content Hub | Red Theater")
@@ -155,19 +190,17 @@ class FieldMappingTests(unittest.TestCase):
         self.assertEqual(len(imported()["AIM344"]["speakers"]), 5)
 
     def test_should_take_topics_from_the_topic_facet(self):
-        raw = sample()
-        rec = by_code(raw)["DVT212-S"]
-        self.assertEqual(imported()["DVT212-S"]["topics"], rec["attributes"].get("Topic", []))
+        self.assertEqual(imported()["DVT212-S"]["topics"], ["Artificial Intelligence", "Developer Tools"])
 
     def test_should_take_tags_from_areas_of_interest_then_services(self):
-        rec = by_code(sample())["AIM344"]
-        want = rec["attributes"].get("AreaofInterest", []) + rec["attributes"].get("Services", [])
-        self.assertEqual(imported()["AIM344"]["tags"], want)
+        self.assertEqual(imported()["AIM344"]["tags"], ["Generative AI", "Network & Infrastructure Security", "Resilience",
+                                                         "Amazon Elastic Compute Cloud (Amazon EC2)"])
 
     def test_should_take_audience_from_roles_then_industries(self):
-        rec = by_code(sample())["SEC205"]
-        want = rec["attributes"].get("Role", []) + rec["attributes"].get("Industry", [])
-        self.assertEqual(imported()["SEC205"]["audience"], want)
+        raw = sample()
+        by_code(raw)["DVT212-S"]["attributes"]["Industry"] = ["Healthcare"]
+        self.assertEqual(by_code(ri.normalize(raw)[0])["DVT212-S"]["audience"],
+                         ["Developer / Engineer", "DevOps Engineer", "Solution / Systems Architect", "Healthcare"])
 
     def test_should_deliver_every_session_in_person(self):
         self.assertEqual(distinct("delivery"), {("In-person",)})
@@ -209,7 +242,7 @@ class ExclusionTests(unittest.TestCase):
         raw[0]["testRecord"] = True
         raw[1]["status"] = "Cancelled"
         raw[2]["published"] = 0
-        self.assertEqual(ri.normalize(raw)[1], {"test": 1, "notAccepted": 1, "unpublished": 1})
+        self.assertEqual(ri.normalize(raw)[1], {"test": 1, "notAccepted": 1, "unpublished": 1, "malformed": 0, "extraRuns": 0})
 
 
 class FetchTests(unittest.TestCase):
@@ -227,6 +260,43 @@ class FetchTests(unittest.TestCase):
         ri.fetch_catalog(self.post)
         self.assertEqual(self.calls, [0, 50, 100])
 
+    def test_should_skip_a_page_item_that_is_not_a_session(self):
+        self.pages[1]["items"] = [None, "junk"] + self.pages[1]["items"]
+        self.assertEqual(codes(ri.fetch_catalog(self.post)), ["DVT212-S", "ANT319-R", "ANT203-S"])
+
+    def test_should_skip_a_page_item_with_an_unusable_session_id(self):
+        self.pages[1]["items"] = [{"sessionID": ["x"], "code": "BAD1"}] + self.pages[1]["items"]
+        self.assertEqual(codes(ri.fetch_catalog(self.post)), ["DVT212-S", "ANT319-R", "ANT203-S"])
+
+    def test_should_keep_a_session_listed_on_two_pages_once(self):
+        self.pages[1]["items"] = self.pages[1]["items"] + self.pages[0]["sectionList"][0]["items"][:1]
+        self.assertEqual(codes(ri.fetch_catalog(self.post)), ["DVT212-S", "ANT319-R", "ANT203-S"])
+
+    def test_should_refuse_a_page_that_reports_an_error(self):
+        self.pages[1] = {"responseCode": "500", "responseMessage": "Internal error"}
+        with self.assertRaisesRegex(RuntimeError, "Internal error"):
+            ri.fetch_catalog(self.post)
+
+    def test_should_refuse_paging_that_ends_short_of_the_reported_total(self):
+        self.pages[1]["items"] = []
+        with self.assertRaisesRegex(RuntimeError, "2 of 3"):
+            ri.fetch_catalog(self.post)
+
+    def test_should_refuse_paging_when_a_later_page_reports_a_different_total(self):
+        self.pages[1]["total"] = 2
+        with self.assertRaisesRegex(RuntimeError, "3, then 2"):
+            ri.fetch_catalog(self.post)
+
+    def test_should_hold_paging_to_a_total_given_as_text(self):
+        self.pages[0]["sectionList"][0]["total"] = "3"
+        self.pages[1]["total"], self.pages[1]["items"] = "3", []
+        with self.assertRaisesRegex(RuntimeError, "2 of 3"):
+            ri.fetch_catalog(self.post)
+
+    def test_should_not_read_a_true_flag_as_a_total(self):
+        self.pages[0]["sectionList"][0]["total"] = True  # read as 1, the later pages' 3 would look like a change
+        self.assertEqual(codes(ri.fetch_catalog(self.post)), ["DVT212-S", "ANT319-R", "ANT203-S"])
+
     def test_should_collect_items_from_the_first_and_later_page_shapes(self):
         self.assertEqual(codes(ri.fetch_catalog(self.post)), ["DVT212-S", "ANT319-R", "ANT203-S"])
 
@@ -243,8 +313,8 @@ class FetchTests(unittest.TestCase):
         self.assertEqual([spk["company"], spk["title"]], ["Caylent", "Sr Innovation Architect"])
 
 
-class ImportRunTests(unittest.TestCase):
-    """End to end over a temporary data directory."""
+class ImportDir:
+    """A temporary data directory with a snapshot to import from."""
 
     def setUp(self):
         self.dir = tempfile.mkdtemp()
@@ -265,6 +335,10 @@ class ImportRunTests(unittest.TestCase):
     def data(self, name):
         return load_path(os.path.join(self.dir, name))
 
+
+class ImportRunTests(ImportDir, unittest.TestCase):
+    """End to end over a temporary data directory."""
+
     def test_should_write_the_catalog_on_first_import(self):
         self.run_import()
         self.assertEqual(len(self.data("sessions.json")["sessions"]), len(SNAP["sessions"]))
@@ -279,6 +353,16 @@ class ImportRunTests(unittest.TestCase):
         self.write_snapshot(sample()[:15])
         self.run_import()
         self.assertEqual(len(self.data("sessions.json")["sessions"]), len(SNAP["sessions"]))
+
+    def test_should_accept_a_refresh_that_keeps_90_percent_of_sessions(self):
+        self.run_import()
+        self.write_snapshot(sample()[:19])  # 19 of 21 (90.5%)
+        self.assertEqual(self.run_import()[0], 0)
+
+    def test_should_refuse_a_refresh_just_under_90_percent_of_sessions(self):
+        self.run_import()
+        self.write_snapshot(sample()[:18])  # 18 of 21 (85.7%)
+        self.assertEqual(self.run_import()[0], 3)
 
     def test_should_exit_non_zero_when_a_refresh_is_refused(self):
         self.run_import()
@@ -315,6 +399,160 @@ class ImportRunTests(unittest.TestCase):
         self.assertIsNotNone(by_code(self.data("sessions.json")["sessions"])["ANT319-R"]["firstSeen"])
 
 
+class MalformedRecordTests(ImportDir, unittest.TestCase):
+    """One broken entry in the AWS feed must not fail every later import."""
+
+    def test_should_import_every_session_when_the_feed_holds_an_empty_record(self):
+        self.assertEqual(len(ri.normalize([None] + sample())[0]), len(ri.normalize(sample())[0]))
+
+    def test_should_skip_a_record_without_a_session_id(self):
+        raw = sample()
+        del raw[0]["sessionID"]
+        self.assertNotIn(raw[0]["code"], by_code(ri.normalize(raw)[0]))
+
+    def test_should_count_skipped_records_as_malformed(self):
+        raw = sample()
+        del raw[0]["sessionID"]
+        self.assertEqual(ri.normalize([None, "junk"] + raw)[1]["malformed"], 3)
+
+    def test_should_count_blank_or_non_text_session_ids_as_malformed(self):
+        raw = sample()[:3]
+        raw[0]["sessionID"], raw[1]["sessionID"], raw[2]["sessionID"] = "   ", ["x"], {"id": 1}
+        self.assertEqual(ri.normalize(raw)[1]["malformed"], 3)
+
+    def test_should_use_the_trimmed_session_id(self):
+        raw = sample()[:1]
+        raw[0]["sessionID"] = "  %s\n" % raw[0]["sessionID"]
+        self.assertEqual(ri.normalize(raw)[0][0]["id"], raw[0]["sessionID"].strip())
+
+    def test_should_keep_a_session_whose_speaker_entry_is_garbled(self):
+        raw = sample()
+        raw[0]["speakers"] = ["garbled", None] + raw[0]["speakers"]
+        self.assertEqual(by_code(ri.normalize(raw)[0])[raw[0]["code"]]["speakers"], by_code(ri.normalize(sample())[0])[raw[0]["code"]]["speakers"])
+
+    def test_should_keep_a_session_whose_time_entry_is_garbled_unscheduled(self):
+        raw = sample()
+        raw[0]["times"] = ["garbled"]
+        self.assertIsNone(by_code(ri.normalize(raw)[0])[raw[0]["code"]]["start"])
+
+    def test_should_complete_an_import_from_a_feed_with_an_empty_record(self):
+        self.write_snapshot([None] + sample())
+        self.assertEqual(self.run_import()[0], 0)
+
+
+class ExtraRunTests(unittest.TestCase):
+    """AWS lists repeats as separate sessions; a second time on one record has never been seen."""
+
+    def two_times(self):
+        raw = sample()
+        rec = by_code(raw)["ANT319-R"]
+        second = dict(rec["times"][0], sessionTimeID="T2", utcStartTime="2026/12/03 18:00:00", utcEndTime="2026/12/03 19:00:00")
+        rec["times"].append(second)
+        return raw
+
+    def test_should_import_the_first_time_of_a_session_with_two(self):
+        with contextlib.redirect_stderr(io.StringIO()):
+            recs = by_code(ri.normalize(self.two_times())[0])
+        self.assertEqual(recs["ANT319-R"]["start"], by_code(ri.normalize(sample())[0])["ANT319-R"]["start"])
+
+    def test_should_count_the_extra_run(self):
+        with contextlib.redirect_stderr(io.StringIO()):
+            self.assertEqual(ri.normalize(self.two_times())[1]["extraRuns"], 1)
+
+    def test_should_warn_which_session_has_an_extra_run(self):
+        err = io.StringIO()
+        with contextlib.redirect_stderr(err):
+            ri.normalize(self.two_times())
+        self.assertIn("ANT319-R", err.getvalue())
+
+
+class CiSignalTests(ImportDir, unittest.TestCase):
+    """The workflow posts to the change issue only when the script reports changed=true."""
+
+    def cli(self):
+        """Runs the importer as the workflow does; -> what it wrote to GITHUB_OUTPUT."""
+        out = os.path.join(self.dir, "github_output")
+        open(out, "w").close()
+        subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "import_reinvent.py"), self.snap, "--data-dir", self.dir],
+                       env=dict(os.environ, GITHUB_OUTPUT=out), check=True, capture_output=True, timeout=120)
+        with open(out, encoding="utf-8") as f:
+            return f.read()
+
+    def test_should_report_a_change_to_the_workflow(self):
+        self.cli()
+        moved = sample()
+        by_code(moved)["ANT319-R"]["times"][0]["room"] = "MGM Grand | Level 3 | Room 301"
+        self.write_snapshot(moved)
+        self.assertEqual(self.cli(), "changed=true\n")
+
+    def test_should_report_no_change_to_the_workflow(self):
+        self.cli()
+        self.assertEqual(self.cli(), "changed=false\n")
+
+
+class FetchRefusedTests(ImportDir, unittest.TestCase):
+    """A refused --fetch keeps the last good catalog (the scheduled workflow's path)."""
+
+    def test_should_keep_the_saved_catalog_when_a_page_reports_an_error(self):
+        self.run_import()
+        before = self.data("sessions.json")
+        pages = load("reinvent_raw_pages.json")
+        pages[1] = {"responseCode": "500", "responseMessage": "Internal error"}
+        fetch = ri.fetch_catalog
+        args = types.SimpleNamespace(snapshot=None, fetch=True, data_dir=self.dir, summary_out=None, snapshot_out=None)
+        with mock.patch.object(ri, "fetch_catalog", lambda: fetch(lambda offset: pages[offset // ri.PAGE_SIZE])), \
+                contextlib.redirect_stderr(io.StringIO()):
+            self.assertEqual((ri.run(args), self.data("sessions.json")), ((3, False), before))
+
+
+def renamed(sessions, old, new):
+    """The same sessions, with one field of every scheduled time renamed (a feed format change)."""
+    for r in sessions:
+        for t in r.get("times") or []:
+            if old in t:
+                t[new] = t.pop(old)
+    return sessions
+
+
+class WithdrawalGuardTests(ImportDir, unittest.TestCase):
+    """A renamed time or room field keeps every session but empties those fields."""
+
+    def setUp(self):
+        super().setUp()
+        self.run_import()
+        self.before = self.data("sessions.json")
+
+    def refresh(self, old, new, allow=False):
+        self.write_snapshot(renamed(sample(), old, new))
+        args = types.SimpleNamespace(snapshot=self.snap, fetch=False, data_dir=self.dir, summary_out=None,
+                                     snapshot_out=None, allow_withdrawal=allow)
+        return ri.run(args)
+
+    def test_should_refuse_a_refresh_whose_times_vanished(self):
+        self.assertEqual(self.refresh("utcStartTime", "startUtc"), (3, False))
+
+    def test_should_keep_last_good_times_when_they_vanish(self):
+        self.refresh("utcStartTime", "startUtc")
+        self.assertEqual(self.data("sessions.json"), self.before)
+
+    def test_should_record_why_the_refresh_was_refused(self):
+        self.refresh("utcStartTime", "startUtc")
+        self.assertIn("sessions with dates fell", self.data("meta.json")["error"])
+
+    def test_should_refuse_a_refresh_whose_rooms_vanished(self):
+        self.assertEqual(self.refresh("room", "roomName"), (3, False))
+
+    def test_should_accept_a_withdrawal_when_explicitly_allowed(self):
+        self.refresh("utcStartTime", "startUtc", allow=True)
+        self.assertEqual(self.data("sessions.json")["stats"]["withDates"], 0)
+
+    def test_should_accept_a_withdrawal_flag_on_the_command_line(self):
+        self.write_snapshot(renamed(sample(), "utcStartTime", "startUtc"))
+        proc = subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "import_reinvent.py"), self.snap,
+                               "--data-dir", self.dir, "--allow-withdrawal"], capture_output=True, text=True, timeout=120)
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+
+
 KEYNOTE = {"code": "KEY001", "title": "CEO keynote", "start": "2026-12-01T16:00:00Z", "end": "2026-12-01T18:30:00Z",
            "room": "Venetian | Level 2 | Hall D", "speakers": [["A. Speaker", "AWS", "CEO"]]}
 
@@ -342,6 +580,15 @@ class KeynoteTests(unittest.TestCase):
 
     def test_should_add_nothing_for_the_empty_placeholder(self):
         self.assertEqual(ri.keynote_records({"keynotes": []}), [])
+
+    def test_should_skip_a_keynote_entry_that_is_not_an_object(self):
+        with contextlib.redirect_stderr(io.StringIO()):
+            self.assertEqual(list(self.keynotes(["KEY002", KEYNOTE])), ["KEY001"])
+
+    def test_should_skip_a_keynote_speaker_given_as_text(self):
+        with contextlib.redirect_stderr(io.StringIO()):
+            got = self.keynotes([dict(KEYNOTE, speakers=["A. Speaker", ["B. Speaker", "AWS", "VP"]])])
+        self.assertEqual(got["KEY001"]["speakers"], [["B. Speaker", "AWS", "VP"]])
 
     def test_should_merge_keynotes_into_the_imported_catalog(self):
         d = tempfile.mkdtemp()

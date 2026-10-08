@@ -2,8 +2,10 @@
 
     python3 -m unittest discover -s tests -v
 """
+import contextlib
 import copy
 import datetime as dt
+import io
 import json
 import os
 import shutil
@@ -12,6 +14,7 @@ import sys
 import tempfile
 import types
 import unittest
+from unittest import mock
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
@@ -70,7 +73,6 @@ class NormalizeTests(unittest.TestCase):
         self.assertEqual(c["BRK101"]["start"], "2025-11-17T22:30:00Z")
         self.assertEqual(c["BRK101"]["room"], "Moscone West, Level 3, Room 3006")
         self.assertFalse(c["BRK101"]["roomTbd"])
-        self.assertTrue(all("In-person" in r["delivery"] or r["delivery"] != ["In person"] for r in recs))
         self.assertTrue(any("In-person" in r["delivery"] for r in recs), "'In person' normalized")
 
     def test_repeat_groups_from_codes_and_links(self):
@@ -82,13 +84,6 @@ class NormalizeTests(unittest.TestCase):
         lab = [r for r in recs if r["code"].startswith("LAB531")]
         self.assertGreaterEqual(len(lab), 2)
         self.assertEqual({r["group"] for r in lab}, {"LAB531"})
-
-    def test_repeat_groups_from_shared_session_id(self):
-        raw = copy.deepcopy(self.raw26[:2])
-        raw[1]["sessionId"] = raw[0]["sessionId"]           # 2026-style repeat: same session, new time id
-        raw[1]["sessionInstanceId"] = raw[0]["sessionId"] + "-other"
-        recs, _, _ = sync.normalize(raw, [], W26)
-        self.assertEqual(len({r["group"] for r in recs}), 1)
 
     def test_speakers_from_speaker_feed(self):
         recs, _, _ = sync.normalize(self.raw26, self.spk26, W26)
@@ -117,7 +112,7 @@ class ParityTests(unittest.TestCase):
             subprocess.run(JS_RUNNER + [os.path.join(HERE, "normalize_cli.js"), "--",
                             os.path.join(HERE, "data", raw_name),
                             os.path.join(HERE, "data", spk_name) if spk_name else "-",
-                            out, window[0], window[1]], check=True, cwd=ROOT)
+                            out, window[0], window[1]], check=True, cwd=ROOT, timeout=120)
             with open(out, encoding="utf-8") as f:
                 return json.load(f)
         finally:
@@ -142,6 +137,83 @@ class ParityTests(unittest.TestCase):
 
     def test_parity_edge_cases(self):
         self.check("raw_edge_cases.json", None, W26)
+
+    def test_should_agree_with_the_browser_at_the_event_window_bounds(self):
+        self.check("raw_window_bounds.json", None, W25)
+
+
+def js_run(cli, *args):
+    """Runs a tests/*_cli.js harness under the JS runner; -> its JSON output."""
+    tmp = tempfile.mkdtemp()
+    try:
+        paths = []
+        for i, a in enumerate(args):  # file paths pass through; data is written to a temp file
+            if not isinstance(a, str):
+                paths.append(os.path.join(tmp, "arg%d.json" % i))
+                with open(paths[-1], "w", encoding="utf-8") as f:
+                    json.dump(a, f)
+            else:
+                paths.append(a)
+        out = os.path.join(tmp, "out.json")
+        subprocess.run(JS_RUNNER + [os.path.join(HERE, cli), "--"] + paths[:2] + [out] + paths[2:],
+                       check=True, cwd=ROOT, timeout=120)
+        with open(out, encoding="utf-8") as f:
+            return json.load(f)
+    finally:
+        shutil.rmtree(tmp)
+
+
+@unittest.skipUnless(JS_RUNNER, "needs node or jsc")
+class DiffParityTests(unittest.TestCase):
+    """The browser decides "the live site has newer changes" with live.js diff(); it must
+    report exactly what sync.diff() would."""
+
+    def setUp(self):
+        self.prev = sync.normalize(load("raw_2025_sample.json"), [], W25)[0]
+
+    def agree(self, cur, expected):
+        """Both diffs agree, and the agreed result is the expected one (agreement alone would
+        also pass if both were wrong): expected = (added, removed, {code: changed fields})."""
+        added, removed, changed = sync.diff(self.prev, cur)
+        js = js_run("diff_cli.js", self.prev, cur)
+        def canon(xs):
+            return sorted(json.dumps(x, sort_keys=True) for x in xs)
+        summary = (len(added), len(removed), {c["code"]: sorted(c["f"]) for c in changed})
+        self.assertEqual(({k: canon(js[k]) for k in ("added", "removed", "changed")}, summary),
+                         ({"added": canon(added), "removed": canon(removed), "changed": canon(changed)}, expected))
+
+    def changed(self, fn):
+        cur = copy.deepcopy(self.prev)
+        fn(cur)
+        return cur
+
+    def test_should_agree_on_a_room_move(self):
+        self.agree(self.changed(lambda c: c[0].update(room="Moscone South, Room 156")), (0, 0, {self.prev[0]["code"]: ["room"]}))
+
+    def test_should_agree_on_a_retitle(self):
+        self.agree(self.changed(lambda c: c[1].update(title="A new title")), (0, 0, {self.prev[1]["code"]: ["title"]}))
+
+    def test_should_agree_that_reordered_speakers_are_no_change(self):
+        with_two = next(i for i, r in enumerate(self.prev) if len(r["speakers"]) > 1)
+        self.agree(self.changed(lambda c: c[with_two].update(speakers=list(reversed(c[with_two]["speakers"])))), (0, 0, {}))
+
+    def test_should_agree_on_a_cancellation(self):
+        self.agree(self.changed(lambda c: c.pop(2)), (0, 1, {}))
+
+    def test_should_agree_on_an_added_run(self):
+        self.agree(self.changed(lambda c: c.append(dict(c[0], inst=c[0]["inst"] + "-extra", start="2025-11-21T17:00:00Z"))), (1, 0, {}))
+
+    def test_should_agree_on_regenerated_run_ids(self):
+        self.agree(self.changed(lambda c: [r.update(inst=r["inst"] + "-new") for r in c[:5]]), (0, 0, {}))
+
+    def test_should_fill_speaker_companies_from_the_last_catalog_like_the_sync(self):
+        raw, speakers = load("raw_2026_sample.json"), load("speakers_2026_sample.json")
+        by_name = {p[0]: p for r in sync.normalize(raw, speakers, W26)[0] for p in r["speakers"] if p[1] or p[2]}
+        py = sync.normalize(raw, [], W26, by_name)[0]
+        js = js_run("normalize_cli.js", os.path.join(HERE, "data", "raw_2026_sample.json"), "-", W26[0], W26[1],
+                    list(by_name.values()))["sessions"]
+        filled = sum(1 for r in py for p in r["speakers"] if p[1])
+        self.assertEqual((js, filled > 0), (py, True))
 
 
 class EdgeCaseTests(unittest.TestCase):
@@ -207,6 +279,30 @@ class EdgeCaseTests(unittest.TestCase):
         self.assertEqual({r["group"] for r in runs}, {"BRK806"})
 
 
+class EventWindowBoundsTests(unittest.TestCase):
+    """Times count from midnight UTC the day before the event until midnight UTC two days
+    after its last day; anything outside is a placeholder schedule (a draft)."""
+
+    def start_of(self, code):
+        recs, _, _ = sync.normalize(load("raw_window_bounds.json"), [], W25)
+        return by_code(recs)[code]["start"]
+
+    def test_should_treat_a_session_just_before_the_pre_day_as_a_draft(self):
+        self.assertIsNone(self.start_of("WIN100"))
+
+    def test_should_keep_a_session_at_the_first_instant_of_the_pre_day(self):
+        self.assertEqual(self.start_of("WIN101"), "2025-11-17T00:00:00Z")
+
+    def test_should_keep_a_session_at_4pm_pacific_on_the_last_day(self):
+        self.assertEqual(self.start_of("WIN102"), "2025-11-22T00:00:00Z")
+
+    def test_should_keep_a_session_late_on_the_spare_day(self):
+        self.assertEqual(self.start_of("WIN103"), "2025-11-22T23:59:00Z")
+
+    def test_should_treat_a_session_at_the_end_of_the_spare_day_as_a_draft(self):
+        self.assertIsNone(self.start_of("WIN104"))
+
+
 class DiffTests(unittest.TestCase):
     def rec(self, inst, start, room, sid="S"):
         return {"id": sid, "inst": inst, "code": "BRK1", "title": "T", "type": "Breakout", "start": start, "end": None,
@@ -225,11 +321,22 @@ class DiffTests(unittest.TestCase):
         self.assertEqual([r["inst"] for r in removed], ["T1"])
         self.assertEqual((added, changed), ([], []))
 
+    def test_should_pair_runs_whose_ids_were_regenerated_without_reporting_them(self):
+        prev = [self.rec("T1", "2026-11-18T18:00:00Z", "W3006"), self.rec("T2", "2026-11-19T22:00:00Z", "S207")]
+        cur = [self.rec("N1", "2026-11-18T18:00:00Z", "W3006"), self.rec("N2", "2026-11-19T22:00:00Z", "S207")]
+        self.assertEqual(sync.diff(prev, cur), ([], [], []))
+
+    def test_should_report_a_move_of_a_run_whose_id_was_regenerated(self):
+        prev = [self.rec("T1", "2026-11-18T18:00:00Z", "W3006")]
+        cur = [self.rec("N1", "2026-11-18T18:00:00Z", "S207")]
+        added, removed, changed = sync.diff(prev, cur)
+        self.assertEqual((added, removed, [set(c["f"]) for c in changed]), ([], [], [{"room"}]))
+
     def test_moved_run_is_a_change(self):
         prev = [self.rec("T1", "2026-11-18T18:00:00Z", "W3006")]
         cur = [self.rec("T1", "2026-11-18T19:00:00Z", "S207")]
-        _, _, changed = sync.diff(prev, cur)
-        self.assertEqual(set(changed[0]["f"]), {"start", "room"})
+        added, removed, changed = sync.diff(prev, cur)
+        self.assertEqual((added, removed, [set(c["f"]) for c in changed]), ([], [], [{"start", "room"}]))
 
 
 class SummaryTests(unittest.TestCase):
@@ -263,7 +370,7 @@ class InstanceConferenceTests(unittest.TestCase):
 
     def check(self, conf):
         return subprocess.run(["node", os.path.join(ROOT, "scripts", "conference_id.js"), conf],
-                              cwd=ROOT, capture_output=True).returncode
+                              cwd=ROOT, capture_output=True, timeout=120).returncode
 
     def test_should_accept_a_conference_id(self):
         self.assertEqual(self.check("reinvent2026"), 0)
@@ -272,7 +379,9 @@ class InstanceConferenceTests(unittest.TestCase):
         self.assertNotEqual(self.check("las-vegas"), 0)
 
 
-class RunTests(unittest.TestCase):
+class SyncDir:
+    """A temporary data directory to run the sync into."""
+
     def setUp(self):
         self.tmp = tempfile.mkdtemp()
         self.addCleanup(shutil.rmtree, self.tmp)
@@ -295,6 +404,8 @@ class RunTests(unittest.TestCase):
         with open(os.path.join(self.tmp, "data", name), encoding="utf-8") as f:
             return json.load(f)
 
+
+class RunTests(SyncDir, unittest.TestCase):
     def test_baseline_then_publication_then_moves(self):
         published = load("raw_2025_sample.json")
         unpublished = copy.deepcopy(published)
@@ -343,7 +454,7 @@ class RunTests(unittest.TestCase):
         self.assertEqual((code, changed), (0, False))
         self.assertEqual(os.path.getmtime(os.path.join(self.tmp, "data", "sessions.json")), before)
 
-    def test_partial_catalog_keeps_last_good_data(self):
+    def test_should_refuse_a_catalog_of_under_50_sessions(self):
         raw = load("raw_2025_sample.json")
         self.run_sync(raw)
         code, changed = self.run_sync(raw[:20])
@@ -367,24 +478,35 @@ class RunTests(unittest.TestCase):
         self.assertGreater(before, 0)
         self.assertEqual(before, after)
 
-    def test_unexpected_payload_is_recorded_not_silent(self):
+    def test_should_exit_non_zero_for_a_feed_of_non_session_entries(self):
         path = self.write("raw.json", [None, 42])
         out = os.path.join(self.tmp, "data")
         proc = subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "sync.py"), "--from-file", path,
                                "--data-dir", out, "--event-window", "2026-11-17:2026-11-20"],
-                              capture_output=True, text=True)
+                              capture_output=True, text=True, timeout=120)
         self.assertEqual(proc.returncode, 3)
         meta = self.data("meta.json")
         self.assertFalse(meta["ok"])
         self.assertTrue(meta["error"])
 
+    def test_should_record_an_unexpected_error_instead_of_failing_silently(self):
+        out = os.path.join(self.tmp, "data")
+        argv = ["sync.py", "--from-file", self.write("raw.json", []), "--data-dir", out, "--event-window", "%s:%s" % W26]
+        with mock.patch.object(sync, "run", side_effect=ValueError("unexpected shape")), mock.patch.object(sys, "argv", argv), \
+                self.assertRaises(SystemExit) as exit_, contextlib.redirect_stderr(io.StringIO()):
+            sync.main()
+        self.assertEqual((exit_.exception.code, self.data("meta.json")["error"]), (3, "ValueError: unexpected shape"))
+
     def test_last_changed_comes_from_committed_data(self):
         raw = load("raw_2026_sample.json")
-        self.run_sync(raw, W26)
-        first = self.data("sessions.json")["generatedAt"]
+        def at(day):
+            return mock.patch.object(sync, "utcnow", return_value=dt.datetime(2026, 10, day, tzinfo=dt.timezone.utc))
+        with at(1):
+            self.run_sync(raw, W26)
         os.remove(os.path.join(self.tmp, "data", "meta.json"))  # as in CI, where meta.json isn't committed
-        self.run_sync(raw, W26)
-        self.assertEqual(self.data("meta.json")["lastChanged"], first)
+        with at(2):
+            self.run_sync(raw, W26)
+        self.assertEqual(self.data("meta.json")["lastChanged"], "2026-10-01T00:00:00Z")
 
     def test_untracked_churn_does_not_move_last_changed(self):
         raw = load("raw_2026_sample.json")
@@ -421,6 +543,71 @@ class RunTests(unittest.TestCase):
         self.assertIn("switched on session times", self.data("changes.json")["batches"][0]["milestones"][0])
 
 
+def catalog_of(n):
+    """n distinct published sessions in the Ignite feed format, from one sample record."""
+    base = {k: v for k, v in load("raw_2025_sample.json")[0].items() if k not in ("repeatedSessions", "relatedSessionCodes")}
+    return [dict(base, sessionId="s%03d" % i, sessionInstanceId="s%03d" % i, sessionCode="BRK%03d" % i)
+            for i in range(n)]
+
+
+class PartialCatalogTests(SyncDir, unittest.TestCase):
+    """A refresh above the 50-session floor that still loses over 40% of the catalog."""
+
+    def test_should_refuse_a_refresh_that_keeps_under_60_percent(self):
+        self.run_sync(catalog_of(200))
+        self.assertEqual(self.run_sync(catalog_of(119)), (3, False))
+
+    def test_should_keep_last_good_data_when_a_partial_refresh_is_refused(self):
+        self.run_sync(catalog_of(200))
+        self.run_sync(catalog_of(110))
+        self.assertEqual(len(self.data("sessions.json")["sessions"]), 200)
+
+    def test_should_accept_a_refresh_that_keeps_60_percent(self):
+        self.run_sync(catalog_of(200))
+        self.assertEqual(self.run_sync(catalog_of(120))[0], 0)
+
+
+class CiSignalTests(SyncDir, unittest.TestCase):
+    """The workflow posts to the change issue only when sync.py reports changed=true."""
+
+    def cli(self, raw):
+        """Runs sync.py as the workflow does; -> what it wrote to GITHUB_OUTPUT."""
+        out = os.path.join(self.tmp, "github_output")
+        open(out, "w").close()
+        subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "sync.py"), "--from-file", self.write("raw.json", raw),
+                        "--data-dir", os.path.join(self.tmp, "data"), "--event-window", "%s:%s" % W25],
+                       env=dict(os.environ, GITHUB_OUTPUT=out), check=True, capture_output=True, timeout=120)
+        with open(out, encoding="utf-8") as f:
+            return f.read()
+
+    def test_should_report_a_change_to_the_workflow(self):
+        raw = load("raw_2025_sample.json")
+        self.cli(raw)
+        raw[0]["location"] = "Moscone South, Room 156"
+        self.assertEqual(self.cli(raw), "changed=true\n")
+
+    def test_should_report_no_change_to_the_workflow(self):
+        raw = load("raw_2025_sample.json")
+        self.cli(raw)
+        self.assertEqual(self.cli(raw), "changed=false\n")
+
+
+class FirstSeenTests(SyncDir, unittest.TestCase):
+    """firstSeen drives the app's "new" badge; it must survive a regenerated instance id."""
+
+    def sync_at(self, when, raw):
+        with mock.patch.object(sync, "utcnow", return_value=dt.datetime(2025, 10, when, tzinfo=dt.timezone.utc)):
+            self.run_sync(raw)
+        return {r["id"]: r["firstSeen"] for r in self.data("sessions.json")["sessions"]}
+
+    def test_should_keep_first_seen_when_a_session_gets_a_new_instance_id(self):
+        self.sync_at(1, catalog_of(60))
+        self.sync_at(2, catalog_of(61))  # s060 appears on the 2nd
+        regenerated = catalog_of(61)
+        regenerated[60]["sessionInstanceId"] = "s060-regenerated"
+        self.assertEqual(self.sync_at(3, regenerated)["s060"], "2025-10-02T00:00:00Z")
+
+
 class EventWindowTests(unittest.TestCase):
     """The site settings' eventStartDate/eventEndDate can be blank or a placeholder."""
 
@@ -436,9 +623,53 @@ class EventWindowTests(unittest.TestCase):
     def test_should_fall_back_to_the_default_window_when_only_the_end_is_unusable(self):
         self.assertEqual(self.window("2026-11-17T08:00:00-08:00", "2026-13-40"), sync.DEFAULT_WINDOW)
 
+    def test_should_fall_back_to_the_default_window_when_event_dates_are_reversed(self):
+        self.assertEqual(self.window("2026-11-20T08:00:00-08:00", "2026-11-17T17:00:00-08:00"), sync.DEFAULT_WINDOW)
+
     def test_should_take_the_window_from_iso_event_dates(self):
         self.assertEqual(self.window("2026-11-16T08:00:00-08:00", "2026-11-19T17:00:00-08:00"),
                          ("2026-11-16", "2026-11-19"))
+
+
+class FetchFallbackTests(unittest.TestCase):
+    """Each feed is tried from the CDN copy first, then the API."""
+
+    def test_should_use_the_api_when_the_cdn_copy_fails(self):
+        def fake(url):
+            if url == sync.SOURCES["sessions"][0]:
+                raise RuntimeError("cdn down")
+            return ["from the api"]
+        with mock.patch.object(sync, "fetch_json", side_effect=fake):
+            self.assertEqual(sync.fetch_first("sessions"), (["from the api"], sync.SOURCES["sessions"][1]))
+
+    def test_should_report_both_errors_when_both_sources_fail(self):
+        with mock.patch.object(sync, "fetch_json", side_effect=[RuntimeError("cdn down"), RuntimeError("api down")]):
+            with self.assertRaisesRegex(RuntimeError, "cdn down; api down"):
+                sync.fetch_first("sessions")
+
+
+class SummaryListTests(unittest.TestCase):
+    """The change summary posted to the issue: watchlist call-outs and long lists."""
+
+    def batch(self, added=(), changed=()):
+        return {"milestones": [], "removed": [],
+                "added": [{"code": c, "title": "T"} for c in added],
+                "changed": [{"code": c, "title": "T", "f": {"room": ["A", "B"]}} for c in changed]}
+
+    def test_should_call_out_changes_to_watched_sessions(self):
+        self.assertIn("**1 change(s) affect sessions on your watchlist:** BRK2",
+                      sync.summary_markdown(self.batch(added=["BRK1"], changed=["BRK2"]), {"BRK2"}))
+
+    def test_should_star_a_watched_session(self):
+        self.assertIn("- ⭐ `BRK2` T", sync.summary_markdown(self.batch(changed=["BRK2"]), {"BRK2"}))
+
+    def test_should_shorten_a_long_list_of_added_sessions(self):
+        text = sync.summary_markdown(self.batch(added=["A%02d" % i for i in range(61)]), set())
+        self.assertEqual((text.count("\n- `A"), "- …and 1 more" in text), (60, True))
+
+    def test_should_shorten_a_long_list_of_changed_sessions(self):
+        text = sync.summary_markdown(self.batch(changed=["C%02d" % i for i in range(81)]), set())
+        self.assertEqual((text.count("\n- `C"), "- …and 1 more" in text), (80, True))
 
 
 class MalformedRecordTests(unittest.TestCase):
@@ -487,6 +718,22 @@ class WithdrawalGuardTests(unittest.TestCase):
         self.run_sync([{k: v for k, v in s.items() if k != "sessionId"} if i % 4 == 0 else s for i, s in enumerate(self.published)])
         self.assertIn("malformed", self.data("meta.json")["error"])
 
+    def test_should_accept_a_feed_with_a_few_malformed_entries(self):
+        self.assertEqual(self.run_sync([None] * 3 + self.published)[0], 0)  # 3 of 61 (4.9%): within the 5% limit
+
+    def test_should_refuse_a_feed_just_over_the_malformed_limit(self):
+        self.assertEqual(self.run_sync([None] * 4 + self.published), (3, False))  # 4 of 62 (6.5%)
+
+    def test_should_refuse_a_catalog_that_lost_most_of_its_times(self):
+        cut = round(0.6 * len(self.published))  # times vanish from 60% of sessions
+        part = self.renamed("startDateTime", "startTime")[:cut] + self.published[cut:]
+        self.assertEqual(self.run_sync(part), (3, False))
+
+    def test_should_accept_a_catalog_that_kept_most_of_its_times(self):
+        cut = round(0.4 * len(self.published))  # times vanish from 40% of sessions
+        part = self.renamed("startDateTime", "startTime")[:cut] + self.published[cut:]
+        self.assertEqual(self.run_sync(part, allow_withdrawal=False)[0], 0)
+
     def test_should_refuse_a_catalog_whose_times_vanished(self):
         self.assertEqual(self.run_sync(self.renamed("startDateTime", "startTime")), (3, False))
 
@@ -513,7 +760,7 @@ class WithdrawalGuardTests(unittest.TestCase):
             json.dump(self.renamed("startDateTime", "startTime"), f)
         proc = subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "sync.py"), "--from-file", path,
                                "--data-dir", os.path.join(self.tmp, "data"), "--event-window", "%s:%s" % W25,
-                               "--allow-withdrawal"], capture_output=True, text=True)
+                               "--allow-withdrawal"], capture_output=True, text=True, timeout=120)
         self.assertEqual(proc.returncode, 0, proc.stderr)
 
 

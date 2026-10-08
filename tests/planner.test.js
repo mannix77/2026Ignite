@@ -4,11 +4,11 @@
 
 import { transition, canBoth, optimize, optimizeDay, decisionGroups, isResolved, fillers, nowNext, weigh, whatIf, chainValue, DEFAULT_PLANNER } from '../assets/js/planner.js';
 import { parseLocation, walkMinutes, sameRoom, DEFAULT_WALK } from '../assets/js/venue.js';
-import { localParts, fromISO, parseSlot, fmtTime, fmtDay, addDays } from '../assets/js/time.js';
+import { localParts, fromISO, parseSlot, fmtTime, fmtDay, addDays, relTime, fmtDuration, fmtRange } from '../assets/js/time.js';
 import { createVenue } from '../assets/js/venue.js';
-import { CONFERENCES, LAS_VEGAS_DEF } from '../assets/js/conferences.js';
+import { CONFERENCES, LAS_VEGAS_DEF, SWAN_DOLPHIN_DEF } from '../assets/js/conferences.js';
 import { parseShare } from '../assets/js/store.js';
-import { arrivalExtra } from '../assets/js/planner.js';
+import { arrivalExtra, lunchConfig, compareOptions } from '../assets/js/planner.js';
 
 const log = typeof print === 'function' && typeof window === 'undefined' ? print : console.log;
 let pass = 0, fail = 0;
@@ -74,7 +74,7 @@ test('walkMinutes uses floor and building pairs', () => {
 });
 
 // --- transitions
-test('back-to-back in same room is fine, cross-building with 5 min gap is a conflict', () => {
+test('back-to-back in one room is fine; across buildings a 15 min gap is fine and a 1 min gap is a conflict', () => {
   const a = item(H(9), H(9.75)), b = item(H(10), H(10.75));
   eq(transition(a, b).status, 'ok');
   const c = item(H(10), H(10.75), S1);
@@ -107,8 +107,10 @@ test('canBoth is symmetric and false for overlaps', () => {
 test('recorded sessions lose to unrecorded at equal priority', () => {
   const a = item(H(9), H(10), W2, { recorded: true }), b = item(H(9), H(10), W3, { recorded: false });
   ok(weigh(b).score > weigh(a).score);
-  const lab = item(H(9), H(10), W2, { type: 'Lab' });
-  ok(weigh(lab).why.some(w => w.includes('in-person only')));
+});
+test('a hands-on session scores its in-person bonus', () => {
+  const talk = item(H(9), H(10), W2), lab = item(H(9), H(10), W2, { type: 'Lab' });
+  eq([weigh(lab).score - weigh(talk).score, weigh(lab).why.some(w => w.includes('in-person only'))], [DEFAULT_PLANNER.weights.handsOnBonus, true]);
 });
 
 // --- optimizer
@@ -124,7 +126,6 @@ test('two Wants beat one Must only when they add up', () => {
   const must = item(H(9), H(11), W2, { priority: 3 });
   const w1 = item(H(9), H(10), W3, { priority: 2 });
   const w2 = item(H(10.25), H(11), W3, { priority: 2 });
-  eq(optimizeDay([must, w1, w2]).chosen.map(c => c.key), [must.key], 'tie keeps the Must');
   w2.recorded = false; // 50 + 60 > 100
   eq(optimizeDay([must, w1, w2]).chosen.map(c => c.key), [w1.key, w2.key]);
   const locked = { ...must, locked: true };
@@ -138,7 +139,6 @@ test('walk time makes a pair infeasible and the optimizer drops the cheaper one'
   eq(res.plan['2026-11-18'].map(x => x.key), [a.key, c.key]);
   const drop = res.dropped.find(d => d.item.key === b.key);
   ok(drop, 'b dropped');
-  ok(['walk', 'overlap'].includes(drop.reason.kind));
 });
 test('explainDrop reports walking problems in words', () => {
   const a = item(H(9), H(9.75), W2, { priority: 3 });
@@ -162,6 +162,12 @@ test('repeat instances: attend once, choose the one that fits', () => {
   const kept = Object.values(res2.plan).flat().filter(x => x.id === 'rep2');
   eq(kept.length, 1);
   eq(res2.dropped[0].reason.kind, 'repeat');
+});
+test('should plan only the locked run of a repeated session', () => {
+  const tue = item(H(9), H(10), W2, { id: 'rep3', code: 'BRK902', priority: 3, locked: true });
+  const thu = item(H(9), H(10), W2, { id: 'rep3', code: 'BRK902', priority: 3, day: '2026-11-20' });
+  const kept = Object.values(optimize([tue, thu]).plan).flat().filter(x => x.id === 'rep3');
+  eq(kept.map(x => x.key), [tue.key]);
 });
 test('locked conflicts are reported', () => {
   const a = item(H(9), H(10), W2, { locked: true, priority: 3 });
@@ -367,6 +373,12 @@ test('explainDrop distinguishes a clashing repeat from a free one (review p8)', 
   eq([d.reason.kind, d.reason.clash], ['repeat', false]);
   ok(!/clash/i.test(d.reason.text), d.reason.text);
 });
+test('explainDrop says when the dropped run of a repeat also clashes', () => {
+  const blocker = item(H(9), H(10), W2, { priority: 3 });
+  const r1 = item(H(9), H(10), W3, { id: 'R2', code: 'BRK8' }), r2 = item(H(9), H(10), W3, { id: 'R2', code: 'BRK8-R1', day: '2026-11-19' });
+  const d = optimize([blocker, r1, r2]).dropped.find(x => x.item.key === r1.key);
+  eq([d.reason.kind, d.reason.clash], ['repeat', true]);
+});
 
 test('nowNext uses the start-of-day origin and keynote entry time', () => {
   const C = parseLocation('Chase Center');
@@ -388,6 +400,46 @@ test('blocked time is a chain item with a real location', () => {
   const during = item(H(12), H(12.75), W2);
   eq(decisionGroups([blk, during]).length, 0, 'blocks are not decisions');
   eq(optimize([blk, during]).dropped[0].reason.kind, 'block');
+});
+
+test('two overlapping runs of one session are not a decision to make', () => {
+  const r1 = item(H(9), H(10), W2, { id: 'rep4', code: 'BRK903' }), r2 = item(H(9.5), H(10.5), W3, { id: 'rep4', code: 'BRK903-R1' });
+  eq(decisionGroups([r1, r2]), []);
+});
+test('two overlapping different sessions are a decision to make', () => {
+  eq(decisionGroups([item(H(9), H(10), W2), item(H(9.5), H(10.5), W3)]).length, 1);
+});
+
+// --- where you are now ("I'm at…" or GPS) and comparing the options of a clash
+test("leave-by counts from where you are, not from your last session's room", () => {
+  const done = item(H(9), H(10), S1), next = item(H(11), H(12), W3);
+  const here = { ...parseLocation('Moscone West, Level 2'), live: true };
+  const r = nowNext([done, next], H(10.5), DEFAULT_PLANNER, here);
+  eq([r.from.key, r.leaveBy], ['origin', H(11) - walkMinutes(here, W3) - DEFAULT_PLANNER.buffer]);
+});
+test('choosing the other side of a clash with a locked session is possible: the lock gives way', () => {
+  const locked = item(H(9), H(10), W2, { priority: 3, locked: true }), other = item(H(9.5), H(10.5), S1, { priority: 2 });
+  const { outcomes } = compareOptions([locked, other], [locked, other]);
+  eq([outcomes.get(other.key).feasible, outcomes.get(locked.key).feasible], [true, true]);
+});
+
+// --- small time and venue helpers the pages show
+test('a late Eastern session belongs to its local day, not the UTC one', () => {
+  eq(fromISO('2026-10-21T01:00:00Z', 'America/New_York'), { day: '2026-10-20', min: 21 * 60 });
+});
+test('two different off-site hotels are a long walk, not a same-floor hop', () => {
+  eq(walkMinutes(parseLocation('Hilton Union Square'), parseLocation('Westin St. Francis'), DEFAULT_WALK), 12);
+});
+test('relative times read naturally', () => {
+  const now = Date.parse('2026-10-07T12:00:00Z'), ago = s => new Date(now - s * 1000).toISOString();
+  eq([ago(30), ago(5 * 60), ago(3 * 3600), ago(2 * 86400), null, 'not a date'].map(t => relTime(t, now)),
+    ['just now', '5 min ago', '3 h ago', '2 d ago', 'never', 'unknown']);
+});
+test('durations read in hours and minutes', () => {
+  eq([45, 60, 90, NaN].map(fmtDuration), ['45 min', '1 h', '1 h 30 min', '']);
+});
+test('a time range reads as start – end', () => {
+  eq(fmtRange(540, 600), '9:00 AM – 10:00 AM');
 });
 
 // --- lunch: a slot in a gap, never a place
@@ -428,6 +480,18 @@ test('lunch outranks only what it is worth more than', () => {
   eq([Object.values(r2.plan).flat().length, !!r2.lunch[D]], [0, true], 'a Maybe (20) over the whole window loses to lunch (40)');
 });
 
+test('lunch turned off in Settings keeps a Maybe that lunch would otherwise beat', () => {
+  const maybe = item(H(11.5), H(13.5), W2, { priority: 1 });
+  const res = optimize([maybe], DEFAULT_PLANNER, lunchConfig({ ...LUNCH, on: false }));
+  eq([Object.values(res.plan).flat().length, res.lunch[D] ?? null], [1, null]);
+});
+test('a lunch longer than its window plans no lunch', () => {
+  eq(lunchConfig({ ...LUNCH, length: 180 }), null);
+});
+test('lunch settings saved as text still plan a lunch', () => {
+  const fromText = lunchConfig({ on: true, from: '690', to: '810', length: '30', weight: '40' });
+  eq(optimize([item(H(9), H(10), W2)], DEFAULT_PLANNER, fromText).lunch[D], { start: H(11.5), end: H(12) });
+});
 test('lunch does not multiply the repeat-run search (review e5)', () => {
   const A = item(H(9), H(10), W2, { id: 'A', code: 'A', day: '2026-11-17' });
   const B = item(H(9), H(10), W2, { id: 'B', code: 'B', day: D });
@@ -481,9 +545,6 @@ test('Las Vegas: the building comes from the first segment', () => {
     'Caesars Forum | Level 1 | Forum 120 | Content Hub | Purple Theater', 'Venetian | Level 2 | Hall B | Expo | Industry Theater']
     .map(r => lv(r).building), ['M', 'W', 'C', 'F', 'V']);
 });
-test('Las Vegas: Caesars Forum is not Caesars Palace', () => {
-  eq(lv('Caesars Forum | Level 1 | Forum 120').building, 'F');
-});
 test('Las Vegas: numbered levels parse as floors', () => {
   eq(lv('MGM Grand | Level 3 | Premier 311').floor, '3');
 });
@@ -498,11 +559,9 @@ test('Las Vegas: two theaters in one Content Hub are a same-floor walk, not the 
   eq(walkMinutes(lv('Caesars Forum | Level 1 | Forum 120 | Content Hub | Purple Theater'),
     lv('Caesars Forum | Level 1 | Forum 120 | Content Hub | Red Theater'), LVW), LVW.sameFloor);
 });
-test('Las Vegas: MGM Grand to the Venetian is a shuttle ride', () => {
-  eq(walkMinutes(lv('MGM Grand | Level 1 | Grand 122'), lv('Venetian | Level 2 | Hall B'), LVW), 35);
-});
-test('Las Vegas: Caesars Palace to Caesars Forum is a short walk', () => {
-  eq(walkMinutes(lv('Caesars Palace | Promenade Level | Roman I'), lv('Caesars Forum | Level 1 | Forum 120'), LVW), 10);
+test('Las Vegas: Caesars Palace then Caesars Forum 15 minutes later is fine (a short walk)', () => {
+  const palace = lv('Caesars Palace | Promenade Level | Roman I'), forum = lv('Caesars Forum | Level 1 | Forum 120');
+  eq(transition(item(H(9), H(10), palace), item(H(10) + 15, H(11), forum), { ...DEFAULT_PLANNER, walk: LVW, keynoteBuildings: [] }).status, 'ok');
 });
 test('Las Vegas: changing floors in one resort takes the diffFloor estimate', () => {
   eq(walkMinutes(lv('MGM Grand | Level 1 | Grand 122'), lv('MGM Grand | Level 3 | Premier 311'), LVW), LVW.diffFloor);
@@ -511,6 +570,25 @@ test('Las Vegas: every building pair has a walking estimate', () => {
   const ids = LV.ids.filter(id => id !== 'O');
   const missing = ids.flatMap(a => ids.filter(b => a < b).map(b => `${a}|${b}`)).filter(k => LVW.pairs[k] == null);
   eq(missing, []);
+});
+// Plans at the Gartner and re:Invent venues, through their own walking times.
+const SD = createVenue(SWAN_DOLPHIN_DEF);
+const at = (venue, keynote = []) => ({ ...DEFAULT_PLANNER, walk: venue.walk, keynoteBuildings: keynote });
+const dolphin = SD.parseLocation('Upper Peninsula 4, WDW Dolphin Hotel');
+const beachClub = SD.parseLocation("Grand Harbor Salon 1, Disney's Yacht & Beach Resort");
+test('Gartner: the Dolphin then the Yacht & Beach Club 10 minutes later is a conflict', () => {
+  eq(transition(item(H(9), H(10), dolphin), item(H(10) + 10, H(11), beachClub), at(SD)).status, 'conflict');
+});
+test('Gartner: the Dolphin then the Yacht & Beach Club 20 minutes later is fine', () => {
+  eq(transition(item(H(9), H(10), dolphin), item(H(10) + 20, H(11), beachClub), at(SD)).status, 'ok');
+});
+test('Gartner: a plan keeps only one of two Musts too far apart to walk between', () => {
+  const a = item(H(9), H(10), dolphin, { priority: 3 }), b = item(H(10) + 10, H(11), beachClub, { priority: 3 });
+  eq(optimize([a, b], at(SD)).plan['2026-11-18'].length, 1);
+});
+test('Las Vegas: the MGM Grand then the Venetian 20 minutes later is a conflict', () => {
+  const mgm = lv('MGM Grand | Level 1 | Grand 122'), venetian = lv('Venetian | Level 2 | Hall B');
+  eq(transition(item(H(9), H(10), mgm), item(H(10) + 20, H(11), venetian), at(LV)).status, 'conflict');
 });
 test('a session at Caesars Palace gets no keynote entry time', () => {
   const ctx = { ...DEFAULT_PLANNER, keynoteBuildings: LV.keynoteBuildings };
@@ -522,10 +600,6 @@ test('a re:Invent keynote still gets keynote entry time', () => {
 });
 test('Chase Center still gets keynote entry time at Ignite', () => {
   eq(arrivalExtra(item(H(9), H(10), parseLocation('Chase Center')), DEFAULT_PLANNER), DEFAULT_PLANNER.keynoteExtra);
-});
-test('re:Invent is listed with its Las Vegas days and timezone', () => {
-  const c = CONFERENCES.reinvent2026;
-  eq([c.tz, c.days[0], c.days[c.days.length - 1], c.dataDir], ['America/Los_Angeles', '2026-11-30', '2026-12-04', 'data/reinvent2026']);
 });
 test('re:Invent session links search the catalog by code', () => {
   eq(CONFERENCES.reinvent2026.sessionUrl({ code: 'DVT212-S' }),

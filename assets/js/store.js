@@ -68,25 +68,32 @@ export function configure({ defaults = {}, buildingIds = [] } = {}) {
 }
 
 // `namespace` keeps each conference (and test data) in its own storage.
+// Saved text that couldn't be read and couldn't yet be copied aside: it must not be
+// overwritten until the copy succeeds (writeNow retries it before every save).
+let unreadable = null;
+
 export function load(namespace = '') {
   KEY = namespace ? `${BASE_KEY}:${namespace}` : BASE_KEY;
   state = blank();
+  unreadable = null;
   try {
     const raw = localStorage.getItem(KEY);
     if (raw) {
       const saved = JSON.parse(raw);
       delete saved.settings; // pre-release format stored every default
-      if (saved.prefs) delete saved.prefs.simNow;
-      if (saved.known && Object.values(saved.known).some(k => k && !k.inst)) saved.known = {}; // pre-release keying
       state = merge(blank(), saved);
-      state.known = sanitizeKnown(state.known);
+      if (!state.ui || typeof state.ui !== 'object' || Array.isArray(state.ui)) state.ui = blank().ui; // startup reads ui.*
+      state.known = sanitizeKnown(state.known); // also drops pre-release entries, which had no run id
       state.picks = sanitizePicks(state.picks);
       state.prefs = sanitizePrefs(state.prefs);
       state.profile = saved.profile ? sanitizeProfile(saved.profile) : null;
       state.backup = sanitizeBackup(saved.backup);
     }
   } catch (e) {
-    console.warn('Could not read saved state', e);
+    // Unreadable (truncated or corrupt): keep a copy before the next save replaces it.
+    console.warn('Could not read saved state; a copy is kept under', `${KEY}#unreadable`, e);
+    let raw = null;
+    try { raw = localStorage.getItem(KEY); if (raw) localStorage.setItem(`${KEY}#unreadable`, raw); } catch { unreadable = raw; }
   }
   cachedSettings = null;
   return state;
@@ -99,18 +106,31 @@ export function namespace() { return KEY === BASE_KEY ? '' : KEY.slice(BASE_KEY.
 let saveFailed = false;
 export function saveFailing() { return saveFailed; }
 
+function writeNow() {
+  clearTimeout(saveTimer);
+  saveTimer = null;
+  try {
+    if (unreadable != null) { localStorage.setItem(`${KEY}#unreadable`, unreadable); unreadable = null; } // copy first, or don't save
+    localStorage.setItem(KEY, JSON.stringify(state));
+    if (saveFailed) { saveFailed = false; for (const fn of listeners) fn('save-ok'); }
+  } catch (e) {
+    console.warn('Could not save state', e);
+    saveFailed = true;
+    for (const fn of listeners) fn('save-error');
+  }
+}
+
 function persist() {
   clearTimeout(saveTimer);
-  saveTimer = setTimeout(() => {
-    try {
-      localStorage.setItem(KEY, JSON.stringify(state));
-      if (saveFailed) { saveFailed = false; for (const fn of listeners) fn('save-ok'); }
-    } catch (e) {
-      console.warn('Could not save state', e);
-      saveFailed = true;
-      for (const fn of listeners) fn('save-error');
-    }
-  }, 150);
+  saveTimer = setTimeout(writeNow, 150);
+}
+
+// Leaving or hiding the page (switching conference, the Reload button, locking the phone)
+// can come within the save delay: write a pending change at once instead of losing it.
+function flushPending() { if (saveTimer) writeNow(); }
+if (typeof window !== 'undefined') window.addEventListener('pagehide', flushPending);
+if (typeof document !== 'undefined' && document.addEventListener) {
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') flushPending(); });
 }
 
 // Another tab saved: adopt its state instead of overwriting it on our next save.
@@ -118,6 +138,7 @@ if (typeof window !== 'undefined') {
   window.addEventListener('storage', e => {
     if (e.key !== KEY || e.newValue == null) return;
     clearTimeout(saveTimer);
+    saveTimer = null;
     load(namespace());
     for (const fn of listeners) fn('reset');
   });
@@ -161,15 +182,16 @@ export function setGroupNote(ids, holder, note, meta = {}) {
   emit('note');
 }
 
+// Settings are cleaned as they are saved, exactly as a reload would clean them.
 export function updateSettings(patch) {
-  state.prefs = merge(state.prefs || {}, clone(patch));
+  state.prefs = sanitizePrefs(merge(state.prefs || {}, clone(patch)));
   cachedSettings = null;
   emit('settings');
 }
 
 // Replace one top-level setting outright (lists/objects where merging would keep stale keys).
 export function setSetting(key, value) {
-  state.prefs = { ...(state.prefs || {}), [key]: clone(value) };
+  state.prefs = sanitizePrefs({ ...(state.prefs || {}), [key]: clone(value) });
   cachedSettings = null;
   emit('settings');
 }
@@ -243,13 +265,14 @@ export function setSeenBatch(at) { state.seenBatch = at; emit('seen'); }
 // ---- validation (backups, share links and old saves are untrusted input)
 
 const ID_RE = /^[\w.:-]{1,120}$/;
-function sanitizePick(p) {
+// `undatedAt` is the time given to a pick that doesn't say when it was made.
+function sanitizePick(p, undatedAt = Date.now()) {
   if (!p || typeof p !== 'object') return null;
   const out = {
     p: [0, 1, 2, 3].includes(p.p) ? p.p : null,
     lock: typeof p.lock === 'string' && ID_RE.test(p.lock) ? p.lock : null,
     note: typeof p.note === 'string' ? p.note.slice(0, 4000) : '',
-    at: Number.isFinite(p.at) ? p.at : Date.now(),
+    at: Number.isFinite(p.at) ? p.at : undatedAt,
   };
   if (p.lockMode === 'preview' && out.lock) out.lockMode = 'preview';
   if (typeof p.reserved === 'string' && ID_RE.test(p.reserved)) out.reserved = p.reserved;
@@ -260,11 +283,11 @@ function sanitizePick(p) {
   return alive(out) ? out : null;
 }
 
-function sanitizePicks(picks) {
+function sanitizePicks(picks, undatedAt) {
   const out = {};
   for (const [id, p] of Object.entries(picks || {})) {
     if (!ID_RE.test(id)) continue;
-    const s = sanitizePick(p);
+    const s = sanitizePick(p, undatedAt);
     if (s) out[id] = s;
   }
   return out;
@@ -272,30 +295,33 @@ function sanitizePicks(picks) {
 
 function sanitizeKnown(known) {
   const out = {};
-  for (const [inst, k] of Object.entries(known || {})) if (k && typeof k === 'object' && typeof k.inst === 'string') out[inst] = k;
+  // Each snapshot is saved under its own run id, so a blank or different id is not a real entry.
+  for (const [inst, k] of Object.entries(known || {})) if (k && typeof k === 'object' && k.inst === inst && inst) out[inst] = k;
   return out;
 }
 
 const num = (v, lo, hi) => (Number.isFinite(v) && v >= lo && v <= hi ? v : undefined);
+// Tuning numbers are held at the nearest limit, so the value shown is the value kept.
+const clamp = (v, lo, hi) => (Number.isFinite(v) ? Math.min(hi, Math.max(lo, v)) : undefined);
 function sanitizePrefs(src) {
   const d = DEFAULT_SETTINGS;
   const out = {};
   if (!src || typeof src !== 'object') return out;
-  for (const k of ['buffer', 'tolerance', 'keynoteExtra']) if (num(src[k], 0, 240) !== undefined) out[k] = src[k];
+  for (const k of ['buffer', 'tolerance', 'keynoteExtra']) if (clamp(src[k], 0, 240) !== undefined) out[k] = clamp(src[k], 0, 240);
   if (src.walk && typeof src.walk === 'object') {
     out.walk = {};
-    for (const k of ['sameRoom', 'sameFloor', 'diffFloor', 'unknown']) if (num(src.walk[k], 0, 240) !== undefined) out.walk[k] = src.walk[k];
+    for (const k of ['sameRoom', 'sameFloor', 'diffFloor', 'unknown']) if (clamp(src.walk[k], 0, 240) !== undefined) out.walk[k] = clamp(src.walk[k], 0, 240);
     if (src.walk.pairs && typeof src.walk.pairs === 'object') {
       out.walk.pairs = {};
       for (const [k, v] of Object.entries(src.walk.pairs)) {
         const [a, b] = k.split('|');
-        if (validBuilding(a) && validBuilding(b) && num(v, 0, 240) !== undefined) out.walk.pairs[k] = v;
+        if (validBuilding(a) && validBuilding(b) && clamp(v, 0, 240) !== undefined) out.walk.pairs[k] = clamp(v, 0, 240);
       }
     }
   }
   if (src.weights && typeof src.weights === 'object') {
     out.weights = {};
-    for (const k of Object.keys(d.weights)) if (num(src.weights[k], 0, 5000) !== undefined) out.weights[k] = src.weights[k];
+    for (const k of Object.keys(d.weights)) if (clamp(src.weights[k], 0, 5000) !== undefined) out.weights[k] = clamp(src.weights[k], 0, 5000);
   }
   if (src.overrides && typeof src.overrides === 'object') {
     out.overrides = {};
@@ -308,7 +334,8 @@ function sanitizePrefs(src) {
     const l = src.lunch;
     const lunch = {};
     if (typeof l.on === 'boolean') lunch.on = l.on;
-    for (const [k, lo, hi] of [['from', 0, 1440], ['to', 0, 1440], ['length', 5, 240], ['weight', 0, 5000]]) if (num(l[k], lo, hi) !== undefined) lunch[k] = l[k];
+    for (const [k, lo, hi] of [['from', 0, 1440], ['to', 0, 1440]]) if (num(l[k], lo, hi) !== undefined) lunch[k] = l[k];
+    for (const [k, lo, hi] of [['length', 5, 240], ['weight', 0, 5000]]) if (clamp(l[k], lo, hi) !== undefined) lunch[k] = clamp(l[k], lo, hi);
     if (Object.keys(lunch).length) out.lunch = lunch;
   }
   if (Array.isArray(src.blocks)) {
@@ -337,21 +364,26 @@ function sanitizePrefs(src) {
 // ---- moving picks between devices
 
 export function exportData() {
-  return { app: 'ignite26-planner', v: 1, conference: namespace() || 'ignite2026', exportedAt: new Date().toISOString(), picks: state.picks, settings: state.prefs, profile: profile() };
+  return { app: 'ignite26-planner', v: 1, conference: namespace() || 'ignite2026', exportedAt: new Date().toISOString(), picks: state.picks, settings: state.prefs, profile: state.profile }; // null: never set
 }
 
 export function importData(obj, { replace = false } = {}) {
-  if (!obj || obj.app !== 'ignite26-planner' || !obj.picks || typeof obj.picks !== 'object') throw new Error('Not an Ignite planner backup file');
-  const incoming = sanitizePicks(obj.picks);
+  if (!obj || obj.app !== 'ignite26-planner' || !obj.picks || typeof obj.picks !== 'object' || Array.isArray(obj.picks)) throw new Error('Not an Ignite planner backup file');
+  const incoming = sanitizePicks(obj.picks, 0); // undated backup picks are older than anything here
+  // Checked before anything changes: a backup from another format must not empty the plan.
+  if (Object.keys(obj.picks).length && !Object.keys(incoming).length) throw new Error('This backup has no picks this planner can read; nothing was changed');
   if (replace) state.picks = {};
+  let applied = 0;
   for (const [id, p] of Object.entries(incoming)) {
     const cur = state.picks[id];
-    if (!cur || p.at >= (cur.at || 0)) state.picks[id] = { ...p, note: p.note || cur?.note || '' };
+    if (!cur || p.at > (cur.at || 0)) { state.picks[id] = { ...p, note: p.note || cur?.note || '' }; applied++; }
   }
   if (obj.settings && replace) { state.prefs = sanitizePrefs(obj.settings); cachedSettings = null; }
-  if (obj.profile && (replace || !state.profile)) state.profile = sanitizeProfile(obj.profile);
+  // Replacing restores the backup's preferences, including "never set" (null); merging only fills in.
+  if (replace && 'profile' in obj) state.profile = obj.profile ? sanitizeProfile(obj.profile) : null;
+  else if (obj.profile && !state.profile) state.profile = sanitizeProfile(obj.profile);
   emit(replace ? 'reset' : 'picks');
-  return Object.keys(incoming).length;
+  return applied;
 }
 
 // Compact share token per pick: CODE.p[sSCORE][w][!LOCKCODE | *LOCKCODE]
