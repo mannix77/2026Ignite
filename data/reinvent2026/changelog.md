@@ -3,6 +3,14 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-10-08T13:00:19Z · https://catalog.awsevents.com/api/sessions
+
+Added 0 · removed 0 · changed 2
+
+**Changed**
+- `COM318` KYC in 90 Seconds: Real-Time Onboarding with AgentCore — speakers: Avinash Dalvi, Poobalan P, S Logesh, Vivek Raja P S → Avinash Dalvi, Poobalan P, S Logesh
+- `SEC385-S` Automate and Scale Cloud Operations with Purpose-Built AI Agents — title: Your Agent Is in Production. Can You Explain What It Did?… → Automate and Scale Cloud Operations with Purpose-Built AI…; level: 300 → 200; desc
+
 ## 2026-10-08T07:03:57Z · https://catalog.awsevents.com/api/sessions
 
 Added 0 · removed 0 · changed 58
