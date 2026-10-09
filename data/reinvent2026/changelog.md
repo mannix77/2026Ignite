@@ -3,6 +3,93 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-10-09T18:51:56Z · https://catalog.awsevents.com/api/sessions
+
+Added 0 · removed 0 · changed 101
+
+**Changed**
+- `ANT402-R1` Reduce spend and data movement with Amazon Redshift Data Sharing and Graviton — speakers: Sudipta Bagchi → Poulomi Dasgupta, Sudipta Bagchi
+- `ANT408` Observe, investigate, act: smarter ops with Amazon OpenSearch Service — speakers: Jon Handler → Jon Handler, Rohin Bhargava
+- `ANT409` From self-managed to AWS managed: agentic AI for Kafka and MQ migrations — speakers: — → Mazrim Mehrtens, Vignesh Selvam
+- `ANT410` Give your AI agent an expert-level playbook with the Agent Toolkit for AWS — speakers: — → Avichay Marciano, Brandon Schur
+- `ANT411-R` Simplify identity and security management in an open data architecture on AWS — speakers: Amila Weerasinghe, Olcay Boz → Aarthi Srinivasan, Amir Bar-Or
+- `ANT411-R1` Simplify identity and security management in an open data architecture on AWS — speakers: — → Aarthi Srinivasan, Amir Bar-Or
+- `ANT412` Apache Iceberg V3 on AWS: Lower Costs, Better Lakehouse Performance — speakers: Rohit Vashishtha → Arun Shanmugam, Rohit Vashishtha
+- `ANT413-R` Automating data pipelines with agentic AI and Apache Iceberg — speakers: Sudipta Bagchi → Asif Abbasi, Sudipta Bagchi
+- `ANT413-R1` Self-healing data pipelines with agentic AI and Apache Iceberg — speakers: — → Asif Abbasi, Sudipta Bagchi
+- `ANT417-R` A practical guide to Apache Iceberg migration on AWS — speakers: Stefano Sandonà → Salim Tutuncu, Stefano Sandonà
+- `ANT417-R1` A practical guide to Apache Iceberg migration on AWS — speakers: Stefano Sandonà → Salim Tutuncu, Stefano Sandonà
+- `ANT419-R` Power streaming analytics on AWS with AI-driven insights — speakers: Swapna Bandla → Austin Groeneveld, Swapna Bandla
+- `ANT419-R1` Power streaming analytics on AWS with AI-driven insights — speakers: — → Austin Groeneveld, Swapna Bandla
+- `ANT422` Accelerating Apache Spark 4.1 workloads with AWS Analytics — speakers: Sekar Srinivasan → Giovanni Matteo Fumarola, Sekar Srinivasan
+- `ANT423` Introducing AWS Context: Build governed intelligence for agents at scale — speakers: Steve Ash → Aditya Krishnan, Steve Ash
+- `ANT424-R` Simplify Data Analytics operations with AI-powered Apache Spark agents on AWS — speakers: David Zhang → David Zhang, Mohit Saxena
+- `ANT424-R1` Migrating legacy ETL to serverless with AWS Glue — speakers: David Zhang → David Zhang, Mohit Saxena
+- `ANT426-R` Building a semantic layer with AWS Glue Data Catalog and AWS Context — speakers: — → Syed Humair, Varshni Muralidharan
+- `ANT426-R1` Building a semantic layer with AWS Glue Data Catalog and AWS Context — speakers: — → Syed Humair, Varshni Muralidharan
+- `ANT427` Design an open, cost-effective and high-performant lakehouse with Apache Iceberg on — speakers: — → Radhika Jakkula, Saman Irfan
+- `ANT428-R` Best practices for operating an Apache Iceberg lakehouse at scale — speakers: — → Aditya Challa, prasadnu Mohan Prasad
+- `ANT428-R1` Best practices for operating an Apache Iceberg lakehouse at scale — speakers: — → Aditya Challa, prasadnu Mohan Prasad
+- `ANT429-R1` Govern your context layer for AI agents with AWS Context — speakers: — → Leonardo Gomez Virahonda
+- `ANT430` Event-driven agents at scale: building agentic AI on Amazon MSK — speakers: — → Luca Perrozzi, Masudur Rahaman Sayem
+- `ANT433` Powering your agentic AI experience with AWS streaming and messaging — speakers: John Morkel, Sarang Bapat → John Morkel, Sarang Bapat, Subham Rakshit
+- `ANT437-R` Accelerate lakehouse analytics with Apache Iceberg materialized views — speakers: Behram Irani, Santiago Abarca, Sekar Srinivasan → Behram Irani, Santiago Abarca, Sharad Pai
+- `ANT437-R1` Accelerate lakehouse analytics with Apache Iceberg materialized views — speakers: Sekar Srinivasan → Behram Irani, Santiago Abarca, Sharad Pai
+- `ANT438-R1` Give your AI agents business context with AWS Glue Data Catalog — speakers: Priyanka Chaudhary → Joel Farvault, Kunal Ghosh, Priyanka Chaudhary
+- `ANT441` Build a well-governed natural language-to-SQL agentic solution for Amazon Redshift — speakers: Shruti Worlikar, Uday Narayanan → Ivan Fernandez Perea, Shruti Worlikar, Uday Narayanan
+- `ANT442` Make your vector search faster, more relevant, and cost-efficient — speakers: — → Hajer Bouafif, prasadnu Mohan Prasad
+- `ANT443` Build orchestration agents for AWS Glue ETL — speakers: Priyanka Chaudhary, Raghu Prabhu, Vivek Shrivastava → John Oshodi, Raghu Prabhu, Vivek Shrivastava
+- `ANT444` Build conversational AI agents for query federation with Amazon Athena — speakers: Shoukat Ghouse, Steve Phillips → Pathik Shah, Sandeep Mishra, Shoukat Ghouse, Steve Phillips
+- `ANT446` Build event-driven applications with AWS Streaming and Messaging — speakers: Ashley Millette, Vinodh Kannan Sadayamuthu → Ashley Millette, Charishma Makineni, Mayank Juneja, Vinod…
+- `ANT447-R` Getting Started with Apache Iceberg: The AI-Ready open lakehouse advantage — speakers: Diego Ortiz, Hugo Mineiro → Diego Ortiz, Hugo Mineiro, Jay Agnihotri, Rahul Sharma
+- `ANT447-R1` Getting Started with Apache Iceberg: The AI-Ready open lakehouse advantage — speakers: Hugo Mineiro → Diego Ortiz, Hugo Mineiro, Jay Agnihotri, Rahul Sharma
+- `ANT448-R` Unified observability with Amazon OpenSearch Service — speakers: — → Alex Tarasov, Aruna Govindaraju, Cedric Pelvet, Jay Agnih…
+- `ANT448-R1` Unified observability with Amazon OpenSearch Service — speakers: — → Alex Tarasov, Aruna Govindaraju, Cedric Pelvet, Jay Agnih…
+- `ARC206-S` Accelerating Fusion Innovation with AMD EPYC on AWS HPC, Analytics, and Agentic AI (sponsored by AMD) — speakers: Manish Amin → Arijit Choudhury, Manish Amin
+- `ARC333` Inverting the medallion: Serving reads without hitting Gold — speakers: Laks Sundararajan → Chaitanya Vejendla, Laks Sundararajan
+- `ARC337-S` Architecting for six nines with multi-region hedging (sponsored by Capital One) — speakers: — → Prem Kumar Dhayalan
+- `ARC410` Twenty years of cloud architecture — speakers: — → Colm MacCárthaigh
+- `BIZ102` Taking Every Interaction from Mundane to Magic: Agentic CX with Connect Customer — speakers: — → Cecilia Bolich, Pasquale DeMaio
+- `BIZ104-S` From On-Premises to Agentic AI: Bayer's Amazon Connect Transformation Journey (sponsored by Capgemini) — speakers: Vivek Sandell → Andreea Manolache, Vivek Sandell
+- `BIZ107` How EchoStar Turned CX and IT Into One Team to Ship AI Experiences — speakers: Christina Sansone, Sevrin Huff, Tim Baylus → Brian Dawson, Christina Sansone, Sevrin Huff, Tim Baylus
+- `BIZ108` Trust, built in seconds: AI-powered banking at scale — speakers: — → Aly Galal
+- `BIZ112` From Zero to 20,000 Desktops: Getting Started with Amazon Quick — speakers: — → Jose Kunnackal John
+- `BIZ202-S` Trust at Scale: Unlocking Enterprise Agentic AI (sponsored by Qlik) — speakers: — → James Welsh
+- `BIZ209` Prevent supply chain disruptions with AI-driven insights and action — speakers: Gautam Kamdar, Jeet Dattani → Gautam Kamdar, Jeet Dattani, Ozgur Dogan
+- `BIZ210` Deploy AI planning teammates without changing how your team works — speakers: Ameet Vaswani, Megha Tak → Ameet Vaswani, Megha Tak, Sid Millspaugh
+- `BIZ213` Accelerating AI adoption and realized value with Amazon Quick — speakers: John Brock, NEAL CAULEY → John Brock, NEAL CAULEY, Stefan Schulz
+- `BIZ216` AI Assistant for Public Sector: Governance Without Compromise with Amazon Quick — speakers: Mike Westwood, Rima Olinger → Mike Westwood, Rima Olinger, Sonali Sahu
+- `BIZ301` Build and Ship an AI-Powered App with Amazon Quick — speakers: Mei Liu, Roy Yung → Douglas Bergquist, Mei Liu, Oyin Oguntoye, Roy Yung, Vaid…
+- `BIZ302` Embed Amazon Quick Chat Agents in Enterprise Applications — speakers: Anneline Sibanda, Arun Santhosh, Sujit Singh → Anneline Sibanda, Arun Santhosh, Ashok Dasineni, Sujit Singh
+- `BIZ305` Security → Zero-Trust Identity & Data Protection in the Agentic Era — speakers: — → Priya Kakarla
+- `BIZ306` Bring Your Own Ontology: Ground Amazon Quick in Enterprise Context — speakers: Conor Huh, Tom Ron → Fatima Khakwani, Tom Ron
+- `BIZ307` Architect AI-powered analytics with Amazon Quick across your data platforms — speakers: Venkat Tatavarthy → Jackson Dowden
+- `BIZ312` Build AI-Powered Analytics with Conversational BI on Amazon Quick — speakers: Neeraj Kumar, Roy Yung → Neeraj Kumar, salim khan
+- `BIZ327-S` Engineering the Context that Makes Enterprise AI Work (sponsored by Impetus Technologies Inc) — speakers: — → Deepak Khosla
+- `CMP251` The AWS Console in the age of agentic compute — speakers: Olga Madejska → James Gray, Olga Madejska
+- `CMP302-R` Agents at the Gate: Governing AI in EC2 Image Builder — speakers: Ali Alzand, Maksim Poletaev, Malini Chatterjee, Prashanth… → Maksim Poletaev, Malini Chatterjee, Rielah De Jesus, Sabh…
+- `CMP302-R1` Agents at the Gate: Governing AI in EC2 Image Builder — speakers: Maksim Poletaev, Malini Chatterjee, Prashanth Ganapathy, … → Maksim Poletaev, Malini Chatterjee, Rielah De Jesus, Sabh…
+- `CMP303` AWS Nitro System deep dive: Security, isolation, and innovation — speakers: Alexander Graf, Filippo Sironi, Scott Peterson → Alexander Graf, Scott Peterson
+- `CMP310` Beyond the simulator: Quantum chemistry workflows on real hardware — speakers: Nick White, Sebastian Stern, Tyler Takeshita → Nick White, Nicola Smyth, Sebastian Stern, Tyler Takeshita
+- `CMP313` Maximizing EC2 NVMe local storage — speakers: Ian Bablewski, Sanjeev Malladi → Ian Bablewski
+- `CMP316-R` Storage performance in EC2 instances: What matters to your workload — speakers: Tanmoy Sen → Kshitij Tambe, Tanmoy Sen
+- `CMP316-R1` Storage performance in EC2 instances: What matters to your workload — speakers: Tanmoy Sen → Kshitij Tambe, Tanmoy Sen
+- `CMP334` Accelerating semiconductor design, simulation and verification on AWS — speakers: Saurabh Modh, Syam Parvathaneni → Gautham Panth, Syam Parvathaneni
+- `CMP347` Canva's migration to AWS Graviton: from 2% to 54% in 10 months — speakers: Lucky Ray → Lucky Ray, Rory McCormick
+- `CMP406` From zero to HPC: Build production clusters with AWS PCS — speakers: Timothy Brown → Matthew Vaughn, Timothy Brown
+- `COM305` Why Enterprise RAG Fails: Document AI and  Ontology Patterns on AWS — speakers: Ayyanar Jeyakrishnan, Bhuvaneswari Subramani → Ayyanar Jeyakrishnan, Bhuvaneswari Subramani, Vivek Raja P S
+- `COM321-R` The Agent Harness You Own on AWS for Regulated Industries — speakers: — → Jacky Chan
+- `COM321-R1` The Agent Harness You Own on AWS for Regulated Industries — speakers: — → Jacky Chan
+- `COM329` Sandboxing AI Agents on EKS: Isolation That Scales — speakers: Adit Modi → Adit Modi, Ishan Modi
+- `CON306-R1` Securing and optimizing your software supply chain with Amazon ECR — speakers: Meg Sarros, Mridul Chopra → Mridul Chopra, Purvi Goyal
+- `CON325` Running AI agents you can trust on Amazon EKS — speakers: Alex Kestner, Carlos Santana → Carlos Santana
+- `CON337-R` Decouple and scale Amazon ECS workloads with event-driven patterns — speakers: Masatoshi Hayashi, Olly Pomeroy → Masatoshi Hayashi, Matthew Meckes
+- `CON337-R1` Decouple and scale Amazon ECS workloads with event-driven patterns — speakers: Masatoshi Hayashi, Olly Pomeroy → Masatoshi Hayashi, Matthew Meckes
+- `CON405` Cloud-native Java on Amazon EKS — speakers: Andrei Shakirin, Dumitru Pascu, Sascha Moellering, Yuriy … → Andrei Shakirin, Dumitru Pascu, Laura Schlosser, Sascha M…
+- `COP205-S` Give Your Best Engineers Back to the Roadmap, Not the Pager (sponsored by NeuBird AI) — speakers: — → Ara Zarifian
+- `COP315-R` Automate patching and compliance with AI-powered visibility — speakers: Ali Alzand, Ganesh Sambandan, Justin Thomas, Ravindra Kor… → Ganesh Sambandan, Jim Grabinski, Justin Thomas, Ravindra …
+- …and 21 more
+
 ## 2026-10-09T01:22:09Z · https://catalog.awsevents.com/api/sessions
 
 Added 0 · removed 0 · changed 41
