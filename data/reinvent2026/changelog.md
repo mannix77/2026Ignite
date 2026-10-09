@@ -3,6 +3,53 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-10-09T01:22:09Z · https://catalog.awsevents.com/api/sessions
+
+Added 0 · removed 0 · changed 41
+
+**Changed**
+- `AIM205` Using AI for Impact: Achieving Sustainability and ROI on AWS — desc
+- `AIM250-S` Koa: NVIDIA Nemotron-Powered CRM Reasoning Inside Salesforce’s AWS Trust Boundary — title: NVIDIA Nemotron on AWS for Enterprise Agent Orchestration… → Koa: NVIDIA Nemotron-Powered CRM Reasoning Inside Salesfo…; level: 200 → 300; desc
+- `AIM391` Automate AI governance and risk management with John Deere — title: Automate AI governance and risk management → Automate AI governance and risk management with John Deere; desc
+- `DAT307-R` Build stateful agentic AI workflows with Aurora, MCP, and AgentCore — desc
+- `DAT307-R1` Build stateful agentic AI workflows with Aurora, MCP, and AgentCore — desc
+- `DAT307-R2` Build stateful agentic AI workflows with Aurora, MCP, and AgentCore — desc
+- `DAT410-R` Build agentic hybrid retrieval with Amazon Aurora PostgreSQL — desc
+- `DAT410-R1` Build agentic hybrid retrieval with Amazon Aurora PostgreSQL — desc
+- `DAT416-R` Build governed agentic AI search with Aurora, RDS, & Bedrock AgentCore — desc
+- `DAT416-R1` Build governed agentic AI search with Aurora, RDS, & Bedrock AgentCore — desc
+- `GHJ201-R` Cloud migration journey tabletop experience — title: Cloud Migration Journey Tabletop Experience → Cloud migration journey tabletop experience
+- `GHJ201-R1` Cloud migration journey tabletop experience — title: Cloud Migration Journey Tabletop Experience → Cloud migration journey tabletop experience
+- `GHJ203-R` Post-quantum cryptography tabletop experience — title: Post-Quantum Cryptography Tabletop Experience → Post-quantum cryptography tabletop experience
+- `GHJ203-R1` Post-quantum cryptography tabletop experience — title: Post-Quantum Cryptography Tabletop Experience → Post-quantum cryptography tabletop experience
+- `GHJ205-R` 3rd party risk management tabletop experience — title: 3rd Party Risk Management Tabletop Experience → 3rd party risk management tabletop experience
+- `GHJ205-R1` 3rd party risk management tabletop experience — title: 3rd Party Risk Management Tabletop Experience → 3rd party risk management tabletop experience
+- `GHJ207-R` Agentic AI governance tabletop experience — title: Agentic AI Governance Tabletop Experience → Agentic AI governance tabletop experience
+- `GHJ207-R1` Agentic AI governance tabletop experience — title: Agentic AI Governance Tabletop Experience → Agentic AI governance tabletop experience
+- `GHJ207-R2` Agentic AI governance tabletop experience — title: Agentic AI Governance Tabletop Experience → Agentic AI governance tabletop experience
+- `GHJ210-R` Incident response tabletop: supply chain — title: Incident Response Tabletop: Supply Chain → Incident response tabletop: supply chain
+- `GHJ210-R1` Incident response tabletop: supply chain — title: Incident Response Tabletop: Supply Chain → Incident response tabletop: supply chain
+- `HMC305-R1` Workload Identity Federation in multicloud environments — desc
+- `HMC313` How Emirates built Multicloud Agents with open-source Agentic AI Gateway — title: …multicloud AI agents with open-source LLM orchestration → …Multicloud Agents with open-source Agentic AI Gateway; desc
+- `HMC325` How 3M does multicloud incident management with AWS DevOps Agent — desc
+- `IND205` Modernizing Care for the Underserved: Montefiore's Cloud Journey — start: 2026-12-03T18:00:00Z → 2026-12-02T16:30:00Z; end: 2026-12-03T19:00:00Z → 2026-12-02T17:30:00Z; room: …Level 1 | Encore Ballroom 5 → …Upper Convention Promenade | Cristal 2 | Content Hub | B…; desc
+- `IND206` How Elevance Health Built a Trusted Data Foundation for AI-Native Member Experiences — title: …Delivers an AI-Native Member Experience on Real-Time Con… → …Built a Trusted Data Foundation for AI-Native Member Exp…; start: 2026-12-02T16:30:00Z → 2026-12-03T18:00:00Z; end: 2026-12-02T17:30:00Z → 2026-12-03T19:00:00Z; room: …Upper Convention Promenade | Cristal 2 | Content Hub | B… → …Level 1 | Encore Ballroom 5; desc
+- `IND3335` DTCC: Rethinking mainframe modernization with spec-driven development — start: 2026-12-03T18:30:00Z → 2026-12-01T00:30:00Z; end: 2026-12-03T19:30:00Z → 2026-12-01T01:30:00Z; room: …Purple Theater → …Red Theater
+- `IND3341` LSEG: Scaling multi-agent AI with assurance on Amazon Bedrock — start: 2026-12-01T00:30:00Z → 2026-12-03T18:30:00Z; end: 2026-12-01T01:30:00Z → 2026-12-03T19:30:00Z; room: …Red Theater → …Purple Theater
+- `IND350-R1` Build an Agentic AI Marketing Engine Powered by Amazon Bedrock — desc
+- `SEC302` Governance foundations for AI workloads that grow into autonomous agents — title: AI governance for autonomous agents with AWS Control Towe… → Governance foundations for AI workloads that grow into au…
+- `SEC322` Investigating Threats to AI: Incident Response to Compromised AI Workloads — title: …AI threats: extending IR to the generative AI layer → …Threats to AI: Incident Response to Compromised AI Workl…
+- `SEC388` How to solve for multicloud identity lifecycle management — desc
+- `SNR305` A leader's guide to escaping proof-of-concept purgatory — start: 2026-12-02T00:30:00Z → 2026-12-01T23:00:00Z; end: 2026-12-02T01:30:00Z → 2026-12-02T00:00:00Z
+- `SNR306` A leader’s guide to governing AI, on behalf of humans — start: 2026-12-02T21:00:00Z → 2026-12-02T21:30:00Z; end: 2026-12-02T22:00:00Z → 2026-12-02T22:30:00Z; room: Wynn/Encore | Level 1 | Encore Ballroom 5 → Venetian | Level 2 | Venetian Theatre
+- `SNR309` A leader's guide to why agentic AI just made your data problem urgent — start: 2026-12-03T22:30:00Z → 2026-12-03T17:00:00Z; end: 2026-12-03T23:30:00Z → 2026-12-03T18:00:00Z; room: Wynn/Encore | Level 1 | Encore Ballroom 5 → Venetian | Level 2 | Venetian Theatre
+- `SNR310` A leader's guide to what your board must know about AI (and shouldn't) — start: 2026-12-02T19:30:00Z → 2026-12-02T20:00:00Z; end: 2026-12-02T20:30:00Z → 2026-12-02T21:00:00Z; room: Wynn/Encore | Level 1 | Encore Ballroom 5 → Venetian | Level 2 | Venetian Theatre
+- `SNR316` A leader's guide to moving from AI investment gridlock to acceleration — start: 2026-12-01T22:30:00Z → 2026-12-02T00:30:00Z; end: 2026-12-01T23:30:00Z → 2026-12-02T01:30:00Z; room: Wynn/Encore | Level 1 | Encore Ballroom 5 → Venetian | Level 2 | Venetian Theatre
+- `SNR317` A leader's guide to scaling AI adoption without losing control — start: 2026-12-01T19:30:00Z → 2026-12-01T20:00:00Z; end: 2026-12-01T20:30:00Z → 2026-12-01T21:00:00Z; room: Wynn/Encore | Level 1 | Encore Ballroom 5 → Venetian | Level 2 | Venetian Theatre
+- `SNR320` A leader's guide to what separates AI leaders from the rest — start: 2026-12-01T21:00:00Z → 2026-12-01T21:30:00Z; end: 2026-12-01T22:00:00Z → 2026-12-01T22:30:00Z; room: Wynn/Encore | Level 1 | Encore Ballroom 5 → Venetian | Level 2 | Venetian Theatre
+- `SNR321` A leader's guide to security at the speed of AI, powered by Mythos — start: 2026-12-03T16:30:00Z → 2026-12-02T18:30:00Z; end: 2026-12-03T17:30:00Z → 2026-12-02T19:30:00Z; room: Wynn/Encore | Level 1 | Encore Ballroom 5 → Venetian | Level 2 | Venetian Theatre
+- `STG368` Deep dive into recent Amazon S3 launches — start: 2026-12-02T18:30:00Z → 2026-12-02T20:00:00Z; end: 2026-12-02T19:30:00Z → 2026-12-02T21:00:00Z; room: Caesars Palace | Promenade Level | Roman I → MGM Grand | Level 1 | Grand 119
+
 ## 2026-10-08T18:53:22Z · https://catalog.awsevents.com/api/sessions
 
 Added 0 · removed 1 · changed 11
