@@ -3,6 +3,85 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-10-10T06:59:34Z · https://catalog.awsevents.com/api/sessions
+
+Added 0 · removed 0 · changed 73
+
+**Changed**
+- `PEX322` Composable Agentic AI: Build Your Partner Offerings for Enterprises — speakers: — → Sindhura Palakodety, Sujatha Kuppuraju
+- `SEC104-S` Armis from ServiceNow:  See Everything, Know What Matters: Powered by AWS (sponsored by ServiceNow) — speakers: Steve Clark → Alex Mutschler, Steve Clark
+- `SEC106-S` AI Under Fire: How to Stop AI-Powered Attacks and Secure AI Coding (sponsored by Palo Alto Networks) — speakers: — → Andy Piazza
+- `SEC107-S` Ring's Security Evolution: From Doorbell to Enterprise Platform (sponsored by Ring LLC) — speakers: — → Harish Komaragiri
+- `SEC201-R1` Turn PQC readiness into the trust story your board needs — speakers: — → Angela Morrison, Jonathan Jenkyn
+- `SEC202` Track cross-domain attack vectors with AWS Security Hub extended — speakers: — → Frank Schwarzenau
+- `SEC204` Global Technical Capability Lead Key & Certificate Services — speakers: Patrick Palmer, Rushir Patel → Rushir Patel
+- `SEC205` Journey to post-quantum (PQ) authentication in AWS — speakers: Avni Rambhia → Avni Rambhia, Oren Nachman
+- `SEC210-S` Intent-Based Access Control for AI Agents that Actually Do Things (sponsored by WorkOS) — speakers: — → Michael Grinich
+- `SEC213-S` Agents can delete your data lake. Can you recover it? (sponsored by Rubrik) — speakers: — → Jérôme Cousin
+- `SEC231-S` Who’s Pulling the Strings? Securing GitHub from Rogue AI Agents (sponsored by Zscaler) — speakers: Brian Lazear → Mrigank Singh
+- `SEC234` EU operational autonomy in action: AWS European Sovereign Cloud — speakers: — → Zoltan Albrecht
+- `SEC237` Secure by design: the AWS foundation for your AI applications — speakers: Maitreya Ranganath → Josh Du Lac, Maitreya Ranganath
+- `SEC301-R1` Close the gap between alert and resolution without growing your security team — speakers: — → Himanshu Verma, Ryan Holland
+- `SEC308-R` Build a KMS key lifecycle dashboard with usage and cost insights — speakers: Alex Goff, Jeremy Stieglitz, Svenja Moehring, Tobias Nickl → Alex Goff, Jeremy Stieglitz, Jonas Buecker, Svenja Moehri…
+- `SEC308-R1` Build a KMS key lifecycle dashboard with usage and cost insights — speakers: — → Alex Goff, Jeremy Stieglitz, Jonas Buecker, Svenja Moehri…
+- `SEC313` Hands-on with the AWS Network Firewall proxy for secure egress — speakers: Anvesh Koganti, Preetkumar Shah, Rahi Patel → Anvesh Koganti, Geoff Sweet, Hunter Chilcote, Preetkumar …
+- `SEC318-R1` Cryptographic computing on AWS: homomorphic encryption in practice — speakers: — → Jonathan Herzog, Ruben Merz
+- `SEC323-R` Assume breach, prove recovery: a ransomware resilience workshop — speakers: Christopher Strug, Danny Wright, Jonathan Jenkyn, Rob Whi… → Christopher Strug, Danny Wright
+- `SEC323-R1` Assume breach, prove recovery: A ransomware resilience workshop — speakers: — → Christopher Strug, Danny Wright
+- `SEC327` Securing Multi-Agent Systems — speakers: Kunle Adeleke → Daniel Wells, Kunle Adeleke
+- `SEC3306` Fix a Security Hub finding once with four layers of controls — speakers: Luis Pastor, Todd Kudlicki → Maitreya Ranganath, Todd Kudlicki
+- `SEC331` Managing software vulnerabilities in the agentic world — speakers: Anthony Verleysen → Anthony Verleysen, Nirali Desai
+- `SEC338-R1` Automated memory forensics at scale with generative AI — speakers: — → Barry Conway
+- `SEC342` When security, speed, and trust all matter: Lessons from Project Glasswing — speakers: Clarke Rodgers → Clarke Rodgers, Hart Rossman
+- `SEC344` Zero trust for non-human identities: IAM for autonomous agents — speakers: Brendan Paul, Robert Albach, Rodney Underkoffler, Shimi R… → Brendan Paul, Rodney Underkoffler, Shimi Rokah, Yaniv Cadosh
+- `SEC347` Agentic AI for Security: How AWS CIRT reduced triage time to minutes — speakers: Joshua McKiddy → Brian Poole, Joshua McKiddy
+- `SEC350-R1` Shared judgment: security culture for the agentic era — speakers: — → Jonathan Jenkyn, Samantha Wylatowska
+- `SEC352-R1` Build a security boundary for AI agents with WAF and Network Firewall — speakers: — → Alin Scurtu, Leonardo Azize, PRAVEEN HOSUR NARAYANA GUPTA…
+- `SEC360` Innovation in identity security: how we protect the cloud & help you do it too — speakers: Ilya Epshteyn, Kristen Haught → Alan Garver, Ilya Epshteyn, Kristen Haught
+- `SEC365` Control what goes out: egress security for AI workloads — speakers: Sofía Aluma → Akshay Choudhry, Sofía Aluma
+- `SEC389-S` Secure Coding Agents for Regulated Environments with Amazon Bedrock AgentCore (sponsored by Act Security) — speakers: — → Offir Levy
+- `SEC391` Securing your AI-accelerated software supply chain with AWS Well-Architected — speakers: Anshu Bathla → Anshu Bathla, Rohit Verma
+- `SEC393` How Badger Meter unified customer identity for critical infrastructure — speakers: — → Abrom Douglas III, Jarred Kohout, Pranab Bora
+- `SEC404` Ship permissions faster: IAM policy tools in your CI/CD pipeline — speakers: Kevin Shanley, Moumita Saha, Todd Kudlicki → Diana Yin, Kevin Shanley, Moumita Saha, Todd Kudlicki
+- `SEC407-R1` Constrain AI agents with permissions boundaries and Cedar in AgentCore — speakers: — → David Sokolik, Ravid Glam
+- `SEC408-R1` Build a container pipeline that blocks tampered images at the gate — speakers: — → Andre Baumeier, Andrea Rossi, Desiree Brunner, Keerthana …
+- `SEC409` Threat detection and IR in AgentCore workloads — speakers: Nima Fotouhi → Mike Saintcross, Nima Fotouhi
+- `SEC412` Crossing the kill chain: IR when attackers pivot between clouds — speakers: Luis Pastor → Ameya Paldhikar, Geoff Sweet
+- `SEC425` From proofs to production: Neurosymbolic AI and provable security — speakers: — → Byron Cook
+- `SNR301` A leader's guide to predicting and proving AI value — speakers: Chris Hennesey → Chris Hennesey, Lindsey Drake
+- `SNR302` A leader's guide to the AI you haven't seen yet — speakers: — → Matt Wood
+- `SNR304` A leader's guide to how AI is changing Amazon’s ways of working — speakers: Stephen Brozovich → Ian Wilson, Stephen Brozovich
+- `SNR305` A leader's guide to escaping proof-of-concept purgatory — speakers: — → Rahul Pathak
+- `SNR308` A leader's guide to how Amazon built its data foundation for agents — speakers: — → Anas Fattahi, G2 Krishnamoorthy
+- `SNR321` A leader's guide to security at the speed of AI, powered by Mythos — speakers: — → Rush Carskadden
+- `STG305` Data protection and resilience with AWS storage — speakers: Danny Johnston, Steve Devos → Danny Johnston, Steve Devos, Stuart Lupton
+- `STG306` Amazon S3 Tables: A deep dive into storage built for Apache Iceberg — speakers: Adnan Pandjou, Yuri Zarubin → Yuri Zarubin
+- `STG326-R` Bring your S3 data to your compute with S3 Files — speakers: Andrew Peng, Prabir Sekhri, Tom McDonald → Prabir Sekhri, Tom McDonald
+- `STG326-R1` Bring your S3 data to your compute with S3 Files — speakers: Andrew Peng, Prabir Sekhri → Prabir Sekhri, Tom McDonald
+- `STG338-R` Simplify secure file sharing with Transfer Family no-code web apps — speakers: Emma Harrison → Emma Harrison, Madhukumar Adavi
+- `STG338-R1` Simplify secure file sharing with Transfer Family no-code web apps — speakers: Emma Harrison → Emma Harrison, Madhukumar Adavi
+- `STG345` Secure data transfers at scale with AWS DataSync and Transfer Family — speakers: Sachin Gupta → Manchun Yao, Randy Boutin, Sachin Gupta
+- `STG349` Choosing the right AWS storage for low-latency workloads — speakers: Aditi Garg, John Mallory → John Mallory, Mike Houle
+- `STG353` Optimize performance and cost for archival data with Amazon S3 — speakers: Amita Marconda, Kavya Munnuru → Amita Marconda, Howard Kang
+- `STG361` Break free from on-premises NAS: Migrating to AWS — speakers: Satya Vandrangi, Saurav Majumder → Saurav Majumder
+- `STG363` Modernizing VMware workloads with Amazon FSx for NetApp ONTAP — speakers: Ben Lipman, Satya Vandrangi → John Jamail, Satya Vandrangi
+- `STG367` Connect NetApp FSx for ONTAP File Data to AI Apps with S3 — speakers: Beerinder Mann → Beerinder Mann, Virgil Ennes
+- `STG422` Dive deep into resilience architectures for Amazon EBS — speakers: — → Barak Pinhas
+- `SVS208` How AI-native startups run untrusted agent code on Lambda MicroVMs — speakers: Ayush Kulkarni → Ayush Kulkarni, Shotaro Kohama
+- `SVS301-R` AWS Serverless developer experience — speakers: Marco Buss, Stephen Liedig → Stephen Liedig
+- `SVS301-R1` AWS Serverless developer experience — speakers: Marco Buss, Stephen Liedig → Stephen Liedig
+- `SVS319` Automating Serverless migrations at scale with AWS Transform — speakers: Ana Barragan, Bhuvan Annamreddi, Brian Krygsman, Dan Fox,… → Ana Barragan, Bhuvan Annamreddi, Dan Fox, Jonathan Tulian…
+- `SVS325-R` Distributed transactions with Step Functions and durable functions — speakers: Hugo Dominguez, Leticia Dornelas, Ricardo Marques, Robert… → Leticia Dornelas, Ricardo Marques, Roberto Perillo, Rogel…
+- `SVS325-R1` Distributed transactions with Step Functions and durable functions — speakers: Hugo Dominguez, Leticia Dornelas, Ricardo Marques, Robert… → Leticia Dornelas, Ricardo Marques, Roberto Perillo, Rogel…
+- `SVS328` Guardrails for AI-generated Serverless infrastructure — speakers: Tomas Mihalyi → Stan Fan, Tomas Mihalyi
+- `TNC101` AWS Technical Essentials — speakers: Christina Nayagam → —
+- `TNC105` AWS Certification & Proficiency Path: How to be Proficient in the Age of AI Agents? — speakers: — → Satabdi Das
+- `TNC216` Building an AI Travel Assistant with AgentCore Gateway — speakers: Jimmy Silva → Bruno Marcondes, Jimmy Silva
+- `TNC322-R` Building Wealth Advisor Agents with Full Stack Architecture — speakers: Mar Cánovas → Bruno Marcondes, Mar Cánovas
+- `TNC322-R1` Building Wealth Advisor Agents with Full Stack Architecture — speakers: Mar Cánovas → Bruno Marcondes, Mar Cánovas
+- `TNC333-R` Developing Apps from Specs with Kiro — speakers: Sam Shalil SHALIL → Bruno Marcondes, Sam Shalil SHALIL
+- `TNC333-R1` Developing Apps from Specs with Kiro — speakers: Sam Shalil SHALIL → Bruno Marcondes, Sam Shalil SHALIL
+
 ## 2026-10-10T01:19:36Z · https://catalog.awsevents.com/api/sessions
 
 Added 18 · removed 0 · changed 111
