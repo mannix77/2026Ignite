@@ -3,6 +3,113 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-10-10T01:19:36Z · https://catalog.awsevents.com/api/sessions
+
+Added 18 · removed 0 · changed 111
+
+**Added**
+- `SEC397` Securing APIs with AWS
+- `COP364` Build better, review faster: AI-Powered Well-Architected reviews
+- `SEC398` The latest innovations in multicloud agent security
+- `DVT346` What AI agents need from an application backend
+- `COP210` Fewer Incidents, Faster Fixes: Expert-led Cloud Operations on AWS
+- `COP358` Observe your applications and agents in one place
+- `SEC395` Find, prove, and fix code vulnerabilities at machine speed
+- `COP359` Build full-stack observability for agents and apps
+- `COP365` Allocate shared AWS infrastructure costs to your business units
+- `COP411` Close the gap between code and production
+- `AIM2210` What's new with NVIDIA GPUs in Amazon EC2
+- `SEC399` Maintain accountability when using IAM federation
+- `SEC3300` Authenticating workloads to the outside world
+- `DVT227` Build a team shared agent workflow from issue to tested PR
+- `COP356` Evaluate and ship AI agents confidently
+- `DVT224` Brownfield development across large codebases with AI agents
+- `DVT225` Best practices for helping agents understand code you didn't write
+- `DVT226` Best practices for working with shared coding agents on your team
+
+**Changed**
+- `AIM211` How Trainium powers the next AI frontier, from silicon to application — title: From chips to applications: How Trainium powers the next … → How Trainium powers the next AI frontier, from silicon to…; desc
+- `AIM214` How Vanguard uses SageMaker HyperPod from training to inference for custom LLMs — title: Maximizing GPU utilization for inference at scale on Amaz… → How Vanguard uses SageMaker HyperPod from training to inf…; desc
+- `AIM2213` How leading AI builders push the frontier with AWS Trainium — desc
+- `AIM304-R` Deploy and optimize world models with agentic AI workflows — desc
+- `AIM304-R1` Deploy and optimize world models with agentic AI workflows — desc
+- `AIM389-S` Fine-tune and evaluate NVIDIA Open models on Amazon SageMaker — title: …Nemotron 3 with Amazon SageMaker Serverless Fine-tuning … → …Open models on Amazon SageMaker; desc
+- `AIM393` Open weights to production: How Salesforce built and served Koa models — title: How BMW Group Built an Automotive Industry Model on SageM… → Open weights to production: How Salesforce built and serv…; desc
+- `AIM404-R` Build optimized, resilient inference endpoints on Amazon SageMaker AI — desc
+- `AIM404-R1` Build optimized, resilient inference endpoints on Amazon SageMaker AI — desc
+- `AIM439-R` Getting Started with AgentCore: ship an agent to production in 2 hours — title: …3 hours → …2 hours
+- `AIM439-R1` Getting Started with AgentCore: ship an agent to production in 2 hours — title: …3 hours → …2 hours
+- `COP209` Manage cloud costs and AI spend with AWS Cost Management — start: 2026-12-03T18:00:00Z → 2026-12-01T22:30:00Z; end: 2026-12-03T19:00:00Z → 2026-12-01T23:30:00Z; room: …Chairman's 363 | Content Hub | Red Theater → …Premier 318
+- `COP360` Monetizing your applications with AWS — start: 2026-12-01T22:30:00Z → 2026-12-03T18:00:00Z; end: 2026-12-01T23:30:00Z → 2026-12-03T19:00:00Z; room: …Premier 318 → …Chairman's 363 | Content Hub | Red Theater
+- `DVT213-S` Building an Open and Real-time Fraud and Decisioning Engine with Mastercard and Redis (sponsored by Redis) — speakers: — → Siva Palanisamy
+- `DVT218-S` Change. Wait. Debug. Let AI drive the infrastructure loop. (sponsored by HashiCorp) — speakers: — → Cole Morrison
+- `DVT222-S` Inside Real AI Software Factories: Lessons From the Teams Building Them (sponsored by LaunchDarkly) — speakers: Jonathan Nolen → Jonathan Nolen, Timothy Cook
+- `DVT305-R` Modernize your CI/CD pipeline with AWS — speakers: Phil Kang → Pablo Silva, Phil Kang
+- `DVT305-R1` Modernize your CI/CD pipeline with AWS — speakers: Phil Kang → Pablo Silva, Phil Kang
+- `DVT306-R` Deploy without drama: Safe, automated releases on AWS — speakers: Michael Michael → Anastasia Giannoulas, Michael Michael
+- `DVT306-R1` Deploy without drama: Safe, automated releases on AWS — speakers: Michael Michael → Anastasia Giannoulas, Michael Michael
+- `DVT329` How startups ship faster with Kiro — speakers: — → Helen Hasbun
+- `DVT330` Outrun technical debt in the age of autonomous development — speakers: Ali Maaz, Ritik Khatwani → Alessandro Lori, Ali Maaz, Ritik Khatwani
+- `DVT336-R` The AWS CLI in an Agentic World: Less Tokens, More Done — speakers: Alex Shovlin → Alex Shovlin, Liam Greenamyre
+- `DVT336-R1` The AWS CLI in an Agentic World: Less Tokens, More Done — speakers: Alex Shovlin → Alex Shovlin, Liam Greenamyre
+- `DVT340` Build on top of large codebases without breaking your code — speakers: — → Anil Maktala
+- `DVT405` Trusted intent: How Kiro proves your specs before writing any code — speakers: Nadia Labai → Brian Beach, Nadia Labai
+- `DVT413-R` Apply Amazon's frontier team playbook to your organization — speakers: Dan Kiuna → Alok Dhamanaskar, Dan Kiuna
+- `DVT413-R1` Apply Amazon's frontier team playbook to your organization — speakers: Dan Kiuna → Alok Dhamanaskar, Dan Kiuna
+- `DVT413-R2` Apply Amazon's frontier team playbook to your organization — speakers: Dan Kiuna → Alok Dhamanaskar, Dan Kiuna
+- `GHJ321` re:Architecture Rodeo: Transforming Customer Experience with AI — speakers: Jacob Scheatzle, Troy Dieter → Disha Jayswal, Jacob Scheatzle, Troy Dieter
+- `HMC206-S` Stop paying for idle GPUs on Amazon EKS (sponsored by Apptio) — speakers: Andrew Midgley → Andrew Midgley, Joe Dahlquist
+- `HMC303` Choosing the right hybrid deployment for your AI workloads — speakers: Chris McEvilly, Shivam Saggar → Chris McEvilly, Michael Kiermaier, Shivam Saggar
+- `HMC307` Scaling interactive generative AI at Netflix with AWS Local Zones — speakers: Daniel Heckenberg, Justin Rosen → Daniel Heckenberg, Justin Rosen, Mathew George
+- `HMC321` Multicloud Operating Models for ISVs — speakers: Dave Smith, Joachim Aumann → Dave Smith, Joachim Aumann, Olga Calvo
+- `HMC322` How Fidelity built a cloud-agnostic AI Gateway — speakers: Ellie Tamari → Ellie Tamari, Joe Cho
+- `HMC325` How 3M does multicloud incident management with AWS DevOps Agent — speakers: — → Chinnayya Ganachar
+- `HMC409-R` Deployment strategies for highly available edge applications — speakers: Afaq Khan, George Oakes, Vaibhav Phadnis → George Oakes
+- `HMC409-R1` Deployment strategies for highly available edge applications — speakers: George Oakes, Vaibhav Phadnis → George Oakes
+- `IND206` How Elevance Health Built a Trusted Data Foundation for AI-Native Member Experiences — speakers: Brian Cardinell, Navneet Srivastava → Brian Cardinell, Maddy Vasantham, Navneet Srivastava
+- `IND210-S` Molecule to Market: Bayer & Capgemini Accelerate Drug Discovery with NVIDIA BioNeMo (sponsored by NVIDIA) — speakers: — → Dr. Janosch Achenbach
+- `IND211-S` Winning the War on Fraud with Network-Powered Intelligence (sponsored by Vonage, Part of Ericsson) — speakers: Oscar Rodriguez → Oscar Rodriguez, Ramesh Krishnan
+- `IND215` Deploying Governed AI Agents in Clinical AI — speakers: — → Bret Borota
+- `IND305` AI for Impact: Elevating human potential through inclusive innovation — start: 2026-12-01T00:30:00Z → 2026-12-02T23:00:00Z; end: 2026-12-01T01:30:00Z → 2026-12-03T00:00:00Z
+- `IND311-R` Build a payment-enabled agent with Amazon Bedrock AgentCore Payments — speakers: Anil Nadiminti, Deepika Prabhakara, Guy Bachar, Jay Galvi… → Anil Nadiminti, Deepika Prabhakara, Jay Galvin, Karim Akacem
+- `IND311-R1` Build a payment-enabled agent with Amazon Bedrock AgentCore Payments — speakers: Anil Nadiminti, Deepika Prabhakara, Guy Bachar, Jay Galvi… → Anil Nadiminti, Deepika Prabhakara, Jay Galvin, Karim Akacem
+- `IND316-R` Best Practices for Successful Multiplayer Game Launches — speakers: Juho Jantunen → Chad Lingmann, Juho Jantunen
+- `IND316-R1` Best Practices for Successful Multiplayer Game Launches — speakers: Juho Jantunen → Chad Lingmann, Juho Jantunen
+- `IND323-R` Telecom Contact Centers: Design Patterns for integrated AI Agents — speakers: Shalima Bhalla → Robin Harwani, Shalima Bhalla
+- `IND323-R1` Telecom Contact Centers: Design Patterns for integrated AI Agents — speakers: Shalima Bhalla → Robin Harwani, Shalima Bhalla
+- `IND3306` How Ramp tracks and governs AI spend down to the team, model, and API key — speakers: Jigna Gandhi → Jigna Gandhi, Richard Wang, Siddhi Surana
+- `IND3308-S` Rise of Autonomous Clinical Data Management: AI Agents Accelerating Drug Development — speakers: — → Gaurav Sharma
+- `IND3311` How Santander governs hundreds of AI agents in production on Amazon Bedrock — start: 2026-12-02T18:00:00Z → 2026-12-02T23:00:00Z; end: 2026-12-02T19:00:00Z → 2026-12-03T00:00:00Z; room: …White Theater → …Red Theater
+- `IND3315` AI discipline: UCLA's data foundation and framework for saying no — start: 2026-12-02T23:00:00Z → 2026-12-01T00:30:00Z; end: 2026-12-03T00:00:00Z → 2026-12-01T01:30:00Z; speakers: Mary Strain → Aditya Singh, Mary Strain
+- `IND3330` State Street: AI agents that write, deploy, and govern at scale — speakers: Ata Turk, Vignesh Ashok kumar → Ata Turk, Manjit Chakraborty, Vignesh Ashok kumar
+- `IND3331` How Nordstrom, Coca-Cola Andina & Mondelez use agentic supply chains — speakers: Fernando Jana Vergara, Pawan Kushwaha, Sanjay Gurbuxani → Aparna Galiasso, Fernando Jana Vergara, Pawan Kushwaha, S…
+- `IND3337` The Trade Desk's Cloud Journey: AI-Assisted Optimization to AI Agents — speakers: Shreyas Shah, Tim Barnes → Sharik Pahwa, Shreyas Shah
+- `IND3341` LSEG: Scaling multi-agent AI with assurance on Amazon Bedrock — speakers: Richard Chester, Zan Kavtaskin → Christopher Hughes, Richard Chester, Zan Kavtaskin
+- `IND3342` How Stripe built an enterprise agent platform on Amazon Bedrock AgentCore — speakers: Hasan Tariq → Anupam Upadhyay, Hasan Tariq, Sharadh Krishnamurthy
+- `IND3343` NatWest: Embedding AI agents into the software delivery lifecycle — speakers: — → Diana Kennedy, Raj Dasoar
+- `IND3348` AI-Enabled SRE: Empowering Incident Commanders at Riot Games — speakers: Maxfield Stewart → Cory Ramirez, Randy James
+- `IND3350` Visa: Building autonomous defense for payments security in the agentic AI era — start: 2026-12-03T21:30:00Z → 2026-12-02T18:00:00Z; end: 2026-12-03T22:30:00Z → 2026-12-02T19:00:00Z; room: …Purple Theater → …White Theater
+- `IND3351` AT&T Expands Connectivity with AWS Interconnect and Amazon Leo — speakers: — → Gordon Shannon
+- `IND359-R` In-Country HPC: How TGS Processes Seismic Data on AWS Brazil — speakers: — → Faisal Asif, Kun Jiao
+- `IND359-R1` In-Country HPC: How TGS Processes Seismic Data on AWS Brazil — speakers: — → Faisal Asif, Kun Jiao
+- `IND368` Transform Episodic Content into High-Converting Microdramas — speakers: Brandon Lindauer, Chris Swan, Saurav Bhattacharya → Chris Swan, Saurav Bhattacharya
+- `IND370` Production Agentic Trading: Build the pipeline Moeve runs on AgentCore — speakers: Aristides Fernandez, Ignacio Rodr�guez Garc�a Rodr�guez G… → Aristides Fernandez, Ignacio Rodriguez Garcia
+- `IND394` Mastercard: Training a large transaction model on billions of transactions — speakers: Gurinder Singh, Steve Flinter → Gurinder Singh, Josh Allbright, Steve Flinter
+- `IND405-R` Build low latency real-time bidding workloads with AWS RTB Fabric — speakers: Gerry Louw, Sharik Pahwa → Gerry Louw
+- `IND405-R1` Build low latency real-time bidding workloads with AWS RTB Fabric — speakers: Gerry Louw, Sharik Pahwa → Gerry Louw
+- `INV503` Beyond Benchmarks: Evaluating AI Safety with Formal Guarantees — speakers: Weitong Ruan → Qian Hu, Weitong Ruan
+- `INV517` Prefill, decode, schedule: LLM inference without bubbles — speakers: — → Anthony Liguori
+- `INV525` Virtualization Architecture Behind AgentCore's Runtime Security Model — speakers: — → Marc Brooker
+- `INV528` State of the art Fairness and Admission Control — speakers: — → Colm MacCárthaigh
+- `MAM201` How IT leaders actually pulled off their cloud migrations — speakers: Boatner Blankenstein, Rama Kolli, Ravi Kishore → Akshay Sharma, Boatner Blankenstein, Rama Kolli, Ravi Kis…
+- `MAM312` Migrate on-premises storage to AWS with agentic AI — speakers: Kiran Chukkala → Kiran Chukkala, Martyn Storey
+- `MAM314` Your playbook: turn your scattered databases into AI-ready infrastructure — speakers: Aarthi Raju → Aarthi Raju, Sudhir Balasubramanian
+- `MAM326` What to do next after your cloud migration — speakers: Baruch Waknine, Caio Ribeiro Cesar, Yogi Barot → Baruch Waknine, Caio Ribeiro Cesar
+- `MAM328` Capital One's WorkSpaces Journey: 320 to 20,000 Desktops in 72hrs — speakers: Joshua Schlumpberger, Rafael Blanco → Joshua Schlumpberger, Rafael Blanco, Valeria Pascucci
+- `MAM343` Govern and optimize AI agents for desktop work on WorkSpaces — speakers: Dave Jaskie, Robert Fountain → Andrew Morgan
+- `MAM346` Your playbook for modernizing 988K lines of .NET in 2 days — speakers: Mustaali Dehnuwala → Anitha Deenadayalan, Mustaali Dehnuwala
+- …and 31 more
+
 ## 2026-10-09T18:51:56Z · https://catalog.awsevents.com/api/sessions
 
 Added 0 · removed 0 · changed 101
