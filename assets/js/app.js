@@ -1929,15 +1929,80 @@ function onRoute() {
 }
 
 function importShare(str) {
-  const parsed = store.parseShare(str, code => app.model.byCode.get(code)?.id || app.model.byGroup.get(code.replace(/-R\d+$/i, ''))?.[0]?.id, code => app.model.byCode.get(code)?.key);
+  const report = {};
+  const parsed = store.parseShare(str, code => app.model.byCode.get(code)?.id || app.model.byGroup.get(code.replace(/-R\d+$/i, ''))?.[0]?.id, code => app.model.byCode.get(code)?.key, report);
+  const skipped = [report.unknown.length ? `${report.unknown.length} code${report.unknown.length > 1 ? 's' : ''} not in this catalog: ${report.unknown.slice(0, 10).join(', ')}${report.unknown.length > 10 ? '…' : ''}.` : '',
+    report.invalid ? `${report.invalid} unreadable entr${report.invalid > 1 ? 'ies' : 'y'}.` : ''].filter(Boolean).join(' ');
   if (app.model.mode === 'official') for (const p of Object.values(parsed)) if (p.lockMode === 'preview') { p.lock = null; delete p.lockMode; }
   const n = Object.keys(parsed).length;
-  if (!n) { toast('That link had no picks in it'); return; }
-  if (confirm(`Import ${n} picks from the link? Ratings and locks for sessions you've already rated will be replaced; notes and reserved seats are kept.`)) {
-    store.applyShared(parsed);
-    toast(`Imported ${n} picks`);
-  }
+  if (!n) { toast(`That link had no picks this catalog knows${skipped ? ` (${skipped})` : ''}`); return; }
+  const pv = store.previewShared(parsed);
+  if (!pv.added.length && !pv.changed.length) { toast(`All ${n} picks in that link are already here${skipped ? `. ${skipped}` : ''}`); return; }
+  showImportPreview({ title: 'Picks from a link', pv, warn: skipped, note: 'Only the sessions in the link change. Your notes and reserved seats stay.',
+    apply: () => { store.applyShared(parsed); toast(`Applied ${pv.added.length + pv.changed.length} picks from the link`); } });
 }
+
+// ---------------------------------------------------------------- import preview
+//
+// A backup or picks link shows what it will change before anything is applied, with
+// clearly labelled choices (store.previewImport / previewShared use the same rules as
+// the import itself).
+
+const importDialog = $('#import-dialog');
+let pendingImport = null;
+
+const ratingName = p => (p == null ? 'not rated' : PRIORITY[p]);
+function importLine(id, text) {
+  const s = sessionById(id);
+  const code = s?.code || store.pick(id)?.code || id;
+  return `<li><span class="code">${esc(code)}</span>${esc(s ? s.title : 'Not in the current catalog')}${text ? ` · ${text}` : ''}</li>`;
+}
+function importSection(label, items) {
+  if (!items.length) return '';
+  const shown = items.slice(0, 40);
+  return `<h3>${esc(label)} (${items.length})</h3><ul class="imp-list">${shown.join('')}</ul>${items.length > shown.length ? `<p class="small muted">…and ${items.length - shown.length} more</p>` : ''}`;
+}
+
+// p: { title, pv (add/merge preview), note, apply(), replace?: { pv, apply() } }
+function showImportPreview(p) {
+  pendingImport = p;
+  const pv = p.pv;
+  const after = id => ratingName(pv.after?.[id]);
+  const changed = pv.changed.map(c => importLine(c.id, `${esc(ratingName(c.from))} → <span class="to">${esc(ratingName(c.to))}</span>`));
+  const added = pv.added.map(id => importLine(id, `<span class="to">${esc(after(id))}</span>`));
+  const removed = p.replace?.pv.removed || [];
+  importDialog.innerHTML = `<div class="imp-body">
+    <h2 id="import-title">${esc(p.title)}</h2>
+    <p class="small muted">${pv.changed.length} changed · ${pv.added.length} new · ${pv.unchanged} already the same. ${esc(p.note || '')}</p>
+    ${p.warn ? `<p class="small" style="color:var(--tight)">Left out: ${esc(p.warn)}</p>` : ''}
+    ${importSection('Changed', changed)}${importSection('New', added)}
+    ${p.replace ? `<p class="small"><b>Replace everything</b> makes this device match the backup exactly${removed.length ? `, and removes ${removed.length} pick${removed.length > 1 ? 's' : ''} that only this device has` : ''}.</p>
+      ${importSection('Replace would remove', removed.map(id => importLine(id, esc(ratingName(store.pick(id)?.p)))))}` : ''}
+  </div>
+  <div class="imp-actions">
+    <button class="btn primary" data-imp="add">${p.replace ? 'Add to what\'s here' : 'Apply these changes'}</button>
+    ${p.replace ? `<button class="btn" data-imp="replace">Replace everything on this device</button>` : ''}
+    <button class="btn ghost" data-imp="cancel">Cancel</button>
+  </div>`;
+  if (!importDialog.open) importDialog.showModal();
+  importDialog.querySelector('[data-imp="add"]').focus();
+}
+
+// Every button closes the dialog; only Add / Replace apply. (No 'close' listener: that event
+// arrives after a new preview may already be open, and would drop its pending import.)
+importDialog.addEventListener('click', e => {
+  const b = e.target.closest('[data-imp]');
+  if (!b) return;
+  const p = pendingImport;
+  pendingImport = null;
+  importDialog.close();
+  if (!p) return;
+  try {
+    if (b.dataset.imp === 'add') p.apply();
+    else if (b.dataset.imp === 'replace') p.replace.apply();
+  } catch (err) { toast(`Nothing was changed: ${err.message}`); }
+});
+importDialog.addEventListener('cancel', () => { pendingImport = null; }); // Esc
 
 function importFavorites() {
   const f = app.snapshot?.favorites;
@@ -2196,8 +2261,13 @@ main.addEventListener('change', e => {
     t.files[0].text().then(txt => {
       const obj = JSON.parse(txt);
       if (obj.conference && obj.conference !== app.conf.id && !confirm(`This backup is for ${CONFERENCES[obj.conference]?.name || obj.conference}, but you're viewing ${app.conf.name}. Import anyway?`)) return;
-      const n = store.importData(obj, { replace: confirm('Replace your current picks and settings with the backup? (Cancel = merge the picks in)') });
-      toast(`Restored ${n} picks`);
+      // Both previews run before anything changes, so an unreadable backup stops here.
+      const add = store.previewImport(obj, { replace: false });
+      const replace = store.previewImport(obj, { replace: true });
+      showImportPreview({ title: `Restore backup${obj.exportedAt ? ` from ${fmtStamp(obj.exportedAt)}` : ''}`, pv: add,
+        note: 'Adding keeps the newer rating for each session, and this device\'s notes and reserved seats.',
+        apply: () => { store.importData(obj, { replace: false }); toast(`Added ${add.added.length + add.changed.length} picks from the backup`); },
+        replace: { pv: replace, apply: () => { store.importData(obj, { replace: true }); toast('This device now matches the backup'); } } });
     }).catch(err => toast(`Couldn't read that file: ${err.message}`));
   }
 });
