@@ -3,6 +3,17 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-10-11T01:24:35Z · https://catalog.awsevents.com/api/sessions
+
+Added 0 · removed 0 · changed 5
+
+**Changed**
+- `AIM213` Scalable LLM inference, easy on the ops: CrowdStrike on SageMaker AI — desc
+- `AIM317-R` Get started on Amazon Bedrock — desc
+- `AIM317-R1` Get started on Amazon Bedrock — desc
+- `AIM377` Agentic platform design engineering: scaling AI agents across the enterprise. — title: The agent fabric: shipping your software into the agentic… → Agentic platform design engineering: scaling AI agents ac…; desc
+- `AIM451` Automated Reasoning as Agent Guardrails — title: Don’t trust the model: automated reasoning as agent guard… → Automated Reasoning as Agent Guardrails; desc
+
 ## 2026-10-10T06:59:34Z · https://catalog.awsevents.com/api/sessions
 
 Added 0 · removed 0 · changed 73
