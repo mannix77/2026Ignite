@@ -3,6 +3,24 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-10-11T18:50:53Z · https://catalog.awsevents.com/api/sessions
+
+Added 0 · removed 0 · changed 12
+
+**Changed**
+- `AIM305-R` Hands-on training world models and deploying agents for Physical AI — desc
+- `AIM305-R1` Hands-on training world models and deploying agents for Physical AI — desc
+- `AIM310` Inside AWS Trainium3: Hardware innovations for better AI economics — desc
+- `AIM311-R` From 1 to 20,000: Scale reliably on AWS Trainium with AWS EKS — desc
+- `AIM311-R1` From 1 to 20,000: Scale reliably on AWS Trainium with AWS EKS — desc
+- `AIM312-R` Beyond fine-tuning: RL for reasoning agents with AWS Trainium — desc
+- `AIM312-R1` Beyond fine-tuning: RL for reasoning agents with AWS Trainium — desc
+- `AIM323` Serving world models on AWS Trainium with native PyTorch — title: …World Model at scale with AWS Trainium and Native PyTorch → …world models on AWS Trainium with native PyTorch; desc
+- `AIM326-R` Scaling Frontier AI model inference on AWS Trainium — desc
+- `AIM326-R1` Scaling Frontier AI model inference on AWS Trainium — desc
+- `AIM329-R` Optimizing model performance with agentic loops on AWS Trainium — desc
+- `AIM329-R1` Optimizing model performance with agentic loops on AWS Trainium — desc
+
 ## 2026-10-11T01:24:35Z · https://catalog.awsevents.com/api/sessions
 
 Added 0 · removed 0 · changed 5
