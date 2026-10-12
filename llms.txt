@@ -1,0 +1,90 @@
+# Conference Planner
+
+> An unofficial, no-login web app (a PWA) for planning which sessions to attend at Microsoft Ignite 2026, Gartner IT Symposium/Xpo 2026 and AWS re:Invent 2026. The person rates sessions Must / Want / Maybe / Skip and the app builds a clash-free day plan. This guide tells an AI assistant how to read the session catalogs and how to give the person a link that sets their ratings in one step, instead of clicking through the app.
+
+App: https://mannix77.github.io/2026Ignite/
+
+## The rule that matters: send the link, don't open it yourself
+
+Picks are saved only in the browser that opens the app (its local storage), separately for each device, each browser, the installed Home Screen app, and each copy of the site (a colleague's copy such as `/gino/` keeps its own picks apart from the main site). If you open an import link in your own browser, the ratings are saved there and the person never sees them; it looks like "the app doesn't save".
+
+So: build the link, then **give it to the person** and ask them to open it on their own phone or computer, in the same browser or Home Screen app they use for the planner. The app shows what the link will change and asks them to confirm. Do not click through the app to rate sessions for them.
+
+## Conferences and catalogs
+
+Each catalog is a JSON file, public and updated by the site's scheduled sync. Use the conference id in links.
+
+- Microsoft Ignite 2026, id `ignite2026`: https://mannix77.github.io/2026Ignite/data/ignite2026/sessions.json
+- Gartner IT Symposium/Xpo 2026, id `gartner2026`: https://mannix77.github.io/2026Ignite/data/gartner2026/sessions.json
+- AWS re:Invent 2026, id `reinvent2026`: https://mannix77.github.io/2026Ignite/data/reinvent2026/sessions.json
+
+Each file is `{"generatedAt": ..., "sessions": [...]}`. Fields of a session that matter:
+
+- `code`: the session code to use in links (e.g. `BRK201`, Gartner's `11b`, re:Invent's `AIM314-R`). Case matters.
+- `title`, `desc`: what the session is about.
+- `type`, `level` (100-400), `topics`, `tags`, `audience`: for matching the person's interests.
+- `speakers`: a list of `[name, company, title]`.
+- `start`, `end`: ISO times in UTC, or `null` while the conference hasn't published times. `room`: the room, or `null`.
+- `recorded`: `true` if a recording is expected (a candidate for "watch later").
+- `group` and `repeats`: runs of the same session share a `group`; `repeats` lists the other runs' codes. Rate **one** code per group; the planner picks the best run. To choose a run yourself, lock it (see below).
+
+## The import link
+
+    https://mannix77.github.io/2026Ignite/?conf=<conference id>#/import/<token>~<token>~...
+
+One token per session, joined by `~`. A token is:
+
+    CODE.P[sSCORE][w][!RUN]
+
+- `CODE`: the session's `code` from the catalog.
+- `.P`: the rating: `3` Must, `2` Want, `1` Maybe, `0` Skip. Required.
+- `sSCORE` (optional): the person's own score, 0 to 100 with at most one decimal (`s87.5`). It ranks sessions within a rating. A score above 100 is dropped and the rating kept.
+- `w` (optional): watch the recording later instead of attending.
+- `!RUN` (optional): lock this run, using the `code` of the run to attend (the same code, or one from `repeats`).
+
+Tokens the app can't read are skipped; the rest of the link still imports.
+
+### Accepted tokens
+
+- `BRK201.3` Must
+- `BRK201.0` Skip
+- `BRK201.2s0` Want, own score 0
+- `BRK201.2s100` Want, own score 100
+- `BRK201.2s100.5` Want; the score is dropped (above 100)
+- `BRK201.1w` Maybe, watch the recording later
+- `BRK201.3s92.5w!BRK201` Must, own score 92.5, watch later, run BRK201 locked
+
+### Ignored tokens
+
+- `BRK201.4` (the rating must be 0 to 3)
+- `BRK201.3s92.55` (at most one decimal in a score)
+- `BRK201.3s1000` (a score has at most three digits)
+- `BRK201.Must` (the rating is a digit)
+- `BRK201` (no rating)
+- `BRK201.3 w` (no spaces inside a token)
+
+### Worked example
+
+"Must for AIM314, the Wednesday afternoon run (AIM314-R1), Want AIM326 with my score 87.5, Maybe BIZ333 as a recording, skip CMP323" at re:Invent:
+
+https://mannix77.github.io/2026Ignite/?conf=reinvent2026#/import/AIM314-R.3!AIM314-R1~AIM326-R.2s87.5~BIZ333.1w~CMP323-R.0
+
+## What opening the link changes
+
+- Only the sessions in the link change. Every other rating stays as it was.
+- For a listed session the link's rating, score, watch-later choice and lock replace the old ones.
+- The person's notes are kept, and so is a seat they reserved (a reserved run stays locked).
+- The person sees "Import N picks from the link?" and must confirm; nothing changes if they cancel.
+
+## Limits
+
+- Keep each link under about 2,000 characters (roughly 100 sessions). For more, split the tokens over several links and have the person open them one after another; each one merges.
+- Use the conference's own id in `?conf=`; a code from another conference is skipped.
+- Copy codes exactly from the catalog. A code that isn't in the catalog is skipped.
+
+## Coming soon
+
+- Reading the person's current picks: a "Copy my picks for AI" button that gives the person text to paste to you.
+- A link that sets the person's preferences (interests, goals) as well as ratings.
+
+Until then, ask the person which sessions they have already rated.

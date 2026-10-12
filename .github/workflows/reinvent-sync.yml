@@ -78,42 +78,13 @@ jobs:
           print("error=" + " ".join(str(e).split())[:1000])
           PY
 
-      # Same retry scheme as the Ignite job: a summary that can't be posted is kept in
-      # data/reinvent2026/pending-summary.md (committed below) and retried next run.
-      - name: Post the change summary to the tracking issue
-        id: notify
-        if: steps.window.outputs.active == 'true' && (steps.sync.outputs.changed == 'true' || hashFiles('data/reinvent2026/pending-summary.md') != '')
-        continue-on-error: true
-        env:
-          GH_TOKEN: ${{ github.token }}
-          LOG_URL: ${{ github.server_url }}/${{ github.repository }}/blob/main/data/reinvent2026/changelog.md
-        run: |
-          set -e
-          pending=data/reinvent2026/pending-summary.md
-          new="$RUNNER_TEMP/summary.md"
-          body="$RUNNER_TEMP/post.md"
-          : > "$body"
-          [ -s "$pending" ] && { echo "_Delayed summary from an earlier sync:_" >> "$body"; cat "$pending" >> "$body"; echo >> "$body"; }
-          [ -s "$new" ] && cat "$new" >> "$body"
-          [ -s "$body" ] || exit 0
-          echo >> "$body"
-          echo "_Full history: [changelog.md]($LOG_URL)_" >> "$body"
-          post() {
-            gh label create reinvent-changes --color ff9900 --description "re:Invent catalog change log" 2>/dev/null || true
-            num=$(gh issue list --label reinvent-changes --state open --limit 1 --json number --jq '.[0].number // empty')
-            if [ -z "$num" ]; then
-              url=$(gh issue create --label reinvent-changes --title "re:Invent 2026 catalog changes" \
-                --body "The scheduled re:Invent sync adds a comment here whenever the session catalog changes (new, removed, retimed or moved sessions). Subscribe to this issue to get notified. The full history is in data/reinvent2026/changelog.md.")
-              num="${url##*/}"
-            fi
-            gh issue comment "$num" --body-file "$body"
-          }
-          if post; then
-            rm -f "$pending"
-          else
-            cp "$body" "$pending"
-            exit 1
-          fi
+      # Same order as the Ignite job (specs/features/change-notices.feature): queue the summary in
+      # data/reinvent2026/pending-summary.md, push it with the catalog, only then post it, and push
+      # the cleared file. A failed push posts nothing; a failed post stays pending for the next run;
+      # a summary already on the issue is never posted twice.
+      - name: Queue the change summary
+        if: steps.window.outputs.active == 'true' && steps.sync.outputs.changed == 'true'
+        run: python3 scripts/post_summary.py stage --pending data/reinvent2026/pending-summary.md --new "$RUNNER_TEMP/summary.md" --id "$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
 
       # Commit only on changes. A fresh snapshot differs on every fetch (fetchedAt, raw
       # fields the app ignores), so it's kept only when the normalized catalog changed.
@@ -143,6 +114,42 @@ jobs:
             sleep $((i * 10))
           done
           echo "::error::Could not push the re:Invent catalog update"
+          exit 1
+
+      - name: Post the change summary to the tracking issue
+        id: notify
+        if: steps.window.outputs.active == 'true' && hashFiles('data/reinvent2026/pending-summary.md') != ''
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          LOG_URL: ${{ github.server_url }}/${{ github.repository }}/blob/main/data/reinvent2026/changelog.md
+        run: |
+          printf '_Full history: [changelog.md](%s)_\n' "$LOG_URL" > "$RUNNER_TEMP/footer.md"
+          python3 scripts/post_summary.py post --pending data/reinvent2026/pending-summary.md \
+            --current "$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT" --label reinvent-changes --color ff9900 \
+            --description "re:Invent catalog change log" --title "re:Invent 2026 catalog changes" \
+            --footer "$RUNNER_TEMP/footer.md" \
+            --issue-body "The scheduled re:Invent sync adds a comment here whenever the session catalog changes (new, removed, retimed or moved sessions). Subscribe to this issue to get notified. The full history is in data/reinvent2026/changelog.md."
+
+      # Push what was posted (the file is cleared or shorter). If this push fails nothing is lost:
+      # the next run finds the summary already on the issue and clears it then.
+      - name: Commit the cleared summary
+        if: steps.notify.outcome != 'skipped'
+        continue-on-error: true
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          d=data/reinvent2026
+          git add -A -- "$d/pending-summary.md"
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "Clear posted re:Invent change summary"
+          for i in 1 2 3; do
+            git pull --rebase --autostash && git push && exit 0
+            sleep $((i * 10))
+          done
+          echo "::warning::Could not push the cleared summary; the next run clears it without posting it again"
           exit 1
 
       - name: Redeploy the site

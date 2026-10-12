@@ -23,13 +23,29 @@ export function bldgChip(loc) {
   return `<span class="chip bldg" style="--bc: var(--b-${color})" title="${attr(name)}">${esc(v.buildingLabel(loc))}</span>`;
 }
 
+// A reservation time is an instant. Shown in the viewer's own zone (timeZone left undefined =
+// the browser's), labelled by Intl (EDT, PDT, GMT+9); pass a zone only to pin it, as tests do.
+export function rsvpOpensText(iso, timeZone) {
+  const when = typeof iso === 'string' ? new Date(iso) : null;
+  if (!when || Number.isNaN(when.getTime())) return '';
+  return when.toLocaleString('en-US', { timeZone, month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' });
+}
+
 export function rsvpChip(s) {
   if (!s.rsvp) return '';
-  const when = typeof s.rsvp === 'string' ? new Date(s.rsvp) : null;
-  const t = when && !Number.isNaN(when.getTime())
-    ? `Reservation required. Seats are limited; reservations open ${when.toLocaleString('en-US', { timeZone: 'America/Los_Angeles', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })} PT`
-    : 'Reservation required. Seats are limited';
+  const when = rsvpOpensText(s.rsvp);
+  const t = when ? `Reservation required. Seats are limited; reservations open ${when}` : 'Reservation required. Seats are limited';
   return `<span class="chip rsvp" title="${attr(t)}">RSVP</span>`;
+}
+
+// Seat availability from the attendee's portal export (re:Invent), at export time.
+export function availChip(s) {
+  const a = s.availability;
+  if (a === 'session_full') return '<span class="chip full" title="Reservations are gone; a walk-up line forms before the start">Session full</span>';
+  if (a === 'walk_up_only') return '<span class="chip walkup" title="No reservations for this session: arrive early">Walk-up</span>';
+  if (a === 'waitlist') return '<span class="chip walkup" title="Reservations are gone; you can join the waitlist">Waitlist</span>';
+  if (a === 'reserve_a_seat' && s.fewSeatsLeft) return '<span class="chip few" title="Reserve soon">Few seats left</span>';
+  return '';
 }
 
 export function recChip(s) {
@@ -87,7 +103,7 @@ export function sessionCard(s, opts = {}) {
     <div class="top"><span class="code">${esc(s.code)}</span>·<span>${esc(s.type)}</span>${s.level ? `·<span>${esc(s.level)}</span>` : ''}${s.dur ? `·<span>${fmtDuration(s.dur)}</span>` : ''}
       ${opts.isNew ? '<span class="chip new">New</span>' : ''}${s.repeats?.length ? `<span class="chip" title="Also runs as ${attr(s.repeats.join(', '))}">Repeats</span>` : ''}${scoreChip(opts.score)}${opts.watch ? '<span class="chip watch" title="On your watch-later list, not in the live plan">Watch later</span>' : ''}</div>
     <a class="title" href="#/session/${encodeURIComponent(s.code)}" data-act="open" data-key="${attr(s.key)}">${esc(s.title)}</a>
-    <div class="meta">${timeChip}<span>${esc(whenText(s))}</span>${!s.onlineOnly ? `${s.loc.known ? bldgChip(s.loc) : ''}<span class="muted">${esc(s.roomLabel || '')}</span>` : ''}${recChip(s)}${opts.reserved ? '<span class="chip new" title="You reserved a seat for this run">Reserved</span>' : rsvpChip(s)}</div>
+    <div class="meta">${timeChip}<span>${esc(whenText(s))}</span>${!s.onlineOnly ? `${s.loc.known ? bldgChip(s.loc) : ''}<span class="muted">${esc(s.roomLabel || '')}</span>` : ''}${recChip(s)}${opts.reserved ? '<span class="chip new" title="You reserved a seat for this run">Reserved</span>' : rsvpChip(s) + availChip(s)}</div>
     ${!opts.compact && s.speakers?.length ? `<div class="who">${speakersLine(s)}</div>` : ''}
     ${opts.extra || ''}
     ${opts.noActions ? '' : `<div class="actions">${prioControl(s.key, p)}</div>`}
@@ -154,4 +170,24 @@ export async function copyText(text) {
     ta.remove();
     return ok;
   }
+}
+
+const SEAT_TEXT = {
+  reserved: 'You hold a reserved seat',
+  reserve_a_seat: few => `Seats to reserve${few ? ', few left' : ''}`,
+  session_full: 'Full: reservations are gone; a walk-up line forms before the start (arrive 15 min early)',
+  walk_up_only: 'Walk-up only: no reservations, arrive early',
+  waitlist: 'Full: you can join the waitlist',
+};
+
+// The "Seats" row of the session detail: the availability, then capacity and seats left, each shown
+// when it is known (seats left needs no capacity).
+export function seatsDetail(s) {
+  const t = s.availability && Object.hasOwn(SEAT_TEXT, s.availability) ? SEAT_TEXT[s.availability] : null;
+  if (t == null) return '';
+  const base = typeof t === 'function' ? t(s.fewSeatsLeft) : t;
+  const cap = Number.isInteger(s.capacity) ? `${s.capacity} seats` : '';
+  const left = Number.isInteger(s.seatsRemaining) ? `${s.seatsRemaining} left at export` : '';
+  const extra = [cap, left].filter(Boolean).join(', ');
+  return extra ? `${base} · ${extra}` : base;
 }

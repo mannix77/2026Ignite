@@ -1,8 +1,8 @@
 // Conference Planner — views, routing and event handling.
 
 import * as store from './store.js';
-import { fetchAll, buildModel, diffKnown, snapshot, cacheUrl, exportAge, customRecords, catalogMatch, CUSTOM_DATA, DATA_OVERRIDE } from './data.js';
-import { checkLive, diff as liveDiff } from './live.js';
+import { fetchAll, buildModel, diffKnown, snapshot, cacheUrl, exportAge, customRecords, catalogMatch, seatsSig, CUSTOM_DATA, DATA_OVERRIDE } from './data.js';
+import { checkLive, diff as liveDiff, changeCounts, countsLine } from './live.js';
 import { optimize, decisionGroups, transitions, fillers, nowNext, weigh, canBoth, overlaps, transition, compareOptions, lunchConfig, arrivalExtra, PRIORITY } from './planner.js';
 import { fmtTime, fmtDay, fmtDuration, relTime, nowLocal, addDays } from './time.js';
 import { createVenue, setVenue, walkMinutes } from './venue.js';
@@ -10,8 +10,8 @@ import { CONFERENCES, currentConferenceId, rememberConference, conferenceList } 
 import { buildSuggester } from './suggest.js';
 import { createRanker, partition, profileConfig, profileGroups, GOALS } from './profile.js';
 import { storageStatus, backupReminder, backupAge } from './health.js';
-import { INSTANCE_LABEL, nsKey } from './instance.js';
-import { esc, attr, icon, bldgChip, recChip, rsvpChip, prioPill, scoreChip, whenText, prioControl, sessionCard, cardClass, toast, shareOrDownload, copyText, speakersLine, setHostCompany } from './ui.js';
+import { INSTANCE_LABEL, nsKey, guideUrl } from './instance.js';
+import { esc, attr, icon, bldgChip, recChip, rsvpChip, rsvpOpensText, seatsDetail, prioPill, scoreChip, whenText, prioControl, sessionCard, cardClass, toast, shareOrDownload, copyText, speakersLine, setHostCompany } from './ui.js';
 
 const $ = (sel, root = document) => root.querySelector(sel);
 const main = $('#main');
@@ -1444,7 +1444,7 @@ function rsvpBanner(plan) {
     const open = !opens || new Date(opens).getTime() <= Date.now();
     const list = need.map(x => `<a href="${attr(app.conf.sessionUrl(x.s))}" target="_blank" rel="noopener">${esc(x.code)}</a>`).join(', ');
     parts.push(`<div class="banner ${open ? 'warn' : ''}">${icon(open ? 'warn' : 'bell')}<div><b>${need.length} of your Must/Want picks need a seat reservation</b>
-      <p>${open ? `Seats are limited: reserve on ${esc(app.conf.siteName)}, then tap <b>I reserved a seat</b> on the session.` : opens ? `Reservations open ${esc(fmtStamp(opens))}. Seats are limited.` : 'Seats are limited.'}</p>
+      <p>${open ? `Seats are limited: reserve on ${esc(app.conf.siteName)}, then tap <b>I reserved a seat</b> on the session.` : opens ? `Reservations open ${esc(rsvpOpensText(opens) || String(opens))}. Seats are limited.` : 'Seats are limited.'}</p>
       <details><summary class="small">Show which</summary><p class="small">${list}</p></details></div></div>`);
   }
   return parts.join('');
@@ -1468,8 +1468,8 @@ function diffHtml(fields) {
 
 function changeItems(b) {
   return [
-    ...(b.added || []).map(x => ({ ...x, k: 'Added' })),
-    ...(b.removed || []).map(x => ({ ...x, k: 'Removed' })),
+    ...(b.added || []).map(x => ({ ...x, k: x.repeat ? 'Run added' : 'Added' })),
+    ...(b.removed || []).map(x => ({ ...x, k: x.repeat ? 'Run removed' : 'Removed' })),
     ...(b.changed || []).map(x => ({ ...x, k: 'Changed' })),
   ];
 }
@@ -1541,7 +1541,7 @@ function renderChanges() {
     if (app.live && !app.live.same) {
       const items = changeItems(app.live.diff).filter(x => !onlyMine || isMine(x));
       parts.push(`<section class="card batch" style="margin-top:14px"><header><b>Live on ${esc(app.conf.siteName)} now</b><span class="muted small">not yet in the history log</span><span class="spacer"></span>
-        <span class="small muted">+${app.live.diff.added.length} · −${app.live.diff.removed.length} · ~${app.live.diff.changed.length}</span></header>${changeList(items, isMine)}</section>`);
+        <span class="small muted">${countsLine(app.live.diff)}</span></header>${changeList(items, isMine)}</section>`);
     }
   }
   parts.push(`<div class="row" style="margin:16px 0 8px"><h2 style="margin:0">History</h2><span class="spacer"></span>
@@ -1555,7 +1555,7 @@ function renderChanges() {
     if (onlyMine && !items.length && !b.milestones?.length) continue;
     parts.push(`<section class="card batch">
       <header><b>${esc(fmtStamp(b.at))}</b><span class="muted small">${esc(relTime(b.at))}</span>
-        <span class="spacer"></span><span class="small muted">+${n(b.added?.length)} · −${n(b.removed?.length)} · ~${n(b.changed?.length)}</span>${!seen || b.at > seen ? '<span class="chip new">New</span>' : ''}</header>
+        <span class="spacer"></span><span class="small muted">${countsLine(b)}</span>${!seen || b.at > seen ? '<span class="chip new">New</span>' : ''}</header>
       ${(b.milestones || []).map(m => `<div class="milestone">${esc(m)}</div>`).join('')}
       ${changeList(items, isMine)}</section>`);
   }
@@ -1687,6 +1687,7 @@ function renderSettings() {
       <div class="field" style="grid-template-columns:1fr;margin-top:10px"><label for="import-code">Import picks from a link<small>Paste a link copied on another device (e.g. Safari → Home Screen app)</small></label></div>
       <div class="row"><input id="import-code" type="text" inputmode="url" autocomplete="off" placeholder="https://…#/import/…" style="flex:1;min-width:0;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--surface)">
         <button class="btn small" data-act="import-code">Import</button></div>
+      <p class="small muted" style="margin-top:10px">Using an AI assistant? Point it at <a href="${attr(guideUrl(location.href))}" target="_blank" rel="noopener">${esc(guideUrl(location.href))}</a>; it explains how to make an import link for you to open here.</p>
       ${app.conf.live ? `<h3 style="margin-top:14px">Email alerts for your picks</h3>
       <p class="small muted">The cloud sync posts every catalog change as a GitHub issue comment (GitHub can email you). It stars changes to codes in <code>${esc(app.conf.dataDir)}/watchlist.json</code>. Copy your Must/Want list, then paste it into that file.</p>
       <div class="row"><button class="btn small" data-act="watchlist">Copy watchlist</button>
@@ -1752,7 +1753,8 @@ function renderDetail(s) {
         <dt>When</dt><dd>${esc(whenText(s))}</dd>
         <dt>Where</dt><dd>${s.onlineOnly ? 'Online' : `${bldgChip(s.loc)} ${esc(s.roomLabel)}`}</dd>
         <dt>Recording</dt><dd>${s.recorded === true ? 'Will be recorded: you can watch it later' : s.recorded === false ? '<b>Not recorded</b>: in person only' : 'Unknown'}</dd>
-        ${s.rsvp ? `<dt>Reservation</dt><dd><b>Required</b>, seats are limited${typeof s.rsvp === 'string' ? `. Opens ${esc(fmtStamp(s.rsvp))} on ${esc(app.conf.siteName)}` : ''}${gp?.reserved ? '. <b>You reserved a seat.</b>' : ''}</dd>` : ''}
+        ${s.rsvp ? `<dt>Reservation</dt><dd><b>Required</b>, seats are limited${typeof s.rsvp === 'string' ? `. Opens ${esc(rsvpOpensText(s.rsvp) || String(s.rsvp))} on ${esc(app.conf.siteName)}` : ''}${gp?.reserved ? '. <b>You reserved a seat.</b>' : ''}</dd>` : ''}
+        ${seatsDetail(s) ? `<dt>Seats</dt><dd>${esc(seatsDetail(s))}</dd>` : ''}
         <dt>Format</dt><dd>${esc((s.delivery || []).join(', ') || '—')}${s.remote ? ' · remote viewing rooms available' : ''}</dd>
         ${s.audience?.length ? `<dt>${app.conf.id === 'gartner2026' ? 'Program' : 'Audience'}</dt><dd>${esc(s.audience.join(', '))}</dd>` : ''}
         ${s.topics?.length ? `<dt>Topics</dt><dd>${esc(s.topics.join(', '))}</dd>` : ''}
@@ -1929,15 +1931,80 @@ function onRoute() {
 }
 
 function importShare(str) {
-  const parsed = store.parseShare(str, code => app.model.byCode.get(code)?.id || app.model.byGroup.get(code.replace(/-R\d+$/i, ''))?.[0]?.id, code => app.model.byCode.get(code)?.key);
+  const report = {};
+  const parsed = store.parseShare(str, code => app.model.byCode.get(code)?.id || app.model.byGroup.get(code.replace(/-R\d+$/i, ''))?.[0]?.id, code => app.model.byCode.get(code)?.key, report);
+  const skipped = [report.unknown.length ? `${report.unknown.length} code${report.unknown.length > 1 ? 's' : ''} not in this catalog: ${report.unknown.slice(0, 10).join(', ')}${report.unknown.length > 10 ? '…' : ''}.` : '',
+    report.invalid ? `${report.invalid} unreadable entr${report.invalid > 1 ? 'ies' : 'y'}.` : ''].filter(Boolean).join(' ');
   if (app.model.mode === 'official') for (const p of Object.values(parsed)) if (p.lockMode === 'preview') { p.lock = null; delete p.lockMode; }
   const n = Object.keys(parsed).length;
-  if (!n) { toast('That link had no picks in it'); return; }
-  if (confirm(`Import ${n} picks from the link? Ratings and locks for sessions you've already rated will be replaced; notes and reserved seats are kept.`)) {
-    store.applyShared(parsed);
-    toast(`Imported ${n} picks`);
-  }
+  if (!n) { toast(`That link had no picks this catalog knows${skipped ? ` (${skipped})` : ''}`); return; }
+  const pv = store.previewShared(parsed);
+  if (!pv.added.length && !pv.changed.length) { toast(`All ${n} picks in that link are already here${skipped ? `. ${skipped}` : ''}`); return; }
+  showImportPreview({ title: 'Picks from a link', pv, warn: skipped, note: 'Only the sessions in the link change. Your notes and reserved seats stay.',
+    apply: () => { store.applyShared(parsed); toast(`Applied ${pv.added.length + pv.changed.length} picks from the link`); } });
 }
+
+// ---------------------------------------------------------------- import preview
+//
+// A backup or picks link shows what it will change before anything is applied, with
+// clearly labelled choices (store.previewImport / previewShared use the same rules as
+// the import itself).
+
+const importDialog = $('#import-dialog');
+let pendingImport = null;
+
+const ratingName = p => (p == null ? 'not rated' : PRIORITY[p]);
+function importLine(id, text) {
+  const s = sessionById(id);
+  const code = s?.code || store.pick(id)?.code || id;
+  return `<li><span class="code">${esc(code)}</span>${esc(s ? s.title : 'Not in the current catalog')}${text ? ` · ${text}` : ''}</li>`;
+}
+function importSection(label, items) {
+  if (!items.length) return '';
+  const shown = items.slice(0, 40);
+  return `<h3>${esc(label)} (${items.length})</h3><ul class="imp-list">${shown.join('')}</ul>${items.length > shown.length ? `<p class="small muted">…and ${items.length - shown.length} more</p>` : ''}`;
+}
+
+// p: { title, pv (add/merge preview), note, apply(), replace?: { pv, apply() } }
+function showImportPreview(p) {
+  pendingImport = p;
+  const pv = p.pv;
+  const after = id => ratingName(pv.after?.[id]);
+  const changed = pv.changed.map(c => importLine(c.id, `${esc(ratingName(c.from))} → <span class="to">${esc(ratingName(c.to))}</span>`));
+  const added = pv.added.map(id => importLine(id, `<span class="to">${esc(after(id))}</span>`));
+  const removed = p.replace?.pv.removed || [];
+  importDialog.innerHTML = `<div class="imp-body">
+    <h2 id="import-title">${esc(p.title)}</h2>
+    <p class="small muted">${pv.changed.length} changed · ${pv.added.length} new · ${pv.unchanged} already the same. ${esc(p.note || '')}</p>
+    ${p.warn ? `<p class="small" style="color:var(--tight)">Left out: ${esc(p.warn)}</p>` : ''}
+    ${importSection('Changed', changed)}${importSection('New', added)}
+    ${p.replace ? `<p class="small"><b>Replace everything</b> makes this device match the backup exactly${removed.length ? `, and removes ${removed.length} pick${removed.length > 1 ? 's' : ''} that only this device has` : ''}.</p>
+      ${importSection('Replace would remove', removed.map(id => importLine(id, esc(ratingName(store.pick(id)?.p)))))}` : ''}
+  </div>
+  <div class="imp-actions">
+    <button class="btn primary" data-imp="add">${p.replace ? 'Add to what\'s here' : 'Apply these changes'}</button>
+    ${p.replace ? `<button class="btn" data-imp="replace">Replace everything on this device</button>` : ''}
+    <button class="btn ghost" data-imp="cancel">Cancel</button>
+  </div>`;
+  if (!importDialog.open) importDialog.showModal();
+  importDialog.querySelector('[data-imp="add"]').focus();
+}
+
+// Every button closes the dialog; only Add / Replace apply. (No 'close' listener: that event
+// arrives after a new preview may already be open, and would drop its pending import.)
+importDialog.addEventListener('click', e => {
+  const b = e.target.closest('[data-imp]');
+  if (!b) return;
+  const p = pendingImport;
+  pendingImport = null;
+  importDialog.close();
+  if (!p) return;
+  try {
+    if (b.dataset.imp === 'add') p.apply();
+    else if (b.dataset.imp === 'replace') p.replace.apply();
+  } catch (err) { toast(`Nothing was changed: ${err.message}`); }
+});
+importDialog.addEventListener('cancel', () => { pendingImport = null; }); // Esc
 
 function importFavorites() {
   const f = app.snapshot?.favorites;
@@ -2196,8 +2263,13 @@ main.addEventListener('change', e => {
     t.files[0].text().then(txt => {
       const obj = JSON.parse(txt);
       if (obj.conference && obj.conference !== app.conf.id && !confirm(`This backup is for ${CONFERENCES[obj.conference]?.name || obj.conference}, but you're viewing ${app.conf.name}. Import anyway?`)) return;
-      const n = store.importData(obj, { replace: confirm('Replace your current picks and settings with the backup? (Cancel = merge the picks in)') });
-      toast(`Restored ${n} picks`);
+      // Both previews run before anything changes, so an unreadable backup stops here.
+      const add = store.previewImport(obj, { replace: false });
+      const replace = store.previewImport(obj, { replace: true });
+      showImportPreview({ title: `Restore backup${obj.exportedAt ? ` from ${fmtStamp(obj.exportedAt)}` : ''}`, pv: add,
+        note: 'Adding keeps the newer rating for each session, and this device\'s notes and reserved seats.',
+        apply: () => { store.importData(obj, { replace: false }); toast(`Added ${add.added.length + add.changed.length} picks from the backup`); },
+        replace: { pv: replace, apply: () => { store.importData(obj, { replace: true }); toast('This device now matches the backup'); } } });
     }).catch(err => toast(`Couldn't read that file: ${err.message}`));
   }
 });
@@ -2238,6 +2310,8 @@ document.addEventListener('keydown', e => {
 
 // Store changes -> keep views and badges in sync.
 store.subscribe(what => {
+  if (what === 'newer-version') { $('#newer-version').hidden = false; return; }
+  if (what === 'reset') $('#newer-version').hidden = !store.newerVersion(); // another tab saved: it may be newer
   if (what === 'save-error' || what === 'save-ok') { $('#save-error').hidden = what === 'save-ok'; if (app.tab === 'settings') renderOrDefer(); return; }
   if (what === 'backup') { if (app.model) renderOrDefer(); return; }
   if (!app.model) return;
@@ -2310,7 +2384,7 @@ function rsvpConfig() {
 function rebuildModel() {
   const doc = app.raw.doc;
   const added = customRecords(store.settings().custom, app.conf); // sessions you added yourself
-  app.model = buildModel(added.length ? { ...doc, sessions: [...(doc.sessions || []), ...added] } : doc, store.settings(), rsvpConfig(), app.conf, app.venue);
+  app.model = buildModel(added.length ? { ...doc, sessions: [...(doc.sessions || []), ...added] } : doc, store.settings(), rsvpConfig(), app.conf, app.venue, app.raw.seats || null);
   app.modelKey = modelKey();
   app.triage = null;
   app.ranker = null;
@@ -2322,7 +2396,8 @@ function rebuildModel() {
 // snapshot, otherwise from the snapshot (which also carries the change history).
 const liveDiffers = () => !!(app.live && !app.live.same);
 function docSig() {
-  return liveDiffers() ? `live:${app.snapshot.doc.generatedAt}:${app.live.at}` : `snap:${app.snapshot.doc.generatedAt}`;
+  const seats = seatsSig(app.snapshot.seats); // a re-exported seat file changes the model too, stamped or not
+  return liveDiffers() ? `live:${app.snapshot.doc.generatedAt}:${app.live.at}:${seats}` : `snap:${app.snapshot.doc.generatedAt}:${seats}`;
 }
 
 // Returns true when the catalog itself changed (and the model was rebuilt).
@@ -2353,10 +2428,13 @@ function afterModelChange() {
 }
 
 function countText(d) {
+  const c = changeCounts(d);
   const parts = [];
-  if (d.added?.length) parts.push(`${d.added.length} added`);
-  if (d.removed?.length) parts.push(`${d.removed.length} removed`);
-  if (d.changed?.length) parts.push(`${d.changed.length} updated`);
+  if (c.added) parts.push(`${c.added} added`);
+  if (c.removed) parts.push(`${c.removed} removed`);
+  if (c.changed) parts.push(`${c.changed} updated`);
+  if (c.addedRuns) parts.push(`${c.addedRuns} extra run${c.addedRuns > 1 ? 's' : ''} added`);
+  if (c.removedRuns) parts.push(`${c.removedRuns} extra run${c.removedRuns > 1 ? 's' : ''} dropped`);
   return parts.join(', ');
 }
 
@@ -2488,6 +2566,7 @@ async function boot() {
   setHostCompany(app.conf.hostCompany);
   store.configure({ defaults: { startFrom: app.venue.startFrom, lunch: app.conf.lunch }, buildingIds: app.venue.ids });
   store.load(CUSTOM_DATA ? `test:${DATA_OVERRIDE}` : app.conf.namespace);
+  $('#newer-version').hidden = !store.newerVersion();
   fillConferenceSwitch();
   applyTheme(store.get().ui.theme);
   try { app.simNow = JSON.parse(sessionStorage.getItem(nsKey('ignite26.simNow')) || 'null'); } catch { app.simNow = null; }

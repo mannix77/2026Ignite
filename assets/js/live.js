@@ -197,7 +197,8 @@ export function diff(prev, cur) {
   };
   for (const [sid, recs] of cg) {
     const olds = pg.get(sid);
-    if (!olds) { added.push(...recs.map(brief)); continue; }
+    // A session that is new as a whole is one session; its other runs are extra runs (repeat: true).
+    if (!olds) { added.push(...recs.map((r, i) => ({ ...brief(r), repeat: i > 0 }))); continue; }
     // Runs keep their instance id; pair leftovers by time only if ids were regenerated.
     const oldByInst = new Map(olds.map(o => [o.inst, o]));
     const leftNew = [];
@@ -210,8 +211,26 @@ export function diff(prev, cur) {
     added.push(...leftNew.slice(leftOld.length).map(r => ({ ...brief(r), repeat: recs.length > 1 })));
     removed.push(...leftOld.slice(leftNew.length).map(o => ({ ...brief(o), repeat: olds.length > 1 })));
   }
-  for (const [sid, recs] of pg) if (!cg.has(sid)) removed.push(...recs.map(brief));
+  for (const [sid, recs] of pg) if (!cg.has(sid)) removed.push(...recs.map((r, i) => ({ ...brief(r), repeat: i > 0 })));
   return { added, removed, changed };
+}
+
+// Change counts per session: an extra run added to or dropped from a session that stays
+// listed (repeat: true) is counted apart, so it never reads as a new or cancelled session.
+export function changeCounts(d) {
+  const runs = list => (list || []).filter(x => x.repeat).length;
+  return {
+    added: (d.added || []).length - runs(d.added), addedRuns: runs(d.added),
+    removed: (d.removed || []).length - runs(d.removed), removedRuns: runs(d.removed),
+    changed: (d.changed || []).length,
+  };
+}
+
+// The counts as one short line for a Changes header: sessions first, extra runs apart.
+export function countsLine(d) {
+  const c = changeCounts(d || {});
+  const runs = n => `${n} run${n > 1 ? 's' : ''}`;
+  return [`+${c.added}`, `−${c.removed}`, `~${c.changed}`, c.addedRuns ? `+${runs(c.addedRuns)}` : '', c.removedRuns ? `−${runs(c.removedRuns)}` : ''].filter(Boolean).join(' · ');
 }
 
 async function getCdn(base, name, timeoutMs = 25000) {
@@ -250,7 +269,9 @@ export async function checkLive(snapshotDoc, conf = {}) {
   const byName = new Map();
   for (const r of prev) for (const p of r.speakers || []) if (p[1] || p[2]) byName.set(p[0], p);
   const { sessions, dropped, draft } = normalize(raw, null, liveWindow(settings, conf), byName);
-  if (prev.length && sessions.length < 0.6 * prev.length) throw new Error(`live catalog looks partial (${sessions.length} sessions)`);
+  // Counts sessions, not runs: dropping a session's extra run loses nothing (same rule as sync.py).
+  const nCur = new Set(sessions.map(r => r.id)).size, nPrev = new Set(prev.map(r => r.id)).size;
+  if (prev.length && nCur < 0.6 * nPrev) throw new Error(`live catalog looks partial (${nCur} sessions)`);
   const seenInst = new Map(prev.map(r => [r.inst, r.firstSeen]));
   const seenId = new Map(prev.map(r => [r.id, r.firstSeen]));
   const now = isoZ(new Date());
