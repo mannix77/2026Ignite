@@ -16,13 +16,14 @@ const OWN = /^(?:$|index\.html$|manifest\.webmanifest$|sw\.js$|assets\/|data\/|t
 const DATA_CACHE = 'data-v1';
 const SHELL = [
   './', 'index.html', 'manifest.webmanifest', 'assets/css/app.css',
-  'assets/js/app.js', 'assets/js/conferences.js', 'assets/js/data.js', 'assets/js/instance.js', 'assets/js/live.js', 'assets/js/planner.js', 'assets/js/profile.js',
+  'assets/js/app.js', 'assets/js/conferences.js', 'assets/js/data.js', 'assets/js/instance.js', 'assets/js/live.js', 'assets/js/planner.js', 'assets/js/profile.js', 'assets/js/health.js',
   'assets/js/store.js', 'assets/js/suggest.js', 'assets/js/time.js', 'assets/js/ui.js', 'assets/js/venue.js',
   'assets/icons/icon.svg', 'assets/icons/icon-180.png', 'assets/icons/icon-512.png',
 ];
 const DATA = ['data/ignite2026/sessions.json', 'data/ignite2026/changes.json', 'data/ignite2026/meta.json', 'data/ignite2026/favorites.json', 'data/ignite2026/profile.json',
   'data/gartner2026/sessions.json', 'data/gartner2026/changes.json', 'data/gartner2026/meta.json', 'data/gartner2026/favorites.json', 'data/gartner2026/profile.json',
-  'data/reinvent2026/sessions.json', 'data/reinvent2026/changes.json', 'data/reinvent2026/meta.json', 'data/reinvent2026/profile.json'];
+  'data/reinvent2026/sessions.json', 'data/reinvent2026/changes.json', 'data/reinvent2026/meta.json', 'data/reinvent2026/profile.json',
+  'data/reinvent2026/favorites.json', 'data/reinvent2026/seats.json'];
 const DATA_TIMEOUT_MS = 3500;
 
 const dataKey = url => { const u = new URL(url, self.location); return u.origin + u.pathname; };

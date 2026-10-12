@@ -191,6 +191,9 @@ h3 { font-size: 15px; margin: 0 0 6px; }
 .chip.score { background: var(--want-soft); color: var(--want); }
 .chip.watch { background: var(--skip-soft); color: var(--text-2); }
 .chip.sugg { background: var(--ok-soft); color: var(--ok); }
+.chip.full { background: var(--bad-soft); color: var(--bad); }
+.chip.few { background: var(--maybe-soft); color: var(--maybe); }
+.chip.walkup { background: var(--skip-soft); color: var(--text-2); }
 .quick + .quick { margin-top: -4px; }
 .here-bar { margin: 10px 0 14px; }
 .here-bar select { font-size: 16px; max-width: 46vw; }
@@ -429,7 +432,18 @@ dialog#detail {
   width: min(720px, 100vw - 24px); max-height: min(88vh, 900px); padding: 0; border: 1px solid var(--line); border-radius: 16px;
   background: var(--surface); color: var(--text); box-shadow: 0 20px 60px rgb(0 0 0 / .35);
 }
-dialog#detail::backdrop { background: rgb(8 14 12 / .5); }
+dialog#detail::backdrop, dialog#import-dialog::backdrop { background: rgb(8 14 12 / .5); }
+dialog#import-dialog {
+  width: min(560px, 100vw - 24px); max-height: min(88vh, 760px); padding: 0; border: 1px solid var(--line); border-radius: 16px;
+  background: var(--surface); color: var(--text); box-shadow: 0 20px 60px rgb(0 0 0 / .35);
+}
+.imp-body { padding: 16px; overflow: auto; }
+.imp-body h2 { margin: 0 0 4px; font-size: 19px; }
+.imp-list { list-style: none; margin: 6px 0 12px; padding: 0; display: grid; gap: 4px; font-size: 14px; }
+.imp-list li { padding: 6px 8px; border-radius: var(--radius-sm); background: var(--surface-2); }
+.imp-list .code { font-family: var(--mono); font-weight: 600; margin-right: 6px; }
+.imp-list .to { font-weight: 700; }
+.imp-actions { position: sticky; bottom: 0; display: flex; gap: 8px; flex-wrap: wrap; padding: 12px 16px; border-top: 1px solid var(--line); background: var(--surface); }
 @media (max-width: 640px) {
   dialog#detail { width: 100vw; max-width: 100vw; max-height: 92vh; margin: auto 0 0; border-radius: 16px 16px 0 0; }
 }
@@ -492,3 +506,8 @@ body:has(dialog[open]) { overflow: hidden; }
   .t-time { font-size: 12px; white-space: nowrap; }
 }
 .text-input { width: 100%; border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; background: var(--surface); color: var(--text); font: inherit; }
+.storage-status { display: flex; gap: 8px; align-items: flex-start; padding: 8px 10px; border-radius: var(--radius-sm); margin: 0 0 8px; font-size: 14px; }
+.storage-status svg { width: 18px; height: 18px; flex: none; margin-top: 1px; }
+.storage-status.installed, .storage-status.protected { background: var(--ok-soft); color: var(--ok); }
+.storage-status.at-risk { background: var(--tight-soft); color: var(--tight); }
+.storage-status.not-saved { background: var(--bad-soft); color: var(--bad); }

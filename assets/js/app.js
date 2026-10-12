@@ -1,7 +1,7 @@
 // Conference Planner — views, routing and event handling.
 
 import * as store from './store.js';
-import { fetchAll, buildModel, diffKnown, snapshot, cacheUrl, exportAge, customRecords, catalogMatch, CUSTOM_DATA, DATA_OVERRIDE } from './data.js';
+import { fetchAll, buildModel, diffKnown, snapshot, cacheUrl, exportAge, customRecords, catalogMatch, seatsSig, CUSTOM_DATA, DATA_OVERRIDE } from './data.js';
 import { checkLive, diff as liveDiff } from './live.js';
 import { optimize, decisionGroups, transitions, fillers, nowNext, weigh, canBoth, overlaps, transition, compareOptions, lunchConfig, arrivalExtra, PRIORITY } from './planner.js';
 import { fmtTime, fmtDay, fmtDuration, relTime, nowLocal, addDays } from './time.js';
@@ -9,8 +9,9 @@ import { createVenue, setVenue, walkMinutes } from './venue.js';
 import { CONFERENCES, currentConferenceId, rememberConference, conferenceList } from './conferences.js';
 import { buildSuggester } from './suggest.js';
 import { createRanker, partition, profileConfig, profileGroups, GOALS } from './profile.js';
+import { storageStatus, backupReminder, backupAge } from './health.js';
 import { INSTANCE_LABEL, nsKey, guideUrl } from './instance.js';
-import { esc, attr, icon, bldgChip, recChip, rsvpChip, prioPill, scoreChip, whenText, prioControl, sessionCard, cardClass, toast, shareOrDownload, copyText, speakersLine, setHostCompany } from './ui.js';
+import { esc, attr, icon, bldgChip, recChip, rsvpChip, seatsDetail, prioPill, scoreChip, whenText, prioControl, sessionCard, cardClass, toast, shareOrDownload, copyText, speakersLine, setHostCompany } from './ui.js';
 
 const $ = (sel, root = document) => root.querySelector(sel);
 const main = $('#main');
@@ -41,6 +42,8 @@ const app = {
   browseLimit: PAGE,
   triage: null,
   ranker: null,     // preferences scorer (profile.js), rebuilt when they change
+  persisted: false, // the browser promised not to clear this site's storage
+  installEvent: null, // Android/Chrome install prompt, offered from the install banner
   openFill: null,
   nowTimer: null,
   dialogKey: null,
@@ -640,7 +643,7 @@ function renderBrowse() {
     <button class="btn ghost small x" data-act="intro-dismiss" aria-label="Dismiss">${icon('x')}</button></div>`;
   const sg = results.sugg;
   const extraFor = s => (f.suggested && sg?.get(s.key)?.score > 0 ? suggestExtra({ s, ...sg.get(s.key) }) : '') + (showFit && s.day === t.day && prioOf(s) !== 0 ? fitLine(s, h) : '');
-  return `${installBanner()}${staleBanner()}${favoritesBanner()}${intro}
+  return `${installBanner()}${backupBanner()}${staleBanner()}${favoritesBanner()}${intro}
   <div class="searchbar">
     <label class="search">${icon('search')}<span class="sr-only">Search sessions</span>
       <input id="q" type="search" placeholder="Search titles, speakers, tags, codes…" value="${attr(f.q)}" autocomplete="off" enterkeyhint="search"></label>
@@ -841,7 +844,7 @@ function renderTriage() {
   const nGroups = Object.keys(store.profile().groups).length;
   const tabs = [['setup', 'Quick start'], ['groups', `By group${nGroups ? ` (${nGroups})` : ''}`], ['rate', `Shortlist (${st.shortlist})`]];
   const intro = { setup: 'Answer these once. They rank the whole catalog and hide formats you never attend.', groups: 'Decide whole topics, tracks or formats at once.', rate: 'Rate the best matches one at a time. Everything below the cut stays parked, never lost.' }[view];
-  return `<h1>Triage</h1>
+  return `<h1>Triage</h1>${installBanner()}${backupBanner()}
     ${triageMeter(st)}
     <div class="segtabs" role="tablist" aria-label="Triage steps">${tabs.map(([k, l], i) => `<button type="button" role="tab" data-act="t-view" data-view="${k}" aria-selected="${view === k}"><span class="step">${i + 1}</span>${esc(l)}</button>`).join('')}</div>
     <p class="lede">${intro}</p>
@@ -956,14 +959,63 @@ function previewBanner() {
 const IS_IOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 const STANDALONE = navigator.standalone === true || matchMedia('(display-mode: standalone)').matches;
 
-// iPhone: a Home Screen app has its own storage (and Safari may wipe site data after 7 days
-// without a visit), so nudge people to install before they invest time rating sessions.
+const IS_ANDROID = /Android/i.test(navigator.userAgent);
+
+function health() {
+  return storageStatus({ standalone: STANDALONE, persisted: app.persisted, saveFailing: store.saveFailing() });
+}
+
+// Picks are kept only where the planner runs. iPhone: a Home Screen app has its own storage
+// and Safari may clear a tab's data after 7 days without a visit. Android: an installed app
+// is far more likely to get storage Chrome won't clean up. Nudge before people invest time.
+// Dismissing the install banner is per device, not per conference.
+const INSTALL_DISMISSED = nsKey('ignite26.planner.installDismissed');
+function installDismissed() {
+  try { return localStorage.getItem(INSTALL_DISMISSED) === '1' || !!store.get().ui.installDismissed; } catch { return !!store.get().ui.installDismissed; }
+}
+
 function installBanner() {
-  if (!IS_IOS || STANDALONE || store.get().ui.installDismissed) return '';
-  return `<div class="banner install">${icon('plan')}<div><b>Add to your Home Screen first</b>
-    <p>Tap <b>Share → Add to Home Screen</b>. The installed app keeps its own copy of your picks and works offline.</p>
+  if (STANDALONE || installDismissed()) return '';
+  if (IS_IOS) {
+    return `<div class="banner install">${icon('plan')}<div><b>Add to your Home Screen first</b>
+    <p>Tap <b>Share → Add to Home Screen</b>, then open the planner from that icon. The installed app keeps its own copy of your picks, Safari won't clear it, and it works offline.</p>
     <details><summary class="small">Already rated some in Safari?</summary><p class="small">Here: Settings → <b>Copy link to my picks</b>. In the installed app: Settings → <b>Import picks from a link</b>.</p></details></div>
     <button class="btn ghost small x" data-act="install-dismiss" aria-label="Dismiss">${icon('x')}</button></div>`;
+  }
+  if (IS_ANDROID && !app.persisted) {
+    return `<div class="banner install">${icon('plan')}<div><b>Install the planner to keep your picks</b>
+    <p>Chrome may clear a website's data when the phone runs low on space; an installed app is protected.</p>
+    ${app.installEvent ? `<button class="btn small primary" data-act="install-app">Install app</button>` : `<p>Tap <b>⋮ → Install app</b> (or <b>Add to Home screen</b>).</p>`}</div>
+    <button class="btn ghost small x" data-act="install-dismiss" aria-label="Dismiss">${icon('x')}</button></div>`;
+  }
+  return '';
+}
+
+const BACKUP_WHY = { never: "You haven't saved a backup yet.", changes: "You've changed a lot of picks since your last backup.", age: 'Your last backup is over a week old.', conference: `${'{conf}'} starts soon, and your latest picks aren't in a backup.` };
+function backupWhere() {
+  return IS_IOS ? 'In the share sheet choose <b>Save to Files → iCloud Drive</b> (e.g. a "Planner backups" folder) so it\'s there if you change phones.'
+    : IS_ANDROID ? 'Save it to <b>Google Drive</b> so it\'s there if you change phones.'
+    : 'Keep it somewhere that is backed up (iCloud Drive, OneDrive, Google Drive).';
+}
+
+function backupBanner() {
+  const b = store.backupState();
+  const hasPicks = Object.values(store.get().picks).some(p => p.p != null);
+  const r = backupReminder({ hasPicks, at: b.at, changes: b.changes, dismissed: b.dismissed, now: Date.now(), conferenceStart: app.conf.days[0], today: nowLocal(null, app.conf.tz).day });
+  if (!r) return '';
+  return `<div class="banner">${icon('refresh')}<div><b>Save a backup of your picks</b>
+    <p>${BACKUP_WHY[r.reason].replace('{conf}', esc(app.conf.short))} ${backupWhere()}</p>
+    <div class="row"><button class="btn small primary" data-act="export">Save a backup</button><button class="btn small ghost" data-act="backup-dismiss">Not now</button></div></div></div>`;
+}
+
+// Ask the browser to protect this site's storage once there are picks, and remember the answer.
+async function refreshPersisted() {
+  try {
+    if (Object.keys(store.get().picks).length) await navigator.storage?.persist?.();
+    const was = app.persisted;
+    app.persisted = !!(await navigator.storage?.persisted?.());
+    if (was !== app.persisted && app.model) renderOrDefer();
+  } catch { /* not supported */ }
 }
 
 // The catalog is someone's export (Gartner): say when it's a day old and who can refresh it.
@@ -1018,7 +1070,7 @@ function renderShortlist(plan) {
   const minutes = plan.tba.reduce((a, x) => a + (x.s.dur || 0), 0);
   const notRec = plan.tba.filter(x => x.s.recorded === false && x.priority >= 2).length;
   const rec = plan.tba.filter(x => x.s.recorded === true).length;
-  return `<h1>My plan</h1>${installBanner()}${staleBanner()}${favoritesBanner()}${missingPicksBanner()}${rsvpBanner(plan)}
+  return `<h1>My plan</h1>${installBanner()}${backupBanner()}${staleBanner()}${favoritesBanner()}${missingPicksBanner()}${rsvpBanner(plan)}
   <div class="banner">${icon('clock')}<div><b>Waiting for dates and rooms to be published.</b>
     <p>The catalog is checked automatically (last checked ${esc(relTime(app.live?.at || meta.lastChecked || app.raw.doc.generatedAt))}). Once times appear, your plan builds itself. It flags sessions you can't reach in time and suggests what to give up. Want to try it now?</p>
     <button class="btn small" data-act="preview-on">Rehearse with a simulated schedule</button></div></div>
@@ -1068,7 +1120,7 @@ function renderSchedule(plan) {
   const sacrificed = new Set(plan.res.dropped.filter(d => real(d) && !plan.chosenGroups.has(d.item.id)).map(d => d.item.id)).size;
 
   const parts = [];
-  parts.push(`<h1>My plan</h1>${installBanner()}${staleBanner()}${favoritesBanner()}${previewBanner()}${missingPicksBanner()}${rsvpBanner(plan)}`);
+  parts.push(`<h1>My plan</h1>${installBanner()}${backupBanner()}${staleBanner()}${favoritesBanner()}${previewBanner()}${missingPicksBanner()}${rsvpBanner(plan)}`);
   const lockedConflicts = plan.res.lockedConflicts.filter(x => !x.pseudo);
   if (lockedConflicts.length) {
     parts.push(`<div class="banner bad">${icon('warn')}<div><b>Some sessions you locked can't all happen.</b><p>${lockedConflicts.map(x => esc(x.code)).join(', ')} clash with other locked sessions or blocked time. Unlock one of them.</p></div></div>`);
@@ -1625,6 +1677,9 @@ function renderSettings() {
       <div class="field"><label for="theme">Theme</label><select id="theme">${['auto', 'light', 'dark'].map(t => `<option ${theme === t ? 'selected' : ''}>${t}</option>`).join('')}</select></div>
     </section>
     <section class="panel"><h3>Your data</h3>
+      ${(() => { const h = health(); const b = store.backupState(); return `<p class="storage-status ${h.level}" id="storage-status">${icon(h.level === 'installed' || h.level === 'protected' ? 'check' : 'warn')}<span>${esc(h.text)}</span></p>
+      ${h.level === 'at-risk' ? `<p class="small">${IS_IOS ? 'To install: <b>Share → Add to Home Screen</b>, then open the planner from that icon.' : IS_ANDROID ? 'To install: <b>⋮ → Install app</b> (or <b>Add to Home screen</b>).' : 'Install it from your browser\'s menu (Install app / Add to Home screen).'}</p>` : ''}
+      <p class="small">Last backup: <b id="last-backup">${esc(backupAge(b.at, Date.now()))}</b>${b.changes && b.at ? ` · ${b.changes} change${b.changes > 1 ? 's' : ''} since` : ''}. ${backupWhere()}</p>`; })()}
       <p class="small muted">Picks live on this device${STANDALONE ? ' (in this Home Screen app)' : ''}. Use a backup file or a share link to move them between devices.</p>
       <div class="row"><button class="btn small" data-act="export">Save a backup</button>
         <label class="btn small">Restore backup<input type="file" accept="application/json,.json" id="import-file" hidden></label>
@@ -1699,6 +1754,7 @@ function renderDetail(s) {
         <dt>Where</dt><dd>${s.onlineOnly ? 'Online' : `${bldgChip(s.loc)} ${esc(s.roomLabel)}`}</dd>
         <dt>Recording</dt><dd>${s.recorded === true ? 'Will be recorded: you can watch it later' : s.recorded === false ? '<b>Not recorded</b>: in person only' : 'Unknown'}</dd>
         ${s.rsvp ? `<dt>Reservation</dt><dd><b>Required</b>, seats are limited${typeof s.rsvp === 'string' ? `. Opens ${esc(fmtStamp(s.rsvp))} on ${esc(app.conf.siteName)}` : ''}${gp?.reserved ? '. <b>You reserved a seat.</b>' : ''}</dd>` : ''}
+        ${seatsDetail(s) ? `<dt>Seats</dt><dd>${esc(seatsDetail(s))}</dd>` : ''}
         <dt>Format</dt><dd>${esc((s.delivery || []).join(', ') || '—')}${s.remote ? ' · remote viewing rooms available' : ''}</dd>
         ${s.audience?.length ? `<dt>${app.conf.id === 'gartner2026' ? 'Program' : 'Audience'}</dt><dd>${esc(s.audience.join(', '))}</dd>` : ''}
         ${s.topics?.length ? `<dt>Topics</dt><dd>${esc(s.topics.join(', '))}</dd>` : ''}
@@ -1875,15 +1931,80 @@ function onRoute() {
 }
 
 function importShare(str) {
-  const parsed = store.parseShare(str, code => app.model.byCode.get(code)?.id || app.model.byGroup.get(code.replace(/-R\d+$/i, ''))?.[0]?.id, code => app.model.byCode.get(code)?.key);
+  const report = {};
+  const parsed = store.parseShare(str, code => app.model.byCode.get(code)?.id || app.model.byGroup.get(code.replace(/-R\d+$/i, ''))?.[0]?.id, code => app.model.byCode.get(code)?.key, report);
+  const skipped = [report.unknown.length ? `${report.unknown.length} code${report.unknown.length > 1 ? 's' : ''} not in this catalog: ${report.unknown.slice(0, 10).join(', ')}${report.unknown.length > 10 ? '…' : ''}.` : '',
+    report.invalid ? `${report.invalid} unreadable entr${report.invalid > 1 ? 'ies' : 'y'}.` : ''].filter(Boolean).join(' ');
   if (app.model.mode === 'official') for (const p of Object.values(parsed)) if (p.lockMode === 'preview') { p.lock = null; delete p.lockMode; }
   const n = Object.keys(parsed).length;
-  if (!n) { toast('That link had no picks in it'); return; }
-  if (confirm(`Import ${n} picks from the link? Ratings and locks for sessions you've already rated will be replaced; notes and reserved seats are kept.`)) {
-    store.applyShared(parsed);
-    toast(`Imported ${n} picks`);
-  }
+  if (!n) { toast(`That link had no picks this catalog knows${skipped ? ` (${skipped})` : ''}`); return; }
+  const pv = store.previewShared(parsed);
+  if (!pv.added.length && !pv.changed.length) { toast(`All ${n} picks in that link are already here${skipped ? `. ${skipped}` : ''}`); return; }
+  showImportPreview({ title: 'Picks from a link', pv, warn: skipped, note: 'Only the sessions in the link change. Your notes and reserved seats stay.',
+    apply: () => { store.applyShared(parsed); toast(`Applied ${pv.added.length + pv.changed.length} picks from the link`); } });
 }
+
+// ---------------------------------------------------------------- import preview
+//
+// A backup or picks link shows what it will change before anything is applied, with
+// clearly labelled choices (store.previewImport / previewShared use the same rules as
+// the import itself).
+
+const importDialog = $('#import-dialog');
+let pendingImport = null;
+
+const ratingName = p => (p == null ? 'not rated' : PRIORITY[p]);
+function importLine(id, text) {
+  const s = sessionById(id);
+  const code = s?.code || store.pick(id)?.code || id;
+  return `<li><span class="code">${esc(code)}</span>${esc(s ? s.title : 'Not in the current catalog')}${text ? ` · ${text}` : ''}</li>`;
+}
+function importSection(label, items) {
+  if (!items.length) return '';
+  const shown = items.slice(0, 40);
+  return `<h3>${esc(label)} (${items.length})</h3><ul class="imp-list">${shown.join('')}</ul>${items.length > shown.length ? `<p class="small muted">…and ${items.length - shown.length} more</p>` : ''}`;
+}
+
+// p: { title, pv (add/merge preview), note, apply(), replace?: { pv, apply() } }
+function showImportPreview(p) {
+  pendingImport = p;
+  const pv = p.pv;
+  const after = id => ratingName(pv.after?.[id]);
+  const changed = pv.changed.map(c => importLine(c.id, `${esc(ratingName(c.from))} → <span class="to">${esc(ratingName(c.to))}</span>`));
+  const added = pv.added.map(id => importLine(id, `<span class="to">${esc(after(id))}</span>`));
+  const removed = p.replace?.pv.removed || [];
+  importDialog.innerHTML = `<div class="imp-body">
+    <h2 id="import-title">${esc(p.title)}</h2>
+    <p class="small muted">${pv.changed.length} changed · ${pv.added.length} new · ${pv.unchanged} already the same. ${esc(p.note || '')}</p>
+    ${p.warn ? `<p class="small" style="color:var(--tight)">Left out: ${esc(p.warn)}</p>` : ''}
+    ${importSection('Changed', changed)}${importSection('New', added)}
+    ${p.replace ? `<p class="small"><b>Replace everything</b> makes this device match the backup exactly${removed.length ? `, and removes ${removed.length} pick${removed.length > 1 ? 's' : ''} that only this device has` : ''}.</p>
+      ${importSection('Replace would remove', removed.map(id => importLine(id, esc(ratingName(store.pick(id)?.p)))))}` : ''}
+  </div>
+  <div class="imp-actions">
+    <button class="btn primary" data-imp="add">${p.replace ? 'Add to what\'s here' : 'Apply these changes'}</button>
+    ${p.replace ? `<button class="btn" data-imp="replace">Replace everything on this device</button>` : ''}
+    <button class="btn ghost" data-imp="cancel">Cancel</button>
+  </div>`;
+  if (!importDialog.open) importDialog.showModal();
+  importDialog.querySelector('[data-imp="add"]').focus();
+}
+
+// Every button closes the dialog; only Add / Replace apply. (No 'close' listener: that event
+// arrives after a new preview may already be open, and would drop its pending import.)
+importDialog.addEventListener('click', e => {
+  const b = e.target.closest('[data-imp]');
+  if (!b) return;
+  const p = pendingImport;
+  pendingImport = null;
+  importDialog.close();
+  if (!p) return;
+  try {
+    if (b.dataset.imp === 'add') p.apply();
+    else if (b.dataset.imp === 'replace') p.replace.apply();
+  } catch (err) { toast(`Nothing was changed: ${err.message}`); }
+});
+importDialog.addEventListener('cancel', () => { pendingImport = null; }); // Esc
 
 function importFavorites() {
   const f = app.snapshot?.favorites;
@@ -2001,14 +2122,26 @@ function onClick(e) {
     ack: () => { store.setKnown(app.nextKnown); app.alerts = []; render(); },
     refresh: () => refreshData(true),
     'sync-local': () => syncLocal(el),
-    export: () => shareOrDownload(`${app.conf.id}-picks-${new Date().toISOString().slice(0, 10)}.json`, JSON.stringify(store.exportData(), null, 1), 'application/json'),
+    export: async () => {
+      const r = await shareOrDownload(`${app.conf.id}-picks-${new Date().toISOString().slice(0, 10)}.json`, JSON.stringify(store.exportData(), null, 1), 'application/json');
+      if (r !== 'cancelled') { store.markBackup(); toast('Backup saved. Keep it somewhere that is backed up'); }
+    },
+    'backup-dismiss': () => store.dismissBackupReminder(Date.now(), nowLocal(null, app.conf.tz).day),
+    'install-app': async () => {
+      const ev = app.installEvent;
+      if (!ev) return;
+      app.installEvent = null;
+      try { await ev.prompt(); await ev.userChoice; } catch { /* dismissed */ }
+      refreshPersisted();
+      render();
+    },
     'import-code': () => {
       const raw = ($('#import-code')?.value || '').trim();
       importShare(safeDecode(raw.includes('#/import/') ? raw.split('#/import/')[1] : raw));
     },
     'favorites-import': () => { if (confirm('Import your workbook favorites? Ratings, scores and watch-later marks for those sessions will be set from the spreadsheet; your notes are kept.')) importFavorites(); },
     'favorites-dismiss': () => { store.setUI({ favoritesVersion: app.snapshot?.favorites?.version }); app.favoritesOffer = null; render(); },
-    'install-dismiss': () => { store.setUI({ installDismissed: true }); render(); },
+    'install-dismiss': () => { try { localStorage.setItem(INSTALL_DISMISSED, '1'); } catch { /* storage blocked */ } store.setUI({ installDismissed: true }); render(); },
     'intro-dismiss': () => { store.setUI({ introDismissed: true }); render(); },
     'forget-missing': () => {
       const gone = new Set(app.picks.orphans.map(o => o.id));
@@ -2130,8 +2263,13 @@ main.addEventListener('change', e => {
     t.files[0].text().then(txt => {
       const obj = JSON.parse(txt);
       if (obj.conference && obj.conference !== app.conf.id && !confirm(`This backup is for ${CONFERENCES[obj.conference]?.name || obj.conference}, but you're viewing ${app.conf.name}. Import anyway?`)) return;
-      const n = store.importData(obj, { replace: confirm('Replace your current picks and settings with the backup? (Cancel = merge the picks in)') });
-      toast(`Restored ${n} picks`);
+      // Both previews run before anything changes, so an unreadable backup stops here.
+      const add = store.previewImport(obj, { replace: false });
+      const replace = store.previewImport(obj, { replace: true });
+      showImportPreview({ title: `Restore backup${obj.exportedAt ? ` from ${fmtStamp(obj.exportedAt)}` : ''}`, pv: add,
+        note: 'Adding keeps the newer rating for each session, and this device\'s notes and reserved seats.',
+        apply: () => { store.importData(obj, { replace: false }); toast(`Added ${add.added.length + add.changed.length} picks from the backup`); },
+        replace: { pv: replace, apply: () => { store.importData(obj, { replace: true }); toast('This device now matches the backup'); } } });
     }).catch(err => toast(`Couldn't read that file: ${err.message}`));
   }
 });
@@ -2172,7 +2310,8 @@ document.addEventListener('keydown', e => {
 
 // Store changes -> keep views and badges in sync.
 store.subscribe(what => {
-  if (what === 'save-error' || what === 'save-ok') { $('#save-error').hidden = what === 'save-ok'; return; }
+  if (what === 'save-error' || what === 'save-ok') { $('#save-error').hidden = what === 'save-ok'; if (app.tab === 'settings') renderOrDefer(); return; }
+  if (what === 'backup') { if (app.model) renderOrDefer(); return; }
   if (!app.model) return;
   if (what === 'profile') {
     // Preferences rank and hide sessions; they never change ratings or the plan.
@@ -2188,7 +2327,7 @@ store.subscribe(what => {
     if (what === 'reset') { applyTheme(store.get().ui.theme); app.triage = null; app.ranker = null; }
   }
   indexPicks();
-  if (what === 'picks' || what === 'reset') { trackNewPicks(); computeAlerts(); }
+  if (what === 'picks' || what === 'reset') { trackNewPicks(); computeAlerts(); if (!app.persisted) setTimeout(refreshPersisted, 500); }
   invalidate();
   if (app.tab === 'browse' && what === 'picks') {
     // Update only the cards that changed, so the list doesn't jump.
@@ -2243,7 +2382,7 @@ function rsvpConfig() {
 function rebuildModel() {
   const doc = app.raw.doc;
   const added = customRecords(store.settings().custom, app.conf); // sessions you added yourself
-  app.model = buildModel(added.length ? { ...doc, sessions: [...(doc.sessions || []), ...added] } : doc, store.settings(), rsvpConfig(), app.conf, app.venue);
+  app.model = buildModel(added.length ? { ...doc, sessions: [...(doc.sessions || []), ...added] } : doc, store.settings(), rsvpConfig(), app.conf, app.venue, app.raw.seats || null);
   app.modelKey = modelKey();
   app.triage = null;
   app.ranker = null;
@@ -2255,7 +2394,8 @@ function rebuildModel() {
 // snapshot, otherwise from the snapshot (which also carries the change history).
 const liveDiffers = () => !!(app.live && !app.live.same);
 function docSig() {
-  return liveDiffers() ? `live:${app.snapshot.doc.generatedAt}:${app.live.at}` : `snap:${app.snapshot.doc.generatedAt}`;
+  const seats = seatsSig(app.snapshot.seats); // a re-exported seat file changes the model too, stamped or not
+  return liveDiffers() ? `live:${app.snapshot.doc.generatedAt}:${app.live.at}:${seats}` : `snap:${app.snapshot.doc.generatedAt}:${seats}`;
 }
 
 // Returns true when the catalog itself changed (and the model was rebuilt).
@@ -2471,6 +2611,9 @@ async function boot() {
   syncGeo();
   setInterval(leaveAlertTick, 30000);
   registerServiceWorker();
+  refreshPersisted();
+  window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); app.installEvent = e; if (app.model) renderOrDefer(); });
+  window.addEventListener('appinstalled', () => { app.installEvent = null; refreshPersisted(); });
 }
 
 boot();
