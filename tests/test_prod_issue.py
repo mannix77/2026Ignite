@@ -69,7 +69,8 @@ class ReportProblemTests(unittest.TestCase):
         gh = FakeGitHub()
         report(gh)
         report(gh, message=REFUSED_AGAIN, run=RUN2)
-        self.assertEqual(gh.comments, [])
+        (issue,) = gh.issues.values()   # the repeat went to the one issue, as an edit...
+        self.assertEqual(("**Occurrences:** 2" in issue["body"], gh.comments), (True, []))   # ...not as a comment
 
     def test_should_open_a_separate_issue_for_a_different_kind_of_problem(self):
         gh = FakeGitHub()
@@ -112,13 +113,10 @@ class ProblemKeyTests(unittest.TestCase):
 class GitHubCliTests(unittest.TestCase):
     def test_should_call_the_github_cli_with_a_timeout(self):
         calls = []
-        gh = p.GitHubCli("mannix77/2026Ignite", runner=lambda args, **kw: calls.append(kw) or "[]")
-        gh.list_open("production")
-        self.assertEqual(calls, [{"timeout": 60}])
-
-
-if __name__ == "__main__":
-    unittest.main()
+        gh = p.GitHubCli("mannix77/2026Ignite", runner=lambda args, **kw: calls.append((args, kw)) or "[]")
+        self.assertEqual(gh.list_open("production"), [])
+        self.assertEqual(calls, [(["gh", "issue", "list", "--label", "production", "--state", "open", "--limit", "100",
+                                   "--json", "number,title,body", "-R", "mannix77/2026Ignite"], {"timeout": 60})])
 
 
 ROOT = os.path.dirname(HERE)
@@ -200,3 +198,7 @@ class WorkflowWiringTests(unittest.TestCase):
     def test_should_close_reinvent_issues_when_the_run_succeeds(self):
         calls, _ = self.run_step("reinvent-sync.yml", DEPLOY="skipped")
         self.assertEqual(calls, ["resolve - |"])
+
+
+if __name__ == "__main__":
+    unittest.main()
