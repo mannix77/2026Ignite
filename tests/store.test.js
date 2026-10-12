@@ -347,7 +347,7 @@ await test('should apply exactly the previewed changes when adding a backup', as
   const pv = store.previewImport(backup, { replace: false });
   store.importData(backup, { replace: false });
   // A changed, B new, D same rating, E's local rating is newer and stays.
-  eq([pv.changed.map(c => c.id), pv.added, pv.unchanged, ['A', 'B', 'D', 'E'].map(id => store.pick(id)?.p)], [['A'], ['B'], 2, [3, 2, 1, 3]]);
+  eq([pv.changed.map(c => c.id), pv.added, pv.removed, pv.unchanged, ['A', 'B', 'D', 'E'].map(id => store.pick(id)?.p)], [['A'], ['B'], [], 2, [3, 2, 1, 3]]);
   await sleep(SAVE);
 });
 await test('should list the picks a replace would remove', async () => {
@@ -386,7 +386,7 @@ await test('should apply exactly the previewed changes from a picks link', async
   const link = { A: { p: 3, code: 'K1', at: 20 }, B: { p: 2, code: 'K2', at: 20 } };
   const pv = store.previewShared(link);
   store.applyShared(link);
-  eq([pv.changed.map(c => c.id), pv.unchanged, store.pick('A')?.p, store.pick('A')?.note], [['A'], 1, 3, 'x']);
+  eq([pv.changed.map(c => c.id), pv.added, pv.unchanged, store.pick('A')?.p, store.pick('A')?.note, store.pick('B')?.p], [['A'], [], 1, 3, 'x', 2]);
   await sleep(SAVE);
 });
 
