@@ -53,6 +53,8 @@ JUNK = [
     dict(export_session("j3", "JUNK4"), reserved="false"),                            # a string flag
     dict(export_session("j4", "JUNK5"), favorite="yes"),                              # a string flag
     {"id": "j5", "code": "JUNK6", "favorite": True, "times": [{"timeId": "x", "reserved": "no"}]},
+    dict(export_session("j6", "JUNK7"), availability="sold_out_maybe"),              # an availability the planner doesn't know
+    dict(export_session("j7", "JUNK8"), few_seats_left="yes"),                        # a string flag
 ]
 
 
@@ -61,7 +63,7 @@ class FavoritesTests(unittest.TestCase):
         self.picks, self.seats, self.skipped = rf.favorites(EXPORT, CATALOG, NOW)
 
     def test_should_pin_a_reserved_seat_as_must_locked_to_that_run(self):
-        self.assertEqual(self.picks["p1"], {"p": 3, "lock": "p1", "reserved": "p1", "note": "", "at": NOW_MS,
+        self.assertEqual(self.picks["p1"], {"p": 3, "lock": "p1", "reserved": "p1", "note": "", "at": NOW_MS + 1,
                                             "g": "PEX403", "code": "PEX403-R1"})
 
     def test_should_rate_a_favorite_with_open_seats_want(self):
@@ -99,9 +101,9 @@ class FavoritesTests(unittest.TestCase):
         self.assertTrue(all(pk["note"] == "" for pk in self.picks.values()))
 
     def test_should_count_malformed_fields_as_junk_without_aborting(self):
-        catalog = CATALOG + [catalog_rec("JUNK%d" % n, "j%d" % n) for n in range(1, 6)]
+        catalog = CATALOG + [catalog_rec("JUNK%d" % n, "j%d" % n) for n in range(1, 8)]
         picks, seats, skipped = rf.favorites({"sessions": JUNK + [export_session("s1", "SVS304-R")]}, catalog, NOW)
-        self.assertEqual((sorted(picks), skipped["junk"]), (["s1"], 5))
+        self.assertEqual((sorted(picks), sorted(seats), skipped["junk"]), (["s1"], ["s1"], 7))
 
     def test_should_leave_out_seat_counts_that_are_not_whole_numbers(self):
         odd = export_session("s1", "SVS304-R")
@@ -116,9 +118,37 @@ class FavoritesTests(unittest.TestCase):
         picks, seats, _ = rf.favorites({"sessions": [two]}, CATALOG, NOW)
         self.assertEqual((picks["p1"]["reserved"], seats["p1"]["capacity"], seats["p1"]["seatsRemaining"]), ("p1", 120, 0))
 
+    def test_should_leave_out_a_seat_count_too_big_for_a_float_without_aborting(self):
+        big = export_session("s1", "SVS304-R")
+        big["times"][0].update(capacity=10 ** 400, seatsRemaining=7)
+        picks, seats, skipped = rf.favorites({"sessions": [big]}, CATALOG, NOW)
+        self.assertEqual((picks["s1"]["p"], seats["s1"], skipped["junk"]),
+                         (2, {"availability": "reserve_a_seat", "fewSeatsLeft": False, "seatsRemaining": 7}, 0))
+
+    def test_should_skip_unusable_catalog_records_and_treat_their_sessions_as_not_in_the_catalog(self):
+        catalog = ["junk", None, {"id": "s1", "code": "SVS304-R"},                  # no run id (inst)
+                   {"id": "i1", "inst": "  ", "code": "IND327-R"},                   # blank run id
+                   catalog_rec("PEX403-R1", "p1")]
+        sessions = [export_session("s1", "SVS304-R"), export_session("i1", "IND327-R"), export_session("p1", "PEX403-R1")]
+        picks, seats, skipped = rf.favorites({"sessions": sessions}, catalog, NOW)
+        self.assertEqual((sorted(picks), sorted(seats), skipped["unknown"], skipped["junk"]),
+                         (["p1"], ["p1"], ["SVS304-R", "IND327-R"], 0))
+
+    def test_should_let_a_reserved_pick_win_its_group_when_the_app_sorts_by_time(self):
+        # The app takes the newest pick of a group (ties go to the first): the reserved Must must be newer.
+        catalog = [catalog_rec("TNC324-R1", "t1", "TNC324"), catalog_rec("TNC324-R2", "t2", "TNC324")]
+        sessions = [export_session("t1", "TNC324-R1"), export_session("t2", "TNC324-R2", reserved=True, availability="reserved")]
+        picks, _, _ = rf.favorites({"sessions": sessions}, catalog, NOW)
+        self.assertEqual((picks["t1"]["p"], picks["t2"]["p"], picks["t1"]["at"], picks["t2"]["at"]), (2, 3, NOW_MS, NOW_MS + 1))
+
 
 class EntryPointTests(unittest.TestCase):
     """What the real entry point writes, on disk."""
+
+    def assert_nothing_written(self):
+        for path in (os.path.join(self.data, "favorites.json"), os.path.join(self.data, "seats.json"),
+                     os.path.join(self.backup, "reinvent-2026-picks.json")):
+            self.assertFalse(os.path.exists(path), path)
 
     def setUp(self):
         self.tmp = tempfile.mkdtemp()
@@ -175,25 +205,36 @@ class EntryPointTests(unittest.TestCase):
         result, _ = self.run_main()
         self.assertEqual((result["picks"], result["skipped"]["junk"]), (1, 1))
 
+    def test_should_refuse_junk_just_outside_the_threshold(self):
+        with open(self.export, "w", encoding="utf-8") as f:
+            json.dump({"sessions": [export_session("s1", "SVS304-R")] * 8 + ["junk"] * 2}, f)
+        with self.assertRaises(SystemExit) as cm:
+            self.run_main()
+        self.assertIn("2 of 10 records are junk", str(cm.exception))
+        self.assert_nothing_written()
+
     def test_should_refuse_an_empty_export(self):
         with open(self.export, "w", encoding="utf-8") as f:
             json.dump({"sessions": []}, f)
-        with self.assertRaises(SystemExit):
+        with self.assertRaises(SystemExit) as cm:
             self.run_main()
-        self.assertFalse(os.path.exists(os.path.join(self.data, "favorites.json")))
+        self.assertIn("holds no sessions", str(cm.exception))
+        self.assert_nothing_written()
 
     def test_should_refuse_an_export_of_the_wrong_shape(self):
         with open(self.export, "w", encoding="utf-8") as f:
             json.dump([1, 2, 3], f)
-        with self.assertRaises(SystemExit):
+        with self.assertRaises(SystemExit) as cm:
             self.run_main()
-        self.assertFalse(os.path.exists(os.path.join(self.data, "favorites.json")))
+        self.assertIn("expected the portal export", str(cm.exception))
+        self.assert_nothing_written()
 
     def test_should_refuse_to_run_without_an_imported_catalog(self):
         os.remove(os.path.join(self.data, "sessions.json"))
-        with self.assertRaises(SystemExit):
+        with self.assertRaises(SystemExit) as cm:
             self.run_main()
-        self.assertFalse(os.path.exists(os.path.join(self.data, "favorites.json")))
+        self.assertIn("no imported catalog", str(cm.exception))
+        self.assert_nothing_written()
 
 
 if __name__ == "__main__":

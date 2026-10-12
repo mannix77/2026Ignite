@@ -49,11 +49,17 @@ def flag(v):
     raise ValueError("flag")
 
 
+MAX_SEATS = 10 ** 6  # no session holds more; also keeps absurd integers out of the published file
+
+
 def count(v):
-    """A whole, finite, non-negative seat count; anything else is left out."""
-    if isinstance(v, bool) or not isinstance(v, (int, float)) or not math.isfinite(v) or v < 0 or v != int(v):
+    """A whole, non-negative, plausible seat count; anything else is left out. Floats are checked
+    for finiteness only as floats: a huge int compares directly and never raises."""
+    if isinstance(v, bool) or not isinstance(v, (int, float)):
         return None
-    return int(v)
+    if isinstance(v, float) and (not math.isfinite(v) or v != int(v)):
+        return None
+    return int(v) if 0 <= v <= MAX_SEATS else None
 
 
 def read_session(s):
@@ -65,10 +71,10 @@ def read_session(s):
     if not sid or not isinstance(times, list):
         return None
     availability = s.get("availability")
-    if availability is not None and not isinstance(availability, str):
+    if availability is not None and (not isinstance(availability, str) or availability not in AVAILABILITY):
         return None
     try:
-        favorite, reserved = flag(s.get("favorite")), flag(s.get("reserved"))
+        favorite, reserved, few = flag(s.get("favorite")), flag(s.get("reserved")), flag(s.get("few_seats_left"))
         slots = [t for t in times if isinstance(t, dict)]
         for t in slots:
             flag(t.get("reserved"))
@@ -78,8 +84,7 @@ def read_session(s):
     # Seat counts come from the slot the pick stands for: the reserved one, else the first.
     slot = next((t for t in slots if t.get("reserved") is True), slots[0] if slots else {})
     return {"id": sid, "code": sync.text(s.get("code")), "favorite": favorite, "reserved": reserved,
-            "availability": availability if availability in AVAILABILITY else None,
-            "few": s.get("few_seats_left") is True,
+            "availability": availability, "few": few,
             "capacity": count(slot.get("capacity")), "seatsRemaining": count(slot.get("seatsRemaining"))}
 
 
@@ -87,9 +92,11 @@ def favorites(export, catalog, now):
     """-> (picks, seats, skipped) where skipped counts {"unknown", "junk", "unmarked"}."""
     by_id = {}
     for rec in catalog:
-        sid = usable_id(rec.get("id"))
-        if sid:
-            by_id.setdefault(sid, rec)
+        # A record without a usable id, run id (inst) or code can't carry a pick or a reservation.
+        if isinstance(rec, dict) and usable_id(rec.get("inst")) and usable_id(rec.get("code")):
+            sid = usable_id(rec.get("id"))
+            if sid:
+                by_id.setdefault(sid, rec)
     now_ms = int(now.timestamp() * 1000)
     picks, seats = {}, {}
     skipped = {"unknown": [], "junk": 0, "unmarked": 0}
@@ -107,7 +114,9 @@ def favorites(export, catalog, now):
             continue
         availability = "reserved" if s["reserved"] else s["availability"]
         p = 3 if s["reserved"] else TIER.get(availability, 2)
-        pick = {"p": p, "lock": rec["inst"] if s["reserved"] else None, "note": "", "at": now_ms,
+        # The app takes the newest pick of a group and ties go to the first: a reserved pick is one
+        # millisecond newer so it always decides the group's rating over an unreserved run.
+        pick = {"p": p, "lock": rec["inst"] if s["reserved"] else None, "note": "", "at": now_ms + (1 if s["reserved"] else 0),
                 "g": rec.get("group") or rec["code"], "code": rec["code"]}
         if s["reserved"]:
             pick["reserved"] = rec["inst"]
