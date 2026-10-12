@@ -30,6 +30,7 @@ jobs:
       changed: ${{ steps.sync.outputs.changed }}
       outcome: ${{ steps.sync.outcome }}
       notify: ${{ steps.notify.outcome }}
+      error: ${{ steps.why.outputs.error }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
 
@@ -59,6 +60,20 @@ jobs:
         continue-on-error: true
         timeout-minutes: 6
         run: python3 scripts/sync.py --summary-out "$RUNNER_TEMP/summary.md"
+
+      # The reason a failed sync gives (meta.json isn't committed), for the production issue.
+      - name: Read why the sync failed
+        id: why
+        if: steps.sync.outcome == 'failure'
+        run: |
+          python3 - >> "$GITHUB_OUTPUT" <<'PY'
+          import json
+          try:
+              e = json.load(open("data/ignite2026/meta.json", encoding="utf-8")).get("error") or ""
+          except Exception:
+              e = ""
+          print("error=" + " ".join(str(e).split())[:1000])
+          PY
 
       # Posts this run's summary and any summary a previous run failed to post. A failure
       # leaves the summary in data/ignite2026/pending-summary.md (committed below) so the
@@ -183,17 +198,61 @@ jobs:
       - id: deployment
         uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5
 
+  # One GitHub issue per production problem (scripts/prod_issue.py): a new problem opens an
+  # issue labelled "production" and fails the run once; a repeat only updates that issue; a
+  # successful run closes this workflow's open issues. Spec: specs/features/production-issues.feature
   report:
     needs: [sync, deploy]
-    if: always() && (needs.sync.outputs.outcome == 'failure' || needs.sync.outputs.notify == 'failure')
+    if: always() && needs.sync.result != 'cancelled'
     runs-on: ubuntu-latest
-    permissions: {}
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: write
     steps:
-      - name: Sync or notification failed
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          sparse-checkout: scripts/prod_issue.py
+          sparse-checkout-cone-mode: false
+
+      - name: Open, update or close the production issue
+        id: prod
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SYNC_JOB: ${{ needs.sync.result }}
+          SYNC: ${{ needs.sync.outputs.outcome }}
+          NOTIFY: ${{ needs.sync.outputs.notify }}
+          DEPLOY: ${{ needs.deploy.result }}
+          ERROR: ${{ needs.sync.outputs.error }}
+          WORKFLOW: ${{ github.workflow }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
-          if [ "${{ needs.sync.outputs.outcome }}" = "failure" ]; then
-            echo "::error::The catalog sync failed; the site is serving the last good data. See the 'Sync the catalog' step log."
+          set -o pipefail
+          report() {
+            printf '%s\n' "$3" > "$RUNNER_TEMP/problem.txt"
+            python3 scripts/prod_issue.py report --workflow "$WORKFLOW" --kind "$1" --title "$2" \
+              --message-file "$RUNNER_TEMP/problem.txt" --run-url "$RUN_URL"
+          }
+          if [ "$SYNC_JOB" = "failure" ]; then
+            report job-failed "The sync job failed" "A step of the sync job failed (tests, commit or site build); the site keeps the last deploy. See the run log for the failing step."
+          elif [ "$SYNC" = "failure" ]; then
+            report sync-refused "The catalog sync failed or was refused" "${ERROR:-The catalog sync failed; see the 'Sync the catalog' step log.} The site keeps the last good data."
+          elif [ "$NOTIFY" = "failure" ]; then
+            report notify-failed "The change summary could not be posted" "The catalog changed but the issue comment could not be posted; it is kept in data/ignite2026/pending-summary.md and retried next run."
+          elif [ "$DEPLOY" = "failure" ]; then
+            report deploy-failed "The site deploy failed" "Publishing to GitHub Pages failed; the site keeps the previous version. See the deploy job log."
           else
-            echo "::error::The catalog changed but the issue comment could not be posted; it is kept in data/ignite2026/pending-summary.md and will be retried next run."
-          fi
+            python3 scripts/prod_issue.py resolve --workflow "$WORKFLOW" --run-url "$RUN_URL"
+            exit 0
+          fi | tee "$RUNNER_TEMP/result.txt"
+          echo "result=$(tail -n 1 "$RUNNER_TEMP/result.txt")" >> "$GITHUB_OUTPUT"
+
+      - name: Fail the run when a new production problem appears
+        if: steps.prod.outputs.result == 'opened'
+        run: |
+          echo "::error::A new production problem was found and filed as a GitHub issue labelled 'production'."
           exit 1
+
+      - name: Note a repeat of a known problem
+        if: steps.prod.outputs.result == 'updated'
+        run: echo "::warning::A known production problem happened again; its GitHub issue was updated."
