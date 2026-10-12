@@ -115,7 +115,9 @@ class PostSummaryTests(unittest.TestCase):
 
     def test_creates_the_tracking_issue_when_none_is_open(self):
         self.stage("Added 1", "run-1")
-        self.post("run-1")
+        r = self.post("run-1")
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertIsNone(self.pending_text())
         st = self.load_state()
         self.assertEqual(st["created"], {"label": "ignite-changes", "title": "Ignite 2026 catalog changes"})
         self.assertEqual(len(st["comments"]), 1)
@@ -133,7 +135,8 @@ class PostSummaryTests(unittest.TestCase):
         self.assertEqual(r.returncode, 0, r.stderr)
         self.assertEqual(self.comments(), ["<!-- summary:run-1 -->\n_Delayed summary from an earlier sync:_\n\nAdded 1\n"])
         self.assertIsNone(self.pending_text())
-        self.post("run-3")
+        again = self.post("run-3")
+        self.assertEqual(again.returncode, 0, again.stderr)
         self.assertEqual(len(self.comments()), 1)
 
     def test_a_summary_already_on_the_issue_is_not_posted_again_and_is_cleared(self):
