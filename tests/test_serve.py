@@ -50,6 +50,18 @@ class ServedFilesTests(unittest.TestCase):
     def test_should_serve_the_app_assets(self):
         self.assertEqual(self.status("/assets/js/app.js"), 200)
 
+    def test_should_serve_the_guide_for_ai_assistants(self):
+        conn = http.client.HTTPConnection("127.0.0.1", self.port, timeout=10)
+        try:
+            conn.request("GET", "/llms.txt")
+            res = conn.getresponse()
+            status, body = res.status, res.read()
+        finally:
+            conn.close()
+        with open(os.path.join(ROOT, "llms.txt"), "rb") as f:
+            self.assertEqual((status, body), (200, f.read()))   # the repository's guide, not just any 200
+        self.assertEqual(self.status("/llms.txt/../scripts/sync.py"), 404)
+
     def test_should_refuse_the_git_folder(self):
         self.assertEqual(self.status("/.git/config"), 404)
 
