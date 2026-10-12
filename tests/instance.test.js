@@ -9,7 +9,7 @@ globalThis.document = {
   querySelector: sel => (sel === 'meta[name="planner-instance"]' ? { content: ' Gino ' }
     : sel === 'meta[name="planner-default-conference"]' ? { content: copyDefault } : null),
 };
-const { INSTANCE } = await import('../assets/js/instance.js');
+const { INSTANCE, guideUrl } = await import('../assets/js/instance.js');
 const store = await import('../assets/js/store.js');
 const { rememberConference, currentConferenceId } = await import('../assets/js/conferences.js');
 
@@ -102,6 +102,17 @@ await test('should open Ignite when the copy has no default and nothing is saved
   eq(opens(), 'ignite2026');
 });
 location.search = '';
+
+// ---- Settings → Your data points AI assistants at this copy's llms.txt (specs/features/ai-assistant-guide.feature)
+await test("should point at the guide in Gino's copy from any page of his copy", () => {
+  eq([guideUrl('https://mannix77.github.io/2026Ignite/gino/?conf=gartner2026#/settings'),
+    guideUrl('https://mannix77.github.io/2026Ignite/gino/index.html')],
+  ['https://mannix77.github.io/2026Ignite/gino/llms.txt', 'https://mannix77.github.io/2026Ignite/gino/llms.txt']);
+});
+
+await test("should point at the main site's guide from the main site", () => {
+  eq(guideUrl('https://mannix77.github.io/2026Ignite/?conf=ignite2026#/settings'), 'https://mannix77.github.io/2026Ignite/llms.txt');
+});
 
 console.log(`${pass} passed, ${fail} failed`);
 if (fail) process.exit(1);

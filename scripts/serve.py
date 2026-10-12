@@ -28,7 +28,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SYNC = os.path.join(ROOT, "scripts", "sync.py")
 LOCAL_DATA = os.path.join(ROOT, ".local-data", "ignite2026")
 COMMITTED = os.path.join(ROOT, "data", "ignite2026")
-ALLOWED_FILES = {"/", "/index.html", "/sw.js", "/manifest.webmanifest"}
+ALLOWED_FILES = {"/", "/index.html", "/sw.js", "/manifest.webmanifest", "/llms.txt"}
 ALLOWED_PREFIXES = ("/assets/", "/data/", "/tests/fixtures/")
 _lock = threading.Lock()
 
