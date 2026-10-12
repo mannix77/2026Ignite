@@ -49,6 +49,7 @@ jobs:
           node tests/catalog.test.js
           node tests/store.test.js
           node tests/instance.test.js
+          node tests/health.test.js
           python3 -m unittest discover -s tests
 
       - name: Sync the catalog
