@@ -3,6 +3,15 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-10-12T13:15:42Z · https://catalog.awsevents.com/api/sessions
+
+Added 0 · removed 0 · changed 3
+
+**Changed**
+- `COM311-R` Your Users Aren't Waiting to Build AI Agents. Are You Ready? — speakers: Rian Brooks-Kane → Ian Mckay, Rian Brooks-Kane
+- `COM311-R1` Your Users Aren't Waiting to Build AI Agents. Are You Ready? — speakers: Rian Brooks-Kane → Ian Mckay, Rian Brooks-Kane
+- `COM319` Stop Rolling Back AI Agents: Production Patterns That Work — speakers: Gunnar Grosch, Nadia Reyhani → Gunnar Grosch, Kristine Armiyants, Nadia Reyhani
+
 ## 2026-10-12T07:21:22Z · https://catalog.awsevents.com/api/sessions
 
 Added 0 · removed 0 · changed 2
