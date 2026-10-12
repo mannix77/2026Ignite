@@ -358,6 +358,16 @@ class DiffTests(unittest.TestCase):
         self.assertEqual([(r["inst"], r["repeat"]) for r in removed], [("A1", False), ("A2", True), ("B1", False)])
         self.assertEqual((added, changed), ([], []))
 
+    def test_the_change_notice_headings_do_not_claim_the_session_is_still_listed(self):
+        batch = {"at": "2026-10-12T00:00:00Z", "milestones": [], "changed": [],
+                 "added": [{"code": "N1", "title": "New", "repeat": False}, {"code": "N1-R1", "title": "New", "repeat": True}],
+                 "removed": [{"code": "G1", "title": "Gone", "repeat": False}, {"code": "G1-R1", "title": "Gone", "repeat": True}]}
+        text = sync.summary_markdown(batch, set())
+        self.assertIn("**Extra runs added**\n- `N1-R1` New", text)
+        self.assertIn("**Extra runs dropped**\n- `G1-R1` Gone", text)
+        self.assertNotIn("still in the catalog", text)
+        self.assertNotIn("already listed", text)
+
     def test_the_console_summary_counts_sessions_and_extra_runs_apart(self):
         added = [{"code": "A", "repeat": False}, {"code": "A", "repeat": True}]
         removed = [{"code": "B", "repeat": False}, {"code": "B", "repeat": True}, {"code": "B", "repeat": True}]
@@ -644,8 +654,11 @@ class PartialCatalogTests(SyncDir, unittest.TestCase):
         self.assertEqual((result, len(self.data("sessions.json")["sessions"])), ((3, False), 400))
 
     def test_should_accept_keeping_60_percent_of_sessions_with_fewer_runs(self):
-        self.run_sync(runs_of(200, 2))
-        self.assertEqual(self.run_sync(runs_of(120, 1))[0], 0)
+        ids = lambda: len({x["id"] for x in self.data("sessions.json")["sessions"]})
+        baseline = self.run_sync(runs_of(200, 2))
+        self.assertEqual((baseline, ids()), ((0, False), 200))  # a first import (nothing to diff), so the next run is a refresh
+        refresh = self.run_sync(runs_of(120, 1))
+        self.assertEqual((refresh, ids()), ((0, True), 120))
 
 
 class CiSignalTests(SyncDir, unittest.TestCase):

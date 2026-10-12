@@ -135,11 +135,14 @@ await test('should count a wholly added or removed multi-run session as one sess
   const run = (id, inst, start) => ({ id, inst, code: inst, title: 'T', start, speakers: [] });
   const three = [run('A', 'A1', '2026-11-18T18:00:00Z'), run('A', 'A2', '2026-11-19T18:00:00Z'), run('A', 'A3', '2026-11-20T18:00:00Z')];
   const one = run('B', 'B1', '2026-11-18T19:00:00Z');
-  const added = liveDiff([], [...three, one]).added;
-  eq(added.map(x => [x.inst, x.repeat]), [['A1', false], ['A2', true], ['A3', true], ['B1', false]]);
-  eq(changeCounts({ added, removed: [], changed: [] }), { added: 2, addedRuns: 2, removed: 0, removedRuns: 0, changed: 0 });
-  const removed = liveDiff([...three, one], []).removed;
-  eq(removed.map(x => [x.inst, x.repeat]), [['A1', false], ['A2', true], ['A3', true], ['B1', false]]);
+  const addedDiff = liveDiff([], [...three, one]);
+  eq(addedDiff.added.map(x => [x.inst, x.repeat]), [['A1', false], ['A2', true], ['A3', true], ['B1', false]]);
+  eq([addedDiff.removed, addedDiff.changed], [[], []]);
+  eq(changeCounts(addedDiff), { added: 2, addedRuns: 2, removed: 0, removedRuns: 0, changed: 0 });
+  const removedDiff = liveDiff([...three, one], []);
+  eq([removedDiff.added, removedDiff.changed], [[], []]);
+  eq(removedDiff.removed.map(x => [x.inst, x.repeat]), [['A1', false], ['A2', true], ['A3', true], ['B1', false]]);
+  eq(changeCounts(removedDiff), { added: 0, addedRuns: 0, removed: 2, removedRuns: 2, changed: 0 });
 });
 
 await test('should show session and extra-run counts apart in a Changes header', () => {

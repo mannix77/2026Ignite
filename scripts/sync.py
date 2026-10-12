@@ -451,7 +451,7 @@ def summary_markdown(batch, watch):
     if hit:
         lines.append("**%d change(s) affect sessions on your watchlist:** %s"
                      % (len(hit), ", ".join(sorted({x["code"] for x in hit}))))
-    # An extra run added to or dropped from a session that stays listed (repeat=True) is
+    # An extra run added to or dropped from a session (repeat=True; the session itself may be new or gone) is
     # reported apart from sessions added or removed, so it never reads as a cancellation.
     groups = {(key, run): [x for x in batch[key] if bool(x.get("repeat")) == run]
               for key in ("added", "removed") for run in (False, True)}
@@ -466,8 +466,8 @@ def summary_markdown(batch, watch):
         return "%s`%s` %s" % ("⭐ " if x["code"] in watch else "", x["code"], x["title"])
 
     for label, key, run in (("Added", "added", False), ("Removed", "removed", False),
-                            ("Extra runs added (the session was already listed)", "added", True),
-                            ("Extra runs dropped (the session is still in the catalog)", "removed", True)):
+                            ("Extra runs added", "added", True),
+                            ("Extra runs dropped", "removed", True)):
         items = groups[key, run]
         if items:
             lines.append("\n**%s**" % label)
