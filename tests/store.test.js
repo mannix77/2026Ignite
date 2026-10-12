@@ -325,5 +325,77 @@ await test('should ignore share-link tokens it cannot read', async () => {
 });
 await sleep(SAVE);
 
+// ---- an older tab never saves over newer data (specs/features/saving.feature)
+const KEY_OF = ns => `ignite26.planner.v1:${ns}`;
+const seed = (ns, saved) => { const raw = JSON.stringify(saved); localStorage.setItem(KEY_OF(ns), raw); return raw; };
+const NEWER = { v: 2, picks: { N1: { p: 3, lock: null, note: 'kept', at: 5, futureField: 'x' } }, futureTop: { a: 1 } };
+
+await test('should write nothing over saved data from a newer version, and ask for a reload', async () => {
+  const raw = seed('newer-a', NEWER);
+  const seen = [];
+  const off = store.subscribe(what => seen.push(what));
+  store.load('newer-a');
+  eq(store.newerVersion(), true);
+  store.mutatePicks(p => { p.N2 = { p: 2, lock: null, note: '', at: 6 }; });
+  await sleep(SAVE);
+  fire('pagehide'); // leaving the page flushes a pending save too
+  off();
+  eq(localStorage.getItem(KEY_OF('newer-a')) === raw, true); // byte for byte, unknown fields included
+  eq(seen.includes('newer-version'), true);
+});
+
+await test('should save as usual when the saved version is the one this code knows, or has none', async () => {
+  for (const [ns, saved] of [['known-v1', { v: 1, picks: {} }], ['known-none', { picks: {} }]]) {
+    seed(ns, saved);
+    store.load(ns);
+    eq(store.newerVersion(), false);
+    store.mutatePicks(p => { p.K1 = { p: 3, lock: null, note: '', at: 1 }; });
+    await sleep(SAVE);
+    eq(JSON.parse(localStorage.getItem(KEY_OF(ns))).picks.K1?.p, 3);
+  }
+});
+
+await test('should refuse only a version newer than this code knows (v 2 refused, v 1 and a non-number saved)', async () => {
+  for (const [ns, v, refused] of [['thr-1', 1, false], ['thr-2', 2, true], ['thr-text', '2', false]]) {
+    const raw = seed(ns, { v, picks: {} });
+    store.load(ns);
+    store.mutatePicks(p => { p.T1 = { p: 1, lock: null, note: '', at: 1 }; });
+    await sleep(SAVE);
+    eq([ns, store.newerVersion(), localStorage.getItem(KEY_OF(ns)) === raw], [ns, refused, refused]);
+  }
+});
+
+await test('should stop saving when another tab saves a newer version while this tab has a pending edit', async () => {
+  seed('newer-live', { v: 1, picks: {} });
+  store.load('newer-live');
+  store.mutatePicks(p => { p.L1 = { p: 3, lock: null, note: '', at: 1 }; }); // pending: not yet written
+  const raw = seed('newer-live', NEWER);                                      // the other tab's save
+  for (const fn of pageEvents.storage || []) fn({ key: KEY_OF('newer-live'), newValue: raw });
+  eq(store.newerVersion(), true);
+  store.mutatePicks(p => { p.L2 = { p: 2, lock: null, note: '', at: 2 }; });
+  await sleep(SAVE);
+  eq(localStorage.getItem(KEY_OF('newer-live')) === raw, true);
+});
+
+await test('should save again once the page is loaded with a conference whose data it understands', async () => {
+  seed('newer-then-ok', NEWER);
+  store.load('newer-then-ok');
+  eq(store.newerVersion(), true);
+  store.load('nothing-saved-yet'); // no saved text at all: the flag must not carry over
+  eq(store.newerVersion(), false);
+  store.mutatePicks(p => { p.E1 = { p: 1, lock: null, note: '', at: 1 }; });
+  await sleep(SAVE);
+  eq(JSON.parse(localStorage.getItem(KEY_OF('nothing-saved-yet'))).picks.E1?.p, 1);
+  seed('newer-again', NEWER);
+  store.load('newer-again');
+  seed('ok-after', { v: 1, picks: {} });
+  store.load('ok-after');
+  eq(store.newerVersion(), false);
+  store.mutatePicks(p => { p.A1 = { p: 2, lock: null, note: '', at: 1 }; });
+  await sleep(SAVE);
+  eq(JSON.parse(localStorage.getItem(KEY_OF('ok-after'))).picks.A1?.p, 2);
+});
+
+await sleep(SAVE);
 console.log(`${pass} passed, ${fail} failed`);
 if (fail) process.exit(1);

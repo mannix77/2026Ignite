@@ -23,12 +23,18 @@ export function bldgChip(loc) {
   return `<span class="chip bldg" style="--bc: var(--b-${color})" title="${attr(name)}">${esc(v.buildingLabel(loc))}</span>`;
 }
 
+// A reservation time is an instant. Shown in the viewer's own zone (timeZone left undefined =
+// the browser's), labelled by Intl (EDT, PDT, GMT+9); pass a zone only to pin it, as tests do.
+export function rsvpOpensText(iso, timeZone) {
+  const when = typeof iso === 'string' ? new Date(iso) : null;
+  if (!when || Number.isNaN(when.getTime())) return '';
+  return when.toLocaleString('en-US', { timeZone, month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' });
+}
+
 export function rsvpChip(s) {
   if (!s.rsvp) return '';
-  const when = typeof s.rsvp === 'string' ? new Date(s.rsvp) : null;
-  const t = when && !Number.isNaN(when.getTime())
-    ? `Reservation required. Seats are limited; reservations open ${when.toLocaleString('en-US', { timeZone: 'America/Los_Angeles', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })} PT`
-    : 'Reservation required. Seats are limited';
+  const when = rsvpOpensText(s.rsvp);
+  const t = when ? `Reservation required. Seats are limited; reservations open ${when}` : 'Reservation required. Seats are limited';
   return `<span class="chip rsvp" title="${attr(t)}">RSVP</span>`;
 }
 
