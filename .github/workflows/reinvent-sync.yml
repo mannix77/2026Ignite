@@ -32,6 +32,7 @@ jobs:
       outcome: ${{ steps.sync.outcome }}
       notify: ${{ steps.notify.outcome }}
       error: ${{ steps.why.outputs.error }}
+      redeploy: ${{ steps.redeploy.outcome }}
     steps:
       - name: Stop after the event
         id: window
@@ -153,6 +154,7 @@ jobs:
           exit 1
 
       - name: Redeploy the site
+        id: redeploy
         if: steps.commit.outputs.pushed == 'true'
         continue-on-error: true   # the next scheduled Ignite run deploys it anyway
         env:
@@ -183,7 +185,7 @@ jobs:
           SYNC_JOB: ${{ needs.sync.result }}
           SYNC: ${{ needs.sync.outputs.outcome }}
           NOTIFY: ${{ needs.sync.outputs.notify }}
-          DEPLOY: skipped
+          DEPLOY: ${{ needs.sync.outputs.redeploy }}   # this workflow's deploy is asking sync.yml to redeploy
           ERROR: ${{ needs.sync.outputs.error }}
           WORKFLOW: ${{ github.workflow }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
@@ -201,7 +203,7 @@ jobs:
           elif [ "$NOTIFY" = "failure" ]; then
             report notify-failed "The change summary could not be posted" "The catalog changed but the issue comment could not be posted; it is kept in data/reinvent2026/pending-summary.md and retried next run."
           elif [ "$DEPLOY" = "failure" ]; then
-            report deploy-failed "The site deploy failed" "Publishing to GitHub Pages failed; the site keeps the previous version. See the deploy job log."
+            report deploy-failed "The site redeploy request failed" "The catalog was saved, but asking sync.yml to redeploy the site failed; the site shows the new catalog after the next scheduled Ignite run. See the 'Redeploy the site' step log."
           else
             python3 scripts/prod_issue.py resolve --workflow "$WORKFLOW" --run-url "$RUN_URL"
             exit 0

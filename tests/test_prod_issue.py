@@ -99,7 +99,8 @@ class ResolveTests(unittest.TestCase):
         self.assertEqual((self.closed, self.gh.issues[self.ignite]["open"], len(comments), RUN2 in comments[0]), ([self.ignite], False, 1, True))
 
     def test_should_leave_the_other_workflows_issue_open(self):
-        self.assertEqual((self.ignite != self.reinvent, self.gh.issues[self.reinvent]["open"]), (True, True))
+        self.assertEqual((self.ignite != self.reinvent, self.gh.issues[self.ignite]["open"], self.gh.issues[self.reinvent]["open"]),
+                         (True, False, True))   # the recovered workflow's issue closed; the other one did not
 
 
 class ProblemKeyTests(unittest.TestCase):
@@ -180,24 +181,36 @@ class WorkflowWiringTests(unittest.TestCase):
                                            "result=opened"))
 
     def test_should_report_a_failed_ignite_job_before_anything_else(self):
-        calls, _ = self.run_step("sync.yml", SYNC_JOB="failure", SYNC="", DEPLOY="skipped")
-        self.assertEqual(kinds(calls), ["report job-failed"])
+        calls, output = self.run_step("sync.yml", SYNC_JOB="failure", SYNC="", DEPLOY="skipped")
+        self.assertEqual((kinds(calls), output), (["report job-failed"], "result=opened"))
 
     def test_should_report_a_failed_ignite_deploy(self):
-        calls, _ = self.run_step("sync.yml", DEPLOY="failure")
-        self.assertEqual(kinds(calls), ["report deploy-failed"])
+        calls, output = self.run_step("sync.yml", DEPLOY="failure")
+        self.assertEqual((kinds(calls), output), (["report deploy-failed"], "result=opened"))
 
     def test_should_close_ignite_issues_when_the_run_succeeds(self):
         calls, output = self.run_step("sync.yml")
         self.assertEqual((calls, output), (["resolve - |"], "result=closed nothing"))
 
     def test_should_report_a_refused_reinvent_sync_with_its_reason(self):
-        calls, _ = self.run_step("reinvent-sync.yml", SYNC="failure", DEPLOY="skipped", ERROR="catalog returned 15 sessions")
-        self.assertEqual(calls, ["report sync-refused | catalog returned 15 sessions The site keeps the last good data."])
+        calls, output = self.run_step("reinvent-sync.yml", SYNC="failure", DEPLOY="skipped", ERROR="catalog returned 15 sessions")
+        self.assertEqual((calls, output), (["report sync-refused | catalog returned 15 sessions The site keeps the last good data."], "result=opened"))
 
     def test_should_close_reinvent_issues_when_the_run_succeeds(self):
-        calls, _ = self.run_step("reinvent-sync.yml", DEPLOY="skipped")
-        self.assertEqual(calls, ["resolve - |"])
+        calls, output = self.run_step("reinvent-sync.yml", DEPLOY="skipped")
+        self.assertEqual((calls, output), (["resolve - |"], "result=closed nothing"))
+
+    def test_should_report_a_failed_reinvent_redeploy_request_instead_of_closing_issues(self):
+        calls, output = self.run_step("reinvent-sync.yml", DEPLOY="failure")
+        self.assertEqual((kinds(calls), output), (["report deploy-failed"], "result=opened"))
+        self.assertIn("redeploy", calls[0].split(" | ")[1])   # the message names what failed: the redeploy request
+
+    def test_should_wire_the_reinvent_redeploy_outcome_into_the_report(self):
+        # DEPLOY comes from the sync job's output for the "Redeploy the site" step, not a fixed value.
+        with open(os.path.join(ROOT, ".github", "workflows", "reinvent-sync.yml"), encoding="utf-8") as f:
+            text = f.read()
+        self.assertEqual((text.count("redeploy: ${{ steps.redeploy.outcome }}"), text.count("DEPLOY: ${{ needs.sync.outputs.redeploy }}"),
+                          text.count("DEPLOY: skipped")), (1, 1, 0))
 
 
 if __name__ == "__main__":

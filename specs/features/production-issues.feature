@@ -16,6 +16,12 @@ Feature: A GitHub issue for every production problem
       When the Ignite deploy fails
       Then a second production issue is opened for the deploy
 
+    Scenario: A failed re:Invent redeploy request opens an issue instead of closing them
+      Given a production issue is open for the re:Invent sync
+      When the re:Invent sync succeeds but its request to redeploy the site fails
+      Then a production issue is opened for the redeploy
+      And the open re:Invent issue is not closed
+
   Rule: The same problem again updates its issue instead of adding noise
 
     Scenario: A repeat of the same refusal updates the existing issue
