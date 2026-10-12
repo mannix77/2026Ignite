@@ -1,7 +1,7 @@
 // Conference Planner — views, routing and event handling.
 
 import * as store from './store.js';
-import { fetchAll, buildModel, diffKnown, snapshot, cacheUrl, exportAge, customRecords, catalogMatch, CUSTOM_DATA, DATA_OVERRIDE } from './data.js';
+import { fetchAll, buildModel, diffKnown, snapshot, cacheUrl, exportAge, customRecords, catalogMatch, seatsSig, CUSTOM_DATA, DATA_OVERRIDE } from './data.js';
 import { checkLive, diff as liveDiff } from './live.js';
 import { optimize, decisionGroups, transitions, fillers, nowNext, weigh, canBoth, overlaps, transition, compareOptions, lunchConfig, arrivalExtra, PRIORITY } from './planner.js';
 import { fmtTime, fmtDay, fmtDuration, relTime, nowLocal, addDays } from './time.js';
@@ -11,7 +11,7 @@ import { buildSuggester } from './suggest.js';
 import { createRanker, partition, profileConfig, profileGroups, GOALS } from './profile.js';
 import { storageStatus, backupReminder, backupAge } from './health.js';
 import { INSTANCE_LABEL, nsKey } from './instance.js';
-import { esc, attr, icon, bldgChip, recChip, rsvpChip, prioPill, scoreChip, whenText, prioControl, sessionCard, cardClass, toast, shareOrDownload, copyText, speakersLine, setHostCompany } from './ui.js';
+import { esc, attr, icon, bldgChip, recChip, rsvpChip, seatsDetail, prioPill, scoreChip, whenText, prioControl, sessionCard, cardClass, toast, shareOrDownload, copyText, speakersLine, setHostCompany } from './ui.js';
 
 const $ = (sel, root = document) => root.querySelector(sel);
 const main = $('#main');
@@ -1753,7 +1753,7 @@ function renderDetail(s) {
         <dt>Where</dt><dd>${s.onlineOnly ? 'Online' : `${bldgChip(s.loc)} ${esc(s.roomLabel)}`}</dd>
         <dt>Recording</dt><dd>${s.recorded === true ? 'Will be recorded: you can watch it later' : s.recorded === false ? '<b>Not recorded</b>: in person only' : 'Unknown'}</dd>
         ${s.rsvp ? `<dt>Reservation</dt><dd><b>Required</b>, seats are limited${typeof s.rsvp === 'string' ? `. Opens ${esc(fmtStamp(s.rsvp))} on ${esc(app.conf.siteName)}` : ''}${gp?.reserved ? '. <b>You reserved a seat.</b>' : ''}</dd>` : ''}
-        ${s.availability ? `<dt>Seats</dt><dd>${esc({ reserved: 'You hold a reserved seat', reserve_a_seat: `Seats to reserve${s.fewSeatsLeft ? ', few left' : ''}`, session_full: 'Full: reservations are gone; a walk-up line forms before the start (arrive 15 min early)', walk_up_only: 'Walk-up only: no reservations, arrive early', waitlist: 'Full: you can join the waitlist' }[s.availability])}${Number.isInteger(s.capacity) ? ` · ${s.capacity} seats${Number.isInteger(s.seatsRemaining) ? `, ${s.seatsRemaining} left at export` : ''}` : ''}</dd>` : ''}
+        ${seatsDetail(s) ? `<dt>Seats</dt><dd>${esc(seatsDetail(s))}</dd>` : ''}
         <dt>Format</dt><dd>${esc((s.delivery || []).join(', ') || '—')}${s.remote ? ' · remote viewing rooms available' : ''}</dd>
         ${s.audience?.length ? `<dt>${app.conf.id === 'gartner2026' ? 'Program' : 'Audience'}</dt><dd>${esc(s.audience.join(', '))}</dd>` : ''}
         ${s.topics?.length ? `<dt>Topics</dt><dd>${esc(s.topics.join(', '))}</dd>` : ''}
@@ -2323,7 +2323,7 @@ function rebuildModel() {
 // snapshot, otherwise from the snapshot (which also carries the change history).
 const liveDiffers = () => !!(app.live && !app.live.same);
 function docSig() {
-  const seats = app.snapshot.seats?.exportedAt || ''; // a re-exported seat file changes the model too
+  const seats = seatsSig(app.snapshot.seats); // a re-exported seat file changes the model too, stamped or not
   return liveDiffers() ? `live:${app.snapshot.doc.generatedAt}:${app.live.at}:${seats}` : `snap:${app.snapshot.doc.generatedAt}:${seats}`;
 }
 

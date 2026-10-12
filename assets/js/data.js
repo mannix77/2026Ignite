@@ -117,10 +117,24 @@ const count = v => (Number.isInteger(v) && v >= 0 ? v : null);
 // The usable seat record for a session, or null: an untrusted file is read, never trusted.
 export function seatInfo(seats, id) {
   const table = seats && typeof seats === 'object' ? seats.seats : null;
-  if (!table || typeof table !== 'object' || typeof id !== 'string' || !id || !Object.hasOwn(table, id)) return null;
+  if (!table || typeof table !== 'object' || typeof id !== 'string' || !id.trim() || !Object.hasOwn(table, id)) return null; // exact key, but never a blank one
   const r = table[id];
   if (!r || typeof r !== 'object' || !AVAILABILITY.has(r.availability)) return null;
   return { availability: r.availability, capacity: count(r.capacity), seatsRemaining: count(r.seatsRemaining), fewSeatsLeft: r.fewSeatsLeft === true };
+}
+
+// A short signature of the seat file's content, so a re-export that keeps (or lacks) exportedAt
+// still rebuilds the model. Cached per parsed file: it is computed on every refresh check.
+const sigCache = new WeakMap();
+export function seatsSig(seats) {
+  if (!seats || typeof seats !== 'object') return '';
+  if (sigCache.has(seats)) return sigCache.get(seats);
+  const text = JSON.stringify(seats.seats ?? null) || '';
+  let h = 5381;
+  for (let i = 0; i < text.length; i++) h = ((h * 33) ^ text.charCodeAt(i)) >>> 0;
+  const sig = `${typeof seats.exportedAt === 'string' ? seats.exportedAt : ''}#${text.length}.${h.toString(36)}`;
+  sigCache.set(seats, sig);
+  return sig;
 }
 
 export function buildModel(doc, settings, rsvp, conf, venue, seats = null) {

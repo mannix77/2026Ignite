@@ -152,8 +152,8 @@ for (const [id, rooms] of Object.entries(realRooms)) {
 
 
 // ---- seat availability from the attendee's portal export (specs/features/seat-availability.feature)
-const { seatInfo } = await import('../assets/js/data.js');
-const { availChip } = await import('../assets/js/ui.js');
+const { seatInfo, seatsSig } = await import('../assets/js/data.js');
+const { availChip, seatsDetail } = await import('../assets/js/ui.js');
 const reinvent = CONFERENCES.reinvent2026;
 const seatRec = (id, code) => ({ id, inst: id, code, title: code, type: 'Workshop', delivery: ['In-person'], rsvp: true, rsvpOpens: '2026-10-06T16:00:00Z',
   start: '2026-12-02T16:30:00Z', end: '2026-12-02T18:30:00Z', dur: 120, room: 'Wynn/Encore | Level 1 | Encore Ballroom 1', group: code, repeats: [], capacity: 84 });
@@ -195,6 +195,43 @@ await test('should ignore seat records for unknown sessions and junk values', ()
   eq([x.availability, x.rsvp, x.capacity, x.seatsRemaining, x.fewSeatsLeft, availChip(x)], [undefined, '2026-10-06T16:00:00Z', 84, undefined, undefined, '']);
   eq([seatInfo(seatFile, 'x1'), seatInfo(seatFile, 'ghost')?.availability, seatInfo(null, 'i1'), seatInfo({ seats: [] }, 'i1'), seatInfo(seatFile, '')], [null, 'session_full', null, null, null]);
   eq(seatInfo({ seats: { toString: { availability: 'session_full' } } }, 'constructor'), null); // only own keys count
+});
+
+await test('should keep a usable availability and drop only the invalid counts', () => {
+  const bad = { seats: { y1: { availability: 'reserve_a_seat', capacity: -5, seatsRemaining: 'many', fewSeatsLeft: true } } };
+  eq(seatInfo(bad, 'y1'), { availability: 'reserve_a_seat', capacity: null, seatsRemaining: null, fewSeatsLeft: true });
+  const doc = { generatedAt: 'x', sessions: [seatRec('y1', 'YYY100')] };
+  const y = buildModel(doc, store.settings(), null, reinvent, createVenue(reinvent.venue), bad).sessions[0];
+  eq([y.availability, y.capacity, y.seatsRemaining, y.fewSeatsLeft], ['reserve_a_seat', 84, undefined, true]); // the catalog's capacity stays
+});
+
+await test('should not apply seat data to a blank session id', () => {
+  const blank = { seats: { ' ': { availability: 'session_full', capacity: 10, seatsRemaining: 0 } } };
+  eq([seatInfo(blank, ' '), seatInfo(blank, '\t')], [null, null]);
+  const doc = { generatedAt: 'x', sessions: [seatRec(' ', 'BLANK1')] };
+  const b = buildModel(doc, store.settings(), null, reinvent, createVenue(reinvent.venue), blank).sessions[0];
+  eq([b?.availability, b?.rsvp], [undefined, '2026-10-06T16:00:00Z']); // not cleared by a record under a blank key
+});
+
+await test('should change the seat signature when seat values change even if exportedAt does not', () => {
+  const a = { exportedAt: 'T', seats: { s1: { availability: 'reserve_a_seat', seatsRemaining: 3 } } };
+  const sameAgain = { exportedAt: 'T', seats: { s1: { availability: 'reserve_a_seat', seatsRemaining: 3 } } };
+  const fewer = { exportedAt: 'T', seats: { s1: { availability: 'reserve_a_seat', seatsRemaining: 2 } } };
+  const noStamp = { seats: { s1: { availability: 'session_full' } } };
+  eq(seatsSig(a) === seatsSig(sameAgain), true);
+  eq(seatsSig(a) === seatsSig(fewer), false);
+  eq(seatsSig(noStamp) === seatsSig({ seats: { s1: { availability: 'waitlist' } } }), false);
+  eq([seatsSig(null), seatsSig(undefined), seatsSig('junk')], ['', '', '']);
+});
+
+await test('should show seats left in the detail even when the capacity is missing', () => {
+  const detail = o => seatsDetail({ availability: 'reserve_a_seat', ...o });
+  eq(detail({ capacity: 84, seatsRemaining: 3 }), 'Seats to reserve · 84 seats, 3 left at export');
+  eq(detail({ seatsRemaining: 3 }), 'Seats to reserve · 3 left at export');
+  eq(detail({ capacity: 84 }), 'Seats to reserve · 84 seats');
+  eq(detail({}), 'Seats to reserve');
+  eq(detail({ fewSeatsLeft: true, seatsRemaining: 0 }), 'Seats to reserve, few left · 0 left at export');
+  eq(seatsDetail({}), '');
 });
 
 await test('should leave a catalog without a seat file exactly as it is', () => {

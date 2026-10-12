@@ -165,3 +165,23 @@ export async function copyText(text) {
     return ok;
   }
 }
+
+const SEAT_TEXT = {
+  reserved: 'You hold a reserved seat',
+  reserve_a_seat: few => `Seats to reserve${few ? ', few left' : ''}`,
+  session_full: 'Full: reservations are gone; a walk-up line forms before the start (arrive 15 min early)',
+  walk_up_only: 'Walk-up only: no reservations, arrive early',
+  waitlist: 'Full: you can join the waitlist',
+};
+
+// The "Seats" row of the session detail: the availability, then capacity and seats left, each shown
+// when it is known (seats left needs no capacity).
+export function seatsDetail(s) {
+  const t = s.availability && Object.hasOwn(SEAT_TEXT, s.availability) ? SEAT_TEXT[s.availability] : null;
+  if (t == null) return '';
+  const base = typeof t === 'function' ? t(s.fewSeatsLeft) : t;
+  const cap = Number.isInteger(s.capacity) ? `${s.capacity} seats` : '';
+  const left = Number.isInteger(s.seatsRemaining) ? `${s.seatsRemaining} left at export` : '';
+  const extra = [cap, left].filter(Boolean).join(', ');
+  return extra ? `${base} · ${extra}` : base;
+}
