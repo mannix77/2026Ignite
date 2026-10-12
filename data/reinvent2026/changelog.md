@@ -3,6 +3,14 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-10-12T07:21:22Z · https://catalog.awsevents.com/api/sessions
+
+Added 0 · removed 0 · changed 2
+
+**Changed**
+- `ANT408` Observe, investigate, act: smarter ops with Amazon OpenSearch Service — level: 400 → 300
+- `ANT423` Introducing AWS Context: Build governed intelligence for agents at scale — level: 400 → 300
+
 ## 2026-10-11T18:50:53Z · https://catalog.awsevents.com/api/sessions
 
 Added 0 · removed 0 · changed 12
