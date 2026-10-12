@@ -380,6 +380,9 @@ await test('should ignore each token the guide lists as ignored, and still impor
     [['BRK202'], ['BRK202'], ['BRK202'], ['BRK202'], ['BRK202'], ['BRK202']],
     [['BRK202'], ['BRK202'], ['BRK202'], ['BRK202'], ['BRK202'], ['BRK202']],
   ]);
+  // The valid token still imports as a Must (3), both in the dialog's count and in what is saved.
+  eq(documented.map(t => store.parseShare(`BRK202.3~${t}`, same, same).BRK202?.p), [3, 3, 3, 3, 3, 3]);
+  eq(documented.map(t => receive(`BRK202.3~${t}`).BRK202?.p), [3, 3, 3, 3, 3, 3]);
 });
 await sleep(SAVE);
 

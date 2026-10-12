@@ -66,15 +66,22 @@ class PublishedGuideTests(unittest.TestCase):
 
     def test_should_publish_the_copies_without_error(self):
         self.assertEqual((self.published.returncode, self.published.stderr), (0, ""))
+        self.assertTrue(os.path.isfile(os.path.join(self.site, "gino", "llms.txt")))  # the intended effect happened
 
     def test_should_give_links_under_ginos_copy_in_ginos_guide(self):
         guide = self.read("gino/llms.txt")
-        self.assertEqual((GINO + "?conf=" in guide, guide.count(SITE), guide.count(GINO)),
-                         (True, guide.count(GINO), self.read("llms.txt").count(SITE)))
+        main_links = self.read("llms.txt").count(SITE)
+        self.assertGreater(main_links, 0)                         # the guide has links to rewrite
+        self.assertIn(GINO + "?conf=", guide)
+        self.assertEqual(guide.count(GINO), main_links)           # every link moved...
+        self.assertEqual(guide.replace(GINO, "").count(SITE), 0)  # ...and none stayed on the main site
 
     def test_should_keep_the_main_sites_links_in_the_main_sites_guide(self):
         guide = self.read("llms.txt")
-        self.assertEqual((SITE + "?conf=" in guide, GINO in guide), (True, False))
+        with open(os.path.join(ROOT, "llms.txt"), encoding="utf-8") as f:
+            self.assertEqual(guide, f.read())   # the repository's guide, untouched by the deploy step
+        self.assertIn(SITE + "?conf=", guide)
+        self.assertNotIn(GINO, guide)
 
 
 class GuideCopyScriptTests(unittest.TestCase):
@@ -90,19 +97,23 @@ class GuideCopyScriptTests(unittest.TestCase):
         res = subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "instance_llms.py"), src, dest, name],
                              capture_output=True, text=True, timeout=30)
         if not os.path.exists(dest):
-            return res.returncode, None
+            return res.returncode, None, res.stderr
         with open(dest, encoding="utf-8") as f:
-            return res.returncode, f.read()
+            return res.returncode, f.read(), res.stderr
 
     def test_should_rewrite_every_site_link_for_the_copy(self):
-        self.assertEqual(self.copy(f"Open {SITE}?conf=x or {SITE}data/x.json\n", "gino"),
-                         (0, f"Open {GINO}?conf=x or {GINO}data/x.json\n"))
+        code, text, _ = self.copy(f"Open {SITE}?conf=x or {SITE}data/x.json\n", "gino")
+        self.assertEqual((code, text), (0, f"Open {GINO}?conf=x or {GINO}data/x.json\n"))
 
     def test_should_refuse_a_guide_without_the_site_address(self):
-        self.assertEqual(self.copy("Open https://example.org/\n", "gino"), (1, None))
+        code, text, err = self.copy("Open https://example.org/\n", "gino")
+        self.assertEqual((code, text), (1, None))   # refused, and nothing written
+        self.assertIn("has no link to " + SITE, err)
 
     def test_should_refuse_a_copy_name_that_is_not_a_folder_name(self):
-        self.assertEqual(self.copy(f"Open {SITE}\n", "../gino"), (1, None))
+        code, text, err = self.copy(f"Open {SITE}\n", "../gino")
+        self.assertEqual((code, text), (1, None))
+        self.assertIn("must be lowercase letters, digits or -", err)
 
 
 if __name__ == "__main__":
