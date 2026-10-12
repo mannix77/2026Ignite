@@ -346,7 +346,8 @@ def diff(prev, cur):
     for sid, recs in cg.items():
         olds = pg.get(sid)
         if not olds:
-            added.extend(brief(r) for r in recs)
+            # New as a whole: one session; its other runs are extra runs (repeat=True).
+            added.extend(dict(brief(r), repeat=i > 0) for i, r in enumerate(recs))
             continue
         # Runs keep their instance id; pair leftovers by time only if ids were regenerated.
         old_by_inst = {o["inst"]: o for o in olds}
@@ -364,7 +365,7 @@ def diff(prev, cur):
         removed.extend(dict(brief(o), repeat=len(olds) > 1) for o in left_old[len(left_new):])
     for sid, recs in pg.items():
         if sid not in cg:
-            removed.extend(brief(r) for r in recs)
+            removed.extend(dict(brief(r), repeat=i > 0) for i, r in enumerate(recs))
     return added, removed, changed
 
 
@@ -450,17 +451,29 @@ def summary_markdown(batch, watch):
     if hit:
         lines.append("**%d change(s) affect sessions on your watchlist:** %s"
                      % (len(hit), ", ".join(sorted({x["code"] for x in hit}))))
-    lines.append("Added %d · removed %d · changed %d" % (len(batch["added"]), len(batch["removed"]), len(batch["changed"])))
+    # An extra run added to or dropped from a session (repeat=True; the session itself may be new or gone) is
+    # reported apart from sessions added or removed, so it never reads as a cancellation.
+    groups = {(key, run): [x for x in batch[key] if bool(x.get("repeat")) == run]
+              for key in ("added", "removed") for run in (False, True)}
+    line = "Added %d · removed %d · changed %d" % (len(groups["added", False]), len(groups["removed", False]), len(batch["changed"]))
+    for (key, verb) in (("added", "added"), ("removed", "dropped")):
+        n = len(groups[key, True])
+        if n:
+            line += " · %d extra run%s %s" % (n, "" if n == 1 else "s", verb)
+    lines.append(line)
 
     def fmt(x):
         return "%s`%s` %s" % ("⭐ " if x["code"] in watch else "", x["code"], x["title"])
 
-    for label, key in (("Added", "added"), ("Removed", "removed")):
-        if batch[key]:
+    for label, key, run in (("Added", "added", False), ("Removed", "removed", False),
+                            ("Extra runs added", "added", True),
+                            ("Extra runs dropped", "removed", True)):
+        items = groups[key, run]
+        if items:
             lines.append("\n**%s**" % label)
-            lines.extend("- " + fmt(x) for x in batch[key][:60])
-            if len(batch[key]) > 60:
-                lines.append("- …and %d more" % (len(batch[key]) - 60))
+            lines.extend("- " + fmt(x) for x in items[:60])
+            if len(items) > 60:
+                lines.append("- …and %d more" % (len(items) - 60))
     if batch["changed"]:
         lines.append("\n**Changed**")
         rows = sorted(batch["changed"], key=lambda x: (x["code"] not in watch, x["code"]))
@@ -490,6 +503,14 @@ def event_window(args, flags):
     # Like live.js liveWindow: unusable or reversed site dates mean the configured default.
     a, b = day_or_none((flags or {}).get("eventStart")), day_or_none((flags or {}).get("eventEnd"))
     return (a, b) if a and b and a <= b else DEFAULT_WINDOW
+
+
+def session_stats(lst):
+    """Sessions (not runs) with a time / a room: a session counts if any of its runs has one."""
+    return {
+        "withDates": len({r["id"] for r in lst if r.get("start")}),
+        "withRooms": len({r["id"] for r in lst if r.get("room") and not r.get("roomTbd")}),
+    }
 
 
 def withdrawal(ps, cs):
@@ -547,10 +568,13 @@ def run(args):
         by_name = {p[0]: p for r in prev for p in r.get("speakers") or [] if p[1] or p[2]}
         cur, dropped, draft = normalize(raw, raw_spk, event_window(args, flags or {}), by_name)
         # Guard: an outage or partial index must not look like hundreds of cancellations.
-        if len(cur) < 50 or (prev and len(cur) < 0.6 * len(prev)):
+        # It counts sessions, not runs: dropping a session's extra run (Ignite deleted its
+        # placeholder runs once rooms were published) loses nothing. Same rule in live.js.
+        n_cur, n_prev = len({r["id"] for r in cur}), len({r["id"] for r in prev})
+        if n_cur < 50 or (prev and n_cur < 0.6 * n_prev):
             raise RuntimeError("catalog returned %d sessions (previously %d); keeping last good data"
-                               % (len(cur), len(prev)))
-        why = withdrawal(stats(prev), stats(cur)) if prev and not getattr(args, "allow_withdrawal", False) else None
+                               % (n_cur, n_prev))
+        why = withdrawal(session_stats(prev), session_stats(cur)) if prev and not getattr(args, "allow_withdrawal", False) else None
         if why:
             raise RuntimeError(why)
     except RuntimeError as e:
@@ -608,10 +632,24 @@ def run(args):
     if batch and args.summary_out:
         with open(args.summary_out, "w", encoding="utf-8") as f:
             f.write(summary_markdown(batch, watch))
-    print("sessions=%d dates=%d rooms=%d draft=%d | added=%d removed=%d changed=%d%s"
-          % (cs["sessions"], cs["withDates"], cs["withRooms"], draft, len(added), len(removed), len(changed),
-             (" | " + "; ".join(ms)) if ms else ""))
+    print(console_summary(cs, draft, added, removed, changed, ms))
     return 0, bool(batch)
+
+
+def console_summary(stats, draft, added, removed, changed, milestones):
+    """One line for the run log. Sessions and extra runs are counted apart: a dropped extra run
+    (repeat=True) of a session that stays listed is not a removed session."""
+    def sessions(xs):
+        return sum(1 for x in xs if not x.get("repeat"))
+    def runs(xs):
+        return sum(1 for x in xs if x.get("repeat"))
+    line = "sessions=%d dates=%d rooms=%d draft=%d | added=%d removed=%d changed=%d" % (
+        stats["sessions"], stats["withDates"], stats["withRooms"], draft, sessions(added), sessions(removed), len(changed))
+    if runs(added) or runs(removed):
+        line += " | extra runs: added=%d dropped=%d" % (runs(added), runs(removed))
+    if milestones:
+        line += " | " + "; ".join(milestones)
+    return line
 
 
 def main():

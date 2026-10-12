@@ -197,6 +197,28 @@ class DiffParityTests(unittest.TestCase):
         with_two = next(i for i, r in enumerate(self.prev) if len(r["speakers"]) > 1)
         self.agree(self.changed(lambda c: c[with_two].update(speakers=list(reversed(c[with_two]["speakers"])))), (0, 0, {}))
 
+    def test_should_agree_that_a_new_multi_run_session_is_one_session_plus_extra_runs(self):
+        def add_runs(c):
+            for n in range(3):
+                extra = copy.deepcopy(c[0])
+                extra.update(id="NEWSESSION", inst="NEWSESSION-%d" % n, code="NEW%d" % n, start="2026-11-1%dT18:00:00Z" % (7 + n))
+                c.append(extra)
+        self.agree(self.changed(add_runs), (3, 0, {}))
+        added = sync.diff(self.prev, self.changed(add_runs))[0]
+        self.assertEqual([a["repeat"] for a in added], [False, True, True])
+
+    def test_should_agree_that_a_dropped_multi_run_session_is_one_session_plus_extra_runs(self):
+        base = self.prev
+        gone = []
+        for n in range(3):
+            r = copy.deepcopy(base[0])
+            r.update(id="GONESESSION", inst="GONESESSION-%d" % n, code="GONE%d" % n, start="2026-11-1%dT18:00:00Z" % (7 + n))
+            gone.append(r)
+        self.prev = base + gone
+        self.agree(base, (0, 3, {}))
+        removed = sync.diff(self.prev, base)[1]
+        self.assertEqual([r["repeat"] for r in removed], [False, True, True])
+
     def test_should_agree_on_a_cancellation(self):
         self.agree(self.changed(lambda c: c.pop(2)), (0, 1, {}))
 
@@ -321,6 +343,40 @@ class DiffTests(unittest.TestCase):
         self.assertEqual([r["inst"] for r in removed], ["T1"])
         self.assertEqual((added, changed), ([], []))
 
+    def test_a_new_session_with_three_runs_is_one_session_and_two_extra_runs(self):
+        cur = [self.rec("A1", "2026-11-18T18:00:00Z", "W3006", "A"), self.rec("A2", "2026-11-19T18:00:00Z", "W3006", "A"),
+               self.rec("A3", "2026-11-20T18:00:00Z", "W3006", "A"), self.rec("B1", "2026-11-18T19:00:00Z", "S207", "B")]
+        added, removed, changed = sync.diff([], cur)
+        self.assertEqual([(a["inst"], a["repeat"]) for a in added],
+                         [("A1", False), ("A2", True), ("A3", True), ("B1", False)])
+        self.assertEqual((removed, changed), ([], []))
+
+    def test_a_dropped_session_with_two_runs_is_one_session_and_one_extra_run(self):
+        prev = [self.rec("A1", "2026-11-18T18:00:00Z", "W3006", "A"), self.rec("A2", "2026-11-19T18:00:00Z", "W3006", "A"),
+                self.rec("B1", "2026-11-18T19:00:00Z", "S207", "B")]
+        added, removed, changed = sync.diff(prev, [])
+        self.assertEqual([(r["inst"], r["repeat"]) for r in removed], [("A1", False), ("A2", True), ("B1", False)])
+        self.assertEqual((added, changed), ([], []))
+
+    def test_the_change_notice_headings_do_not_claim_the_session_is_still_listed(self):
+        batch = {"at": "2026-10-12T00:00:00Z", "milestones": [], "changed": [],
+                 "added": [{"code": "N1", "title": "New", "repeat": False}, {"code": "N1-R1", "title": "New", "repeat": True}],
+                 "removed": [{"code": "G1", "title": "Gone", "repeat": False}, {"code": "G1-R1", "title": "Gone", "repeat": True}]}
+        text = sync.summary_markdown(batch, set())
+        self.assertIn("**Extra runs added**\n- `N1-R1` New", text)
+        self.assertIn("**Extra runs dropped**\n- `G1-R1` Gone", text)
+        self.assertNotIn("still in the catalog", text)
+        self.assertNotIn("already listed", text)
+
+    def test_the_console_summary_counts_sessions_and_extra_runs_apart(self):
+        added = [{"code": "A", "repeat": False}, {"code": "A", "repeat": True}]
+        removed = [{"code": "B", "repeat": False}, {"code": "B", "repeat": True}, {"code": "B", "repeat": True}]
+        stats = {"sessions": 10, "withDates": 8, "withRooms": 7}
+        self.assertEqual(sync.console_summary(stats, 0, added, removed, [{}], []),
+                         "sessions=10 dates=8 rooms=7 draft=0 | added=1 removed=1 changed=1 | extra runs: added=1 dropped=2")
+        self.assertEqual(sync.console_summary(stats, 2, [{"code": "A"}], [], [], ["dates published"]),
+                         "sessions=10 dates=8 rooms=7 draft=2 | added=1 removed=0 changed=0 | dates published")
+
     def test_should_pair_runs_whose_ids_were_regenerated_without_reporting_them(self):
         prev = [self.rec("T1", "2026-11-18T18:00:00Z", "W3006"), self.rec("T2", "2026-11-19T22:00:00Z", "S207")]
         cur = [self.rec("N1", "2026-11-18T18:00:00Z", "W3006"), self.rec("N2", "2026-11-19T22:00:00Z", "S207")]
@@ -362,6 +418,19 @@ class SummaryTests(unittest.TestCase):
 
     def test_should_keep_a_short_title_change_whole(self):
         self.assertIn("title: Old name → New name", self.summary("Old name", "New name"))
+
+    # A run dropped from a session that is still listed (repeat=True) is not a cancellation.
+    RUNS = {"milestones": [], "added": [], "changed": [], "removed": [
+        {"code": "BRK201", "title": "The evolution of the Microsoft Copilot app", "repeat": True},
+        {"code": "BRK999", "title": "A session that was cancelled"}]}
+
+    def test_should_count_dropped_extra_runs_apart_from_removed_sessions(self):
+        self.assertIn("Added 0 · removed 1 · changed 0 · 1 extra run dropped", sync.summary_markdown(self.RUNS, set()))
+
+    def test_should_list_a_dropped_run_under_its_own_heading(self):
+        text = sync.summary_markdown(self.RUNS, set())
+        self.assertEqual((text.index("**Removed**") < text.index("BRK999") < text.index("**Extra runs dropped"),
+                          text.index("**Extra runs dropped") < text.index("BRK201")), (True, True))
 
 
 @unittest.skipUnless(shutil.which("node"), "needs node")
@@ -550,6 +619,11 @@ def catalog_of(n):
             for i in range(n)]
 
 
+def runs_of(n, runs):
+    """n sessions with `runs` runs each: records sharing a sessionId, each its own instance."""
+    return [dict(r, sessionInstanceId="%s-run%d" % (r["sessionId"], k)) for r in catalog_of(n) for k in range(runs)]
+
+
 class PartialCatalogTests(SyncDir, unittest.TestCase):
     """A refresh above the 50-session floor that still loses over 40% of the catalog."""
 
@@ -565,6 +639,26 @@ class PartialCatalogTests(SyncDir, unittest.TestCase):
     def test_should_accept_a_refresh_that_keeps_60_percent(self):
         self.run_sync(catalog_of(200))
         self.assertEqual(self.run_sync(catalog_of(120))[0], 0)
+
+    # Oct 2026: Ignite published rooms as a second run of every session, then deleted the
+    # placeholder runs; the guard must count sessions, not runs.
+    def test_should_accept_dropping_extra_runs_of_the_same_sessions(self):
+        self.run_sync(runs_of(200, 2))
+        before = len(self.data("sessions.json")["sessions"])
+        result = self.run_sync(runs_of(200, 1))
+        self.assertEqual((before, result, len(self.data("sessions.json")["sessions"])), (400, (0, True), 200))
+
+    def test_should_refuse_losing_sessions_even_when_extra_runs_keep_the_count_up(self):
+        self.run_sync(runs_of(200, 2))
+        result = self.run_sync(runs_of(119, 3))  # 357 runs (above 60% of 400), only 119 of 200 sessions
+        self.assertEqual((result, len(self.data("sessions.json")["sessions"])), ((3, False), 400))
+
+    def test_should_accept_keeping_60_percent_of_sessions_with_fewer_runs(self):
+        ids = lambda: len({x["id"] for x in self.data("sessions.json")["sessions"]})
+        baseline = self.run_sync(runs_of(200, 2))
+        self.assertEqual((baseline, ids()), ((0, False), 200))  # a first import (nothing to diff), so the next run is a refresh
+        refresh = self.run_sync(runs_of(120, 1))
+        self.assertEqual((refresh, ids()), ((0, True), 120))
 
 
 class CiSignalTests(SyncDir, unittest.TestCase):
