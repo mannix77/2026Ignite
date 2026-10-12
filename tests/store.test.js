@@ -327,11 +327,11 @@ await sleep(SAVE);
 
 // ---- an older tab never saves over newer data (specs/features/saving.feature)
 const KEY_OF = ns => `ignite26.planner.v1:${ns}`;
-const seed = (ns, saved) => { const raw = JSON.stringify(saved); localStorage.setItem(KEY_OF(ns), raw); return raw; };
+const seedRaw = (ns, saved) => { const raw = JSON.stringify(saved); localStorage.setItem(KEY_OF(ns), raw); return raw; };
 const NEWER = { v: 2, picks: { N1: { p: 3, lock: null, note: 'kept', at: 5, futureField: 'x' } }, futureTop: { a: 1 } };
 
 await test('should write nothing over saved data from a newer version, and ask for a reload', async () => {
-  const raw = seed('newer-a', NEWER);
+  const raw = seedRaw('newer-a', NEWER);
   const seen = [];
   const off = store.subscribe(what => seen.push(what));
   store.load('newer-a');
@@ -346,7 +346,7 @@ await test('should write nothing over saved data from a newer version, and ask f
 
 await test('should save as usual when the saved version is the one this code knows, or has none', async () => {
   for (const [ns, saved] of [['known-v1', { v: 1, picks: {} }], ['known-none', { picks: {} }]]) {
-    seed(ns, saved);
+    seedRaw(ns, saved);
     store.load(ns);
     eq(store.newerVersion(), false);
     store.mutatePicks(p => { p.K1 = { p: 3, lock: null, note: '', at: 1 }; });
@@ -357,7 +357,7 @@ await test('should save as usual when the saved version is the one this code kno
 
 await test('should refuse only a version newer than this code knows (v 2 refused, v 1 and a non-number saved)', async () => {
   for (const [ns, v, refused] of [['thr-1', 1, false], ['thr-2', 2, true], ['thr-text', '2', false]]) {
-    const raw = seed(ns, { v, picks: {} });
+    const raw = seedRaw(ns, { v, picks: {} });
     store.load(ns);
     store.mutatePicks(p => { p.T1 = { p: 1, lock: null, note: '', at: 1 }; });
     await sleep(SAVE);
@@ -366,10 +366,10 @@ await test('should refuse only a version newer than this code knows (v 2 refused
 });
 
 await test('should stop saving when another tab saves a newer version while this tab has a pending edit', async () => {
-  seed('newer-live', { v: 1, picks: {} });
+  seedRaw('newer-live', { v: 1, picks: {} });
   store.load('newer-live');
   store.mutatePicks(p => { p.L1 = { p: 3, lock: null, note: '', at: 1 }; }); // pending: not yet written
-  const raw = seed('newer-live', NEWER);                                      // the other tab's save
+  const raw = seedRaw('newer-live', NEWER);                                      // the other tab's save
   for (const fn of pageEvents.storage || []) fn({ key: KEY_OF('newer-live'), newValue: raw });
   eq(store.newerVersion(), true);
   store.mutatePicks(p => { p.L2 = { p: 2, lock: null, note: '', at: 2 }; });
@@ -378,7 +378,7 @@ await test('should stop saving when another tab saves a newer version while this
 });
 
 await test('should save again once the page is loaded with a conference whose data it understands', async () => {
-  seed('newer-then-ok', NEWER);
+  seedRaw('newer-then-ok', NEWER);
   store.load('newer-then-ok');
   eq(store.newerVersion(), true);
   store.load('nothing-saved-yet'); // no saved text at all: the flag must not carry over
@@ -386,14 +386,79 @@ await test('should save again once the page is loaded with a conference whose da
   store.mutatePicks(p => { p.E1 = { p: 1, lock: null, note: '', at: 1 }; });
   await sleep(SAVE);
   eq(JSON.parse(localStorage.getItem(KEY_OF('nothing-saved-yet'))).picks.E1?.p, 1);
-  seed('newer-again', NEWER);
+  seedRaw('newer-again', NEWER);
   store.load('newer-again');
-  seed('ok-after', { v: 1, picks: {} });
+  seedRaw('ok-after', { v: 1, picks: {} });
   store.load('ok-after');
   eq(store.newerVersion(), false);
   store.mutatePicks(p => { p.A1 = { p: 2, lock: null, note: '', at: 1 }; });
   await sleep(SAVE);
   eq(JSON.parse(localStorage.getItem(KEY_OF('ok-after'))).picks.A1?.p, 2);
+});
+
+// ---- previewing a backup or link before it is applied (specs/features/restoring-picks.feature)
+const backupOf = picks => ({ app: 'ignite26-planner', v: 1, conference: 'gartner2026', picks });
+const seed = (ns, picks) => { store.load(ns); store.mutatePicks(p => Object.assign(p, picks)); };
+
+await test('should list changed and new picks in a backup without applying them', async () => {
+  seed('pv-list', { A: { p: 2, lock: null, note: '', at: 10 } });
+  const pv = store.previewImport(backupOf({ A: { p: 3, at: 20 }, B: { p: 2, at: 20 }, C: { p: 1, at: 20 } }), { replace: false });
+  eq([pv.changed, pv.added, pv.unchanged, pv.removed], [[{ id: 'A', from: 2, to: 3 }], ['B', 'C'], 0, []]);
+  await sleep(SAVE);
+});
+await test('should leave picks untouched while previewing a backup', async () => {
+  seed('pv-untouched', { A: { p: 2, lock: null, note: '', at: 10 } });
+  store.previewImport(backupOf({ A: { p: 3, at: 20 }, B: { p: 2, at: 20 } }), { replace: true });
+  eq([store.pick('A')?.p, store.pick('B')], [2, null]);
+  await sleep(SAVE);
+});
+await test('should apply exactly the previewed changes when adding a backup', async () => {
+  seed('pv-exact', { A: { p: 2, lock: null, note: '', at: 10 }, D: { p: 1, lock: null, note: '', at: 10 }, E: { p: 3, lock: null, note: '', at: 50 } });
+  const backup = backupOf({ A: { p: 3, at: 20 }, B: { p: 2, at: 20 }, D: { p: 1, at: 20 }, E: { p: 0, at: 30 } });
+  const pv = store.previewImport(backup, { replace: false });
+  store.importData(backup, { replace: false });
+  // A changed, B new, D same rating, E's local rating is newer and stays.
+  eq([pv.changed.map(c => c.id), pv.added, pv.removed, pv.unchanged, ['A', 'B', 'D', 'E'].map(id => store.pick(id)?.p)], [['A'], ['B'], [], 2, [3, 2, 1, 3]]);
+  await sleep(SAVE);
+});
+await test('should list the picks a replace would remove', async () => {
+  seed('pv-remove', { A: { p: 2, lock: null, note: '', at: 10 }, Z: { p: 3, lock: null, note: '', at: 10 } });
+  const pv = store.previewImport(backupOf({ A: { p: 2, at: 20 } }), { replace: true });
+  eq([pv.removed, pv.unchanged, pv.added, pv.changed], [['Z'], 1, [], []]);
+  await sleep(SAVE);
+});
+await test('should keep a note and reserved seat when adding a backup that rates the same session', async () => {
+  seed('pv-keep', { A: { p: 2, lock: 'A', reserved: 'A', note: 'bring laptop', at: 10 } });
+  store.importData(backupOf({ A: { p: 3, at: 20 } }), { replace: false });
+  const a = store.pick('A');
+  eq([a?.p, a?.note, a?.reserved], [3, 'bring laptop', 'A']);
+  await sleep(SAVE);
+});
+await test('should preview a picks link without applying it', async () => {
+  seed('pv-link', { A: { p: 1, lock: null, note: 'x', at: 10 } });
+  const link = { A: { p: 3, code: 'K1', at: 20 }, B: { p: 2, code: 'K2', at: 20 }, C: { p: 0, code: 'K3', at: 20 } };
+  const pv = store.previewShared(link);
+  eq([pv.changed, pv.added, store.pick('A')?.p, store.pick('B')], [[{ id: 'A', from: 1, to: 3 }], ['B', 'C'], 1, null]);
+  await sleep(SAVE);
+});
+await test('should count only the link\'s own sessions as already the same', async () => {
+  seed('pv-scope', { A: { p: 2, lock: null, note: '', at: 10 }, X: { p: 1, lock: null, note: '', at: 10 }, Y: { p: 3, lock: null, note: '', at: 10 } });
+  const pv = store.previewShared({ A: { p: 2, code: 'K1', at: 20 }, B: { p: 3, code: 'K2', at: 20 } });
+  eq([pv.unchanged, pv.added, pv.changed], [1, ['B'], []]);
+  await sleep(SAVE);
+});
+await test('should report link entries whose session code is not in the catalog', () => {
+  const report = {};
+  const picks = store.parseShare('K1.3~CX88.0~not-a-token', code => ({ K1: 'S1' })[code] || null, () => null, report);
+  eq([Object.keys(picks), report.unknown, report.invalid], [['S1'], ['CX88'], 1]);
+});
+await test('should apply exactly the previewed changes from a picks link', async () => {
+  seed('pv-link-exact', { A: { p: 1, lock: null, note: 'x', at: 10 }, B: { p: 2, lock: null, note: '', at: 10 } });
+  const link = { A: { p: 3, code: 'K1', at: 20 }, B: { p: 2, code: 'K2', at: 20 } };
+  const pv = store.previewShared(link);
+  store.applyShared(link);
+  eq([pv.changed.map(c => c.id), pv.added, pv.unchanged, store.pick('A')?.p, store.pick('A')?.note, store.pick('B')?.p], [['A'], [], 1, 3, 'x', 2]);
+  await sleep(SAVE);
 });
 
 await sleep(SAVE);
