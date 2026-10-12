@@ -1,6 +1,227 @@
 {
  "batches": [
   {
+   "at": "2026-10-12T18:54:24Z",
+   "milestones": [],
+   "added": [
+    {
+     "id": "1780442242419001cHwV",
+     "inst": "1780442242419001cHwV",
+     "code": "SEC3301",
+     "title": "Protect workloads with AWS Certificate Manager"
+    },
+    {
+     "id": "1780441495114001GRLB",
+     "inst": "1780441495114001GRLB",
+     "code": "INV531",
+     "title": "Visual reasoning will be bigger than language reasoning"
+    },
+    {
+     "id": "1780441495229001GNU6",
+     "inst": "1780441495229001GNU6",
+     "code": "INV533",
+     "title": "How AI is Changing Everything (Computer Systems, Education, Driving, and More)"
+    },
+    {
+     "id": "1780441495290001GyRq",
+     "inst": "1780441495290001GyRq",
+     "code": "INV534",
+     "title": "The Cogs of a Well-oiled Software Factory"
+    },
+    {
+     "id": "1780441495346001GjR2",
+     "inst": "1780441495346001GjR2",
+     "code": "INV535",
+     "title": "Data Environments for Agents"
+    },
+    {
+     "id": "1780441495410001Gx5M",
+     "inst": "1780441495410001Gx5M",
+     "code": "INV536",
+     "title": "Recursive Self-Improvement on the Job"
+    },
+    {
+     "id": "1780441495472001GS2F",
+     "inst": "1780441495472001GS2F",
+     "code": "INV537",
+     "title": "No torque sensors, no problem: learning safe physical interaction for humanoids"
+    }
+   ],
+   "removed": [
+    {
+     "id": "1780442264176001c8Nr",
+     "inst": "1780442264176001c8Nr",
+     "code": "IND398",
+     "title": "How the Air Force defends DoD workloads with Amazon Bedrock Agents"
+    }
+   ],
+   "changed": [
+    {
+     "id": "1790358248382001i9HT",
+     "inst": "1790358248382001i9HT",
+     "code": "STG417-R1",
+     "title": "Protecting hundreds of accounts from one place with AWS Backup",
+     "f": {
+      "title": [
+       "AWS Backup at scale: centralizing enterprise data protection",
+       "Protecting hundreds of accounts from one place with AWS Backup"
+      ]
+     }
+    },
+    {
+     "id": "1780442254490001cjku",
+     "inst": "1780442254490001cjku",
+     "code": "COP409",
+     "title": "Pinpoint latency in microservices with distributed tracing",
+     "f": {
+      "speakers": [
+       [
+        "Carlos A. Henríquez Q.",
+        "Kevin Lewin"
+       ],
+       [
+        "Carlos Henriquez Quintana",
+        "Kevin Lewin"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441485206001GC7l",
+     "inst": "1780441485206001GC7l",
+     "code": "DVT212-S",
+     "title": "After the Agents Write the Code: A Field Report From 100 Million Code Reviews",
+     "f": {
+      "title": [
+       "100 Million Bugs Later: A Field Report From the Agentic Era (sponsored by CodeRabbit)",
+       "After the Agents Write the Code: A Field Report From 100 Million Code Reviews"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1790358251244001iwM9",
+     "inst": "1790358251244001iwM9",
+     "code": "STG335-R1",
+     "title": "Build an AI-powered AWS Backup analyst and remediate with AgentCore",
+     "f": {
+      "title": [
+       "Build an AI-powered AWS Backup posture analyst with AgentCore",
+       "Build an AI-powered AWS Backup analyst and remediate with AgentCore"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441487120001GgdE",
+     "inst": "1780441487120001GgdE",
+     "code": "MAM101-S",
+     "title": "Aflac’s Modernization journey to a resilient and innovative future (sponsored by Kyndryl)",
+     "f": {
+      "start": [
+       "2026-12-03T00:30:00Z",
+       "2026-12-01T19:30:00Z"
+      ],
+      "end": [
+       "2026-12-03T01:30:00Z",
+       "2026-12-01T20:30:00Z"
+      ],
+      "room": [
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | White Theater",
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | Red Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780442225292001cN20",
+     "inst": "1780442225292001cN20",
+     "code": "COP323-R",
+     "title": "Trust but verify: Building the audit loop for AI agents in production",
+     "f": {
+      "title": [
+       "Trust but verify: Building the audit loop for AI-driven operations",
+       "Trust but verify: Building the audit loop for AI agents in production"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441491081001GQhb",
+     "inst": "1780441491081001GQhb",
+     "code": "STG345",
+     "title": "Secure petabyte-scale data transfers with AWS DataSync",
+     "f": {
+      "title": [
+       "Secure data transfers at scale with AWS DataSync and Transfer Family",
+       "Secure petabyte-scale data transfers with AWS DataSync"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442257822001cP5I",
+     "inst": "1780442257822001cP5I",
+     "code": "SEC338-R",
+     "title": "Automated forensics at scale with generative AI",
+     "f": {
+      "title": [
+       "Automated memory forensics at scale with generative AI",
+       "Automated forensics at scale with generative AI"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1790358247012001iLZU",
+     "inst": "1790358247012001iLZU",
+     "code": "COP323-R1",
+     "title": "Trust but verify: Building the audit loop for AI agents in production",
+     "f": {
+      "title": [
+       "Trust but verify: Building the audit loop for AI-driven operations",
+       "Trust but verify: Building the audit loop for AI agents in production"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442231841001cArp",
+     "inst": "1780442231841001cArp",
+     "code": "STG335-R",
+     "title": "Build an AI-powered AWS Backup analyst and remediate with AgentCore",
+     "f": {
+      "title": [
+       "Build an AI-powered AWS Backup posture analyst with AgentCore",
+       "Build an AI-powered AWS Backup analyst and remediate with AgentCore"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1786342064270001PBCV",
+     "inst": "1786342064270001PBCV",
+     "code": "DAT451",
+     "title": "Lessons from Netflix's distributed PostgreSQL migration to Aurora",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1790876026219001ItGq",
+     "inst": "1790876026219001ItGq",
+     "code": "SEC338-R1",
+     "title": "Automated forensics at scale with generative AI",
+     "f": {
+      "title": [
+       "Automated memory forensics at scale with generative AI",
+       "Automated forensics at scale with generative AI"
+      ],
+      "desc": true
+     }
+    }
+   ]
+  },
+  {
    "at": "2026-10-12T13:15:42Z",
    "milestones": [],
    "added": [],

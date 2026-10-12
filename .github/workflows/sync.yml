@@ -60,40 +60,13 @@ jobs:
         timeout-minutes: 6
         run: python3 scripts/sync.py --summary-out "$RUNNER_TEMP/summary.md"
 
-      # Posts this run's summary and any summary a previous run failed to post. A failure
-      # leaves the summary in data/ignite2026/pending-summary.md (committed below) so the
-      # notification is retried next time instead of being lost.
-      - name: Post the change summary to the tracking issue
-        id: notify
-        if: steps.sync.outputs.changed == 'true' || hashFiles('data/ignite2026/pending-summary.md') != ''
-        continue-on-error: true   # never block the deploy on a GitHub API hiccup
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -e
-          pending=data/ignite2026/pending-summary.md
-          new="$RUNNER_TEMP/summary.md"
-          body="$RUNNER_TEMP/post.md"
-          : > "$body"
-          [ -s "$pending" ] && { echo "_Delayed summary from an earlier sync:_" >> "$body"; cat "$pending" >> "$body"; echo >> "$body"; }
-          [ -s "$new" ] && cat "$new" >> "$body"
-          [ -s "$body" ] || exit 0
-          post() {
-            gh label create ignite-changes --color 0f766e --description "Ignite catalog change log" 2>/dev/null || true
-            num=$(gh issue list --label ignite-changes --state open --limit 1 --json number --jq '.[0].number // empty')
-            if [ -z "$num" ]; then
-              url=$(gh issue create --label ignite-changes --title "Ignite 2026 catalog changes" \
-                --body "The scheduled sync adds a comment here whenever the Ignite session catalog changes (new, removed, retimed or moved sessions, and when dates/rooms are published). Subscribe to this issue to get notified. Starred (⭐) entries are on your watchlist (data/ignite2026/watchlist.json).")
-              num="${url##*/}"
-            fi
-            gh issue comment "$num" --body-file "$body"
-          }
-          if post; then
-            rm -f "$pending"
-          else
-            cp "$body" "$pending"
-            exit 1
-          fi
+      # The summary is announced only after the catalog is pushed (specs/features/change-notices.feature):
+      # it is queued in data/ignite2026/pending-summary.md, committed and pushed with the catalog,
+      # posted, and the cleared file is pushed again. A failed push posts nothing; a failed post
+      # stays pending for the next run; a summary already on the issue is never posted twice.
+      - name: Queue the change summary
+        if: steps.sync.outputs.changed == 'true'
+        run: python3 scripts/post_summary.py stage --pending data/ignite2026/pending-summary.md --new "$RUNNER_TEMP/summary.md" --id "$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
 
       - name: Commit catalog changes
         run: |
@@ -116,6 +89,39 @@ jobs:
             sleep $((i * 10))
           done
           echo "::error::Could not push the Ignite catalog update"
+          exit 1
+
+      - name: Post the change summary to the tracking issue
+        id: notify
+        if: hashFiles('data/ignite2026/pending-summary.md') != ''
+        continue-on-error: true   # never block the deploy on a GitHub API hiccup
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 scripts/post_summary.py post --pending data/ignite2026/pending-summary.md \
+            --current "$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT" --label ignite-changes --color 0f766e \
+            --description "Ignite catalog change log" --title "Ignite 2026 catalog changes" \
+            --issue-body "The scheduled sync adds a comment here whenever the Ignite session catalog changes (new, removed, retimed or moved sessions, and when dates/rooms are published). Subscribe to this issue to get notified. Starred (⭐) entries are on your watchlist (data/ignite2026/watchlist.json)."
+
+      # Push what was posted (the file is cleared or shorter). If this push fails nothing is lost:
+      # the next run finds the summary already on the issue and clears it then.
+      - name: Commit the cleared summary
+        if: steps.notify.outcome != 'skipped'
+        continue-on-error: true
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          d=data/ignite2026
+          git add -A -- "$d/pending-summary.md"
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "Clear posted change summary"
+          for i in 1 2 3; do
+            git pull --rebase --autostash && git push && exit 0
+            sleep $((i * 10))
+          done
+          echo "::warning::Could not push the cleared summary; the next run clears it without posting it again"
           exit 1
 
       - name: Stamp the app version for offline caching
@@ -150,6 +156,7 @@ jobs:
             cp -R index.html manifest.webmanifest sw.js assets data "$name/"
             find "$name/data" \( -name favorites.json -o -name profile.json \) -delete
             [ -d "$dir/data" ] && cp -R "$dir/data/." "$name/data/"
+            python3 scripts/instance_llms.py llms.txt "$name/llms.txt" "$name"   # the AI guide, with this copy's links
             sed -i "s|<meta name=\"planner-instance\" content=\"\">|<meta name=\"planner-instance\" content=\"$name\">|" "$name/index.html"
             grep -q "content=\"$name\"" "$name/index.html"
             conf=""
