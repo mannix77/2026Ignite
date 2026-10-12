@@ -117,6 +117,10 @@ export function saveFailing() { return saveFailed; }
 function writeNow() {
   clearTimeout(saveTimer);
   saveTimer = null;
+  try {
+    // Another tab may have saved a newer version whose storage event hasn't reached us yet.
+    if (!newer) { const stored = JSON.parse(localStorage.getItem(KEY) || 'null'); newer = Number.isFinite(stored?.v) && stored.v > SCHEMA_VERSION; }
+  } catch { /* unreadable saved text: handled by the existing copy-first path below */ }
   if (newer) { for (const fn of listeners) fn('newer-version'); return; } // reload to get the new code; don't strip what it wrote
   try {
     if (unreadable != null) { localStorage.setItem(`${KEY}#unreadable`, unreadable); unreadable = null; } // copy first, or don't save

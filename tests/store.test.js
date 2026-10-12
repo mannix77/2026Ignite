@@ -377,6 +377,16 @@ await test('should stop saving when another tab saves a newer version while this
   eq(localStorage.getItem(KEY_OF('newer-live')) === raw, true);
 });
 
+await test('should refuse to save over a newer version written by another tab before its storage event arrives', async () => {
+  seedRaw('newer-silent', { v: 1, picks: {} });
+  store.load('newer-silent');
+  const raw = seedRaw('newer-silent', NEWER);   // the other tab's save; no storage event is fired here
+  eq(store.newerVersion(), false);              // this tab doesn't know yet
+  store.mutatePicks(p => { p.Q1 = { p: 2, lock: null, note: '', at: 1 }; });
+  await sleep(SAVE);
+  eq([store.newerVersion(), localStorage.getItem(KEY_OF('newer-silent')) === raw], [true, true]);
+});
+
 await test('should save again once the page is loaded with a conference whose data it understands', async () => {
   seedRaw('newer-then-ok', NEWER);
   store.load('newer-then-ok');

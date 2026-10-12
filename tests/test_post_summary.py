@@ -138,7 +138,8 @@ class PostSummaryTests(unittest.TestCase):
 
     def test_a_summary_already_on_the_issue_is_not_posted_again_and_is_cleared(self):
         self.stage("Added 1", "run-1")
-        self.post("run-1")
+        first = self.post("run-1")
+        self.assertEqual((first.returncode, len(self.comments())), (0, 1))
         self.stage("Added 1", "run-1")            # the clearing never reached the repo: run-1's text is back
         self.assertIsNotNone(self.pending_text())
         r = self.post("run-2")

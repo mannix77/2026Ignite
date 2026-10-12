@@ -170,8 +170,13 @@ await test('should label the zone by its real name on each side of a daylight-sa
 });
 await test('should put the time in the chip tooltip, not the label', () => {
   const html = rsvpChip({ rsvp: '2026-10-20T13:00:00Z' });
-  eq(chipTitle(html).startsWith('Reservation required. Seats are limited; reservations open '), true);
   eq(html.includes('>RSVP<'), true);
+  // The tooltip carries the opening time in the device's zone: run under a pinned zone.
+  const title = tz => JSON.parse(execFileSync(process.execPath, ['--input-type=module', '-e',
+    "const { rsvpChip } = await import('./assets/js/ui.js'); console.log(JSON.stringify(rsvpChip({ rsvp: '2026-10-20T13:00:00Z' })));"],
+  { env: { ...process.env, TZ: tz }, encoding: 'utf8', timeout: 20000 }));
+  eq(chipTitle(title('America/New_York')), 'Reservation required. Seats are limited; reservations open Oct 20, 9:00 AM EDT');
+  eq(chipTitle(title('America/Los_Angeles')), 'Reservation required. Seats are limited; reservations open Oct 20, 6:00 AM PDT');
 });
 await test('should convert to the device zone when none is given (Tokyo, Eastern)', () => {
   // The browser's zone, not the conference's: run under two machine zones.
