@@ -31,9 +31,15 @@ function clone(o) {
   return JSON.parse(JSON.stringify(o));
 }
 
+// The saved-state version this code understands. Data saved with a higher one came from a newer
+// copy of the planner (an updated tab): load it, but never write over it.
+const SCHEMA_VERSION = 1;
+let newer = false;
+export function newerVersion() { return newer; }
+
 function blank() {
   return {
-    v: 1,
+    v: SCHEMA_VERSION,
     picks: {},          // sessionId -> { p, lock, lockMode, reserved, score, mode, note, g, code, at }
     prefs: {},          // only the settings the user changed; defaults fill the rest
     known: {},          // instKey -> snapshot of fields we alert on, for picked sessions
@@ -76,10 +82,12 @@ export function load(namespace = '') {
   KEY = namespace ? `${BASE_KEY}:${namespace}` : BASE_KEY;
   state = blank();
   unreadable = null;
+  newer = false;
   try {
     const raw = localStorage.getItem(KEY);
     if (raw) {
       const saved = JSON.parse(raw);
+      newer = Number.isFinite(saved?.v) && saved.v > SCHEMA_VERSION;
       delete saved.settings; // pre-release format stored every default
       state = merge(blank(), saved);
       if (!state.ui || typeof state.ui !== 'object' || Array.isArray(state.ui)) state.ui = blank().ui; // startup reads ui.*
@@ -109,6 +117,11 @@ export function saveFailing() { return saveFailed; }
 function writeNow() {
   clearTimeout(saveTimer);
   saveTimer = null;
+  try {
+    // Another tab may have saved a newer version whose storage event hasn't reached us yet.
+    if (!newer) { const stored = JSON.parse(localStorage.getItem(KEY) || 'null'); newer = Number.isFinite(stored?.v) && stored.v > SCHEMA_VERSION; }
+  } catch { /* unreadable saved text: handled by the existing copy-first path below */ }
+  if (newer) { for (const fn of listeners) fn('newer-version'); return; } // reload to get the new code; don't strip what it wrote
   try {
     if (unreadable != null) { localStorage.setItem(`${KEY}#unreadable`, unreadable); unreadable = null; } // copy first, or don't save
     localStorage.setItem(KEY, JSON.stringify(state));

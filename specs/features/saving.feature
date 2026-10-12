@@ -13,3 +13,16 @@ Feature: A change is saved even when you leave straight away
       Given Gino has just added a note to a session
       When he locks his phone straight away
       Then the note is there when he opens the planner again
+
+  Rule: An older copy of the planner never saves over newer data
+
+    Scenario: A tab still running old code meets data saved by the new version
+      Given another tab, running a newer planner, has saved this conference's picks
+      When Gino rates a session in the tab that is still running the old planner
+      Then nothing is written over the newer data
+      And the page asks him to reload
+
+    Scenario: Data from the version this planner knows saves as usual
+      Given the saved picks are in the format this planner knows
+      When Gino rates a session
+      Then the rating is saved

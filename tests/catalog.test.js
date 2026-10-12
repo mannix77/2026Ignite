@@ -8,6 +8,7 @@ const { CONFERENCES } = await import('../assets/js/conferences.js');
 const { createVenue } = await import('../assets/js/venue.js');
 const { transition, DEFAULT_PLANNER } = await import('../assets/js/planner.js');
 const store = await import('../assets/js/store.js');
+const { rsvpChip, rsvpOpensText } = await import('../assets/js/ui.js');
 
 let pass = 0, fail = 0;
 async function test(name, fn) {
@@ -150,6 +151,48 @@ for (const [id, rooms] of Object.entries(realRooms)) {
   });
 }
 
+// ---- reservation times (specs/features/reservation-times.feature)
+// Stored as an instant; shown in the viewer's own zone, labelled by Intl.
+const { execFileSync } = await import('node:child_process');
+const chipTitle = html => (/title="([^"]*)"/.exec(html) || [])[1];
+await test('should show 13:00 UTC as 9:00 AM EDT on a device in Eastern time', () => {
+  eq(rsvpOpensText('2026-10-20T13:00:00Z', 'America/New_York'), 'Oct 20, 9:00 AM EDT');
+});
+await test('should show 16:00 UTC as 9:00 AM PDT on a device in Pacific time', () => {
+  eq(rsvpOpensText('2026-10-20T16:00:00Z', 'America/Los_Angeles'), 'Oct 20, 9:00 AM PDT');
+});
+await test('should read an offset time as the same instant (08:00+08:00 is midnight UTC)', () => {
+  eq(rsvpOpensText('2026-10-26T08:00:00+08:00', 'UTC'), 'Oct 26, 12:00 AM UTC');
+});
+await test('should label the zone by its real name on each side of a daylight-saving change', () => {
+  eq(rsvpOpensText('2026-11-02T17:00:00Z', 'America/New_York'), 'Nov 2, 12:00 PM EST');
+  eq(rsvpOpensText('2026-11-01T04:00:00Z', 'America/New_York'), 'Nov 1, 12:00 AM EDT');
+});
+await test('should put the time in the chip tooltip, not the label', () => {
+  const html = rsvpChip({ rsvp: '2026-10-20T13:00:00Z' });
+  eq(html.includes('>RSVP<'), true);
+  // The tooltip carries the opening time in the device's zone: run under a pinned zone.
+  const title = tz => JSON.parse(execFileSync(process.execPath, ['--input-type=module', '-e',
+    "const { rsvpChip } = await import('./assets/js/ui.js'); console.log(JSON.stringify(rsvpChip({ rsvp: '2026-10-20T13:00:00Z' })));"],
+  { env: { ...process.env, TZ: tz }, encoding: 'utf8', timeout: 20000 }));
+  eq(chipTitle(title('America/New_York')), 'Reservation required. Seats are limited; reservations open Oct 20, 9:00 AM EDT');
+  eq(chipTitle(title('America/Los_Angeles')), 'Reservation required. Seats are limited; reservations open Oct 20, 6:00 AM PDT');
+});
+await test('should convert to the device zone when none is given (Tokyo, Eastern)', () => {
+  // The browser's zone, not the conference's: run under two machine zones.
+  const run = tz => JSON.parse(execFileSync(process.execPath, ['--input-type=module', '-e',
+    "const { rsvpOpensText } = await import('./assets/js/ui.js'); console.log(JSON.stringify(rsvpOpensText('2026-10-20T15:00:00Z')));"],
+  { env: { ...process.env, TZ: tz }, encoding: 'utf8', timeout: 20000 }));
+  eq(run('Asia/Tokyo'), 'Oct 21, 12:00 AM GMT+9');
+  eq(run('America/New_York'), 'Oct 20, 11:00 AM EDT');
+});
+await test('should say only that a reservation is required when the time is missing or unreadable', () => {
+  const plain = 'Reservation required. Seats are limited';
+  eq(chipTitle(rsvpChip({ rsvp: true })), plain);
+  eq(chipTitle(rsvpChip({ rsvp: 'not a date' })), plain);
+  eq(rsvpOpensText('not a date', 'UTC'), '');
+  eq(rsvpChip({ rsvp: null }), '');
+});
 
 // ---- seat availability from the attendee's portal export (specs/features/seat-availability.feature)
 const { seatInfo, seatsSig } = await import('../assets/js/data.js');

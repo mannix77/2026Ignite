@@ -11,7 +11,7 @@ import { buildSuggester } from './suggest.js';
 import { createRanker, partition, profileConfig, profileGroups, GOALS } from './profile.js';
 import { storageStatus, backupReminder, backupAge } from './health.js';
 import { INSTANCE_LABEL, nsKey, guideUrl } from './instance.js';
-import { esc, attr, icon, bldgChip, recChip, rsvpChip, seatsDetail, prioPill, scoreChip, whenText, prioControl, sessionCard, cardClass, toast, shareOrDownload, copyText, speakersLine, setHostCompany } from './ui.js';
+import { esc, attr, icon, bldgChip, recChip, rsvpChip, rsvpOpensText, seatsDetail, prioPill, scoreChip, whenText, prioControl, sessionCard, cardClass, toast, shareOrDownload, copyText, speakersLine, setHostCompany } from './ui.js';
 
 const $ = (sel, root = document) => root.querySelector(sel);
 const main = $('#main');
@@ -1444,7 +1444,7 @@ function rsvpBanner(plan) {
     const open = !opens || new Date(opens).getTime() <= Date.now();
     const list = need.map(x => `<a href="${attr(app.conf.sessionUrl(x.s))}" target="_blank" rel="noopener">${esc(x.code)}</a>`).join(', ');
     parts.push(`<div class="banner ${open ? 'warn' : ''}">${icon(open ? 'warn' : 'bell')}<div><b>${need.length} of your Must/Want picks need a seat reservation</b>
-      <p>${open ? `Seats are limited: reserve on ${esc(app.conf.siteName)}, then tap <b>I reserved a seat</b> on the session.` : opens ? `Reservations open ${esc(fmtStamp(opens))}. Seats are limited.` : 'Seats are limited.'}</p>
+      <p>${open ? `Seats are limited: reserve on ${esc(app.conf.siteName)}, then tap <b>I reserved a seat</b> on the session.` : opens ? `Reservations open ${esc(rsvpOpensText(opens) || String(opens))}. Seats are limited.` : 'Seats are limited.'}</p>
       <details><summary class="small">Show which</summary><p class="small">${list}</p></details></div></div>`);
   }
   return parts.join('');
@@ -1753,7 +1753,7 @@ function renderDetail(s) {
         <dt>When</dt><dd>${esc(whenText(s))}</dd>
         <dt>Where</dt><dd>${s.onlineOnly ? 'Online' : `${bldgChip(s.loc)} ${esc(s.roomLabel)}`}</dd>
         <dt>Recording</dt><dd>${s.recorded === true ? 'Will be recorded: you can watch it later' : s.recorded === false ? '<b>Not recorded</b>: in person only' : 'Unknown'}</dd>
-        ${s.rsvp ? `<dt>Reservation</dt><dd><b>Required</b>, seats are limited${typeof s.rsvp === 'string' ? `. Opens ${esc(fmtStamp(s.rsvp))} on ${esc(app.conf.siteName)}` : ''}${gp?.reserved ? '. <b>You reserved a seat.</b>' : ''}</dd>` : ''}
+        ${s.rsvp ? `<dt>Reservation</dt><dd><b>Required</b>, seats are limited${typeof s.rsvp === 'string' ? `. Opens ${esc(rsvpOpensText(s.rsvp) || String(s.rsvp))} on ${esc(app.conf.siteName)}` : ''}${gp?.reserved ? '. <b>You reserved a seat.</b>' : ''}</dd>` : ''}
         ${seatsDetail(s) ? `<dt>Seats</dt><dd>${esc(seatsDetail(s))}</dd>` : ''}
         <dt>Format</dt><dd>${esc((s.delivery || []).join(', ') || '—')}${s.remote ? ' · remote viewing rooms available' : ''}</dd>
         ${s.audience?.length ? `<dt>${app.conf.id === 'gartner2026' ? 'Program' : 'Audience'}</dt><dd>${esc(s.audience.join(', '))}</dd>` : ''}
@@ -2310,6 +2310,8 @@ document.addEventListener('keydown', e => {
 
 // Store changes -> keep views and badges in sync.
 store.subscribe(what => {
+  if (what === 'newer-version') { $('#newer-version').hidden = false; return; }
+  if (what === 'reset') $('#newer-version').hidden = !store.newerVersion(); // another tab saved: it may be newer
   if (what === 'save-error' || what === 'save-ok') { $('#save-error').hidden = what === 'save-ok'; if (app.tab === 'settings') renderOrDefer(); return; }
   if (what === 'backup') { if (app.model) renderOrDefer(); return; }
   if (!app.model) return;
@@ -2561,6 +2563,7 @@ async function boot() {
   setHostCompany(app.conf.hostCompany);
   store.configure({ defaults: { startFrom: app.venue.startFrom, lunch: app.conf.lunch }, buildingIds: app.venue.ids });
   store.load(CUSTOM_DATA ? `test:${DATA_OVERRIDE}` : app.conf.namespace);
+  $('#newer-version').hidden = !store.newerVersion();
   fillConferenceSwitch();
   applyTheme(store.get().ui.theme);
   try { app.simNow = JSON.parse(sessionStorage.getItem(nsKey('ignite26.simNow')) || 'null'); } catch { app.simNow = null; }
