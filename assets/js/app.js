@@ -2,7 +2,7 @@
 
 import * as store from './store.js';
 import { fetchAll, buildModel, diffKnown, snapshot, cacheUrl, exportAge, customRecords, catalogMatch, CUSTOM_DATA, DATA_OVERRIDE } from './data.js';
-import { checkLive, diff as liveDiff } from './live.js';
+import { checkLive, diff as liveDiff, changeCounts } from './live.js';
 import { optimize, decisionGroups, transitions, fillers, nowNext, weigh, canBoth, overlaps, transition, compareOptions, lunchConfig, arrivalExtra, PRIORITY } from './planner.js';
 import { fmtTime, fmtDay, fmtDuration, relTime, nowLocal, addDays } from './time.js';
 import { createVenue, setVenue, walkMinutes } from './venue.js';
@@ -1468,8 +1468,8 @@ function diffHtml(fields) {
 
 function changeItems(b) {
   return [
-    ...(b.added || []).map(x => ({ ...x, k: 'Added' })),
-    ...(b.removed || []).map(x => ({ ...x, k: 'Removed' })),
+    ...(b.added || []).map(x => ({ ...x, k: x.repeat ? 'Run added' : 'Added' })),
+    ...(b.removed || []).map(x => ({ ...x, k: x.repeat ? 'Run removed' : 'Removed' })),
     ...(b.changed || []).map(x => ({ ...x, k: 'Changed' })),
   ];
 }
@@ -2353,10 +2353,13 @@ function afterModelChange() {
 }
 
 function countText(d) {
+  const c = changeCounts(d);
   const parts = [];
-  if (d.added?.length) parts.push(`${d.added.length} added`);
-  if (d.removed?.length) parts.push(`${d.removed.length} removed`);
-  if (d.changed?.length) parts.push(`${d.changed.length} updated`);
+  if (c.added) parts.push(`${c.added} added`);
+  if (c.removed) parts.push(`${c.removed} removed`);
+  if (c.changed) parts.push(`${c.changed} updated`);
+  if (c.addedRuns) parts.push(`${c.addedRuns} extra run${c.addedRuns > 1 ? 's' : ''} added`);
+  if (c.removedRuns) parts.push(`${c.removedRuns} extra run${c.removedRuns > 1 ? 's' : ''} dropped`);
   return parts.join(', ');
 }
 

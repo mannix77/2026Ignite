@@ -7,7 +7,7 @@ const { buildModel, diffKnown, cacheUrl } = await import('../assets/js/data.js')
 const { CONFERENCES } = await import('../assets/js/conferences.js');
 const { createVenue } = await import('../assets/js/venue.js');
 const { compareOptions, DEFAULT_PLANNER } = await import('../assets/js/planner.js');
-const { checkLive, liveWindow } = await import('../assets/js/live.js');
+const { checkLive, liveWindow, changeCounts } = await import('../assets/js/live.js');
 
 let pass = 0, fail = 0;
 async function test(name, fn) {
@@ -123,6 +123,27 @@ await test('should run at most the cap of what-if plans for a large clash', () =
   }));
   const out = compareOptions(items, items, { ...DEFAULT_PLANNER, walk: venue.walk }, null, { cap: 4 });
   eq(out.outcomes.size, 4);
+});
+
+// ---- changes are counted per session; an extra run dropped or added is not a cancellation
+await test('should count dropped extra runs apart from removed sessions', () => {
+  eq(changeCounts({ added: [{ code: 'A' }, { code: 'B', repeat: true }], removed: [{ code: 'C', repeat: true }, { code: 'D' }], changed: [{ code: 'E' }] }),
+    { added: 1, addedRuns: 1, removed: 1, removedRuns: 1, changed: 1 });
+});
+
+// ---- the live check's partial-catalog guard counts sessions, not runs (same rule as sync.py)
+async function liveAgainst(prev, raw) {
+  const realFetch = globalThis.fetch;
+  globalThis.fetch = async u => ({ ok: true, json: async () => (String(u).includes('settings') ? {} : raw) });
+  try { const r = await checkLive({ sessions: prev }, ignite); return r.doc.sessions.length; } catch (e) { return e.message; } finally { globalThis.fetch = realFetch; }
+}
+const snapRuns = (n, runs) => Array.from({ length: n * runs }, (_, i) => ({ id: `s${i % n}`, inst: `s${i % n}-run${Math.floor(i / n)}`, speakers: [] }));
+const feedRuns = (n, runs) => Array.from({ length: n * runs }, (_, i) => ({ sessionId: `s${i % n}`, sessionInstanceId: `s${i % n}-run${Math.floor(i / n)}`, title: `T${i % n}`, sessionCode: `C${i % n}` }));
+await test('should accept a live catalog that only drops extra runs of the same sessions', async () => {
+  eq(await liveAgainst(snapRuns(100, 2), feedRuns(100, 1)), 100);
+});
+await test('should refuse a live catalog that loses sessions even when extra runs keep the count up', async () => {
+  eq(/looks partial/.test(String(await liveAgainst(snapRuns(100, 2), feedRuns(59, 3)))), true);
 });
 
 // ---- a live feed that is largely malformed is refused, not read as removals (same 5% limit as sync.py)

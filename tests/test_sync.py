@@ -363,6 +363,19 @@ class SummaryTests(unittest.TestCase):
     def test_should_keep_a_short_title_change_whole(self):
         self.assertIn("title: Old name → New name", self.summary("Old name", "New name"))
 
+    # A run dropped from a session that is still listed (repeat=True) is not a cancellation.
+    RUNS = {"milestones": [], "added": [], "changed": [], "removed": [
+        {"code": "BRK201", "title": "The evolution of the Microsoft Copilot app", "repeat": True},
+        {"code": "BRK999", "title": "A session that was cancelled"}]}
+
+    def test_should_count_dropped_extra_runs_apart_from_removed_sessions(self):
+        self.assertIn("Added 0 · removed 1 · changed 0 · 1 extra run dropped", sync.summary_markdown(self.RUNS, set()))
+
+    def test_should_list_a_dropped_run_under_its_own_heading(self):
+        text = sync.summary_markdown(self.RUNS, set())
+        self.assertEqual((text.index("**Removed**") < text.index("BRK999") < text.index("**Extra runs dropped"),
+                          text.index("**Extra runs dropped") < text.index("BRK201")), (True, True))
+
 
 @unittest.skipUnless(shutil.which("node"), "needs node")
 class InstanceConferenceTests(unittest.TestCase):
@@ -550,6 +563,11 @@ def catalog_of(n):
             for i in range(n)]
 
 
+def runs_of(n, runs):
+    """n sessions with `runs` runs each: records sharing a sessionId, each its own instance."""
+    return [dict(r, sessionInstanceId="%s-run%d" % (r["sessionId"], k)) for r in catalog_of(n) for k in range(runs)]
+
+
 class PartialCatalogTests(SyncDir, unittest.TestCase):
     """A refresh above the 50-session floor that still loses over 40% of the catalog."""
 
@@ -565,6 +583,23 @@ class PartialCatalogTests(SyncDir, unittest.TestCase):
     def test_should_accept_a_refresh_that_keeps_60_percent(self):
         self.run_sync(catalog_of(200))
         self.assertEqual(self.run_sync(catalog_of(120))[0], 0)
+
+    # Oct 2026: Ignite published rooms as a second run of every session, then deleted the
+    # placeholder runs; the guard must count sessions, not runs.
+    def test_should_accept_dropping_extra_runs_of_the_same_sessions(self):
+        self.run_sync(runs_of(200, 2))
+        before = len(self.data("sessions.json")["sessions"])
+        result = self.run_sync(runs_of(200, 1))
+        self.assertEqual((before, result, len(self.data("sessions.json")["sessions"])), (400, (0, True), 200))
+
+    def test_should_refuse_losing_sessions_even_when_extra_runs_keep_the_count_up(self):
+        self.run_sync(runs_of(200, 2))
+        result = self.run_sync(runs_of(119, 3))  # 357 runs (above 60% of 400), only 119 of 200 sessions
+        self.assertEqual((result, len(self.data("sessions.json")["sessions"])), ((3, False), 400))
+
+    def test_should_accept_keeping_60_percent_of_sessions_with_fewer_runs(self):
+        self.run_sync(runs_of(200, 2))
+        self.assertEqual(self.run_sync(runs_of(120, 1))[0], 0)
 
 
 class CiSignalTests(SyncDir, unittest.TestCase):
