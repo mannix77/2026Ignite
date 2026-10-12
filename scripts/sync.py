@@ -346,7 +346,8 @@ def diff(prev, cur):
     for sid, recs in cg.items():
         olds = pg.get(sid)
         if not olds:
-            added.extend(brief(r) for r in recs)
+            # New as a whole: one session; its other runs are extra runs (repeat=True).
+            added.extend(dict(brief(r), repeat=i > 0) for i, r in enumerate(recs))
             continue
         # Runs keep their instance id; pair leftovers by time only if ids were regenerated.
         old_by_inst = {o["inst"]: o for o in olds}
@@ -364,7 +365,7 @@ def diff(prev, cur):
         removed.extend(dict(brief(o), repeat=len(olds) > 1) for o in left_old[len(left_new):])
     for sid, recs in pg.items():
         if sid not in cg:
-            removed.extend(brief(r) for r in recs)
+            removed.extend(dict(brief(r), repeat=i > 0) for i, r in enumerate(recs))
     return added, removed, changed
 
 
@@ -631,10 +632,24 @@ def run(args):
     if batch and args.summary_out:
         with open(args.summary_out, "w", encoding="utf-8") as f:
             f.write(summary_markdown(batch, watch))
-    print("sessions=%d dates=%d rooms=%d draft=%d | added=%d removed=%d changed=%d%s"
-          % (cs["sessions"], cs["withDates"], cs["withRooms"], draft, len(added), len(removed), len(changed),
-             (" | " + "; ".join(ms)) if ms else ""))
+    print(console_summary(cs, draft, added, removed, changed, ms))
     return 0, bool(batch)
+
+
+def console_summary(stats, draft, added, removed, changed, milestones):
+    """One line for the run log. Sessions and extra runs are counted apart: a dropped extra run
+    (repeat=True) of a session that stays listed is not a removed session."""
+    def sessions(xs):
+        return sum(1 for x in xs if not x.get("repeat"))
+    def runs(xs):
+        return sum(1 for x in xs if x.get("repeat"))
+    line = "sessions=%d dates=%d rooms=%d draft=%d | added=%d removed=%d changed=%d" % (
+        stats["sessions"], stats["withDates"], stats["withRooms"], draft, sessions(added), sessions(removed), len(changed))
+    if runs(added) or runs(removed):
+        line += " | extra runs: added=%d dropped=%d" % (runs(added), runs(removed))
+    if milestones:
+        line += " | " + "; ".join(milestones)
+    return line
 
 
 def main():

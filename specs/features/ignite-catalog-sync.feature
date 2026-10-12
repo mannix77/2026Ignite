@@ -23,3 +23,19 @@ Feature: Keeping the Ignite catalog current without false alarms
       When one of its runs is dropped
       Then the change notice reports 1 extra run dropped
       And the change notice reports 0 sessions removed
+
+    Scenario: A new session with several runs is one session and its extra runs
+      Given Microsoft adds a session with 3 runs
+      Then the change notice reports 1 session added
+      And the change notice reports 2 extra runs added
+
+    Scenario: A session dropped with all its runs is one session and its extra runs
+      Given a session in the catalog has 2 runs
+      When the whole session is dropped
+      Then the change notice reports 1 session removed
+      And the change notice reports 1 extra run dropped
+
+    Scenario: Every short summary counts the same way
+      Given a change with 1 session added and 2 extra runs dropped
+      Then the Changes tab headers, the live header and the sync log line each show 1 added and 2 extra runs dropped
+      And none of them shows a removed session

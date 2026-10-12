@@ -197,7 +197,8 @@ export function diff(prev, cur) {
   };
   for (const [sid, recs] of cg) {
     const olds = pg.get(sid);
-    if (!olds) { added.push(...recs.map(brief)); continue; }
+    // A session that is new as a whole is one session; its other runs are extra runs (repeat: true).
+    if (!olds) { added.push(...recs.map((r, i) => ({ ...brief(r), repeat: i > 0 }))); continue; }
     // Runs keep their instance id; pair leftovers by time only if ids were regenerated.
     const oldByInst = new Map(olds.map(o => [o.inst, o]));
     const leftNew = [];
@@ -210,7 +211,7 @@ export function diff(prev, cur) {
     added.push(...leftNew.slice(leftOld.length).map(r => ({ ...brief(r), repeat: recs.length > 1 })));
     removed.push(...leftOld.slice(leftNew.length).map(o => ({ ...brief(o), repeat: olds.length > 1 })));
   }
-  for (const [sid, recs] of pg) if (!cg.has(sid)) removed.push(...recs.map(brief));
+  for (const [sid, recs] of pg) if (!cg.has(sid)) removed.push(...recs.map((r, i) => ({ ...brief(r), repeat: i > 0 })));
   return { added, removed, changed };
 }
 
@@ -223,6 +224,13 @@ export function changeCounts(d) {
     removed: (d.removed || []).length - runs(d.removed), removedRuns: runs(d.removed),
     changed: (d.changed || []).length,
   };
+}
+
+// The counts as one short line for a Changes header: sessions first, extra runs apart.
+export function countsLine(d) {
+  const c = changeCounts(d || {});
+  const runs = n => `${n} run${n > 1 ? 's' : ''}`;
+  return [`+${c.added}`, `−${c.removed}`, `~${c.changed}`, c.addedRuns ? `+${runs(c.addedRuns)}` : '', c.removedRuns ? `−${runs(c.removedRuns)}` : ''].filter(Boolean).join(' · ');
 }
 
 async function getCdn(base, name, timeoutMs = 25000) {

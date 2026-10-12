@@ -2,7 +2,7 @@
 
 import * as store from './store.js';
 import { fetchAll, buildModel, diffKnown, snapshot, cacheUrl, exportAge, customRecords, catalogMatch, seatsSig, CUSTOM_DATA, DATA_OVERRIDE } from './data.js';
-import { checkLive, diff as liveDiff, changeCounts } from './live.js';
+import { checkLive, diff as liveDiff, changeCounts, countsLine } from './live.js';
 import { optimize, decisionGroups, transitions, fillers, nowNext, weigh, canBoth, overlaps, transition, compareOptions, lunchConfig, arrivalExtra, PRIORITY } from './planner.js';
 import { fmtTime, fmtDay, fmtDuration, relTime, nowLocal, addDays } from './time.js';
 import { createVenue, setVenue, walkMinutes } from './venue.js';
@@ -1541,7 +1541,7 @@ function renderChanges() {
     if (app.live && !app.live.same) {
       const items = changeItems(app.live.diff).filter(x => !onlyMine || isMine(x));
       parts.push(`<section class="card batch" style="margin-top:14px"><header><b>Live on ${esc(app.conf.siteName)} now</b><span class="muted small">not yet in the history log</span><span class="spacer"></span>
-        <span class="small muted">+${app.live.diff.added.length} · −${app.live.diff.removed.length} · ~${app.live.diff.changed.length}</span></header>${changeList(items, isMine)}</section>`);
+        <span class="small muted">${countsLine(app.live.diff)}</span></header>${changeList(items, isMine)}</section>`);
     }
   }
   parts.push(`<div class="row" style="margin:16px 0 8px"><h2 style="margin:0">History</h2><span class="spacer"></span>
@@ -1555,7 +1555,7 @@ function renderChanges() {
     if (onlyMine && !items.length && !b.milestones?.length) continue;
     parts.push(`<section class="card batch">
       <header><b>${esc(fmtStamp(b.at))}</b><span class="muted small">${esc(relTime(b.at))}</span>
-        <span class="spacer"></span><span class="small muted">+${n(b.added?.length)} · −${n(b.removed?.length)} · ~${n(b.changed?.length)}</span>${!seen || b.at > seen ? '<span class="chip new">New</span>' : ''}</header>
+        <span class="spacer"></span><span class="small muted">${countsLine(b)}</span>${!seen || b.at > seen ? '<span class="chip new">New</span>' : ''}</header>
       ${(b.milestones || []).map(m => `<div class="milestone">${esc(m)}</div>`).join('')}
       ${changeList(items, isMine)}</section>`);
   }

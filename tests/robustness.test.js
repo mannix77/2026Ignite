@@ -7,7 +7,7 @@ const { buildModel, diffKnown, cacheUrl } = await import('../assets/js/data.js')
 const { CONFERENCES } = await import('../assets/js/conferences.js');
 const { createVenue } = await import('../assets/js/venue.js');
 const { compareOptions, DEFAULT_PLANNER } = await import('../assets/js/planner.js');
-const { checkLive, liveWindow, changeCounts } = await import('../assets/js/live.js');
+const { checkLive, liveWindow, changeCounts, countsLine, diff: liveDiff } = await import('../assets/js/live.js');
 
 let pass = 0, fail = 0;
 async function test(name, fn) {
@@ -129,6 +129,25 @@ await test('should run at most the cap of what-if plans for a large clash', () =
 await test('should count dropped extra runs apart from removed sessions', () => {
   eq(changeCounts({ added: [{ code: 'A' }, { code: 'B', repeat: true }], removed: [{ code: 'C', repeat: true }, { code: 'D' }], changed: [{ code: 'E' }] }),
     { added: 1, addedRuns: 1, removed: 1, removedRuns: 1, changed: 1 });
+});
+
+await test('should count a wholly added or removed multi-run session as one session plus extra runs', () => {
+  const run = (id, inst, start) => ({ id, inst, code: inst, title: 'T', start, speakers: [] });
+  const three = [run('A', 'A1', '2026-11-18T18:00:00Z'), run('A', 'A2', '2026-11-19T18:00:00Z'), run('A', 'A3', '2026-11-20T18:00:00Z')];
+  const one = run('B', 'B1', '2026-11-18T19:00:00Z');
+  const added = liveDiff([], [...three, one]).added;
+  eq(added.map(x => [x.inst, x.repeat]), [['A1', false], ['A2', true], ['A3', true], ['B1', false]]);
+  eq(changeCounts({ added, removed: [], changed: [] }), { added: 2, addedRuns: 2, removed: 0, removedRuns: 0, changed: 0 });
+  const removed = liveDiff([...three, one], []).removed;
+  eq(removed.map(x => [x.inst, x.repeat]), [['A1', false], ['A2', true], ['A3', true], ['B1', false]]);
+});
+
+await test('should show session and extra-run counts apart in a Changes header', () => {
+  eq(countsLine({ added: [{ code: 'A' }, { code: 'B', repeat: true }], removed: [{ code: 'C', repeat: true }, { code: 'D' }], changed: [{ code: 'E' }] }),
+    '+1 · −1 · ~1 · +1 run · −1 run');
+  eq(countsLine({ added: [{ code: 'A', repeat: true }, { code: 'B', repeat: true }], removed: [], changed: [] }), '+0 · −0 · ~0 · +2 runs');
+  eq(countsLine({ added: [], removed: [], changed: [] }), '+0 · −0 · ~0');
+  eq(countsLine({}), '+0 · −0 · ~0');
 });
 
 // ---- the live check's partial-catalog guard counts sessions, not runs (same rule as sync.py)
