@@ -93,3 +93,32 @@ When a test is meant to guard a line, break that line in a scratch copy and run 
 the test must fail. A mutation that didn't apply, or that crashes the suite, proves nothing:
 confirm the edit applied and the mutant compiles (`node --check`, `py_compile`) before
 counting failures.
+
+## Before you push
+
+Reviews keep finding the same things, and almost all of them can be found before the push.
+CodeRabbit's included allowance is small (about one review an hour; its comment says when the
+next one is due), so a push it can't review costs the next one too.
+
+1. **Self-review the diff first.** Re-read it as a reviewer would, with "Tests that can't pass
+   for the wrong reason" and the path instructions in `.coderabbit.yaml` open, and check every new
+   test against the rules by number. When one instance of a problem turns up, list the others in
+   the same file yourself (rule 6). Then run the `/code-review` skill on the diff. The CodeRabbit
+   CLI can't be used from the cloud sandbox (its download host is blocked and it needs a login),
+   so this read-through is the local review.
+2. **Run it, don't guess it.** An expected value in a test (a return tuple, a count, a message)
+   comes from running the code once and judging the result, or from a published fact; never from
+   memory. Copy commit SHAs, thread ids and other identifiers from tool output; never type or
+   complete one from memory.
+3. **One push per PR, batched.** Fix everything for a PR locally (every open thread, conflicts,
+   nits that cite a rule here), then push once. Before pushing, read the PR's latest CodeRabbit
+   comment: if it says "Review limit reached", wait for the time it gives unless the push is
+   needed to unblock something. Pushing to several PRs in the same hour starves all of them;
+   order them by what is waiting to merge. Replies and "resolved" don't use a review, so answer a
+   thread once its fix is pushed and name the commit. A draft PR isn't auto-reviewed: keep it
+   draft until a slot is free.
+4. **Read the PR first.** Before changing a PR or acting on a finding, read all its threads and
+   the issues it links to or is linked from. A decision recorded there ("deferred to #89", "keep
+   the owner's wording") outranks a bot finding or a task list; if your change would reverse one,
+   stop and ask. Check that a finding's premise is still the owner's current requirement (an
+   issue's first wording can be superseded by a later instruction).
