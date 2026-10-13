@@ -1,6 +1,369 @@
 {
  "batches": [
   {
+   "at": "2026-10-13T01:23:27Z",
+   "milestones": [],
+   "added": [
+    {
+     "id": "1780442280509001cFT5",
+     "inst": "1780442280509001cFT5",
+     "code": "AMZ202-R",
+     "title": "Turn a Bee wearable into your re:Invent notetaking companion",
+     "repeat": false
+    },
+    {
+     "id": "1780441491305001GHCP",
+     "inst": "1780441491305001GHCP",
+     "code": "STG371",
+     "title": "Modernizing file transfer with AWS Transfer Family",
+     "repeat": false
+    },
+    {
+     "id": "1780442280564001c38d",
+     "inst": "1780442280564001c38d",
+     "code": "AMZ202-R1",
+     "title": "Turn a Bee wearable into your re:Invent notetaking companion",
+     "repeat": false
+    },
+    {
+     "id": "1780441462028001G0p2",
+     "inst": "1780441462028001G0p2",
+     "code": "ANT332",
+     "title": "Inside DuckDB and how AWS Analytics puts it to work",
+     "repeat": false
+    },
+    {
+     "id": "1780441475885001GBCT",
+     "inst": "1780441475885001GBCT",
+     "code": "IND3340",
+     "title": "AI-driven customer experience with Amaze, Byte by Yum! & Amorepacific",
+     "repeat": false
+    },
+    {
+     "id": "1780441491369001GtPz",
+     "inst": "1780441491369001GtPz",
+     "code": "STG372",
+     "title": "Speed up latency-sensitive workloads with Amazon S3 Express One Zone",
+     "repeat": false
+    },
+    {
+     "id": "1780442232284001c7A8",
+     "inst": "1780442232284001c7A8",
+     "code": "ANT320-R",
+     "title": "Data mesh on AWS: governance, identity, and end‑user attribution",
+     "repeat": false
+    },
+    {
+     "id": "1780441473454001GxKn",
+     "inst": "1780441473454001GxKn",
+     "code": "AIM3317",
+     "title": "How Datadog optimizes cost per token for GenAI at scale",
+     "repeat": false
+    },
+    {
+     "id": "1780442263186001cakI",
+     "inst": "1780442263186001cakI",
+     "code": "HMC324",
+     "title": "How Marriott built AI-powered travel search with agents on AWS and model on GCP",
+     "repeat": false
+    }
+   ],
+   "removed": [],
+   "changed": [
+    {
+     "id": "1780441473816001GBHJ",
+     "inst": "1780441473816001GBHJ",
+     "code": "IND3346",
+     "title": "Data mesh to agentic AI: Building an AI-ready enterprise on AWS",
+     "f": {
+      "title": [
+       "Data Mesh to Agentic AI: Building an AI-Ready Enterprise on AWS",
+       "Data mesh to agentic AI: Building an AI-ready enterprise on AWS"
+      ]
+     }
+    },
+    {
+     "id": "1780441493928001GYcW",
+     "inst": "1780441493928001GYcW",
+     "code": "INV511",
+     "title": "Inside NKI: How AWS designed a kernel language for peak AI performance",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441461730001GMXW",
+     "inst": "1780441461730001GMXW",
+     "code": "ANT350",
+     "title": "Observe, investigate, act: smarter ops with Amazon OpenSearch Service",
+     "f": {
+      "code": [
+       "ANT408",
+       "ANT350"
+      ]
+     }
+    },
+    {
+     "id": "1780442245233001cJ4E",
+     "inst": "1780442245233001cJ4E",
+     "code": "IND3322",
+     "title": "Build an AI student advisor: Agents for education",
+     "f": {
+      "title": [
+       "Build an AI Student Advisor: Agents for Education",
+       "Build an AI student advisor: Agents for education"
+      ]
+     }
+    },
+    {
+     "id": "1780442276021001cmMv",
+     "inst": "1780442276021001cmMv",
+     "code": "AIM335-R",
+     "title": "Build Provable Zero-Trust Agents with Automated Reasoning checks",
+     "f": {
+      "title": [
+       "Build provable AI agents with Automated Reasoning checks",
+       "Build Provable Zero-Trust Agents with Automated Reasoning checks"
+      ]
+     }
+    },
+    {
+     "id": "1780442251182001cAGd",
+     "inst": "1780442251182001cAGd",
+     "code": "SVS329-R",
+     "title": "Serverless application testing in the age of agents",
+     "f": {
+      "title": [
+       "Testing serverless and event-driven applications",
+       "Serverless application testing in the age of agents"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1787375092677001xENf",
+     "inst": "1787375092677001xENf",
+     "code": "IND422",
+     "title": "Build an AI-powered student services contact center",
+     "f": {
+      "title": [
+       "Build an AI-powered student services with Connect Customer",
+       "Build an AI-powered student services contact center"
+      ]
+     }
+    },
+    {
+     "id": "1780442275908001csOH",
+     "inst": "1780442275908001csOH",
+     "code": "AIM334-R",
+     "title": "Hands-on distributed training with AWS Trainium and PyTorch",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441484808001GFzE",
+     "inst": "1780441484808001GFzE",
+     "code": "AIM3316-S",
+     "title": "Koa: NVIDIA Nemotron-Powered CRM Reasoning Inside Salesforce’s AWS Trust Boundary",
+     "f": {
+      "code": [
+       "AIM250-S",
+       "AIM3316-S"
+      ]
+     }
+    },
+    {
+     "id": "1780442253574001cNfO",
+     "inst": "1780442253574001cNfO",
+     "code": "AIM339",
+     "title": "Build nanochat models with PyTorch and Trainium-Easier than you think",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1790358253399001i0ub",
+     "inst": "1790358253399001i0ub",
+     "code": "SVS329-R1",
+     "title": "Serverless application testing in the age of agents",
+     "f": {
+      "title": [
+       "Testing serverless and event-driven applications",
+       "Serverless application testing in the age of agents"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441462382001GJ4i",
+     "inst": "1780441462382001GJ4i",
+     "code": "ANT351",
+     "title": "Introducing AWS Context: Build governed intelligence for agents at scale",
+     "f": {
+      "code": [
+       "ANT423",
+       "ANT351"
+      ]
+     }
+    },
+    {
+     "id": "1790358234575001ianB",
+     "inst": "1790358234575001ianB",
+     "code": "ANT413-R1",
+     "title": "Automating data pipelines with agentic AI and Apache Iceberg",
+     "f": {
+      "title": [
+       "Self-healing data pipelines with agentic AI and Apache Iceberg",
+       "Automating data pipelines with agentic AI and Apache Iceberg"
+      ]
+     }
+    },
+    {
+     "id": "1780442234803001c9gE",
+     "inst": "1780442234803001c9gE",
+     "code": "AIM349-R",
+     "title": "Build production AI assistant with Hugging Face Libraries and models",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1790358245821001iv42",
+     "inst": "1790358245821001iv42",
+     "code": "ANT320-R1",
+     "title": "Data mesh on AWS: governance, identity, and end‑user attribution",
+     "f": {
+      "title": [
+       "Protect your analytics workloads with cross-region resilience",
+       "Data mesh on AWS: governance, identity, and end‑user attribution"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442232783001claK",
+     "inst": "1780442232783001claK",
+     "code": "ANT425",
+     "title": "Trace Lineage From AI Endpoints and Models to Data",
+     "f": {
+      "title": [
+       "Governance across engines with AWS Glue Data Catalog",
+       "Trace Lineage From AI Endpoints and Models to Data"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442220953001cPpJ",
+     "inst": "1780442220953001cPpJ",
+     "code": "GHJ213",
+     "title": "AWS AI League Championship Grand Finale: Agentic Football Cup",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1790358253108001i5Fu",
+     "inst": "1790358253108001i5Fu",
+     "code": "AIM334-R1",
+     "title": "Hands-on distributed training with AWS Trainium and PyTorch",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442229820001cWPn",
+     "inst": "1780442229820001cWPn",
+     "code": "NET316",
+     "title": "Scaling website delivery with Amazon CloudFront: one configuration, many sites",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441464527001GHt9",
+     "inst": "1780441464527001GHt9",
+     "code": "AIM2215",
+     "title": "World Models & Physical AI: The Next Frontier in Intelligent Systems",
+     "f": {
+      "code": [
+       "AIM360",
+       "AIM2215"
+      ]
+     }
+    },
+    {
+     "id": "1790358239722001iuit",
+     "inst": "1790358239722001iuit",
+     "code": "ANT424-R1",
+     "title": "Simplify Data Analytics operations with AI-powered Apache Spark agents on AWS",
+     "f": {
+      "title": [
+       "Migrating legacy ETL to serverless with AWS Glue",
+       "Simplify Data Analytics operations with AI-powered Apache Spark agents on AWS"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442270290001cyIp",
+     "inst": "1780442270290001cyIp",
+     "code": "SEC285-S",
+     "title": "Automate and Scale Cloud Operations with Purpose-Built AI Agents",
+     "f": {
+      "code": [
+       "SEC385-S",
+       "SEC285-S"
+      ]
+     }
+    },
+    {
+     "id": "1786342064270001PBCV",
+     "inst": "1786342064270001PBCV",
+     "code": "DAT451",
+     "title": "Netflix on Aurora PostgreSQL: Operating 40TB+ after fleet migration",
+     "f": {
+      "title": [
+       "Lessons from Netflix's distributed PostgreSQL migration to Aurora",
+       "Netflix on Aurora PostgreSQL: Operating 40TB+ after fleet migration"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441492907001GuAB",
+     "inst": "1780441492907001GuAB",
+     "code": "SVS403-R",
+     "title": "Building stateful AI workflows with Serverless orchestration",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1790358256927001iapi",
+     "inst": "1790358256927001iapi",
+     "code": "AIM335-R1",
+     "title": "Build Provable Zero-Trust Agents with Automated Reasoning checks",
+     "f": {
+      "title": [
+       "Build provable AI agents with Automated Reasoning checks",
+       "Build Provable Zero-Trust Agents with Automated Reasoning checks"
+      ]
+     }
+    },
+    {
+     "id": "1790358244337001it1l",
+     "inst": "1790358244337001it1l",
+     "code": "SVS403-R1",
+     "title": "Building stateful AI workflows with Serverless orchestration",
+     "f": {
+      "desc": true
+     }
+    }
+   ]
+  },
+  {
    "at": "2026-10-12T18:54:24Z",
    "milestones": [],
    "added": [
