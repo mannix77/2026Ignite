@@ -1,6 +1,268 @@
 {
  "batches": [
   {
+   "at": "2026-10-13T18:53:16Z",
+   "milestones": [],
+   "added": [
+    {
+     "id": "1791492157127001UCdR",
+     "inst": "1791492157127001UCdR",
+     "code": "KEY001",
+     "title": "Developer Keynote",
+     "repeat": false
+    },
+    {
+     "id": "1791492157230001Uw9y",
+     "inst": "1791492157230001Uw9y",
+     "code": "KEY002",
+     "title": "CEO Keynote",
+     "repeat": false
+    },
+    {
+     "id": "1791492157329001U2je",
+     "inst": "1791492157329001U2je",
+     "code": "KEY003",
+     "title": "Data & AI Keynote",
+     "repeat": false
+    },
+    {
+     "id": "1791492157430001U8jn",
+     "inst": "1791492157430001U8jn",
+     "code": "KEY004",
+     "title": "Partner Keynote",
+     "repeat": false
+    },
+    {
+     "id": "1791492157537001UxSg",
+     "inst": "1791492157537001UxSg",
+     "code": "KEY005",
+     "title": "Technical Innovations Keynote",
+     "repeat": false
+    }
+   ],
+   "removed": [],
+   "changed": [
+    {
+     "id": "1790358250283001iYiG",
+     "inst": "1790358250283001iYiG",
+     "code": "IND418-R1",
+     "title": "From documents to decisions: Agentic AI for federal operations",
+     "f": {
+      "title": [
+       "Agentic AI for Mission Readiness: Accelerating Federal Operations",
+       "From documents to decisions: Agentic AI for federal operations"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441462316001GfXD",
+     "inst": "1780441462316001GfXD",
+     "code": "ANT334",
+     "title": "Cut your data lake and lakehouse bills: Cost and performance tuning best practices",
+     "f": {
+      "start": [
+       "2026-12-02T21:30:00Z",
+       "2026-11-30T22:30:00Z"
+      ],
+      "end": [
+       "2026-12-02T22:30:00Z",
+       "2026-11-30T23:30:00Z"
+      ],
+      "room": [
+       "Caesars Palace | Promenade South | Octavius 4 | Content Hub | Blue Theater",
+       "Caesars Palace | Promenade South | Octavius 4 | Content Hub | Red Theater"
+      ]
+     }
+    },
+    {
+     "id": "1790358249228001iTS3",
+     "inst": "1790358249228001iTS3",
+     "code": "IND352-R1",
+     "title": "Gotta detect 'em all: finding rogue devices with Amazon Bedrock",
+     "f": {
+      "title": [
+       "Autonomous Swarms, Human Command: Building Trusted AI Teammates on AWS",
+       "Gotta detect 'em all: finding rogue devices with Amazon Bedrock"
+      ]
+     }
+    },
+    {
+     "id": "1790358245269001ipnL",
+     "inst": "1790358245269001ipnL",
+     "code": "IND353-R1",
+     "title": "Agents under oath: HIPAA-compliant agentic AI on AWS",
+     "f": {
+      "title": [
+       "Agents Under Oath: HIPAA-compliant agentic AI on AWS",
+       "Agents under oath: HIPAA-compliant agentic AI on AWS"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441462444001GDdl",
+     "inst": "1780441462444001GDdl",
+     "code": "ANT335",
+     "title": "Drive AI and ML ROI with cost-efficient data analytics on AWS",
+     "f": {
+      "title": [
+       "Optimize AI costs with practical deployment blueprints for analytics on AWS",
+       "Drive AI and ML ROI with cost-efficient data analytics on AWS"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442266564001c2mb",
+     "inst": "1780442266564001c2mb",
+     "code": "ARC101-S",
+     "title": "How DocuSign built a scalable data foundation for AI (sponsored by Fivetran)",
+     "f": {
+      "title": [
+       "Building a governed AI ready data foundation on AWS (sponsored by Fivetran)",
+       "How DocuSign built a scalable data foundation for AI (sponsored by Fivetran)"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442282738001cR5l",
+     "inst": "1780442282738001cR5l",
+     "code": "MAM418",
+     "title": "AIOps for SAP on AWS: Proactive Log Intelligence with Amazon Bedrock Agents",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441462237001G2A7",
+     "inst": "1780441462237001G2A7",
+     "code": "ANT333",
+     "title": "Your data, your engine: How open source and open standards power analytics on AWS",
+     "f": {
+      "start": [
+       "2026-11-30T22:30:00Z",
+       "2026-12-02T21:30:00Z"
+      ],
+      "end": [
+       "2026-11-30T23:30:00Z",
+       "2026-12-02T22:30:00Z"
+      ],
+      "room": [
+       "Caesars Palace | Promenade South | Octavius 4 | Content Hub | Red Theater",
+       "Caesars Palace | Promenade South | Octavius 4 | Content Hub | Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1790358242656001irxy",
+     "inst": "1790358242656001irxy",
+     "code": "SEC429-R1",
+     "title": "Tenant-isolated agent memory: one IAM policy for AgentCore Memory",
+     "f": {
+      "start": [
+       "2026-12-04T00:00:00Z",
+       "2026-12-02T21:30:00Z"
+      ],
+      "end": [
+       "2026-12-04T01:00:00Z",
+       "2026-12-02T22:30:00Z"
+      ],
+      "room": [
+       "Caesars Palace | Promenade Level | Neopolitan I",
+       "MGM Grand | Level 3 | Room 353"
+      ]
+     }
+    },
+    {
+     "id": "1780441465606001GlIi",
+     "inst": "1780441465606001GlIi",
+     "code": "BIZ106",
+     "title": "How Flybuys Cut Costs and Scaled AI Agents Across 10M Members",
+     "f": {
+      "title": [
+       "How An AI-First Approach Helped Add 500,000 New Members",
+       "How Flybuys Cut Costs and Scaled AI Agents Across 10M Members"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441465546001GTJc",
+     "inst": "1780441465546001GTJc",
+     "code": "BIZ105",
+     "title": "Shaping the Future of Guest Support at lululemon with an AI-powered experience",
+     "f": {
+      "title": [
+       "How a brand modernized CX Globally Across Three Regions",
+       "Shaping the Future of Guest Support at lululemon with an AI-powered experience"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442229586001cEF5",
+     "inst": "1780442229586001cEF5",
+     "code": "MAM411",
+     "title": "Best Practices for .NET modernization with AWS Transform",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1790358250692001iwwm",
+     "inst": "1790358250692001iwwm",
+     "code": "IND397-R1",
+     "title": "Accelerate your agentic AI mission from prototype to ATO in weeks",
+     "f": {
+      "title": [
+       "Accelerate your GenAI mission from prototype to ATO in weeks",
+       "Accelerate your agentic AI mission from prototype to ATO in weeks"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441475601001GnFO",
+     "inst": "1780441475601001GnFO",
+     "code": "IND328",
+     "title": "How Blue Origin built a centralized enterprise knowledge graph on AWS",
+     "f": {
+      "room": [
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Blue Theater",
+       "Wynn/Encore | Level 1 | Encore Ballroom 5"
+      ]
+     }
+    },
+    {
+     "id": "1780441475825001GL0i",
+     "inst": "1780441475825001GL0i",
+     "code": "IND3343",
+     "title": "NatWest: Embedding AI agents into the software delivery lifecycle",
+     "f": {
+      "room": [
+       "Wynn/Encore | Level 1 | Encore Ballroom 5",
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441475431001Gos3",
+     "inst": "1780441475431001Gos3",
+     "code": "IND309",
+     "title": "Advancing the Mission with AI and HPC Supercomputing Pods on AWS",
+     "f": {
+      "title": [
+       "Powering America's AI and HPC leadership for mission-critical outcomes",
+       "Advancing the Mission with AI and HPC Supercomputing Pods on AWS"
+      ],
+      "desc": true
+     }
+    }
+   ]
+  },
+  {
    "at": "2026-10-13T01:23:27Z",
    "milestones": [],
    "added": [
