@@ -1,0 +1,92 @@
+<!-- summary:38618625118-1 -->
+Added 4 · removed 0 · changed 85
+
+**Added**
+- `MAM227-S` Sovereign Transformations: From Legacy to an AI-Ready Estate You Own (sponsored by Concierto by Trianz)
+- `AIM464-S` From Infrastructure to Intelligence: Building the Full AI Stack in Saudi Arabia (sponsored by HUMAIN)
+- `IND3353` TP ICAP: Driving revenue through faster decisions with agentic AI
+- `IND3354` Lives on the Line: Modernizing National Weather Forecasting on AWS
+
+**Changed**
+- `AIM2210-NEW` What's new with NVIDIA GPUs in Amazon EC2 — code: AIM2210 → AIM2210-NEW
+- `AIM2216` Trust in Depth: Giving agents more freedom without losing control — code: AIM395 → AIM2216
+- `BIZ114-NEW` What's New in Amazon Connect Customer — code: BIZ114 → BIZ114-NEW
+- `BIZ332-NEW` ​​Every Candidate, Every Time: AI-Led Structured Interviews at Scale — code: BIZ332 → BIZ332-NEW
+- `BIZ333-NEW` Design, Simulate, Ship: End-to-End AI Agents on Connect Customer — code: BIZ333 → BIZ333-NEW
+- `BIZ334-NEW` Building Smarter Self-Service Experiences with AI — code: BIZ334 → BIZ334-NEW
+- `BIZ335-NEW` Build an AI agent that understands customer intent — code: BIZ335 → BIZ335-NEW
+- `CMP101-NEW` Cutting manual accounts payable work — code: CMP101 → CMP101-NEW
+- `CMP252-NEW` Running larger, higher-fidelity quantum experiments on Amazon Braket — code: CMP252 → CMP252-NEW
+- `CMP358-NEW` Graviton5 for data workloads — code: CMP358 → CMP358-NEW
+- `CMP359-NEW` Simplifying how you use AWS: automating common patterns on your behalf — code: CMP359 → CMP359-NEW
+- `CON345-NEW` Eliminate wasted compute capacity with Amazon ECS — code: CON345 → CON345-NEW
+- `CON346-NEW` Enhanced container image access & distribution with Amazon ECR — code: CON346 → CON346-NEW
+- `CON347-NEW` Intelligent, right-sized compute on Amazon EKS — code: CON347 → CON347-NEW
+- `CON348-NEW` Defense-in-Depth for Containers on Amazon EKS: A Layering Story — code: CON348 → CON348-NEW
+- `COP210-NEW` Fewer Incidents, Faster Fixes: Expert-led Cloud Operations on AWS — code: COP210 → COP210-NEW
+- `COP353-NEW` Take Action on Operational Issues with AWS DevOps Agent — code: COP353 → COP353-NEW
+- `COP354-NEW` Diagnose Complex Workloads with AWS DevOps Agent — code: COP354 → COP354-NEW
+- `COP355-NEW` Resolve Incidents and Validate Releases with AWS DevOps Agent — code: COP355 → COP355-NEW
+- `COP356-NEW` Evaluate and ship AI agents confidently — code: COP356 → COP356-NEW
+- `COP357-NEW` Monitor AI workloads and agents end to end — code: COP357 → COP357-NEW
+- `COP358-NEW` Observe your applications and agents in one place — code: COP358 → COP358-NEW
+- `COP359-NEW` Build full-stack observability for agents and apps — code: COP359 → COP359-NEW
+- `COP360-NEW` Monetizing your applications with AWS — code: COP360 → COP360-NEW
+- `COP363-NEW` Investigate Incidents Across Teams with AWS DevOps Agent — code: COP363 → COP363-NEW
+- `COP364-NEW` Build better, review faster: AI-Powered Well-Architected reviews — code: COP364 → COP364-NEW
+- `COP365-NEW` Allocate shared AWS infrastructure costs to your business units — code: COP365 → COP365-NEW
+- `COP367-NEW` End-to-end resilience for your cloud workloads — code: COP367 → COP367-NEW
+- `COP368-NEW` Recovering AWS Graviton workloads with orchestrated DR — code: COP368 → COP368-NEW
+- `COP411-NEW` Close the gap between code and production — code: COP411 → COP411-NEW
+- `DAT428` Build governed remediation workflows for Aurora database operations — desc
+- `DAT452-NEW` [NEW LAUNCH] Coming soon! — code: DAT452 → DAT452-NEW
+- `DAT453-NEW` [NEW LAUNCH] Coming soon! — code: DAT453 → DAT453-NEW
+- `DVT224-NEW` Brownfield development across large codebases with AI agents — code: DVT224 → DVT224-NEW
+- `DVT226-NEW` Best practices for working with shared coding agents on your team — code: DVT226 → DVT226-NEW
+- `DVT227-NEW` Build a team shared agent workflow from issue to tested PR — code: DVT227 → DVT227-NEW
+- `DVT343-NEW` From code to production in seconds — building web apps that last — code: DVT343 → DVT343-NEW
+- `DVT344-NEW` Ship web apps that just work — code: DVT344 → DVT344-NEW
+- `DVT346-NEW` What AI agents need from an application backend — code: DVT346 → DVT346-NEW
+- `HMC311` Architecting AWS Outposts networking for enterprise and ultra-low-latency workloads — title: …for ultra-low latency on AWS Outposts with accelerated n… → …AWS Outposts networking for enterprise and ultra-low-lat…; desc
+- `HMC320-NEW` Right workload on the right cloud - multicloud workload placement — code: HMC320 → HMC320-NEW
+- `IND3307` Unified Commerce Intelligence for Amazon Brands on Amazon Quick — title: …Sellers on Amazon Quick → …Brands on Amazon Quick; desc
+- `IND3349-NEW` From Generic to Industry Expert: The Next Era of AI — code: IND3349 → IND3349-NEW
+- `KEY001` Developer Keynote — speakers: Clare Liguori → Clare Liguori, Eric Johnson, Marc Brooker
+- `MAM219` Transforming business and SAP with Amazon Innovations — start: 2026-12-04T00:00:00Z → 2026-12-02T18:30:00Z; end: 2026-12-04T01:00:00Z → 2026-12-02T19:30:00Z; room: Venetian | Level 2 | Ballroom F | Content Hub | Red Theater → Caesars Palace | Promenade South | Octavius 4 | Content H…
+- `MAM221` Accelerating AI-powered business transformation and SAP Modernization — start: 2026-12-03T17:00:00Z → 2026-12-04T00:00:00Z; end: 2026-12-03T18:00:00Z → 2026-12-04T01:00:00Z; room: Caesars Palace | Promenade Level | Roman I → Venetian | Level 2 | Ballroom F | Content Hub | Red Theater
+- `MAM225-NEW` What's new with AWS Transform for migrations — code: MAM225 → MAM225-NEW
+- `MAM344` From migration to continuous modernization: reduce tech debt at scale — start: 2026-12-02T18:30:00Z → 2026-12-03T17:00:00Z; end: 2026-12-02T19:30:00Z → 2026-12-03T18:00:00Z; room: …South | Octavius 4 | Content Hub | Blue Theater → …Level | Roman I
+- `MAM347-NEW` Meet Your AI Teammate for WorkSpaces Administration — code: MAM347 → MAM347-NEW
+- `MAM348-NEW` Provision Desktops for Builders Faster with WorkSpaces — code: MAM348 → MAM348-NEW
+- `MAM349-NEW` Scaling legacy app modernization with autonomous agents — code: MAM349 → MAM349-NEW
+- `MAM350-NEW` Faster tech debt remediation without the setup overhead — code: MAM350 → MAM350-NEW
+- `NET101-NEW` What's new in eero networking — code: NET101 → NET101-NEW
+- `NET338-NEW` Innovations in Elastic Load Balancing and application networking — code: NET338 → NET338-NEW
+- `NET339-NEW` AI innovations across network monitoring and operations — code: NET339 → NET339-NEW
+- `NET340-NEW` Innovations in Secure Service Edge architectures on AWS — code: NET340 → NET340-NEW
+- `NET342-NEW` Innovations in DNS and Amazon Route 53 — code: NET342 → NET342-NEW
+- `NET343-NEW` DDI Architecture Patterns: DNS, DHCP, and IPAM at AWS — code: NET343 → NET343-NEW
+- `PEX217-NEW` Sell to AI agents through AWS Marketplace — code: PEX217 → PEX217-NEW
+- `PEX310-R` Accelerate Your FDE Journey: The Harness & FDE Delivery Kit — title: From Intention to Production: Loop Engineering with the F… → Accelerate Your FDE Journey: The Harness & FDE Delivery Kit
+- `PEX310-R1` Accelerate Your FDE Journey: The Harness & FDE Delivery Kit — title: From Intention to Production: Loop Engineering with the F… → Accelerate Your FDE Journey: The Harness & FDE Delivery Kit
+- `PEX320-NEW` AI-Powered Migrations: AWS Transform Across the Lifecycle — code: PEX320 → PEX320-NEW
+- `SEC220-S` Move AI agents from prototype to production with 1Password (sponsored by 1Password) — start: 2026-12-03T22:00:00Z → 2026-12-03T01:30:00Z; end: 2026-12-03T22:20:00Z → 2026-12-03T01:50:00Z; room: …Partner Advantage Theater → …Global Impact Theater
+- `SEC321-R` Securing AI coding agents: defense in depth across the development lifecycle — desc
+- `SEC321-R1` Securing AI coding agents: defense in depth across the development lifecycle — desc
+- `SEC3300-NEW` Authenticating workloads to the outside world — code: SEC3300 → SEC3300-NEW
+- `SEC3301-NEW` Protect workloads with AWS Certificate Manager — code: SEC3301 → SEC3301-NEW
+- `SEC393` How Badger Meter unified customer identity with Amazon Cognito — title: …for critical infrastructure → …with Amazon Cognito; desc
+- `SEC395-NEW` Find, prove, and fix code vulnerabilities at machine speed — code: SEC395 → SEC395-NEW
+- `SEC397-NEW` Securing APIs with AWS — code: SEC397 → SEC397-NEW
+- `SEC398-NEW` The latest innovations in multicloud agent security — code: SEC398 → SEC398-NEW
+- `SEC399-NEW` Maintain accountability when using IAM federation — code: SEC399 → SEC399-NEW
+- `STG205-NEW` Cost optimization techniques for Amazon EBS — code: STG205 → STG205-NEW
+- `STG206-NEW` Design for resiliency in Amazon EBS — code: STG206 → STG206-NEW
+- `STG309` Shared file storage for containers, serverless, and Lambda — desc
+- `STG358` Inside Zeta Global's open lakehouse architecture on AWS — desc
+- `STG368-NEW` Deep dive into recent Amazon S3 launches — code: STG368 → STG368-NEW
+- `STG369-NEW` AWS Backup: Architecture deep dive — code: STG369 → STG369-NEW
+- `STG370-NEW` What's new with AWS Backup — code: STG370 → STG370-NEW
+- `STG422-NEW` Dive deep into resilience architectures for Amazon EBS — code: STG422 → STG422-NEW
+- …and 5 more
+
