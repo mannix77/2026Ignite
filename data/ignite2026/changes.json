@@ -1,6 +1,432 @@
 {
  "batches": [
   {
+   "at": "2026-10-14T18:35:47Z",
+   "milestones": [],
+   "added": [
+    {
+     "id": "1787856873792001hzKc",
+     "inst": "1787856873792001hzKc-1791825362182001XJaN",
+     "code": "LAB681",
+     "title": "Turn signal into real-time protections with Project Perception",
+     "repeat": true
+    },
+    {
+     "id": "1787856873792001hzKc",
+     "inst": "1787856873792001hzKc-1791825386655001alqZ",
+     "code": "LAB681",
+     "title": "Turn signal into real-time protections with Project Perception",
+     "repeat": true
+    },
+    {
+     "id": "1787856874461001hhwp",
+     "inst": "1787856874461001hhwp-1791915692751001bjDG",
+     "code": "LAB685",
+     "title": "Deploy Copilot with confidence: Find & protect exposed sensitive data",
+     "repeat": true
+    }
+   ],
+   "removed": [],
+   "changed": [
+    {
+     "id": "1787856617825001EHOK",
+     "inst": "1787856617825001EHOK-1791588173700001CIOq",
+     "code": "BRK295",
+     "title": "Web IQ: The new search engine for agents",
+     "f": {
+      "speakers": [
+       [
+        "Roby Carli",
+        "Shannon Ridge Kaura"
+       ],
+       [
+        "Anand Ravi",
+        "Roby Carli"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856619047001E5dp",
+     "inst": "1787856619047001E5dp-1791587924732001F1no",
+     "code": "BRK303",
+     "title": "Secure your business presence in the AI web with Web IQ",
+     "f": {
+      "speakers": [
+       [
+        "Brian King",
+        "Sarvesh Nagpal"
+       ],
+       [
+        "Brian King",
+        "Pedro Bojikian"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856621370001E15q",
+     "inst": "1787856621370001E15q-1791588156528001CqcQ",
+     "code": "BRK318",
+     "title": "Project Perception: How Agentic Security Works",
+     "f": {
+      "speakers": [
+       [
+        "Naama Ben Dov"
+       ],
+       [
+        "Corina Feuerstein",
+        "Naama Ben Dov"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856624940001EdeO",
+     "inst": "1787856624940001EdeO-1791588287315001Cdqv",
+     "code": "BRK341",
+     "title": "Inside Look at Agent 365: Lessons from Microsoft's Office of the CISO",
+     "f": {
+      "speakers": [
+       [
+        "Karen Dahmen"
+       ],
+       [
+        "Karen Dahmen",
+        "Vivek Vinod Sharma"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856634261001EE74",
+     "inst": "1787856634261001EE74-1791588307571001C9P8",
+     "code": "BRK401",
+     "title": "Windows 365 Flex & Cloud PC Devices: Lower Costs, Greater Value",
+     "f": {
+      "speakers": [
+       [
+        "José Lara Silva",
+        "Tania Mariscal"
+       ],
+       [
+        "José Lara Silva",
+        "Raid El Badarin-Deriy",
+        "Tania Mariscal"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856639288001EBwb",
+     "inst": "1787856639288001EBwb-1791588287757001C0Sy",
+     "code": "BRK434",
+     "title": "AI runs on data. Is your storage architecture ready?",
+     "f": {
+      "speakers": [
+       [
+        "Saurabh Sensharma",
+        "Vamshi Kommineni"
+       ],
+       [
+        "Harish Arora",
+        "Saurabh Sensharma",
+        "Vamshi Kommineni"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856642196001E70E",
+     "inst": "1787856642196001E70E-1791588100918001CIYP",
+     "code": "BRK453",
+     "title": "What's new and what's next in Azure Storage​",
+     "f": {
+      "speakers": [
+       [
+        "Aung Oo",
+        "Vybava Ramadoss"
+       ],
+       [
+        "Aung Oo",
+        "David Meyer",
+        "Vybava Ramadoss"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856646604001EsgZ",
+     "inst": "1787856646604001EsgZ-1791588099082001C482",
+     "code": "BRK482",
+     "title": "FinOps for AI: Partner Playbook for Building AI Solutions and Services",
+     "f": {
+      "speakers": [
+       [
+        "Matt Kerner"
+       ],
+       [
+        "Adam Bogobowicz",
+        "Matt Kerner"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856647047001Ezwq",
+     "inst": "1787856647047001Ezwq-1791588242070001CocU",
+     "code": "BRK485",
+     "title": "Modernize with AI to expand your practice and unlock customer growth​",
+     "f": {
+      "speakers": [
+       [
+        "Frederico Pravatta Rezende",
+        "Mayank Bhatia"
+       ],
+       [
+        "Barry Wordell",
+        "Frederico Pravatta Rezende",
+        "Mayank Bhatia"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787854983619001tEMF",
+     "inst": "1787854983619001tEMF-1791588289341001CuCO",
+     "code": "BRKSP619",
+     "title": "Build AI-powered Microsoft Fabric workflows with GitHub Copilot",
+     "f": {
+      "speakers": [
+       [
+        "Leslie Welch"
+       ],
+       [
+        "Kevin Pereira",
+        "Leslie Welch"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856876398001h9Z7",
+     "inst": "1787856876398001h9Z7-1791588128453001CPL2",
+     "code": "LAB722",
+     "title": "Operate secure, multi-tenant agentic apps on Azure Container Apps",
+     "f": {
+      "speakers": [
+       [
+        "Jenny Lawrance",
+        "Simon Jakesch"
+       ],
+       [
+        "Chris Gillum",
+        "Jenny Lawrance"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856876398001h9Z7",
+     "inst": "1787856876398001h9Z7-1791906602185001MhDt",
+     "code": "LAB722",
+     "title": "Operate secure, multi-tenant agentic apps on Azure Container Apps",
+     "f": {
+      "speakers": [
+       [
+        "Jenny Lawrance",
+        "Simon Jakesch"
+       ],
+       [
+        "Chris Gillum",
+        "Jenny Lawrance"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856876398001h9Z7",
+     "inst": "1787856876398001h9Z7-1791906628859001afuq",
+     "code": "LAB722",
+     "title": "Operate secure, multi-tenant agentic apps on Azure Container Apps",
+     "f": {
+      "speakers": [
+       [
+        "Jenny Lawrance",
+        "Simon Jakesch"
+       ],
+       [
+        "Chris Gillum",
+        "Jenny Lawrance"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856876398001h9Z7",
+     "inst": "1787856876398001h9Z7-1791906653514001MFzS",
+     "code": "LAB722",
+     "title": "Operate secure, multi-tenant agentic apps on Azure Container Apps",
+     "f": {
+      "speakers": [
+       [
+        "Jenny Lawrance",
+        "Simon Jakesch"
+       ],
+       [
+        "Chris Gillum",
+        "Jenny Lawrance"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1789507933291001zsTr",
+     "inst": "1789507933291001zsTr-1791588128917001CzVO",
+     "code": "LAB741",
+     "title": "From AI ambition to business advantage",
+     "f": {
+      "speakers": [
+       [
+        "Bob Tichelman"
+       ],
+       [
+        "Fiona Carney"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1789507933291001zsTr",
+     "inst": "1789507933291001zsTr-1791911876244001MxP8",
+     "code": "LAB741",
+     "title": "From AI ambition to business advantage",
+     "f": {
+      "speakers": [
+       [
+        "Bob Tichelman"
+       ],
+       [
+        "Fiona Carney"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856663179001E2CC",
+     "inst": "1787856663179001E2CC-1791588201595001C02i",
+     "code": "LTG1171",
+     "title": "Getting Started with Agent 365: Setting Up Your Agent Control Plane",
+     "f": {
+      "speakers": [
+       [
+        "Kendra Springer",
+        "Kevin Hedrick"
+       ],
+       [
+        "Kendra Springer"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856670524001EsCN",
+     "inst": "1787856670524001EsCN-1791588169637001C1BX",
+     "code": "LTG1218",
+     "title": "Identity-aware knowledge retrieval with Foundry IQ",
+     "f": {
+      "speakers": [
+       [
+        "Pamela Fox"
+       ],
+       [
+        "Matt Gotteiner",
+        "Pamela Fox"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856672510001E9Sd",
+     "inst": "1787856672510001E9Sd-1791588348917001CDgy",
+     "code": "LTG1231",
+     "title": "Threat-aware exposure management for the agentic age",
+     "f": {
+      "speakers": [
+       [
+        "Lior Arviv"
+       ],
+       [
+        "Gal Fenigshtein"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856582459001E9pN",
+     "inst": "1787856582459001E9pN-1791588180404001CLC9",
+     "code": "THR901",
+     "title": "The agentic path from legacy apps to AI-native on Azure Container Apps",
+     "f": {
+      "speakers": [
+       [
+        "Chris Gillum",
+        "Simon Jakesch",
+        "Vini Soto"
+       ],
+       [
+        "Chris Gillum",
+        "Vini Soto"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787858597857001SSQT",
+     "inst": "1787858597857001SSQT-1791814920122001CNQS",
+     "code": "THRSP1130",
+     "title": "Build governed AI that understands your business context",
+     "f": {
+      "room": [
+       "Moscone West | Level 3, Theater B",
+       "Moscone South | The Hub, Partner Theater"
+      ]
+     }
+    },
+    {
+     "id": "1787854973737001tjxJ",
+     "inst": "1787854973737001tjxJ-1791588081171001CX9t",
+     "code": "TT1650",
+     "title": "IT Strategies for Agent Observability and Governance with Agent 365",
+     "f": {
+      "speakers": [
+       [
+        "Poornima Muthukumar"
+       ],
+       []
+      ]
+     }
+    },
+    {
+     "id": "1789610579158001K5t4",
+     "inst": "1789610579158001K5t4-1791588113346001CKoZ",
+     "code": "TT1862",
+     "title": "Capacity management in Microsoft Fabric",
+     "f": {
+      "speakers": [
+       [
+        "Pankaj Arora",
+        "Sanjay Raut"
+       ],
+       [
+        "Pankaj Arora"
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
    "at": "2026-10-14T16:31:43Z",
    "milestones": [],
    "added": [
