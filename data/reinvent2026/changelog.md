@@ -3,6 +3,13 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-10-14T06:59:48Z · https://catalog.awsevents.com/api/sessions
+
+Added 0 · removed 0 · changed 1
+
+**Changed**
+- `AIM310` Making foundation models performant on AWS Trainium3 — title: Inside AWS Trainium3: Hardware innovations for better AI … → Making foundation models performant on AWS Trainium3; desc
+
 ## 2026-10-14T01:09:33Z · https://catalog.awsevents.com/api/sessions
 
 Added 4 · removed 0 · changed 14
