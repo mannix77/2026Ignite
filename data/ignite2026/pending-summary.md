@@ -1,0 +1,75 @@
+<!-- summary:38523882561-1 -->
+Added 0 · removed 0 · changed 66 · 2 extra runs added
+
+**Extra runs added**
+- `LAB652` Delegate complex work: Hands-on with Copilot Cowork
+- `LAB685` Deploy Copilot with confidence: Find & protect exposed sensitive data
+
+**Changed**
+- `BRK211` Secure and Govern Microsoft Copilot and Cowork — room: Moscone South | Level 2, Room 201 → Moscone West | Level 3, Room 3004
+- `BRK216` Multi-model AI in Copilot: Performance and value with built-in trust — speakers: Eric Van Aelstyn, Nagu Rangan, Natan Szymczyk → Nagu Rangan, Natan Szymczyk
+- `BRK288` Visual Studio governance for the agentic era — room: Rescheduling 3 → Moscone West | Level 3, Room 3001
+- `BRK297` The shift from RAG to context: Grounding agents with Foundry IQ — room: Moscone West | Level 2, Room 2005 → AMC Metreon | Level 3, Theater 15
+- `BRK298` Bringing conversational analytics to where decisions happen — room: Moscone South | Level 2, Room 211 → Moscone South | Level 2, Room 203
+- `BRK303` Secure your business presence in the AI web with Web IQ — room: AMC Metreon | Level 3, Theater 14 → AMC Metreon | Level 3, Theater 15
+- `BRK326` Build secure foundations to scale AI across your organization — room: Moscone South | Level 2, Room 203 → AMC Metreon | Level 3, Theater 12
+- `BRK343` AI is changing access. See how Microsoft Entra helps you stay ahead. — room: Moscone South | Level 2, Room 203 → AMC Metreon | Level 3, Theater 12
+- `BRK351` Unify your data estate with Microsoft OneLake — room: Moscone South | Level 2, Room 201 → Moscone West | Level 2, Room 2002
+- `BRK359` Build intelligent PostgreSQL apps with HorizonDB in Microsoft Fabric — room: Moscone West | Level 2, Room 2005 → Moscone West | Level 3, Room 3002
+- `BRK361` Azure HorizonDB: Deep dive into architecture and internals — room: Moscone West | Level 2, Room 2005 → Moscone West | Level 2, Room 2002
+- `BRK363` Less hunting, more building: Database agents in a unified estate — room: Marriott Marquis | Lower B2, Yerba Buena Salon 8 → Marriott Marquis | Lower B2, Yerba Buena Salon 9
+- `BRK372` Where agents meet analytics: Build with SQL Database in Fabric — room: Rescheduling 3 → AMC Metreon | Level 3, Theater 14
+- `BRK376` Headless CRM: Accelerate revenue and pipeline with agentic sales — room: Moscone West | Level 2, Room 2009 → AMC Metreon | Level 3, Theater 9
+- `BRK377` The Agentic Shift: Reimagining Customer Service — room: Moscone West | Level 2, Room 2005 → Marriott Marquis | Lower B2, Yerba Buena Salon 8
+- `BRK378` Host apps from anywhere with the new Copilot Managed Runtime — room: Moscone West | Level 2, Room 2006 → Moscone South | Level 2, Room 209
+- `BRK383` What’s new in Dynamics 365 Business Central​ — room: Moscone South | Level 2, Room 203 → Moscone West | Level 2, Room 2006
+- `BRK385` What’s new in Dynamics 365 Sales and Customer Service​ — room: Moscone West | Level 2, Room 2001 → Moscone West | Level 2, Room 2009
+- `BRK388` Build and deploy local AI at scale across enterprise PCs w/ Windows ML — room: Moscone West | Level 2, Room 2006 → Moscone West | Level 2, Room 2001
+- `BRK389` Local AI on Windows: Offload coding tasks and build with APIs — room: Moscone West | Level 3, Room 3002 → Moscone West | Level 2, Room 2009
+- `BRK390` Deploying Agents You Can Trust on Windows — room: Rescheduling Room 2 → Moscone West | Level 3, Room 3005
+- `BRK393` Build and ship faster with enterprise-ready Windows developer tools​ — room: Moscone West | Level 2, Room 2002 → Moscone West | Level 2, Room 2001
+- `BRK394` Building Windows apps with WinUI and agents​ — room: Moscone West | Level 2, Room 2002 → Marriott Marquis | Lower B2, Yerba Buena Salon 8
+- `BRK395` Inside WSL containers for application development ​ — room: Moscone West | Level 3, Room 3004 → Moscone West | Level 3, Room 3001
+- `BRK396` Raising the Bar for Windows Quality: Built with Your Feedback — room: Moscone West | Level 2, Room 2002 → Moscone West | Level 2, Room 2005
+- `BRK398` From Prevention to Recovery: Building a More Resilient Windows Estate — room: Moscone West | Level 3, Room 3018 → Moscone West | Level 2, Room 2005
+- `BRK399` Intelligence on Windows: Unlocking the Full Value of Microsoft Copilot — room: Moscone West | Level 2, Room 2014 → Marriott Marquis | Lower B2, Yerba Buena Salon 7
+- `BRK400` Windows 365 – Your flexible, trusted workspace for the age of AI — room: Moscone West | Level 2, Room 2001 → Moscone West | Level 3, Room 3014
+- `BRK401` Windows 365 Flex & Cloud PC Devices: Lower Costs, Greater Value — room: Moscone West | Level 2, Room 2001 → Moscone West | Level 2, Room 2005
+- `BRK402` Modernize on-prem VDI with Azure Virtual Desktop and Windows 365 — title: Modernizing on-prem VDI with Azure Virtual Desktop hybrid → Modernize on-prem VDI with Azure Virtual Desktop and Wind…; desc
+- `BRK403` Every developer and agent needs a computer: Building with Windows 365 — room: Moscone West | Level 2, Room 2006 → Moscone West | Level 2, Room 2005
+- `BRK404` AI ready endpoints: secure, manage and scale — room: Moscone West | Level 2, Room 2001 → Moscone West | Level 3, Room 3014
+- `BRK406` From AI Pilots to Practice: Put Intelligence to Work with Windows — room: Moscone West | Level 2, Room 2006 → Moscone West | Level 3, Room 3014
+- `BRK407` What's new in Windows Management — room: Moscone West | Level 2, Room 2001 → Moscone West | Level 3, Room 3018
+- `BRK424` Modernize legacy integration with Azure Logic Apps — room: Rescheduling 3 → Moscone West | Level 3, Room 3005
+- `BRK429` The evolution of Azure infrastructure for AI models, apps, and agents — room: Rescheduling Room → AMC Metreon | Level 3, Theater 14
+- `BRK439` Sovereign cloud mythbusters: Separating fact from fiction — room: Moscone West | Level 3, Room 3014 → AMC Metreon | Level 3, Theater 9
+- `BRK448` Run secure agent loops in production with isolated sandboxes at scale — room: Rescheduling 3 → AMC Metreon | Level 3, Theater 15
+- `BRK454` From discovery to award: transforming grant management with AI agents — room: Moscone West | Level 2, Room 2014 → AMC Metreon | Level 3, Theater 15
+- `BRK461` From data silos to healthcare intelligence with Microsoft Fabric — room: Moscone West | Level 3, Room 3002 → Marriott Marquis | Lower B2, Yerba Buena Salon 8
+- `BRK472` Agentic AI in financial services: From assistants to business systems — title: From market data to agentic decisions in financial services → Agentic AI in financial services: From assistants to busi…; room: AMC Metreon | Level 3, Theater 12 → Moscone West | Level 2, Room 2006; desc
+- `BRK489` Sovereignty in Every Modernization Conversation​ — room: AMC Metreon | Level 3, Theater 9 → Moscone South | Level 2, Room 211
+- `BRK495` Accelerate your security services at machine speed​ — room: Moscone South | Level 2, Room 209 → Moscone South | Level 2, Room 211
+- `BRK504` AI-First Transformation – Reimagining Partner Profitability — room: Moscone South | Level 2, Room 211 → Moscone South | Level 2, Room 203
+- `BRK508` Building the Capability to Sell, Deliver and Scale Agentic AI Outcomes — room: Moscone South | Level 2, Room 211 → Moscone South | Level 2, Room 209
+- `BRK509` Your AI-Powered Partnership: The E2E Partner Experience​ — room: Moscone South | Level 2, Room 203 → Marriott Marquis | Lower B2, Yerba Buena Salon 9
+- `BRK510` Transforming support into a growth engine with Unified for Partners — room: Moscone South | Level 2, Room 209 → Moscone South | Level 2, Room 211
+- `BRK515` Unlock AI growth: Inside strategies from SDC & SI leaders + partners​ — speakers: Dennis Cerasoli, Jim Lee, Nina Harding → Dennis Cerasoli, Jim Lee, Joydeep Mukherjee, Nina Harding…
+- `BRK523` Frontier Media: Intelligence, Trust, and the partners who build them​ — speakers: Alessandra Antonelli, Cara Catalane → Alessandra Antonelli, Cara Catalane, Jeff Kember
+- `BRK536` Guardrails That Accelerate: Matching AI Ambition to Risk Appetite — room: Moscone West | Level 2, Room 2005 → AMC Metreon | Level 3, Theater 15
+- `BRK539` Is Your AI an Accessibility Advantage or Liability? Shift Left — room: AMC Metreon | Level 3, Theater 15 → Moscone West | Level 2, Room 2009
+- `BRK548` Agentic Engineering at Scale: How Replit Enables Shipping Safely — room: Rescheduling 3 → Moscone West | Level 3, Room 3006
+- `BRK555` Lost in San Francisco: Build AI agents that find their way — room: Marriott Marquis | Lower B2, Yerba Buena Salon 7 → AMC Metreon | Level 3, Theater 9
+- `BRK571` Beyond the Pilot: Turning Copilot & Agents into Business Value — room: Moscone South | Level 2, Room 201 → Moscone West | Level 3, Room 3002
+- `BRKSP590` Build the managed intelligence stack for SMBs with Pax8 and Microsoft — room: Rescheduling Room 2 → Moscone South | Level 2, Room 209
+- `BRKSP593` Scale your AI practice from AI curiosity to frontier transformation — room: Rescheduling Room → Moscone South | Level 2, Room 203
+- `BRKSP595` Get an AI advantage when the Microsoft ecosystem works together — room: AMC Metreon | Level 3, Theater 12 → Moscone West | Level 2, Room 2014
+- `BRKSP599` Move beyond patterns with AI-driven data classification — room: Moscone South | Level 2, Room 203 → Moscone West | Level 2, Room 2002
+- `BRKSP601` Turn shadow agents into governed digital coworkers — room: Rescheduling Room → AMC Metreon | Level 3, Theater 12
+- `BRKSP609` Transform operations across industries with physical AI in action — room: Rescheduling 3 → Moscone West | Level 2, Room 2001
+- `BRKSP612` The end of token-maxxing? Scale AI with less spend — dur: — → 45; room: — → Moscone West | Level 2, Room 2005
+- `BRKSP614` Run more models and agents with greater AI infrastructure choice — room: Rescheduling 3 → Moscone West | Level 3, Room 3001
+- `BRKSP619` Build AI-powered Microsoft Fabric workflows with GitHub Copilot — room: Rescheduling 3 → Moscone West | Level 2, Room 2014
+- `BRKSP622` Build the agentic workplace with Dell and Microsoft — room: Rescheduling Room → Moscone West | Level 2, Room 2006
+- `BRKSP627` Turn AI ambition into measurable outcomes in financial services — room: Rescheduling 3 → Moscone West | Level 2, Room 2006
+- `TT1650` IT Strategies for Agent Observability and Governance with Agent 365 — speakers: Poornima Muthukumar, Samer Baroudi → Poornima Muthukumar
+
