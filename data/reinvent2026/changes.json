@@ -1,6 +1,1620 @@
 {
  "batches": [
   {
+   "at": "2026-10-16T18:49:30Z",
+   "milestones": [],
+   "added": [
+    {
+     "id": "1780442281286001cgYP",
+     "inst": "1780442281286001cgYP",
+     "code": "IND409-R",
+     "title": "Designing the AWS Secure Research Environment: Architecture deep dive",
+     "repeat": false
+    },
+    {
+     "id": "1790358253579001i9ek",
+     "inst": "1790358253579001i9ek",
+     "code": "IND409-R1",
+     "title": "Designing the AWS Secure Research Environment: Architecture Deep Dive",
+     "repeat": false
+    }
+   ],
+   "removed": [],
+   "changed": [
+    {
+     "id": "1780441477865001G3MJ",
+     "inst": "1780441477865001G3MJ",
+     "code": "MAM201",
+     "title": "How IT leaders actually pulled off their cloud migrations",
+     "f": {
+      "speakers": [
+       [
+        "Akshay Sharma",
+        "Boatner Blankenstein",
+        "Rama Kolli",
+        "Ravi Kishore"
+       ],
+       [
+        "Boatner Blankenstein",
+        "Rama Kolli",
+        "Ravi Kishore"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442282456001cOWz",
+     "inst": "1780442282456001cOWz",
+     "code": "MAM332-R",
+     "title": "Build AI agents to operate desktop and mainframe apps on WorkSpaces",
+     "f": {
+      "speakers": [
+       [
+        "Andrew Morgan",
+        "Stephen Stetler"
+       ],
+       [
+        "Dave Jaskie",
+        "Stephen Stetler"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442223188001c776",
+     "inst": "1780442223188001c776",
+     "code": "ANT447-R",
+     "title": "Getting Started with Apache Iceberg: The AI-Ready open lakehouse advantage",
+     "f": {
+      "speakers": [
+       [
+        "Diego Ortiz",
+        "Hugo Mineiro",
+        "Jay Agnihotri",
+        "Rahul Sharma"
+       ],
+       [
+        "Diego Ortiz",
+        "Hugo Mineiro",
+        "Rahul Sharma"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441475015001GXRk",
+     "inst": "1780441475015001GXRk",
+     "code": "HMC303",
+     "title": "Choosing the right hybrid deployment for your AI workloads",
+     "f": {
+      "speakers": [
+       [
+        "Chris McEvilly",
+        "Michael Kiermaier",
+        "Shelby Seward",
+        "Shivam Saggar"
+       ],
+       [
+        "Chris McEvilly",
+        "Shelby Seward",
+        "Shivam Saggar"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441466262001GSAX",
+     "inst": "1780441466262001GSAX",
+     "code": "BIZ219",
+     "title": "How a Brand Turned AI Governance Into a Strategic Advantage with Amazon Quick",
+     "f": {
+      "speakers": [
+       [
+        "Srikanth Baheti",
+        "Steve Vinsik"
+       ],
+       [
+        "Avinash Kalyankar",
+        "Srikanth Baheti",
+        "Steve Vinsik"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442236897001cqDM",
+     "inst": "1780442236897001cqDM",
+     "code": "BIZ325",
+     "title": "Fix Data Gaps Fast: Agentic Onboarding with Amazon Connect Decisions",
+     "f": {
+      "speakers": [
+       [
+        "Colby Ward"
+       ],
+       [
+        "Ali Zagros",
+        "Colby Ward"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1784231863107001EDTW",
+     "inst": "1784231863107001EDTW",
+     "code": "TNC340-R",
+     "title": "Resolving and Preventing Production Incidents with AWS DevOps Agent",
+     "f": {
+      "speakers": [
+       [
+        "Ryan Gallaway",
+        "Ryan Leavitt",
+        "jasoncz Chen"
+       ],
+       [
+        "Ryan Gallaway",
+        "jasoncz Chen"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442229132001cd5L",
+     "inst": "1780442229132001cd5L",
+     "code": "IND351",
+     "title": "Breathing Life into Game Worlds with Amazon Neptune & GraphRAG",
+     "f": {
+      "speakers": [
+       [
+        "Heungsu Ha",
+        "JP Velasco",
+        "Steve Phillips",
+        "Yeonho Lee",
+        "matthew nimmo"
+       ],
+       [
+        "Heungsu Ha",
+        "JP Velasco",
+        "Yeonho Lee",
+        "matthew nimmo"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442231895001cHXe",
+     "inst": "1780442231895001cHXe",
+     "code": "STG337",
+     "title": "Build and optimize data transfers with AWS DataSync Enhanced mode",
+     "f": {
+      "speakers": [
+       [
+        "Harshi Surampalli",
+        "Phani Surampalli",
+        "Santhosh Arunuri",
+        "Shaguna Awasthi",
+        "Sravan Rachiraju"
+       ],
+       [
+        "Harshi Surampalli",
+        "Mathieu Riverin",
+        "Phani Surampalli",
+        "Santhosh Arunuri",
+        "Shaguna Awasthi"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442285860001cNde",
+     "inst": "1780442285860001cNde",
+     "code": "STG340",
+     "title": "Improving your database agility with Amazon FSx",
+     "f": {
+      "speakers": [
+       [
+        "James Kuhlke",
+        "Jay Horne"
+       ],
+       [
+        "Andrew Peng",
+        "James Kuhlke"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441491305001GHCP",
+     "inst": "1780441491305001GHCP",
+     "code": "STG371",
+     "title": "Modernizing file transfer with AWS Transfer Family",
+     "f": {
+      "speakers": [
+       [],
+       [
+        "Madhukumar Adavi",
+        "Randy Boutin"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442237003001csbL",
+     "inst": "1780442237003001csbL",
+     "code": "COP325-R",
+     "title": "Observability patterns for agentic AI in production",
+     "f": {
+      "speakers": [
+       [
+        "Joseph Choi",
+        "Wei Tao",
+        "chaitanya Gummadi"
+       ],
+       [
+        "Joseph Choi",
+        "chaitanya Gummadi"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441491369001GtPz",
+     "inst": "1780441491369001GtPz",
+     "code": "STG372",
+     "title": "Speed up latency-sensitive workloads with Amazon S3 Express One Zone",
+     "f": {
+      "speakers": [
+       [],
+       [
+        "Mallory Gershenfeld"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442251182001cAGd",
+     "inst": "1780442251182001cAGd",
+     "code": "SVS329-R",
+     "title": "Serverless application testing in the age of agents",
+     "f": {
+      "speakers": [
+       [
+        "Brian Krygsman",
+        "Dan Fox"
+       ],
+       [
+        "Brian Krygsman",
+        "Rajdeep Banerjee"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441498545001G7mI",
+     "inst": "1780441498545001G7mI",
+     "code": "CMP338",
+     "title": "Building optimized enterprise HPC systems for CAE and CFD",
+     "f": {
+      "speakers": [
+       [
+        "Sandeep Sovani"
+       ],
+       [
+        "Francesco Ruffino",
+        "Sandeep Sovani"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1790358224678001ieMn",
+     "inst": "1790358224678001ieMn",
+     "code": "DVT337-R1",
+     "title": "Build a SaaS control plane with Kiro specs and Strands multi-tenant constructs",
+     "f": {
+      "speakers": [
+       [
+        "Andre Gomes",
+        "Andrew Powell",
+        "Ashley Chen",
+        "Daniel Wirjo",
+        "Pranjal Gururani",
+        "Steve Drew"
+       ],
+       [
+        "Andrew Powell",
+        "Ashley Chen",
+        "Daniel Wirjo",
+        "Pranjal Gururani",
+        "Steve Drew"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441476713001Goxq",
+     "inst": "1780441476713001Goxq",
+     "code": "IND3305",
+     "title": "How Citizens Bank reimagined CX with Amazon Connect Customer & GenAI",
+     "f": {
+      "speakers": [
+       [
+        "James Kraeutler"
+       ],
+       [
+        "Deepak Nair",
+        "James Kraeutler"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441490740001GCbS",
+     "inst": "1780441490740001GCbS",
+     "code": "STG309",
+     "title": "Shared file storage for containers, serverless, and Lambda",
+     "f": {
+      "speakers": [
+       [
+        "Eric Heinrichs",
+        "Jacob Strauss",
+        "Tajammal Sheikh"
+       ],
+       [
+        "Eric Heinrichs",
+        "Jacob Strauss",
+        "Samyak Kathane"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441476934001GBLm",
+     "inst": "1780441476934001GBLm",
+     "code": "IND3302",
+     "title": "How Prime Video Built an AI-assisted Creative Suite on AWS",
+     "f": {
+      "start": [
+       "2026-12-02T21:00:00Z",
+       "2026-11-30T22:30:00Z"
+      ],
+      "end": [
+       "2026-12-02T22:00:00Z",
+       "2026-11-30T23:30:00Z"
+      ]
+     }
+    },
+    {
+     "id": "1780442254857001cak0",
+     "inst": "1780442254857001cak0",
+     "code": "COM326",
+     "title": "Observable Agents with Lambda Durable Functions and OpenTelemetry",
+     "f": {
+      "speakers": [
+       [
+        "Raphael Manke"
+       ],
+       [
+        "Gunnar Grosch",
+        "Raphael Manke"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1790358256289001iXke",
+     "inst": "1790358256289001iXke",
+     "code": "DAT410-R1",
+     "title": "Build agentic hybrid retrieval with Amazon Aurora PostgreSQL",
+     "f": {
+      "speakers": [
+       [
+        "Grant McAlister",
+        "Radwan Deeb",
+        "Rinisha Marar",
+        "Shayon Sanyal",
+        "Sudhir Amin"
+       ],
+       [
+        "Kanishka Chaturvedi",
+        "Radwan Deeb",
+        "Rinisha Marar",
+        "Shayon Sanyal",
+        "Sudhir Amin"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442259771001cxJa",
+     "inst": "1780442259771001cxJa",
+     "code": "COP202",
+     "title": "Autonomous operations: reducing MTTR at scale, feat. BMG Bank",
+     "f": {
+      "speakers": [
+       [
+        "Everton Queiroz"
+       ],
+       [
+        "Everton Queiroz",
+        "Matheus Arrais"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442229641001c0fd",
+     "inst": "1780442229641001c0fd",
+     "code": "NET204-R",
+     "title": "Centralize AWS PrivateLink endpoints at scale with Amazon VPC Lattice",
+     "f": {
+      "speakers": [
+       [
+        "Henning Schroeder",
+        "Kimberley Clements",
+        "Mankaran Singh",
+        "Michael Miller",
+        "Tega Odjegba",
+        "Victor Babasanmi"
+       ],
+       [
+        "Henning Schroeder",
+        "Kimberley Clements",
+        "Mankaran Singh",
+        "Tega Odjegba",
+        "Victor Babasanmi"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1784231863536001Ewq6",
+     "inst": "1784231863536001Ewq6",
+     "code": "TNC340-R1",
+     "title": "Resolving and Preventing Production Incidents with AWS DevOps Agent",
+     "f": {
+      "speakers": [
+       [
+        "Ryan Gallaway",
+        "Ryan Leavitt",
+        "jasoncz Chen"
+       ],
+       [
+        "Ryan Gallaway",
+        "jasoncz Chen"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441466796001Gzqy",
+     "inst": "1780441466796001Gzqy",
+     "code": "COP335",
+     "title": "Evolve your observability for the agentic era",
+     "f": {
+      "title": [
+       "Turn log storage into log intelligence",
+       "Evolve your observability for the agentic era"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441487120001GgdE",
+     "inst": "1780441487120001GgdE",
+     "code": "MAM101-S",
+     "title": "Aflac’s Modernization journey to a resilient and innovative future (sponsored by Kyndryl)",
+     "f": {
+      "speakers": [
+       [
+        "Lucy Frost"
+       ],
+       [
+        "DJ Goldsworthy",
+        "Tohru Futami"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442250228001cwhq",
+     "inst": "1780442250228001cwhq",
+     "code": "SEC328-R",
+     "title": "Enforce AI guardrails across your organization without the friction",
+     "f": {
+      "speakers": [
+       [
+        "Mark Keating",
+        "Rob Whitelocks"
+       ],
+       [
+        "Rob Whitelocks"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1790358257020001i8HL",
+     "inst": "1790358257020001i8HL",
+     "code": "NET204-R1",
+     "title": "Centralize AWS PrivateLink endpoints at scale with Amazon VPC Lattice",
+     "f": {
+      "speakers": [
+       [
+        "Henning Schroeder",
+        "Mankaran Singh",
+        "Michael Miller",
+        "Tega Odjegba",
+        "Victor Babasanmi"
+       ],
+       [
+        "Henning Schroeder",
+        "Kimberley Clements",
+        "Mankaran Singh",
+        "Tega Odjegba",
+        "Victor Babasanmi"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442257356001cqaK",
+     "inst": "1780442257356001cqaK",
+     "code": "PEX314",
+     "title": "Align cost with value through outcome-based pricing in AWS Marketplace",
+     "f": {
+      "speakers": [
+       [
+        "Dev SenGupta",
+        "Jihye Kwon"
+       ],
+       [
+        "Jihye Kwon"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441474412001GuqA",
+     "inst": "1780441474412001GuqA",
+     "code": "IND216",
+     "title": "Beyond AIOps: Operating safely in the age of agent sprawl",
+     "f": {
+      "speakers": [
+       [
+        "Ash Thankey",
+        "Paul Moran",
+        "Tarran Benson-West"
+       ],
+       [
+        "Ash Thankey",
+        "Paul Moran",
+        "Samuel Walls",
+        "Tarran Benson-West"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441470484001G8a6",
+     "inst": "1780441470484001G8a6",
+     "code": "DVT320",
+     "title": "How Kiro learns: an AI coding agent that improves with every session",
+     "f": {
+      "speakers": [
+       [
+        "Kyle Seaman",
+        "Navyata Bawa",
+        "Trevor Mac"
+       ],
+       [
+        "Navyata Bawa",
+        "Trevor Mac"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1790358257662001imSn",
+     "inst": "1790358257662001imSn",
+     "code": "SVS342-R1",
+     "title": "Coding the tool layer for AI agents on Serverless",
+     "f": {
+      "speakers": [
+       [
+        "Jacob Cravinho",
+        "Rahul Popat"
+       ],
+       [
+        "Jacob Cravinho"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442222987001cwRQ",
+     "inst": "1780442222987001cwRQ",
+     "code": "ANT441",
+     "title": "Build a well-governed natural language-to-SQL agentic solution for Amazon Redshift",
+     "f": {
+      "speakers": [
+       [
+        "Andre Hass",
+        "Ivan Fernandez Perea",
+        "Shruti Worlikar",
+        "Uday Narayanan",
+        "Vinayaka Gangadhar"
+       ],
+       [
+        "Andre Hass",
+        "Ivan Fernandez Perea",
+        "Uday Narayanan",
+        "Vinayaka Gangadhar"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1790358231906001iTNH",
+     "inst": "1790358231906001iTNH",
+     "code": "MAM332-R1",
+     "title": "Build an AI agent that completes desktop tasks with WorkSpaces",
+     "f": {
+      "speakers": [
+       [
+        "Andrew Morgan",
+        "Stephen Stetler"
+       ],
+       [
+        "Dave Jaskie",
+        "Stephen Stetler"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442258468001cyLY",
+     "inst": "1780442258468001cyLY",
+     "code": "GHJ319-R",
+     "title": "re:Architecture Rodeo: Architecting AI Governance & Security at Scale",
+     "f": {
+      "speakers": [
+       [
+        "Dodd Pfeffer",
+        "Hasan Mehdi Rizvi",
+        "Omar Gonzalez",
+        "Omkar Deshmane"
+       ],
+       [
+        "Dodd Pfeffer",
+        "Hasan Mehdi Rizvi",
+        "Omkar Deshmane"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442284661001cExf",
+     "inst": "1780442284661001cExf",
+     "code": "SEC312",
+     "title": "Use AWS Continuum to move from annual pentesting to continuous security",
+     "f": {
+      "speakers": [
+       [
+        "Jeremy Schiefer"
+       ],
+       [
+        "Cameron Smith",
+        "Jeremy Schiefer"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442263615001c9wB",
+     "inst": "1780442263615001c9wB",
+     "code": "HMC317",
+     "title": "How LSEG Built a Multicloud Internal Developer Platform with Kubernetes and AI",
+     "f": {
+      "speakers": [
+       [
+        "Avijit Goswami",
+        "Mehreen Ali"
+       ],
+       [
+        "Dean Bryen",
+        "Richard Chester"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1791930044225001YKK3",
+     "inst": "1791930044225001YKK3",
+     "code": "IND3354",
+     "title": "Lives on the Line: Modernizing National Weather Forecasting on AWS",
+     "f": {
+      "speakers": [
+       [],
+       [
+        "Rayette Toles-Abdullah"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441490400001GiGd",
+     "inst": "1780441490400001GiGd",
+     "code": "STG303",
+     "title": "Deep dive on S3 Files with use case architectures and best practices",
+     "f": {
+      "speakers": [
+       [
+        "Jimmy Zuber",
+        "Mallory Gershenfeld",
+        "Smitha Sriram"
+       ],
+       [
+        "Jimmy Zuber",
+        "Smitha Sriram"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441491081001GQhb",
+     "inst": "1780441491081001GQhb",
+     "code": "STG345",
+     "title": "Secure petabyte-scale data transfers with AWS DataSync",
+     "f": {
+      "speakers": [
+       [
+        "Manchun Yao",
+        "Randy Boutin",
+        "Sachin Gupta"
+       ],
+       [
+        "Christie Lee",
+        "Manchun Yao",
+        "Sachin Gupta"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441466315001GqmS",
+     "inst": "1780441466315001GqmS",
+     "code": "BIZ214",
+     "title": "Empowering 155,000 people without compromising trust: Amazon Quick",
+     "f": {
+      "speakers": [
+       [
+        "Ben Haller",
+        "Raji Sivasubramaniam"
+       ],
+       [
+        "Ben Haller",
+        "Lars Nettemann",
+        "Raji Sivasubramaniam"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441490516001GdFk",
+     "inst": "1780441490516001GdFk",
+     "code": "STG305",
+     "title": "Data protection and resilience with AWS storage",
+     "f": {
+      "speakers": [
+       [
+        "Danny Johnston",
+        "Steve Devos",
+        "Stuart Lupton"
+       ],
+       [
+        "Danny Johnston",
+        "Stuart Lupton"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442260189001cyXi",
+     "inst": "1780442260189001cyXi",
+     "code": "DAT315",
+     "title": "Scaling ElastiCache globally: 500+ clusters & 1.3 trillion ops/day",
+     "f": {
+      "title": [
+       "Scaling ElastiCache globally: 400+ clusters & 1.3 trillion ops/day",
+       "Scaling ElastiCache globally: 500+ clusters & 1.3 trillion ops/day"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441500395001GnUf",
+     "inst": "1780441500395001GnUf",
+     "code": "HMC314",
+     "title": "Architecting for digital sovereignty: Choosing your AWS hybrid cloud infrastructure",
+     "f": {
+      "speakers": [
+       [
+        "Siew Hoon Lim",
+        "Sungro Kim"
+       ],
+       [
+        "Sherry Lin",
+        "Sungro Kim"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441493752001Goqh",
+     "inst": "1780441493752001Goqh",
+     "code": "INV508",
+     "title": "How neurosymbolic AI formalizes natural language into verifiable logic",
+     "f": {
+      "speakers": [
+       [
+        "Aman Goel",
+        "Dejan Jovanovic",
+        "Dimitra Giannakopoulou"
+       ],
+       [
+        "Aman Goel",
+        "Dimitra Giannakopoulou"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1790358253399001i0ub",
+     "inst": "1790358253399001i0ub",
+     "code": "SVS329-R1",
+     "title": "Serverless application testing in the age of agents",
+     "f": {
+      "speakers": [
+       [
+        "Brian Krygsman",
+        "Dan Fox"
+       ],
+       [
+        "Brian Krygsman",
+        "Rajdeep Banerjee"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442258201001cF7X",
+     "inst": "1780442258201001cF7X",
+     "code": "SVS342-R",
+     "title": "Coding the tool layer for AI agents on Serverless",
+     "f": {
+      "speakers": [
+       [
+        "Jacob Cravinho",
+        "Rahul Popat"
+       ],
+       [
+        "Jacob Cravinho"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442229428001cp1C",
+     "inst": "1780442229428001cp1C",
+     "code": "MAM401",
+     "title": "Build and test HA/DR architectures for Microsoft workloads on AWS",
+     "f": {
+      "speakers": [
+       [
+        "Ali Alzand",
+        "Chase Lindeman",
+        "Kevin Sookhan",
+        "Luciano Bernardes",
+        "Sagal Farah",
+        "Sivasekar Elumalai"
+       ],
+       [
+        "Chase Lindeman",
+        "Kevin Sookhan",
+        "Luciano Bernardes",
+        "Sagal Farah",
+        "Sivasekar Elumalai"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1790358233606001i2oz",
+     "inst": "1790358233606001i2oz",
+     "code": "ANT447-R1",
+     "title": "Getting Started with Apache Iceberg: The AI-Ready open lakehouse advantage",
+     "f": {
+      "speakers": [
+       [
+        "Diego Ortiz",
+        "Hugo Mineiro",
+        "Jay Agnihotri",
+        "Rahul Sharma"
+       ],
+       [
+        "Diego Ortiz",
+        "Hugo Mineiro",
+        "Rahul Sharma"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441477314001GUum",
+     "inst": "1780441477314001GUum",
+     "code": "IND3310",
+     "title": "Optimizing agentic AI: Vanguard's production deployment journey",
+     "f": {
+      "speakers": [
+       [
+        "Jay Wolfe",
+        "Kihyeon Myung",
+        "Krishna Gogineni",
+        "Ritesh Shah"
+       ],
+       [
+        "Jay Wolfe",
+        "Krishna Gogineni",
+        "Ritesh Shah"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1790358225908001insj",
+     "inst": "1790358225908001insj",
+     "code": "ANT438-R1",
+     "title": "Give your AI agents business context with AWS Glue Data Catalog",
+     "f": {
+      "speakers": [
+       [
+        "Aritra Ghosh",
+        "Joel Farvault",
+        "Kunal Ghosh",
+        "Luis Campos",
+        "Prasad Nadig",
+        "Priyanka Chaudhary"
+       ],
+       [
+        "Aritra Ghosh",
+        "Joel Farvault",
+        "Kunal Ghosh",
+        "Luis Campos",
+        "Prasad Nadig"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441472163001Gf4O",
+     "inst": "1780441472163001Gf4O",
+     "code": "DVT226",
+     "title": "Best practices for working with shared coding agents on your team",
+     "f": {
+      "start": [
+       "2026-12-04T18:00:00Z",
+       "2026-12-02T19:30:00Z"
+      ],
+      "end": [
+       "2026-12-04T19:00:00Z",
+       "2026-12-02T20:30:00Z"
+      ]
+     }
+    },
+    {
+     "id": "1780442272017001c7O4",
+     "inst": "1780442272017001c7O4",
+     "code": "IND212-S",
+     "title": "Proof of What You Know: Building Trust in an AI Skills Economy (sponsored by Pearson)",
+     "f": {
+      "speakers": [
+       [
+        "Maureen Ladd"
+       ],
+       [
+        "Juan Garcia"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1790358215164001ij4P",
+     "inst": "1790358215164001ij4P",
+     "code": "ANT437-R1",
+     "title": "Accelerate lakehouse analytics with Apache Iceberg materialized views",
+     "f": {
+      "speakers": [
+       [
+        "Behram Irani",
+        "Santiago Abarca",
+        "Saunak Chandra",
+        "Sharad Pai"
+       ],
+       [
+        "Santiago Abarca",
+        "Saunak Chandra",
+        "Sharad Pai"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441476879001GkOz",
+     "inst": "1780441476879001GkOz",
+     "code": "IND3301",
+     "title": "Content at the Speed of Live: AI-Powered Media Ops at Live Nation",
+     "f": {
+      "start": [
+       "2026-11-30T22:30:00Z",
+       "2026-12-02T21:00:00Z"
+      ],
+      "end": [
+       "2026-11-30T23:30:00Z",
+       "2026-12-02T22:00:00Z"
+      ]
+     }
+    },
+    {
+     "id": "1780441502843001GYOk",
+     "inst": "1780441502843001GYOk",
+     "code": "STG326-R",
+     "title": "Bring your S3 data to your compute with S3 Files",
+     "f": {
+      "speakers": [
+       [
+        "Prabir Sekhri",
+        "Tom McDonald"
+       ],
+       [
+        "Andrew Peng",
+        "Prabir Sekhri"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442234803001c9gE",
+     "inst": "1780442234803001c9gE",
+     "code": "AIM349",
+     "title": "Build production AI assistant with Hugging Face Libraries and models",
+     "f": {
+      "code": [
+       "AIM349-R",
+       "AIM349"
+      ]
+     }
+    },
+    {
+     "id": "1780441467889001Gs6e",
+     "inst": "1780441467889001Gs6e",
+     "code": "CMP305",
+     "title": "Run your largest SAP HANA on AWS: EC2 High Memory deep dive",
+     "f": {
+      "speakers": [
+       [
+        "Dave Smith",
+        "Linda Wang",
+        "Vikas Ratna"
+       ],
+       [
+        "Linda Wang",
+        "Vikas Ratna"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442226592001cpE3",
+     "inst": "1780442226592001cpE3",
+     "code": "DAT410-R",
+     "title": "Build agentic hybrid retrieval with Amazon Aurora PostgreSQL",
+     "f": {
+      "speakers": [
+       [
+        "Grant McAlister",
+        "Radwan Deeb",
+        "Rinisha Marar",
+        "Shayon Sanyal",
+        "Sudhir Amin"
+       ],
+       [
+        "Kanishka Chaturvedi",
+        "Radwan Deeb",
+        "Rinisha Marar",
+        "Shayon Sanyal",
+        "Sudhir Amin"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442276718001cyJQ",
+     "inst": "1780442276718001cyJQ",
+     "code": "BIZ311",
+     "title": "Master Agent Skills: From Desktop Builds to Production Deployment",
+     "f": {
+      "speakers": [
+       [
+        "Jed Lechner",
+        "Leo Mentis Raj Selvaraj",
+        "Mrunal Shridhar"
+       ],
+       [
+        "Jed Lechner",
+        "Mrunal Shridhar"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442282400001cfv1",
+     "inst": "1780442282400001cfv1",
+     "code": "MAM413-R",
+     "title": "Move your multi-tenant agents to serverless AgentCore",
+     "f": {
+      "speakers": [
+       [
+        "Hoseong Seo",
+        "Peter Yang",
+        "Ranjith Raman"
+       ],
+       [
+        "Hoseong Seo"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442247952001cBC1",
+     "inst": "1780442247952001cBC1",
+     "code": "NET328",
+     "title": "Elastic Fabric Adapter powering the largest AI workloads on AWS",
+     "f": {
+      "speakers": [
+       [
+        "Brian Barrett",
+        "John Pangle"
+       ],
+       [
+        "Erez Zarum",
+        "John Pangle"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1790358238147001iFjU",
+     "inst": "1790358238147001iFjU",
+     "code": "SEC371-R1",
+     "title": "Stop troubleshooting your AWS network from memory and stale diagrams",
+     "f": {
+      "speakers": [
+       [
+        "Luis Pastor",
+        "Neil Yajnik"
+       ],
+       [
+        "Neil Yajnik"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442263803001c0KW",
+     "inst": "1780442263803001c0KW",
+     "code": "IND3339",
+     "title": "Agentic advertising with privacy-enhanced data collaboration",
+     "f": {
+      "speakers": [
+       [
+        "Ryan Malecky"
+       ],
+       [
+        "Ryan Malecky",
+        "Zelle Steyn"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442277842001cCMx",
+     "inst": "1780442277842001cCMx",
+     "code": "CMP404",
+     "title": "Learn how to build a Genomics PCP pipeline on AWS",
+     "f": {
+      "title": [
+       "From DNA to discovery: Build a genomics HPC pipeline on AWS",
+       "Learn how to build a Genomics PCP pipeline on AWS"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441468232001GxCy",
+     "inst": "1780441468232001GxCy",
+     "code": "CON414",
+     "title": "Customize and serve models at scale on Amazon EKS",
+     "f": {
+      "speakers": [
+       [
+        "Christina Andonov",
+        "Sajjan Gundapuneedi"
+       ],
+       [
+        "Christina Andonov",
+        "Sajjan Gundapuneedi",
+        "Salva Jung"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442281468001cJZK",
+     "inst": "1780442281468001cJZK",
+     "code": "IND370",
+     "title": "Production Agentic Trading: Build the pipeline Moeve runs on AgentCore",
+     "f": {
+      "speakers": [
+       [
+        "Aristides Fernandez",
+        "Ignacio Rodriguez Garcia",
+        "Loreto Albinana"
+       ],
+       [
+        "Aristides Fernandez",
+        "Loreto Albinana"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441478082001GAEb",
+     "inst": "1780441478082001GAEb",
+     "code": "MAM319",
+     "title": "How LG U+ cut migration time 50% with AI-powered app refactoring",
+     "f": {
+      "speakers": [
+       [
+        "Bhavna Sarathy",
+        "YoungJoon Jeong"
+       ],
+       [
+        "Bhavna Sarathy"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1790358247750001irKq",
+     "inst": "1790358247750001irKq",
+     "code": "STG326-R1",
+     "title": "Bring your S3 data to your compute with S3 Files",
+     "f": {
+      "speakers": [
+       [
+        "Prabir Sekhri",
+        "Tom McDonald"
+       ],
+       [
+        "Andrew Peng",
+        "Prabir Sekhri"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442224933001c7YK",
+     "inst": "1780442224933001c7YK",
+     "code": "BIZ302",
+     "title": "Embed Amazon Quick Chat Agents in Enterprise Applications",
+     "f": {
+      "speakers": [
+       [
+        "Anneline Sibanda",
+        "Arun Santhosh",
+        "Ashok Dasineni",
+        "Manasi Karale",
+        "Stephen Elsaker",
+        "Sujit Singh"
+       ],
+       [
+        "Arun Santhosh",
+        "Ashok Dasineni",
+        "Manasi Karale",
+        "Stephen Elsaker",
+        "Sujit Singh"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442222927001cDcT",
+     "inst": "1780442222927001cDcT",
+     "code": "ANT437-R",
+     "title": "Accelerate lakehouse analytics with Apache Iceberg materialized views",
+     "f": {
+      "speakers": [
+       [
+        "Behram Irani",
+        "Santiago Abarca",
+        "Saunak Chandra",
+        "Sharad Pai"
+       ],
+       [
+        "Santiago Abarca",
+        "Saunak Chandra",
+        "Sharad Pai"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442250166001cxTo",
+     "inst": "1780442250166001cxTo",
+     "code": "SEC371-R",
+     "title": "Stop troubleshooting your AWS network from memory and stale diagrams",
+     "f": {
+      "speakers": [
+       [
+        "Luis Pastor",
+        "Neil Yajnik"
+       ],
+       [
+        "Neil Yajnik"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442249770001cmHP",
+     "inst": "1780442249770001cmHP",
+     "code": "SEC435",
+     "title": "Tokenomics of attacks: how AWS defends you from AI-powered threats",
+     "f": {
+      "speakers": [
+       [],
+       [
+        "Alexandra Lee"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1786342064464001PNWj",
+     "inst": "1786342064464001PNWj",
+     "code": "DVT337-R",
+     "title": "Build a SaaS control plane with Kiro specs and Strands multi-tenant constructs",
+     "f": {
+      "speakers": [
+       [
+        "Andre Gomes",
+        "Andrew Powell",
+        "Ashley Chen",
+        "Daniel Wirjo",
+        "Pranjal Gururani",
+        "Steve Drew"
+       ],
+       [
+        "Andrew Powell",
+        "Ashley Chen",
+        "Daniel Wirjo",
+        "Pranjal Gururani",
+        "Steve Drew"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442223249001cXHo",
+     "inst": "1780442223249001cXHo",
+     "code": "ANT438-R",
+     "title": "Give your AI agents business context with AWS Glue Data Catalog",
+     "f": {
+      "speakers": [
+       [
+        "Aritra Ghosh",
+        "Joel Farvault",
+        "Kunal Ghosh",
+        "Luis Campos",
+        "Prasad Nadig",
+        "Priyanka Chaudhary"
+       ],
+       [
+        "Aritra Ghosh",
+        "Joel Farvault",
+        "Kunal Ghosh",
+        "Luis Campos",
+        "Prasad Nadig"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1790358221206001imjz",
+     "inst": "1790358221206001imjz",
+     "code": "COP325-R1",
+     "title": "Observability patterns for agentic AI in production",
+     "f": {
+      "speakers": [
+       [
+        "Joseph Choi",
+        "Wei Tao",
+        "chaitanya Gummadi"
+       ],
+       [
+        "Joseph Choi",
+        "chaitanya Gummadi"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441480663001GZM8",
+     "inst": "1780441480663001GZM8",
+     "code": "SEC363",
+     "title": "Stop threats at DNS: what's new in Route 53 DNS Firewall",
+     "f": {
+      "speakers": [
+       [],
+       [
+        "Adhish Bhobe"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441480925001G42o",
+     "inst": "1780441480925001G42o",
+     "code": "SEC393",
+     "title": "How Badger Meter unified customer identity with Amazon Cognito",
+     "f": {
+      "speakers": [
+       [
+        "Abrom Douglas III",
+        "Howie Li",
+        "Jarred Kohout",
+        "Pranab Bora"
+       ],
+       [
+        "Howie Li",
+        "Jarred Kohout",
+        "Pranab Bora"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1788995765129001YOxf",
+     "inst": "1788995765129001YOxf",
+     "code": "SEC392-S",
+     "title": "Your Agent Is in Production. Can You Explain What It Did? (sponsored by Datadog)",
+     "f": {
+      "speakers": [
+       [],
+       [
+        "Andrew Krug"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1790358247659001ie9O",
+     "inst": "1790358247659001ie9O",
+     "code": "SEC328-R1",
+     "title": "Enforce AI guardrails across your organization without the friction",
+     "f": {
+      "speakers": [
+       [
+        "Mark Keating",
+        "Rob Whitelocks"
+       ],
+       [
+        "Mark Keating"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442230697001cSHG",
+     "inst": "1780442230697001cSHG",
+     "code": "SEC344",
+     "title": "Zero trust for non-human identities: IAM for autonomous agents",
+     "f": {
+      "speakers": [
+       [
+        "Brendan Paul",
+        "Rodney Underkoffler",
+        "Shimi Rokah",
+        "Yaniv Cadosh"
+       ],
+       [
+        "Brendan Paul",
+        "Shimi Rokah",
+        "Yaniv Cadosh"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442250092001cgU9",
+     "inst": "1780442250092001cgU9",
+     "code": "SEC370",
+     "title": "Navigating mergers and divestitures across multiple AWS organizations",
+     "f": {
+      "speakers": [
+       [
+        "Laura Reith",
+        "Nivedita Tripathi"
+       ],
+       [
+        "Alex Torres (AWS)",
+        "Nivedita Tripathi"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1791930073276001DUy9",
+     "inst": "1791930073276001DUy9",
+     "code": "IND3355",
+     "title": "Building Worlds for Machines: VAMS and 3DGS for Autonomy",
+     "f": {
+      "speakers": [
+       [],
+       [
+        "Eric Cornwell"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441475431001Gos3",
+     "inst": "1780441475431001Gos3",
+     "code": "IND309",
+     "title": "Advancing the Mission with AI and HPC Supercomputing Pods on AWS",
+     "f": {
+      "speakers": [
+       [
+        "Debra Goldfarb",
+        "Lowell Wofford"
+       ],
+       [
+        "Lowell Wofford"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1790358219903001iuAQ",
+     "inst": "1790358219903001iuAQ",
+     "code": "MAM413-R1",
+     "title": "Move your multi-tenant agents to serverless AgentCore",
+     "f": {
+      "speakers": [
+       [
+        "Hoseong Seo",
+        "Peter Yang",
+        "Ranjith Raman"
+       ],
+       [
+        "Hoseong Seo"
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
    "at": "2026-10-16T01:06:21Z",
    "milestones": [],
    "added": [
