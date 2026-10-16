@@ -3,6 +3,98 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-10-16T01:06:21Z · https://catalog.awsevents.com/api/sessions
+
+Added 3 · removed 0 · changed 271
+
+**Added**
+- `HMC312` How RBC built a regulated multicloud platform
+- `INV539` Beyond Next-Token Prediction: World Models for Human Health
+- `IND3355` Building Worlds for Machines: VAMS and 3DGS for Autonomy
+
+**Changed**
+- `AIM104-S` Autonomous AI Ops with AWS DevOps Agent and New Relic Autopilot (sponsored by New Relic) — speakers: Elliot Markowitz → Anush Jayaraman, Bill Fine, Elliot Markowitz
+- `AIM129-S` High Growth. Bold Innovation. The Kiwibank Story. (sponsored by Accenture) — speakers: Serena Smorti → Dusshyant Roy, Serena Smorti
+- `AIM132-S` Taming AI Token Costs and Security Risks with Cribl and AWS (sponsored by Cribl) — speakers: Bill Emmett → Bill Emmett, Joshua Andre
+- `AIM204` AWS AI from chips to agents: The end-to-end production AI foundation — speakers: Alex Thewsey → Alex Thewsey, Denis V Batalov
+- `AIM214` How Vanguard uses SageMaker HyperPod from training to inference for custom LLMs — speakers: Kareem Syed-Mohammed, Susmitha Marupaka → Kareem Syed-Mohammed, Ritesh Shah, Swapnil Palod
+- `AIM217` Build Voice AI experiences with Amazon Polly and Transcribe — speakers: Veerdhawal (Veer) Pande → Nikie Xiong, Veerdhawal (Veer) Pande
+- `AIM218` Building conversational AI with Amazon Nova 2 Sonic — speakers: Gui Ruggiero → Gui Ruggiero, Logan Campi
+- `AIM2203-S` Securing AI and Autonomous Agents: Protecting the Lifecycle Across Any Platform (sponsored by Fortinet) — speakers: — → Chad Larter
+- `AIM2210` What's new with NVIDIA GPUs in Amazon EC2 — code: AIM2210-NEW → AIM2210
+- `AIM2212-S` DevEx 2026: The AI Era (sponsored by Atlassian) — speakers: — → Andrew Boyagi
+- `AIM2216` Trust in Depth: Giving agents more freedom without losing control — speakers: Cami Novelli-Killeen, Erin Kraemer → Brooke Jamieson, Cami Novelli-Killeen, Erin Kraemer
+- `AIM236-S` Making Enterprise Data AI-Ready Without the Data Engineering Overhead (sponsored by Eon) — speakers: Gonen Stein → Gonen Stein, Yaniv Ehrlich
+- `AIM246-S` Context to Action: Turning Agent Memory into a Customer Retention Lever (sponsored by MongoDB) — speakers: — → Srikrishna Srinivasan
+- `AIM248-S` 3-step blueprint for scaling AI with a modern enterprise core (sponsored by IBM) — speakers: Dan Kusel, Kristen Bennie → Brian Bohan, Dan Kusel, Kristen Bennie, Laxman Challa
+- `AIM252-S` Securing the Bedrock: A Strong API Foundation for AI Innovation (sponsored by Kong) — speakers: Amit Shah → Amit Shah, Bryce Macher, Jonathan Kindberg
+- `AIM261-S` Scaling inference compute across clusters (sponsored by Baseten) — speakers: — → Colin McGrath
+- `AIM266-S` The Governance Gap Keeping AI Agents Out of Production (sponsored by WSO2) — speakers: — → Rania Khalaf
+- `AIM274-S` The Next Phase of AI for SRE: Distributed Reasoning for Enterprise Operations (sponsored by Ciroos) — speakers: — → Ananda Rajagopal
+- `AIM277-S` Running Vercel in Your Own AWS Account (sponsored by Vercel) — speakers: — → Brandon Tuttle, Glenn Phillips
+- `AIM298-S` Teaching agents to pay with Stripe (sponsored by Stripe) — speakers: — → Ben Smith
+- `AIM304-R` Deploy and optimize world models with agentic AI workflows — speakers: Megan McKenzie → Bashir Mohammed, PhD, Gyanesh Kumar, Megan McKenzie, Mich…
+- `AIM304-R1` Deploy and optimize world models with agentic AI workflows — speakers: Megan McKenzie → Bashir Mohammed, PhD, Gyanesh Kumar, Megan McKenzie, Mich…
+- `AIM307` Turn your coding agent into an always-on dev team with AgentCore — speakers: Eashank Kaushik → Abhimanyu Siwach, Eashank Kaushik
+- `AIM308-R` Put your data to work: build a knowledge assistant on Amazon Bedrock — speakers: Aakash Upadhyay, Dani Mitchell, Nabil Ezzarhouni, Sunita … → Aakash Upadhyay, Dani Mitchell, Nabil Ezzarhouni, Siamak …
+- `AIM308-R1` Put your data to work: build a knowledge assistant on Amazon Bedrock — speakers: Aakash Upadhyay, Dani Mitchell, Nabil Ezzarhouni, Sunita … → Aakash Upadhyay, Dani Mitchell, Nabil Ezzarhouni, Siamak …
+- `AIM311-R` From 1 to 20,000: Scale reliably on AWS Trainium with AWS EKS — speakers: — → Chelsie Zhang
+- `AIM311-R1` From 1 to 20,000: Scale reliably on AWS Trainium with AWS EKS — speakers: — → Chelsie Zhang
+- `AIM317-R` Get started on Amazon Bedrock — speakers: ANSHIKA SAXENA → ANSHIKA SAXENA, Ritika Mittal
+- `AIM317-R1` Get started on Amazon Bedrock — speakers: ANSHIKA SAXENA → ANSHIKA SAXENA, Ritika Mittal
+- `AIM319` Token Counts to Business Impact: Measurable AI Architectures at Scale — speakers: John Masci, Pranav Sharma → Alex Iankoulski, John Masci, Pranav Sharma
+- `AIM322-R` Build an AI navigator that makes every frontline worker an expert — speakers: Paul Mietz Egli, Sebastian Muah, Tim Ness, Vanitha Suguma… → Paul Mietz Egli, Tim Ness, Vanitha Sugumaran, vtbloise Bl…
+- `AIM322-R1` Build an AI navigator that makes every frontline worker an expert — speakers: Paul Mietz Egli, Sebastian Muah, Tim Ness, Vanitha Suguma… → Paul Mietz Egli, Tim Ness, Vanitha Sugumaran, vtbloise Bl…
+- `AIM326-R` Scaling Frontier AI model inference on AWS Trainium — speakers: Achintya Pinninti, Pinak Panigrahi → Achintya Pinninti, Andre Gomes, Pinak Panigrahi
+- `AIM326-R1` Scaling Frontier AI model inference on AWS Trainium — speakers: Pinak Panigrahi → Achintya Pinninti, Andre Gomes, Pinak Panigrahi
+- `AIM3311` See where every AI dollar goes on Amazon Bedrock — speakers: Fahad Ahmed, Rahul Sharma → Fahad Ahmed, Rahul Sharma, Yiwen Zhang
+- `AIM3312` Accelerate Apache Spark data processing with GPUs at lower cost — speakers: Vidish Mehta → Karthik Prabhakar, Vidish Mehta
+- `AIM3315` Optimize agentic AI costs with EC2 Capacity Blocks and Spot Instances — speakers: — → Sherif AbdElGawad
+- `AIM3316-S` Koa: NVIDIA Nemotron-Powered CRM Reasoning Inside Salesforce’s AWS Trust Boundary (sponsored by NVIDIA) — speakers: — → Shubham Mehrotra
+- `AIM344` GPU cluster failure patterns on AWS: observe, diagnose, recover — desc
+- `AIM345` Disaggregated inference at scale: when to split prefill from decode — desc
+- `AIM346-R` Deploy, scale, and tune AI model serving with self-managed agents — speakers: Aniruddha Deodhar → Alex Iankoulski, Aniruddha Deodhar
+- `AIM346-R1` Deploy, scale, and tune AI model serving with self-managed agents — speakers: Aniruddha Deodhar → Alex Iankoulski, Aniruddha Deodhar
+- `AIM347-R` AI Systems Performance Engineering on AWS: A practitioner's deep dive — desc
+- `AIM347-R1` AI Systems Performance Engineering on AWS: A practitioner's deep dive — desc
+- `AIM351-R` Build an automated evaluation pipeline for AI agents — speakers: Dheeraj Hegde, Sam Palani, Suyin Wang, Wale Akinfaderin → Aishwarya Gavili, Dheeraj Hegde, Sam Palani, Suyin Wang, …
+- `AIM351-R1` Build an automated evaluation pipeline for AI agents — speakers: Dheeraj Hegde, Sam Palani, Suyin Wang, Wale Akinfaderin → Aishwarya Gavili, Dheeraj Hegde, Sam Palani, Suyin Wang, …
+- `AIM352` Build and deploy a voice agent with Amazon Nova 2 Sonic — speakers: Nitin Eusebius, Osman Ipek, Reilly Manton → Hector Lopez, Nitin Eusebius, Osman Ipek, Reilly Manton
+- `AIM356` Build voice-enabled applications with Amazon Polly and Amazon Transcribe — speakers: Deepthi Devanira → Deepthi Devanira, Venkat Gomatham
+- `AIM357` Cross-modal search with Amazon Nova Multimodal Embeddings — speakers: Wale Akinfaderin → Gowtham Shankar, Sapeksha Vemulapati, Wale Akinfaderin
+- `AIM358` Build agentic observability workflows with AI tools from AWS Marketplace — speakers: Tuan Vo → George Maroulakos, Tuan Vo
+- `AIM364-R` Architect for production AI: A decision framework that scales — speakers: Hazim Qudah → Brent Rabowsky, Hazim Qudah
+- `AIM364-R1` Architect for production AI: A decision framework that scales — speakers: Hazim Qudah → Brent Rabowsky, Hazim Qudah
+- `AIM368` How ISVs ship agent products to customers faster with AgentCore — speakers: Andy Kuszyk, Veena Vasudevan → Andy Kuszyk, Peter Janovsky, Veena Vasudevan
+- `AIM369` Automate your business processes with workflow agents on AgentCore — speakers: Heeki Park, Will Matos → Daniela Kinsella, Heeki Park, Will Matos
+- `AIM374` It's live. Now what? Operating AI on Amazon Bedrock — speakers: Rashim Gupta → Alan Yao, Rashim Gupta
+- `AIM377` Agentic platform design engineering: scaling AI agents across the enterprise. — speakers: Rajeswari Malladi → Manuj Arora, Rajeswari Malladi
+- `AIM380-S` Clinical Trials, Reimagined at the Speed of AI (sponsored by PwC) — speakers: — → Chuck Liu, Terry Morris
+- `AIM389-S` Fine-tune and evaluate NVIDIA Open models on Amazon SageMaker (sponsored by NVIDIA) — speakers: — → Curt Lockhart, Dimitri Maltezakis, Sandeep Raveesh
+- `AIM392` Expand your GPU playbook: Amazon EC2 G7e/G7 for inference and training — desc
+- `AIM393` Open weights to production: How Salesforce built and served Koa models — speakers: — → Hrushikesh Gangur
+- `AIM405` Build agents on OSS models with blazing fast inference on SageMaker AI — speakers: Dan Ferguson, Piyush Daftary, Vivek Gangasani → Dan Ferguson, Piyush Daftary
+- `AIM406` End-to-end foundation model pipelines on SageMaker HyperPod with EKS — speakers: Harsh Asnani, Mayank Gupta, Mijanur Palash → Farrukh Sohail, Harsh Asnani, Mayank Gupta
+- `AIM409-R` Build a cost optimization playbook for your AI workload — speakers: Eitan Sela, Jamie Brearton, Shreeya Sharma, Yaakov Tayeb → Eitan Sela, Jamie Brearton, Shivi Shivi, Shreeya Sharma, …
+- `AIM409-R1` Build a cost optimization playbook for your AI workload — speakers: Eitan Sela, Jamie Brearton, Shreeya Sharma, Yaakov Tayeb → Eitan Sela, Jamie Brearton, Shivi Shivi, Shreeya Sharma, …
+- `AIM436-R` Scale production agents reliably with AgentCore — speakers: Satveer Khurpa → Satveer Khurpa, Shishir Bharathi
+- `AIM436-R1` Scale production agents reliably with AgentCore — speakers: Evandro Franco → Evandro Franco, Shishir Bharathi
+- `AIM442` Evaluate, select, optimize and find your best model — speakers: Nicole Meyers → Nicole Meyers, Roop Bains
+- `AIM458-S` The Physical AI Blueprint: A Full-Stack Solution with AWS and NVIDIA (sponsored by NVIDIA) — speakers: Abhishek Srivastav, Shaun Kirby → Abhishek Srivastav, Ali Shahrokni, Shaun Kirby
+- `AMZ202-R` Turn a Bee wearable into your re:Invent notetaking companion — speakers: Brooke Jamieson, Chris Melissinos → Kourtney Meiss
+- `AMZ202-R1` Turn a Bee wearable into your re:Invent notetaking companion — speakers: Brooke Jamieson, Chris Melissinos → Kourtney Meiss
+- `AMZ301` The Art of the Impossible: How Amazon Builds on AWS — speakers: Tulip Gupta, Woodrow Arrington → Tulip Gupta
+- `AMZ303-R` Prime Video Financial Systems on the Road to 10x Velocity with Kiro — speakers: Tulip Gupta → Kannan Ekanath, Robert Cicero, Tulip Gupta
+- `AMZ303-R1` Prime Video Financial Systems on the Road to 10x Velocity with Kiro — speakers: Tulip Gupta → Kannan Ekanath, Robert Cicero, Tulip Gupta
+- `AMZ304` Instant Play Demos on Twitch – Increasing Player Engagement — speakers: Todd Sharp → Frank Zhu, Todd Sharp
+- `ANT203-S` Accelerating Data Processing: GPU Accelerated Amazon EMR at the Enterprise Scale (sponsored by NVIDIA) — speakers: — → Felix Cheung
+- `ANT303` Accelerate analytics and AI with an open lakehouse architecture on Apache Iceberg — speakers: Paul Meighan → Brian Mitchell, Shruti Worlikar
+- `ANT308` What's new in Amazon Redshift — speakers: Naresh Chainani → Milind Oke, Naresh Chainani
+- `ANT312` What's new in AWS Data Processing — speakers: Anjali Norwood → Anurag Singh, Bryan Liles, Kinshuk Pahare
+- `ANT313` Architect your metadata hub with AWS Glue Data Catalog — speakers: — → Mihika Naik, Vidit Ochani
+- `ANT330` Explore agentic data engineering in Amazon SageMaker — speakers: Saurabh Bhutyani, Varsha Velagapudi → Saurabh Bhutyani, Varsha Velagapudi, Vishnu Vettrivel
+- …and 191 more
+
 ## 2026-10-15T18:51:58Z · https://catalog.awsevents.com/api/sessions
 
 Added 0 · removed 0 · changed 10
