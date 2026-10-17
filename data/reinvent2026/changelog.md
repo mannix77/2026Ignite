@@ -3,6 +3,13 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-10-17T06:55:17Z · https://catalog.awsevents.com/api/sessions
+
+Added 0 · removed 0 · changed 1
+
+**Changed**
+- `SEC434` Leverage the power of MCP servers for resource inventory and compliance — title: …compliance across clouds → …compliance
+
 ## 2026-10-17T01:07:41Z · https://catalog.awsevents.com/api/sessions
 
 Added 0 · removed 0 · changed 43
