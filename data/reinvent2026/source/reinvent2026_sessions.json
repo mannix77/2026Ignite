@@ -1,7 +1,7 @@
 {
  "source": "https://catalog.awsevents.com/api/sessions",
  "event": "reinvent2026",
- "fetchedAt": "2026-10-17T12:49:29Z",
+ "fetchedAt": "2026-10-17T18:45:54Z",
  "count": 2245,
  "sessions": [
   {
@@ -2999,7 +2999,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-15T22:36:43Z",
+   "modified": "2026-10-17T18:08:19Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -19723,7 +19723,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-16T21:47:05Z",
+   "modified": "2026-10-17T15:04:50Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -22517,7 +22517,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T12:02:28Z",
+   "modified": "2026-10-17T18:24:21Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -30978,7 +30978,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T11:42:53Z",
+   "modified": "2026-10-17T17:31:37Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -32213,7 +32213,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T11:44:28Z",
+   "modified": "2026-10-17T17:48:53Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -33475,7 +33475,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-15T22:01:58Z",
+   "modified": "2026-10-16T19:47:37Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -33517,16 +33517,16 @@
    },
    "speakers": [
     {
-     "name": "Hrushikesh Gangur",
-     "title": "Principal Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Nehal Padia",
      "title": "Director, Products TPM",
      "company": "Salesforce",
      "role": "Sponsor Speaker"
+    },
+    {
+     "name": "Hrushikesh Gangur",
+     "title": "Principal Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
     }
    ],
    "times": [
@@ -33708,7 +33708,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-16T21:03:16Z",
+   "modified": "2026-10-17T14:34:10Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -34188,83 +34188,6 @@
    ]
   },
   {
-   "sessionID": "1790358228908001ivwY",
-   "code": "CMP343-R1",
-   "title": "Bringing better Amazon EC2 price performance to your pipeline with AWS Graviton",
-   "abstract": "Which workload should move to AWS Graviton first? And what actually changes in your pipeline? In this code talk, we answer both live. We profile an application portfolio to find strong Arm64 candidates, check dependency and library compatibility, and update a working CI/CD pipeline to build multi-architecture container images for x86 and Arm64, so you see exactly what changes and why. Then we deploy the workload and run a side-by-side load test to compare price performance. You'll leave with a repeatable workload-selection checklist and pipeline patterns you can apply to your own AWS Graviton adoption with minimal disruption.",
-   "type": "Code talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-16T08:11:56Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Code talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Compute"
-    ],
-    "AreaofInterest": [
-     "Cost Optimization"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "DevOps Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Elastic Compute Cloud (Amazon EC2)"
-    ],
-    "Venue": [
-     "Caesars Palace"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Diego Nieto Marin",
-     "title": "Senior Geo Specialist Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Allan Henrique Homenhuck",
-     "title": "Sr GTM Specialist SA, EFF Compute",
-     "company": "AWS Brazil",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360373507001AzeE",
-     "date": "2026-12-01",
-     "startTime": "16:00",
-     "endTime": "17:00",
-     "utcStartTime": "2026/12/02 00:00:00",
-     "utcEndTime": "2026/12/02 01:00:00",
-     "length": 60,
-     "room": "Caesars Palace | Promenade South | Octavius 4 | Content Hub | Code Talk",
-     "roomId": "1789591920119001bHvX",
-     "capacity": "80",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442255177001cgVo",
    "code": "CMP343-R",
    "title": "Bringing better Amazon EC2 price performance to your pipeline with AWS Graviton",
@@ -34335,6 +34258,83 @@
      "room": "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Code Talk",
      "roomId": "1789591920430004bQ0h",
      "capacity": "120",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358228908001ivwY",
+   "code": "CMP343-R1",
+   "title": "Bringing better Amazon EC2 price performance to your pipeline with AWS Graviton",
+   "abstract": "Which workload should move to AWS Graviton first? And what actually changes in your pipeline? In this code talk, we answer both live. We profile an application portfolio to find strong Arm64 candidates, check dependency and library compatibility, and update a working CI/CD pipeline to build multi-architecture container images for x86 and Arm64, so you see exactly what changes and why. Then we deploy the workload and run a side-by-side load test to compare price performance. You'll leave with a repeatable workload-selection checklist and pipeline patterns you can apply to your own AWS Graviton adoption with minimal disruption.",
+   "type": "Code talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-17T14:34:10Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Code talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Compute"
+    ],
+    "AreaofInterest": [
+     "Cost Optimization"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "DevOps Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Elastic Compute Cloud (Amazon EC2)"
+    ],
+    "Venue": [
+     "Caesars Palace"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Allan Henrique Homenhuck",
+     "title": "Sr GTM Specialist SA, EFF Compute",
+     "company": "AWS Brazil",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Diego Nieto Marin",
+     "title": "Senior Geo Specialist Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360373507001AzeE",
+     "date": "2026-12-01",
+     "startTime": "16:00",
+     "endTime": "17:00",
+     "utcStartTime": "2026/12/02 00:00:00",
+     "utcEndTime": "2026/12/02 01:00:00",
+     "length": 60,
+     "room": "Caesars Palace | Promenade South | Octavius 4 | Content Hub | Code Talk",
+     "roomId": "1789591920119001bHvX",
+     "capacity": "80",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -38301,7 +38301,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T11:46:49Z",
+   "modified": "2026-10-17T16:48:13Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -43082,7 +43082,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-15T22:01:58Z",
+   "modified": "2026-10-17T16:41:20Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -44953,7 +44953,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-16T22:32:20Z",
+   "modified": "2026-10-17T16:04:39Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -53087,90 +53087,6 @@
    ]
   },
   {
-   "sessionID": "1780442244775001cbB1",
-   "code": "IND405-R",
-   "title": "Build low latency real-time bidding workloads with AWS RTB Fabric",
-   "abstract": "With the growth of digital media, including streaming video and retail media, customers that operate advertising platforms need to buy, sell, deliver, and measure millions of ad transactions per second while meeting stringent latency requirements. In this chalk talk, you will learn how to run real-time bidding workloads with your AdTech partners on a dedicated network in the cloud using AWS RTB Fabric. You will learn how to setup, onboard, and integrate AWS RTB Fabric with your supply and demand-side-platforms. Additionally, you will learn about key features including the core network, modules, and pricing model of the service.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-16T21:52:48Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "400 – Expert"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Migration & Modernization",
-     "Industry Solutions"
-    ],
-    "AreaofInterest": [
-     "Innovation & Transformation",
-     "Machine Learning"
-    ],
-    "Industry": [
-     "Advertising & Marketing"
-    ],
-    "Role": [
-     "Data Engineer",
-     "Developer / Engineer",
-     "DevOps Engineer"
-    ],
-    "Services": [
-     "Amazon Elastic Compute Cloud (Amazon EC2)",
-     "Amazon Elastic Kubernetes Service (Amazon EKS)",
-     "AWS RTB Fabric"
-    ],
-    "Venue": [
-     "Caesars Forum"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Sergio Serra",
-     "title": "Product Leader",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Gerry Louw",
-     "title": "Global Tech Lead Advertising and Marketing Technology - AWS",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025514547001CU0C",
-     "date": "2026-12-02",
-     "startTime": "09:00",
-     "endTime": "10:00",
-     "utcStartTime": "2026/12/02 17:00:00",
-     "utcEndTime": "2026/12/02 18:00:00",
-     "length": 60,
-     "room": "Caesars Forum | Level 1 | Alliance 314",
-     "roomId": "1789591919643004bRVK",
-     "capacity": "88",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358223207001iA4U",
    "code": "IND405-R1",
    "title": "Build low latency real-time bidding workloads with AWS RTB Fabric",
@@ -53247,6 +53163,90 @@
      "length": 60,
      "room": "Caesars Forum | Level 1 | Forum 114",
      "roomId": "1789591919703003bevY",
+     "capacity": "88",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442244775001cbB1",
+   "code": "IND405-R",
+   "title": "Build low latency real-time bidding workloads with AWS RTB Fabric",
+   "abstract": "With the growth of digital media, including streaming video and retail media, customers that operate advertising platforms need to buy, sell, deliver, and measure millions of ad transactions per second while meeting stringent latency requirements. In this chalk talk, you will learn how to run real-time bidding workloads with your AdTech partners on a dedicated network in the cloud using AWS RTB Fabric. You will learn how to setup, onboard, and integrate AWS RTB Fabric with your supply and demand-side-platforms. Additionally, you will learn about key features including the core network, modules, and pricing model of the service.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-17T15:09:17Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "400 – Expert"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Migration & Modernization",
+     "Industry Solutions"
+    ],
+    "AreaofInterest": [
+     "Innovation & Transformation",
+     "Machine Learning"
+    ],
+    "Industry": [
+     "Advertising & Marketing"
+    ],
+    "Role": [
+     "Data Engineer",
+     "Developer / Engineer",
+     "DevOps Engineer"
+    ],
+    "Services": [
+     "Amazon Elastic Compute Cloud (Amazon EC2)",
+     "Amazon Elastic Kubernetes Service (Amazon EKS)",
+     "AWS RTB Fabric"
+    ],
+    "Venue": [
+     "Caesars Forum"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Sergio Serra",
+     "title": "Product Leader",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Gerry Louw",
+     "title": "Global Tech Lead Advertising and Marketing Technology - AWS",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025514547001CU0C",
+     "date": "2026-12-02",
+     "startTime": "09:00",
+     "endTime": "10:00",
+     "utcStartTime": "2026/12/02 17:00:00",
+     "utcEndTime": "2026/12/02 18:00:00",
+     "length": 60,
+     "room": "Caesars Forum | Level 1 | Alliance 314",
+     "roomId": "1789591919643004bRVK",
      "capacity": "88",
      "inPersonTime": true,
      "virtualTime": false,
@@ -54691,7 +54691,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T09:25:23Z",
+   "modified": "2026-10-17T18:28:21Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -62778,7 +62778,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T12:04:03Z",
+   "modified": "2026-10-17T18:03:43Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -65243,7 +65243,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T11:57:26Z",
+   "modified": "2026-10-17T15:31:53Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -70337,7 +70337,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T10:14:18Z",
+   "modified": "2026-10-17T13:16:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -71256,7 +71256,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T09:27:10Z",
+   "modified": "2026-10-17T17:55:05Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -71527,84 +71527,6 @@
    ]
   },
   {
-   "sessionID": "1780442279109001cmOH",
-   "code": "DVT312-R",
-   "title": "Deploy infrastructure with speed and safety using AWS CloudFormation",
-   "abstract": "In this workshop, build and test AWS CloudFormation templates hands-on. Create stacks to deploy and manage resources, then use the CloudFormation Language Server to author with real-time validation in your IDE. Explore testing tools—cfn-lint, CloudFormation Guard, and early change-set validation—to catch errors before deployment. Learn language features like Stack Refactoring and drift-aware change sets that help you evolve templates safely over time. You must bring your laptop to participate.",
-   "type": "Workshop",
-   "length": 120,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-16T23:41:29Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Workshop"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Cloud Operations",
-     "Developer Tools"
-    ],
-    "AreaofInterest": [
-     "DevOps"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "DevOps Engineer"
-    ],
-    "Services": [
-     "AWS CloudFormation"
-    ],
-    "Venue": [
-     "Caesars Forum"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Kevin DeJong",
-     "title": "Software Dev Engineer III",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Mihir Surani",
-     "title": "Principal Software Dev Engineer",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025495273001C0Xo",
-     "date": "2026-11-30",
-     "startTime": "15:30",
-     "endTime": "17:30",
-     "utcStartTime": "2026/11/30 23:30:00",
-     "utcEndTime": "2026/12/01 01:30:00",
-     "length": 120,
-     "room": "Caesars Forum | Level 1 | Academy 412",
-     "roomId": "1789591919551001bxoq",
-     "capacity": "140",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358238947001iq0B",
    "code": "DVT312-R1",
    "title": "Deploy infrastructure with speed and safety using AWS CloudFormation",
@@ -71613,7 +71535,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T12:04:03Z",
+   "modified": "2026-10-17T16:05:59Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -71675,6 +71597,84 @@
      "length": 120,
      "room": "Wynn/Encore | Upper Convention Promenade | Cristal 1",
      "roomId": "1789591921294004b94B",
+     "capacity": "140",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442279109001cmOH",
+   "code": "DVT312-R",
+   "title": "Deploy infrastructure with speed and safety using AWS CloudFormation",
+   "abstract": "In this workshop, build and test AWS CloudFormation templates hands-on. Create stacks to deploy and manage resources, then use the CloudFormation Language Server to author with real-time validation in your IDE. Explore testing tools—cfn-lint, CloudFormation Guard, and early change-set validation—to catch errors before deployment. Learn language features like Stack Refactoring and drift-aware change sets that help you evolve templates safely over time. You must bring your laptop to participate.",
+   "type": "Workshop",
+   "length": 120,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-17T18:23:20Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Workshop"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Cloud Operations",
+     "Developer Tools"
+    ],
+    "AreaofInterest": [
+     "DevOps"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "DevOps Engineer"
+    ],
+    "Services": [
+     "AWS CloudFormation"
+    ],
+    "Venue": [
+     "Caesars Forum"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Kevin DeJong",
+     "title": "Software Dev Engineer III",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Mihir Surani",
+     "title": "Principal Software Dev Engineer",
+     "company": "Amazon",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025495273001C0Xo",
+     "date": "2026-11-30",
+     "startTime": "15:30",
+     "endTime": "17:30",
+     "utcStartTime": "2026/11/30 23:30:00",
+     "utcEndTime": "2026/12/01 01:30:00",
+     "length": 120,
+     "room": "Caesars Forum | Level 1 | Academy 412",
+     "roomId": "1789591919551001bxoq",
      "capacity": "140",
      "inPersonTime": true,
      "virtualTime": false,
@@ -71992,7 +71992,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T07:42:27Z",
+   "modified": "2026-10-17T13:16:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -72622,7 +72622,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T08:47:44Z",
+   "modified": "2026-10-17T17:20:23Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -73313,93 +73313,6 @@
    ]
   },
   {
-   "sessionID": "1780442281286001cgYP",
-   "code": "IND409-R",
-   "title": "Designing the AWS Secure Research Environment: Architecture deep dive",
-   "abstract": "Discover how the AWS Secure Research Environment (SRE) helps research institutions stand up NIST 800-171 and CMMC Level 2 infrastructure. Explore the architecture: Landing Zone Accelerator (LZA) customization, multi-account strategy with Control Tower Account Factory, preventive SCPs versus detective controls, Network Firewall egress, and automated evidence collection feeding Security Hub. No setup is required. Using a simulated pipeline, you work through and gain a deep understanding of the LZA configuration customizations an SRE needs, customize them for your organization, and leave with your own SRE config files. We provide next-step instructions for deploying those configs in a real, customer-owned AWS environment later.",
-   "type": "Workshop",
-   "length": 120,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-17T04:55:38Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Workshop"
-    ],
-    "Level": [
-     "400 – Expert"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Architecture",
-     "Security & Identity"
-    ],
-    "AreaofInterest": [
-     "Well-Architected Framework",
-     "Governance, Risk & Compliance",
-     "Automation"
-    ],
-    "Industry": [
-     "Education",
-     "Government"
-    ],
-    "Role": [
-     "Cloud Security Specialist",
-     "IT Professional / Technical Manager",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "AWS Control Tower",
-     "AWS Organizations",
-     "AWS Security Hub"
-    ],
-    "Venue": [
-     "Wynn/Encore"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Devin Hicks",
-     "title": "Solutions Architect",
-     "company": "Amazon Web Services, Inc.",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Chris Riddle",
-     "title": "Sr Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025472745001CkFx",
-     "date": "2026-11-30",
-     "startTime": "08:30",
-     "endTime": "10:30",
-     "utcStartTime": "2026/11/30 16:30:00",
-     "utcEndTime": "2026/11/30 18:30:00",
-     "length": 120,
-     "room": "Wynn/Encore | Level 1 | Encore Ballroom 1",
-     "roomId": "1789591921156004bqEA",
-     "capacity": "84",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358253579001i9ek",
    "code": "IND409-R1",
    "title": "Designing the AWS Secure Research Environment: Architecture Deep Dive",
@@ -73408,7 +73321,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T11:59:27Z",
+   "modified": "2026-10-17T17:33:22Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -73480,6 +73393,93 @@
      "room": "Wynn/Encore | Upper Convention Promenade | Cristal 7",
      "roomId": "1789591921464001bbZh",
      "capacity": "140",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442281286001cgYP",
+   "code": "IND409-R",
+   "title": "Designing the AWS Secure Research Environment: Architecture deep dive",
+   "abstract": "Discover how the AWS Secure Research Environment (SRE) helps research institutions stand up NIST 800-171 and CMMC Level 2 infrastructure. Explore the architecture: Landing Zone Accelerator (LZA) customization, multi-account strategy with Control Tower Account Factory, preventive SCPs versus detective controls, Network Firewall egress, and automated evidence collection feeding Security Hub. No setup is required. Using a simulated pipeline, you work through and gain a deep understanding of the LZA configuration customizations an SRE needs, customize them for your organization, and leave with your own SRE config files. We provide next-step instructions for deploying those configs in a real, customer-owned AWS environment later.",
+   "type": "Workshop",
+   "length": 120,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-17T18:30:32Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Workshop"
+    ],
+    "Level": [
+     "400 – Expert"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Architecture",
+     "Security & Identity"
+    ],
+    "AreaofInterest": [
+     "Well-Architected Framework",
+     "Governance, Risk & Compliance",
+     "Automation"
+    ],
+    "Industry": [
+     "Education",
+     "Government"
+    ],
+    "Role": [
+     "Cloud Security Specialist",
+     "IT Professional / Technical Manager",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "AWS Control Tower",
+     "AWS Organizations",
+     "AWS Security Hub"
+    ],
+    "Venue": [
+     "Wynn/Encore"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Devin Hicks",
+     "title": "Solutions Architect",
+     "company": "Amazon Web Services, Inc.",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Chris Riddle",
+     "title": "Sr Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025472745001CkFx",
+     "date": "2026-11-30",
+     "startTime": "08:30",
+     "endTime": "10:30",
+     "utcStartTime": "2026/11/30 16:30:00",
+     "utcEndTime": "2026/11/30 18:30:00",
+     "length": 120,
+     "room": "Wynn/Encore | Level 1 | Encore Ballroom 1",
+     "roomId": "1789591921156004bqEA",
+     "capacity": "84",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -76032,7 +76032,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T00:57:01Z",
+   "modified": "2026-10-17T16:20:24Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -78059,7 +78059,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-16T16:09:11Z",
+   "modified": "2026-10-17T16:48:13Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -78086,12 +78086,6 @@
    },
    "speakers": [
     {
-     "name": "Farrukh Sohail",
-     "title": "Sr. Product Marketing Manager - Technical",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Harsh Asnani",
      "title": "Sr. Worldwide Specialist SA - GenAI",
      "company": "Amazon Web Services, Inc.",
@@ -78100,6 +78094,12 @@
     {
      "name": "Mayank Gupta",
      "title": "Senior Specialist, AI/ML",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Farrukh Sohail",
+     "title": "Sr. Product Marketing Manager - Technical",
      "company": "AWS",
      "role": "Internal Speaker"
     }
@@ -78203,7 +78203,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T12:02:27Z",
+   "modified": "2026-10-17T16:48:13Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -79042,7 +79042,7 @@
    "length": 90,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T09:28:35Z",
+   "modified": "2026-10-17T16:34:33Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -81626,7 +81626,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-16T19:51:26Z",
+   "modified": "2026-10-17T13:31:33Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -84491,7 +84491,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T12:27:47Z",
+   "modified": "2026-10-17T13:11:56Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -88547,7 +88547,7 @@
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-16T11:33:16Z",
+   "modified": "2026-10-16T19:47:37Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -88929,7 +88929,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T01:54:02Z",
+   "modified": "2026-10-17T17:06:09Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -89220,89 +89220,6 @@
    ]
   },
   {
-   "sessionID": "1780442244582001ctiG",
-   "code": "IND356-R",
-   "title": "From static to self-improving agents with Amazon Bedrock AgentCore",
-   "abstract": "AI agents that learn from every production cycle deliver better outcomes without retraining or manual prompt tuning. In this chalk talk, we'll explore how Amazon Bedrock AgentCore Evaluations scores live agent behavior across multiple quality dimensions and how the optimization capability discovers better system prompts and tool configurations from production traces. Learn how the agent improves continuously from production results, expert corrections, and revised context your team contributes. We'll demonstrate the full observe-evaluate-improve cycle with an underwriting agent on Amazon Bedrock AgentCore and the Strands Agents Framework, then discuss how the pattern applies to claims, fraud, and customer service agents.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-15T22:01:58Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Artificial Intelligence",
-     "Industry Solutions"
-    ],
-    "AreaofInterest": [
-     "Agentic AI"
-    ],
-    "Industry": [
-     "Financial Services"
-    ],
-    "Role": [
-     "Data Engineer",
-     "Developer / Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon API Gateway",
-     "Amazon Bedrock",
-     "AWS Step Functions"
-    ],
-    "Venue": [
-     "Wynn/Encore"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Sid Singh",
-     "title": "Principal SA",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Philipp Klose",
-     "title": "Solution Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025530787001CSZF",
-     "date": "2026-12-03",
-     "startTime": "08:30",
-     "endTime": "09:30",
-     "utcStartTime": "2026/12/03 16:30:00",
-     "utcEndTime": "2026/12/03 17:30:00",
-     "length": 60,
-     "room": "Wynn/Encore | Convention Promenade | Montrachet 1",
-     "roomId": "1789591921019001bmgQ",
-     "capacity": "78",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358252462001iyni",
    "code": "IND356-R1",
    "title": "From static to self-improving agents with Amazon Bedrock AgentCore",
@@ -89311,7 +89228,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-15T22:01:58Z",
+   "modified": "2026-10-16T19:47:37Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -89355,15 +89272,15 @@
    },
    "speakers": [
     {
-     "name": "Sid Singh",
-     "title": "Principal SA",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Philipp Klose",
      "title": "Solution Architect",
      "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Sid Singh",
+     "title": "Principal SA",
+     "company": "AWS",
      "role": "Internal Speaker"
     }
    ],
@@ -89375,6 +89292,89 @@
      "endTime": "17:00",
      "utcStartTime": "2026/12/01 00:00:00",
      "utcEndTime": "2026/12/01 01:00:00",
+     "length": 60,
+     "room": "Wynn/Encore | Convention Promenade | Montrachet 1",
+     "roomId": "1789591921019001bmgQ",
+     "capacity": "78",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442244582001ctiG",
+   "code": "IND356-R",
+   "title": "From static to self-improving agents with Amazon Bedrock AgentCore",
+   "abstract": "AI agents that learn from every production cycle deliver better outcomes without retraining or manual prompt tuning. In this chalk talk, we'll explore how Amazon Bedrock AgentCore Evaluations scores live agent behavior across multiple quality dimensions and how the optimization capability discovers better system prompts and tool configurations from production traces. Learn how the agent improves continuously from production results, expert corrections, and revised context your team contributes. We'll demonstrate the full observe-evaluate-improve cycle with an underwriting agent on Amazon Bedrock AgentCore and the Strands Agents Framework, then discuss how the pattern applies to claims, fraud, and customer service agents.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-16T19:47:37Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Artificial Intelligence",
+     "Industry Solutions"
+    ],
+    "AreaofInterest": [
+     "Agentic AI"
+    ],
+    "Industry": [
+     "Financial Services"
+    ],
+    "Role": [
+     "Data Engineer",
+     "Developer / Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon API Gateway",
+     "Amazon Bedrock",
+     "AWS Step Functions"
+    ],
+    "Venue": [
+     "Wynn/Encore"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Philipp Klose",
+     "title": "Solution Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Sid Singh",
+     "title": "Principal SA",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025530787001CSZF",
+     "date": "2026-12-03",
+     "startTime": "08:30",
+     "endTime": "09:30",
+     "utcStartTime": "2026/12/03 16:30:00",
+     "utcEndTime": "2026/12/03 17:30:00",
      "length": 60,
      "room": "Wynn/Encore | Convention Promenade | Montrachet 1",
      "roomId": "1789591921019001bmgQ",
@@ -89871,7 +89871,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-16T20:48:06Z",
+   "modified": "2026-10-17T14:15:47Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -91004,7 +91004,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T06:29:39Z",
+   "modified": "2026-10-17T15:28:47Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -95570,7 +95570,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T04:14:45Z",
+   "modified": "2026-10-17T17:21:24Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -101260,6 +101260,82 @@
    ]
   },
   {
+   "sessionID": "1780441489009001G3sy",
+   "code": "AIM2209-S",
+   "title": "How Philips accelerated sales quoting with Agentic AI (sponsored by EPAM)",
+   "abstract": "Philips, a global health technology company, identified an opportunity to accelerate customer quoting for complex solutions combining equipment, software and services. Working with EPAM, Philips built the solution on AWS using an AI-native approach. A team of fewer than 20 used Amazon Kiro across the software development lifecycle, with Amazon Bedrock and the Strands Agents SDK powering an agentic architecture. The result is Sensei, an AI-powered sales experience. This session shares practical lessons for applying agentic AI, accelerating development and business operations, embedding governance, and moving from prototype to enterprise production at scale.",
+   "type": "Breakout session",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-17T16:13:09Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Breakout session"
+    ],
+    "Level": [
+     "200 – Intermediate"
+    ],
+    "Features": [
+     "AWS Partners",
+     "Lecture-style"
+    ],
+    "Topic": [
+     "Application Integration",
+     "Artificial Intelligence",
+     "Business Agents"
+    ],
+    "SponsorSessionPrimaryTopic": [
+     "Artificial Intelligence"
+    ],
+    "AreaofInterest": [
+     "Generative AI",
+     "Responsible AI",
+     "Agentic AI"
+    ],
+    "Role": [
+     "Business Executive",
+     "DevOps Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Bedrock",
+     "Kiro"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "Walkuponlysession": [
+     "Walk up only"
+    ],
+    "SessionAppendices": [
+     "Sponsored"
+    ]
+   },
+   "speakers": [],
+   "times": [
+    {
+     "sessionTimeID": "1790025489763001Crb9",
+     "date": "2026-11-30",
+     "startTime": "13:30",
+     "endTime": "14:30",
+     "utcStartTime": "2026/11/30 21:30:00",
+     "utcEndTime": "2026/11/30 22:30:00",
+     "length": 60,
+     "room": "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Blue Theater",
+     "roomId": "1789591920403001bO1o",
+     "capacity": "116",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
    "sessionID": "1780441476934001GBLm",
    "code": "IND3302",
    "title": "How Prime Video Built an AI-assisted Creative Suite on AWS",
@@ -102992,88 +103068,6 @@
    ]
   },
   {
-   "sessionID": "1780442247583001cddI",
-   "code": "MAM317-R",
-   "title": "How to decompose Oracle and SQL Server into purpose-built databases",
-   "abstract": "A monolithic traditional RDBMS databases serves transactions, reporting, and search, but serves none of them well. In this chalk talk, we'll whiteboard how to decompose a proprietary database into purpose-built layers on AWS, including Amazon Aurora PostgreSQL for transactional workloads, Aurora pgvector for semantic search and GenAI (RAG), and Amazon Redshift via zero-ETL for real-time analytics, for a smarter modernization approach. We'll walk through how this pattern eliminates licensing costs, removes ETL pipelines, and turns your operational data into an AI-ready platform. Come ready to whiteboard your decomposition use case.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-17T06:18:01Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Databases",
-     "Migration & Modernization"
-    ],
-    "AreaofInterest": [
-     "Microsoft & .NET",
-     "Oracle",
-     "Agentic AI"
-    ],
-    "Role": [
-     "Data Engineer",
-     "Developer / Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Aurora",
-     "Amazon DynamoDB",
-     "Amazon OpenSearch Service"
-    ],
-    "Venue": [
-     "Caesars Palace"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Anand Bilgaiyan",
-     "title": "Senior Specialist Partner solution Architect Enterprise Transformation",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Yogi Barot",
-     "title": "Tech Leader, Migration",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025483620001C1Me",
-     "date": "2026-11-30",
-     "startTime": "12:00",
-     "endTime": "13:00",
-     "utcStartTime": "2026/11/30 20:00:00",
-     "utcEndTime": "2026/11/30 21:00:00",
-     "length": 60,
-     "room": "Caesars Palace | Promenade South | Octavius 14",
-     "roomId": "1789591920078001bjro",
-     "capacity": "70",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358219069001iXD0",
    "code": "MAM317-R1",
    "title": "How to decompose Oracle and SQL Server into purpose-built databases",
@@ -103082,7 +103076,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T07:08:26Z",
+   "modified": "2026-10-17T18:29:32Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -103149,6 +103143,88 @@
      "room": "MGM Grand | Level 1 | Boulevard 163",
      "roomId": "1789591920202001b2p2",
      "capacity": "94",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442247583001cddI",
+   "code": "MAM317-R",
+   "title": "How to decompose Oracle and SQL Server into purpose-built databases",
+   "abstract": "A monolithic traditional RDBMS databases serves transactions, reporting, and search, but serves none of them well. In this chalk talk, we'll whiteboard how to decompose a proprietary database into purpose-built layers on AWS, including Amazon Aurora PostgreSQL for transactional workloads, Aurora pgvector for semantic search and GenAI (RAG), and Amazon Redshift via zero-ETL for real-time analytics, for a smarter modernization approach. We'll walk through how this pattern eliminates licensing costs, removes ETL pipelines, and turns your operational data into an AI-ready platform. Come ready to whiteboard your decomposition use case.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-17T18:20:49Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Databases",
+     "Migration & Modernization"
+    ],
+    "AreaofInterest": [
+     "Microsoft & .NET",
+     "Oracle",
+     "Agentic AI"
+    ],
+    "Role": [
+     "Data Engineer",
+     "Developer / Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Aurora",
+     "Amazon DynamoDB",
+     "Amazon OpenSearch Service"
+    ],
+    "Venue": [
+     "Caesars Palace"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Anand Bilgaiyan",
+     "title": "Senior Specialist Partner solution Architect Enterprise Transformation",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Yogi Barot",
+     "title": "Tech Leader, Migration",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025483620001C1Me",
+     "date": "2026-11-30",
+     "startTime": "12:00",
+     "endTime": "13:00",
+     "utcStartTime": "2026/11/30 20:00:00",
+     "utcEndTime": "2026/11/30 21:00:00",
+     "length": 60,
+     "room": "Caesars Palace | Promenade South | Octavius 14",
+     "roomId": "1789591920078001bjro",
+     "capacity": "70",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -108554,7 +108630,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T09:21:32Z",
+   "modified": "2026-10-17T14:04:29Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -109719,7 +109795,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-15T22:01:58Z",
+   "modified": "2026-10-16T19:47:37Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -112845,7 +112921,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T09:25:23Z",
+   "modified": "2026-10-17T18:43:23Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -114581,7 +114657,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T05:23:57Z",
+   "modified": "2026-10-17T17:25:55Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -115294,7 +115370,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T06:29:39Z",
+   "modified": "2026-10-17T16:19:09Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -116178,88 +116254,6 @@
    ]
   },
   {
-   "sessionID": "1780442281772001cozb",
-   "code": "MAM305-R",
-   "title": "Migrate SQL Server to Aurora PostgreSQL with AI-powered conversion",
-   "abstract": "Migrating SQL Server databases with stored procedures, triggers, and complex T-SQL constructs to Aurora PostgreSQL typically takes weeks of manual schema conversion and dependency resolution. In this workshop, you'll walk through the end-to-end workflow using AWS Transform's agentic AI: assess your SQL Server database, automate schema conversion, resolve dependencies, then hand off to your local IDE where you review, refine, and deploy converted database objects directly. You'll leave knowing how to reduce weeks of manual effort to hours while improving conversion accuracy and confidence.",
-   "type": "Workshop",
-   "length": 120,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-16T19:46:17Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Workshop"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Databases",
-     "Migration & Modernization"
-    ],
-    "AreaofInterest": [
-     "Microsoft & .NET",
-     "Cost Optimization",
-     "Agentic AI"
-    ],
-    "Role": [
-     "Data Engineer",
-     "IT Professional / Technical Manager",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Aurora for PostgreSQL",
-     "AWS Transform"
-    ],
-    "Venue": [
-     "Caesars Palace"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Vikas Babu Gali",
-     "title": "Sr. Solutions Architect",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Koushik Rajagopal",
-     "title": "Principal Software Dev Eng",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025485305001CW5a",
-     "date": "2026-11-30",
-     "startTime": "12:30",
-     "endTime": "14:30",
-     "utcStartTime": "2026/11/30 20:30:00",
-     "utcEndTime": "2026/11/30 22:30:00",
-     "length": 120,
-     "room": "Caesars Palace | Promenade Level | Milano IV",
-     "roomId": "1789591919941001bt9M",
-     "capacity": "150",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358256468001iSNZ",
    "code": "MAM305-R1",
    "title": "Migrate SQL Server to Aurora PostgreSQL with AI-powered conversion",
@@ -116268,7 +116262,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T00:04:14Z",
+   "modified": "2026-10-17T18:29:32Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -116335,6 +116329,88 @@
      "room": "MGM Grand | Level 1 | Grand 111",
      "roomId": "1789591920238004bouB",
      "capacity": "112",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442281772001cozb",
+   "code": "MAM305-R",
+   "title": "Migrate SQL Server to Aurora PostgreSQL with AI-powered conversion",
+   "abstract": "Migrating SQL Server databases with stored procedures, triggers, and complex T-SQL constructs to Aurora PostgreSQL typically takes weeks of manual schema conversion and dependency resolution. In this workshop, you'll walk through the end-to-end workflow using AWS Transform's agentic AI: assess your SQL Server database, automate schema conversion, resolve dependencies, then hand off to your local IDE where you review, refine, and deploy converted database objects directly. You'll leave knowing how to reduce weeks of manual effort to hours while improving conversion accuracy and confidence.",
+   "type": "Workshop",
+   "length": 120,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-17T18:20:54Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Workshop"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Databases",
+     "Migration & Modernization"
+    ],
+    "AreaofInterest": [
+     "Microsoft & .NET",
+     "Cost Optimization",
+     "Agentic AI"
+    ],
+    "Role": [
+     "Data Engineer",
+     "IT Professional / Technical Manager",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Aurora for PostgreSQL",
+     "AWS Transform"
+    ],
+    "Venue": [
+     "Caesars Palace"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Vikas Babu Gali",
+     "title": "Sr. Solutions Architect",
+     "company": "Amazon",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Koushik Rajagopal",
+     "title": "Principal Software Dev Eng",
+     "company": "Amazon",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025485305001CW5a",
+     "date": "2026-11-30",
+     "startTime": "12:30",
+     "endTime": "14:30",
+     "utcStartTime": "2026/11/30 20:30:00",
+     "utcEndTime": "2026/11/30 22:30:00",
+     "length": 120,
+     "room": "Caesars Palace | Promenade Level | Milano IV",
+     "roomId": "1789591919941001bt9M",
+     "capacity": "150",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -116506,7 +116582,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-16T15:16:23Z",
+   "modified": "2026-10-17T18:39:36Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -116963,7 +117039,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-16T19:46:49Z",
+   "modified": "2026-10-16T19:47:37Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -117660,7 +117736,7 @@
    "length": 90,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T06:04:29Z",
+   "modified": "2026-10-17T15:31:54Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -117721,7 +117797,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-16T22:11:27Z",
+   "modified": "2026-10-17T16:03:13Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -117801,7 +117877,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-16T00:38:11Z",
+   "modified": "2026-10-17T15:06:11Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -121513,7 +121589,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T04:41:30Z",
+   "modified": "2026-10-17T13:16:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -123939,7 +124015,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T01:04:23Z",
+   "modified": "2026-10-17T18:43:23Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -125874,7 +125950,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T04:17:36Z",
+   "modified": "2026-10-17T15:54:55Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -125952,7 +126028,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T10:18:08Z",
+   "modified": "2026-10-17T16:01:03Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -127327,7 +127403,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-16T23:21:00Z",
+   "modified": "2026-10-17T14:19:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -127923,86 +127999,6 @@
    ]
   },
   {
-   "sessionID": "1780442277389001c8wm",
-   "code": "CMP325-R",
-   "title": "Optimize your Amazon EC2 instances: Profile, diagnose, decide",
-   "abstract": "Which EC2 instance performs best? It depends on the workload. In this hands-on workshop, learn a repeatable methodology: observe with APerf, find breaking points, diagnose pipeline bottlenecks, and decide by price-performance across AWS Graviton-, Intel-, and AMD-based instances. Then fix code guided by profiling data.",
-   "type": "Workshop",
-   "length": 120,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-17T04:33:17Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Workshop"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Compute",
-     "Migration & Modernization"
-    ],
-    "AreaofInterest": [
-     "Cost Optimization",
-     "Innovation & Transformation"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "DevOps Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Elastic Compute Cloud (Amazon EC2)"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Toby Buckley",
-     "title": "Sr Specialist SA, EC2",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Julio Arnedo",
-     "title": "Startups Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025485108001Cv6y",
-     "date": "2026-11-30",
-     "startTime": "12:30",
-     "endTime": "14:30",
-     "utcStartTime": "2026/11/30 20:30:00",
-     "utcEndTime": "2026/11/30 22:30:00",
-     "length": 120,
-     "room": "MGM Grand | Level 3 | Premier 310",
-     "roomId": "1789591920472001bMHw",
-     "capacity": "84",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358254340001iDRX",
    "code": "CMP325-R1",
    "title": "Optimize your Amazon EC2 instances: Profile, diagnose, decide",
@@ -128076,6 +128072,86 @@
      "room": "MGM Grand | Level 3 | Premier 313",
      "roomId": "1789591920487004bQOS",
      "capacity": "140",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442277389001c8wm",
+   "code": "CMP325-R",
+   "title": "Optimize your Amazon EC2 instances: Profile, diagnose, decide",
+   "abstract": "Which EC2 instance performs best? It depends on the workload. In this hands-on workshop, learn a repeatable methodology: observe with APerf, find breaking points, diagnose pipeline bottlenecks, and decide by price-performance across AWS Graviton-, Intel-, and AMD-based instances. Then fix code guided by profiling data.",
+   "type": "Workshop",
+   "length": 120,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-17T14:20:54Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Workshop"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Compute",
+     "Migration & Modernization"
+    ],
+    "AreaofInterest": [
+     "Cost Optimization",
+     "Innovation & Transformation"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "DevOps Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Elastic Compute Cloud (Amazon EC2)"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Toby Buckley",
+     "title": "Sr Specialist SA, EC2",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Julio Arnedo",
+     "title": "Startups Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025485108001Cv6y",
+     "date": "2026-11-30",
+     "startTime": "12:30",
+     "endTime": "14:30",
+     "utcStartTime": "2026/11/30 20:30:00",
+     "utcEndTime": "2026/11/30 22:30:00",
+     "length": 120,
+     "room": "MGM Grand | Level 3 | Premier 310",
+     "roomId": "1789591920472001bMHw",
+     "capacity": "84",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -129918,7 +129994,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T00:01:03Z",
+   "modified": "2026-10-17T16:59:01Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -130884,82 +130960,6 @@
    ]
   },
   {
-   "sessionID": "1780441489009001G3sy",
-   "code": "AIM2209-S",
-   "title": "Philips' Agentic AI Leap: 45 Days to Minutes on Sales Quotes (sponsored by EPAM)",
-   "abstract": "Philips faced a 45-day sales quoting bottleneck in digital pathology, chasing systems and spreadsheets on every deal. With EPAM and AWS, Philips built Sensei, a conversational AI sales agent, using an AI-native SDLC powered by AWS Kiro and running on Amazon Bedrock with Strands Agents. In under six months, specialized agents for pricing, quoting and CRM cut quote turnaround by 90 percent, generating customer briefings in under two minutes, with governance and compliance built in for a regulated industry. This session shares a practical blueprint for applying agentic AI to complex enterprise workflows at speed, without sacrificing enterprise-grade trust. This presentation is brought to you by EPAM, an AWS Partner.",
-   "type": "Breakout session",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-15T22:01:58Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Breakout session"
-    ],
-    "Level": [
-     "200 – Intermediate"
-    ],
-    "Features": [
-     "AWS Partners",
-     "Lecture-style"
-    ],
-    "Topic": [
-     "Application Integration",
-     "Artificial Intelligence",
-     "Business Agents"
-    ],
-    "SponsorSessionPrimaryTopic": [
-     "Artificial Intelligence"
-    ],
-    "AreaofInterest": [
-     "Generative AI",
-     "Responsible AI",
-     "Agentic AI"
-    ],
-    "Role": [
-     "Business Executive",
-     "DevOps Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Bedrock",
-     "Kiro"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "Walkuponlysession": [
-     "Walk up only"
-    ],
-    "SessionAppendices": [
-     "Sponsored"
-    ]
-   },
-   "speakers": [],
-   "times": [
-    {
-     "sessionTimeID": "1790025489763001Crb9",
-     "date": "2026-11-30",
-     "startTime": "13:30",
-     "endTime": "14:30",
-     "utcStartTime": "2026/11/30 21:30:00",
-     "utcEndTime": "2026/11/30 22:30:00",
-     "length": 60,
-     "room": "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Blue Theater",
-     "roomId": "1789591920403001bO1o",
-     "capacity": "116",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442245858001cOiY",
    "code": "IND389",
    "title": "Physical AI for MedTech: From Intelligent Devices to Business Impact",
@@ -131137,7 +131137,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T04:34:27Z",
+   "modified": "2026-10-17T17:33:18Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -132255,7 +132255,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T03:31:27Z",
+   "modified": "2026-10-17T17:00:37Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -133278,7 +133278,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-16T21:41:53Z",
+   "modified": "2026-10-17T16:15:38Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -134121,87 +134121,6 @@
    ]
   },
   {
-   "sessionID": "1780442285971001cRuS",
-   "code": "STG339-R",
-   "title": "Protect, recover, validate: Data resiliency for AWS storage",
-   "abstract": "Data protection strategies today must span workloads and prove recovery works before an incident demands it. In this workshop, you'll implement recovery and data protection strategies for Amazon S3, Amazon EFS, and Amazon EBS with AWS Backup. Using a financial services application architecture, you'll configure protection mechanisms for ransomware and insider threats and execute step-by-step recovery procedures against simulated cyber threats. Recover across multiple services, validate restored data integrity, and walk away with patterns to strengthen your own recovery capabilities. Participants must bring a laptop for this session.",
-   "type": "Workshop",
-   "length": 120,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-16T23:00:26Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Workshop"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Security & Identity",
-     "Storage"
-    ],
-    "AreaofInterest": [
-     "Data Protection",
-     "Disaster Response & Recovery",
-     "Resilience"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "IT Professional / Technical Manager",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "AWS Backup"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Rucha Kiwlekar",
-     "title": "Technical Account Manager",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Allyn Henderson",
-     "title": "Storage SA",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025485508001CqTU",
-     "date": "2026-11-30",
-     "startTime": "12:30",
-     "endTime": "14:30",
-     "utcStartTime": "2026/11/30 20:30:00",
-     "utcEndTime": "2026/11/30 22:30:00",
-     "length": 120,
-     "room": "MGM Grand | Level 1 | Grand 124",
-     "roomId": "1789591920329003bjkj",
-     "capacity": "112",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358255277001iEq1",
    "code": "STG339-R1",
    "title": "Protect, recover, validate: Data resiliency for AWS storage",
@@ -134283,6 +134202,87 @@
    ]
   },
   {
+   "sessionID": "1780442285971001cRuS",
+   "code": "STG339-R",
+   "title": "Protect, recover, validate: Data resiliency for AWS storage",
+   "abstract": "Data protection strategies today must span workloads and prove recovery works before an incident demands it. In this workshop, you'll implement recovery and data protection strategies for Amazon S3, Amazon EFS, and Amazon EBS with AWS Backup. Using a financial services application architecture, you'll configure protection mechanisms for ransomware and insider threats and execute step-by-step recovery procedures against simulated cyber threats. Recover across multiple services, validate restored data integrity, and walk away with patterns to strengthen your own recovery capabilities. Participants must bring a laptop for this session.",
+   "type": "Workshop",
+   "length": 120,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-17T17:29:26Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Workshop"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Security & Identity",
+     "Storage"
+    ],
+    "AreaofInterest": [
+     "Data Protection",
+     "Disaster Response & Recovery",
+     "Resilience"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "IT Professional / Technical Manager",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "AWS Backup"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Rucha Kiwlekar",
+     "title": "Technical Account Manager",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Allyn Henderson",
+     "title": "Storage SA",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025485508001CqTU",
+     "date": "2026-11-30",
+     "startTime": "12:30",
+     "endTime": "14:30",
+     "utcStartTime": "2026/11/30 20:30:00",
+     "utcEndTime": "2026/11/30 22:30:00",
+     "length": 120,
+     "room": "MGM Grand | Level 1 | Grand 124",
+     "roomId": "1789591920329003bjkj",
+     "capacity": "112",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
    "sessionID": "1780442242419001cHwV",
    "code": "SEC3301",
    "title": "Protect workloads with AWS Certificate Manager",
@@ -134291,7 +134291,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T08:56:18Z",
+   "modified": "2026-10-17T17:35:13Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -135067,7 +135067,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-16T14:13:05Z",
+   "modified": "2026-10-17T14:24:40Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -136448,7 +136448,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T04:08:18Z",
+   "modified": "2026-10-17T18:24:21Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -138931,7 +138931,7 @@
    "length": 240,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-16T23:53:27Z",
+   "modified": "2026-10-17T16:38:30Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -139003,7 +139003,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T02:20:57Z",
+   "modified": "2026-10-17T17:02:02Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -139319,7 +139319,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T04:41:59Z",
+   "modified": "2026-10-17T17:36:09Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -139678,82 +139678,6 @@
    ]
   },
   {
-   "sessionID": "1790358223503001iicM",
-   "code": "OPN302-R1",
-   "title": "Rethinking the AWS SDK for Python: Async, streaming, and more",
-   "abstract": "If you've ever wrapped boto3 in asyncio, juggled thread pools for concurrent AWS calls, or wished for proper streaming support, this session is for you. With the new AWS SDK for Python, async is native, concurrent calls no longer require thread-pool workarounds, and bidirectional streaming enables use cases like live transcription and speech-to-speech that go beyond what's available in boto3 today. Follow along as we put those capabilities to work with clean concurrent calls, Amazon Bedrock and Amazon Transcribe streaming, and a practical path to migrating your own code to the new SDK.",
-   "type": "Code talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-17T09:25:18Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Code talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Artificial Intelligence",
-     "Developer Tools"
-    ],
-    "AreaofInterest": [
-     "Agentic AI",
-     "Customer Enablement"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "Solution / Systems Architect",
-     "Tech Explorer"
-    ],
-    "Venue": [
-     "Wynn/Encore"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Jonathan Gaytan",
-     "title": "Software Engineer",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Alessandra Romero",
-     "title": "Software Development Engineer",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360391098001A1Je",
-     "date": "2026-12-01",
-     "startTime": "15:00",
-     "endTime": "16:00",
-     "utcStartTime": "2026/12/01 23:00:00",
-     "utcEndTime": "2026/12/02 00:00:00",
-     "length": 60,
-     "room": "Wynn/Encore | Convention Promenade | Margaux 1",
-     "roomId": "1789591921003001bQQi",
-     "capacity": "84",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442248328001cjnN",
    "code": "OPN302-R",
    "title": "Rethinking the AWS SDK for Python: Async, streaming, and more",
@@ -139823,6 +139747,82 @@
      "room": "Caesars Forum | Level 1 | Forum 120 | Content Hub | Code Talk",
      "roomId": "1789591919752004bpPI",
      "capacity": "120",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358223503001iicM",
+   "code": "OPN302-R1",
+   "title": "Rethinking the AWS SDK for Python: Async, streaming, and more",
+   "abstract": "If you've ever wrapped boto3 in asyncio, juggled thread pools for concurrent AWS calls, or wished for proper streaming support, this session is for you. With the new AWS SDK for Python, async is native, concurrent calls no longer require thread-pool workarounds, and bidirectional streaming enables use cases like live transcription and speech-to-speech that go beyond what's available in boto3 today. Follow along as we put those capabilities to work with clean concurrent calls, Amazon Bedrock and Amazon Transcribe streaming, and a practical path to migrating your own code to the new SDK.",
+   "type": "Code talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-17T17:20:23Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Code talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Artificial Intelligence",
+     "Developer Tools"
+    ],
+    "AreaofInterest": [
+     "Agentic AI",
+     "Customer Enablement"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "Solution / Systems Architect",
+     "Tech Explorer"
+    ],
+    "Venue": [
+     "Wynn/Encore"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Jonathan Gaytan",
+     "title": "Software Engineer",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Alessandra Romero",
+     "title": "Software Development Engineer",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360391098001A1Je",
+     "date": "2026-12-01",
+     "startTime": "15:00",
+     "endTime": "16:00",
+     "utcStartTime": "2026/12/01 23:00:00",
+     "utcEndTime": "2026/12/02 00:00:00",
+     "length": 60,
+     "room": "Wynn/Encore | Convention Promenade | Margaux 1",
+     "roomId": "1789591921003001bQQi",
+     "capacity": "84",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -140074,7 +140074,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T06:17:57Z",
+   "modified": "2026-10-17T12:59:52Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -141903,7 +141903,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T07:06:16Z",
+   "modified": "2026-10-17T14:00:34Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -142677,7 +142677,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T00:57:01Z",
+   "modified": "2026-10-17T14:54:40Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -144742,7 +144742,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-16T18:47:25Z",
+   "modified": "2026-10-17T16:11:56Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -145096,7 +145096,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T06:27:23Z",
+   "modified": "2026-10-17T17:15:26Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -145713,7 +145713,7 @@
    "length": 90,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T03:32:47Z",
+   "modified": "2026-10-17T17:25:55Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -146457,7 +146457,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T01:29:43Z",
+   "modified": "2026-10-17T18:37:51Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -148270,7 +148270,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-16T15:28:28Z",
+   "modified": "2026-10-17T18:20:54Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -148302,15 +148302,15 @@
    },
    "speakers": [
     {
-     "name": "Weitong Ruan",
-     "title": "Senior Applied Science Manager",
-     "company": "Amazon",
-     "role": "External Speaker"
-    },
-    {
      "name": "Fan Yang",
      "title": "Senior Applied Scientist",
      "company": "Amazon.com Inc",
+     "role": "External Speaker"
+    },
+    {
+     "name": "Weitong Ruan",
+     "title": "Senior Applied Science Manager",
+     "company": "Amazon",
      "role": "External Speaker"
     }
    ],
@@ -149036,7 +149036,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-16T22:01:38Z",
+   "modified": "2026-10-17T14:19:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -149349,7 +149349,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T04:31:00Z",
+   "modified": "2026-10-17T18:30:32Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -151420,76 +151420,6 @@
    ]
   },
   {
-   "sessionID": "1790358256107001ip9e",
-   "code": "ANT411-R1",
-   "title": "Simplify identity and security management in an open data architecture on AWS",
-   "abstract": "As organizations unify data across Amazon S3 data lakes, S3 Tables, and Amazon Redshift using the open data lakehouse architecture, securing access at scale becomes critical. In this chalk talk, we dive deep into simplifying trusted identity propagation so end-user identities — not shared service roles — reach the data plane, designing multi-dimensional tag-based access control taxonomies that scale automatically through inheritance, enforcing column-level and cell-level security across federated catalogs, and auditing every access event to individual users",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-17T00:45:17Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "400 – Expert"
-    ],
-    "Features": [
-     "Customer story",
-     "Discussion"
-    ],
-    "Topic": [
-     "Analytics"
-    ],
-    "Services": [
-     "Amazon SageMaker"
-    ],
-    "Venue": [
-     "Wynn/Encore"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Aarthi Srinivasan",
-     "title": "Senior Specialist Solutions Architect Big Data",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Amir Bar-Or",
-     "title": "Principal Engineer",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360395038001AjcN",
-     "date": "2026-12-02",
-     "startTime": "13:00",
-     "endTime": "14:00",
-     "utcStartTime": "2026/12/02 21:00:00",
-     "utcEndTime": "2026/12/02 22:00:00",
-     "length": 60,
-     "room": "Wynn/Encore | Level 1 | Chopin 2",
-     "roomId": "1789591921094001bT6B",
-     "capacity": "88",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442232227001c5pU",
    "code": "ANT411-R",
    "title": "Simplify identity and security management in an open data architecture on AWS",
@@ -151551,6 +151481,76 @@
      "length": 60,
      "room": "Caesars Forum | Level 1 | Forum 114",
      "roomId": "1789591919703003bevY",
+     "capacity": "88",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358256107001ip9e",
+   "code": "ANT411-R1",
+   "title": "Simplify identity and security management in an open data architecture on AWS",
+   "abstract": "As organizations unify data across Amazon S3 data lakes, S3 Tables, and Amazon Redshift using the open data lakehouse architecture, securing access at scale becomes critical. In this chalk talk, we dive deep into simplifying trusted identity propagation so end-user identities — not shared service roles — reach the data plane, designing multi-dimensional tag-based access control taxonomies that scale automatically through inheritance, enforcing column-level and cell-level security across federated catalogs, and auditing every access event to individual users",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-17T16:04:39Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "400 – Expert"
+    ],
+    "Features": [
+     "Customer story",
+     "Discussion"
+    ],
+    "Topic": [
+     "Analytics"
+    ],
+    "Services": [
+     "Amazon SageMaker"
+    ],
+    "Venue": [
+     "Wynn/Encore"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Aarthi Srinivasan",
+     "title": "Senior Specialist Solutions Architect Big Data",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Amir Bar-Or",
+     "title": "Principal Engineer",
+     "company": "Amazon",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360395038001AjcN",
+     "date": "2026-12-02",
+     "startTime": "13:00",
+     "endTime": "14:00",
+     "utcStartTime": "2026/12/02 21:00:00",
+     "utcEndTime": "2026/12/02 22:00:00",
+     "length": 60,
+     "room": "Wynn/Encore | Level 1 | Chopin 2",
+     "roomId": "1789591921094001bT6B",
      "capacity": "88",
      "inPersonTime": true,
      "virtualTime": false,
@@ -151848,7 +151848,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-16T16:24:21Z",
+   "modified": "2026-10-17T17:35:14Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -154135,66 +154135,6 @@
    ]
   },
   {
-   "sessionID": "1780442250166001cxTo",
-   "code": "SEC371-R",
-   "title": "Stop troubleshooting your AWS network from memory and stale diagrams",
-   "abstract": "Your network grew faster than your documentation. Routes were added in a sprint, VPC attachments stacked during migrations, and somewhere along the way, your team lost the full picture. When something breaks, you're troubleshooting from memory and stale diagrams. In this session, learn how to turn that around in hours instead of months. See how to point AI-assisted tooling at your live environment to map every resource, trace every traffic path, and surface misconfigurations before they become incidents. Then take it further: modernize what you find with current AWS network security capabilities. Walk out with a repeatable workflow you can run against your own network this week.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-16T16:49:04Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Security & Identity"
-    ],
-    "Venue": [
-     "Wynn/Encore"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Neil Yajnik",
-     "title": "Sr. Product Manager",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025537809001CpYB",
-     "date": "2026-12-03",
-     "startTime": "10:30",
-     "endTime": "11:30",
-     "utcStartTime": "2026/12/03 18:30:00",
-     "utcEndTime": "2026/12/03 19:30:00",
-     "length": 60,
-     "room": "Wynn/Encore | Level 1 | Encore Ballroom 3",
-     "roomId": "1789591921174001bpeI",
-     "capacity": "70",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358238147001iFjU",
    "code": "SEC371-R1",
    "title": "Stop troubleshooting your AWS network from memory and stale diagrams",
@@ -154247,6 +154187,66 @@
      "length": 60,
      "room": "Caesars Palace | Promenade South | Octavius 14",
      "roomId": "1789591920078001bjro",
+     "capacity": "70",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442250166001cxTo",
+   "code": "SEC371-R",
+   "title": "Stop troubleshooting your AWS network from memory and stale diagrams",
+   "abstract": "Your network grew faster than your documentation. Routes were added in a sprint, VPC attachments stacked during migrations, and somewhere along the way, your team lost the full picture. When something breaks, you're troubleshooting from memory and stale diagrams. In this session, learn how to turn that around in hours instead of months. See how to point AI-assisted tooling at your live environment to map every resource, trace every traffic path, and surface misconfigurations before they become incidents. Then take it further: modernize what you find with current AWS network security capabilities. Walk out with a repeatable workflow you can run against your own network this week.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-17T14:21:19Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Security & Identity"
+    ],
+    "Venue": [
+     "Wynn/Encore"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Neil Yajnik",
+     "title": "Sr. Product Manager",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025537809001CpYB",
+     "date": "2026-12-03",
+     "startTime": "10:30",
+     "endTime": "11:30",
+     "utcStartTime": "2026/12/03 18:30:00",
+     "utcEndTime": "2026/12/03 19:30:00",
+     "length": 60,
+     "room": "Wynn/Encore | Level 1 | Encore Ballroom 3",
+     "roomId": "1789591921174001bpeI",
      "capacity": "70",
      "inPersonTime": true,
      "virtualTime": false,
@@ -154722,7 +154722,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T02:20:57Z",
+   "modified": "2026-10-17T18:12:41Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -156193,7 +156193,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T08:55:18Z",
+   "modified": "2026-10-17T18:43:22Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -162278,7 +162278,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T08:52:31Z",
+   "modified": "2026-10-17T17:36:54Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -163584,7 +163584,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T12:27:46Z",
+   "modified": "2026-10-17T17:29:26Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -165350,7 +165350,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T04:49:07Z",
+   "modified": "2026-10-17T14:00:34Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -167050,7 +167050,7 @@
    "length": 180,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T07:47:54Z",
+   "modified": "2026-10-17T15:04:55Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -168594,7 +168594,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-16T20:34:11Z",
+   "modified": "2026-10-17T18:44:22Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -171958,7 +171958,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T04:05:43Z",
+   "modified": "2026-10-17T18:24:21Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [

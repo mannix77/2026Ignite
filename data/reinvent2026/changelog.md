@@ -3,6 +3,13 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-10-17T18:45:54Z · https://catalog.awsevents.com/api/sessions
+
+Added 0 · removed 0 · changed 1
+
+**Changed**
+- `AIM2209-S` How Philips accelerated sales quoting with Agentic AI (sponsored by EPAM) — title: Philips' Agentic AI Leap: 45 Days to Minutes on Sales Quo… → How Philips accelerated sales quoting with Agentic AI (sp…; desc
+
 ## 2026-10-17T06:55:17Z · https://catalog.awsevents.com/api/sessions
 
 Added 0 · removed 0 · changed 1
