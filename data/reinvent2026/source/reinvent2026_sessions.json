@@ -1,7 +1,7 @@
 {
  "source": "https://catalog.awsevents.com/api/sessions",
  "event": "reinvent2026",
- "fetchedAt": "2026-10-18T01:13:04Z",
+ "fetchedAt": "2026-10-18T06:55:26Z",
  "count": 2245,
  "sessions": [
   {
@@ -32213,7 +32213,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T17:48:53Z",
+   "modified": "2026-10-18T01:53:10Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -44262,7 +44262,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-15T22:36:43Z",
+   "modified": "2026-10-16T19:47:37Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -44293,14 +44293,14 @@
    },
    "speakers": [
     {
-     "name": "Vinodh Kannan Sadayamuthu",
-     "title": "Senior Solution Architect",
+     "name": "Ashley Millette",
+     "title": "Streaming Specialist Solution Architect",
      "company": "AWS",
      "role": "Internal Speaker"
     },
     {
-     "name": "Ashley Millette",
-     "title": "Streaming Specialist Solution Architect",
+     "name": "Vinodh Kannan Sadayamuthu",
+     "title": "Senior Solution Architect",
      "company": "AWS",
      "role": "Internal Speaker"
     },
@@ -48758,105 +48758,6 @@
    ]
   },
   {
-   "sessionID": "1790358234889001iGyQ",
-   "code": "SVS203-R1",
-   "title": "Building interactive web applications on AWS Serverless",
-   "abstract": "Web applications need fast responses, server-side rendering, and real-time updates, but managing origin servers, CDN configurations, and scaling infrastructure pulls you away from building features. In this builders' session, deploy a full-stack web application entirely on AWS Serverless. Working in small groups with AWS experts, you'll configure routing and static asset delivery, implement server-side rendering with consistent low latency, and add real-time interactivity. Walk away with a working application and deployment patterns for production web workloads. Bring your laptop.",
-   "type": "Builders' session",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-15T22:01:58Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Builders' session"
-    ],
-    "Level": [
-     "200 – Intermediate"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Application Integration",
-     "Serverless"
-    ],
-    "AreaofInterest": [
-     "Front-End Web & Mobile",
-     "Lambda-Based Applications"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "IT Professional / Technical Manager",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon CloudFront",
-     "AWS Lambda"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Erica Liu",
-     "title": "Sr Modernisation & Serverless Specialist",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Fabrianne Effendi",
-     "title": "Specialist SA, Modernization & Serverless",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Muhammad Khairul Habib",
-     "title": "Senior Solution Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Jan Michael Go Tan",
-     "title": "Principal Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Arthi Jaganathan",
-     "title": "Head Applications ProServe APJC",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360385715001AH0o",
-     "date": "2026-12-01",
-     "startTime": "14:30",
-     "endTime": "15:30",
-     "utcStartTime": "2026/12/01 22:30:00",
-     "utcEndTime": "2026/12/01 23:30:00",
-     "length": 60,
-     "room": "MGM Grand | Level 3 | Room 301",
-     "roomId": "1789591920540001bhYC",
-     "capacity": "50",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780441493015001GTe9",
    "code": "SVS203-R",
    "title": "Building interactive web applications on AWS Serverless",
@@ -48865,7 +48766,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-15T22:01:58Z",
+   "modified": "2026-10-16T19:47:37Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -48907,8 +48808,26 @@
    },
    "speakers": [
     {
+     "name": "Fabrianne Effendi",
+     "title": "Specialist SA, Modernization & Serverless",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Muhammad Khairul Habib",
+     "title": "Senior Solution Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
      "name": "Arthi Jaganathan",
      "title": "Head Applications ProServe APJC",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Jan Michael Go Tan",
+     "title": "Principal Solutions Architect",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
     },
@@ -48917,7 +48836,76 @@
      "title": "Sr Modernisation & Serverless Specialist",
      "company": "AWS",
      "role": "Internal Speaker"
-    },
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025493907001CFe3",
+     "date": "2026-11-30",
+     "startTime": "15:00",
+     "endTime": "16:00",
+     "utcStartTime": "2026/11/30 23:00:00",
+     "utcEndTime": "2026/12/01 00:00:00",
+     "length": 60,
+     "room": "Caesars Forum | Level 1 | Forum 120 | Content Hub | Builders' Session 1",
+     "roomId": "1789591919735004bsN5",
+     "capacity": "50",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358234889001iGyQ",
+   "code": "SVS203-R1",
+   "title": "Building interactive web applications on AWS Serverless",
+   "abstract": "Web applications need fast responses, server-side rendering, and real-time updates, but managing origin servers, CDN configurations, and scaling infrastructure pulls you away from building features. In this builders' session, deploy a full-stack web application entirely on AWS Serverless. Working in small groups with AWS experts, you'll configure routing and static asset delivery, implement server-side rendering with consistent low latency, and add real-time interactivity. Walk away with a working application and deployment patterns for production web workloads. Bring your laptop.",
+   "type": "Builders' session",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-16T19:47:37Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Builders' session"
+    ],
+    "Level": [
+     "200 – Intermediate"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Application Integration",
+     "Serverless"
+    ],
+    "AreaofInterest": [
+     "Front-End Web & Mobile",
+     "Lambda-Based Applications"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "IT Professional / Technical Manager",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon CloudFront",
+     "AWS Lambda"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ]
+   },
+   "speakers": [
     {
      "name": "Fabrianne Effendi",
      "title": "Specialist SA, Modernization & Serverless",
@@ -48935,19 +48923,31 @@
      "title": "Principal Solutions Architect",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
+    },
+    {
+     "name": "Erica Liu",
+     "title": "Sr Modernisation & Serverless Specialist",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Arthi Jaganathan",
+     "title": "Head Applications ProServe APJC",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
     }
    ],
    "times": [
     {
-     "sessionTimeID": "1790025493907001CFe3",
-     "date": "2026-11-30",
-     "startTime": "15:00",
-     "endTime": "16:00",
-     "utcStartTime": "2026/11/30 23:00:00",
-     "utcEndTime": "2026/12/01 00:00:00",
+     "sessionTimeID": "1790360385715001AH0o",
+     "date": "2026-12-01",
+     "startTime": "14:30",
+     "endTime": "15:30",
+     "utcStartTime": "2026/12/01 22:30:00",
+     "utcEndTime": "2026/12/01 23:30:00",
      "length": 60,
-     "room": "Caesars Forum | Level 1 | Forum 120 | Content Hub | Builders' Session 1",
-     "roomId": "1789591919735004bsN5",
+     "room": "MGM Grand | Level 3 | Room 301",
+     "roomId": "1789591920540001bhYC",
      "capacity": "50",
      "inPersonTime": true,
      "virtualTime": false,
@@ -59287,7 +59287,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-15T22:01:58Z",
+   "modified": "2026-10-18T04:23:06Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -69559,7 +69559,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-16T16:51:41Z",
+   "modified": "2026-10-16T19:47:37Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -74350,7 +74350,7 @@
    "length": 180,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T07:09:37Z",
+   "modified": "2026-10-18T01:56:52Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -79258,7 +79258,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-15T22:01:58Z",
+   "modified": "2026-10-16T19:47:37Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -79298,16 +79298,16 @@
    },
    "speakers": [
     {
-     "name": "Zhuobin Huang",
-     "title": "Sr. Solutions Architect Manager",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Dan He",
      "title": "效能研发部技术总监",
      "company": "NetEase, Inc.",
      "role": "External Speaker"
+    },
+    {
+     "name": "Zhuobin Huang",
+     "title": "Sr. Solutions Architect Manager",
+     "company": "AWS",
+     "role": "Internal Speaker"
     }
    ],
    "times": [
@@ -80203,87 +80203,6 @@
    ]
   },
   {
-   "sessionID": "1780442234059001cB58",
-   "code": "AIM316-R",
-   "title": "Evaluating AI Agents for your Nonprofit: From Vibes to Metrics on AWS",
-   "abstract": "You shipped an agent. How do you know it works? For organizations where AI decisions affect people's lives, rigorous evaluation isn't optional — it's ethical. This chalk talk introduces a structured evaluation framework combining Amazon Bedrock model evaluation, AgentCore observability, and CloudWatch metrics. We cover building eval datasets, measuring tool-use accuracy, detecting hallucination in agentic chains, benchmarking latency and cost, and setting up automated regression testing. Leave with a repeatable eval pipeline you can plug into CI/CD — turning agent quality from subjective to measurable. ",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-15T22:01:58Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Artificial Intelligence",
-     "Serverless",
-     "Containers"
-    ],
-    "AreaofInterest": [
-     "Responsible AI",
-     "Tech for Impact",
-     "Agentic AI"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "IT Professional / Technical Manager",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Bedrock"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Omar Tabbakha",
-     "title": "Solution Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Krutika Khinvasara",
-     "title": "Sr. Solutions Architect",
-     "company": "Amazon Web Services Inc.",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025536612001Cych",
-     "date": "2026-12-03",
-     "startTime": "10:30",
-     "endTime": "11:30",
-     "utcStartTime": "2026/12/03 18:30:00",
-     "utcEndTime": "2026/12/03 19:30:00",
-     "length": 60,
-     "room": "MGM Grand | Level 1 | Boulevard 162",
-     "roomId": "1789591920194001baD5",
-     "capacity": "98",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358257112001iNjk",
    "code": "AIM316-R1",
    "title": "Evaluating AI Agents for your Nonprofit: From Vibes to Metrics on AWS",
@@ -80358,6 +80277,87 @@
      "room": "Wynn/Encore | Level 1 | Debussy 1",
      "roomId": "1789591921139004bOia",
      "capacity": "78",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442234059001cB58",
+   "code": "AIM316-R",
+   "title": "Evaluating AI Agents for your Nonprofit: From Vibes to Metrics on AWS",
+   "abstract": "You shipped an agent. How do you know it works? For organizations where AI decisions affect people's lives, rigorous evaluation isn't optional — it's ethical. This chalk talk introduces a structured evaluation framework combining Amazon Bedrock model evaluation, AgentCore observability, and CloudWatch metrics. We cover building eval datasets, measuring tool-use accuracy, detecting hallucination in agentic chains, benchmarking latency and cost, and setting up automated regression testing. Leave with a repeatable eval pipeline you can plug into CI/CD — turning agent quality from subjective to measurable. ",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-18T01:53:10Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Artificial Intelligence",
+     "Serverless",
+     "Containers"
+    ],
+    "AreaofInterest": [
+     "Responsible AI",
+     "Tech for Impact",
+     "Agentic AI"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "IT Professional / Technical Manager",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Bedrock"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Krutika Khinvasara",
+     "title": "Sr. Solutions Architect",
+     "company": "Amazon Web Services Inc.",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Omar Tabbakha",
+     "title": "Solution Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025536612001Cych",
+     "date": "2026-12-03",
+     "startTime": "10:30",
+     "endTime": "11:30",
+     "utcStartTime": "2026/12/03 18:30:00",
+     "utcEndTime": "2026/12/03 19:30:00",
+     "length": 60,
+     "room": "MGM Grand | Level 1 | Boulevard 162",
+     "roomId": "1789591920194001baD5",
+     "capacity": "98",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -90915,87 +90915,6 @@
    ]
   },
   {
-   "sessionID": "1780442238674001c8MS",
-   "code": "CMP324-R",
-   "title": "GenAI chip selection: From training to inference",
-   "abstract": "Every GenAI workload hits the same question: GPU, Trainium, Graviton, or Inferentia—and when do you use each? In this chalk talk, we walk through a practical decision tree covering model training, real-time inference, and agentic AI workloads. We then go deep on inference cost optimization: right-sizing GPU instances, offloading pre/post-processing to Graviton, using Spot for batch inference, prompt caching, and moving production inference to Inferentia2. Expect opinionated guidance, real customer math from teams that cut inference costs without sacrificing latency, and a whiteboard framework you can take back to your team on Monday.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-16T23:54:31Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Artificial Intelligence",
-     "Compute"
-    ],
-    "AreaofInterest": [
-     "Generative AI",
-     "Cost Optimization"
-    ],
-    "Role": [
-     "Data Scientist",
-     "Developer / Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Elastic Compute Cloud (Amazon EC2)",
-     "AWS Trainium",
-     "Amazon EC2 - Graviton"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Kumar Shubham",
-     "title": "TAM (ENT)",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Barak Nissim",
-     "title": "Sr. AI/ML Specialist",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025545373001CHbC",
-     "date": "2026-12-03",
-     "startTime": "13:30",
-     "endTime": "14:30",
-     "utcStartTime": "2026/12/03 21:30:00",
-     "utcEndTime": "2026/12/03 22:30:00",
-     "length": 60,
-     "room": "MGM Grand | Level 1 | Boulevard 162",
-     "roomId": "1789591920194001baD5",
-     "capacity": "98",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358223348001ikwx",
    "code": "CMP324-R1",
    "title": "GenAI chip selection: From training to inference",
@@ -91071,6 +90990,87 @@
      "room": "MGM Grand | Level 1 | Boulevard 163",
      "roomId": "1789591920202001b2p2",
      "capacity": "94",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442238674001c8MS",
+   "code": "CMP324-R",
+   "title": "GenAI chip selection: From training to inference",
+   "abstract": "Every GenAI workload hits the same question: GPU, Trainium, Graviton, or Inferentia—and when do you use each? In this chalk talk, we walk through a practical decision tree covering model training, real-time inference, and agentic AI workloads. We then go deep on inference cost optimization: right-sizing GPU instances, offloading pre/post-processing to Graviton, using Spot for batch inference, prompt caching, and moving production inference to Inferentia2. Expect opinionated guidance, real customer math from teams that cut inference costs without sacrificing latency, and a whiteboard framework you can take back to your team on Monday.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-16T23:54:31Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Artificial Intelligence",
+     "Compute"
+    ],
+    "AreaofInterest": [
+     "Generative AI",
+     "Cost Optimization"
+    ],
+    "Role": [
+     "Data Scientist",
+     "Developer / Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Elastic Compute Cloud (Amazon EC2)",
+     "AWS Trainium",
+     "Amazon EC2 - Graviton"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Kumar Shubham",
+     "title": "TAM (ENT)",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Barak Nissim",
+     "title": "Sr. AI/ML Specialist",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025545373001CHbC",
+     "date": "2026-12-03",
+     "startTime": "13:30",
+     "endTime": "14:30",
+     "utcStartTime": "2026/12/03 21:30:00",
+     "utcEndTime": "2026/12/03 22:30:00",
+     "length": 60,
+     "room": "MGM Grand | Level 1 | Boulevard 162",
+     "roomId": "1789591920194001baD5",
+     "capacity": "98",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -93829,7 +93829,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-15T22:01:58Z",
+   "modified": "2026-10-18T05:30:24Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -93867,14 +93867,14 @@
    },
    "speakers": [
     {
-     "name": "Arko Dutta",
-     "title": "Solution Architect",
+     "name": "Prema iyer",
+     "title": "Sr. Technical Account Manager",
      "company": "AWS",
      "role": "Internal Speaker"
     },
     {
-     "name": "Prema iyer",
-     "title": "Sr. Technical Account Manager",
+     "name": "Arko Dutta",
+     "title": "Solutions Architect",
      "company": "AWS",
      "role": "Internal Speaker"
     }
@@ -93906,7 +93906,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-15T22:01:58Z",
+   "modified": "2026-10-18T05:30:24Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -93944,14 +93944,14 @@
    },
    "speakers": [
     {
-     "name": "Arko Dutta",
-     "title": "Solution Architect",
+     "name": "Prema iyer",
+     "title": "Sr. Technical Account Manager",
      "company": "AWS",
      "role": "Internal Speaker"
     },
     {
-     "name": "Prema iyer",
-     "title": "Sr. Technical Account Manager",
+     "name": "Arko Dutta",
+     "title": "Solutions Architect",
      "company": "AWS",
      "role": "Internal Speaker"
     }
@@ -94784,7 +94784,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-15T22:36:43Z",
+   "modified": "2026-10-16T19:47:37Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -94811,14 +94811,14 @@
    },
    "speakers": [
     {
-     "name": "Hari Thatavarthy",
-     "title": "Sr Solutions Architect",
+     "name": "Sandeep Adwankar",
+     "title": "Sr. Product Manager",
      "company": "Amazon",
      "role": "Internal Speaker"
     },
     {
-     "name": "Sandeep Adwankar",
-     "title": "Sr. Product Manager",
+     "name": "Hari Thatavarthy",
+     "title": "Sr Solutions Architect",
      "company": "Amazon",
      "role": "Internal Speaker"
     }
@@ -103401,7 +103401,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T22:56:26Z",
+   "modified": "2026-10-18T01:56:52Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -111447,7 +111447,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-16T18:59:58Z",
+   "modified": "2026-10-16T19:47:37Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -127999,86 +127999,6 @@
    ]
   },
   {
-   "sessionID": "1790358254340001iDRX",
-   "code": "CMP325-R1",
-   "title": "Optimize your Amazon EC2 instances: Profile, diagnose, decide",
-   "abstract": "Which EC2 instance performs best? It depends on the workload. In this hands-on workshop, learn a repeatable methodology: observe with APerf, find breaking points, diagnose pipeline bottlenecks, and decide by price-performance across AWS Graviton-, Intel-, and AMD-based instances. Then fix code guided by profiling data.",
-   "type": "Workshop",
-   "length": 120,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-17T07:46:44Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Workshop"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Compute",
-     "Migration & Modernization"
-    ],
-    "AreaofInterest": [
-     "Cost Optimization",
-     "Innovation & Transformation"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "DevOps Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Elastic Compute Cloud (Amazon EC2)"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Toby Buckley",
-     "title": "Sr Specialist SA, EC2",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Julio Arnedo",
-     "title": "Startups Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360384799001AQVr",
-     "date": "2026-12-03",
-     "startTime": "15:30",
-     "endTime": "17:30",
-     "utcStartTime": "2026/12/03 23:30:00",
-     "utcEndTime": "2026/12/04 01:30:00",
-     "length": 120,
-     "room": "MGM Grand | Level 3 | Premier 313",
-     "roomId": "1789591920487004bQOS",
-     "capacity": "140",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442277389001c8wm",
    "code": "CMP325-R",
    "title": "Optimize your Amazon EC2 instances: Profile, diagnose, decide",
@@ -128152,6 +128072,86 @@
      "room": "MGM Grand | Level 3 | Premier 310",
      "roomId": "1789591920472001bMHw",
      "capacity": "84",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358254340001iDRX",
+   "code": "CMP325-R1",
+   "title": "Optimize your Amazon EC2 instances: Profile, diagnose, decide",
+   "abstract": "Which EC2 instance performs best? It depends on the workload. In this hands-on workshop, learn a repeatable methodology: observe with APerf, find breaking points, diagnose pipeline bottlenecks, and decide by price-performance across AWS Graviton-, Intel-, and AMD-based instances. Then fix code guided by profiling data.",
+   "type": "Workshop",
+   "length": 120,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-18T04:12:38Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Workshop"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Compute",
+     "Migration & Modernization"
+    ],
+    "AreaofInterest": [
+     "Cost Optimization",
+     "Innovation & Transformation"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "DevOps Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Elastic Compute Cloud (Amazon EC2)"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Toby Buckley",
+     "title": "Sr Specialist SA, EC2",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Julio Arnedo",
+     "title": "Startups Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360384799001AQVr",
+     "date": "2026-12-03",
+     "startTime": "15:30",
+     "endTime": "17:30",
+     "utcStartTime": "2026/12/03 23:30:00",
+     "utcEndTime": "2026/12/04 01:30:00",
+     "length": 120,
+     "room": "MGM Grand | Level 3 | Premier 313",
+     "roomId": "1789591920487004bQOS",
+     "capacity": "140",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -133206,7 +133206,7 @@
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-15T22:01:58Z",
+   "modified": "2026-10-16T19:47:37Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -136383,7 +136383,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T11:35:02Z",
+   "modified": "2026-10-18T05:29:49Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -138931,7 +138931,7 @@
    "length": 240,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T16:38:30Z",
+   "modified": "2026-10-18T04:17:20Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -148270,7 +148270,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T18:20:54Z",
+   "modified": "2026-10-18T01:48:38Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -154874,7 +154874,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T22:20:27Z",
+   "modified": "2026-10-18T04:40:22Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -163584,7 +163584,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T21:23:43Z",
+   "modified": "2026-10-18T01:48:38Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -167207,7 +167207,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-15T22:01:58Z",
+   "modified": "2026-10-16T19:47:37Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -169469,7 +169469,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-17T22:20:27Z",
+   "modified": "2026-10-18T04:23:06Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -173604,88 +173604,6 @@
    ]
   },
   {
-   "sessionID": "1790358245540001iJxl",
-   "code": "NET202-R1",
-   "title": "Your network, your rules: Global routing policies with AWS Cloud WAN",
-   "abstract": "As global networks scale, they demand deterministic traffic paths, not best-effort routing. In this workshop, gain granular control over traffic flows between Regions, VPCs, and on-premises locations using AWS Cloud WAN routing policies across a multi-Region network. Through hands-on labs, configure route filtering to control reachability, summarize prefixes to reduce routing table complexity, and influence preferred paths with BGP attributes. Leave with practical skills to design scalable, policy-driven connectivity architectures. Bring your laptop.",
-   "type": "Workshop",
-   "length": 120,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-16T19:38:16Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Workshop"
-    ],
-    "Level": [
-     "200 – Intermediate"
-    ],
-    "Features": [
-     "Customer story",
-     "Hands-on"
-    ],
-    "Topic": [
-     "Hybrid Cloud & Multicloud",
-     "Networking & Content Delivery"
-    ],
-    "AreaofInterest": [
-     "Global Infrastructure"
-    ],
-    "Role": [
-     "Advisor / Consultant",
-     "IT Professional / Technical Manager",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Virtual Private Cloud (Amazon VPC)",
-     "AWS Cloud WAN",
-     "AWS Site-to-Site VPN"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Mandar Alankar",
-     "title": "Senior Networking SA",
-     "company": "Amazon Web Services Inc.",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Shubham Singh",
-     "title": "Senior Specialist Solutions Architect - Networking",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360379041001AMd8",
-     "date": "2026-11-30",
-     "startTime": "15:30",
-     "endTime": "17:30",
-     "utcStartTime": "2026/11/30 23:30:00",
-     "utcEndTime": "2026/12/01 01:30:00",
-     "length": 120,
-     "room": "MGM Grand | Level 1 | Grand 118",
-     "roomId": "1789591920298004byOT",
-     "capacity": "84",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442282858001cJvp",
    "code": "NET202-R",
    "title": "Your network, your rules: Global routing policies with AWS Cloud WAN",
@@ -173760,6 +173678,88 @@
      "room": "MGM Grand | Level 1 | Terrace 153",
      "roomId": "1789591920384001bv2d",
      "capacity": "140",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358245540001iJxl",
+   "code": "NET202-R1",
+   "title": "Your network, your rules: Global routing policies with AWS Cloud WAN",
+   "abstract": "As global networks scale, they demand deterministic traffic paths, not best-effort routing. In this workshop, gain granular control over traffic flows between Regions, VPCs, and on-premises locations using AWS Cloud WAN routing policies across a multi-Region network. Through hands-on labs, configure route filtering to control reachability, summarize prefixes to reduce routing table complexity, and influence preferred paths with BGP attributes. Leave with practical skills to design scalable, policy-driven connectivity architectures. Bring your laptop.",
+   "type": "Workshop",
+   "length": 120,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-16T19:47:37Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Workshop"
+    ],
+    "Level": [
+     "200 – Intermediate"
+    ],
+    "Features": [
+     "Customer story",
+     "Hands-on"
+    ],
+    "Topic": [
+     "Hybrid Cloud & Multicloud",
+     "Networking & Content Delivery"
+    ],
+    "AreaofInterest": [
+     "Global Infrastructure"
+    ],
+    "Role": [
+     "Advisor / Consultant",
+     "IT Professional / Technical Manager",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Virtual Private Cloud (Amazon VPC)",
+     "AWS Cloud WAN",
+     "AWS Site-to-Site VPN"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Mandar Alankar",
+     "title": "Senior Networking SA",
+     "company": "Amazon Web Services Inc.",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Shubham Singh",
+     "title": "Senior Specialist Solutions Architect - Networking",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360379041001AMd8",
+     "date": "2026-11-30",
+     "startTime": "15:30",
+     "endTime": "17:30",
+     "utcStartTime": "2026/11/30 23:30:00",
+     "utcEndTime": "2026/12/01 01:30:00",
+     "length": 120,
+     "room": "MGM Grand | Level 1 | Grand 118",
+     "roomId": "1789591920298004byOT",
+     "capacity": "84",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
