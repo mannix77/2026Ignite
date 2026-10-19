@@ -3,6 +3,13 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-10-19T07:11:25Z · https://catalog.awsevents.com/api/sessions
+
+Added 0 · removed 0 · changed 1
+
+**Changed**
+- `STG366-S` From Risk Signal to Recovery: Building Agentic Resilience with MCP — title: Resilience for Data Foundations: The Lessons Iceberg Forc… → From Risk Signal to Recovery: Building Agentic Resilience…; level: 300 → 200; desc
+
 ## 2026-10-19T01:14:34Z · https://catalog.awsevents.com/api/sessions
 
 Added 0 · removed 0 · changed 5
