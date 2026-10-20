@@ -1,0 +1,86 @@
+<!-- summary:39423301029-1 -->
+Added 0 · removed 0 · changed 101
+
+**Changed**
+- `LAB650` Build a Knowledge-Powered Workspace with Copilot in SharePoint​‌ — desc
+- `LAB650` Build a Knowledge-Powered Workspace with Copilot in SharePoint​‌ — desc
+- `LAB650` Build a Knowledge-Powered Workspace with Copilot in SharePoint​‌ — desc
+- `LAB650` Build a Knowledge-Powered Workspace with Copilot in SharePoint​‌ — desc
+- `LAB651` Build AI Agents in Teams: 1P, 3P, and Agentic Workflows Hands-On — desc
+- `LAB651` Build AI Agents in Teams: 1P, 3P, and Agentic Workflows Hands-On — desc
+- `LAB651` Build AI Agents in Teams: 1P, 3P, and Agentic Workflows Hands-On — desc
+- `LAB652` Delegate complex work: Hands-on with Copilot Cowork — desc
+- `LAB652` Delegate complex work: Hands-on with Copilot Cowork — desc
+- `LAB652` Delegate complex work: Hands-on with Copilot Cowork — desc
+- `LAB652` Delegate complex work: Hands-on with Copilot Cowork — desc
+- `LAB654` Connect Business Data to Copilot with Custom Connectors — desc
+- `LAB654` Connect Business Data to Copilot with Custom Connectors — desc
+- `LAB654` Connect Business Data to Copilot with Custom Connectors — desc
+- `LAB654` Connect Business Data to Copilot with Custom Connectors — desc
+- `LAB655` The Next Generation of Teams Administration — desc
+- `LAB655` The Next Generation of Teams Administration — desc
+- `LAB655` The Next Generation of Teams Administration — desc
+- `LAB655` The Next Generation of Teams Administration — desc
+- `LAB660` Configuring, monitoring, and managing AI spend with Agent 365 — desc
+- `LAB660` Configuring, monitoring, and managing AI spend with Agent 365 — desc
+- `LAB660` Configuring, monitoring, and managing AI spend with Agent 365 — desc
+- `LAB660` Configuring, monitoring, and managing AI spend with Agent 365 — desc
+- `LAB661` Hill climbing for agents: From 60% to 90% with Open Source and Foundry — desc
+- `LAB661` Hill climbing for agents: From 60% to 90% with Open Source and Foundry — desc
+- `LAB661` Hill climbing for agents: From 60% to 90% with Open Source and Foundry — desc
+- `LAB661` Hill climbing for agents: From 60% to 90% with Open Source and Foundry — desc
+- `LAB662` Avoiding agent chaos: Design your enterprise governance model — desc
+- `LAB662` Avoiding agent chaos: Design your enterprise governance model — desc
+- `LAB662` Avoiding agent chaos: Design your enterprise governance model — desc
+- `LAB662` Avoiding agent chaos: Design your enterprise governance model — desc
+- `LAB663` Build smarter AI systems with model router and agent optimizer — desc
+- `LAB663` Build smarter AI systems with model router and agent optimizer — desc
+- `LAB663` Build smarter AI systems with model router and agent optimizer — desc
+- `LAB663` Build smarter AI systems with model router and agent optimizer — desc
+- `LAB664` Build agentic document workflows with Content Understanding — desc
+- `LAB664` Build agentic document workflows with Content Understanding — desc
+- `LAB664` Build agentic document workflows with Content Understanding — desc
+- `LAB664` Build agentic document workflows with Content Understanding — desc
+- `LAB665` See how far one agent goes in Copilot Studio — desc
+- `LAB665` See how far one agent goes in Copilot Studio — desc
+- `LAB665` See how far one agent goes in Copilot Studio — desc
+- `LAB665` See how far one agent goes in Copilot Studio — desc
+- `LAB666` Host apps from anywhere with the new Copilot Managed Runtime — desc
+- `LAB666` Host apps from anywhere with the new Copilot Managed Runtime — desc
+- `LAB666` Host apps from anywhere with the new Copilot Managed Runtime — desc
+- `LAB666` Host apps from anywhere with the new Copilot Managed Runtime — desc
+- `LAB667` Building multi-agent systems. Lost in San Francisco — desc
+- `LAB667` Building multi-agent systems. Lost in San Francisco — desc
+- `LAB667` Building multi-agent systems. Lost in San Francisco — desc
+- `LAB667` Building multi-agent systems. Lost in San Francisco — desc
+- `LAB670` Build your first Microsoft IQ playbook — desc
+- `LAB670` Build your first Microsoft IQ playbook — desc
+- `LAB670` Build your first Microsoft IQ playbook — desc
+- `LAB670` Build your first Microsoft IQ playbook — desc
+- `LAB671` Build a proactive intelligence agent using Work IQ — desc
+- `LAB671` Build a proactive intelligence agent using Work IQ — desc
+- `LAB671` Build a proactive intelligence agent using Work IQ — desc
+- `LAB671` Build a proactive intelligence agent using Work IQ — desc
+- `LAB672` Ground agents in your business with an ontology in Fabric IQ — desc
+- `LAB672` Ground agents in your business with an ontology in Fabric IQ — desc
+- `LAB672` Ground agents in your business with an ontology in Fabric IQ — desc
+- `LAB672` Ground agents in your business with an ontology in Fabric IQ — desc
+- `LAB673` Turning data into agent-ready knowledge with Foundry IQ — desc
+- `LAB673` Turning data into agent-ready knowledge with Foundry IQ — desc
+- `LAB673` Turning data into agent-ready knowledge with Foundry IQ — desc
+- `LAB673` Turning data into agent-ready knowledge with Foundry IQ — desc
+- `LAB680` AI Agents Are Sending Signals. Make Access Respond. — desc
+- `LAB680` AI Agents Are Sending Signals. Make Access Respond. — desc
+- `LAB680` AI Agents Are Sending Signals. Make Access Respond. — desc
+- `LAB680` AI Agents Are Sending Signals. Make Access Respond. — desc
+- `LAB681` Turn signal into real-time protections with Project Perception — desc
+- `LAB681` Turn signal into real-time protections with Project Perception — desc
+- `LAB681` Turn signal into real-time protections with Project Perception — desc
+- `LAB682` Can't secure what you can't see. Find every AI agent in your org — desc
+- `LAB682` Can't secure what you can't see. Find every AI agent in your org — desc
+- `LAB682` Can't secure what you can't see. Find every AI agent in your org — room: Moscone West | Level 2, Room 2011 → Moscone West | Level 2, Room 2007; desc
+- `LAB683` Secure local AI agents with end-to-end threat protection — desc
+- `LAB683` Secure local AI agents with end-to-end threat protection — desc
+- `LAB683` Secure local AI agents with end-to-end threat protection — desc
+- …and 21 more
+
