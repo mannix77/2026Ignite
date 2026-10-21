@@ -1,6 +1,216 @@
 {
  "batches": [
   {
+   "at": "2026-10-21T18:51:40Z",
+   "milestones": [],
+   "added": [
+    {
+     "id": "1789513462538001LdND",
+     "inst": "1789513462538001LdND",
+     "code": "ACT108",
+     "title": "AWS re:Invent 5K Race",
+     "repeat": false
+    },
+    {
+     "id": "1792116355358001x1T9",
+     "inst": "1792116355358001x1T9",
+     "code": "ACT153",
+     "title": "Networking Reception at Canonita, sponsored by CodeRabbit",
+     "repeat": false
+    },
+    {
+     "id": "1792116475179001j2tj",
+     "inst": "1792116475179001j2tj",
+     "code": "ACT154",
+     "title": "Networking Reception at Delmonico, sponsored by NVIDIA",
+     "repeat": false
+    },
+    {
+     "id": "1792116549080001L5ti",
+     "inst": "1792116549080001L5ti",
+     "code": "ACT155",
+     "title": "Networking Reception at Flight Club, sponsored by AMD",
+     "repeat": false
+    },
+    {
+     "id": "1792116618219001Lqr7",
+     "inst": "1792116618219001Lqr7",
+     "code": "ACT156",
+     "title": "Networking Reception at Canonita, sponsored by Atos",
+     "repeat": false
+    },
+    {
+     "id": "1792116680883001AAnj",
+     "inst": "1792116680883001AAnj",
+     "code": "ACT157",
+     "title": "Networking Reception at Flight Club, sponsored by CockroachDB",
+     "repeat": false
+    },
+    {
+     "id": "1780441486679001Gssl",
+     "inst": "1780441486679001Gssl",
+     "code": "BIZ211-S",
+     "title": "You cannot write the eval for a failure you have not seen yet (sponsored by Arize AI)",
+     "repeat": false
+    }
+   ],
+   "removed": [],
+   "changed": [
+    {
+     "id": "1780441461828001GzX2",
+     "inst": "1780441461828001GzX2",
+     "code": "ANT313",
+     "title": "Architect your metadata hub with AWS Glue Data Catalog",
+     "f": {
+      "start": [
+       "2026-12-02T23:00:00Z",
+       "2026-11-30T18:30:00Z"
+      ],
+      "end": [
+       "2026-12-03T00:00:00Z",
+       "2026-11-30T19:30:00Z"
+      ]
+     }
+    },
+    {
+     "id": "1780442260783001cQnv",
+     "inst": "1780442260783001cQnv",
+     "code": "CON207",
+     "title": "Amazon ECS Gateway: Managed ingress for containerized applications",
+     "f": {
+      "title": [
+       "Simplify ingress networking for applications on Amazon ECS",
+       "Amazon ECS Gateway: Managed ingress for containerized applications"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441486214001GkYl",
+     "inst": "1780441486214001GkYl",
+     "code": "AIM124-S",
+     "title": "ServiceNow: The Super Intelligence Control Tower for Business Reinvention",
+     "f": {
+      "title": [
+       "ServiceNow: The AI Control Tower for Business Reinvention (sponsored by ServiceNow)",
+       "ServiceNow: The Super Intelligence Control Tower for Business Reinvention"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441465208001GtSz",
+     "inst": "1780441465208001GtSz",
+     "code": "AIM2216",
+     "title": "Trust in Depth: Giving agents more freedom without losing control",
+     "f": {
+      "start": [
+       "2026-12-02T18:30:00Z",
+       "2026-12-01T23:00:00Z"
+      ],
+      "end": [
+       "2026-12-02T19:30:00Z",
+       "2026-12-02T00:00:00Z"
+      ],
+      "room": [
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Blue Theater",
+       "Caesars Palace | Promenade Level | Roman I"
+      ]
+     }
+    },
+    {
+     "id": "1784738621075001yfqq",
+     "inst": "1784738621075001yfqq",
+     "code": "NET321-R",
+     "title": "Securing Amazon Bedrock AgentCore with AWS WAF and a self-healing security agent",
+     "f": {
+      "title": [
+       "Securing Amazon Bedrock agents with AWS WAF and a self-healing security agent",
+       "Securing Amazon Bedrock AgentCore with AWS WAF and a self-healing security agent"
+      ]
+     }
+    },
+    {
+     "id": "1780442267912001cGIF",
+     "inst": "1780442267912001cGIF",
+     "code": "IND3309-S",
+     "title": "Beyond Search: How Gilead Built a Multi-Agent AI That Reasons Like a Scientist",
+     "f": {
+      "title": [
+       "Inside Bayer’s AI agent: Interpretability as governance (sponsored by Thoughtworks)",
+       "Beyond Search: How Gilead Built a Multi-Agent AI That Reasons Like a Scientist"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441474038001Gdkt",
+     "inst": "1780441474038001Gdkt",
+     "code": "AIM2214",
+     "title": "Accelerating Applications with Data on AWS Marketplace",
+     "f": {
+      "title": [
+       "Accelerating AI with Trusted Data on AWS Marketplace",
+       "Accelerating Applications with Data on AWS Marketplace"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441461354001Gc5p",
+     "inst": "1780441461354001Gc5p",
+     "code": "ANT308",
+     "title": "What's new in Amazon Redshift",
+     "f": {
+      "start": [
+       "2026-12-04T00:00:00Z",
+       "2026-12-02T23:00:00Z"
+      ],
+      "end": [
+       "2026-12-04T01:00:00Z",
+       "2026-12-03T00:00:00Z"
+      ],
+      "room": [
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Red Theater",
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | White Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441487581001G8Xq",
+     "inst": "1780441487581001G8Xq",
+     "code": "CMP204-S",
+     "title": "Agentic AI on AWS with Intel® Xeon® 6 (sponsored by Intel)",
+     "f": {
+      "title": [
+       "Reshaping Agentic AI and Business Analytics with Databricks on Intel (sponsored by Intel)",
+       "Agentic AI on AWS with Intel® Xeon® 6 (sponsored by Intel)"
+      ]
+     }
+    },
+    {
+     "id": "1780441461150001GGoc",
+     "inst": "1780441461150001GGoc",
+     "code": "ANT301",
+     "title": "Graviton. Serverless. Apache Iceberg. Your guide to a modern data warehouse strategy",
+     "f": {
+      "start": [
+       "2026-11-30T18:30:00Z",
+       "2026-12-04T00:00:00Z"
+      ],
+      "end": [
+       "2026-11-30T19:30:00Z",
+       "2026-12-04T01:00:00Z"
+      ],
+      "room": [
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | White Theater",
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Red Theater"
+      ]
+     }
+    }
+   ]
+  },
+  {
    "at": "2026-10-21T07:01:49Z",
    "milestones": [],
    "added": [],
