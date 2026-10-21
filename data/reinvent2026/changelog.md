@@ -3,6 +3,13 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-10-21T07:01:49Z · https://catalog.awsevents.com/api/sessions
+
+Added 0 · removed 0 · changed 1
+
+**Changed**
+- `AMZ301` The Art of the Impossible: How Amazon Builds on AWS — desc
+
 ## 2026-10-21T01:10:17Z · https://catalog.awsevents.com/api/sessions
 
 Added 0 · removed 6 · changed 12
