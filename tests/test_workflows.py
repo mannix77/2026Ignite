@@ -50,6 +50,19 @@ class CheckoutTests(unittest.TestCase):
                 self.assertEqual(m.group(1), "${{ github.ref_name }}")
 
 
+class RetryLoopTests(unittest.TestCase):
+    def test_every_push_retry_loop_aborts_a_failed_rebase(self):
+        # Covers the loops CommitStepTests does not execute (cleared summary, both re:Invent steps).
+        expected = {"sync.yml": 2, "reinvent-sync.yml": 2}
+        for name, count in expected.items():
+            with self.subTest(workflow=name):
+                lines = open(os.path.join(ROOT, ".github", "workflows", name), encoding="utf-8").read().splitlines()
+                pulls = [i for i, l in enumerate(lines) if "git pull --rebase" in l]
+                self.assertEqual(len(pulls), count)
+                for i in pulls:
+                    self.assertTrue(lines[i + 1].strip().startswith("git rebase --abort"), lines[i + 1])
+
+
 class CommitStepTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.mkdtemp()
