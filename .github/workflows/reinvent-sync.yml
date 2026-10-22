@@ -112,6 +112,7 @@ jobs:
           git commit -m "re:Invent catalog update $(date -u +%Y-%m-%dT%H:%MZ)"
           for i in 1 2 3; do
             git pull --rebase --autostash && git push && { echo "pushed=true" >> "$GITHUB_OUTPUT"; exit 0; }
+            git rebase --abort 2>/dev/null || true   # a conflict must not leave the next try mid-rebase
             sleep $((i * 10))
           done
           echo "::error::Could not push the re:Invent catalog update"
@@ -148,6 +149,7 @@ jobs:
           git commit -m "Clear posted re:Invent change summary"
           for i in 1 2 3; do
             git pull --rebase --autostash && git push && exit 0
+            git rebase --abort 2>/dev/null || true   # a conflict must not leave the next try mid-rebase
             sleep $((i * 10))
           done
           echo "::warning::Could not push the cleared summary; the next run clears it without posting it again"

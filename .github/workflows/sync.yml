@@ -139,6 +139,7 @@ jobs:
           git commit -m "Clear posted change summary"
           for i in 1 2 3; do
             git pull --rebase --autostash && git push && exit 0
+            git rebase --abort 2>/dev/null || true   # a conflict must not leave the next try mid-rebase
             sleep $((i * 10))
           done
           echo "::warning::Could not push the cleared summary; the next run clears it without posting it again"

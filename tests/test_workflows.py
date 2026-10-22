@@ -33,6 +33,10 @@ def git(cwd, *args):
                         "GIT_COMMITTER_NAME": "t", "GIT_COMMITTER_EMAIL": "t@t"})
 
 
+def git_out(cwd, *args):
+    return subprocess.run(["git", *args], cwd=cwd, check=True, capture_output=True, text=True,
+                          timeout=30).stdout
+
 class CheckoutTests(unittest.TestCase):
     def test_sync_job_checks_out_the_branch_not_the_trigger_commit(self):
         # A run that queued behind another would otherwise sync from a commit older than that
@@ -64,6 +68,9 @@ class CommitStepTests(unittest.TestCase):
         with open(os.path.join(repo, "data", "ignite2026", name), "w") as f:
             f.write(text)
 
+    def remote_file(self, name):
+        return git_out(self.remote, "show", "main:data/ignite2026/" + name)
+
     def run_step(self):
         shim = os.path.join(self.tmp, "bin")
         os.makedirs(shim, exist_ok=True)
@@ -78,8 +85,7 @@ class CommitStepTests(unittest.TestCase):
         self.write(self.work, "sessions.json", "mine\n")
         r = self.run_step()
         self.assertEqual(r.returncode, 0, r.stderr)
-        git(self.other, "pull", "-q")
-        self.assertEqual(open(os.path.join(self.other, "data", "ignite2026", "sessions.json")).read(), "mine\n")
+        self.assertEqual(self.remote_file("sessions.json"), "mine\n")
 
     def test_a_losing_conflict_fails_without_leaving_a_half_finished_rebase(self):
         self.write(self.other, "sessions.json", "theirs\n")
@@ -92,10 +98,12 @@ class CommitStepTests(unittest.TestCase):
         # The retries must have aborted the rebase each time: with it left open, the later
         # attempts could only fail with "Pulling is not possible because you have unmerged files".
         self.assertNotIn("unmerged files", r.stderr)
-        self.assertFalse(os.path.isdir(os.path.join(self.work, ".git", "rebase-merge")))
-        # And the other run's data on the remote is untouched.
-        git(self.other, "pull", "-q")
-        self.assertEqual(open(os.path.join(self.other, "data", "ignite2026", "sessions.json")).read(), "theirs\n")
+        for state in ("rebase-merge", "rebase-apply"):
+            self.assertFalse(os.path.isdir(os.path.join(self.work, ".git", state)), state)
+        # abort (not quit) restores HEAD: the local catalog commit is still there to retry.
+        self.assertTrue(git_out(self.work, "log", "-1", "--format=%s").startswith("Catalog update "))
+        # And the other run's data on the remote ref is untouched.
+        self.assertEqual(self.remote_file("sessions.json"), "theirs\n")
 
 
 if __name__ == "__main__":
