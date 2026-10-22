@@ -1,6 +1,301 @@
 {
  "batches": [
   {
+   "at": "2026-10-22T01:07:54Z",
+   "milestones": [],
+   "added": [
+    {
+     "id": "1789513460876001LSxe",
+     "inst": "1789513460876001LSxe",
+     "code": "SVC001-D1",
+     "title": "Breakfast",
+     "repeat": false
+    },
+    {
+     "id": "1789513460391001LcMK",
+     "inst": "1789513460391001LcMK",
+     "code": "SVC002-D1",
+     "title": "Lunch",
+     "repeat": false
+    },
+    {
+     "id": "1787852032272001jpCU",
+     "inst": "1787852032272001jpCU",
+     "code": "AWS009",
+     "title": "Expo Welcome Reception",
+     "repeat": false
+    },
+    {
+     "id": "1789513460716001L2BC",
+     "inst": "1789513460716001L2BC",
+     "code": "SVC001-D2",
+     "title": "Breakfast",
+     "repeat": false
+    },
+    {
+     "id": "1789513460468001LguF",
+     "inst": "1789513460468001LguF",
+     "code": "SVC002-D2",
+     "title": "Lunch",
+     "repeat": false
+    },
+    {
+     "id": "1789513460561001LXWW",
+     "inst": "1789513460561001LXWW",
+     "code": "SVC001-D3",
+     "title": "Breakfast",
+     "repeat": false
+    },
+    {
+     "id": "1789513460951001LDwb",
+     "inst": "1789513460951001LDwb",
+     "code": "SVC002-D3",
+     "title": "Lunch",
+     "repeat": false
+    },
+    {
+     "id": "1789513461454001LSlV",
+     "inst": "1789513461454001LSlV",
+     "code": "SVC001-D4",
+     "title": "Breakfast",
+     "repeat": false
+    },
+    {
+     "id": "1789513461029002L6F1",
+     "inst": "1789513461029002L6F1",
+     "code": "SVC002-D4",
+     "title": "Lunch",
+     "repeat": false
+    },
+    {
+     "id": "1789513461668001Lexm",
+     "inst": "1789513461668001Lexm",
+     "code": "SVC001-D5",
+     "title": "Breakfast",
+     "repeat": false
+    }
+   ],
+   "removed": [
+    {
+     "id": "1780441475544001GQ33",
+     "inst": "1780441475544001GQ33",
+     "code": "IND206",
+     "title": "How Elevance Health Built a Trusted Data Foundation for AI-Native Member Experiences",
+     "repeat": false
+    },
+    {
+     "id": "1792116355358001x1T9",
+     "inst": "1792116355358001x1T9",
+     "code": "ACT153",
+     "title": "Networking Reception at Canonita, sponsored by CodeRabbit",
+     "repeat": false
+    },
+    {
+     "id": "1792116475179001j2tj",
+     "inst": "1792116475179001j2tj",
+     "code": "ACT154",
+     "title": "Networking Reception at Delmonico, sponsored by NVIDIA",
+     "repeat": false
+    },
+    {
+     "id": "1792116549080001L5ti",
+     "inst": "1792116549080001L5ti",
+     "code": "ACT155",
+     "title": "Networking Reception at Flight Club, sponsored by AMD",
+     "repeat": false
+    },
+    {
+     "id": "1792116618219001Lqr7",
+     "inst": "1792116618219001Lqr7",
+     "code": "ACT156",
+     "title": "Networking Reception at Canonita, sponsored by Atos",
+     "repeat": false
+    },
+    {
+     "id": "1792116680883001AAnj",
+     "inst": "1792116680883001AAnj",
+     "code": "ACT157",
+     "title": "Networking Reception at Flight Club, sponsored by CockroachDB",
+     "repeat": false
+    },
+    {
+     "id": "1780441486679001Gssl",
+     "inst": "1780441486679001Gssl",
+     "code": "BIZ211-S",
+     "title": "You cannot write the eval for a failure you have not seen yet (sponsored by Arize AI)",
+     "repeat": false
+    }
+   ],
+   "changed": [
+    {
+     "id": "1780441479203001G8vZ",
+     "inst": "1780441479203001G8vZ",
+     "code": "NET404",
+     "title": "Connect everything, everywhere: AWS global connectivity",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441475015001GXRk",
+     "inst": "1780441475015001GXRk",
+     "code": "HMC303",
+     "title": "Choosing the right hybrid deployment for your AI workloads",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441479148001GM4u",
+     "inst": "1780441479148001GM4u",
+     "code": "NET308",
+     "title": "Building an interconnectivity fabric across AWS accounts and orgs",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442235239001cwpl",
+     "inst": "1780442235239001cwpl",
+     "code": "AIM364-R",
+     "title": "Architect for production AI: A decision framework that scales",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441470484001G8a6",
+     "inst": "1780441470484001G8a6",
+     "code": "DVT320",
+     "title": "How Kiro learns: an AI coding agent that improves with every session",
+     "f": {
+      "speakers": [
+       [
+        "Navyata Bawa",
+        "Trevor Mac"
+       ],
+       [
+        "Navyata Bawa",
+        "Trevor Mack"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441486396001G9cG",
+     "inst": "1780441486396001G9cG",
+     "code": "AIM131-S",
+     "title": "How SoCalGas Is Using Agentic AI for SAP Migration Hypercare on AWS with Accenture",
+     "f": {
+      "title": [
+       "How SoCalGas De-Risked a SAP Migration with Agentic AI on AWS (sponsored by Accenture)",
+       "How SoCalGas Is Using Agentic AI for SAP Migration Hypercare on AWS with Accenture"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1789513462538001LdND",
+     "inst": "1789513462538001LdND",
+     "code": "ACT053",
+     "title": "AWS re:Invent 5K Race",
+     "f": {
+      "code": [
+       "ACT108",
+       "ACT053"
+      ],
+      "level": [
+       100,
+       null
+      ]
+     }
+    },
+    {
+     "id": "1780441475490001GopZ",
+     "inst": "1780441475490001GopZ",
+     "code": "IND205",
+     "title": "Modernizing Care for the Underserved: Montefiore's Cloud Journey",
+     "f": {
+      "start": [
+       "2026-12-03T18:00:00Z",
+       "2026-12-02T16:30:00Z"
+      ],
+      "end": [
+       "2026-12-03T19:00:00Z",
+       "2026-12-02T17:30:00Z"
+      ],
+      "room": [
+       "Wynn/Encore | Level 1 | Encore Ballroom 5",
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1784231862157001EKUp",
+     "inst": "1784231862157001EKUp",
+     "code": "TNC312-R",
+     "title": "Build Reliable AI Agents on AWS with Amazon SageMaker AI and Amazon Bedrock",
+     "f": {
+      "speakers": [
+       [],
+       [
+        "Marilia Brito"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442277497001clif",
+     "inst": "1780442277497001clif",
+     "code": "CMP402",
+     "title": "Build hybrid quantum-classical solutions for science and engineering on Amazon Braket",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441467946001GY1H",
+     "inst": "1780441467946001GY1H",
+     "code": "CMP306",
+     "title": "Delivering next-generation quantum hardware on Amazon Braket",
+     "f": {
+      "title": [
+       "Delivering next-generation devices on Amazon Braket",
+       "Delivering next-generation quantum hardware on Amazon Braket"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442247890001cNv2",
+     "inst": "1780442247890001cNv2",
+     "code": "NET325-R",
+     "title": "Resilient by design: Last Mile and Multicloud Interconnect",
+     "f": {
+      "title": [
+       "Resilient by design: Simplifying last-mile connectivity with AWS",
+       "Resilient by design: Last Mile and Multicloud Interconnect"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1784231863419001EKif",
+     "inst": "1784231863419001EKif",
+     "code": "TNC312-R1",
+     "title": "Build Reliable AI Agents on AWS with Amazon SageMaker AI and Amazon Bedrock",
+     "f": {
+      "speakers": [
+       [],
+       [
+        "Marilia Brito"
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
    "at": "2026-10-21T18:51:40Z",
    "milestones": [],
    "added": [
