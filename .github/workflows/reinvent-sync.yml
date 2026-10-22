@@ -46,6 +46,10 @@ jobs:
 
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         if: steps.window.outputs.active == 'true'
+        with:
+          # The branch tip, not the trigger's commit: a run queued behind another would start
+          # from before that run's push and its catalog commit would conflict.
+          ref: ${{ github.ref_name }}
 
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         if: steps.window.outputs.active == 'true'

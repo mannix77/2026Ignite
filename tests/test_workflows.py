@@ -38,12 +38,16 @@ def git_out(cwd, *args):
                           timeout=30).stdout
 
 class CheckoutTests(unittest.TestCase):
-    def test_sync_job_checks_out_the_branch_not_the_trigger_commit(self):
+    def test_every_sync_job_checks_out_the_branch_not_the_trigger_commit(self):
         # A run that queued behind another would otherwise sync from a commit older than that
         # run's push, and its catalog commit would conflict on rebase.
-        m = re.search(r"actions/checkout@\S+[^\n]*\n\s+with:\n(?:\s+#[^\n]*\n)*\s+ref: ([^\n]+)", sync_job_text())
-        self.assertIsNotNone(m, "the sync job's checkout must set ref")
-        self.assertEqual(m.group(1), "${{ github.ref_name }}")
+        for name in ("sync.yml", "reinvent-sync.yml"):
+            with self.subTest(workflow=name):
+                text = open(os.path.join(ROOT, ".github", "workflows", name), encoding="utf-8").read()
+                text = text.split("\n  deploy:")[0].split("\n  report:")[0]
+                m = re.search(r"actions/checkout@\S+[^\n]*\n(?:\s+if:[^\n]*\n)?\s+with:\n(?:\s+#[^\n]*\n)*\s+ref: ([^\n]+)", text)
+                self.assertIsNotNone(m, name + ": checkout must set ref")
+                self.assertEqual(m.group(1), "${{ github.ref_name }}")
 
 
 class CommitStepTests(unittest.TestCase):
