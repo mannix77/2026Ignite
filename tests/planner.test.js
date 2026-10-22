@@ -8,6 +8,7 @@ import { localParts, fromISO, parseSlot, fmtTime, fmtDay, addDays, relTime, fmtD
 import { createVenue } from '../assets/js/venue.js';
 import { CONFERENCES, LAS_VEGAS_DEF, SWAN_DOLPHIN_DEF } from '../assets/js/conferences.js';
 import { parseShare } from '../assets/js/store.js';
+import { upNext } from '../assets/js/upnext.js';
 import { arrivalExtra, lunchConfig, compareOptions } from '../assets/js/planner.js';
 
 const log = typeof print === 'function' && typeof window === 'undefined' ? print : console.log;
@@ -608,6 +609,63 @@ test('re:Invent session links search the catalog by code', () => {
 test('share links accept re:Invent session codes', () => {
   const ids = { 'DVT212-S': 'a', 'ANT319-R': 'b', 'INV002-S-R1': 'c' };
   eq(Object.keys(parseShare('DVT212-S.3~ANT319-R.2!ANT319-R~INV002-S-R1.1', c => ids[c], c => ids[c])), ['a', 'b', 'c']);
+});
+
+// ---- Up next: what's coming up that I care about, and how far it is
+const un = (key, startMin, endMin, extra = {}) => ({ key, group: key, code: key, title: key, day: 'd1', inPerson: true, startMin, endMin, ...extra });
+const unRun = (sessions, o = {}) => upNext({
+  sessions, day: 'd1', nowMin: 660, horizon: 120, tolerance: 5,
+  walkTo: s => s.walk ?? null, prio: s => s.prio ?? null, interest: s => s.interest ?? 0,
+  chosen: s => !!s.planned, minInterest: 25, ...o });
+const unStatus = slots => Object.fromEntries(slots.flatMap(x => x.items).map(i => [i.s.key, i.status]).sort());
+const unKeys = slots => slots.map(x => x.items.map(i => i.s.key));
+
+test('up next lists planned, rated and likely sessions, not rejected or unrelated ones', () => {
+  const slots = unRun([
+    un('A', 690, 720, { planned: true }), un('B', 690, 720, { prio: 2 }), un('C', 690, 720, { interest: 40 }),
+    un('D', 690, 720, { prio: 0 }), un('E', 690, 720, { interest: 10 }), un('F', 690, 720)]);
+  eq(unKeys(slots).flat().sort(), ['A', 'B', 'C']);
+});
+test('a rejected session stays hidden even when planned or resembling picks', () => {
+  eq(unKeys(unRun([un('D', 690, 720, { prio: 0, planned: true, interest: 90 })])), []);
+});
+test('up next groups by start time inside the horizon', () => {
+  const slots = unRun([un('L', 800, 830, { prio: 1 }), un('Y', 720, 750, { prio: 1 }), un('X', 690, 720, { prio: 1 })]);
+  eq(slots.map(x => x.startMin), [690, 720]);
+  eq(unKeys(slots), [['X'], ['Y']]);
+});
+test('the horizon is inclusive at its edge and refuses just beyond it', () => {
+  eq(unKeys(unRun([un('in', 780, 810, { prio: 1 }), un('out', 781, 810, { prio: 1 })])), [['in']]);
+});
+test('enough time: walk and spare minutes', () => {
+  const [{ items: [i] }] = unRun([un('S', 690, 720, { prio: 1, walk: 9 })]);
+  eq([i.walk, i.slack, i.status], [9, 21, 'ok']);
+});
+test('arriving exactly at the start is fine; one minute past the tolerance is not', () => {
+  const r = unRun([un('edge', 669, 700, { prio: 1, walk: 9 }), un('tol', 665, 700, { prio: 1, walk: 10 }), un('late', 665, 700, { prio: 1, walk: 11 })]);
+  const by = unStatus(r);
+  eq(by, { edge: 'ok', late: 'unreachable', tol: 'ok' });
+});
+test('unreachable sessions sort after reachable ones in their group', () => {
+  const r = unRun([un('far', 665, 700, { prio: 3, walk: 18 }), un('near', 665, 700, { prio: 1, walk: 2 })]);
+  eq(unKeys(r), [['near', 'far']]);
+  eq(r[0].items.map(i => i.status), ['ok', 'unreachable']);
+});
+test('a session in progress is listed as such and reachable until 15 minutes before it ends', () => {
+  const r = unRun([un('now', 645, 705, { prio: 1, walk: 5 }), un('over', 645, 670, { prio: 1, walk: 5 }), un('gone', 600, 660, { prio: 1, walk: 1 })]);
+  const by = unStatus(r);
+  eq(by, { now: 'inprogress', over: 'unreachable' }); // 'gone' ended and is not listed
+});
+test('unknown position lists sessions with no walk time and no verdict', () => {
+  const [{ items: [i] }] = unRun([un('U', 690, 720, { prio: 1 })]);
+  eq([i.walk, i.slack, i.status], [null, null, 'unknown']);
+});
+test('within a group planned sessions come first, then higher rating, then likeness', () => {
+  const r = unRun([un('c', 690, 720, { interest: 60 }), un('b', 690, 720, { prio: 3 }), un('a', 690, 720, { planned: true, prio: 1 })]);
+  eq(unKeys(r), [['a', 'b', 'c']]);
+});
+test('online-only, other-day and ended sessions are not listed', () => {
+  eq(unKeys(unRun([un('o', 690, 720, { prio: 1, inPerson: false }), un('d', 690, 720, { prio: 1, day: 'd2' }), un('e', 600, 660, { prio: 1 })])), []);
 });
 
 log(`${pass} passed, ${fail} failed`);
