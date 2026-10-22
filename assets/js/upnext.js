@@ -22,7 +22,7 @@ export function upNext({ sessions, day, nowMin, horizon = 120, tolerance = 5, wa
     else {
       slack = s.startMin - (nowMin + walk);
       if (started) status = nowMin + walk <= s.endMin - IN_PROGRESS_MIN_LEFT ? 'inprogress' : 'unreachable';
-      else status = slack >= -tolerance ? 'ok' : 'unreachable';
+      else status = slack >= -Math.min(tolerance, Math.floor((s.endMin - s.startMin) / 4)) ? 'ok' : 'unreachable'; // as planner.js: never more than 1/4 of a session
     }
     items.push({ s, walk, slack, status, planned, p: p ?? 0, i: interest(s) });
   }

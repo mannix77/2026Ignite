@@ -627,7 +627,7 @@ test('up next lists planned, rated and likely sessions, not rejected or unrelate
   eq(unKeys(slots).flat().sort(), ['A', 'B', 'C']);
 });
 test('a rejected session stays hidden even when planned or resembling picks', () => {
-  eq(unKeys(unRun([un('D', 690, 720, { prio: 0, planned: true, interest: 90 })])), []);
+  eq(unKeys(unRun([un('D', 690, 720, { prio: 0, planned: true, interest: 90 }), un('ok', 690, 720, { prio: 1 })])), [['ok']]);
 });
 test('up next groups by start time inside the horizon', () => {
   const slots = unRun([un('L', 800, 830, { prio: 1 }), un('Y', 720, 750, { prio: 1 }), un('X', 690, 720, { prio: 1 })]);
@@ -656,6 +656,15 @@ test('a session in progress is listed as such and reachable until 15 minutes bef
   const by = unStatus(r);
   eq(by, { now: 'inprogress', over: 'unreachable' }); // 'gone' ended and is not listed
 });
+test('in-progress cutoff: 15 minutes left is joinable, 14 is not', () => {
+  // now 660, walk 5 -> arrive 665; ends 680 leaves exactly 15, ends 679 leaves 14
+  eq(unStatus(unRun([un('edge', 645, 680, { prio: 1, walk: 5 }), un('short', 645, 679, { prio: 1, walk: 5 })])), { edge: 'inprogress', short: 'unreachable' });
+});
+test('lateness never exceeds a quarter of the session, and never reaches past its end', () => {
+  // tolerance 5: a 20-min session allows 5, a 16-min allows 4, a 2-min allows 0
+  const r = unRun([un('q20', 665, 685, { prio: 1, walk: 10 }), un('q16', 665, 681, { prio: 1, walk: 9 }), un('q16late', 665, 681, { prio: 1, walk: 10 }), un('tiny', 665, 667, { prio: 1, walk: 6 }), un('tinyok', 665, 667, { prio: 1, walk: 5 })]);
+  eq(unStatus(r), { q16: 'ok', q16late: 'unreachable', q20: 'ok', tiny: 'unreachable', tinyok: 'ok' });
+});
 test('unknown position lists sessions with no walk time and no verdict', () => {
   const [{ items: [i] }] = unRun([un('U', 690, 720, { prio: 1 })]);
   eq([i.walk, i.slack, i.status], [null, null, 'unknown']);
@@ -665,7 +674,7 @@ test('within a group planned sessions come first, then higher rating, then liken
   eq(unKeys(r), [['a', 'b', 'c']]);
 });
 test('online-only, other-day and ended sessions are not listed', () => {
-  eq(unKeys(unRun([un('o', 690, 720, { prio: 1, inPerson: false }), un('d', 690, 720, { prio: 1, day: 'd2' }), un('e', 600, 660, { prio: 1 })])), []);
+  eq(unKeys(unRun([un('o', 690, 720, { prio: 1, inPerson: false }), un('d', 690, 720, { prio: 1, day: 'd2' }), un('e', 600, 660, { prio: 1 }), un('ok', 690, 720, { prio: 1 })])), [['ok']]);
 });
 
 log(`${pass} passed, ${fail} failed`);

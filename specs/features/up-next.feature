@@ -50,14 +50,14 @@ Feature: Up next shows what is coming up that I care about, and how far it is
 
     Scenario: Default destination is my next planned item
       Given I am in the Dolphin at 11:00 and my next planned session is at 12:30 in the Swan
-      And a candidate session runs 11:15 to 11:45 in the Yacht and Beach Club, 18 minutes from here and 20 from the Swan
+      And a candidate session runs 11:20 to 11:50 in the Yacht and Beach Club, 18 minutes from here and 20 from the Swan
       When I look at the candidate
       Then it shows 18 to get there, 30 in the session, 20 on to the Swan
-      And it says I would reach the Swan at 12:23 with 7 minutes to spare
+      And it says I would reach the Swan at 12:10 with 20 minutes to spare
 
     Scenario: The detour makes me late
-      Given the same candidate but my next planned session is at 12:10
-      Then it says I would be 13 minutes late for it
+      Given the same candidate but my next planned session is at 12:05
+      Then it says I would be 5 minutes late for it
 
     Scenario: I choose a different place to be next
       Given I choose the Dolphin as where I need to be next

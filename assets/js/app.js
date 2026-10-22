@@ -1419,11 +1419,10 @@ function renderNow() {
 // Up next: what's coming up that I care about, by start time, with where and how far.
 function upNextHtml(t, h, nn, plan, c) {
   const sg = suggester();
-  const fromLoc = nn.from?.loc || null;
   const slots = upNext({
     sessions: app.model.sessions, day: t.day, nowMin: t.min, horizon: 120, tolerance: c.tolerance,
-    walkTo: x => (h ? hereWalk(x.loc, h, c) : fromLoc ? walkMinutes(fromLoc, x.loc, c.walk) : null),
-    prio: prioOf, interest: x => (sg.ready ? sg.score(x).score : 0), chosen: x => plan.chosen.has(x.key), minInterest: 25,
+    walkTo: x => (h ? hereWalk(x.loc, h, c) : null), // no position, no walk: the plan's origin isn't where you are
+    prio: prioOf, interest: x => (sg.ready && !(prioOf(x) == null && ranker().evaluate(x).hidden) ? sg.score(x).score : 0), chosen: x => plan.chosen.has(x.key), minInterest: 25,
   });
   const verdict = it => {
     const w = it.walk != null ? `${it.walk} min walk` : 'distance unknown';
