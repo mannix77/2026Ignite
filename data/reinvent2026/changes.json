@@ -1,6 +1,2098 @@
 {
  "batches": [
   {
+   "at": "2026-10-23T01:11:44Z",
+   "milestones": [],
+   "added": [],
+   "removed": [],
+   "changed": [
+    {
+     "id": "1780442280509001cFT5",
+     "inst": "1780442280509001cFT5",
+     "code": "AMZ202-R",
+     "title": "Turn a Bee wearable into your re:Invent notetaking companion",
+     "f": {
+      "speakers": [
+       [
+        "Kourtney Meiss"
+       ],
+       [
+        "Emerson Sklar",
+        "Kourtney Meiss"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441489933001Grje",
+     "inst": "1780441489933001Grje",
+     "code": "COP344-S",
+     "title": "Agentic AI Needs Agentic Infrastructure: Autonomy on Amazon EKS (sponsored by ScaleOps)",
+     "f": {
+      "speakers": [
+       [],
+       [
+        "Gilad Elyashar"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442221068001cCiD",
+     "inst": "1780442221068001cCiD",
+     "code": "SNR302",
+     "title": "A leader's guide to the AI you haven't seen yet",
+     "f": {
+      "speakers": [
+       [
+        "Matt Wood"
+       ],
+       [
+        "Ishit Vachhrajani",
+        "Matt Wood"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442258406001clB2",
+     "inst": "1780442258406001clB2",
+     "code": "SVS347-R",
+     "title": "Building and scaling low latency web applications with AWS Lambda Web Functions",
+     "f": {
+      "title": [
+       "Building and scaling low latency web apps with AWS Serverless",
+       "Building and scaling low latency web applications with AWS Lambda Web Functions"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442279528001cKTV",
+     "inst": "1780442279528001cKTV",
+     "code": "BIZ334",
+     "title": "Building Smarter Self-Service Experiences with AI",
+     "f": {
+      "speakers": [
+       [],
+       [
+        "Saurabh Dey"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442229697001cq0V",
+     "inst": "1780442229697001cq0V",
+     "code": "NET305-R",
+     "title": "Enforce encryption in transit using Amazon VPC Encryption Controls",
+     "f": {
+      "speakers": [
+       [
+        "Ankush Goyal",
+        "Ashraf Altalleh",
+        "Hrushikesh Gangur",
+        "Salman Ahmed"
+       ],
+       [
+        "Ankush Goyal",
+        "Ashraf Altalleh",
+        "Hrushikesh Gangur",
+        "Salman Ahmed",
+        "Thaddeus Worsnop"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1785370448720001ujpS",
+     "inst": "1785370448720001ujpS",
+     "code": "SEC388",
+     "title": "How to solve for multicloud identity lifecycle management",
+     "f": {
+      "speakers": [
+       [
+        "Phillip Spies",
+        "Rodney Underkoffler"
+       ],
+       [
+        "Joshua Stultz",
+        "Phillip Spies",
+        "Rodney Underkoffler"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1784231863107001EDTW",
+     "inst": "1784231863107001EDTW",
+     "code": "TNC340-R",
+     "title": "Resolving and Preventing Production Incidents with AWS DevOps Agent",
+     "f": {
+      "speakers": [
+       [
+        "Ryan Gallaway",
+        "jasoncz Chen"
+       ],
+       [
+        "Ryan Gallaway",
+        "Vicente Aguilar",
+        "jasoncz Chen"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441470557001G5s8",
+     "inst": "1780441470557001G5s8",
+     "code": "DVT338",
+     "title": "Scale agentic development with automated orchestration",
+     "f": {
+      "speakers": [
+       [
+        "Rodrigo Azevedo"
+       ],
+       [
+        "Rodrigo Azevedo",
+        "Romain Dura",
+        "mac Merritt"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1785433201996001JZhX",
+     "inst": "1785433201996001JZhX",
+     "code": "STG367",
+     "title": "Connect NetApp FSx for ONTAP File Data to AI Apps with S3",
+     "f": {
+      "speakers": [
+       [
+        "Beerinder Mann",
+        "Nava Ajay Kanth Kota",
+        "Virgil Ennes"
+       ],
+       [
+        "Beerinder Mann",
+        "Nava Ajay Kanth Kota",
+        "Sean Phuphanich",
+        "Virgil Ennes"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441475130001G0Cv",
+     "inst": "1780441475130001G0Cv",
+     "code": "HMC312",
+     "title": "How RBC built a regulated multicloud platform",
+     "f": {
+      "speakers": [
+       [
+        "Chris Brandon",
+        "Ellie Tamari",
+        "Vinh Tran"
+       ],
+       [
+        "Chris Brandon",
+        "Ellie Tamari",
+        "Ernani Cecon",
+        "Vinh Tran"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442236771001cB9S",
+     "inst": "1780442236771001cB9S",
+     "code": "MAM343",
+     "title": "Govern and optimize AI agents for desktop work on WorkSpaces",
+     "f": {
+      "speakers": [
+       [
+        "Andrew Morgan"
+       ],
+       [
+        "Andrew Morgan",
+        "Ed Mahlum"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442225728001cLFG",
+     "inst": "1780442225728001cLFG",
+     "code": "CMP312",
+     "title": "Assess your workloads with SELinux compatibility on Amazon Linux 2027",
+     "f": {
+      "speakers": [
+       [
+        "Chris Bilbo",
+        "Frederick Lefebvre",
+        "Ovais Siddiqui",
+        "Steve Zarkos"
+       ],
+       [
+        "Chris Bilbo",
+        "Frederick Lefebvre",
+        "Ovais Siddiqui",
+        "Steve Zarkos",
+        "Stewart Smith"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442279164001cQct",
+     "inst": "1780442279164001cQct",
+     "code": "DVT314-R",
+     "title": "Beyond the IDE: autonomous development with Kiro web and mobile",
+     "f": {
+      "speakers": [
+       [
+        "Artur Rodrigues"
+       ],
+       [
+        "Artur Rodrigues",
+        "Massimo \"Max\" Becker"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441475993001GKxh",
+     "inst": "1780441475993001GKxh",
+     "code": "IND3336",
+     "title": "How Hyundai Is Transforming Customer and Vehicle Experiences on AWS",
+     "f": {
+      "speakers": [
+       [
+        "Eundoo Song",
+        "Yunsang Hwang"
+       ],
+       [
+        "Eundoo Song",
+        "Eunjee Moon",
+        "Yunsang Hwang"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442230935001c3x9",
+     "inst": "1780442230935001c3x9",
+     "code": "SEC319-R",
+     "title": "Preventing unintended access: a practical guide to data perimeter controls",
+     "f": {
+      "speakers": [
+       [
+        "Nitin Kulkarni",
+        "Sowjanya Rajavaram"
+       ],
+       [
+        "Manas Chhabra",
+        "Nitin Kulkarni",
+        "Sowjanya Rajavaram"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441491305001GHCP",
+     "inst": "1780441491305001GHCP",
+     "code": "STG371",
+     "title": "Modernizing file transfer with AWS Transfer Family",
+     "f": {
+      "speakers": [
+       [
+        "Madhukumar Adavi",
+        "Randy Boutin"
+       ],
+       [
+        "Madhukumar Adavi",
+        "Randy Boutin",
+        "Ulili Nhaga"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442280564001c38d",
+     "inst": "1780442280564001c38d",
+     "code": "AMZ202-R1",
+     "title": "Turn a Bee wearable into your re:Invent notetaking companion",
+     "f": {
+      "speakers": [
+       [
+        "Kourtney Meiss"
+       ],
+       [
+        "Emerson Sklar",
+        "Kourtney Meiss"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442234619001cJC9",
+     "inst": "1780442234619001cJC9",
+     "code": "AIM312-R",
+     "title": "Beyond fine-tuning: RL for reasoning agents with AWS Trainium",
+     "f": {
+      "speakers": [
+       [
+        "Hiroshi Tokoyo"
+       ],
+       [
+        "Hiroshi Tokoyo",
+        "Maen Suleiman"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441464093001GrWo",
+     "inst": "1780441464093001GrWo",
+     "code": "AIM343",
+     "title": "Data Prep to Deployment: How Tencent Games Scaled to 1,000 GPUs on SageMaker HyperPod",
+     "f": {
+      "speakers": [
+       [
+        "Shreyas Adiyodi",
+        "Xulong Gao"
+       ],
+       [
+        "Haoming Li",
+        "Shreyas Adiyodi",
+        "Xulong Gao"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441492855001GjyG",
+     "inst": "1780441492855001GjyG",
+     "code": "SVS306-R",
+     "title": "Building Agentic AI architectures with AWS Serverless",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442224146001cSsL",
+     "inst": "1780442224146001cSsL",
+     "code": "AIM322-R",
+     "title": "Build an AI navigator that makes every frontline worker an expert",
+     "f": {
+      "speakers": [
+       [
+        "Paul Mietz Egli",
+        "Tim Ness",
+        "Vanitha Sugumaran",
+        "vtbloise Bloise"
+       ],
+       [
+        "Krishna Kadiyala",
+        "Paul Mietz Egli",
+        "Tim Ness",
+        "Vanitha Sugumaran",
+        "vtbloise Bloise"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441464697001GwWk",
+     "inst": "1780441464697001GwWk",
+     "code": "AIM370",
+     "title": "Trusting agents in production: end-to-end security with AgentCore",
+     "f": {
+      "speakers": [
+       [
+        "Guilherme Greco"
+       ],
+       [
+        "Fei Yuan",
+        "Guilherme Greco"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442236230001cn8Y",
+     "inst": "1780442236230001cn8Y",
+     "code": "BIZ305",
+     "title": "Security → Zero-Trust Identity & Data Protection in Amazon Quick",
+     "f": {
+      "title": [
+       "Security → Zero-Trust Identity & Data Protection in the Agentic Era",
+       "Security → Zero-Trust Identity & Data Protection in Amazon Quick"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441490628001GCvg",
+     "inst": "1780441490628001GCvg",
+     "code": "STG201",
+     "title": "Persistent memory, shared context, instant discovery. Solving storage for AI agents",
+     "f": {
+      "speakers": [
+       [
+        "Jordan Dolman"
+       ],
+       [
+        "Claire Edgcumbe",
+        "Jordan Dolman"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441493015001GTe9",
+     "inst": "1780441493015001GTe9",
+     "code": "SVS203-R",
+     "title": "Building interactive web applications on AWS Lambda Web Functions",
+     "f": {
+      "title": [
+       "Building interactive web applications on AWS Serverless",
+       "Building interactive web applications on AWS Lambda Web Functions"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442246079001cZby",
+     "inst": "1780442246079001cZby",
+     "code": "IND381",
+     "title": "Decision patterns for AI Agents with Amazon Connect Customer",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442264865001czz4",
+     "inst": "1780442264865001czz4",
+     "code": "PEX210",
+     "title": "Delivering Measurable Customer Business Outcomes",
+     "f": {
+      "speakers": [
+       [
+        "Winston Chung"
+       ],
+       [
+        "Peter Gratzke",
+        "Winston Chung"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1784231863536001Ewq6",
+     "inst": "1784231863536001Ewq6",
+     "code": "TNC340-R1",
+     "title": "Resolving and Preventing Production Incidents with AWS DevOps Agent",
+     "f": {
+      "speakers": [
+       [
+        "Ryan Gallaway",
+        "jasoncz Chen"
+       ],
+       [
+        "Ryan Gallaway",
+        "Vicente Aguilar",
+        "jasoncz Chen"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442273524001cazM",
+     "inst": "1780442273524001cazM",
+     "code": "BIZ111-S",
+     "title": "Build the Agentic Workplace: What's New on the Slack Developer Platform (sponsored by Salesforce)",
+     "f": {
+      "speakers": [
+       [],
+       [
+        "Josh Milas"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442273194001czQm",
+     "inst": "1780442273194001czQm",
+     "code": "BIZ328-S",
+     "title": "Build It, Govern It, Ship It: CI/CD for AI Agents with the NVIDIA Agent Toolkit (sponsored by NVIDIA)",
+     "f": {
+      "speakers": [
+       [],
+       [
+        "Kevon Mayers"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1791930011210001r9lr",
+     "inst": "1791930011210001r9lr",
+     "code": "IND3353",
+     "title": "TP ICAP: Driving revenue through faster decisions with agentic AI",
+     "f": {
+      "speakers": [
+       [
+        "Erica Martin",
+        "Shahen Bokhari"
+       ],
+       [
+        "Animesh Kundu",
+        "Erica Martin",
+        "Shahen Bokhari"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441487120001GgdE",
+     "inst": "1780441487120001GgdE",
+     "code": "MAM101-S",
+     "title": "Aflac’s Modernization journey to a resilient and innovative future (sponsored by Kyndryl)",
+     "f": {
+      "speakers": [
+       [
+        "DJ Goldsworthy",
+        "Tohru Futami"
+       ],
+       [
+        "DJ Goldsworthy",
+        "Jamie Rutledge",
+        "Tohru Futami"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441480262001GTJk",
+     "inst": "1780441480262001GTJk",
+     "code": "PEX202",
+     "title": "Go-Live to ROI: How Partners Turn Customer Outcomes into Revenue",
+     "f": {
+      "speakers": [
+       [
+        "Bhargs Srivathsan",
+        "Karen Hildebrand"
+       ],
+       [
+        "Bhargs Srivathsan",
+        "Karen Hildebrand",
+        "Peter Gratzke"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442250228001cwhq",
+     "inst": "1780442250228001cwhq",
+     "code": "SEC328-R",
+     "title": "Enforce AI guardrails across your organization without the friction",
+     "f": {
+      "speakers": [
+       [
+        "Rob Whitelocks"
+       ],
+       [
+        "Michael Ingoldby",
+        "Rob Whitelocks"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441481593001GlFY",
+     "inst": "1780441481593001GlFY",
+     "code": "SVS336",
+     "title": "Building production AI agents on AWS: compute, security, state, and cost",
+     "f": {
+      "title": [
+       "Building Serverless AI agents",
+       "Building production AI agents on AWS: compute, security, state, and cost"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442276433001cs04",
+     "inst": "1780442276433001cs04",
+     "code": "AIM442",
+     "title": "Intelligent document processing with generative AI on AWS",
+     "f": {
+      "speakers": [
+       [
+        "Nicole Meyers",
+        "Roop Bains"
+       ],
+       [
+        "Nicole Meyers",
+        "Niklas Breuer",
+        "Roop Bains"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442274523001cAee",
+     "inst": "1780442274523001cAee",
+     "code": "ANT416-R",
+     "title": "Build agentic AI applications with the open data lakehouse architecture on AWS",
+     "f": {
+      "speakers": [
+       [
+        "David Greenshtein"
+       ],
+       [
+        "David Greenshtein",
+        "Nathan Yee"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441482113001G5tc",
+     "inst": "1780441482113001G5tc",
+     "code": "ARC206-S",
+     "title": "Accelerating Fusion Innovation with AMD EPYC on AWS HPC, Analytics, and Agentic AI (sponsored by AMD)",
+     "f": {
+      "speakers": [
+       [
+        "Arijit Choudhury",
+        "Hardeep Sullan",
+        "Manish Amin"
+       ],
+       [
+        "Arijit Choudhury",
+        "Brody Bassett",
+        "Hardeep Sullan",
+        "Manish Amin"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442285273001cewa",
+     "inst": "1780442285273001cewa",
+     "code": "BIZ329-S",
+     "title": "Build, Govern, Optimize: Trustworthy, Cost-Aware Agents with the NVIDIA Agent Toolkit (sponsored by NVIDIA)",
+     "f": {
+      "speakers": [
+       [
+        "Dimitri Maltezakis",
+        "Kevon Mayers"
+       ],
+       [
+        "Chris Smith",
+        "Dimitri Maltezakis",
+        "Kevon Mayers"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1790358231393001ieYz",
+     "inst": "1790358231393001ieYz",
+     "code": "NET305-R1",
+     "title": "Enforce encryption in transit using Amazon VPC Encryption Controls",
+     "f": {
+      "speakers": [
+       [
+        "Ankush Goyal",
+        "Ashraf Altalleh",
+        "Hrushikesh Gangur",
+        "Salman Ahmed"
+       ],
+       [
+        "Ankush Goyal",
+        "Ashraf Altalleh",
+        "Hrushikesh Gangur",
+        "Salman Ahmed",
+        "Thaddeus Worsnop"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442257356001cqaK",
+     "inst": "1780442257356001cqaK",
+     "code": "PEX314",
+     "title": "Align cost with value through outcome-based pricing in AWS Marketplace",
+     "f": {
+      "speakers": [
+       [
+        "Jihye Kwon"
+       ],
+       [
+        "Jihye Kwon",
+        "Swami Jayaraman"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1784231862095001E6Pk",
+     "inst": "1784231862095001E6Pk",
+     "code": "TNC311-R",
+     "title": "Enhance Production Applications with AI-Assisted Development in Kiro",
+     "f": {
+      "speakers": [
+       [],
+       [
+        "Javier Martinez Nohales"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441484808001GFzE",
+     "inst": "1780441484808001GFzE",
+     "code": "AIM3316-S",
+     "title": "Koa: NVIDIA Nemotron-Powered CRM Reasoning Inside Salesforce’s AWS Trust Boundary (sponsored by NVIDIA)",
+     "f": {
+      "speakers": [
+       [
+        "Shubham Mehrotra"
+       ],
+       [
+        "Petro Junior Milan",
+        "Shubham Mehrotra"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442273639001c8d0",
+     "inst": "1780442273639001c8d0",
+     "code": "DVT218-S",
+     "title": "Change. Wait. Debug. Let AI drive the infrastructure loop. (sponsored by HashiCorp)",
+     "f": {
+      "speakers": [
+       [
+        "Cole Morrison"
+       ],
+       [
+        "Cole Morrison",
+        "Kyle Ruddy"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441470484001G8a6",
+     "inst": "1780441470484001G8a6",
+     "code": "DVT320",
+     "title": "How Kiro learns: an AI coding agent that improves with every session",
+     "f": {
+      "speakers": [
+       [
+        "Navyata Bawa",
+        "Trevor Mack"
+       ],
+       [
+        "David Killmon",
+        "Navyata Bawa",
+        "Trevor Mack"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441485988001Gs2V",
+     "inst": "1780441485988001Gs2V",
+     "code": "ARC337-S",
+     "title": "Architecting for five nines with multi-region: Capital One’s journey (sponsored by Capital One)",
+     "f": {
+      "speakers": [
+       [
+        "Prem Kumar Dhayalan"
+       ],
+       [
+        "Mats Lannér",
+        "Prem Kumar Dhayalan"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441489637001GeTR",
+     "inst": "1780441489637001GeTR",
+     "code": "DVT342-S",
+     "title": "Building 10x Organizations - Using Modern Productivity Metrics (sponsored by Atlassian)",
+     "f": {
+      "speakers": [
+       [],
+       [
+        "Justin Reock"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1790358257662001imSn",
+     "inst": "1790358257662001imSn",
+     "code": "SVS342-R1",
+     "title": "Coding the tool layer for AI agents on Serverless",
+     "f": {
+      "speakers": [
+       [
+        "Jacob Cravinho"
+       ],
+       [
+        "Jacob Cravinho",
+        "Matt Boland"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442241372001c7Ky",
+     "inst": "1780442241372001c7Ky",
+     "code": "ANT343",
+     "title": "What's new with the Amazon SageMaker Data Agent",
+     "f": {
+      "speakers": [
+       [],
+       [
+        "Ramesh Harisaran Singh"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1790358251900001i6hN",
+     "inst": "1790358251900001i6hN",
+     "code": "MAM323-R1",
+     "title": "Analyze your portfolio, prioritize what to fix, and transform it",
+     "f": {
+      "speakers": [
+       [
+        "Aritra Nag",
+        "Lucas Soriano Alves Duarte"
+       ],
+       [
+        "Aritra Nag",
+        "Lucas Soriano Alves Duarte",
+        "Manmohit Pal Singh"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442278996001cybc",
+     "inst": "1780442278996001cybc",
+     "code": "DVT313",
+     "title": "Build real-time applications with AWS Amplify",
+     "f": {
+      "speakers": [
+       [
+        "Andrés Aguilar"
+       ],
+       [
+        "Andrés Aguilar",
+        "Pranav Malewadkar"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1784738621075001yfqq",
+     "inst": "1784738621075001yfqq",
+     "code": "NET321-R",
+     "title": "Securing Amazon Bedrock AgentCore with AWS WAF and a self-healing security agent",
+     "f": {
+      "speakers": [
+       [
+        "Piotrek Witkowski"
+       ],
+       [
+        "Alex Moening",
+        "Piotrek Witkowski"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442241818001cusZ",
+     "inst": "1780442241818001cusZ",
+     "code": "CMP359",
+     "title": "Simplifying how you use AWS: automating common patterns on your behalf",
+     "f": {
+      "speakers": [
+       [],
+       [
+        "Steve Rice"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1791930044225001YKK3",
+     "inst": "1791930044225001YKK3",
+     "code": "IND3354",
+     "title": "Lives on the Line: Modernizing National Weather Forecasting on AWS",
+     "f": {
+      "speakers": [
+       [
+        "Rayette Toles-Abdullah"
+       ],
+       [
+        "David Santore",
+        "Rayette Toles-Abdullah"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442230086001cwgM",
+     "inst": "1780442230086001cwgM",
+     "code": "PEX401-R",
+     "title": "Building a Zero Trust for Agentic AI Practice: A Partner Framework",
+     "f": {
+      "speakers": [
+       [
+        "Henry Axelrod",
+        "Krishna Prasad Prasad",
+        "Shashi Raina",
+        "YaduKishore Tatavarthi"
+       ],
+       [
+        "Henry Axelrod",
+        "Krishna Prasad Prasad",
+        "Reet Takkar",
+        "Shashi Raina",
+        "YaduKishore Tatavarthi"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441490400001GiGd",
+     "inst": "1780441490400001GiGd",
+     "code": "STG303",
+     "title": "Deep dive on S3 Files with use case architectures and best practices",
+     "f": {
+      "speakers": [
+       [
+        "Jimmy Zuber",
+        "Smitha Sriram"
+       ],
+       [
+        "Amir Levy",
+        "Jimmy Zuber",
+        "Smitha Sriram"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442262960001cjOu",
+     "inst": "1780442262960001cjOu",
+     "code": "COM345",
+     "title": "Designing for Operability: Catching Performance Gaps Before Scale",
+     "f": {
+      "speakers": [
+       [],
+       [
+        "Jofia Jose Prakash"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1790358243018001i1AK",
+     "inst": "1790358243018001i1AK",
+     "code": "DVT314-R1",
+     "title": "Beyond the IDE: autonomous development with Kiro web and mobile",
+     "f": {
+      "speakers": [
+       [
+        "Artur Rodrigues"
+       ],
+       [
+        "Artur Rodrigues",
+        "Massimo \"Max\" Becker"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441488777001GRzl",
+     "inst": "1780441488777001GRzl",
+     "code": "ARC208-S",
+     "title": "Make AMD Your Default on AWS: Efficient EC2 for the Agentic AI Era with EPYC (sponsored by AMD)",
+     "f": {
+      "speakers": [
+       [
+        "Madhusudhan Rangarajan",
+        "Mike Thompson"
+       ],
+       [
+        "Madhusudhan Rangarajan",
+        "Mike Thompson",
+        "Stuart Bunyan"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1791492157329001U2je",
+     "inst": "1791492157329001U2je",
+     "code": "KEY003",
+     "title": "Data & AI Keynote",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441491249001GEEU",
+     "inst": "1780441491249001GEEU",
+     "code": "STG359",
+     "title": "Migrate your NAS to the cloud: Building AI-ready file storage",
+     "f": {
+      "speakers": [
+       [
+        "Andrew Crudge"
+       ],
+       [
+        "Andrew Crudge",
+        "Luke Miller"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442225397001cQnc",
+     "inst": "1780442225397001cQnc",
+     "code": "COP307",
+     "title": "Keep your open source observability, move to managed scale",
+     "f": {
+      "speakers": [
+       [
+        "Camila Soares Camara",
+        "Lucas Vieira",
+        "Nilo Bustani",
+        "Santiago Benavidez"
+       ],
+       [
+        "Camila Soares Camara",
+        "Ingrid Alitzel Sánchez Elguea",
+        "Lucas Vieira",
+        "Nilo Bustani",
+        "Santiago Benavidez"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442241141001c9KR",
+     "inst": "1780442241141001c9KR",
+     "code": "DVT339",
+     "title": "Best practices for making coding agent orchestration more deterministic",
+     "f": {
+      "speakers": [
+       [
+        "Arundeep Nagaraj"
+       ],
+       [
+        "Arundeep Nagaraj",
+        "Romain Dura"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441477208001GAch",
+     "inst": "1780441477208001GAch",
+     "code": "IND386",
+     "title": "How Bristol Myers Squibb Scales AI from Experiments to Enterprise with AWS",
+     "f": {
+      "speakers": [
+       [
+        "Brian Loyal"
+       ],
+       [
+        "Brian Loyal",
+        "Ethan Sena"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442258201001cF7X",
+     "inst": "1780442258201001cF7X",
+     "code": "SVS342-R",
+     "title": "Coding the tool layer for AI agents on Serverless",
+     "f": {
+      "speakers": [
+       [
+        "Jacob Cravinho"
+       ],
+       [
+        "Jacob Cravinho",
+        "Matt Boland"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442280014001cmTr",
+     "inst": "1780442280014001cmTr",
+     "code": "SEC395",
+     "title": "Find, prove, and fix code vulnerabilities with AWS Continuum",
+     "f": {
+      "speakers": [
+       [],
+       [
+        "Pat Gaw"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1790358227757001i7w6",
+     "inst": "1790358227757001i7w6",
+     "code": "OPN314-R1",
+     "title": "Kiro Crew: Architecture of an open source AI coding agent built on Kiro",
+     "f": {
+      "speakers": [
+       [
+        "Joe Guo"
+       ],
+       [
+        "Bolin Chen",
+        "Joe Guo"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1790358230625001ipqD",
+     "inst": "1790358230625001ipqD",
+     "code": "PEX401-R1",
+     "title": "Building a Zero Trust for Agentic AI Practice: A Partner Framework",
+     "f": {
+      "speakers": [
+       [
+        "Henry Axelrod",
+        "Krishna Prasad Prasad",
+        "Shashi Raina",
+        "YaduKishore Tatavarthi"
+       ],
+       [
+        "Henry Axelrod",
+        "Krishna Prasad Prasad",
+        "Reet Takkar",
+        "Shashi Raina",
+        "YaduKishore Tatavarthi"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441489356001GA6l",
+     "inst": "1780441489356001GA6l",
+     "code": "AIM263-S",
+     "title": "Why Multi-Agent Systems Fail in Production (And How to Fix It) (sponsored by MongoDB)",
+     "f": {
+      "speakers": [
+       [
+        "Lydia Eichelberg"
+       ],
+       [
+        "Lydia Eichelberg",
+        "Nina Lopatina"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442285205001ccQf",
+     "inst": "1780442285205001ccQf",
+     "code": "AIM397-S",
+     "title": "Build a Live App in Under 20 Minutes, Then See How It Actually Worked (sponsored by MongoDB)",
+     "f": {
+      "speakers": [
+       [],
+       [
+        "Nina Lopatina"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442241531001cSLv",
+     "inst": "1780442241531001cSLv",
+     "code": "COP365",
+     "title": "Allocate shared AWS infrastructure costs to your business units",
+     "f": {
+      "speakers": [
+       [],
+       [
+        "Erik Nestorovic"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441471747001Ga93",
+     "inst": "1780441471747001Ga93",
+     "code": "IND3349",
+     "title": "From Generic to Industry Expert: The Next Era of AI",
+     "f": {
+      "speakers": [
+       [],
+       [
+        "Gregory Mead"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1790358247195001iGDV",
+     "inst": "1790358247195001iGDV",
+     "code": "NET321-R1",
+     "title": "Securing Amazon Bedrock agents with AWS WAF and a self-healing security agent",
+     "f": {
+      "speakers": [
+       [
+        "Piotrek Witkowski"
+       ],
+       [
+        "Alex Moening",
+        "Piotrek Witkowski"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441480549001G8Ad",
+     "inst": "1780441480549001G8Ad",
+     "code": "PEX212",
+     "title": "Agentic Selling: Scaling Revenue through Expertise on Demand",
+     "f": {
+      "speakers": [
+       [
+        "Aaron Barton",
+        "Prerit Panwar"
+       ],
+       [
+        "Aaron Barton",
+        "Prerit Panwar",
+        "Simone Thompson"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1790358217777001iqkI",
+     "inst": "1790358217777001iqkI",
+     "code": "SEC319-R1",
+     "title": "Preventing unintended access: a practical guide to data perimeter controls",
+     "f": {
+      "speakers": [
+       [
+        "Nitin Kulkarni",
+        "Sowjanya Rajavaram"
+       ],
+       [
+        "Manas Chhabra",
+        "Nitin Kulkarni",
+        "Sowjanya Rajavaram"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1790358218602001ij33",
+     "inst": "1790358218602001ij33",
+     "code": "ANT416-R1",
+     "title": "Build agentic AI applications with the open data lakehouse architecture on AWS",
+     "f": {
+      "speakers": [
+       [
+        "David Greenshtein"
+       ],
+       [
+        "David Greenshtein",
+        "Nathan Yee"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1790358244618001i1Bb",
+     "inst": "1790358244618001i1Bb",
+     "code": "AIM322-R1",
+     "title": "Build an AI navigator that makes every frontline worker an expert",
+     "f": {
+      "speakers": [
+       [
+        "Paul Mietz Egli",
+        "Tim Ness",
+        "Vanitha Sugumaran",
+        "vtbloise Bloise"
+       ],
+       [
+        "Krishna Kadiyala",
+        "Paul Mietz Egli",
+        "Tim Ness",
+        "Vanitha Sugumaran",
+        "vtbloise Bloise"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441471915001GDKZ",
+     "inst": "1780441471915001GDKZ",
+     "code": "DAT453",
+     "title": "[NEW LAUNCH] Coming soon!",
+     "f": {
+      "start": [
+       "2026-12-03T18:00:00Z",
+       "2026-12-02T21:00:00Z"
+      ],
+      "end": [
+       "2026-12-03T19:00:00Z",
+       "2026-12-02T22:00:00Z"
+      ],
+      "room": [
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | Red Theater",
+       "MGM Grand | Level 1 | Grand 117"
+      ]
+     }
+    },
+    {
+     "id": "1780441476768001GdrF",
+     "inst": "1780441476768001GdrF",
+     "code": "IND3306",
+     "title": "How Ramp tracks and governs AI spend down to the team, model, and API key",
+     "f": {
+      "speakers": [
+       [
+        "Jigna Gandhi",
+        "Richard Wang",
+        "Siddhi Surana"
+       ],
+       [
+        "Alexander Chau",
+        "Jigna Gandhi",
+        "Richard Wang",
+        "Siddhi Surana"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441488097001G1EO",
+     "inst": "1780441488097001G1EO",
+     "code": "COP347-S",
+     "title": "Drive AI at full speed: The enterprise blueprint (sponsored by HashiCorp)",
+     "f": {
+      "speakers": [
+       [
+        "Cole Morrison"
+       ],
+       [
+        "Cole Morrison",
+        "Kyle Ruddy"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441483894001GgWj",
+     "inst": "1780441483894001GgWj",
+     "code": "IND210-S",
+     "title": "Molecule to Market: Bayer & Capgemini Accelerate Drug Discovery with NVIDIA BioNeMo (sponsored by NVIDIA)",
+     "f": {
+      "speakers": [
+       [
+        "Dr. Janosch Achenbach"
+       ],
+       [
+        "Dr. Janosch Achenbach",
+        "Lukas Kuckelkorn"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441475373001GKRr",
+     "inst": "1780441475373001GKRr",
+     "code": "IND305",
+     "title": "AI for Impact: Elevating human potential through inclusive innovation",
+     "f": {
+      "speakers": [
+       [
+        "Steve Tilkens"
+       ],
+       [
+        "Diwakar Jha",
+        "Steve Tilkens"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442282342001cISn",
+     "inst": "1780442282342001cISn",
+     "code": "MAM323-R",
+     "title": "Analyze your portfolio, prioritize what to fix, and transform it",
+     "f": {
+      "speakers": [
+       [
+        "Aritra Nag",
+        "Lucas Soriano Alves Duarte"
+       ],
+       [
+        "Aritra Nag",
+        "Lucas Soriano Alves Duarte",
+        "Manmohit Pal Singh"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442242294001cPyH",
+     "inst": "1780442242294001cPyH",
+     "code": "SEC3300",
+     "title": "Authenticating workloads to the outside world",
+     "f": {
+      "speakers": [
+       [],
+       [
+        "Fei Yuan"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441484865001GbTa",
+     "inst": "1780441484865001GbTa",
+     "code": "AIM251-S",
+     "title": "How YipitData Builds AI-Native Analytics with AWS, Databricks, and OpenAI (sponsored by Databricks)",
+     "f": {
+      "speakers": [
+       [],
+       [
+        "Sully Clark"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441470028001Gr0t",
+     "inst": "1780441470028001Gr0t",
+     "code": "DVT204",
+     "title": "Beyond the pilot: How customers scaled Kiro and proved the value",
+     "f": {
+      "speakers": [
+       [
+        "Diana Kennedy",
+        "Kym Weiland",
+        "Rory Richardson (AWS)"
+       ],
+       [
+        "Diana Kennedy",
+        "Kym Weiland",
+        "Michael Erdman",
+        "Rory Richardson (AWS)"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442248204001cdgt",
+     "inst": "1780442248204001cdgt",
+     "code": "NET333",
+     "title": "A practitioner’s guide to migrating from 3rd-party CDN and WAF to AWS",
+     "f": {
+      "speakers": [
+       [
+        "Achraf Souk"
+       ],
+       [
+        "Achraf Souk",
+        "Etienne Munnich"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441479902001G5OS",
+     "inst": "1780441479902001G5OS",
+     "code": "OPN308",
+     "title": "The Neuron Stack: Enabling open source ML solutions on AWS Trainium",
+     "f": {
+      "speakers": [
+       [],
+       [
+        "Maen Suleiman"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1790358238147001iFjU",
+     "inst": "1790358238147001iFjU",
+     "code": "SEC371-R1",
+     "title": "Stop troubleshooting your AWS network from memory and stale diagrams",
+     "f": {
+      "speakers": [
+       [
+        "Neil Yajnik"
+       ],
+       [
+        "Kartik Ganesh",
+        "Neil Yajnik"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442263748001ciSc",
+     "inst": "1780442263748001ciSc",
+     "code": "IND215",
+     "title": "Deploying Governed AI Agents in Clinical AI",
+     "f": {
+      "speakers": [
+       [
+        "Bret Borota"
+       ],
+       [
+        "Bret Borota",
+        "Dan Eakin"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442259582001cthc",
+     "inst": "1780442259582001cthc",
+     "code": "AIM393",
+     "title": "Open weights to production: How Salesforce built and served Koa models",
+     "f": {
+      "speakers": [
+       [
+        "Hrushikesh Gangur"
+       ],
+       [
+        "Hrushikesh Gangur",
+        "James Zhu"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1786342064647001P5SM",
+     "inst": "1786342064647001P5SM",
+     "code": "DVT341",
+     "title": "Making Kiro Crew work for your team",
+     "f": {
+      "speakers": [
+       [
+        "Hillel Antonov",
+        "Kyle Seaman"
+       ],
+       [
+        "Aaron Longwell",
+        "Hillel Antonov",
+        "Kyle Seaman"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442245419001c4jY",
+     "inst": "1780442245419001c4jY",
+     "code": "IND3303",
+     "title": "Real-time AI video enrichment with AWS Elemental Inference",
+     "f": {
+      "speakers": [
+       [
+        "Kiran Patel",
+        "Phil Harrison"
+       ],
+       [
+        "Kiran Patel",
+        "Phil Harrison",
+        "Vipul Patel"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441480733001GC0U",
+     "inst": "1780441480733001GC0U",
+     "code": "SEC326",
+     "title": "What's new in Application Security: Securing applications at machine speed",
+     "f": {
+      "speakers": [
+       [
+        "Daniel Santana",
+        "Joao Melo"
+       ],
+       [
+        "Christopher Rae",
+        "Daniel Santana",
+        "Joao Melo"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441478082001GAEb",
+     "inst": "1780441478082001GAEb",
+     "code": "MAM319",
+     "title": "How LG U+ cut migration time 50% with AI-powered app refactoring",
+     "f": {
+      "speakers": [
+       [
+        "Bhavna Sarathy"
+       ],
+       [
+        "Bhavna Sarathy",
+        "Yoojong Lee"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1786342064400001PiN0",
+     "inst": "1786342064400001PiN0",
+     "code": "MAM344",
+     "title": "From migration to continuous modernization: reduce tech debt at scale",
+     "f": {
+      "speakers": [
+       [
+        "Neha Goswami"
+       ],
+       [
+        "Everett Dolgner",
+        "Neha Goswami"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442230481001cZMC",
+     "inst": "1780442230481001cZMC",
+     "code": "SEC305",
+     "title": "Malware Protection: hands-on detection and response for malicious files",
+     "f": {
+      "speakers": [
+       [
+        "Anthony Harvey",
+        "Fabian Serrano Morales",
+        "Omner Barajas",
+        "Shay Grinberg"
+       ],
+       [
+        "Anthony Harvey",
+        "Fabian Serrano Morales",
+        "Omner Barajas",
+        "Pedro Gadelha",
+        "Shay Grinberg"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442265339001c4R2",
+     "inst": "1780442265339001c4R2",
+     "code": "SEC377",
+     "title": "Protect EKS and ECS workloads without chasing pod IPs",
+     "f": {
+      "speakers": [
+       [],
+       [
+        "Bongkyoon Choi"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442255779001clk0",
+     "inst": "1780442255779001clk0",
+     "code": "DVT326",
+     "title": "Learn faster: Experimentation in an AI world",
+     "f": {
+      "speakers": [
+       [
+        "Ben Shumpert"
+       ],
+       [
+        "Ben Shumpert",
+        "Steve Rice"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442250166001cxTo",
+     "inst": "1780442250166001cxTo",
+     "code": "SEC371-R",
+     "title": "Stop troubleshooting your AWS network from memory and stale diagrams",
+     "f": {
+      "speakers": [
+       [
+        "Neil Yajnik"
+       ],
+       [
+        "Kartik Ganesh",
+        "Neil Yajnik"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442249770001cmHP",
+     "inst": "1780442249770001cmHP",
+     "code": "SEC435",
+     "title": "Tokenomics of attacks: how AWS defends you from AI-powered threats",
+     "f": {
+      "speakers": [
+       [
+        "Alexandra Lee"
+       ],
+       [
+        "Alexandra Lee",
+        "Paul Bodmer"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442272955001cOHL",
+     "inst": "1780442272955001cOHL",
+     "code": "AIM125-S",
+     "title": "No room for error: deploying trusted AI when the stakes are high (sponsored by Monte Carlo)",
+     "f": {
+      "speakers": [
+       [],
+       [
+        "Barr Moses",
+        "Brenda Remy"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442389888001NPVg",
+     "inst": "1780442389888001NPVg",
+     "code": "SEC103-S",
+     "title": "Turn AWS Security Signals into Action with AI-First SecOps (sponsored by Splunk, a Cisco Company)",
+     "f": {
+      "speakers": [
+       [
+        "Peter Prizio"
+       ],
+       [
+        "Peter Prizio",
+        "colin gibbens"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442249168001crHI",
+     "inst": "1780442249168001crHI",
+     "code": "SEC419",
+     "title": "OAuth delegation patterns for AI agents with Amazon Bedrock AgentCore Identity",
+     "f": {
+      "speakers": [
+       [
+        "Jeff Lombardo"
+       ],
+       [
+        "Fei Yuan",
+        "Jeff Lombardo"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442227509001c83e",
+     "inst": "1780442227509001c83e",
+     "code": "PEX320",
+     "title": "AI-Powered Migrations: AWS Transform Across the Lifecycle",
+     "f": {
+      "speakers": [
+       [],
+       [
+        "Luca Gorgoglione Certini"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1784231863339001EPfB",
+     "inst": "1784231863339001EPfB",
+     "code": "TNC311-R1",
+     "title": "Enhance Production Applications with AI-Assisted Development in Kiro",
+     "f": {
+      "speakers": [
+       [],
+       [
+        "Javier Martinez Nohales"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442269174001cP7n",
+     "inst": "1780442269174001cP7n",
+     "code": "AIM457-S",
+     "title": "From reactive operations to autonomous resilience: How Agentic AI is redefining SRE (sponsored by HCLTech)",
+     "f": {
+      "speakers": [
+       [],
+       [
+        "Ramesh Ramakrishnan"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442273693001cd1J",
+     "inst": "1780442273693001cd1J",
+     "code": "AIM394-S",
+     "title": "Agents run at the edge. The blast radius lives in the cloud (sponsored by Sysdig)",
+     "f": {
+      "speakers": [
+       [],
+       [
+        "Eric Carter"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441474644001GNoW",
+     "inst": "1780441474644001GNoW",
+     "code": "IND3345",
+     "title": "Robinhood: Scaling in-app agentic trading to every investor on AWS",
+     "f": {
+      "speakers": [
+       [
+        "Chirantan Mahipal",
+        "Viraj Padte"
+       ],
+       [
+        "Chirantan Mahipal",
+        "Sreeram Ramji",
+        "Viraj Padte"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1785441035591001GjfZ",
+     "inst": "1785441035591001GjfZ",
+     "code": "OPN314-R",
+     "title": "Kiro Crew: Architecture of an open source AI coding agent built on Kiro",
+     "f": {
+      "speakers": [
+       [
+        "Joe Guo"
+       ],
+       [
+        "Bolin Chen",
+        "Joe Guo"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442230419001cZLA",
+     "inst": "1780442230419001cZLA",
+     "code": "SEC404",
+     "title": "Ship permissions faster: IAM policy tools in your CI/CD pipeline",
+     "f": {
+      "speakers": [
+       [
+        "Diana Yin",
+        "Kevin Shanley",
+        "Moumita Saha",
+        "Todd Kudlicki"
+       ],
+       [
+        "Diana Yin",
+        "Kevin Shanley",
+        "Moumita Saha",
+        "Siva Rajamani",
+        "Todd Kudlicki"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1790358245912001ii19",
+     "inst": "1790358245912001ii19",
+     "code": "AIM312-R1",
+     "title": "Beyond fine-tuning: RL for reasoning agents with AWS Trainium",
+     "f": {
+      "speakers": [
+       [
+        "Hiroshi Tokoyo"
+       ],
+       [
+        "Hiroshi Tokoyo",
+        "Maen Suleiman"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441461234001G5fg",
+     "inst": "1780441461234001G5fg",
+     "code": "ANT302",
+     "title": "What's new in Amazon SageMaker platform",
+     "f": {
+      "speakers": [
+       [
+        "Brian Ross",
+        "Shikha Verma"
+       ],
+       [
+        "Brian Ross",
+        "Derek Chau",
+        "Shikha Verma"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442221624001cqr7",
+     "inst": "1780442221624001cqr7",
+     "code": "HMC322",
+     "title": "How Uber brought AWS into its agentic AI stack across clouds",
+     "f": {
+      "title": [
+       "How Fidelity built a cloud-agnostic AI Gateway",
+       "How Uber brought AWS into its agentic AI stack across clouds"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1790358247659001ie9O",
+     "inst": "1790358247659001ie9O",
+     "code": "SEC328-R1",
+     "title": "Enforce AI guardrails across your organization without the friction",
+     "f": {
+      "speakers": [
+       [
+        "Mark Keating"
+       ],
+       [
+        "Michael Ingoldby",
+        "Rob Whitelocks"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442257533001cBA5",
+     "inst": "1780442257533001cBA5",
+     "code": "SEC358",
+     "title": "Proving your defenses work: validating GuardDuty runtime detection",
+     "f": {
+      "speakers": [
+       [
+        "Bryan Van Hook"
+       ],
+       [
+        "Bryan Van Hook",
+        "Muhammad Wasiq (AWS)"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441477699001GgxY",
+     "inst": "1780441477699001GgxY",
+     "code": "IND345",
+     "title": "Human+AI Collaboration: How Amazon Deploys Autonomous Operations on AWS",
+     "f": {
+      "speakers": [
+       [
+        "Elad Dwek",
+        "Joseph Rosing"
+       ],
+       [
+        "Chris Keane",
+        "Elad Dwek",
+        "Joseph Rosing"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441475431001Gos3",
+     "inst": "1780441475431001Gos3",
+     "code": "IND309",
+     "title": "Advancing the Mission with AI and HPC Supercomputing Pods on AWS",
+     "f": {
+      "speakers": [
+       [
+        "Lowell Wofford"
+       ],
+       [
+        "Lowell Wofford",
+        "Nicci Neal"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442222761001cmMF",
+     "inst": "1780442222761001cmMF",
+     "code": "SEC204",
+     "title": "Post-quantum readiness at scale with AWS and DXC Technology",
+     "f": {
+      "speakers": [
+       [
+        "Rushir Patel"
+       ],
+       [
+        "Douglas Skirving",
+        "Rushir Patel"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442222420001coic",
+     "inst": "1780442222420001coic",
+     "code": "SEC365",
+     "title": "Control what goes out: egress security for AI workloads",
+     "f": {
+      "speakers": [
+       [
+        "Akshay Choudhry",
+        "Sofía Aluma"
+       ],
+       [
+        "Akshay Choudhry",
+        "Bashuman Deb",
+        "Sofía Aluma"
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
    "at": "2026-10-22T18:51:46Z",
    "milestones": [],
    "added": [],

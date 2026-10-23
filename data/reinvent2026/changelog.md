@@ -3,6 +3,93 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-10-23T01:11:44Z · https://catalog.awsevents.com/api/sessions
+
+Added 0 · removed 0 · changed 121
+
+**Changed**
+- `AIM125-S` No room for error: deploying trusted AI when the stakes are high (sponsored by Monte Carlo) — speakers: — → Barr Moses, Brenda Remy
+- `AIM251-S` How YipitData Builds AI-Native Analytics with AWS, Databricks, and OpenAI (sponsored by Databricks) — speakers: — → Sully Clark
+- `AIM263-S` Why Multi-Agent Systems Fail in Production (And How to Fix It) (sponsored by MongoDB) — speakers: Lydia Eichelberg → Lydia Eichelberg, Nina Lopatina
+- `AIM312-R` Beyond fine-tuning: RL for reasoning agents with AWS Trainium — speakers: Hiroshi Tokoyo → Hiroshi Tokoyo, Maen Suleiman
+- `AIM312-R1` Beyond fine-tuning: RL for reasoning agents with AWS Trainium — speakers: Hiroshi Tokoyo → Hiroshi Tokoyo, Maen Suleiman
+- `AIM322-R` Build an AI navigator that makes every frontline worker an expert — speakers: Paul Mietz Egli, Tim Ness, Vanitha Sugumaran, vtbloise Bl… → Krishna Kadiyala, Paul Mietz Egli, Tim Ness, Vanitha Sugu…
+- `AIM322-R1` Build an AI navigator that makes every frontline worker an expert — speakers: Paul Mietz Egli, Tim Ness, Vanitha Sugumaran, vtbloise Bl… → Krishna Kadiyala, Paul Mietz Egli, Tim Ness, Vanitha Sugu…
+- `AIM3316-S` Koa: NVIDIA Nemotron-Powered CRM Reasoning Inside Salesforce’s AWS Trust Boundary (sponsored by NVIDIA) — speakers: Shubham Mehrotra → Petro Junior Milan, Shubham Mehrotra
+- `AIM343` Data Prep to Deployment: How Tencent Games Scaled to 1,000 GPUs on SageMaker HyperPod — speakers: Shreyas Adiyodi, Xulong Gao → Haoming Li, Shreyas Adiyodi, Xulong Gao
+- `AIM370` Trusting agents in production: end-to-end security with AgentCore — speakers: Guilherme Greco → Fei Yuan, Guilherme Greco
+- `AIM393` Open weights to production: How Salesforce built and served Koa models — speakers: Hrushikesh Gangur → Hrushikesh Gangur, James Zhu
+- `AIM394-S` Agents run at the edge. The blast radius lives in the cloud (sponsored by Sysdig) — speakers: — → Eric Carter
+- `AIM397-S` Build a Live App in Under 20 Minutes, Then See How It Actually Worked (sponsored by MongoDB) — speakers: — → Nina Lopatina
+- `AIM442` Intelligent document processing with generative AI on AWS — speakers: Nicole Meyers, Roop Bains → Nicole Meyers, Niklas Breuer, Roop Bains
+- `AIM457-S` From reactive operations to autonomous resilience: How Agentic AI is redefining SRE (sponsored by HCLTech) — speakers: — → Ramesh Ramakrishnan
+- `AMZ202-R` Turn a Bee wearable into your re:Invent notetaking companion — speakers: Kourtney Meiss → Emerson Sklar, Kourtney Meiss
+- `AMZ202-R1` Turn a Bee wearable into your re:Invent notetaking companion — speakers: Kourtney Meiss → Emerson Sklar, Kourtney Meiss
+- `ANT302` What's new in Amazon SageMaker platform — speakers: Brian Ross, Shikha Verma → Brian Ross, Derek Chau, Shikha Verma
+- `ANT343` What's new with the Amazon SageMaker Data Agent — speakers: — → Ramesh Harisaran Singh
+- `ANT416-R` Build agentic AI applications with the open data lakehouse architecture on AWS — speakers: David Greenshtein → David Greenshtein, Nathan Yee
+- `ANT416-R1` Build agentic AI applications with the open data lakehouse architecture on AWS — speakers: David Greenshtein → David Greenshtein, Nathan Yee
+- `ARC206-S` Accelerating Fusion Innovation with AMD EPYC on AWS HPC, Analytics, and Agentic AI (sponsored by AMD) — speakers: Arijit Choudhury, Hardeep Sullan, Manish Amin → Arijit Choudhury, Brody Bassett, Hardeep Sullan, Manish Amin
+- `ARC208-S` Make AMD Your Default on AWS: Efficient EC2 for the Agentic AI Era with EPYC (sponsored by AMD) — speakers: Madhusudhan Rangarajan, Mike Thompson → Madhusudhan Rangarajan, Mike Thompson, Stuart Bunyan
+- `ARC337-S` Architecting for five nines with multi-region: Capital One’s journey (sponsored by Capital One) — speakers: Prem Kumar Dhayalan → Mats Lannér, Prem Kumar Dhayalan
+- `BIZ111-S` Build the Agentic Workplace: What's New on the Slack Developer Platform (sponsored by Salesforce) — speakers: — → Josh Milas
+- `BIZ305` Security → Zero-Trust Identity & Data Protection in Amazon Quick — title: …the Agentic Era → …Amazon Quick; desc
+- `BIZ328-S` Build It, Govern It, Ship It: CI/CD for AI Agents with the NVIDIA Agent Toolkit (sponsored by NVIDIA) — speakers: — → Kevon Mayers
+- `BIZ329-S` Build, Govern, Optimize: Trustworthy, Cost-Aware Agents with the NVIDIA Agent Toolkit (sponsored by NVIDIA) — speakers: Dimitri Maltezakis, Kevon Mayers → Chris Smith, Dimitri Maltezakis, Kevon Mayers
+- `BIZ334` Building Smarter Self-Service Experiences with AI — speakers: — → Saurabh Dey
+- `CMP312` Assess your workloads with SELinux compatibility on Amazon Linux 2027 — speakers: Chris Bilbo, Frederick Lefebvre, Ovais Siddiqui, Steve Za… → Chris Bilbo, Frederick Lefebvre, Ovais Siddiqui, Steve Za…
+- `CMP359` Simplifying how you use AWS: automating common patterns on your behalf — speakers: — → Steve Rice
+- `COM345` Designing for Operability: Catching Performance Gaps Before Scale — speakers: — → Jofia Jose Prakash
+- `COP307` Keep your open source observability, move to managed scale — speakers: Camila Soares Camara, Lucas Vieira, Nilo Bustani, Santiag… → Camila Soares Camara, Ingrid Alitzel Sánchez Elguea, Luca…
+- `COP344-S` Agentic AI Needs Agentic Infrastructure: Autonomy on Amazon EKS (sponsored by ScaleOps) — speakers: — → Gilad Elyashar
+- `COP347-S` Drive AI at full speed: The enterprise blueprint (sponsored by HashiCorp) — speakers: Cole Morrison → Cole Morrison, Kyle Ruddy
+- `COP365` Allocate shared AWS infrastructure costs to your business units — speakers: — → Erik Nestorovic
+- `DAT453` [NEW LAUNCH] Coming soon! — start: 2026-12-03T18:00:00Z → 2026-12-02T21:00:00Z; end: 2026-12-03T19:00:00Z → 2026-12-02T22:00:00Z; room: Caesars Forum | Level 1 | Forum 120 | Content Hub | Red T… → MGM Grand | Level 1 | Grand 117
+- `DVT204` Beyond the pilot: How customers scaled Kiro and proved the value — speakers: Diana Kennedy, Kym Weiland, Rory Richardson (AWS) → Diana Kennedy, Kym Weiland, Michael Erdman, Rory Richards…
+- `DVT218-S` Change. Wait. Debug. Let AI drive the infrastructure loop. (sponsored by HashiCorp) — speakers: Cole Morrison → Cole Morrison, Kyle Ruddy
+- `DVT313` Build real-time applications with AWS Amplify — speakers: Andrés Aguilar → Andrés Aguilar, Pranav Malewadkar
+- `DVT314-R` Beyond the IDE: autonomous development with Kiro web and mobile — speakers: Artur Rodrigues → Artur Rodrigues, Massimo "Max" Becker
+- `DVT314-R1` Beyond the IDE: autonomous development with Kiro web and mobile — speakers: Artur Rodrigues → Artur Rodrigues, Massimo "Max" Becker
+- `DVT320` How Kiro learns: an AI coding agent that improves with every session — speakers: Navyata Bawa, Trevor Mack → David Killmon, Navyata Bawa, Trevor Mack
+- `DVT326` Learn faster: Experimentation in an AI world — speakers: Ben Shumpert → Ben Shumpert, Steve Rice
+- `DVT338` Scale agentic development with automated orchestration — speakers: Rodrigo Azevedo → Rodrigo Azevedo, Romain Dura, mac Merritt
+- `DVT339` Best practices for making coding agent orchestration more deterministic — speakers: Arundeep Nagaraj → Arundeep Nagaraj, Romain Dura
+- `DVT341` Making Kiro Crew work for your team — speakers: Hillel Antonov, Kyle Seaman → Aaron Longwell, Hillel Antonov, Kyle Seaman
+- `DVT342-S` Building 10x Organizations - Using Modern Productivity Metrics (sponsored by Atlassian) — speakers: — → Justin Reock
+- `HMC312` How RBC built a regulated multicloud platform — speakers: Chris Brandon, Ellie Tamari, Vinh Tran → Chris Brandon, Ellie Tamari, Ernani Cecon, Vinh Tran
+- `HMC322` How Uber brought AWS into its agentic AI stack across clouds — title: How Fidelity built a cloud-agnostic AI Gateway → How Uber brought AWS into its agentic AI stack across clouds; desc
+- `IND210-S` Molecule to Market: Bayer & Capgemini Accelerate Drug Discovery with NVIDIA BioNeMo (sponsored by NVIDIA) — speakers: Dr. Janosch Achenbach → Dr. Janosch Achenbach, Lukas Kuckelkorn
+- `IND215` Deploying Governed AI Agents in Clinical AI — speakers: Bret Borota → Bret Borota, Dan Eakin
+- `IND305` AI for Impact: Elevating human potential through inclusive innovation — speakers: Steve Tilkens → Diwakar Jha, Steve Tilkens
+- `IND309` Advancing the Mission with AI and HPC Supercomputing Pods on AWS — speakers: Lowell Wofford → Lowell Wofford, Nicci Neal
+- `IND3303` Real-time AI video enrichment with AWS Elemental Inference — speakers: Kiran Patel, Phil Harrison → Kiran Patel, Phil Harrison, Vipul Patel
+- `IND3306` How Ramp tracks and governs AI spend down to the team, model, and API key — speakers: Jigna Gandhi, Richard Wang, Siddhi Surana → Alexander Chau, Jigna Gandhi, Richard Wang, Siddhi Surana
+- `IND3336` How Hyundai Is Transforming Customer and Vehicle Experiences on AWS — speakers: Eundoo Song, Yunsang Hwang → Eundoo Song, Eunjee Moon, Yunsang Hwang
+- `IND3345` Robinhood: Scaling in-app agentic trading to every investor on AWS — speakers: Chirantan Mahipal, Viraj Padte → Chirantan Mahipal, Sreeram Ramji, Viraj Padte
+- `IND3349` From Generic to Industry Expert: The Next Era of AI — speakers: — → Gregory Mead
+- `IND3353` TP ICAP: Driving revenue through faster decisions with agentic AI — speakers: Erica Martin, Shahen Bokhari → Animesh Kundu, Erica Martin, Shahen Bokhari
+- `IND3354` Lives on the Line: Modernizing National Weather Forecasting on AWS — speakers: Rayette Toles-Abdullah → David Santore, Rayette Toles-Abdullah
+- `IND345` Human+AI Collaboration: How Amazon Deploys Autonomous Operations on AWS — speakers: Elad Dwek, Joseph Rosing → Chris Keane, Elad Dwek, Joseph Rosing
+- `IND381` Decision patterns for AI Agents with Amazon Connect Customer — desc
+- `IND386` How Bristol Myers Squibb Scales AI from Experiments to Enterprise with AWS — speakers: Brian Loyal → Brian Loyal, Ethan Sena
+- `KEY003` Data & AI Keynote — desc
+- `MAM101-S` Aflac’s Modernization journey to a resilient and innovative future (sponsored by Kyndryl) — speakers: DJ Goldsworthy, Tohru Futami → DJ Goldsworthy, Jamie Rutledge, Tohru Futami
+- `MAM319` How LG U+ cut migration time 50% with AI-powered app refactoring — speakers: Bhavna Sarathy → Bhavna Sarathy, Yoojong Lee
+- `MAM323-R` Analyze your portfolio, prioritize what to fix, and transform it — speakers: Aritra Nag, Lucas Soriano Alves Duarte → Aritra Nag, Lucas Soriano Alves Duarte, Manmohit Pal Singh
+- `MAM323-R1` Analyze your portfolio, prioritize what to fix, and transform it — speakers: Aritra Nag, Lucas Soriano Alves Duarte → Aritra Nag, Lucas Soriano Alves Duarte, Manmohit Pal Singh
+- `MAM343` Govern and optimize AI agents for desktop work on WorkSpaces — speakers: Andrew Morgan → Andrew Morgan, Ed Mahlum
+- `MAM344` From migration to continuous modernization: reduce tech debt at scale — speakers: Neha Goswami → Everett Dolgner, Neha Goswami
+- `NET305-R` Enforce encryption in transit using Amazon VPC Encryption Controls — speakers: Ankush Goyal, Ashraf Altalleh, Hrushikesh Gangur, Salman … → Ankush Goyal, Ashraf Altalleh, Hrushikesh Gangur, Salman …
+- `NET305-R1` Enforce encryption in transit using Amazon VPC Encryption Controls — speakers: Ankush Goyal, Ashraf Altalleh, Hrushikesh Gangur, Salman … → Ankush Goyal, Ashraf Altalleh, Hrushikesh Gangur, Salman …
+- `NET321-R` Securing Amazon Bedrock AgentCore with AWS WAF and a self-healing security agent — speakers: Piotrek Witkowski → Alex Moening, Piotrek Witkowski
+- `NET321-R1` Securing Amazon Bedrock agents with AWS WAF and a self-healing security agent — speakers: Piotrek Witkowski → Alex Moening, Piotrek Witkowski
+- `NET333` A practitioner’s guide to migrating from 3rd-party CDN and WAF to AWS — speakers: Achraf Souk → Achraf Souk, Etienne Munnich
+- `OPN308` The Neuron Stack: Enabling open source ML solutions on AWS Trainium — speakers: — → Maen Suleiman
+- `OPN314-R` Kiro Crew: Architecture of an open source AI coding agent built on Kiro — speakers: Joe Guo → Bolin Chen, Joe Guo
+- `OPN314-R1` Kiro Crew: Architecture of an open source AI coding agent built on Kiro — speakers: Joe Guo → Bolin Chen, Joe Guo
+- `PEX202` Go-Live to ROI: How Partners Turn Customer Outcomes into Revenue — speakers: Bhargs Srivathsan, Karen Hildebrand → Bhargs Srivathsan, Karen Hildebrand, Peter Gratzke
+- …and 41 more
+
 ## 2026-10-22T18:51:46Z · https://catalog.awsevents.com/api/sessions
 
 Added 0 · removed 0 · changed 13
