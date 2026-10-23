@@ -1,6 +1,708 @@
 {
  "batches": [
   {
+   "at": "2026-10-23T20:47:50Z",
+   "milestones": [],
+   "added": [
+    {
+     "id": "1787856664888001Ezhk",
+     "inst": "1787856664888001Ezhk-1791588221823001CTu1",
+     "code": "LTG1182",
+     "title": "Instrumenting agent ROI: Trace data into a number your CFO accepts",
+     "repeat": false
+    },
+    {
+     "id": "1787856702748001EKHM",
+     "inst": "1787856702748001EKHM-1791588345516001Cahc",
+     "code": "LTG1427",
+     "title": "Community Taught Me How to Lead",
+     "repeat": false
+    },
+    {
+     "id": "1787856702919001EsBo",
+     "inst": "1787856702919001EsBo-1791588142196001COtx",
+     "code": "LTG1428",
+     "title": "The Best Career Move I Never Planned",
+     "repeat": false
+    },
+    {
+     "id": "1787856703072001Ehfg",
+     "inst": "1787856703072001Ehfg-1791588142428001C78u",
+     "code": "LTG1429",
+     "title": "Find Your People: Growing Community with Purpose",
+     "repeat": false
+    },
+    {
+     "id": "1787856703226001E17f",
+     "inst": "1787856703226001E17f-1791588142656001CVwI",
+     "code": "LTG1430",
+     "title": "Champions Create Change",
+     "repeat": false
+    },
+    {
+     "id": "1787856703377001EEMO",
+     "inst": "1787856703377001EEMO-1791588190810001CNb4",
+     "code": "LTG1431",
+     "title": "Lift as You Climb",
+     "repeat": false
+    },
+    {
+     "id": "1787856707241001E1GQ",
+     "inst": "1787856707241001E1GQ-1791588137374001CTp2",
+     "code": "LTG1456",
+     "title": "Build Your Next Community Event with AI Agents",
+     "repeat": false
+    },
+    {
+     "id": "1787856707389001ElID",
+     "inst": "1787856707389001ElID-1791588137604001Cgh0",
+     "code": "LTG1457",
+     "title": "Don’t Build Alone: How Community Helps You Build Better Agents",
+     "repeat": false
+    }
+   ],
+   "removed": [
+    {
+     "id": "1787858591169001SUm7",
+     "inst": "1787858591169001SUm7-1791588165357001CFAR",
+     "code": "THRSP1050",
+     "title": "Scale enterprise AI with security, sovereignty, and governance",
+     "repeat": false
+    },
+    {
+     "id": "1787858591313001S6FP",
+     "inst": "1787858591313001S6FP-1791588178166001C3m7",
+     "code": "THRSP1051",
+     "title": "AI doesn't wait. Neither should your network.",
+     "repeat": false
+    },
+    {
+     "id": "1787858591455001SYOv",
+     "inst": "1787858591455001SYOv-1791588182295001C5rb",
+     "code": "THRSP1052",
+     "title": "Connect people, spaces, and AI for better workplace experiences",
+     "repeat": false
+    },
+    {
+     "id": "1787858591752001SE9f",
+     "inst": "1787858591752001SE9f-1791588088633001CiMx",
+     "code": "THRSP1054",
+     "title": "Proxy, host, operator: Who can read your agent's prompts?",
+     "repeat": false
+    },
+    {
+     "id": "1787858591906001S2pK",
+     "inst": "1787858591906001S2pK-1791588188918001CueR",
+     "code": "THRSP1055",
+     "title": "GPU liquidity means AI compute without data movement",
+     "repeat": false
+    },
+    {
+     "id": "1787858592053001Scmk",
+     "inst": "1787858592053001Scmk-1791588207415001CgDS",
+     "code": "THRSP1056",
+     "title": "Connect M365 Copilot to your revenue engine for AI that executes",
+     "repeat": false
+    },
+    {
+     "id": "1787858586194001SCij",
+     "inst": "1787858586194001SCij-1791588096085001Ckim",
+     "code": "THRSP1060",
+     "title": "Secure workplace AI without slowing innovation",
+     "repeat": false
+    },
+    {
+     "id": "1787858586362001SEV8",
+     "inst": "1787858586362001SEV8-1791588109445001CfxY",
+     "code": "THRSP1061",
+     "title": "When AI added work, see what successful IT teams did differently",
+     "repeat": false
+    },
+    {
+     "id": "1787858586508001SUb8",
+     "inst": "1787858586508001SUb8-1791588122064001CVan",
+     "code": "THRSP1062",
+     "title": "Context is the fix: Innovate the agentic service desk",
+     "repeat": false
+    },
+    {
+     "id": "1787858586668001SAn1",
+     "inst": "1787858586668001SAn1-1791588122293001CeBT",
+     "code": "THRSP1063",
+     "title": "Who broke access? Recover Entra ID and Intune live",
+     "repeat": false
+    },
+    {
+     "id": "1787858586817001SgTE",
+     "inst": "1787858586817001SgTE-1791588109673001CKDY",
+     "code": "THRSP1064",
+     "title": "Build the data layer for enterprise AI",
+     "repeat": false
+    },
+    {
+     "id": "1787858586963001S9Tq",
+     "inst": "1787858586963001S9Tq-1791588096318001CQkJ",
+     "code": "THRSP1065",
+     "title": "Local when it matters. Cloud when it counts.",
+     "repeat": false
+    },
+    {
+     "id": "1787858587109001SxCN",
+     "inst": "1787858587109001SxCN-1791588122526001CjUv",
+     "code": "THRSP1066",
+     "title": "Build an intelligent search pipeline for grounded AI",
+     "repeat": false
+    },
+    {
+     "id": "1787858587262001SqyP",
+     "inst": "1787858587262001SqyP-1791588109902001CLPV",
+     "code": "THRSP1067",
+     "title": "Move beyond AI pilots and build the frontier firm",
+     "repeat": false
+    },
+    {
+     "id": "1787858587411001SYAN",
+     "inst": "1787858587411001SYAN-1791588122758001ChDp",
+     "code": "THRSP1068",
+     "title": "Turn personal agents into enterprise assets",
+     "repeat": false
+    },
+    {
+     "id": "1787858587557001SRoh",
+     "inst": "1787858587557001SRoh-1791588110129001C6VU",
+     "code": "THRSP1069",
+     "title": "Your cloud. Your path. Your pace.",
+     "repeat": false
+    },
+    {
+     "id": "1787858587701001SEf3",
+     "inst": "1787858587701001SEf3-1791588122992001CwBJ",
+     "code": "THRSP1070",
+     "title": "Scale AI agents with visibility, governance, and cost control",
+     "repeat": false
+    },
+    {
+     "id": "1787858587847001Sjkj",
+     "inst": "1787858587847001Sjkj-1791588110376001CMV8",
+     "code": "THRSP1071",
+     "title": "How global banks put agentic AI to work",
+     "repeat": false
+    },
+    {
+     "id": "1787858587993001SE6q",
+     "inst": "1787858587993001SE6q-1791588096550001Czta",
+     "code": "THRSP1072",
+     "title": "Building with Muse Spark: From capabilities to production",
+     "repeat": false
+    },
+    {
+     "id": "1787858588140001Ssju",
+     "inst": "1787858588140001Ssju-1791588123224001CXs3",
+     "code": "THRSP1073",
+     "title": "Move beyond AI pilots with a Frontier Company approach",
+     "repeat": false
+    },
+    {
+     "id": "1787858588293001Slkf",
+     "inst": "1787858588293001Slkf-1791588076446001C3w7",
+     "code": "THRSP1074",
+     "title": "Create connected context to scale AI ROI",
+     "repeat": false
+    },
+    {
+     "id": "1787858588435001SOwl",
+     "inst": "1787858588435001SOwl-1791588110609001CtzL",
+     "code": "THRSP1075",
+     "title": "Modernize industrial architecture for AI-powered operations",
+     "repeat": false
+    },
+    {
+     "id": "1787858588582001SAMi",
+     "inst": "1787858588582001SAMi-1791588123468001Clum",
+     "code": "THRSP1076",
+     "title": "Transform your legacy estate for sovereign AI",
+     "repeat": false
+    },
+    {
+     "id": "1787858588728001SSsa",
+     "inst": "1787858588728001SSsa-1791588123705001ClfQ",
+     "code": "THRSP1077",
+     "title": "Build the secure, AI-ready enterprise workspace",
+     "repeat": false
+    },
+    {
+     "id": "1787858588894001SXYv",
+     "inst": "1787858588894001SXYv-1791588088864001C88z",
+     "code": "THRSP1078",
+     "title": "Move from AI cautious to AI confident with Veeam and Microsoft 365",
+     "repeat": false
+    },
+    {
+     "id": "1787858589042001SQWA",
+     "inst": "1787858589042001SQWA-1791588096799001Clox",
+     "code": "THRSP1079",
+     "title": "Build cyber resilience at AI speed",
+     "repeat": false
+    },
+    {
+     "id": "1787858589207001So7i",
+     "inst": "1787858589207001So7i-1791588110837001C0a3",
+     "code": "THRSP1080",
+     "title": "Move from AI proof of concepts to enterprise-grade production on Ubuntu",
+     "repeat": false
+    },
+    {
+     "id": "1787858589365001StHQ",
+     "inst": "1787858589365001StHQ-1791588123948001CDPn",
+     "code": "THRSP1081",
+     "title": "Build your frontier blueprint to turn AI potential into value",
+     "repeat": false
+    },
+    {
+     "id": "1787858589511001SVYY",
+     "inst": "1787858589511001SVYY-1791588354094001CCDY",
+     "code": "THRSP1082",
+     "title": "Turn Oracle data in Azure into intelligent AI-powered workflows",
+     "repeat": false
+    },
+    {
+     "id": "1787858589661001SgJk",
+     "inst": "1787858589661001SgJk-1791588346409001CmVt",
+     "code": "THRSP1083",
+     "title": "Stop dark documents from multiplying your AI risk",
+     "repeat": false
+    },
+    {
+     "id": "1787858589825001S9UN",
+     "inst": "1787858589825001S9UN-1791588229087001CBND",
+     "code": "THRSP1084",
+     "title": "A practical 3 step approach to operationalize AI trust",
+     "repeat": false
+    },
+    {
+     "id": "1787858589973001Stwz",
+     "inst": "1787858589973001Stwz-1791588237724001C9sw",
+     "code": "THRSP1085",
+     "title": "Go from idea to governed AI app with Replit and Microsoft Fabric",
+     "repeat": false
+    },
+    {
+     "id": "1787858590121001Sovz",
+     "inst": "1787858590121001Sovz-1791588215428001CLYk",
+     "code": "THRSP1086",
+     "title": "Trust that travels starts on the endpoint",
+     "repeat": false
+    },
+    {
+     "id": "1787858590418001SeX7",
+     "inst": "1787858590418001SeX7-1791588237951001CQKh",
+     "code": "THRSP1088",
+     "title": "Go from outage to online with hybrid cloud disaster recovery",
+     "repeat": false
+    },
+    {
+     "id": "1787858592343001SMyy",
+     "inst": "1787858592343001SMyy-1791588238409001C7Dr",
+     "code": "THRSP1093",
+     "title": "Catch synthetic identity rings at scale",
+     "repeat": false
+    },
+    {
+     "id": "1787858592493001SCP1",
+     "inst": "1787858592493001SCP1-1791588207644001CdIM",
+     "code": "THRSP1094",
+     "title": "Accelerate Microsoft AVD and Windows 365 adoption",
+     "repeat": false
+    },
+    {
+     "id": "1787858592637001SMgf",
+     "inst": "1787858592637001SMgf-1791588189161001CxrN",
+     "code": "THRSP1095",
+     "title": "Your file estate has a second audience now. Is it ready for Copilot?",
+     "repeat": false
+    },
+    {
+     "id": "1787858592781001SFke",
+     "inst": "1787858592781001SFke-1791588207899001C4iP",
+     "code": "THRSP1096",
+     "title": "Go beyond the model to secure AI apps, agents, and data",
+     "repeat": false
+    },
+    {
+     "id": "1787858592924001Sr2b",
+     "inst": "1787858592924001Sr2b-1791588215658001CWLK",
+     "code": "THRSP1097",
+     "title": "Extend Microsoft Copilot and Windows from software to workspace",
+     "repeat": false
+    },
+    {
+     "id": "1787858593079001Snio",
+     "inst": "1787858593079001Snio-1791588229785001C9UM",
+     "code": "THRSP1098",
+     "title": "Strengthen Microsoft 365 backup, recovery, and archiving with Azure",
+     "repeat": false
+    },
+    {
+     "id": "1787858593226001SEOO",
+     "inst": "1787858593226001SEOO-1791588238655001CZtT",
+     "code": "THRSP1099",
+     "title": "Strengthen data resilience for Microsoft Copilot and AI",
+     "repeat": false
+    },
+    {
+     "id": "1787858593384001SWcm",
+     "inst": "1787858593384001SWcm-1791588215887001CZtg",
+     "code": "THRSP1100",
+     "title": "Defend against vibe-coded Microsoft 365 attacks",
+     "repeat": false
+    },
+    {
+     "id": "1787858593527001STqP",
+     "inst": "1787858593527001STqP-1791588230018001CYI1",
+     "code": "THRSP1101",
+     "title": "Simplify recovery with an Azure-native approach",
+     "repeat": false
+    },
+    {
+     "id": "1787858593819001Sgcm",
+     "inst": "1787858593819001Sgcm-1791588230243001Cymt",
+     "code": "THRSP1103",
+     "title": "Deliver an intelligent workplace experience with Cisco",
+     "repeat": false
+    },
+    {
+     "id": "1787858593974001SXAY",
+     "inst": "1787858593974001SXAY-1791588239104001CHpv",
+     "code": "THRSP1104",
+     "title": "Strengthen Copilot agent security with trusted data",
+     "repeat": false
+    },
+    {
+     "id": "1787858594120001SZiv",
+     "inst": "1787858594120001SZiv-1791588294418001C5be",
+     "code": "THRSP1105",
+     "title": "Redefine connectivity for frontier firms",
+     "repeat": false
+    },
+    {
+     "id": "1787858594275001SnEg",
+     "inst": "1787858594275001SnEg-1791588300833001Cmqi",
+     "code": "THRSP1106",
+     "title": "See Elastic Nightshift and Azure SRE Agent investigate an incident",
+     "repeat": false
+    },
+    {
+     "id": "1787858594429001Scya",
+     "inst": "1787858594429001Scya-1791588266663001CgEM",
+     "code": "THRSP1107",
+     "title": "How Commvault reduced cloud storage costs by 40%",
+     "repeat": false
+    },
+    {
+     "id": "1787858594574001SCJm",
+     "inst": "1787858594574001SCJm-1791588317250001CzhL",
+     "code": "THRSP1108",
+     "title": "Turn Microsoft 365 into the foundation for secure AI services",
+     "repeat": false
+    },
+    {
+     "id": "1787858594736001SLBb",
+     "inst": "1787858594736001SLBb-1791588331687001Clb0",
+     "code": "THRSP1109",
+     "title": "Deploy intelligent SRE for autonomous cloud ops",
+     "repeat": false
+    },
+    {
+     "id": "1787858594879001SEIR",
+     "inst": "1787858594879001SEIR-1791588342588001CDs8",
+     "code": "THRSP1110",
+     "title": "Meet the demands of the AI era with behavioral security",
+     "repeat": false
+    },
+    {
+     "id": "1787858595023001SYUF",
+     "inst": "1787858595023001SYUF-1791588291540001CtFv",
+     "code": "THRSP1111",
+     "title": "Scale AI delivery with forward deployed engineering on Azure",
+     "repeat": false
+    },
+    {
+     "id": "1787858595173001SQKr",
+     "inst": "1787858595173001SQKr-1791588278343001CcsA",
+     "code": "THRSP1112",
+     "title": "Build agentic workflows with Microsoft Agent 365 and n8n",
+     "repeat": false
+    },
+    {
+     "id": "1787858595316001S5po",
+     "inst": "1787858595316001S5po-1791588328299001C9J7",
+     "code": "THRSP1113",
+     "title": "Protect your software supply chain from agents of chaos",
+     "repeat": false
+    },
+    {
+     "id": "1787858595460001SOtT",
+     "inst": "1787858595460001SOtT-1791588331918001CLKY",
+     "code": "THRSP1114",
+     "title": "How multimodal AI transforms property inspections at Ryan Specialty",
+     "repeat": false
+    },
+    {
+     "id": "1787858595620001Sbng",
+     "inst": "1787858595620001Sbng-1791588342813001CvQE",
+     "code": "THRSP1115",
+     "title": "Turn your network into the strategic control point for AI",
+     "repeat": false
+    },
+    {
+     "id": "1787858595782001Sp6y",
+     "inst": "1787858595782001Sp6y-1791588301055001CfWr",
+     "code": "THRSP1116",
+     "title": "Build resilience and recover Microsoft operations after compromise",
+     "repeat": false
+    },
+    {
+     "id": "1787858595928001SBNK",
+     "inst": "1787858595928001SBNK-1791588317472001CCuw",
+     "code": "THRSP1117",
+     "title": "Copilot readiness doesn't stay ready",
+     "repeat": false
+    },
+    {
+     "id": "1787858596075001STJM",
+     "inst": "1787858596075001STJM-1791588328527001CtEn",
+     "code": "THRSP1118",
+     "title": "AI changed what attackers find. It didn't change how they move.",
+     "repeat": false
+    },
+    {
+     "id": "1787858596220001SjZp",
+     "inst": "1787858596220001SjZp-1791588332150001CZvW",
+     "code": "THRSP1119",
+     "title": "Extend Copilot Studio agents to securely act on enterprise data",
+     "repeat": false
+    },
+    {
+     "id": "1787858596380001SgZB",
+     "inst": "1787858596380001SgZB-1791588343037001CncS",
+     "code": "THRSP1120",
+     "title": "Connect Foundry to real-time communications with omnichannel AI agents",
+     "repeat": false
+    },
+    {
+     "id": "1787858596526001S5QZ",
+     "inst": "1787858596526001S5QZ-1791588294635001CnZL",
+     "code": "THRSP1121",
+     "title": "Get a full view of your IT estate with Microsoft and NinjaOne",
+     "repeat": false
+    },
+    {
+     "id": "1787858596673001SNU4",
+     "inst": "1787858596673001SNU4-1791588291763001CmLL",
+     "code": "THRSP1122",
+     "title": "Scale Azure VM storage and control costs with Everpure Cloud",
+     "repeat": false
+    },
+    {
+     "id": "1787858596822001SJyI",
+     "inst": "1787858596822001SJyI-1791588317707001CTZO",
+     "code": "THRSP1123",
+     "title": "Microsoft 365 knows more than your workplace shows",
+     "repeat": false
+    },
+    {
+     "id": "1787858596971001SCQ2",
+     "inst": "1787858596971001SCQ2-1791588328759001C6TN",
+     "code": "THRSP1124",
+     "title": "Apply quantum AI to complex business decisions",
+     "repeat": false
+    },
+    {
+     "id": "1787858597116001SBbE",
+     "inst": "1787858597116001SBbE-1791588332374001C7xT",
+     "code": "THRSP1125",
+     "title": "Navigate the next wave of AI and frontier technologies",
+     "repeat": false
+    },
+    {
+     "id": "1787858597262001SfBR",
+     "inst": "1787858597262001SfBR-1791588343258001CHX4",
+     "code": "THRSP1126",
+     "title": "When the insider threat is a deepfake",
+     "repeat": false
+    },
+    {
+     "id": "1787858597407001SNIM",
+     "inst": "1787858597407001SNIM-1791588346637001CEv4",
+     "code": "THRSP1127",
+     "title": "Extend Intune, AVD, and Copilot with autonomous endpoint management",
+     "repeat": false
+    },
+    {
+     "id": "1787858597554001S13J",
+     "inst": "1787858597554001S13J-1791588354319001Cfm8",
+     "code": "THRSP1128",
+     "title": "Optimize your Azure costs with expert insights",
+     "repeat": false
+    },
+    {
+     "id": "1787858597699001SIzT",
+     "inst": "1787858597699001SIzT-1791814919886001CJJL",
+     "code": "THRSP1129",
+     "title": "Turn AI ambition into enterprise impact",
+     "repeat": false
+    },
+    {
+     "id": "1787858597857001SSQT",
+     "inst": "1787858597857001SSQT-1791814920122001CNQS",
+     "code": "THRSP1130",
+     "title": "Build governed AI that understands your business context",
+     "repeat": false
+    },
+    {
+     "id": "1787858598006001SHo9",
+     "inst": "1787858598006001SHo9-1791814923599001CvUl",
+     "code": "THRSP1131",
+     "title": "Accelerate business with AI-powered agreements from Docusign",
+     "repeat": false
+    },
+    {
+     "id": "1787858598158001SnDc",
+     "inst": "1787858598158001SnDc-1791814923826001CieA",
+     "code": "THRSP1132",
+     "title": "Build global data infrastructure with computing‑power‑cooling synergy",
+     "repeat": false
+    },
+    {
+     "id": "1787858598306001SSO4",
+     "inst": "1787858598306001SSO4-1791588346861001CzHJ",
+     "code": "THRSP1133",
+     "title": "Build a secure platform for containers, VMs, and AI",
+     "repeat": false
+    },
+    {
+     "id": "1787858598453001SIbA",
+     "inst": "1787858598453001SIbA-1791588332605001Cb9r",
+     "code": "THRSP1134",
+     "title": "Trace, evaluate, and ship reliable AI agents",
+     "repeat": false
+    },
+    {
+     "id": "1787858598600001STDp",
+     "inst": "1787858598600001STDp-1791588332841001Cbpi",
+     "code": "THRSP1135",
+     "title": "Skip the copy tax and ground AI on enterprise file data",
+     "repeat": false
+    },
+    {
+     "id": "1787858599037001S3X3",
+     "inst": "1787858599037001S3X3-1791588347092001CQNJ",
+     "code": "THRSP1138",
+     "title": "Is your conference room ready for Copilot?",
+     "repeat": false
+    },
+    {
+     "id": "1787858599197001SmYc",
+     "inst": "1787858599197001SmYc-1791588347311001CKjz",
+     "code": "THRSP1139",
+     "title": "Skip the pipelines and give Copilot live data",
+     "repeat": false
+    },
+    {
+     "id": "1787858599341001SsB5",
+     "inst": "1787858599341001SsB5-1791588354542001C19c",
+     "code": "THRSP1140",
+     "title": "Secure remote onboarding with Yubico, CLEAR, and Entra",
+     "repeat": false
+    },
+    {
+     "id": "1787858599485001SqLO",
+     "inst": "1787858599485001SqLO-1791588294858001C7Y0",
+     "code": "THRSP1141",
+     "title": "Layer KnowBe4 behavioral AI and threat intelligence onto Microsoft",
+     "repeat": false
+    },
+    {
+     "id": "1787858599632001ShlA",
+     "inst": "1787858599632001ShlA-1791588301277001CQxb",
+     "code": "THRSP1142",
+     "title": "Enact one firewall policy across the enterprise",
+     "repeat": false
+    },
+    {
+     "id": "1787858599777001SFDY",
+     "inst": "1787858599777001SFDY-1791588347539001CKU1",
+     "code": "THRSP1143",
+     "title": "Remove exploitable access before attackers find it",
+     "repeat": false
+    },
+    {
+     "id": "1787858600081001STy3",
+     "inst": "1787858600081001STy3-1791588347763001CUbd",
+     "code": "THRSP1145",
+     "title": "Secure AI on Azure with Fortinet’s AI-native Security Fabric",
+     "repeat": false
+    },
+    {
+     "id": "1787858600227001ShOV",
+     "inst": "1787858600227001ShOV-1791588347984001CVcC",
+     "code": "THRSP1146",
+     "title": "Get a clean signal, faster answers with Cribl and Microsoft Sentinel",
+     "repeat": false
+    },
+    {
+     "id": "1787858600372001Sr0J",
+     "inst": "1787858600372001Sr0J-1791588355011001Cp1q",
+     "code": "THRSP1147",
+     "title": "Accelerate engineering innovation with AI-driven simulation on Azure",
+     "repeat": false
+    },
+    {
+     "id": "1787858600514001SR4L",
+     "inst": "1787858600514001SR4L-1791588355236001CYkl",
+     "code": "THRSP1148",
+     "title": "Leverage recursive self-improvement to train better AI agents",
+     "repeat": false
+    },
+    {
+     "id": "1787858600661001SjTP",
+     "inst": "1787858600661001SjTP-1791588317934001CLpU",
+     "code": "THRSP1149",
+     "title": "Turn customer intelligence into action with Adobe and Microsoft",
+     "repeat": false
+    },
+    {
+     "id": "1787858600812001SVTr",
+     "inst": "1787858600812001SVTr-1791588301500001Cjny",
+     "code": "THRSP1150",
+     "title": "Transform collaboration for users and IT using AI",
+     "repeat": false
+    },
+    {
+     "id": "1787858600958001SAMQ",
+     "inst": "1787858600958001SAMQ-1791588328988001Cbb7",
+     "code": "THRSP1151",
+     "title": "Why are we still treating AI agents as software?",
+     "repeat": false
+    },
+    {
+     "id": "1787858601106001SogJ",
+     "inst": "1787858601106001SogJ-1791588318158001CMg8",
+     "code": "THRSP1152",
+     "title": "Design resilient security for the agentic era",
+     "repeat": false
+    },
+    {
+     "id": "1787858601261001SCVJ",
+     "inst": "1787858601261001SCVJ-1791588333075001CClb",
+     "code": "THRSP1153",
+     "title": "Turn AI agents into AI experts with your trusted enterprise context",
+     "repeat": false
+    }
+   ],
+   "changed": []
+  },
+  {
    "at": "2026-10-23T20:29:38Z",
    "milestones": [],
    "added": [
