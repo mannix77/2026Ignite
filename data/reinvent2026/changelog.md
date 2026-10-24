@@ -3,6 +3,13 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-10-24T12:50:03Z · https://catalog.awsevents.com/api/sessions
+
+Added 0 · removed 0 · changed 1
+
+**Changed**
+- `SEC211-S` Shipping AI at Full Velocity: Securing the Agentic Pipeline from IDE to Runtime — title: AI Threat Readiness: Securing AWS Workloads at Machine Sp… → Shipping AI at Full Velocity: Securing the Agentic Pipeli…; desc
+
 ## 2026-10-24T01:08:25Z · https://catalog.awsevents.com/api/sessions
 
 Added 0 · removed 1 · changed 20
