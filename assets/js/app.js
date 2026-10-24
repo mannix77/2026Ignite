@@ -5,6 +5,7 @@ import { fetchAll, buildModel, diffKnown, snapshot, cacheUrl, exportAge, customR
 import { checkLive, diff as liveDiff, changeCounts, countsLine } from './live.js';
 import { optimize, decisionGroups, transitions, fillers, nowNext, weigh, canBoth, overlaps, transition, compareOptions, lunchConfig, arrivalExtra, PRIORITY } from './planner.js';
 import { fmtTime, fmtDay, fmtDuration, relTime, nowLocal, addDays } from './time.js';
+import { upNext } from './upnext.js';
 import { createVenue, setVenue, walkMinutes } from './venue.js';
 import { CONFERENCES, currentConferenceId, rememberConference, conferenceList } from './conferences.js';
 import { buildSuggester } from './suggest.js';
@@ -1372,6 +1373,7 @@ function renderNow() {
     parts.push(sim);
     return parts.join('');
   }
+  parts.push(upNextHtml(t, h, nn, plan, c));
   const cards = [];
   const show = x => (x.pseudo === 'lunch' ? `<div class="panel small">🍽 <b>Lunch break</b> ${fmtTime(x.startMin)}–${fmtTime(x.endMin)}</div>` : x.pseudo ? pseudoRow(x) : card(x.s, { compact: true, noActions: true }));
   if (nn.current) {
@@ -1411,6 +1413,30 @@ function renderNow() {
     }).join('') || '<p class="muted">Nothing you can still reach in the next 90 minutes.</p>'}</div></div>`;
   parts.push(`<div class="now-grid"><div class="stack">${cards.join('')}${sim}</div>${soonHtml}</div>`);
   return parts.join('');
+}
+
+
+// Up next: what's coming up that I care about, by start time, with where and how far.
+function upNextHtml(t, h, nn, plan, c) {
+  const sg = suggester();
+  const slots = upNext({
+    sessions: app.model.sessions, day: t.day, nowMin: t.min, horizon: 120, tolerance: c.tolerance,
+    walkTo: x => (h ? hereWalk(x.loc, h, c) : null), // no position, no walk: the plan's origin isn't where you are
+    prio: prioOf, interest: x => (sg.ready && !(prioOf(x) == null && ranker().evaluate(x).hidden) ? sg.score(x).score : 0), chosen: x => plan.chosen.has(x.key), minInterest: 25,
+  });
+  const verdict = it => {
+    const w = it.walk != null ? `${it.walk} min walk` : 'distance unknown';
+    if (it.status === 'inprogress') return { cls: 'ok', text: `In progress · ${w}` };
+    if (it.status === 'unreachable') return { cls: '', text: `Can't make it · ${w}` };
+    if (it.status === 'ok') return { cls: 'ok', text: `${w} · ${it.slack >= 0 ? `${it.slack} min to spare` : `${-it.slack} min late, within your tolerance`}` };
+    return { cls: '', text: w };
+  };
+  const body = slots.map(sl => `<h3 class="slot">${fmtTime(sl.startMin)}${sl.startMin <= t.min ? ' · started' : ` · in ${fmtDuration(sl.startMin - t.min)}`}</h3>
+    <div class="list">${sl.items.map(it => {
+      const v = verdict(it);
+      return card(it.s, { compact: true, extra: `<div class="reason ${v.cls}">${icon(v.cls ? 'walk' : 'warn')}<span>${it.planned ? '<b>In your plan</b> · ' : ''}${esc(v.text)}</span></div>` });
+    }).join('')}</div>`).join('');
+  return `<section class="up-next"><h2>Up next</h2><p class="small muted">Sessions you've planned, rated or would likely want in the next 2 hours${h ? ', from where you are' : ''}.</p>${body || '<p class="muted">Nothing you care about starts in the next 2 hours. See "Nearby now" below.</p>'}</section>`;
 }
 
 // ---------------------------------------------------------------- changes
