@@ -1,7 +1,7 @@
 {
  "source": "https://catalog.awsevents.com/api/sessions",
  "event": "reinvent2026",
- "fetchedAt": "2026-10-25T12:50:20Z",
+ "fetchedAt": "2026-10-25T18:48:20Z",
  "count": 2273,
  "sessions": [
   {
@@ -19479,108 +19479,6 @@
    ]
   },
   {
-   "sessionID": "1790358226847001iyKh",
-   "code": "AIM301-R1",
-   "title": "Application Archeology: Digging up lost knowledge with Kiro",
-   "abstract": "Every organization bleeds knowledge when people leave. For mission-driven teams, a single departure can erase years of context from codebases, runbooks, and integrations. In this builder session, use Kiro — AWS's AI-powered development environment — to reverse that loss. Configure steering files that encode your team's conventions, connect MCP servers to pull context from docs and APIs, and deploy subagents that generate living architecture diagrams and knowledge bases as your code evolves. Walk away with a Kiro workspace that turns any new hire into a productive contributor from day one — no more tribal knowledge walking out the door.  ",
-   "type": "Builders' session",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-23T15:33:18Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Builders' session"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Business Agents",
-     "Developer Tools"
-    ],
-    "AreaofInterest": [
-     "Generative AI",
-     "Tech for Impact",
-     "Agentic AI"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "IT Professional / Technical Manager",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Kiro"
-    ],
-    "Venue": [
-     "Caesars Palace"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Ben Turnbull",
-     "title": "Senior Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Fiona McCann",
-     "title": "Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Deric Martinez",
-     "title": "Senior Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Sofia Kendall",
-     "title": "Solutions Architect",
-     "company": "Amazon AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Sulaman Khan",
-     "title": "Sr Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360372409001Afxc",
-     "date": "2026-12-01",
-     "startTime": "11:30",
-     "endTime": "12:30",
-     "utcStartTime": "2026/12/01 19:30:00",
-     "utcEndTime": "2026/12/01 20:30:00",
-     "length": 60,
-     "room": "Caesars Palace | Promenade South | Octavius 4 | Content Hub | Builders' Session",
-     "roomId": "1789591920108001bzg8",
-     "capacity": "50",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442223867001ceGh",
    "code": "AIM301-R",
    "title": "Application Archeology: Digging up lost knowledge with Kiro",
@@ -19589,7 +19487,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-23T15:33:18Z",
+   "modified": "2026-10-23T19:36:23Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -19634,14 +19532,8 @@
    },
    "speakers": [
     {
-     "name": "Ben Turnbull",
-     "title": "Senior Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Fiona McCann",
-     "title": "Solutions Architect",
+     "name": "Sulaman Khan",
+     "title": "Sr Solutions Architect",
      "company": "AWS",
      "role": "Internal Speaker"
     },
@@ -19652,15 +19544,21 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Sofia Kendall",
+     "name": "Fiona McCann",
      "title": "Solutions Architect",
-     "company": "Amazon AWS",
+     "company": "AWS",
      "role": "Internal Speaker"
     },
     {
-     "name": "Sulaman Khan",
-     "title": "Sr Solutions Architect",
+     "name": "Ben Turnbull",
+     "title": "Senior Solutions Architect",
      "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Sofia Kendall",
+     "title": "Solutions Architect",
+     "company": "Amazon AWS",
      "role": "Internal Speaker"
     }
    ],
@@ -19675,6 +19573,108 @@
      "length": 60,
      "room": "Caesars Forum | Level 1 | Forum 120 | Content Hub | Builders' Session 1",
      "roomId": "1789591919735004bsN5",
+     "capacity": "50",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358226847001iyKh",
+   "code": "AIM301-R1",
+   "title": "Application Archeology: Digging up lost knowledge with Kiro",
+   "abstract": "Every organization bleeds knowledge when people leave. For mission-driven teams, a single departure can erase years of context from codebases, runbooks, and integrations. In this builder session, use Kiro — AWS's AI-powered development environment — to reverse that loss. Configure steering files that encode your team's conventions, connect MCP servers to pull context from docs and APIs, and deploy subagents that generate living architecture diagrams and knowledge bases as your code evolves. Walk away with a Kiro workspace that turns any new hire into a productive contributor from day one — no more tribal knowledge walking out the door.  ",
+   "type": "Builders' session",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-23T19:36:23Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Builders' session"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Business Agents",
+     "Developer Tools"
+    ],
+    "AreaofInterest": [
+     "Generative AI",
+     "Tech for Impact",
+     "Agentic AI"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "IT Professional / Technical Manager",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Kiro"
+    ],
+    "Venue": [
+     "Caesars Palace"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Sulaman Khan",
+     "title": "Sr Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Deric Martinez",
+     "title": "Senior Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Fiona McCann",
+     "title": "Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Ben Turnbull",
+     "title": "Senior Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Sofia Kendall",
+     "title": "Solutions Architect",
+     "company": "Amazon AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360372409001Afxc",
+     "date": "2026-12-01",
+     "startTime": "11:30",
+     "endTime": "12:30",
+     "utcStartTime": "2026/12/01 19:30:00",
+     "utcEndTime": "2026/12/01 20:30:00",
+     "length": 60,
+     "room": "Caesars Palace | Promenade South | Octavius 4 | Content Hub | Builders' Session",
+     "roomId": "1789591920108001bzg8",
      "capacity": "50",
      "inPersonTime": true,
      "virtualTime": false,
@@ -23253,7 +23253,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T19:17:37Z",
+   "modified": "2026-10-25T17:04:04Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -25565,12 +25565,6 @@
    },
    "speakers": [
     {
-     "name": "Heeki Park",
-     "title": "Principal Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Daniela Kinsella",
      "title": "Principal Engineer",
      "company": "The New York Times",
@@ -25580,6 +25574,12 @@
      "name": "Will Matos",
      "title": "Principal Specialist SA",
      "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Heeki Park",
+     "title": "Principal Solutions Architect",
+     "company": "AWS",
      "role": "Internal Speaker"
     }
    ],
@@ -30591,82 +30591,6 @@
    ]
   },
   {
-   "sessionID": "1784231861232001EXVp",
-   "code": "TNC339-R",
-   "title": "AWS Partner: Your agent can wait. Go fix the app it depends on.",
-   "abstract": "This bootcamp is for AWS Partners only. An agent is only as reliable as the services it calls. Before you fix anything, you need to know exactly what's broken. In this workshop you stress-test that claim — probing a service for gaps that break autonomous invocation, reading the findings against your own predictions, and making the call on what gets fixed first. Leave with a ranked fix list and a method that transfers to any service. You must bring your laptop to participate.",
-   "type": "Bootcamp",
-   "length": 120,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-25T05:42:07Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Bootcamp"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Migration & Modernization"
-    ],
-    "AreaofInterest": [
-     "Training & Certification"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Bedrock",
-     "AWS Transform",
-     "Kiro"
-    ],
-    "Venue": [
-     "Caesars Palace"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Andy Kroll",
-     "title": "Senior Generative AI Readiness Specialist",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790020454979001QGmJ",
-     "date": "2026-12-01",
-     "startTime": "15:30",
-     "endTime": "17:30",
-     "utcStartTime": "2026/12/01 23:30:00",
-     "utcEndTime": "2026/12/02 01:30:00",
-     "length": 120,
-     "room": "Caesars Palace | Emperors Level | Emperors Ballroom I",
-     "roomId": "1789591919883001b5WM",
-     "capacity": "82",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1787372742473001zK0g",
    "code": "TNC339-R1",
    "title": "AWS Partner: Your agent can wait. Go fix the app it depends on.",
@@ -30732,6 +30656,82 @@
      "endTime": "15:00",
      "utcStartTime": "2026/12/02 21:00:00",
      "utcEndTime": "2026/12/02 23:00:00",
+     "length": 120,
+     "room": "Caesars Palace | Emperors Level | Emperors Ballroom I",
+     "roomId": "1789591919883001b5WM",
+     "capacity": "82",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1784231861232001EXVp",
+   "code": "TNC339-R",
+   "title": "AWS Partner: Your agent can wait. Go fix the app it depends on.",
+   "abstract": "This bootcamp is for AWS Partners only. An agent is only as reliable as the services it calls. Before you fix anything, you need to know exactly what's broken. In this workshop you stress-test that claim — probing a service for gaps that break autonomous invocation, reading the findings against your own predictions, and making the call on what gets fixed first. Leave with a ranked fix list and a method that transfers to any service. You must bring your laptop to participate.",
+   "type": "Bootcamp",
+   "length": 120,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-25T18:35:41Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Bootcamp"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Migration & Modernization"
+    ],
+    "AreaofInterest": [
+     "Training & Certification"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Bedrock",
+     "AWS Transform",
+     "Kiro"
+    ],
+    "Venue": [
+     "Caesars Palace"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Andy Kroll",
+     "title": "Senior Generative AI Readiness Specialist",
+     "company": "Amazon",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790020454979001QGmJ",
+     "date": "2026-12-01",
+     "startTime": "15:30",
+     "endTime": "17:30",
+     "utcStartTime": "2026/12/01 23:30:00",
+     "utcEndTime": "2026/12/02 01:30:00",
      "length": 120,
      "room": "Caesars Palace | Emperors Level | Emperors Ballroom I",
      "roomId": "1789591919883001b5WM",
@@ -33462,7 +33462,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-25T07:42:06Z",
+   "modified": "2026-10-25T17:49:17Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -34097,7 +34097,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-25T04:31:49Z",
+   "modified": "2026-10-25T17:10:02Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -40403,7 +40403,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-23T15:33:18Z",
+   "modified": "2026-10-25T14:16:07Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -40452,15 +40452,15 @@
    },
    "speakers": [
     {
-     "name": "Ignacio Fernandez Gonzalez",
-     "title": "Principal Technologist",
-     "company": "amazon web services",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Itziar Molina Fernandez",
      "title": "AI/ML Consultant",
      "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Andrea Perez Isla",
+     "title": "Delivery Consultant - AI/ML & Data",
+     "company": "Amazon Web Services (AWS)",
      "role": "Internal Speaker"
     },
     {
@@ -40470,9 +40470,9 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Andrea Perez Isla",
-     "title": "Delivery Consultant - AI/ML & Data",
-     "company": "Amazon Web Services (AWS)",
+     "name": "Ignacio Fernandez Gonzalez",
+     "title": "Principal Technologist",
+     "company": "amazon web services",
      "role": "Internal Speaker"
     },
     {
@@ -40573,91 +40573,6 @@
    ]
   },
   {
-   "sessionID": "1790358257482001i2tA",
-   "code": "STG332-R1",
-   "title": "Build AI agents on Amazon S3 Files",
-   "abstract": "S3 Files is the first cloud object store with fully-featured, high-performance file system access to your data. In this hands-on session, you'll create an S3 file system, attach it to an Amazon EKS cluster, and build an AI agent that loads model weights and processes data directly from S3 via standard file I/O. No SDK rewrites, no data duplication, just native POSIX access. You'll fine-tune synchronization behavior between S3 and the file system, controlling how data flows between object and file interfaces. Finally, you'll configure cross-Region replication to establish a disaster recovery strategy for your production workloads.",
-   "type": "Builders' session",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-23T15:33:18Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Builders' session"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Beerinder Mann",
-     "title": "Sr Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Sebastien Perreault",
-     "title": "Principal Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Ananta Khanal",
-     "title": "Sr Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Samuel Ouvrard",
-     "title": "Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Matt Boyd",
-     "title": "Senior Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360386909001AHTy",
-     "date": "2026-12-02",
-     "startTime": "10:30",
-     "endTime": "11:30",
-     "utcStartTime": "2026/12/02 18:30:00",
-     "utcEndTime": "2026/12/02 19:30:00",
-     "length": 60,
-     "room": "MGM Grand | Level 3 | Room 304",
-     "roomId": "1789591920550004bDgg",
-     "capacity": "50",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442231727001cqtw",
    "code": "STG332-R",
    "title": "Build AI agents on Amazon S3 Files",
@@ -40666,7 +40581,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-23T15:33:18Z",
+   "modified": "2026-10-23T19:36:23Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -40706,18 +40621,6 @@
    },
    "speakers": [
     {
-     "name": "Beerinder Mann",
-     "title": "Sr Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Sebastien Perreault",
-     "title": "Principal Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Ananta Khanal",
      "title": "Sr Solutions Architect",
      "company": "Amazon Web Services",
@@ -40726,6 +40629,18 @@
     {
      "name": "Samuel Ouvrard",
      "title": "Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Beerinder Mann",
+     "title": "Sr Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Sebastien Perreault",
+     "title": "Principal Solutions Architect",
      "company": "AWS",
      "role": "Internal Speaker"
     },
@@ -40747,6 +40662,91 @@
      "length": 60,
      "room": "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Builders' Session 2",
      "roomId": "1789591920422004b914",
+     "capacity": "50",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358257482001i2tA",
+   "code": "STG332-R1",
+   "title": "Build AI agents on Amazon S3 Files",
+   "abstract": "S3 Files is the first cloud object store with fully-featured, high-performance file system access to your data. In this hands-on session, you'll create an S3 file system, attach it to an Amazon EKS cluster, and build an AI agent that loads model weights and processes data directly from S3 via standard file I/O. No SDK rewrites, no data duplication, just native POSIX access. You'll fine-tune synchronization behavior between S3 and the file system, controlling how data flows between object and file interfaces. Finally, you'll configure cross-Region replication to establish a disaster recovery strategy for your production workloads.",
+   "type": "Builders' session",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-23T19:36:23Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Builders' session"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Ananta Khanal",
+     "title": "Sr Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Samuel Ouvrard",
+     "title": "Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Beerinder Mann",
+     "title": "Sr Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Sebastien Perreault",
+     "title": "Principal Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Matt Boyd",
+     "title": "Senior Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360386909001AHTy",
+     "date": "2026-12-02",
+     "startTime": "10:30",
+     "endTime": "11:30",
+     "utcStartTime": "2026/12/02 18:30:00",
+     "utcEndTime": "2026/12/02 19:30:00",
+     "length": 60,
+     "room": "MGM Grand | Level 3 | Room 304",
+     "roomId": "1789591920550004bDgg",
      "capacity": "50",
      "inPersonTime": true,
      "virtualTime": false,
@@ -41080,7 +41080,7 @@
    "length": 240,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-23T15:33:18Z",
+   "modified": "2026-10-25T17:11:32Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -51212,7 +51212,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-25T04:54:16Z",
+   "modified": "2026-10-25T15:40:09Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -56171,93 +56171,6 @@
    ]
   },
   {
-   "sessionID": "1790358223207001iA4U",
-   "code": "IND405-R1",
-   "title": "Build low latency real-time bidding workloads with AWS RTB Fabric",
-   "abstract": "With the growth of digital media, including streaming video and retail media, customers that operate advertising platforms need to buy, sell, deliver, and measure millions of ad transactions per second while meeting stringent latency requirements. In this chalk talk, you will learn how to run real-time bidding workloads with your AdTech partners on a dedicated network in the cloud using AWS RTB Fabric. You will learn how to setup, onboard, and integrate AWS RTB Fabric with your supply and demand-side-platforms. Additionally, you will learn about key features including the core network, modules, and pricing model of the service.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-24T03:39:54Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "400 – Expert"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Migration & Modernization",
-     "Industry Solutions"
-    ],
-    "AreaofInterest": [
-     "Innovation & Transformation",
-     "Machine Learning"
-    ],
-    "Industry": [
-     "Advertising & Marketing"
-    ],
-    "Role": [
-     "Data Engineer",
-     "Developer / Engineer",
-     "DevOps Engineer"
-    ],
-    "Services": [
-     "Amazon Elastic Compute Cloud (Amazon EC2)",
-     "Amazon Elastic Kubernetes Service (Amazon EKS)",
-     "AWS RTB Fabric"
-    ],
-    "Venue": [
-     "Caesars Forum"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Sergio Serra",
-     "title": "Product Leader",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Gerry Louw",
-     "title": "Global Tech Lead Advertising and Marketing Technology - AWS",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360365162001Abf6",
-     "date": "2026-12-01",
-     "startTime": "15:00",
-     "endTime": "16:00",
-     "utcStartTime": "2026/12/01 23:00:00",
-     "utcEndTime": "2026/12/02 00:00:00",
-     "length": 60,
-     "room": "Caesars Forum | Level 1 | Forum 114",
-     "roomId": "1789591919703003bevY",
-     "capacity": "88",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442244775001cbB1",
    "code": "IND405-R",
    "title": "Build low latency real-time bidding workloads with AWS RTB Fabric",
@@ -56337,6 +56250,93 @@
      "length": 60,
      "room": "Caesars Forum | Level 1 | Alliance 314",
      "roomId": "1789591919643004bRVK",
+     "capacity": "88",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358223207001iA4U",
+   "code": "IND405-R1",
+   "title": "Build low latency real-time bidding workloads with AWS RTB Fabric",
+   "abstract": "With the growth of digital media, including streaming video and retail media, customers that operate advertising platforms need to buy, sell, deliver, and measure millions of ad transactions per second while meeting stringent latency requirements. In this chalk talk, you will learn how to run real-time bidding workloads with your AdTech partners on a dedicated network in the cloud using AWS RTB Fabric. You will learn how to setup, onboard, and integrate AWS RTB Fabric with your supply and demand-side-platforms. Additionally, you will learn about key features including the core network, modules, and pricing model of the service.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-25T13:43:07Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "400 – Expert"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Migration & Modernization",
+     "Industry Solutions"
+    ],
+    "AreaofInterest": [
+     "Innovation & Transformation",
+     "Machine Learning"
+    ],
+    "Industry": [
+     "Advertising & Marketing"
+    ],
+    "Role": [
+     "Data Engineer",
+     "Developer / Engineer",
+     "DevOps Engineer"
+    ],
+    "Services": [
+     "Amazon Elastic Compute Cloud (Amazon EC2)",
+     "Amazon Elastic Kubernetes Service (Amazon EKS)",
+     "AWS RTB Fabric"
+    ],
+    "Venue": [
+     "Caesars Forum"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Sergio Serra",
+     "title": "Product Leader",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Gerry Louw",
+     "title": "Global Tech Lead Advertising and Marketing Technology - AWS",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360365162001Abf6",
+     "date": "2026-12-01",
+     "startTime": "15:00",
+     "endTime": "16:00",
+     "utcStartTime": "2026/12/01 23:00:00",
+     "utcEndTime": "2026/12/02 00:00:00",
+     "length": 60,
+     "room": "Caesars Forum | Level 1 | Forum 114",
+     "roomId": "1789591919703003bevY",
      "capacity": "88",
      "inPersonTime": true,
      "virtualTime": false,
@@ -66904,7 +66904,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-23T15:33:18Z",
+   "modified": "2026-10-23T19:36:23Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -66943,6 +66943,12 @@
    },
    "speakers": [
     {
+     "name": "Nava Ajay Kanth Kota",
+     "title": "Sr Partner SA, Storage",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
      "name": "Beerinder Mann",
      "title": "Sr Solutions Architect",
      "company": "AWS",
@@ -66952,12 +66958,6 @@
      "name": "Sean Phuphanich",
      "title": "Principal Technologist",
      "company": "Amazon",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Nava Ajay Kanth Kota",
-     "title": "Sr Partner SA, Storage",
-     "company": "AWS",
      "role": "Internal Speaker"
     },
     {
@@ -68788,7 +68788,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-25T06:44:10Z",
+   "modified": "2026-10-25T13:51:14Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -70479,7 +70479,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-25T12:24:28Z",
+   "modified": "2026-10-25T13:52:26Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -74235,7 +74235,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-25T03:39:38Z",
+   "modified": "2026-10-25T14:43:51Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -74804,7 +74804,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T06:11:56Z",
+   "modified": "2026-10-25T17:59:52Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -76118,7 +76118,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T13:47:15Z",
+   "modified": "2026-10-25T14:18:47Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -77598,7 +77598,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-25T11:25:42Z",
+   "modified": "2026-10-25T15:42:09Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -80875,7 +80875,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-25T08:41:59Z",
+   "modified": "2026-10-25T16:10:15Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -91506,94 +91506,6 @@
    ]
   },
   {
-   "sessionID": "1790358218148001ipzw",
-   "code": "IND3320-R1",
-   "title": "From Hours to Minutes: Fast Android Builds and Virtual Testing on AWS",
-   "abstract": "Automotive software teams lose hours to a slow development cycle: Android builds run for hours, and testing means waiting on scarce physical target hardware. This chalk talk shows how to compress that cycle on AWS. SourceFS cuts Android build times from ~3 hours to under 5 minutes, and the Virtual Engineering Workbench (VEW) lets engineers test against virtual targets in the cloud instead of queuing for physical boards. We'll build up the reference architecture live, show where each piece fits, and walk through the adoption path customers are on today.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-24T02:45:27Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Architecture",
-     "Artificial Intelligence",
-     "Industry Solutions"
-    ],
-    "AreaofInterest": [
-     "Innovation & Transformation",
-     "Agentic AI",
-     "DevOps"
-    ],
-    "Industry": [
-     "Automotive"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Elastic Compute Cloud (Amazon EC2)",
-     "Amazon Simple Storage Service (Amazon S3)",
-     "AWS Lambda"
-    ],
-    "Venue": [
-     "Wynn/Encore"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Hendrik Schoeneberg",
-     "title": "Principal Consultant, Data",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Raphael Hofer",
-     "title": "Industry Specialist Regulatory Compliance Automotive",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360398600001AvA0",
-     "date": "2026-12-01",
-     "startTime": "13:30",
-     "endTime": "14:30",
-     "utcStartTime": "2026/12/01 21:30:00",
-     "utcEndTime": "2026/12/01 22:30:00",
-     "length": 60,
-     "room": "Wynn/Encore | Level 1 | Encore Ballroom 3",
-     "roomId": "1789591921174001bpeI",
-     "capacity": "70",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442245097001cPaL",
    "code": "IND3320-R",
    "title": "From Hours to Minutes: Fast Android Builds and Virtual Testing on AWS",
@@ -91602,7 +91514,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-25T04:23:33Z",
+   "modified": "2026-10-25T15:32:17Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -91671,6 +91583,94 @@
      "endTime": "16:00",
      "utcStartTime": "2026/11/30 23:00:00",
      "utcEndTime": "2026/12/01 00:00:00",
+     "length": 60,
+     "room": "Wynn/Encore | Level 1 | Encore Ballroom 3",
+     "roomId": "1789591921174001bpeI",
+     "capacity": "70",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358218148001ipzw",
+   "code": "IND3320-R1",
+   "title": "From Hours to Minutes: Fast Android Builds and Virtual Testing on AWS",
+   "abstract": "Automotive software teams lose hours to a slow development cycle: Android builds run for hours, and testing means waiting on scarce physical target hardware. This chalk talk shows how to compress that cycle on AWS. SourceFS cuts Android build times from ~3 hours to under 5 minutes, and the Virtual Engineering Workbench (VEW) lets engineers test against virtual targets in the cloud instead of queuing for physical boards. We'll build up the reference architecture live, show where each piece fits, and walk through the adoption path customers are on today.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-25T15:32:17Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Architecture",
+     "Artificial Intelligence",
+     "Industry Solutions"
+    ],
+    "AreaofInterest": [
+     "Innovation & Transformation",
+     "Agentic AI",
+     "DevOps"
+    ],
+    "Industry": [
+     "Automotive"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Elastic Compute Cloud (Amazon EC2)",
+     "Amazon Simple Storage Service (Amazon S3)",
+     "AWS Lambda"
+    ],
+    "Venue": [
+     "Wynn/Encore"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Hendrik Schoeneberg",
+     "title": "Principal Consultant, Data",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Raphael Hofer",
+     "title": "Industry Specialist Regulatory Compliance Automotive",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360398600001AvA0",
+     "date": "2026-12-01",
+     "startTime": "13:30",
+     "endTime": "14:30",
+     "utcStartTime": "2026/12/01 21:30:00",
+     "utcEndTime": "2026/12/01 22:30:00",
      "length": 60,
      "room": "Wynn/Encore | Level 1 | Encore Ballroom 3",
      "roomId": "1789591921174001bpeI",
@@ -93130,7 +93130,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T04:10:00Z",
+   "modified": "2026-10-25T15:24:35Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -93352,7 +93352,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-25T01:49:16Z",
+   "modified": "2026-10-25T17:14:24Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -93700,7 +93700,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T19:31:31Z",
+   "modified": "2026-10-25T18:30:24Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -105940,7 +105940,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-25T06:20:46Z",
+   "modified": "2026-10-25T13:34:49Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -110967,7 +110967,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T21:27:58Z",
+   "modified": "2026-10-25T15:01:50Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -111936,7 +111936,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-25T11:29:03Z",
+   "modified": "2026-10-25T15:52:36Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -112238,7 +112238,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-25T10:51:42Z",
+   "modified": "2026-10-25T16:05:39Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -114655,7 +114655,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-23T15:33:18Z",
+   "modified": "2026-10-23T19:36:23Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -114701,20 +114701,14 @@
    },
    "speakers": [
     {
-     "name": "Ingrid Alitzel Sánchez Elguea",
-     "title": "Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Camila Soares Camara",
-     "title": "Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Nilo Bustani",
      "title": "Senior Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Santiago Benavidez",
+     "title": "Principal Solutions Architect",
      "company": "AWS",
      "role": "Internal Speaker"
     },
@@ -114725,9 +114719,15 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Santiago Benavidez",
-     "title": "Principal Solutions Architect",
-     "company": "AWS",
+     "name": "Camila Soares Camara",
+     "title": "Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Ingrid Alitzel Sánchez Elguea",
+     "title": "Solutions Architect",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     }
    ],
@@ -115243,7 +115243,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-25T10:34:32Z",
+   "modified": "2026-10-25T18:33:55Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -118350,7 +118350,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T22:08:05Z",
+   "modified": "2026-10-25T15:45:35Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -123442,7 +123442,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-25T07:43:47Z",
+   "modified": "2026-10-25T17:14:24Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -124313,7 +124313,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-25T03:37:08Z",
+   "modified": "2026-10-25T18:02:43Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -125150,7 +125150,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T19:36:02Z",
+   "modified": "2026-10-25T17:21:28Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -129019,70 +129019,6 @@
    ]
   },
   {
-   "sessionID": "1780442277105001cLEI",
-   "code": "BIZ321-R",
-   "title": "Never Start Over: Chat to Co-Browse, Voice and Video on Amazon Connect Customer",
-   "abstract": "Your customer is halfway through an application in your app, and stuck. Today they abandon it, call you, and start explaining from scratch. In this hands-on workshop you build a single unbroken conversation that escalates in richness without losing context. A customer opens chat inside your application. When they stall on a form, the agent co-browses the page and sees the blocking field, then uses agent assist to answer a policy question with cited sources. The conversation carries into an in-app call, context intact, no phone number and no repeated details. Documents are reviewed over screen share, identity is confirmed over video, and because it's a joint application the co-applicant and a product specialist join the same call. Walk away with an escalation pattern combining persistent context, WebRTC channels and AI-assisted agents, for any high-consideration interaction.",
-   "type": "Workshop",
-   "length": 120,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-24T19:45:30Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Workshop"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Business Agents"
-    ],
-    "Venue": [
-     "Caesars Palace"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Amit Gupta",
-     "title": "Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025507078001C0vz",
-     "date": "2026-12-01",
-     "startTime": "15:00",
-     "endTime": "17:00",
-     "utcStartTime": "2026/12/01 23:00:00",
-     "utcEndTime": "2026/12/02 01:00:00",
-     "length": 120,
-     "room": "Caesars Palace | Promenade Level | Pompeian IV",
-     "roomId": "1789591919964004bHlA",
-     "capacity": "85",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358236486001iasR",
    "code": "BIZ321-R1",
    "title": "Never Start Over: Chat to Co-Browse, Voice and Video on Amazon Connect Customer",
@@ -129140,6 +129076,70 @@
      "room": "MGM Grand | Level 3 | Premier 310",
      "roomId": "1789591920472001bMHw",
      "capacity": "84",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442277105001cLEI",
+   "code": "BIZ321-R",
+   "title": "Never Start Over: Chat to Co-Browse, Voice and Video on Amazon Connect Customer",
+   "abstract": "Your customer is halfway through an application in your app, and stuck. Today they abandon it, call you, and start explaining from scratch. In this hands-on workshop you build a single unbroken conversation that escalates in richness without losing context. A customer opens chat inside your application. When they stall on a form, the agent co-browses the page and sees the blocking field, then uses agent assist to answer a policy question with cited sources. The conversation carries into an in-app call, context intact, no phone number and no repeated details. Documents are reviewed over screen share, identity is confirmed over video, and because it's a joint application the co-applicant and a product specialist join the same call. Walk away with an escalation pattern combining persistent context, WebRTC channels and AI-assisted agents, for any high-consideration interaction.",
+   "type": "Workshop",
+   "length": 120,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-25T15:12:32Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Workshop"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Business Agents"
+    ],
+    "Venue": [
+     "Caesars Palace"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Amit Gupta",
+     "title": "Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025507078001C0vz",
+     "date": "2026-12-01",
+     "startTime": "15:00",
+     "endTime": "17:00",
+     "utcStartTime": "2026/12/01 23:00:00",
+     "utcEndTime": "2026/12/02 01:00:00",
+     "length": 120,
+     "room": "Caesars Palace | Promenade Level | Pompeian IV",
+     "roomId": "1789591919964004bHlA",
+     "capacity": "85",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -130659,7 +130659,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T21:45:33Z",
+   "modified": "2026-10-25T13:54:39Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -134171,7 +134171,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-25T02:30:46Z",
+   "modified": "2026-10-25T14:07:25Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -134394,7 +134394,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T20:35:22Z",
+   "modified": "2026-10-25T14:36:50Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -141336,7 +141336,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-25T02:38:17Z",
+   "modified": "2026-10-25T15:00:09Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -144671,79 +144671,6 @@
    ]
   },
   {
-   "sessionID": "1780442274351001cHMv",
-   "code": "ANT402-R",
-   "title": "Reduce spend and data movement with Amazon Redshift Data Sharing and Graviton",
-   "abstract": "Organizations sharing data across business units often rely on slow, error-prone ETL jobs that create costly duplication. Amazon Redshift Data Sharing enables secure, live access across provisioned and serverless warehouses — within or across accounts and regions — eliminating data movement entirely. Additionally, Redshift Graviton instances deliver up to 35% better price-performance, accelerating workloads on Apache Iceberg tables through optimized columnar processing and parallel I/O. In this session, learn how to break down data silos with cross-warehouse data sharing and boost open data lakehouse performance with Redshift on Graviton.",
-   "type": "Workshop",
-   "length": 120,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-24T02:02:09Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Workshop"
-    ],
-    "Level": [
-     "400 – Expert"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Analytics"
-    ],
-    "Services": [
-     "Amazon Redshift"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Poulomi Dasgupta",
-     "title": "Sr. Analytics Specialist Solutions Architect",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Erika Nagamine",
-     "title": "Sr. Specialist SA, Data & AI",
-     "company": "Amazon Web Services (AWS)",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025511463001CglW",
-     "date": "2026-12-02",
-     "startTime": "08:00",
-     "endTime": "10:00",
-     "utcStartTime": "2026/12/02 16:00:00",
-     "utcEndTime": "2026/12/02 18:00:00",
-     "length": 120,
-     "room": "MGM Grand | Level 1 | Grand 113",
-     "roomId": "1789591920248001bj7J",
-     "capacity": "112",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358243199001inZR",
    "code": "ANT402-R1",
    "title": "Reduce spend and data movement with Amazon Redshift Data Sharing and Graviton",
@@ -144810,6 +144737,79 @@
      "room": "MGM Grand | Level 3 | Premier 317",
      "roomId": "1789591920505001bX6q",
      "capacity": "84",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442274351001cHMv",
+   "code": "ANT402-R",
+   "title": "Reduce spend and data movement with Amazon Redshift Data Sharing and Graviton",
+   "abstract": "Organizations sharing data across business units often rely on slow, error-prone ETL jobs that create costly duplication. Amazon Redshift Data Sharing enables secure, live access across provisioned and serverless warehouses — within or across accounts and regions — eliminating data movement entirely. Additionally, Redshift Graviton instances deliver up to 35% better price-performance, accelerating workloads on Apache Iceberg tables through optimized columnar processing and parallel I/O. In this session, learn how to break down data silos with cross-warehouse data sharing and boost open data lakehouse performance with Redshift on Graviton.",
+   "type": "Workshop",
+   "length": 120,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-25T15:47:55Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Workshop"
+    ],
+    "Level": [
+     "400 – Expert"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Analytics"
+    ],
+    "Services": [
+     "Amazon Redshift"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Poulomi Dasgupta",
+     "title": "Sr. Analytics Specialist Solutions Architect",
+     "company": "Amazon",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Erika Nagamine",
+     "title": "Sr. Specialist SA, Data & AI",
+     "company": "Amazon Web Services (AWS)",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025511463001CglW",
+     "date": "2026-12-02",
+     "startTime": "08:00",
+     "endTime": "10:00",
+     "utcStartTime": "2026/12/02 16:00:00",
+     "utcEndTime": "2026/12/02 18:00:00",
+     "length": 120,
+     "room": "MGM Grand | Level 1 | Grand 113",
+     "roomId": "1789591920248001bj7J",
+     "capacity": "112",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -145495,7 +145495,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-25T06:02:29Z",
+   "modified": "2026-10-25T18:41:13Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -145549,6 +145549,93 @@
      "room": "MGM Grand | Level 1 | Boulevard 165",
      "roomId": "1789591920220001bzVv",
      "capacity": "98",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442272548001c81L",
+   "code": "IND109-S",
+   "title": "Reimagining Patient Engagement with AI and Cloud (sponsored by Incedo Inc.)",
+   "abstract": "Life sciences organizations are exploring how AI and cloud can transform engagement across the patient journey. This executive discussion will examine how connected data, generative AI and intelligent automation can enable more personalized, timely and responsive patient experiences.\n\nThe conversation will explore opportunities to reduce friction, improve engagement, drive adherence, and deliver more connected omnichannel experiences aligned with business priorities. It will also address the challenges of data fragmentation, governance, trust and adoption. Attendees will gain practical executive perspectives on moving beyond AI experimentation to scalable, responsible solutions that deliver meaningful value for patients and life sciences organizations.",
+   "type": "Lightning talk",
+   "length": 20,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-25T17:01:33Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Lightning talk"
+    ],
+    "Level": [
+     "100 – Foundational"
+    ],
+    "Features": [
+     "AWS Partners",
+     "Lecture-style"
+    ],
+    "Topic": [
+     "Artificial Intelligence",
+     "Business Agents",
+     "Industry Solutions"
+    ],
+    "SponsorSessionPrimaryTopic": [
+     "Industry Solutions"
+    ],
+    "AreaofInterest": [
+     "Generative AI",
+     "Innovation & Transformation",
+     "Agentic AI"
+    ],
+    "Role": [
+     "Business Executive",
+     "Entrepreneur (Founder/Co-Founder)",
+     "IT Executive"
+    ],
+    "Services": [
+     "Amazon Redshift",
+     "Amazon SageMaker AI",
+     "Amazon Bedrock AgentCore"
+    ],
+    "Venue": [
+     "Venetian"
+    ],
+    "Walkuponlysession": [
+     "Walk up only"
+    ],
+    "SessionAppendices": [
+     "Sponsored"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Nitin Seth",
+     "title": "CEO & Co-Founder",
+     "company": "Incedo Inc - SI Partner",
+     "role": "Sponsor Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790033123236001qbQ6",
+     "date": "2026-12-03",
+     "startTime": "14:30",
+     "endTime": "14:50",
+     "utcStartTime": "2026/12/03 22:30:00",
+     "utcEndTime": "2026/12/03 22:50:00",
+     "length": 20,
+     "room": "Venetian | Level 2 | Hall B | Expo | Industry Theater",
+     "roomId": "1789591920788003bsa2",
+     "capacity": "50",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -146294,7 +146381,7 @@
    "length": 240,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-25T06:36:19Z",
+   "modified": "2026-10-25T14:16:07Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -147494,7 +147581,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T03:39:54Z",
+   "modified": "2026-10-25T13:59:21Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -152594,7 +152681,7 @@
    "length": 90,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-23T15:33:18Z",
+   "modified": "2026-10-25T17:19:12Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -155328,7 +155415,7 @@
    "length": 180,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T00:39:17Z",
+   "modified": "2026-10-25T15:49:06Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -161381,7 +161468,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-23T15:33:18Z",
+   "modified": "2026-10-25T18:42:42Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -161411,9 +161498,9 @@
    },
    "speakers": [
     {
-     "name": "Colm MacCárthaigh",
-     "title": "VP/Distinguished Engineer",
-     "company": "Amazon.com",
+     "name": "Colm MacCarthaigh",
+     "title": "Vice President / Distinguished Engineer",
+     "company": "AWS",
      "role": "Premier Internal Speaker"
     }
    ],
@@ -162605,7 +162692,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T18:07:02Z",
+   "modified": "2026-10-25T15:20:09Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -162847,76 +162934,6 @@
    ]
   },
   {
-   "sessionID": "1789063766046001htb0",
-   "code": "TNC334-R1",
-   "title": "Streamlining Claims Processing with Amazon Quick",
-   "abstract": "Claims adjusters spend hours retrieving policy data, applying business rules, and drafting decision letters manually. In this SimuLearn session, you use Amazon Quick Automate to orchestrate the entire claims process. You configure REST API and MCP connectors, build a multi-step workflow with Custom Agent steps, and chain together policy retrieval, rules validation, and AI-powered letter generation. The workflow handles missing data gracefully and stores audit-ready decision letters in S3. ",
-   "type": "Lab",
-   "length": 120,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-24T02:07:36Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Lab"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Business Agents"
-    ],
-    "Venue": [
-     "Caesars Palace"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Ryan Forger",
-     "title": "Senior Technical Instructor",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Ryan Leavitt",
-     "title": "Technical Lab Developer",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1791232571347001megX",
-     "date": "2026-12-03",
-     "startTime": "12:30",
-     "endTime": "14:30",
-     "utcStartTime": "2026/12/03 20:30:00",
-     "utcEndTime": "2026/12/03 22:30:00",
-     "length": 120,
-     "room": "Caesars Palace | Emperors Level | Augustus Ballroom V",
-     "roomId": "1789591919870001bKOb",
-     "capacity": "200",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1784231862630001EwND",
    "code": "TNC334-R",
    "title": "Streamlining Claims Processing with Amazon Quick",
@@ -162988,6 +163005,76 @@
      "endTime": "15:00",
      "utcStartTime": "2026/11/30 21:00:00",
      "utcEndTime": "2026/11/30 23:00:00",
+     "length": 120,
+     "room": "Caesars Palace | Emperors Level | Augustus Ballroom V",
+     "roomId": "1789591919870001bKOb",
+     "capacity": "200",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1789063766046001htb0",
+   "code": "TNC334-R1",
+   "title": "Streamlining Claims Processing with Amazon Quick",
+   "abstract": "Claims adjusters spend hours retrieving policy data, applying business rules, and drafting decision letters manually. In this SimuLearn session, you use Amazon Quick Automate to orchestrate the entire claims process. You configure REST API and MCP connectors, build a multi-step workflow with Custom Agent steps, and chain together policy retrieval, rules validation, and AI-powered letter generation. The workflow handles missing data gracefully and stores audit-ready decision letters in S3. ",
+   "type": "Lab",
+   "length": 120,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-25T15:00:10Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Lab"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Business Agents"
+    ],
+    "Venue": [
+     "Caesars Palace"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Ryan Forger",
+     "title": "Senior Technical Instructor",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Ryan Leavitt",
+     "title": "Technical Lab Developer",
+     "company": "Amazon",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1791232571347001megX",
+     "date": "2026-12-03",
+     "startTime": "12:30",
+     "endTime": "14:30",
+     "utcStartTime": "2026/12/03 20:30:00",
+     "utcEndTime": "2026/12/03 22:30:00",
      "length": 120,
      "room": "Caesars Palace | Emperors Level | Augustus Ballroom V",
      "roomId": "1789591919870001bKOb",
@@ -163082,7 +163169,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-25T01:15:18Z",
+   "modified": "2026-10-25T15:49:06Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -164375,7 +164462,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-25T07:42:06Z",
+   "modified": "2026-10-25T16:05:39Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -164621,7 +164708,7 @@
    "length": 90,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-23T15:33:18Z",
+   "modified": "2026-10-25T18:42:42Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -164642,9 +164729,9 @@
    },
    "speakers": [
     {
-     "name": "Colm MacCárthaigh",
-     "title": "VP/Distinguished Engineer",
-     "company": "Amazon.com",
+     "name": "Colm MacCarthaigh",
+     "title": "Vice President / Distinguished Engineer",
+     "company": "AWS",
      "role": "Premier Internal Speaker"
     },
     {
@@ -170798,91 +170885,6 @@
    ]
   },
   {
-   "sessionID": "1780442272548001c81L",
-   "code": "IND109-S",
-   "title": "Transforming Patient Engagement with AI and Cloud (sponsored by Incedo Inc.)",
-   "abstract": "Life sciences organizations are reimagining patient engagement through cloud data and artificial intelligence. This session explores how generative AI and intelligent automation can help create more connected personalized and responsive patient experiences across the patient journey. Drawing on real world transformation experiences the discussion will highlight practical opportunities to improve patient engagement reduce friction and enable more proactive interactions while addressing the data governance and adoption considerations required to scale AI responsibly. Attendees will gain practical perspectives on how life sciences organizations can move from AI experimentation to scalable solutions that deliver meaningful patient and business outcomes. This presentation is brought to you by Incedo Inc., an AWS Partner.",
-   "type": "Lightning talk",
-   "length": 20,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-23T19:36:23Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Lightning talk"
-    ],
-    "Level": [
-     "100 – Foundational"
-    ],
-    "Features": [
-     "AWS Partners",
-     "Lecture-style"
-    ],
-    "Topic": [
-     "Artificial Intelligence",
-     "Business Agents",
-     "Industry Solutions"
-    ],
-    "SponsorSessionPrimaryTopic": [
-     "Industry Solutions"
-    ],
-    "AreaofInterest": [
-     "Business Intelligence",
-     "Innovation & Transformation",
-     "Agentic AI"
-    ],
-    "Role": [
-     "Business Executive",
-     "Entrepreneur (Founder/Co-Founder)",
-     "IT Executive"
-    ],
-    "Services": [
-     "Amazon Bedrock"
-    ],
-    "Venue": [
-     "Venetian"
-    ],
-    "Walkuponlysession": [
-     "Walk up only"
-    ],
-    "SessionAppendices": [
-     "Sponsored"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Nitin Seth",
-     "title": "CEO & Co-Founder",
-     "company": "Incedo Inc - SI Partner",
-     "role": "Sponsor Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790033123236001qbQ6",
-     "date": "2026-12-03",
-     "startTime": "14:30",
-     "endTime": "14:50",
-     "utcStartTime": "2026/12/03 22:30:00",
-     "utcEndTime": "2026/12/03 22:50:00",
-     "length": 20,
-     "room": "Venetian | Level 2 | Hall B | Expo | Industry Theater",
-     "roomId": "1789591920788003bsa2",
-     "capacity": "50",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442278352001chmU",
    "code": "CON316",
    "title": "Transform your SaaS for the agentic AI era on Amazon ECS",
@@ -172805,7 +172807,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T18:07:02Z",
+   "modified": "2026-10-25T13:40:46Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -173383,7 +173385,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-25T11:33:00Z",
+   "modified": "2026-10-25T15:00:10Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -173538,7 +173540,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-23T15:33:18Z",
+   "modified": "2026-10-25T18:42:42Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -173583,9 +173585,9 @@
    },
    "speakers": [
     {
-     "name": "Colm MacCárthaigh",
-     "title": "VP/Distinguished Engineer",
-     "company": "Amazon.com",
+     "name": "Colm MacCarthaigh",
+     "title": "Vice President / Distinguished Engineer",
+     "company": "AWS",
      "role": "Premier Internal Speaker"
     }
    ],
@@ -174673,7 +174675,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-25T01:53:27Z",
+   "modified": "2026-10-25T16:59:53Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -175876,7 +175878,7 @@
    "length": 180,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T18:33:48Z",
+   "modified": "2026-10-25T15:42:54Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -176589,7 +176591,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T21:31:29Z",
+   "modified": "2026-10-25T18:35:41Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -177625,88 +177627,6 @@
      "room": "Caesars Forum | Level 1 | Forum 120 | Content Hub | Purple Theater",
      "roomId": "1789591919770001biba",
      "capacity": "148",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
-   "sessionID": "1780441488437001GGhk",
-   "code": "DVT210-S",
-   "title": "What Observability at the Speed of AI Looks Like (sponsored by groundcover)",
-   "abstract": "For a company like Polymarket, moving fast isn’t a nice-to-have. It’s a requirement. Failing to scale quickly enough can stall unprecedented momentum, while compromising its PII and security posture can carry even greater risk.\nBuilt on AWS, this session explores how Polymarket uses groundcover to shift infrastructure responsibilities to AI agents, build agentic development loops, maintain full data residency, and gain instant visibility into every change, no matter how quickly production evolves. We’ll also share the immediate impact: at least 50% lower MTTR for infrastructure escalations and an approximately 7% reduction in Polymarket’s AWS bill. This presentation is brought to you by groundcover, an AWS Partner.",
-   "type": "Breakout session",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-23T19:36:23Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Breakout session"
-    ],
-    "Level": [
-     "200 – Intermediate"
-    ],
-    "Features": [
-     "AWS Partners",
-     "Lecture-style"
-    ],
-    "Topic": [
-     "Architecture",
-     "Artificial Intelligence",
-     "Developer Tools"
-    ],
-    "SponsorSessionPrimaryTopic": [
-     "Developer Tools"
-    ],
-    "AreaofInterest": [
-     "Cost Optimization",
-     "Agentic AI",
-     "DevOps"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "DevOps Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Venue": [
-     "Wynn/Encore"
-    ],
-    "Walkuponlysession": [
-     "Walk up only"
-    ],
-    "SessionAppendices": [
-     "Sponsored"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Noam Levy",
-     "title": "Field CTO",
-     "company": "groundcover",
-     "role": "Sponsor Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025478012001C9r9",
-     "date": "2026-11-30",
-     "startTime": "10:00",
-     "endTime": "11:00",
-     "utcStartTime": "2026/11/30 18:00:00",
-     "utcEndTime": "2026/11/30 19:00:00",
-     "length": 60,
-     "room": "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Blue Theater",
-     "roomId": "1789591921314004bo2v",
-     "capacity": "100",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -178779,7 +178699,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T22:09:15Z",
+   "modified": "2026-10-25T14:38:34Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -179216,7 +179136,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-25T03:28:51Z",
+   "modified": "2026-10-25T17:19:12Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -179662,7 +179582,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-25T04:24:53Z",
+   "modified": "2026-10-25T17:27:52Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -180613,6 +180533,88 @@
    ]
   },
   {
+   "sessionID": "1780441488437001GGhk",
+   "code": "DVT210-S",
+   "title": "When Telemetry Steers the Robot: Observability for Physical AI",
+   "abstract": "Path Robotics is pushing physical AI beyond the lab into tough industrial environments. Its Obsidian AI model autonomously welds production parts, while Rove brings that intelligence into shipyards on a Boston Dynamics quadruped.\nWhen AI moves into the physical world, observability becomes mission-critical. Built on AWS, Path needs visibility into AI applications, robot motion, and welding arcs, where traditional observability tools fall short.\nIn this session, Path Robotics and groundcover share how they replaced legacy SaaS observability with a BYOC architecture spanning commercial and sovereign environments. groundcover’s eBPF sensor delivers instant visibility into agentic applications and field robotics, providing critical production context.",
+   "type": "Breakout session",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-25T13:36:21Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Breakout session"
+    ],
+    "Level": [
+     "200 – Intermediate"
+    ],
+    "Features": [
+     "AWS Partners",
+     "Lecture-style"
+    ],
+    "Topic": [
+     "Architecture",
+     "Artificial Intelligence",
+     "Developer Tools"
+    ],
+    "SponsorSessionPrimaryTopic": [
+     "Developer Tools"
+    ],
+    "AreaofInterest": [
+     "Cost Optimization",
+     "Agentic AI",
+     "DevOps"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "DevOps Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Venue": [
+     "Wynn/Encore"
+    ],
+    "Walkuponlysession": [
+     "Walk up only"
+    ],
+    "SessionAppendices": [
+     "Sponsored"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Noam Levy",
+     "title": "Field CTO",
+     "company": "groundcover",
+     "role": "Sponsor Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025478012001C9r9",
+     "date": "2026-11-30",
+     "startTime": "10:00",
+     "endTime": "11:00",
+     "utcStartTime": "2026/11/30 18:00:00",
+     "utcEndTime": "2026/11/30 19:00:00",
+     "length": 60,
+     "room": "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Blue Theater",
+     "roomId": "1789591921314004bo2v",
+     "capacity": "100",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
    "sessionID": "1790358221388001i3vN",
    "code": "ARC202-R2",
    "title": "Where do agents fit? A capability-first approach to agentic AI",
@@ -180941,7 +180943,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-25T04:30:39Z",
+   "modified": "2026-10-25T18:41:13Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -183415,7 +183417,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-25T04:58:57Z",
+   "modified": "2026-10-25T18:39:32Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
