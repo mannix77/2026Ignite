@@ -1,7 +1,7 @@
 {
  "source": "https://catalog.awsevents.com/api/sessions",
  "event": "reinvent2026",
- "fetchedAt": "2026-10-24T18:47:31Z",
+ "fetchedAt": "2026-10-25T01:13:32Z",
  "count": 2273,
  "sessions": [
   {
@@ -23253,7 +23253,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T16:38:09Z",
+   "modified": "2026-10-24T19:17:37Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -23488,7 +23488,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T02:50:54Z",
+   "modified": "2026-10-24T22:09:15Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -30591,82 +30591,6 @@
    ]
   },
   {
-   "sessionID": "1784231861232001EXVp",
-   "code": "TNC339-R",
-   "title": "AWS Partner: Your agent can wait. Go fix the app it depends on.",
-   "abstract": "This bootcamp is for AWS Partners only. An agent is only as reliable as the services it calls. Before you fix anything, you need to know exactly what's broken. In this workshop you stress-test that claim — probing a service for gaps that break autonomous invocation, reading the findings against your own predictions, and making the call on what gets fixed first. Leave with a ranked fix list and a method that transfers to any service. You must bring your laptop to participate.",
-   "type": "Bootcamp",
-   "length": 120,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-24T04:13:06Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Bootcamp"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Migration & Modernization"
-    ],
-    "AreaofInterest": [
-     "Training & Certification"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Bedrock",
-     "AWS Transform",
-     "Kiro"
-    ],
-    "Venue": [
-     "Caesars Palace"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Andy Kroll",
-     "title": "Senior Generative AI Readiness Specialist",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790020454979001QGmJ",
-     "date": "2026-12-01",
-     "startTime": "15:30",
-     "endTime": "17:30",
-     "utcStartTime": "2026/12/01 23:30:00",
-     "utcEndTime": "2026/12/02 01:30:00",
-     "length": 120,
-     "room": "Caesars Palace | Emperors Level | Emperors Ballroom I",
-     "roomId": "1789591919883001b5WM",
-     "capacity": "82",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1787372742473001zK0g",
    "code": "TNC339-R1",
    "title": "AWS Partner: Your agent can wait. Go fix the app it depends on.",
@@ -30732,6 +30656,82 @@
      "endTime": "15:00",
      "utcStartTime": "2026/12/02 21:00:00",
      "utcEndTime": "2026/12/02 23:00:00",
+     "length": 120,
+     "room": "Caesars Palace | Emperors Level | Emperors Ballroom I",
+     "roomId": "1789591919883001b5WM",
+     "capacity": "82",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1784231861232001EXVp",
+   "code": "TNC339-R",
+   "title": "AWS Partner: Your agent can wait. Go fix the app it depends on.",
+   "abstract": "This bootcamp is for AWS Partners only. An agent is only as reliable as the services it calls. Before you fix anything, you need to know exactly what's broken. In this workshop you stress-test that claim — probing a service for gaps that break autonomous invocation, reading the findings against your own predictions, and making the call on what gets fixed first. Leave with a ranked fix list and a method that transfers to any service. You must bring your laptop to participate.",
+   "type": "Bootcamp",
+   "length": 120,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-24T19:17:37Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Bootcamp"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Migration & Modernization"
+    ],
+    "AreaofInterest": [
+     "Training & Certification"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Bedrock",
+     "AWS Transform",
+     "Kiro"
+    ],
+    "Venue": [
+     "Caesars Palace"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Andy Kroll",
+     "title": "Senior Generative AI Readiness Specialist",
+     "company": "Amazon",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790020454979001QGmJ",
+     "date": "2026-12-01",
+     "startTime": "15:30",
+     "endTime": "17:30",
+     "utcStartTime": "2026/12/01 23:30:00",
+     "utcEndTime": "2026/12/02 01:30:00",
      "length": 120,
      "room": "Caesars Palace | Emperors Level | Emperors Ballroom I",
      "roomId": "1789591919883001b5WM",
@@ -33462,7 +33462,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T18:35:03Z",
+   "modified": "2026-10-25T01:01:56Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -34097,7 +34097,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T02:55:46Z",
+   "modified": "2026-10-24T22:09:15Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -48774,7 +48774,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-23T15:33:18Z",
+   "modified": "2026-10-25T00:29:58Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -51212,7 +51212,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T18:25:06Z",
+   "modified": "2026-10-24T22:02:58Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -60548,7 +60548,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T15:47:31Z",
+   "modified": "2026-10-24T21:34:30Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -61272,7 +61272,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T02:26:55Z",
+   "modified": "2026-10-24T19:24:54Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -72764,7 +72764,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T16:43:51Z",
+   "modified": "2026-10-24T20:00:18Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -78661,7 +78661,7 @@
    "length": 180,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T03:31:51Z",
+   "modified": "2026-10-25T01:09:12Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -80944,7 +80944,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T02:39:19Z",
+   "modified": "2026-10-24T22:13:46Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -87642,7 +87642,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-23T18:00:30Z",
+   "modified": "2026-10-24T20:31:31Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -89272,7 +89272,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-23T18:35:04Z",
+   "modified": "2026-10-24T22:10:50Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -93700,7 +93700,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T17:13:14Z",
+   "modified": "2026-10-24T19:31:31Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -94678,7 +94678,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T13:54:57Z",
+   "modified": "2026-10-24T21:48:39Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -105940,7 +105940,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T02:54:01Z",
+   "modified": "2026-10-24T22:06:29Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -108345,7 +108345,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T16:31:57Z",
+   "modified": "2026-10-24T22:41:37Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -110967,7 +110967,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T06:16:57Z",
+   "modified": "2026-10-24T21:27:58Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -111936,7 +111936,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T18:33:38Z",
+   "modified": "2026-10-24T22:13:11Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -112238,7 +112238,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T14:52:20Z",
+   "modified": "2026-10-24T22:16:12Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -114991,91 +114991,6 @@
    ]
   },
   {
-   "sessionID": "1790358240915001ipNX",
-   "code": "IND3304-R1",
-   "title": "KNFSD File Cache: Extending Your NFS Storage into the Cloud",
-   "abstract": "Need to cache and serve NFS data from on-premises filers, across Availability Zones and Regions, or from other cloud providers with full read and write-back support? In this chalk talk, dive into KNFSD File Cache, an open-source, kernel-based NFS caching proxy on Amazon EC2 that transparently extends existing NFS storage into AWS. A single Terraform module stands up a production-ready, autoscaling cluster with high throughput and at low cost. Discuss hybrid and burst-compute patterns across M&E, HPC, Financial Services, and Life Sciences industries—eliminating latency without migration, client changes, or vendor lock-in.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-23T15:33:18Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Customer story",
-     "Discussion"
-    ],
-    "Topic": [
-     "Artificial Intelligence",
-     "Migration & Modernization"
-    ],
-    "AreaofInterest": [
-     "Agentic AI"
-    ],
-    "Industry": [
-     "Media & Entertainment"
-    ],
-    "Role": [
-     "Academic / Researcher",
-     "Developer / Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Elastic Compute Cloud (Amazon EC2)"
-    ],
-    "Venue": [
-     "Caesars Forum"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "DJ Rahming",
-     "title": "Senior Specialist Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Andy Hayes",
-     "title": "Snr Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360365254001Ab8q",
-     "date": "2026-12-01",
-     "startTime": "16:30",
-     "endTime": "17:30",
-     "utcStartTime": "2026/12/02 00:30:00",
-     "utcEndTime": "2026/12/02 01:30:00",
-     "length": 60,
-     "room": "Caesars Forum | Level 1 | Forum 114",
-     "roomId": "1789591919703003bevY",
-     "capacity": "88",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442245471001cBL6",
    "code": "IND3304-R",
    "title": "KNFSD File Cache: Extending Your NFS Storage into the Cloud",
@@ -115084,7 +114999,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T03:38:44Z",
+   "modified": "2026-10-24T19:33:17Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -115152,6 +115067,91 @@
      "length": 60,
      "room": "Caesars Forum | Level 1 | Alliance 314",
      "roomId": "1789591919643004bRVK",
+     "capacity": "88",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358240915001ipNX",
+   "code": "IND3304-R1",
+   "title": "KNFSD File Cache: Extending Your NFS Storage into the Cloud",
+   "abstract": "Need to cache and serve NFS data from on-premises filers, across Availability Zones and Regions, or from other cloud providers with full read and write-back support? In this chalk talk, dive into KNFSD File Cache, an open-source, kernel-based NFS caching proxy on Amazon EC2 that transparently extends existing NFS storage into AWS. A single Terraform module stands up a production-ready, autoscaling cluster with high throughput and at low cost. Discuss hybrid and burst-compute patterns across M&E, HPC, Financial Services, and Life Sciences industries—eliminating latency without migration, client changes, or vendor lock-in.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-24T20:33:32Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Customer story",
+     "Discussion"
+    ],
+    "Topic": [
+     "Artificial Intelligence",
+     "Migration & Modernization"
+    ],
+    "AreaofInterest": [
+     "Agentic AI"
+    ],
+    "Industry": [
+     "Media & Entertainment"
+    ],
+    "Role": [
+     "Academic / Researcher",
+     "Developer / Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Elastic Compute Cloud (Amazon EC2)"
+    ],
+    "Venue": [
+     "Caesars Forum"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Andy Hayes",
+     "title": "Snr Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "DJ Rahming",
+     "title": "Senior Specialist Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360365254001Ab8q",
+     "date": "2026-12-01",
+     "startTime": "16:30",
+     "endTime": "17:30",
+     "utcStartTime": "2026/12/02 00:30:00",
+     "utcEndTime": "2026/12/02 01:30:00",
+     "length": 60,
+     "room": "Caesars Forum | Level 1 | Forum 114",
+     "roomId": "1789591919703003bevY",
      "capacity": "88",
      "inPersonTime": true,
      "virtualTime": false,
@@ -115243,7 +115243,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T14:11:39Z",
+   "modified": "2026-10-24T22:41:37Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -118350,7 +118350,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-23T20:57:41Z",
+   "modified": "2026-10-24T22:08:05Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -121692,7 +121692,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-23T15:39:37Z",
+   "modified": "2026-10-25T00:16:12Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -122554,7 +122554,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T04:14:17Z",
+   "modified": "2026-10-24T22:02:58Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -123442,7 +123442,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T13:04:34Z",
+   "modified": "2026-10-24T21:31:29Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -124313,7 +124313,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-23T22:05:33Z",
+   "modified": "2026-10-24T21:24:57Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -125150,7 +125150,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T16:14:06Z",
+   "modified": "2026-10-24T19:36:02Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -129027,7 +129027,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-23T16:32:24Z",
+   "modified": "2026-10-24T19:45:30Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -129091,7 +129091,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T04:11:20Z",
+   "modified": "2026-10-24T19:45:30Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -130659,7 +130659,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T16:43:16Z",
+   "modified": "2026-10-24T21:45:33Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -134171,7 +134171,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-23T19:36:23Z",
+   "modified": "2026-10-25T01:12:37Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -134394,7 +134394,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T17:16:41Z",
+   "modified": "2026-10-24T20:35:22Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -138052,7 +138052,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-23T15:33:18Z",
+   "modified": "2026-10-24T22:02:58Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -138100,9 +138100,9 @@
    },
    "speakers": [
     {
-     "name": "Umer Chaudhary",
-     "title": "Sr. Mgr Network Solutions",
-     "company": "AWS",
+     "name": "Young Jung",
+     "title": "Sr. Manager of Telco Network SA",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     },
     {
@@ -138112,9 +138112,9 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Young Jung",
-     "title": "Sr. Manager of Telco Network SA",
-     "company": "Amazon Web Services",
+     "name": "Umer Chaudhary",
+     "title": "Sr. Mgr Network Solutions",
+     "company": "AWS",
      "role": "Internal Speaker"
     }
    ],
@@ -139635,7 +139635,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T16:48:48Z",
+   "modified": "2026-10-24T19:44:20Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -141420,7 +141420,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T06:15:47Z",
+   "modified": "2026-10-25T00:16:12Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -141716,94 +141716,6 @@
    ]
   },
   {
-   "sessionID": "1790358233125001i6JR",
-   "code": "AIM308-R1",
-   "title": "Put your data to work: build a knowledge assistant on Amazon Bedrock",
-   "abstract": "Your data lives in documents, images, databases, warehouses, and relationships between entities. In this builders session, build a knowledge assistant that works across all of it on Amazon Bedrock. Use Managed Knowledge Bases with multimodal ingestion to handle PDFs and images, add natural-language querying over structured data, and wire in GraphRAG for questions that span connected entities. Then make it enterprise-ready: secure tenant isolation, concurrency-aware ingestion, and the Agentic Retrieval API for multi-hop, cited answers. Leave with a deployed stack and retrieval patterns you can reuse across your organization.",
-   "type": "Builders' session",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-23T15:33:18Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Builders' session"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Artificial Intelligence"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Aakash Upadhyay",
-     "title": "Principal Engineer",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Siamak Ziraknejad",
-     "title": "Lead, Knowledge & Context",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Sunita Koppar",
-     "title": "Sr Specialist Solutions Architect GenAI ML",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Nabil Ezzarhouni",
-     "title": "AWS AI/ML Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Dani Mitchell",
-     "title": "Generative AI Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360382141001A5cb",
-     "date": "2026-12-02",
-     "startTime": "13:00",
-     "endTime": "14:00",
-     "utcStartTime": "2026/12/02 21:00:00",
-     "utcEndTime": "2026/12/02 22:00:00",
-     "length": 60,
-     "room": "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Builders' Session 2",
-     "roomId": "1789591920422004b914",
-     "capacity": "50",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442224281001cuhS",
    "code": "AIM308-R",
    "title": "Put your data to work: build a knowledge assistant on Amazon Bedrock",
@@ -141812,7 +141724,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-23T15:33:18Z",
+   "modified": "2026-10-23T19:36:23Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -141843,20 +141755,20 @@
    },
    "speakers": [
     {
-     "name": "Aakash Upadhyay",
-     "title": "Principal Engineer",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Siamak Ziraknejad",
      "title": "Lead, Knowledge & Context",
      "company": "Amazon",
      "role": "Internal Speaker"
     },
     {
-     "name": "Sunita Koppar",
-     "title": "Sr Specialist Solutions Architect GenAI ML",
+     "name": "Dani Mitchell",
+     "title": "Generative AI Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Aakash Upadhyay",
+     "title": "Principal Engineer",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
     },
@@ -141867,8 +141779,8 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Dani Mitchell",
-     "title": "Generative AI Solutions Architect",
+     "name": "Sunita Koppar",
+     "title": "Sr Specialist Solutions Architect GenAI ML",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
     }
@@ -141884,6 +141796,94 @@
      "length": 60,
      "room": "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Builders' Session 1",
      "roomId": "1789591920413001bvC3",
+     "capacity": "50",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358233125001i6JR",
+   "code": "AIM308-R1",
+   "title": "Put your data to work: build a knowledge assistant on Amazon Bedrock",
+   "abstract": "Your data lives in documents, images, databases, warehouses, and relationships between entities. In this builders session, build a knowledge assistant that works across all of it on Amazon Bedrock. Use Managed Knowledge Bases with multimodal ingestion to handle PDFs and images, add natural-language querying over structured data, and wire in GraphRAG for questions that span connected entities. Then make it enterprise-ready: secure tenant isolation, concurrency-aware ingestion, and the Agentic Retrieval API for multi-hop, cited answers. Leave with a deployed stack and retrieval patterns you can reuse across your organization.",
+   "type": "Builders' session",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-23T19:36:23Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Builders' session"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Artificial Intelligence"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Siamak Ziraknejad",
+     "title": "Lead, Knowledge & Context",
+     "company": "Amazon",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Dani Mitchell",
+     "title": "Generative AI Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Aakash Upadhyay",
+     "title": "Principal Engineer",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Nabil Ezzarhouni",
+     "title": "AWS AI/ML Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Sunita Koppar",
+     "title": "Sr Specialist Solutions Architect GenAI ML",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360382141001A5cb",
+     "date": "2026-12-02",
+     "startTime": "13:00",
+     "endTime": "14:00",
+     "utcStartTime": "2026/12/02 21:00:00",
+     "utcEndTime": "2026/12/02 22:00:00",
+     "length": 60,
+     "room": "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Builders' Session 2",
+     "roomId": "1789591920422004b914",
      "capacity": "50",
      "inPersonTime": true,
      "virtualTime": false,
@@ -142397,7 +142397,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T16:01:04Z",
+   "modified": "2026-10-24T20:01:18Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -145495,7 +145495,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T16:52:10Z",
+   "modified": "2026-10-24T21:10:14Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -155786,7 +155786,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-23T20:52:23Z",
+   "modified": "2026-10-24T22:08:05Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -160163,7 +160163,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-23T15:33:18Z",
+   "modified": "2026-10-24T23:22:57Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -162448,7 +162448,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-23T21:25:17Z",
+   "modified": "2026-10-24T20:11:22Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -164375,7 +164375,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T18:37:44Z",
+   "modified": "2026-10-24T22:09:00Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -167129,7 +167129,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T09:19:41Z",
+   "modified": "2026-10-24T22:16:12Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -172260,7 +172260,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-23T19:36:23Z",
+   "modified": "2026-10-25T00:29:58Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -174107,7 +174107,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-23T17:54:00Z",
+   "modified": "2026-10-24T20:00:18Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -176303,16 +176303,16 @@
    },
    "speakers": [
     {
-     "name": "Vaijayanti Korde",
-     "title": "Head of Cybersecurity Cloud & Crypto Platform",
-     "company": "Visa Inc",
-     "role": "External Speaker"
-    },
-    {
      "name": "Gaurav Priyolkar",
      "title": "Principal Solutions Architect",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
+    },
+    {
+     "name": "Vaijayanti Korde",
+     "title": "Head of Cybersecurity Cloud & Crypto Platform",
+     "company": "Visa Inc",
+     "role": "External Speaker"
     }
    ],
    "times": [
@@ -176589,7 +176589,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T02:56:12Z",
+   "modified": "2026-10-24T21:31:29Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -178779,7 +178779,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T16:49:49Z",
+   "modified": "2026-10-24T22:09:15Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -179216,7 +179216,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T18:33:38Z",
+   "modified": "2026-10-24T22:18:07Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -179662,7 +179662,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T18:05:46Z",
+   "modified": "2026-10-24T21:31:29Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -180850,89 +180850,6 @@
    ]
   },
   {
-   "sessionID": "1790358237168001icNH",
-   "code": "ARC315-R1",
-   "title": "Where embeddings live: Designing production retrieval on AWS",
-   "abstract": "Where should vector embeddings live? In your operational database, a dedicated vector store, or across several? In this session you evaluate the trade-offs across latency, data freshness, cost, and retrieval quality. You implement the same retrieval pattern across three engines: Amazon OpenSearch Service for combined lexical and vector search, Amazon Aurora PostgreSQL with pgvector for SQL-native filtered retrieval, and Amazon S3 Vectors for cost-optimized scale. You then combine them into a hybrid architecture that orchestrates a single query and merges the results with reciprocal rank fusion. You leave able to answer where your embeddings should live, backed by patterns you built yourself. Bring your laptop to participate.",
-   "type": "Workshop",
-   "length": 120,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-24T15:27:03Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Workshop"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Architecture",
-     "Databases"
-    ],
-    "AreaofInterest": [
-     "Agentic AI"
-    ],
-    "Role": [
-     "Data Engineer",
-     "Data Scientist",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Aurora",
-     "Amazon Simple Storage Service (Amazon S3)"
-    ],
-    "Venue": [
-     "Wynn/Encore"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Amee Shah",
-     "title": "Sr. Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Harshil Shah",
-     "title": "Senior Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360403012001A684",
-     "date": "2026-12-02",
-     "startTime": "12:30",
-     "endTime": "14:30",
-     "utcStartTime": "2026/12/02 20:30:00",
-     "utcEndTime": "2026/12/02 22:30:00",
-     "length": 120,
-     "room": "Wynn/Encore | Upper Convention Promenade | Cristal 7",
-     "roomId": "1789591921464001bbZh",
-     "capacity": "140",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442275094001c8KG",
    "code": "ARC315-R",
    "title": "Where embeddings live: Designing production retrieval on AWS",
@@ -180941,7 +180858,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T18:31:42Z",
+   "modified": "2026-10-24T20:12:57Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -181005,6 +180922,89 @@
      "endTime": "14:30",
      "utcStartTime": "2026/11/30 20:30:00",
      "utcEndTime": "2026/11/30 22:30:00",
+     "length": 120,
+     "room": "Wynn/Encore | Upper Convention Promenade | Cristal 7",
+     "roomId": "1789591921464001bbZh",
+     "capacity": "140",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358237168001icNH",
+   "code": "ARC315-R1",
+   "title": "Where embeddings live: Designing production retrieval on AWS",
+   "abstract": "Where should vector embeddings live? In your operational database, a dedicated vector store, or across several? In this session you evaluate the trade-offs across latency, data freshness, cost, and retrieval quality. You implement the same retrieval pattern across three engines: Amazon OpenSearch Service for combined lexical and vector search, Amazon Aurora PostgreSQL with pgvector for SQL-native filtered retrieval, and Amazon S3 Vectors for cost-optimized scale. You then combine them into a hybrid architecture that orchestrates a single query and merges the results with reciprocal rank fusion. You leave able to answer where your embeddings should live, backed by patterns you built yourself. Bring your laptop to participate.",
+   "type": "Workshop",
+   "length": 120,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-24T20:52:10Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Workshop"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Architecture",
+     "Databases"
+    ],
+    "AreaofInterest": [
+     "Agentic AI"
+    ],
+    "Role": [
+     "Data Engineer",
+     "Data Scientist",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Aurora",
+     "Amazon Simple Storage Service (Amazon S3)"
+    ],
+    "Venue": [
+     "Wynn/Encore"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Amee Shah",
+     "title": "Sr. Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Harshil Shah",
+     "title": "Senior Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360403012001A684",
+     "date": "2026-12-02",
+     "startTime": "12:30",
+     "endTime": "14:30",
+     "utcStartTime": "2026/12/02 20:30:00",
+     "utcEndTime": "2026/12/02 22:30:00",
      "length": 120,
      "room": "Wynn/Encore | Upper Convention Promenade | Cristal 7",
      "roomId": "1789591921464001bbZh",
@@ -181680,7 +181680,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T00:43:44Z",
+   "modified": "2026-10-24T19:12:05Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
