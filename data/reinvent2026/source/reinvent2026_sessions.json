@@ -1,7 +1,7 @@
 {
  "source": "https://catalog.awsevents.com/api/sessions",
  "event": "reinvent2026",
- "fetchedAt": "2026-10-25T06:56:56Z",
+ "fetchedAt": "2026-10-25T12:50:20Z",
  "count": 2273,
  "sessions": [
   {
@@ -7238,7 +7238,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-23T15:33:18Z",
+   "modified": "2026-10-25T12:26:14Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -22991,90 +22991,6 @@
    ]
   },
   {
-   "sessionID": "1780442284605001chVc",
-   "code": "SEC323-R",
-   "title": "Assume breach, prove recovery: a ransomware resilience workshop",
-   "abstract": "Most organizations have backups. Few can prove clean recovery after ransomware, and regulators now demand exactly that proof. In this hands-on workshop, you configure a resilient backup architecture on AWS using vaults and immutable storage. You then experience a simulated ransomware event, validate that your recovery infrastructure held, restore to an isolated clean room environment, and scan recovered resources for attacker persistence using GuardDuty Malware Protection. You leave with a recovery validation approach and an understanding of why least privilege, vault lock, and validation are non-negotiable.",
-   "type": "Workshop",
-   "length": 120,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-23T15:33:18Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Workshop"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Security & Identity"
-    ],
-    "AreaofInterest": [
-     "Resilience",
-     "Threat Detection & Incident Response",
-     "Identity & Access Management"
-    ],
-    "Role": [
-     "Cloud Security Specialist",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon GuardDuty",
-     "AWS Backup",
-     "AWS Organizations"
-    ],
-    "Venue": [
-     "Wynn/Encore"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Danny Wright",
-     "title": "Principal Technical Account Manager",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Christopher Strug",
-     "title": "Senior Technical Account Manager",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790033116962001qg9R",
-     "date": "2026-12-01",
-     "startTime": "15:30",
-     "endTime": "17:30",
-     "utcStartTime": "2026/12/01 23:30:00",
-     "utcEndTime": "2026/12/02 01:30:00",
-     "length": 120,
-     "room": "Wynn/Encore | Upper Convention Promenade | Cristal 3",
-     "roomId": "1789591921417004bAHD",
-     "capacity": "140",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790877000123001NOUA",
    "code": "SEC323-R1",
    "title": "Assume breach, prove recovery: A ransomware resilience workshop",
@@ -23083,7 +22999,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-23T15:33:18Z",
+   "modified": "2026-10-23T19:36:23Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -23151,6 +23067,90 @@
      "length": 120,
      "room": "Wynn/Encore | Upper Convention Promenade | Cristal 5",
      "roomId": "1789591921434004bXob",
+     "capacity": "140",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442284605001chVc",
+   "code": "SEC323-R",
+   "title": "Assume breach, prove recovery: a ransomware resilience workshop",
+   "abstract": "Most organizations have backups. Few can prove clean recovery after ransomware, and regulators now demand exactly that proof. In this hands-on workshop, you configure a resilient backup architecture on AWS using vaults and immutable storage. You then experience a simulated ransomware event, validate that your recovery infrastructure held, restore to an isolated clean room environment, and scan recovered resources for attacker persistence using GuardDuty Malware Protection. You leave with a recovery validation approach and an understanding of why least privilege, vault lock, and validation are non-negotiable.",
+   "type": "Workshop",
+   "length": 120,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-23T19:36:23Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Workshop"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Security & Identity"
+    ],
+    "AreaofInterest": [
+     "Resilience",
+     "Threat Detection & Incident Response",
+     "Identity & Access Management"
+    ],
+    "Role": [
+     "Cloud Security Specialist",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon GuardDuty",
+     "AWS Backup",
+     "AWS Organizations"
+    ],
+    "Venue": [
+     "Wynn/Encore"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Danny Wright",
+     "title": "Principal Technical Account Manager",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Christopher Strug",
+     "title": "Senior Technical Account Manager",
+     "company": "Amazon",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790033116962001qg9R",
+     "date": "2026-12-01",
+     "startTime": "15:30",
+     "endTime": "17:30",
+     "utcStartTime": "2026/12/01 23:30:00",
+     "utcEndTime": "2026/12/02 01:30:00",
+     "length": 120,
+     "room": "Wynn/Encore | Upper Convention Promenade | Cristal 3",
+     "roomId": "1789591921417004bAHD",
      "capacity": "140",
      "inPersonTime": true,
      "virtualTime": false,
@@ -26698,15 +26698,15 @@
    },
    "speakers": [
     {
-     "name": "Julia Furst Morgado",
-     "title": "Principal DevRel Engineer",
-     "company": "Dash0",
-     "role": "External Speaker"
-    },
-    {
      "name": "Jones Zachariah Noel",
      "title": "AWS Serverless Hero / Senior Developer Relations Engineer",
      "company": "New Relic",
+     "role": "External Speaker"
+    },
+    {
+     "name": "Julia Furst Morgado",
+     "title": "Principal DevRel Engineer",
+     "company": "Dash0",
      "role": "External Speaker"
     }
    ],
@@ -26783,15 +26783,15 @@
    },
    "speakers": [
     {
-     "name": "Julia Furst Morgado",
-     "title": "Principal DevRel Engineer",
-     "company": "Dash0",
-     "role": "External Speaker"
-    },
-    {
      "name": "Jones Zachariah Noel",
      "title": "AWS Serverless Hero / Senior Developer Relations Engineer",
      "company": "New Relic",
+     "role": "External Speaker"
+    },
+    {
+     "name": "Julia Furst Morgado",
+     "title": "Principal DevRel Engineer",
+     "company": "Dash0",
      "role": "External Speaker"
     }
    ],
@@ -30591,82 +30591,6 @@
    ]
   },
   {
-   "sessionID": "1787372742473001zK0g",
-   "code": "TNC339-R1",
-   "title": "AWS Partner: Your agent can wait. Go fix the app it depends on.",
-   "abstract": "This bootcamp is for AWS Partners only. An agent is only as reliable as the services it calls. Before you fix anything, you need to know exactly what's broken. In this workshop you stress-test that claim — probing a service for gaps that break autonomous invocation, reading the findings against your own predictions, and making the call on what gets fixed first. Leave with a ranked fix list and a method that transfers to any service. You must bring your laptop to participate.",
-   "type": "Bootcamp",
-   "length": 120,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-24T12:00:52Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Bootcamp"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Migration & Modernization"
-    ],
-    "AreaofInterest": [
-     "Training & Certification"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Bedrock",
-     "AWS Transform",
-     "Kiro"
-    ],
-    "Venue": [
-     "Caesars Palace"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Andy Kroll",
-     "title": "Senior Generative AI Readiness Specialist",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790980247940001Xbr7",
-     "date": "2026-12-02",
-     "startTime": "13:00",
-     "endTime": "15:00",
-     "utcStartTime": "2026/12/02 21:00:00",
-     "utcEndTime": "2026/12/02 23:00:00",
-     "length": 120,
-     "room": "Caesars Palace | Emperors Level | Emperors Ballroom I",
-     "roomId": "1789591919883001b5WM",
-     "capacity": "82",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1784231861232001EXVp",
    "code": "TNC339-R",
    "title": "AWS Partner: Your agent can wait. Go fix the app it depends on.",
@@ -30732,6 +30656,82 @@
      "endTime": "17:30",
      "utcStartTime": "2026/12/01 23:30:00",
      "utcEndTime": "2026/12/02 01:30:00",
+     "length": 120,
+     "room": "Caesars Palace | Emperors Level | Emperors Ballroom I",
+     "roomId": "1789591919883001b5WM",
+     "capacity": "82",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1787372742473001zK0g",
+   "code": "TNC339-R1",
+   "title": "AWS Partner: Your agent can wait. Go fix the app it depends on.",
+   "abstract": "This bootcamp is for AWS Partners only. An agent is only as reliable as the services it calls. Before you fix anything, you need to know exactly what's broken. In this workshop you stress-test that claim — probing a service for gaps that break autonomous invocation, reading the findings against your own predictions, and making the call on what gets fixed first. Leave with a ranked fix list and a method that transfers to any service. You must bring your laptop to participate.",
+   "type": "Bootcamp",
+   "length": 120,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-25T10:22:34Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Bootcamp"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Migration & Modernization"
+    ],
+    "AreaofInterest": [
+     "Training & Certification"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Bedrock",
+     "AWS Transform",
+     "Kiro"
+    ],
+    "Venue": [
+     "Caesars Palace"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Andy Kroll",
+     "title": "Senior Generative AI Readiness Specialist",
+     "company": "Amazon",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790980247940001Xbr7",
+     "date": "2026-12-02",
+     "startTime": "13:00",
+     "endTime": "15:00",
+     "utcStartTime": "2026/12/02 21:00:00",
+     "utcEndTime": "2026/12/02 23:00:00",
      "length": 120,
      "room": "Caesars Palace | Emperors Level | Emperors Ballroom I",
      "roomId": "1789591919883001b5WM",
@@ -33462,7 +33462,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-25T04:26:18Z",
+   "modified": "2026-10-25T07:42:06Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -35992,7 +35992,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-25T05:43:07Z",
+   "modified": "2026-10-25T10:39:58Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -36234,7 +36234,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-23T15:33:18Z",
+   "modified": "2026-10-23T19:36:23Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -36283,6 +36283,12 @@
    },
    "speakers": [
     {
+     "name": "JP Velasco",
+     "title": "Senior Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
      "name": "Heungsu Ha",
      "title": "SA",
      "company": "AWS",
@@ -36291,12 +36297,6 @@
     {
      "name": "matthew nimmo",
      "title": "Sr. Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "JP Velasco",
-     "title": "Senior Solutions Architect",
      "company": "AWS",
      "role": "Internal Speaker"
     },
@@ -37860,7 +37860,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-23T15:33:18Z",
+   "modified": "2026-10-23T19:36:23Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -37891,24 +37891,6 @@
    },
    "speakers": [
     {
-     "name": "Yaakov Tayeb",
-     "title": "Sr. GTM SSA AI/ML EMEA",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Jamie Brearton",
-     "title": "Bedrock GTM",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Shivi Shivi",
-     "title": "Senior Solutions Architect - AWS Bedrock",
-     "company": "Amazon Web Services Inc.",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Eitan Sela",
      "title": "Principal GenAI/ML Specialist Solutions Architect",
      "company": "Amazon",
@@ -37918,6 +37900,24 @@
      "name": "Shreeya Sharma",
      "title": "Sr. Product Manager Technical",
      "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Shivi Shivi",
+     "title": "Senior Solutions Architect - AWS Bedrock",
+     "company": "Amazon Web Services Inc.",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Yaakov Tayeb",
+     "title": "Sr. GTM SSA AI/ML EMEA",
+     "company": "Amazon",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Jamie Brearton",
+     "title": "Bedrock GTM",
+     "company": "AWS",
      "role": "Internal Speaker"
     }
    ],
@@ -37948,7 +37948,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-23T15:33:18Z",
+   "modified": "2026-10-23T19:36:23Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -37979,24 +37979,6 @@
    },
    "speakers": [
     {
-     "name": "Yaakov Tayeb",
-     "title": "Sr. GTM SSA AI/ML EMEA",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Jamie Brearton",
-     "title": "Bedrock GTM",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Shivi Shivi",
-     "title": "Senior Solutions Architect - AWS Bedrock",
-     "company": "Amazon Web Services Inc.",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Eitan Sela",
      "title": "Principal GenAI/ML Specialist Solutions Architect",
      "company": "Amazon",
@@ -38006,6 +37988,24 @@
      "name": "Shreeya Sharma",
      "title": "Sr. Product Manager Technical",
      "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Shivi Shivi",
+     "title": "Senior Solutions Architect - AWS Bedrock",
+     "company": "Amazon Web Services Inc.",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Yaakov Tayeb",
+     "title": "Sr. GTM SSA AI/ML EMEA",
+     "company": "Amazon",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Jamie Brearton",
+     "title": "Bedrock GTM",
+     "company": "AWS",
      "role": "Internal Speaker"
     }
    ],
@@ -44455,7 +44455,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-23T15:33:18Z",
+   "modified": "2026-10-23T19:36:23Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -44485,15 +44485,15 @@
    },
    "speakers": [
     {
-     "name": "Nathan Arnold",
-     "title": "Sr. Specialist Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Nicolas Jourdan",
      "title": "Sr. Specialist Solution Architect AI/ML/GenAI EMEA",
      "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Nathan Arnold",
+     "title": "Sr. Specialist Solutions Architect",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     }
    ],
@@ -57820,7 +57820,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T18:02:29Z",
+   "modified": "2026-10-25T12:31:05Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -60548,7 +60548,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T21:34:30Z",
+   "modified": "2026-10-25T12:29:25Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -61272,7 +61272,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T19:24:54Z",
+   "modified": "2026-10-25T11:31:04Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -70386,91 +70386,6 @@
    ]
   },
   {
-   "sessionID": "1780442277896001cDcK",
-   "code": "CMP311-R",
-   "title": "Cut cost migrating agentic AI workloads to Graviton5 on EKS AutoMode",
-   "abstract": "Learn how to cut agentic AI infrastructure costs by migrating to AWS Graviton5 on Amazon EKS Auto Mode — with no compromise on latency or reliability. This hands-on workshop covers the full playbook: building multi-architecture container images, designing ARM64 NodePools, configuring IAM Roles for Service Accounts for secure agent-to-AWS communication, and tuning Graviton-optimized inference runtimes for predictable tail latency. Run live cost benchmarks against x86 equivalents to see exactly where Graviton5 pays back, and instrument with CloudWatch Container Insights to confirm performance parity. Walk away with a reusable pattern, a reproducible benchmark methodology, and a clear migration path you can apply to your own workloads the same week.",
-   "type": "Workshop",
-   "length": 120,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-24T05:11:38Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Workshop"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Artificial Intelligence",
-     "Compute"
-    ],
-    "AreaofInterest": [
-     "Cost Optimization",
-     "Agentic AI",
-     "Kubernetes"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "DevOps Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Elastic Kubernetes Service (Amazon EKS)",
-     "Amazon EC2 - Graviton"
-    ],
-    "Venue": [
-     "Caesars Palace"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Borja Pérez Guasch",
-     "title": "Sr. Prototyping Engineer",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Jon Loinaz Anton",
-     "title": "Enterprise Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025495205001CMKU",
-     "date": "2026-11-30",
-     "startTime": "15:30",
-     "endTime": "17:30",
-     "utcStartTime": "2026/11/30 23:30:00",
-     "utcEndTime": "2026/12/01 01:30:00",
-     "length": 120,
-     "room": "Caesars Palace | Promenade Level | Milano IV",
-     "roomId": "1789591919941001bt9M",
-     "capacity": "150",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358224862001i9HT",
    "code": "CMP311-R1",
    "title": "Cut cost migrating agentic AI workloads to Graviton5 on EKS AutoMode",
@@ -70549,6 +70464,91 @@
      "room": "MGM Grand | Level 3 | Premier 317",
      "roomId": "1789591920505001bX6q",
      "capacity": "84",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442277896001cDcK",
+   "code": "CMP311-R",
+   "title": "Cut cost migrating agentic AI workloads to Graviton5 on EKS AutoMode",
+   "abstract": "Learn how to cut agentic AI infrastructure costs by migrating to AWS Graviton5 on Amazon EKS Auto Mode — with no compromise on latency or reliability. This hands-on workshop covers the full playbook: building multi-architecture container images, designing ARM64 NodePools, configuring IAM Roles for Service Accounts for secure agent-to-AWS communication, and tuning Graviton-optimized inference runtimes for predictable tail latency. Run live cost benchmarks against x86 equivalents to see exactly where Graviton5 pays back, and instrument with CloudWatch Container Insights to confirm performance parity. Walk away with a reusable pattern, a reproducible benchmark methodology, and a clear migration path you can apply to your own workloads the same week.",
+   "type": "Workshop",
+   "length": 120,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-25T12:24:28Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Workshop"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Artificial Intelligence",
+     "Compute"
+    ],
+    "AreaofInterest": [
+     "Cost Optimization",
+     "Agentic AI",
+     "Kubernetes"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "DevOps Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Elastic Kubernetes Service (Amazon EKS)",
+     "Amazon EC2 - Graviton"
+    ],
+    "Venue": [
+     "Caesars Palace"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Borja Pérez Guasch",
+     "title": "Sr. Prototyping Engineer",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Jon Loinaz Anton",
+     "title": "Enterprise Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025495205001CMKU",
+     "date": "2026-11-30",
+     "startTime": "15:30",
+     "endTime": "17:30",
+     "utcStartTime": "2026/11/30 23:30:00",
+     "utcEndTime": "2026/12/01 01:30:00",
+     "length": 120,
+     "room": "Caesars Palace | Promenade Level | Milano IV",
+     "roomId": "1789591919941001bt9M",
+     "capacity": "150",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -72764,7 +72764,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T20:00:18Z",
+   "modified": "2026-10-25T10:20:18Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -75718,7 +75718,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T10:21:55Z",
+   "modified": "2026-10-25T11:25:42Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -77598,7 +77598,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-25T04:29:09Z",
+   "modified": "2026-10-25T11:25:42Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -80875,7 +80875,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T09:16:35Z",
+   "modified": "2026-10-25T08:41:59Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -87642,7 +87642,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T20:31:31Z",
+   "modified": "2026-10-25T12:35:02Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -98105,7 +98105,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-25T05:29:36Z",
+   "modified": "2026-10-25T07:11:09Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -111166,93 +111166,6 @@
    ]
   },
   {
-   "sessionID": "1780442244158001c5Jb",
-   "code": "IND359-R",
-   "title": "In-Country HPC: How TGS Processes Seismic Data on AWS Brazil",
-   "abstract": "TGS -- one of the world's largest multi-client geoscience data providers -- faced a significant cost challenge running its business-critical Rackmon EFWI GPU workload at scale. By strategically deploying this workload on AWS infrastructure in Brazil, TGS leveraged Brazil's ReData Special Tax Regime to dramatically reduce the tax burden on GPU-intensive seismic processing. The result: material cost savings on one of the most computationally demanding workloads in the energy industry -- and a reusable in-country processing architecture that can serve future customers with data residency requirements in other geographies.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-23T19:36:23Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Compute",
-     "Migration & Modernization"
-    ],
-    "AreaofInterest": [
-     "Digital Sovereignty",
-     "Global Infrastructure",
-     "Cost Optimization"
-    ],
-    "Industry": [
-     "Energy & Utilities"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "IT Executive",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Elastic Compute Cloud (Amazon EC2)",
-     "Amazon Simple Storage Service (Amazon S3)"
-    ],
-    "Venue": [
-     "Wynn/Encore"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Kun Jiao",
-     "title": "Principal Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Faisal Asif",
-     "title": "Global Head, Cloud Transformation and Innovation",
-     "company": "TGS",
-     "role": "External Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025474823001C937",
-     "date": "2026-11-30",
-     "startTime": "09:00",
-     "endTime": "10:00",
-     "utcStartTime": "2026/11/30 17:00:00",
-     "utcEndTime": "2026/11/30 18:00:00",
-     "length": 60,
-     "room": "Wynn/Encore | Convention Promenade | La Tache 2",
-     "roomId": "1789591920958001b8NR",
-     "capacity": "78",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358232199001iAvH",
    "code": "IND359-R1",
    "title": "In-Country HPC: How TGS Processes Seismic Data on AWS Brazil",
@@ -111333,6 +111246,93 @@
      "room": "Wynn/Encore | Level 1 | Chopin 4",
      "roomId": "1789591921128001bJpf",
      "capacity": "88",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442244158001c5Jb",
+   "code": "IND359-R",
+   "title": "In-Country HPC: How TGS Processes Seismic Data on AWS Brazil",
+   "abstract": "TGS -- one of the world's largest multi-client geoscience data providers -- faced a significant cost challenge running its business-critical Rackmon EFWI GPU workload at scale. By strategically deploying this workload on AWS infrastructure in Brazil, TGS leveraged Brazil's ReData Special Tax Regime to dramatically reduce the tax burden on GPU-intensive seismic processing. The result: material cost savings on one of the most computationally demanding workloads in the energy industry -- and a reusable in-country processing architecture that can serve future customers with data residency requirements in other geographies.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-25T10:48:05Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Compute",
+     "Migration & Modernization"
+    ],
+    "AreaofInterest": [
+     "Digital Sovereignty",
+     "Global Infrastructure",
+     "Cost Optimization"
+    ],
+    "Industry": [
+     "Energy & Utilities"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "IT Executive",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Elastic Compute Cloud (Amazon EC2)",
+     "Amazon Simple Storage Service (Amazon S3)"
+    ],
+    "Venue": [
+     "Wynn/Encore"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Kun Jiao",
+     "title": "Principal Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Faisal Asif",
+     "title": "Global Head, Cloud Transformation and Innovation",
+     "company": "TGS",
+     "role": "External Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025474823001C937",
+     "date": "2026-11-30",
+     "startTime": "09:00",
+     "endTime": "10:00",
+     "utcStartTime": "2026/11/30 17:00:00",
+     "utcEndTime": "2026/11/30 18:00:00",
+     "length": 60,
+     "room": "Wynn/Encore | Convention Promenade | La Tache 2",
+     "roomId": "1789591920958001b8NR",
+     "capacity": "78",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -111936,7 +111936,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-25T04:31:50Z",
+   "modified": "2026-10-25T11:29:03Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -112238,7 +112238,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-25T05:03:23Z",
+   "modified": "2026-10-25T10:51:42Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -115243,7 +115243,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-25T04:55:31Z",
+   "modified": "2026-10-25T10:34:32Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -118213,7 +118213,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-23T15:33:18Z",
+   "modified": "2026-10-23T19:36:23Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -121541,7 +121541,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-23T20:31:21Z",
+   "modified": "2026-10-25T08:11:58Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -122244,7 +122244,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-23T15:33:18Z",
+   "modified": "2026-10-25T07:48:03Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -122554,7 +122554,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-25T06:36:19Z",
+   "modified": "2026-10-25T12:23:28Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -123442,7 +123442,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-25T06:28:38Z",
+   "modified": "2026-10-25T07:43:47Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -125397,7 +125397,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-25T05:03:23Z",
+   "modified": "2026-10-25T12:37:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -134882,7 +134882,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T03:31:51Z",
+   "modified": "2026-10-25T12:20:42Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -141420,7 +141420,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-25T04:27:54Z",
+   "modified": "2026-10-25T10:49:30Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -141980,7 +141980,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T16:48:48Z",
+   "modified": "2026-10-25T09:22:32Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -143990,7 +143990,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-23T15:33:18Z",
+   "modified": "2026-10-25T10:20:18Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -144035,15 +144035,15 @@
    },
    "speakers": [
     {
-     "name": "Aoife Egan",
-     "title": "Well-Architected Solutions Architect",
-     "company": "Amazon Web Services (AWS)",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Sanket Nasre",
      "title": "Sr. Solutions Architect",
      "company": "Amazon Web Services Inc.",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Aoife Egan",
+     "title": "Well-Architected Solutions Architect",
+     "company": "Amazon Web Services (AWS)",
      "role": "Internal Speaker"
     }
    ],
@@ -146369,7 +146369,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-25T03:16:55Z",
+   "modified": "2026-10-25T08:55:29Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -155244,7 +155244,7 @@
    "length": 180,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-25T03:37:08Z",
+   "modified": "2026-10-25T08:58:51Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -156979,7 +156979,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-25T06:15:46Z",
+   "modified": "2026-10-25T09:25:22Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -164375,7 +164375,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-25T05:01:28Z",
+   "modified": "2026-10-25T07:42:06Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -173383,7 +173383,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-24T18:47:42Z",
+   "modified": "2026-10-25T11:33:00Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
