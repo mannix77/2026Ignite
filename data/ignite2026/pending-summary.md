@@ -1,0 +1,154 @@
+<!-- summary:40415249160-1 -->
+### 🚨 Session dates/times published (1335 sessions)
+### 🚨 The Ignite site switched on session times
+### 🚨 The Ignite site switched on session locations
+### 🚨 The Ignite site opened its schedule builder
+### 🚨 The Ignite site switched on day filters
+Added 0 · removed 0 · changed 1173 · 163 extra runs added
+
+**Extra runs added**
+- `BRK101` Microsoft Ignite 101: Navigate, Connect & Maximize Your Experience
+- `LAB650` Build a Knowledge-Powered Workspace with Copilot in SharePoint​‌
+- `LAB650` Build a Knowledge-Powered Workspace with Copilot in SharePoint​‌
+- `LAB650` Build a Knowledge-Powered Workspace with Copilot in SharePoint​‌
+- `LAB651` Build AI Agents in Teams: 1P, 3P, and Agentic Workflows Hands-On
+- `LAB651` Build AI Agents in Teams: 1P, 3P, and Agentic Workflows Hands-On
+- `LAB651` Build AI Agents in Teams: 1P, 3P, and Agentic Workflows Hands-On
+- `LAB652` Delegate complex work: Hands-on with Copilot Cowork
+- `LAB652` Delegate complex work: Hands-on with Copilot Cowork
+- `LAB652` Delegate complex work: Hands-on with Copilot Cowork
+- `LAB654` Connect Business Data to Copilot with Custom Connectors
+- `LAB654` Connect Business Data to Copilot with Custom Connectors
+- `LAB654` Connect Business Data to Copilot with Custom Connectors
+- `LAB655` The Next Generation of Teams Administration
+- `LAB655` The Next Generation of Teams Administration
+- `LAB655` The Next Generation of Teams Administration
+- `LAB660` Configuring, monitoring, and managing AI spend with Agent 365
+- `LAB660` Configuring, monitoring, and managing AI spend with Agent 365
+- `LAB660` Configuring, monitoring, and managing AI spend with Agent 365
+- `LAB661` Hill climbing for agents: From 60% to 90% with Open Source and Foundry
+- `LAB661` Hill climbing for agents: From 60% to 90% with Open Source and Foundry
+- `LAB661` Hill climbing for agents: From 60% to 90% with Open Source and Foundry
+- `LAB662` Avoiding agent chaos: Design your enterprise governance model
+- `LAB662` Avoiding agent chaos: Design your enterprise governance model
+- `LAB662` Avoiding agent chaos: Design your enterprise governance model
+- `LAB663` Build smarter AI systems with model router and agent optimizer
+- `LAB663` Build smarter AI systems with model router and agent optimizer
+- `LAB663` Build smarter AI systems with model router and agent optimizer
+- `LAB664` Build agentic document workflows with Content Understanding
+- `LAB664` Build agentic document workflows with Content Understanding
+- `LAB664` Build agentic document workflows with Content Understanding
+- `LAB665` See how far one agent goes in Copilot Studio
+- `LAB665` See how far one agent goes in Copilot Studio
+- `LAB665` See how far one agent goes in Copilot Studio
+- `LAB666` Host apps from anywhere with the new Copilot Managed Runtime
+- `LAB666` Host apps from anywhere with the new Copilot Managed Runtime
+- `LAB666` Host apps from anywhere with the new Copilot Managed Runtime
+- `LAB667` Building multi-agent systems. Lost in San Francisco
+- `LAB667` Building multi-agent systems. Lost in San Francisco
+- `LAB667` Building multi-agent systems. Lost in San Francisco
+- `LAB670` Build your first Microsoft IQ playbook
+- `LAB670` Build your first Microsoft IQ playbook
+- `LAB670` Build your first Microsoft IQ playbook
+- `LAB671` Build a proactive intelligence agent using Work IQ
+- `LAB671` Build a proactive intelligence agent using Work IQ
+- `LAB671` Build a proactive intelligence agent using Work IQ
+- `LAB672` Ground agents in your business with an ontology in Fabric IQ
+- `LAB672` Ground agents in your business with an ontology in Fabric IQ
+- `LAB672` Ground agents in your business with an ontology in Fabric IQ
+- `LAB673` Turning data into agent-ready knowledge with Foundry IQ
+- `LAB673` Turning data into agent-ready knowledge with Foundry IQ
+- `LAB673` Turning data into agent-ready knowledge with Foundry IQ
+- `LAB680` AI Agents Are Sending Signals. Make Access Respond.
+- `LAB680` AI Agents Are Sending Signals. Make Access Respond.
+- `LAB680` AI Agents Are Sending Signals. Make Access Respond.
+- `LAB681` Turn signal into real-time protections with Project Perception
+- `LAB681` Turn signal into real-time protections with Project Perception
+- `LAB682` Can't secure what you can't see. Find every AI agent in your org
+- `LAB682` Can't secure what you can't see. Find every AI agent in your org
+- `LAB683` Secure local AI agents with end-to-end threat protection
+- …and 103 more
+
+**Changed**
+- `BRK101` Microsoft Ignite 101: Navigate, Connect & Maximize Your Experience — start: — → 2026-11-16T21:30:00Z; end: — → 2026-11-16T22:30:00Z
+- `BRK201` Home: Your starting point for work in the Copilot app — start: — → 2026-11-17T21:00:00Z; end: — → 2026-11-17T21:45:00Z
+- `BRK202` Automate the Follow-Through with Autopilot — start: — → 2026-11-18T00:30:00Z; end: — → 2026-11-18T01:15:00Z
+- `BRK203` Copilot Code: Build custom solutions for your unique needs — start: — → 2026-11-19T00:15:00Z; end: — → 2026-11-19T01:00:00Z
+- `BRK204` Evolution of Chat — start: — → 2026-11-20T01:15:00Z; end: — → 2026-11-20T02:00:00Z
+- `BRK205` Beyond Chat: Delegate Complex Work with Copilot Cowork — start: — → 2026-11-18T18:15:00Z; end: — → 2026-11-18T19:00:00Z
+- `BRK206` Agentic productivity in Microsoft 365 apps — start: — → 2026-11-18T19:30:00Z; end: — → 2026-11-18T20:15:00Z
+- `BRK207` Agentic productivity with new Copilot capabilities in OneNote — start: — → 2026-11-18T00:30:00Z; end: — → 2026-11-18T01:15:00Z
+- `BRK208` From Conversation to Completion: How Teams and Copilot move work ahead — start: — → 2026-11-18T18:15:00Z; end: — → 2026-11-18T19:00:00Z
+- `BRK209` Beyond the Agent: Building Digital Teammates in Microsoft Teams — start: — → 2026-11-19T21:30:00Z; end: — → 2026-11-19T22:15:00Z
+- `BRK210` Work IQ: How Microsoft Copilot Understands Your Work — start: — → 2026-11-18T21:45:00Z; end: — → 2026-11-18T22:30:00Z
+- `BRK211` Secure and Govern Microsoft Copilot Chat and Cowork — start: — → 2026-11-19T19:30:00Z; end: — → 2026-11-19T20:15:00Z
+- `BRK212` Trusting Autonomous AI: Security & Governance for Scout — start: — → 2026-11-18T23:00:00Z; end: — → 2026-11-18T23:45:00Z
+- `BRK213` Defend Against External Threats in Teams — start: — → 2026-11-19T19:30:00Z; end: — → 2026-11-19T20:15:00Z
+- `BRK214` Manage and Secure your AI Agents at Enterprise Scale with Agent 365 — start: — → 2026-11-19T00:15:00Z; end: — → 2026-11-19T01:00:00Z
+- `BRK215` Your On-prem estate: Act now. Reduce risk. — start: — → 2026-11-19T18:15:00Z; end: — → 2026-11-19T19:00:00Z
+- `BRK216` Multi-model AI in Copilot: Performance and value with built-in trust — start: — → 2026-11-18T21:45:00Z; end: — → 2026-11-18T22:30:00Z
+- `BRK217` Real-World AI Transformation with Copilot in SharePoint​‌ — start: — → 2026-11-17T22:00:00Z; end: — → 2026-11-17T22:45:00Z
+- `BRK218` SharePoint: Modernize your knowledge foundation for the AI era — start: — → 2026-11-19T22:45:00Z; end: — → 2026-11-19T23:30:00Z
+- `BRK219` AI in the Flow of Work: OneDrive for the AI Era — start: — → 2026-11-20T19:30:00Z; end: — → 2026-11-20T20:15:00Z
+- `BRK220` Connect Once: Unlock enterprise knowledge with Copilot Connectors — start: — → 2026-11-19T18:15:00Z; end: — → 2026-11-19T19:00:00Z
+- `BRK221` Govern Once, Use Everywhere: Scale Copilot with One Plugin Registry — start: — → 2026-11-20T00:00:00Z; end: — → 2026-11-20T00:45:00Z
+- `BRK222` What's new in Microsoft Copilot for functional roles — start: — → 2026-11-19T17:00:00Z; end: — → 2026-11-19T17:45:00Z
+- `BRK223` Getting work done with Copilot as a small business — start: — → 2026-11-20T17:00:00Z; end: — → 2026-11-20T17:45:00Z
+- `BRK225` The AI Reality Check: What We’re Learning from Customers​ — start: — → 2026-11-19T00:15:00Z; end: — → 2026-11-19T01:00:00Z
+- `BRK226` Why Copilot is the best AI for work — start: — → 2026-11-19T22:45:00Z; end: — → 2026-11-19T23:30:00Z
+- `BRK227` Building an AI Operating System: The Layers of Frontier Transformation — start: — → 2026-11-20T19:30:00Z; end: — → 2026-11-20T20:15:00Z
+- `BRK228` What Microsoft Offering Is Right for Your Use Case? — start: — → 2026-11-18T00:30:00Z; end: — → 2026-11-18T01:15:00Z
+- `BRK229` The Frontier Firm Journey: Accelerate AI with Frontier Accelerate — start: — → 2026-11-19T22:45:00Z; end: — → 2026-11-19T23:30:00Z
+- `BRK230` How customers are unlocking value & growth with Copilot — start: — → 2026-11-18T19:30:00Z; end: — → 2026-11-18T20:15:00Z
+- `BRK231` How Microsoft Connects Employees, Leaders, and Knowledge at Scale — start: — → 2026-11-20T18:15:00Z; end: — → 2026-11-20T19:00:00Z
+- `BRK232` Customer stories: Transform business functions with Microsoft Copilot — start: — → 2026-11-17T22:00:00Z; end: — → 2026-11-17T22:45:00Z
+- `BRK233` Beyond the Benchmark: Evaluating Copilot and AI Tools — start: — → 2026-11-19T22:45:00Z; end: — → 2026-11-19T23:30:00Z
+- `BRK234` Agentify your business processes-the next era of business applications — start: — → 2026-11-17T22:00:00Z; end: — → 2026-11-17T22:45:00Z
+- `BRK236` Agents in Copilot: help every user get more done — start: — → 2026-11-20T00:00:00Z; end: — → 2026-11-20T00:45:00Z
+- `BRK237` Plugins for Copilot: build once, govern once, use everywhere — start: — → 2026-11-20T19:30:00Z; end: — → 2026-11-20T20:15:00Z
+- `BRK238` Frontier tuning: Optimize AI agents for real-world business outcomes — start: — → 2026-11-18T18:15:00Z; end: — → 2026-11-18T19:00:00Z
+- `BRK239` Employee Self-Service to Enterprise Scale: Managing Intelligent Agents — start: — → 2026-11-18T19:30:00Z; end: — → 2026-11-18T20:15:00Z
+- `BRK240` Build and scale the next generation of AI agents in Microsoft Foundry — start: — → 2026-11-17T22:00:00Z; end: — → 2026-11-17T22:45:00Z
+- `BRK241` How SThree is reimagining recruitment with human-led AI — start: — → 2026-11-18T18:15:00Z; end: — → 2026-11-18T19:00:00Z
+- `BRK242` Build your self-improving AI Platform with Microsoft Foundry — start: — → 2026-11-17T23:15:00Z; end: — → 2026-11-18T00:00:00Z
+- `BRK243` How much should you own? Choosing the right agent architecture — start: — → 2026-11-19T21:30:00Z; end: — → 2026-11-19T22:15:00Z
+- `BRK244` Voice agents in Microsoft Foundry: Prototype to production in 45 mins — start: — → 2026-11-19T18:15:00Z; end: — → 2026-11-19T19:00:00Z
+- `BRK245` Content-aware agents with Content Understanding/Document Intelligence — start: — → 2026-11-19T22:45:00Z; end: — → 2026-11-19T23:30:00Z
+- `BRK246` From open weights to workload: Operationalizing at enterprise scale — start: — → 2026-11-18T21:45:00Z; end: — → 2026-11-18T22:30:00Z
+- `BRK247` Token economics: Get more from your production AI budget — start: — → 2026-11-18T19:30:00Z; end: — → 2026-11-18T20:15:00Z
+- `BRK248` Trust at scale: Governance lessons from Microsoft — start: — → 2026-11-18T18:15:00Z; end: — → 2026-11-18T19:00:00Z
+- `BRK249` From traces to better agents: The Foundry improvement loop — start: — → 2026-11-18T19:30:00Z; end: — → 2026-11-18T20:15:00Z
+- `BRK250` Govern AI everywhere: From open frameworks to enterprise control — start: — → 2026-11-19T22:45:00Z; end: — → 2026-11-19T23:30:00Z
+- `BRK251` Agents in production: Observe, evaluate, and optimize with Foundry — start: — → 2026-11-18T23:00:00Z; end: — → 2026-11-18T23:45:00Z
+- `BRK252` Post-train your model and fine tune in Microsoft Foundry — start: — → 2026-11-19T00:15:00Z; end: — → 2026-11-19T01:00:00Z
+- `BRK253` Operate AI at enterprise scale with Microsoft Foundry — start: — → 2026-11-19T19:30:00Z; end: — → 2026-11-19T20:15:00Z
+- `BRK254` Turn enterprise data in a durable advantage with Microsoft AI models — start: — → 2026-11-18T17:00:00Z; end: — → 2026-11-18T17:45:00Z
+- `BRK255` Build private, responsive on-device AI agents with Foundry — start: — → 2026-11-20T19:30:00Z; end: — → 2026-11-20T20:15:00Z
+- `BRK256` Video AI at scale with Microsoft Foundry — start: — → 2026-11-19T17:00:00Z; end: — → 2026-11-19T17:45:00Z
+- `BRK257` Inside Microsoft: How we scale expertise with Foundry agents — start: — → 2026-11-19T17:00:00Z; end: — → 2026-11-19T17:45:00Z
+- `BRK258` Agentic automation: How Copilot Studio blends workflows and agents — start: — → 2026-11-19T17:00:00Z; end: — → 2026-11-19T17:45:00Z
+- `BRK259` Understand Copilot Studio's GitHub Copilot harness: Behind the scenes — start: — → 2026-11-20T01:15:00Z; end: — → 2026-11-20T02:00:00Z
+- `BRK260` The next evolution of AI FinOps: From cost to value — start: — → 2026-11-18T23:00:00Z; end: — → 2026-11-18T23:45:00Z
+- `BRK261` From tool to teammate: Persistent agents for shared processes in Copilot Studio — start: — → 2026-11-19T00:15:00Z; end: — → 2026-11-19T01:00:00Z
+- `BRK262` Scale agents, not risk: Governance and FinOps for the enterprise — start: — → 2026-11-18T17:00:00Z; end: — → 2026-11-18T17:45:00Z
+- `BRK263` Master AI spend management with Agent 365: Govern your AI budget — start: — → 2026-11-19T17:00:00Z; end: — → 2026-11-19T17:45:00Z
+- `BRK264` Pick the right harness to build your agents with using Copilot Studio — start: — → 2026-11-18T21:00:00Z; end: — → 2026-11-18T21:45:00Z
+- `BRK265` Apps and agents: Business process transformation in Copilot Studio — start: — → 2026-11-18T18:15:00Z; end: — → 2026-11-18T19:00:00Z
+- `BRK266` Maximize your Copilot Investment: Scale with flexibility and control — start: — → 2026-11-20T00:00:00Z; end: — → 2026-11-20T00:45:00Z
+- `BRK267` What's new in Copilot Studio — start: — → 2026-11-17T22:00:00Z; end: — → 2026-11-17T22:45:00Z
+- `BRK268` Build as a team with GitHub Copilot tailored to your workflow — start: — → 2026-11-19T18:15:00Z; end: — → 2026-11-19T19:00:00Z
+- `BRK269` Agentic AI in action: Reimagining software engineering at scale — start: — → 2026-11-19T18:15:00Z; end: — → 2026-11-19T19:00:00Z
+- `BRK270` Ship more software with parallel agents in the GitHub Copilot app — start: — → 2026-11-17T23:15:00Z; end: — → 2026-11-18T00:00:00Z
+- `BRK271` Manage GitHub Copilot spending and understand team adoption — start: — → 2026-11-19T19:30:00Z; end: — → 2026-11-19T20:15:00Z
+- `BRK272` From 2 days to 45 minutes: Bradesco’s agentic AI transformation — start: — → 2026-11-19T00:15:00Z; end: — → 2026-11-19T01:00:00Z
+- `BRK273` Bring GitHub Copilot where you work — start: — → 2026-11-20T18:15:00Z; end: — → 2026-11-20T19:00:00Z
+- `BRK274` Hand off the task or take the keyboard in VS Code — start: — → 2026-11-20T19:30:00Z; end: — → 2026-11-20T20:15:00Z
+- `BRK275` What should you build when you can build anything? — start: — → 2026-11-17T23:15:00Z; end: — → 2026-11-18T00:00:00Z
+- `BRK276` Unlock more value from your business apps with GitHub Copilot SDK — start: — → 2026-11-18T19:30:00Z; end: — → 2026-11-18T20:15:00Z
+- `BRK277` Hack the harness: Customize and secure GitHub Copilot SDK agents — start: — → 2026-11-18T23:00:00Z; end: — → 2026-11-18T23:45:00Z
+- `BRK278` Inside Copilot code review: From context to approval — start: — → 2026-11-18T00:30:00Z; end: — → 2026-11-18T01:15:00Z
+- `BRK279` Building a model for software development from the ground up — start: — → 2026-11-17T23:15:00Z; end: — → 2026-11-18T00:00:00Z
+- `BRK280` Designing an agent harness that orchestrates models — start: — → 2026-11-18T21:45:00Z; end: — → 2026-11-18T22:30:00Z
+- `BRK281` Securing coding agents and their code — start: — → 2026-11-20T00:00:00Z; end: — → 2026-11-20T00:45:00Z
+- …and 1093 more
+
