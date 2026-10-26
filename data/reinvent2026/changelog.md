@@ -3,6 +3,14 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-10-26T14:29:44Z · https://catalog.awsevents.com/api/sessions
+
+Added 0 · removed 0 · changed 2
+
+**Changed**
+- `MAM209` Strategies for optimizing your migration: Lessons from ExxonMobil — title: …enterprise licenses on AWS → …your migration: Lessons from ExxonMobil; desc
+- `STG417-R` The multi-account AWS Backup playbook: centralized data protection — title: Protecting hundreds of accounts from one place with AWS B… → The multi-account AWS Backup playbook: centralized data p…; desc
+
 ## 2026-10-26T01:14:08Z · https://catalog.awsevents.com/api/sessions
 
 Added 0 · removed 0 · changed 84
