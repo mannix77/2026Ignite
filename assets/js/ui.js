@@ -51,7 +51,8 @@ export function availChip(s) {
 // The Changes tab line for rooms the venue model doesn't know (batch.unknownRooms, written by the
 // sync and import scripts; the same wording as their summaries). '' for an older batch or none.
 export function unknownRoomsNote(batch) {
-  const rooms = Array.isArray(batch?.unknownRooms) ? batch.unknownRooms.filter(r => typeof r === 'string' && r.trim()) : [];
+  const rooms = Array.isArray(batch?.unknownRooms)
+    ? batch.unknownRooms.filter(r => typeof r === 'string').map(r => r.trim()).filter(Boolean) : [];
   if (!rooms.length) return '';
   return `${rooms.length} room${rooms.length === 1 ? '' : 's'} in an unknown building: ${rooms.join(', ')}`;
 }

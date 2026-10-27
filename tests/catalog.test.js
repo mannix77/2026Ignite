@@ -193,6 +193,9 @@ await test('should word the Changes tab notice like the sync summary', () => {
   eq(unknownRoomsNote(batchWith(['Sponsor Pavilion, Stage 2'])), '1 room in an unknown building: Sponsor Pavilion, Stage 2');
   eq(unknownRoomsNote(batchWith(['Sponsor Pavilion, Stage 2', 'Zephyr Hall'])), '2 rooms in an unknown building: Sponsor Pavilion, Stage 2, Zephyr Hall');
 });
+await test('should show a padded label trimmed and skip junk entries', () => {
+  eq(unknownRoomsNote(batchWith(['  Sponsor Pavilion, Stage 2  ', 42, ' ', 'Zephyr Hall'])), '2 rooms in an unknown building: Sponsor Pavilion, Stage 2, Zephyr Hall');
+});
 await test('should show no notice for a batch with every room known or one logged before rooms were checked', () => {
   eq([unknownRoomsNote(batchWith([])), unknownRoomsNote(batchWith()), unknownRoomsNote(batchWith('not a list')), unknownRoomsNote(batchWith([42, ' ']))], ['', '', '', '']);
 });

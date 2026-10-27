@@ -124,6 +124,22 @@ class UnknownRoomTests(unittest.TestCase):
         self.assertEqual(venues.unknown_rooms("las-vegas", recs("Moscone West | Level 2, Room 2006"), []),
                          ["Moscone West | Level 2, Room 2006"])
 
+    def test_should_report_a_padded_label_trimmed_and_once(self):
+        cur = recs("  " + NEW_ROOM + "  ", NEW_ROOM)
+        self.assertEqual(venues.unknown_rooms("moscone", cur, []), [NEW_ROOM])
+
+    def test_should_match_a_padded_label_against_the_last_catalog(self):
+        self.assertEqual(venues.unknown_rooms("moscone", recs(NEW_ROOM), recs("  " + NEW_ROOM + "  ")), [])
+
+    def test_should_skip_a_malformed_room_in_either_snapshot_and_still_report_the_new_one(self):
+        prev = [{"code": "S0", "room": ["Lark 1", "Lark 2"]}, {"code": "S1", "room": 7}, {"code": "S2"}]
+        cur = recs(NEW_ROOM) + [{"code": "S3", "room": {"name": "Zephyr Hall"}}]
+        self.assertEqual(venues.unknown_rooms("moscone", cur, prev), [NEW_ROOM])
+
+    def test_should_read_a_room_label_only_from_a_usable_string(self):
+        self.assertEqual([venues.room_label(v) for v in ("  Lark 1 ", "zTest3", " ", None, ["Lark 1"], 7)],
+                         ["Lark 1", None, None, None, None, None])
+
 
 class NoticeTests(unittest.TestCase):
     """The change summary and the run log name the unknown rooms."""

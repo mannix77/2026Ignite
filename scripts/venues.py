@@ -45,10 +45,18 @@ BUILDINGS = {
 _COMPILED = {venue: [(bid, re.compile(pat, re.I)) for bid, pat in buildings] for venue, buildings in BUILDINGS.items()}
 
 
+def room_label(v):
+    """The usable room label of a stored value: trimmed, non-blank, not a placeholder; else None.
+    A non-string (a hand-edited snapshot, a feed quirk) is no room. The normalizers already count
+    malformed records, so a bad room value is skipped here without a second count."""
+    label = v.strip() if isinstance(v, str) else ""
+    return label if label and not PLACEHOLDER.match(label) else None
+
+
 def building(venue, room):
     """The building id of a room label, or None when it is blank, a placeholder or in no known building."""
-    label = room.strip() if isinstance(room, str) else ""
-    if not label or PLACEHOLDER.match(label):
+    label = room_label(room)
+    if label is None:
         return None
     for bid, pattern in _COMPILED[venue]:
         if pattern.search(label):
@@ -70,7 +78,6 @@ def unknown_rooms(venue, cur, prev=()):
     """Distinct room labels of cur in no known building that prev did not have, in label order.
     Placeholders and blanks are not rooms. Reporting only rooms new since the last snapshot
     announces a new venue once, in the batch where it appears."""
-    seen = {r.get("room") for r in prev}
-    rooms = {r.get("room") for r in cur} - seen
-    return sorted(room for room in rooms if isinstance(room, str) and room.strip()
-                  and not PLACEHOLDER.match(room.strip()) and building(venue, room) is None)
+    seen = {room_label(r.get("room")) for r in prev}
+    rooms = {room_label(r.get("room")) for r in cur} - seen - {None}
+    return sorted(room for room in rooms if building(venue, room) is None)
