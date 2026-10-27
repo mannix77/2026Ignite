@@ -151,11 +151,15 @@ class NoticeTests(unittest.TestCase):
         return b
 
     def test_should_name_one_unknown_room(self):
-        self.assertIn("**1 room in an unknown building:** " + NEW_ROOM, sync.summary_markdown(self.batch([NEW_ROOM]), set()))
+        self.assertIn("**1 room in an unknown building:** `%s`" % NEW_ROOM, sync.summary_markdown(self.batch([NEW_ROOM]), set()))
 
     def test_should_count_several_unknown_rooms(self):
-        self.assertIn("**2 rooms in an unknown building:** %s, Zephyr Hall" % NEW_ROOM,
+        self.assertIn("**2 rooms in an unknown building:** `%s`, `Zephyr Hall`" % NEW_ROOM,
                       sync.summary_markdown(self.batch([NEW_ROOM, "Zephyr Hall"]), set()))
+
+    def test_should_keep_markdown_in_a_feed_label_inert(self):
+        text = sync.summary_markdown(self.batch(["[Room](https://example.com)", "Hall `A`"]), set())
+        self.assertIn("building:** `[Room](https://example.com)`, `Hall 'A'`", text)
 
     def test_should_say_nothing_when_every_room_is_known(self):
         text = sync.summary_markdown(self.batch([]), set())
@@ -196,7 +200,7 @@ class SyncNoticeTests(test_sync.SyncDir, unittest.TestCase):
         moved = moved_to(self.raw, NEW_ROOM, 3)
         self.assertEqual(self.run_sync(moved), (0, True))
         self.assertEqual(self.data("changes.json")["batches"][0]["unknownRooms"], [NEW_ROOM])
-        self.assertIn("**1 room in an unknown building:** " + NEW_ROOM, self.summary())
+        self.assertIn("**1 room in an unknown building:** `%s`" % NEW_ROOM, self.summary())
 
         again = copy.deepcopy(moved)
         again[-1]["title"] = again[-1]["title"] + " (updated)"
@@ -221,7 +225,7 @@ class ReinventNoticeTests(test_import_reinvent.ImportDir, unittest.TestCase):
         self.assertEqual(self.run_import(), (0, True))
         self.assertEqual(self.data("changes.json")["batches"][0]["unknownRooms"], ["Resorts World | Level 1 | Hall A"])
         with open(os.path.join(self.dir, "changelog.md"), encoding="utf-8") as f:
-            self.assertIn("**1 room in an unknown building:** Resorts World | Level 1 | Hall A", f.read())
+            self.assertIn("**1 room in an unknown building:** `Resorts World | Level 1 | Hall A`", f.read())
 
 
 class GartnerNoticeTests(unittest.TestCase):

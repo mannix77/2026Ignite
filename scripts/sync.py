@@ -459,7 +459,9 @@ def summary_markdown(batch, watch):
     # notice existed have no such key.
     unknown = batch.get("unknownRooms") or []
     if unknown:
-        lines.append("**%s:** %s" % (venues.count_phrase(len(unknown)), ", ".join(unknown)))
+        # Labels come from a feed: shown as code spans (like session codes) so Markdown in one is inert.
+        lines.append("**%s:** %s" % (venues.count_phrase(len(unknown)),
+                                     ", ".join("`%s`" % r.replace("`", "'") for r in unknown)))
     # An extra run added to or dropped from a session (repeat=True; the session itself may be new or gone) is
     # reported apart from sessions added or removed, so it never reads as a cancellation.
     groups = {(key, run): [x for x in batch[key] if bool(x.get("repeat")) == run]
