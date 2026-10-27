@@ -179,6 +179,12 @@ class NoticeTests(unittest.TestCase):
         self.assertIn("| 2 rooms in an unknown building", line)
         self.assertNotIn("unknown building", sync.console_summary(stats, 0, [], [], [], []))
 
+    def test_should_keep_the_run_log_line_on_one_line(self):
+        stats = {"sessions": 1, "withDates": 1, "withRooms": 1}
+        line = sync.console_summary(stats, 0, [], [], [], [], unknown=["Room\n\nsync failed: forged", "Hall\r\nB"])
+        self.assertEqual((line.count("\n"), line.endswith("| 2 rooms in an unknown building: Room sync failed: forged; Hall B")),
+                         (0, True))
+
 
 def moved_to(raw, room, n):
     """The first n sessions of a raw Ignite catalog moved to room."""

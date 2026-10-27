@@ -70,8 +70,9 @@ def count_phrase(n):
 
 
 def notice(rooms, sep=", "):
-    """'2 rooms in an unknown building: A, B' for the run log; '' when there are none."""
-    return count_phrase(len(rooms)) + ": " + sep.join(rooms) if rooms else ""
+    """'2 rooms in an unknown building: A, B' for the run log; '' when there are none. A label is
+    one line of the log: line endings inside it (a feed quirk) become spaces."""
+    return count_phrase(len(rooms)) + ": " + sep.join(re.sub(r"[\r\n]+", " ", r) for r in rooms) if rooms else ""
 
 
 def unknown_rooms(venue, cur, prev=()):
