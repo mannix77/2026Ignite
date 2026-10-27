@@ -448,6 +448,12 @@ def short_pair(old, new):
     return short(lead + old[cut:]), short(lead + new[cut:])
 
 
+def code_span(label):
+    """A feed label as a Markdown code span (like session codes), so Markdown in it is inert: line
+    endings become spaces (a blank line would end the span) and a backtick becomes an apostrophe."""
+    return "`%s`" % re.sub(r"[\r\n]+", " ", label).replace("`", "'")
+
+
 def summary_markdown(batch, watch):
     lines = ["### 🚨 " + m for m in batch["milestones"]]
     hit = [x for x in batch["added"] + batch["removed"] + batch["changed"] if x["code"] in watch]
@@ -459,9 +465,7 @@ def summary_markdown(batch, watch):
     # notice existed have no such key.
     unknown = batch.get("unknownRooms") or []
     if unknown:
-        # Labels come from a feed: shown as code spans (like session codes) so Markdown in one is inert.
-        lines.append("**%s:** %s" % (venues.count_phrase(len(unknown)),
-                                     ", ".join("`%s`" % r.replace("`", "'") for r in unknown)))
+        lines.append("**%s:** %s" % (venues.count_phrase(len(unknown)), ", ".join(code_span(r) for r in unknown)))
     # An extra run added to or dropped from a session (repeat=True; the session itself may be new or gone) is
     # reported apart from sessions added or removed, so it never reads as a cancellation.
     groups = {(key, run): [x for x in batch[key] if bool(x.get("repeat")) == run]

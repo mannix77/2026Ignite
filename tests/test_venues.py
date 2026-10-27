@@ -161,6 +161,10 @@ class NoticeTests(unittest.TestCase):
         text = sync.summary_markdown(self.batch(["[Room](https://example.com)", "Hall `A`"]), set())
         self.assertIn("building:** `[Room](https://example.com)`, `Hall 'A'`", text)
 
+    def test_should_keep_a_label_with_line_endings_inside_one_code_span(self):
+        text = sync.summary_markdown(self.batch(["Room\n\n[Claim voucher](https://example.com)", "Hall\r\nB"]), set())
+        self.assertIn("building:** `Room [Claim voucher](https://example.com)`, `Hall B`\n", text)
+
     def test_should_say_nothing_when_every_room_is_known(self):
         text = sync.summary_markdown(self.batch([]), set())
         self.assertEqual(("unknown building" in text, "Added 0 · removed 0 · changed 0" in text), (False, True))
