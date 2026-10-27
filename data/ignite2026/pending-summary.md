@@ -1,0 +1,61 @@
+<!-- summary:40483990402-1 -->
+Added 0 · removed 0 · changed 56
+
+**Changed**
+- `BRK204` Evolution of Chat — room: Moscone West | Level 2, Room 2006 → Marriott Marquis | Lower B2, Yerba Buena Salon 8
+- `BRK218` SharePoint: Modernize your knowledge foundation for the AI era — room: Moscone West | Level 3, Room 3002 → Moscone West | Level 2, Room 2002
+- `BRK219` AI in the Flow of Work: OneDrive for the AI Era — room: AMC Metreon | Level 3, Theater 11 → Marriott Marquis | Lower B2, Yerba Buena Salon 7
+- `BRK221` Govern Once, Use Everywhere: Scale Copilot with One Plugin Registry — room: AMC Metreon | Level 3, Theater 12 → Moscone West | Level 2, Room 2009
+- `BRK226` Why Copilot is the best AI for work — room: Moscone West | Level 2, Room 2002 → Moscone West | Level 3, Room 3004
+- `BRK229` The Frontier Firm Journey: Accelerate AI with Frontier Accelerate — room: Moscone West | Level 3, Room 3004 → AMC Metreon | Level 3, Theater 11
+- `BRK233` Beyond the Benchmark: Evaluating Copilot and AI Tools — room: Moscone West | Level 2, Room 2001 → Marriott Marquis | Lower B2, Yerba Buena Salon 8
+- `BRK237` Plugins for Copilot: build once, govern once, use everywhere — room: Moscone West | Level 2, Room 2005 → Moscone West | Level 2, Room 2006
+- `BRK243` How much should you own? Choosing the right agent architecture — room: Marriott Marquis | Lower B2, Yerba Buena Salon 7 → AMC Metreon | Level 3, Theater 12
+- `BRK244` Voice agents in Microsoft Foundry: Prototype to production in 45 mins — room: Moscone West | Level 3, Room 3014 → AMC Metreon | Level 3, Theater 12
+- `BRK259` Understand Copilot Studio's GitHub Copilot harness: Behind the scenes — room: AMC Metreon | Level 3, Theater 14 → Moscone West | Level 2, Room 2009
+- `BRK260` The next evolution of AI FinOps: From cost to value — room: Moscone West | Level 2, Room 2001 → Moscone West | Level 2, Room 2002
+- `BRK266` Maximize your Copilot Investment: Scale with flexibility and control — room: Marriott Marquis | Lower B2, Yerba Buena Salon 7 → Moscone West | Level 3, Room 3004
+- `BRK281` Securing coding agents and their code — room: Moscone West | Level 3, Room 3002 → AMC Metreon | Level 3, Theater 14
+- `BRK282` Detect, fix, and govern code and credential risk with AI — room: Moscone West | Level 3, Room 3004 → Moscone West | Level 3, Room 3006
+- `BRK286` Secure the CI pipeline: Practical defenses for GitHub Actions — room: Marriott Marquis | Lower B2, Yerba Buena Salon 8 → AMC Metreon | Level 3, Theater 15
+- `BRK296` Work IQ governance and trust: Control the intelligence layer — room: AMC Metreon | Level 3, Theater 11 → Moscone West | Level 3, Room 3014
+- `BRK300` Building agentic retrieval: From DIY to Foundry IQ — room: Marriott Marquis | Lower B2, Yerba Buena Salon 7 → Moscone West | Level 3, Room 3014
+- `BRK308` How Microsoft IQ shapes the cost of enterprise AI — room: Moscone West | Level 3, Room 3006 → Moscone West | Level 3, Room 3014
+- `BRK314` Agentic incident management: Lessons from production AIOps — room: AMC Metreon | Level 3, Theater 9 → Moscone West | Level 3, Room 3004
+- `BRK317` What the Frontlines Reveal About Modern Security — room: AMC Metreon | Level 3, Theater 9 → Moscone West | Level 3, Room 3005
+- `BRK327` See and reduce exposure across your digital estate — room: Moscone West | Level 3, Room 3018 → Moscone West | Level 3, Room 3005
+- `BRK329` Get your data AI-ready: Discover & mitigate data exposure risks — room: Moscone West | Level 2, Room 2005 → Moscone West | Level 2, Room 2006
+- `BRK335` Insights from Microsoft's journey to prepare its data for AI adoption — room: Moscone West | Level 3, Room 3001 → Marriott Marquis | Lower B2, Yerba Buena Salon 7
+- `BRK338` Secure data as you scale your agents with Microsoft Purview and A365 — room: Moscone West | Level 2, Room 2009 → Moscone West | Level 2, Room 2006
+- `BRK339` Local agents are here. Can you find and secure them? — room: AMC Metreon | Level 3, Theater 11 → Marriott Marquis | Lower B2, Yerba Buena Salon 8
+- `BRK340` A Zero Trust approach to securing AI runtime with Microsoft Defender — room: Moscone West | Level 2, Room 2002 → Marriott Marquis | Lower B2, Yerba Buena Salon 9
+- `BRK345` Master Agent Governance with Agent 365 — room: Moscone West | Level 3, Room 3002 → Moscone West | Level 2, Room 2002
+- `BRK354` Migrate to Microsoft Fabric: Modernize your data estate — room: Moscone West | Level 2, Room 2009 → Moscone West | Level 2, Room 2005
+- `BRK371` Why Azure is the best cloud for SQL — room: Moscone West | Level 2, Room 2006 → AMC Metreon | Level 3, Theater 12
+- `BRK374` Beyond the cache: How Sitecore builds to scale on Azure Managed Redis — room: AMC Metreon | Level 3, Theater 12 → AMC Metreon | Level 3, Theater 11
+- `BRK375` Migrate and modernize MongoDB applications with Azure DocumentDB — room: Moscone West | Level 3, Room 3005 → AMC Metreon | Level 3, Theater 9
+- `BRK377` The Agentic Shift: Reimagining Customer Service — room: Marriott Marquis | Lower B2, Yerba Buena Salon 8 → Moscone West | Level 2, Room 2001
+- `BRK382` Deploy and manage Power Platform at enterprise scale — room: Moscone West | Level 2, Room 2005 → Moscone West | Level 2, Room 2006
+- `BRK387` Leave legacy CRM & ERP behind: Modernize with Dynamics 365 Activate​ — room: Moscone West | Level 2, Room 2014 → Moscone West | Level 2, Room 2005
+- `BRK392` Future-proof your App: Prepare for evolving Windows security standards — room: Moscone West | Level 3, Room 3001 → Marriott Marquis | Lower B2, Yerba Buena Salon 7
+- `BRK393` Build and ship faster with enterprise-ready Windows developer tools​ — room: Marriott Marquis | Lower B2, Yerba Buena Salon 8 → AMC Metreon | Level 3, Theater 11
+- `BRK397` Edge for Business: Browser security in the age of AI productivity — room: Moscone West | Level 2, Room 2001 → Marriott Marquis | Lower B2, Yerba Buena Salon 7
+- `BRK398` From Prevention to Recovery: Building a More Resilient Windows Estate — room: Marriott Marquis | Lower B2, Yerba Buena Salon 7 → Moscone West | Level 2, Room 2014
+- `BRK399` Intelligence on Windows: Unlocking the Full Value of Microsoft Copilot — room: Moscone West | Level 2, Room 2005 → Moscone West | Level 2, Room 2006
+- `BRK402` Modernize on-prem VDI with Azure Virtual Desktop and Windows 365 — room: Moscone West | Level 2, Room 2005 → Moscone West | Level 2, Room 2006
+- `BRK426` Red Hat on Azure: Advancing unified hybrid cloud together — room: Moscone West | Level 3, Room 3004 → AMC Metreon | Level 3, Theater 9
+- `BRK430` Architecting your workloads for maximum compute flexibility — room: AMC Metreon | Level 3, Theater 12 → Moscone West | Level 2, Room 2005
+- `BRK431` Secure by default. Azure's multilayered embedded security capabilities — room: Moscone West | Level 3, Room 3005 → Moscone West | Level 3, Room 3001
+- `BRK432` Running AI workloads efficiently on Azure general compute — room: AMC Metreon | Level 3, Theater 9 → Moscone West | Level 2, Room 2001
+- `BRK444` How does the next wave of quantum impact scientific discovery? — room: Marriott Marquis | Lower B2, Yerba Buena Salon 9 → Moscone West | Level 3, Room 3002
+- `BRK452` AI-powered resiliency for modern workloads with Mark Russinovich — room: Marriott Marquis | Lower B2, Yerba Buena Salon 8 → Moscone West | Level 2, Room 2002
+- `BRK456` Beyond the AI pilot: How leading operators scale — room: Moscone West | Level 2, Room 2002 → Marriott Marquis | Lower B2, Yerba Buena Salon 8
+- `BRK465` Agentic media operations: Run at scale — room: AMC Metreon | Level 3, Theater 14 → Moscone West | Level 2, Room 2014
+- `BRK469` Adaptive Digital Thread: Turning PLM into an AI-Powered Eng Platform — room: Moscone West | Level 2, Room 2014 → Moscone West | Level 2, Room 2009
+- `BRK535` Delegate the Work, Keep the Accountability: A Governance Model for AI — room: Moscone West | Level 2, Room 2009 → Moscone West | Level 2, Room 2014
+- `BRK536` Guardrails That Accelerate: Matching AI Ambition to Risk Appetite — room: AMC Metreon | Level 3, Theater 15 → AMC Metreon | Level 3, Theater 14
+- `BRKSP601` Turn shadow agents into governed digital coworkers — room: Moscone West | Level 3, Room 3014 → Moscone West | Level 3, Room 3005
+- `BRKSP618` Build an AI-ready enterprise: Inside Sonepar's $1bn transformation — room: Moscone West | Level 3, Room 3005 → AMC Metreon | Level 3, Theater 11
+- `BRKSP622` Build the agentic workplace with Dell and Microsoft — room: AMC Metreon | Level 3, Theater 12 → Moscone West | Level 2, Room 2001
+- `BRKSP629` Reimagine cloud and AI platforms for the Frontier Enterprise — room: Moscone West | Level 3, Room 3014 → AMC Metreon | Level 3, Theater 14
+
