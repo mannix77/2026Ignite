@@ -1,0 +1,51 @@
+<!-- summary:40481064450-1 -->
+Added 0 · removed 0 · changed 46
+
+**Changed**
+- `BRK209` Beyond the Agent: Building Digital Teammates in Microsoft Teams — room: AMC Metreon | Level 3, Theater 9 → Moscone West | Level 2, Room 2002
+- `BRK211` Secure and Govern Microsoft Copilot Chat and Cowork — room: Marriott Marquis | Lower B2, Yerba Buena Salon 7 → Marriott Marquis | Lower B2, Yerba Buena Salon 9
+- `BRK213` Defend Against External Threats in Teams — room: Moscone West | Level 3, Room 3005 → Moscone West | Level 2, Room 2006
+- `BRK215` Your On-prem estate: Act now. Reduce risk. — room: Moscone West | Level 3, Room 3005 → Moscone West | Level 3, Room 3014
+- `BRK220` Connect Once: Unlock enterprise knowledge with Copilot Connectors — room: Marriott Marquis | Lower B2, Yerba Buena Salon 7 → Marriott Marquis | Lower B2, Yerba Buena Salon 9
+- `BRK222` What's new in Microsoft Copilot for functional roles — room: Moscone West | Level 3, Room 3006 → Marriott Marquis | Lower B2, Yerba Buena Salon 9
+- `BRK243` How much should you own? Choosing the right agent architecture — room: Marriott Marquis | Lower B2, Yerba Buena Salon 8 → Marriott Marquis | Lower B2, Yerba Buena Salon 7
+- `BRK256` Video AI at scale with Microsoft Foundry — room: Marriott Marquis | Lower B2, Yerba Buena Salon 8 → AMC Metreon | Level 3, Theater 14
+- `BRK263` Master AI spend management with Agent 365: Govern your AI budget — room: AMC Metreon | Level 3, Theater 11 → Moscone West | Level 2, Room 2006
+- `BRK268` Build as a team with GitHub Copilot tailored to your workflow — room: Moscone West | Level 3, Room 3006 → Moscone West | Level 3, Room 3018
+- `BRK271` Manage GitHub Copilot spending and understand team adoption — room: AMC Metreon | Level 3, Theater 11 → Moscone West | Level 2, Room 2009
+- `BRK285` Your agent works. Now make it enterprise-ready. — room: Moscone West | Level 3, Room 3004 → AMC Metreon | Level 3, Theater 14
+- `BRK288` Visual Studio governance for the agentic era — room: Moscone West | Level 3, Room 3014 → AMC Metreon | Level 3, Theater 12
+- `BRK301` Building context-aware agents with Microsoft IQ — room: AMC Metreon | Level 3, Theater 9 → Marriott Marquis | Lower B2, Yerba Buena Salon 7
+- `BRK306` Fabric IQ: Trusted business context for enterprise AI — room: Moscone West | Level 2, Room 2002 → AMC Metreon | Level 3, Theater 9
+- `BRK318` Project Perception: How Agentic Security Works — room: AMC Metreon | Level 3, Theater 14 → Moscone West | Level 2, Room 2002
+- `BRK321` Threat Intelligence reimagined: From signals to protection at AI speed — room: Moscone West | Level 3, Room 3004 → Moscone West | Level 3, Room 3006
+- `BRK331` A Single Policy for Humans and AI Agents? Here’s How to Make It Work — room: Marriott Marquis | Lower B2, Yerba Buena Salon 7 → Marriott Marquis | Lower B2, Yerba Buena Salon 8
+- `BRK341` Inside Look at Agent 365: Lessons from Microsoft's Office of the CISO — room: Moscone West | Level 3, Room 3006 → Marriott Marquis | Lower B2, Yerba Buena Salon 8
+- `BRK342` Secure data and manage AI risk for Microsoft Copilot Chat and Cowork — room: AMC Metreon | Level 3, Theater 12 → Marriott Marquis | Lower B2, Yerba Buena Salon 8
+- `BRK357` Fabric Real-Time Intelligence: From signal to action — room: Moscone West | Level 2, Room 2002 → Moscone West | Level 2, Room 2006
+- `BRK364` Powering AI with Azure Databricks, Foundry, Fabric, and Copilot — room: AMC Metreon | Level 3, Theater 14 → Moscone West | Level 2, Room 2009
+- `BRK368` Postgres in production on Azure: Lessons in fleet modernization — room: Moscone West | Level 2, Room 2009 → AMC Metreon | Level 3, Theater 11
+- `BRK373` Build AI-ready apps on Azure SQL with GitHub Copilot in VS Code — room: AMC Metreon | Level 3, Theater 14 → Moscone West | Level 3, Room 3018
+- `BRK379` Build Customer-Facing Agents in Copilot Studio, Teams, and CCI — room: Moscone West | Level 2, Room 2006 → Moscone West | Level 2, Room 2005
+- `BRK380` Agentify your customer interactions with Dynamics 365 Contact Center — room: Moscone West | Level 2, Room 2002 → Marriott Marquis | Lower B2, Yerba Buena Salon 8
+- `BRK388` Build and deploy local AI at scale across enterprise PCs w/ Windows ML — room: Moscone West | Level 2, Room 2014 → Marriott Marquis | Lower B2, Yerba Buena Salon 7
+- `BRK401` Windows 365 Flex & Cloud PC Devices: Lower Costs, Greater Value — room: Moscone West | Level 3, Room 3014 → Marriott Marquis | Lower B2, Yerba Buena Salon 7
+- `BRK409` Modernize faster with AI-powered discovery, planning, and execution — room: AMC Metreon | Level 3, Theater 9 → Moscone West | Level 2, Room 2014
+- `BRK418` What’s new and what’s next for Windows Server — room: Marriott Marquis | Lower B2, Yerba Buena Salon 9 → Moscone West | Level 2, Room 2002
+- `BRK427` Plan, migrate, operate Linux estates with Azure and GitHub Copilot — room: Moscone West | Level 3, Room 3018 → AMC Metreon | Level 3, Theater 14
+- `BRK428` Delivering AI innovation at scale with Open Source and Azure — room: Moscone West | Level 3, Room 3018 → Moscone West | Level 3, Room 3004
+- `BRK434` AI runs on data. Is your storage architecture ready? — room: AMC Metreon | Level 3, Theater 12 → Moscone West | Level 2, Room 2006
+- `BRK451` Accelerate your move to PostgreSQL with AI-assisted migration — room: Marriott Marquis | Lower B2, Yerba Buena Salon 9 → Moscone West | Level 3, Room 3004
+- `BRK462` Putting AI to work for nurses with Dragon Copilot — room: Moscone West | Level 2, Room 2006 → Moscone West | Level 3, Room 3014
+- `BRK466` Securing edge AI and operational technology (OT) workloads — room: Moscone West | Level 3, Room 3002 → Moscone West | Level 3, Room 3005
+- `BRK473` Building and governing trusted AI agents in financial services — room: Moscone West | Level 3, Room 3002 → Moscone West | Level 3, Room 3005
+- `BRK477` Signals into sales: The intelligence advantage in consumer goods — room: Moscone West | Level 2, Room 2014 → AMC Metreon | Level 3, Theater 11
+- `BRK528` Why human skills matter for your AI outcome — room: Moscone West | Level 2, Room 2009 → Moscone West | Level 3, Room 3006
+- `BRK571` Beyond the Pilot: Turning Copilot & Agents into Business Value — room: Marriott Marquis | Lower B2, Yerba Buena Salon 7 → AMC Metreon | Level 3, Theater 9
+- `BRKSP603` When growth outpaces data, AI closes the gap — room: Marriott Marquis | Lower B2, Yerba Buena Salon 8 → AMC Metreon | Level 3, Theater 12
+- `BRKSP606` The frontier doesn't hold still: Claude agents at scale on Azure — room: Moscone West | Level 2, Room 2005 → Moscone West | Level 3, Room 3001
+- `BRKSP615` Advance physical AI for autonomous systems with simulation — room: Moscone West | Level 3, Room 3001 → Moscone West | Level 3, Room 3002
+- `BRKSP622` Build the agentic workplace with Dell and Microsoft — room: Moscone West | Level 2, Room 2006 → AMC Metreon | Level 3, Theater 12
+- `BRKSP623` Secure the enterprise with cyber resiliency in the AI era — room: Marriott Marquis | Lower B2, Yerba Buena Salon 9 → Moscone West | Level 2, Room 2014
+- `BRKSP628` Scale AI for enterprise value with lessons from Chevron — room: Moscone West | Level 2, Room 2006 → AMC Metreon | Level 3, Theater 11
+
