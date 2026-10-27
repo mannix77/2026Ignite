@@ -38,3 +38,13 @@ Feature: Walking times reach every building the catalog uses
     Scenario: A placeholder is not a room
       When the sync finds sessions whose room is still a placeholder
       Then the change notice does not mention an unknown building
+
+    Scenario: The notice is in the app too
+      Given the catalog history has "Sponsor Pavilion, Stage 2" as a room in an unknown building
+      When Minesh reviews what changed in the catalog
+      Then the entry reads "1 room in an unknown building: Sponsor Pavilion, Stage 2"
+
+    Scenario: A history entry from before rooms were checked
+      Given a history entry with no record of unknown rooms
+      When Minesh reviews what changed in the catalog
+      Then that entry has no unknown-building line

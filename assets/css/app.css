@@ -402,6 +402,7 @@ kbd { font-family: var(--mono); font-size: 12px; border: 1px solid var(--line); 
 .diff del { color: var(--bad); text-decoration: line-through; }
 .diff ins { color: var(--ok); text-decoration: none; font-weight: 600; }
 .milestone { padding: 10px 14px; background: var(--accent-soft); font-weight: 700; }
+.milestone.unknown { background: var(--bad-soft); font-weight: 600; }
 
 /* ---------- settings ---------- */
 .settings-grid { display: grid; gap: 14px; }

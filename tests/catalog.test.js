@@ -8,7 +8,7 @@ const { CONFERENCES } = await import('../assets/js/conferences.js');
 const { createVenue, walkMinutes } = await import('../assets/js/venue.js');
 const { transition, DEFAULT_PLANNER } = await import('../assets/js/planner.js');
 const store = await import('../assets/js/store.js');
-const { rsvpChip, rsvpOpensText } = await import('../assets/js/ui.js');
+const { rsvpChip, rsvpOpensText, unknownRoomsNote } = await import('../assets/js/ui.js');
 
 let pass = 0, fail = 0;
 async function test(name, fn) {
@@ -185,6 +185,16 @@ await test('should give the Settings matrix a Metreon row with a walk to every o
   const others = moscone.ids.filter(id => id !== 'E' && id !== 'O');
   eq(others.filter(id => moscone.walk.pairs[['E', id].sort().join('|')] == null), []);
   eq(others.length > 0, true);
+});
+
+// ---- the Changes tab shows the unknown-building notice the scripts wrote into the batch
+const batchWith = unknownRooms => ({ at: '2026-10-26T01:37:47Z', milestones: [], added: [], removed: [], changed: [], ...(unknownRooms === undefined ? {} : { unknownRooms }) });
+await test('should word the Changes tab notice like the sync summary', () => {
+  eq(unknownRoomsNote(batchWith(['Sponsor Pavilion, Stage 2'])), '1 room in an unknown building: Sponsor Pavilion, Stage 2');
+  eq(unknownRoomsNote(batchWith(['Sponsor Pavilion, Stage 2', 'Zephyr Hall'])), '2 rooms in an unknown building: Sponsor Pavilion, Stage 2, Zephyr Hall');
+});
+await test('should show no notice for a batch with every room known or one logged before rooms were checked', () => {
+  eq([unknownRoomsNote(batchWith([])), unknownRoomsNote(batchWith()), unknownRoomsNote(batchWith('not a list')), unknownRoomsNote(batchWith([42, ' ']))], ['', '', '', '']);
 });
 
 // ---- reservation times (specs/features/reservation-times.feature)
