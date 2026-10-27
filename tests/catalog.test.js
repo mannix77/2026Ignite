@@ -5,10 +5,10 @@ import { sleep } from './shim.js';
 const { exportAge, customRecords, catalogMatch, buildModel } = await import('../assets/js/data.js');
 const { toISO } = await import('../assets/js/time.js');
 const { CONFERENCES } = await import('../assets/js/conferences.js');
-const { createVenue } = await import('../assets/js/venue.js');
+const { createVenue, walkMinutes } = await import('../assets/js/venue.js');
 const { transition, DEFAULT_PLANNER } = await import('../assets/js/planner.js');
 const store = await import('../assets/js/store.js');
-const { rsvpChip, rsvpOpensText } = await import('../assets/js/ui.js');
+const { rsvpChip, rsvpOpensText, unknownRoomsNote } = await import('../assets/js/ui.js');
 
 let pass = 0, fail = 0;
 async function test(name, fn) {
@@ -150,6 +150,55 @@ for (const [id, rooms] of Object.entries(realRooms)) {
     eq(rooms.filter(r => !venue.parseLocation(r).known), []);
   });
 }
+
+// ---- the Metreon is a building of its own (specs/features/venue-model.feature)
+// The AMC theaters are on level 3 and The Aviary is the rooftop on level 4 of the same
+// building, a block from Moscone West. The Settings matrix is drawn from venue.ids and
+// walk.pairs, so a Metreon row needs a pair with every other building.
+const moscone = createVenue(CONFERENCES.ignite2026.venue);
+const place = room => moscone.parseLocation(room);
+await test('should place an AMC Metreon theater in the Metreon on level 3', () => {
+  const loc = place('AMC Metreon | Level 3, Theater 9');
+  eq([loc.building, loc.floor, loc.known], ['E', '3', true]);
+});
+await test('should place The Aviary in the Metreon on level 4', () => {
+  const loc = place('The Aviary, Labs');
+  eq([loc.building, loc.floor, loc.known], ['E', '4', true]);
+});
+await test('should still read the Hub and room numbers as Moscone floors', () => {
+  eq([place('Moscone South, The Hub, Theater A').floor, place('Moscone South, Room 156').floor], ['Hub', '1']);
+});
+await test('should keep the other off-site hotels apart from the Metreon', () => {
+  eq(place('InterContinental, Grand Ballroom').building, 'H');
+});
+await test('should walk 5 minutes between the Metreon and Moscone West and 8 to South', () => {
+  const metreon = place('AMC Metreon | Level 3, Theater 9');
+  const west = place('Moscone West | Level 3, Room 3001');
+  const south = place('Moscone South | Level 2, Room 201');
+  eq([walkMinutes(metreon, west, moscone.walk), walkMinutes(west, metreon, moscone.walk), walkMinutes(metreon, south, moscone.walk)], [5, 5, 8]);
+});
+await test('should count a theater and the roof as different floors of one building', () => {
+  eq(walkMinutes(place('AMC Metreon | Level 3, Theater 11'), place('The Aviary, Breakouts'), moscone.walk), moscone.walk.diffFloor);
+});
+await test('should give the Settings matrix a Metreon row with a walk to every other building', () => {
+  eq(moscone.ids.includes('E'), true);
+  const others = moscone.ids.filter(id => id !== 'E' && id !== 'O');
+  eq(others.filter(id => moscone.walk.pairs[['E', id].sort().join('|')] == null), []);
+  eq(others.length > 0, true);
+});
+
+// ---- the Changes tab shows the unknown-building notice the scripts wrote into the batch
+const batchWith = unknownRooms => ({ at: '2026-10-26T01:37:47Z', milestones: [], added: [], removed: [], changed: [], ...(unknownRooms === undefined ? {} : { unknownRooms }) });
+await test('should word the Changes tab notice like the sync summary', () => {
+  eq(unknownRoomsNote(batchWith(['Sponsor Pavilion, Stage 2'])), '1 room in an unknown building: Sponsor Pavilion, Stage 2');
+  eq(unknownRoomsNote(batchWith(['Sponsor Pavilion, Stage 2', 'Zephyr Hall'])), '2 rooms in an unknown building: Sponsor Pavilion, Stage 2, Zephyr Hall');
+});
+await test('should show a padded label trimmed and skip junk entries', () => {
+  eq(unknownRoomsNote(batchWith(['  Sponsor Pavilion, Stage 2  ', 42, ' ', 'Zephyr Hall'])), '2 rooms in an unknown building: Sponsor Pavilion, Stage 2, Zephyr Hall');
+});
+await test('should show no notice for a batch with every room known or one logged before rooms were checked', () => {
+  eq([unknownRoomsNote(batchWith([])), unknownRoomsNote(batchWith()), unknownRoomsNote(batchWith('not a list')), unknownRoomsNote(batchWith([42, ' ']))], ['', '', '', '']);
+});
 
 // ---- reservation times (specs/features/reservation-times.feature)
 // Stored as an instant; shown in the viewer's own zone, labelled by Intl.

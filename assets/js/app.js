@@ -11,7 +11,7 @@ import { buildSuggester } from './suggest.js';
 import { createRanker, partition, profileConfig, profileGroups, GOALS } from './profile.js';
 import { storageStatus, backupReminder, backupAge } from './health.js';
 import { INSTANCE_LABEL, nsKey, guideUrl } from './instance.js';
-import { esc, attr, icon, bldgChip, recChip, rsvpChip, rsvpOpensText, seatsDetail, prioPill, scoreChip, whenText, prioControl, sessionCard, cardClass, toast, shareOrDownload, copyText, speakersLine, setHostCompany } from './ui.js';
+import { esc, attr, icon, bldgChip, recChip, rsvpChip, rsvpOpensText, seatsDetail, prioPill, scoreChip, whenText, prioControl, sessionCard, cardClass, toast, shareOrDownload, copyText, speakersLine, setHostCompany, unknownRoomsNote } from './ui.js';
 
 const $ = (sel, root = document) => root.querySelector(sel);
 const main = $('#main');
@@ -1553,10 +1553,12 @@ function renderChanges() {
   for (const b of batches.slice(0, 40)) {
     const items = changeItems(b).filter(x => !onlyMine || isMine(x));
     if (onlyMine && !items.length && !b.milestones?.length) continue;
+    const unknownNote = unknownRoomsNote(b);
     parts.push(`<section class="card batch">
       <header><b>${esc(fmtStamp(b.at))}</b><span class="muted small">${esc(relTime(b.at))}</span>
         <span class="spacer"></span><span class="small muted">${countsLine(b)}</span>${!seen || b.at > seen ? '<span class="chip new">New</span>' : ''}</header>
       ${(b.milestones || []).map(m => `<div class="milestone">${esc(m)}</div>`).join('')}
+      ${unknownNote ? `<div class="milestone unknown" title="Walking times to these rooms are a guess until the building is added to the venue model; set them under Settings → Room → building meanwhile">${esc(unknownNote)}</div>` : ''}
       ${changeList(items, isMine)}</section>`);
   }
   return parts.join('');
