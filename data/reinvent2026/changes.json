@@ -1,6 +1,556 @@
 {
  "batches": [
   {
+   "at": "2026-10-27T12:59:29Z",
+   "milestones": [],
+   "added": [
+    {
+     "id": "1787852034046001jO69",
+     "inst": "1787852034046001jO69",
+     "code": "AWS014-R1",
+     "title": "Builder Zone in the Expo",
+     "repeat": false
+    },
+    {
+     "id": "1787852033701001jSzn",
+     "inst": "1787852033701001jSzn",
+     "code": "AWS015-R1",
+     "title": "Global Impact Zone in Expo",
+     "repeat": false
+    },
+    {
+     "id": "1787852034734001jBZg",
+     "inst": "1787852034734001jBZg",
+     "code": "AWS017-R1",
+     "title": "Industry Zone in Expo",
+     "repeat": false
+    },
+    {
+     "id": "1787852034416001jKVN",
+     "inst": "1787852034416001jKVN",
+     "code": "AWS113-R1",
+     "title": "Partner Advantage Zone in Expo",
+     "repeat": false
+    },
+    {
+     "id": "1787852034150001jjQs",
+     "inst": "1787852034150001jjQs",
+     "code": "AWS014-R2",
+     "title": "Builder Zone in the Expo",
+     "repeat": false
+    },
+    {
+     "id": "1787852033828001j4da",
+     "inst": "1787852033828001j4da",
+     "code": "AWS015-R2",
+     "title": "Global Impact Zone in Expo",
+     "repeat": false
+    },
+    {
+     "id": "1787852034826001j0Db",
+     "inst": "1787852034826001j0Db",
+     "code": "AWS017-R2",
+     "title": "Industry Zone in Expo",
+     "repeat": false
+    },
+    {
+     "id": "1787852034532001jG0R",
+     "inst": "1787852034532001jG0R",
+     "code": "AWS113-R2",
+     "title": "Partner Advantage Zone in Expo",
+     "repeat": false
+    },
+    {
+     "id": "1787852034298001jIKi",
+     "inst": "1787852034298001jIKi",
+     "code": "AWS014-R3",
+     "title": "Builder Zone in the Expo",
+     "repeat": false
+    },
+    {
+     "id": "1787852033927001jPsu",
+     "inst": "1787852033927001jPsu",
+     "code": "AWS015-R3",
+     "title": "Global Impact Zone in Expo",
+     "repeat": false
+    },
+    {
+     "id": "1789513461903001LZPi",
+     "inst": "1789513461903001LZPi",
+     "code": "AWS017-R3",
+     "title": "Industry Zone in Expo",
+     "repeat": false
+    },
+    {
+     "id": "1787852034634001j1XE",
+     "inst": "1787852034634001j1XE",
+     "code": "AWS113-R3",
+     "title": "Partner Advantage Zone in Expo",
+     "repeat": false
+    }
+   ],
+   "removed": [
+    {
+     "id": "1780442255902001cPii",
+     "inst": "1780442255902001cPii",
+     "code": "AIM3306",
+     "title": "[EMBARGO PLACEHOLDER]",
+     "repeat": false
+    },
+    {
+     "id": "1787852032924001jCcA",
+     "inst": "1787852032924001jCcA",
+     "code": "AWS116-R",
+     "title": "AWS Village in Expo",
+     "repeat": false
+    },
+    {
+     "id": "1792785142688001ualL",
+     "inst": "1792785142688001ualL",
+     "code": "IND217",
+     "title": "AI-Ready Data Foundation: Improve AI Accuracy in Healthcare and Life Sciences",
+     "repeat": false
+    },
+    {
+     "id": "1791492158608001UyZ1",
+     "inst": "1791492158608001UyZ1",
+     "code": "rec3n5lvp9BT9wyTK",
+     "title": "How KOHO governs banking AI agents with Amazon Bedrock AgentCore",
+     "repeat": false
+    },
+    {
+     "id": "1791492158706001UoLh",
+     "inst": "1791492158706001UoLh",
+     "code": "rec4WOTlcBiZJvbAz",
+     "title": "Vega runs AI threat detection directly on Amazon S3",
+     "repeat": false
+    },
+    {
+     "id": "1791492158800001UeSJ",
+     "inst": "1791492158800001UeSJ",
+     "code": "rec6McYM4WwJ1bqDL",
+     "title": "From $0 to $100M ARR: Scaling real-time voice AI on AWS",
+     "repeat": false
+    },
+    {
+     "id": "1791492157747001U5N1",
+     "inst": "1791492157747001U5N1",
+     "code": "rec6SzheLUuAsR1iL",
+     "title": "When FDE pays off: A VC lens on enterprise AI deployments",
+     "repeat": false
+    },
+    {
+     "id": "1791492158983001UZQ3",
+     "inst": "1791492158983001UZQ3",
+     "code": "rec6Xbk8lsOOli82K",
+     "title": "Triomics speeds cancer trial matching with Amazon Bedrock",
+     "repeat": false
+    },
+    {
+     "id": "1791492159080001U9Id",
+     "inst": "1791492159080001U9Id",
+     "code": "rec8HYMD2egUR83Ht",
+     "title": "Wonderful brings enterprise voice AI to 30+ countries",
+     "repeat": false
+    },
+    {
+     "id": "1791492157840001Uycj",
+     "inst": "1791492157840001Uycj",
+     "code": "rec9cKEsfpO31RsWn",
+     "title": "Beyond the hardware: The intelligence powering robots",
+     "repeat": false
+    },
+    {
+     "id": "1791492159175001UDdZ",
+     "inst": "1791492159175001UDdZ",
+     "code": "recAkxo4C8eAZ2iSx",
+     "title": "Dharma-AI cuts legal AI costs 200-fold with fine-tuned models",
+     "repeat": false
+    },
+    {
+     "id": "1791492159350001Ufcy",
+     "inst": "1791492159350001Ufcy",
+     "code": "recCsq6gGZYJQ4lXT",
+     "title": "From 1,500 to 1M+ databases a week: how Supabase provisions at scale",
+     "repeat": false
+    },
+    {
+     "id": "1791492159441001UNnk",
+     "inst": "1791492159441001UNnk",
+     "code": "recDdBkIrbIZWSyX4",
+     "title": "171 agents, 215 engineering hours saved: inside Halter's Clank and Mav",
+     "repeat": false
+    },
+    {
+     "id": "1791492159535001U6jO",
+     "inst": "1791492159535001U6jO",
+     "code": "recDrtmfwILRnIwhv",
+     "title": "Manifold Bio scales drug discovery workloads 4x across AWS regions",
+     "repeat": false
+    },
+    {
+     "id": "1791492158123001UKPl",
+     "inst": "1791492158123001UKPl",
+     "code": "recHo4rlA0R4SFPMT",
+     "title": "Serving world models in under 40ms across 10,000 concurrent sessions",
+     "repeat": false
+    },
+    {
+     "id": "1791492159823001U0GI",
+     "inst": "1791492159823001U0GI",
+     "code": "recJmpS7MWrCfzP8w",
+     "title": "Voice AI on AWS silicon: Cartesia’s sub-250ms AWS Trainium stack",
+     "repeat": false
+    },
+    {
+     "id": "1791492160019001URRQ",
+     "inst": "1791492160019001URRQ",
+     "code": "recKNtoOktTIN4iup",
+     "title": "From Viral Jailbreak to Fortune 500 Decision Intelligence",
+     "repeat": false
+    },
+    {
+     "id": "1791492160227001UGOY",
+     "inst": "1791492160227001UGOY",
+     "code": "recLAA0kBvTQNWsnE",
+     "title": "Simile models consumer decisions with interview-trained AI twins",
+     "repeat": false
+    },
+    {
+     "id": "1791492160699001Unn8",
+     "inst": "1791492160699001Unn8",
+     "code": "recNEdPG2OWRGkQmr",
+     "title": "Scaling AI Agents: How Forlex Turned Failures Into Mechanisms",
+     "repeat": false
+    },
+    {
+     "id": "1791492158324001Uvdf",
+     "inst": "1791492158324001Uvdf",
+     "code": "recRLqOwxp3XEBy31",
+     "title": "Can self-improving AI overcome reward hacking and hardware limits?",
+     "repeat": false
+    },
+    {
+     "id": "1791492159262001Uwh1",
+     "inst": "1791492159262001Uwh1",
+     "code": "recbCMUeaSbejIr44",
+     "title": "How Clay turns CRM + first-party data into a context graph for AI agents",
+     "repeat": false
+    },
+    {
+     "id": "1791492157931001UyDn",
+     "inst": "1791492157931001UyDn",
+     "code": "recchRtztSPZ4GKvl",
+     "title": "Grow your startup by winning and expanding enterprise accounts",
+     "repeat": false
+    },
+    {
+     "id": "1791492159636001U7N8",
+     "inst": "1791492159636001U7N8",
+     "code": "recg5qiHlsEyURNiE",
+     "title": "Training Agility’s Digit robot for manufacturing with Amazon SageMaker",
+     "repeat": false
+    },
+    {
+     "id": "1791492160417001UwPV",
+     "inst": "1791492160417001UwPV",
+     "code": "reclM2RTPNcxe5xls",
+     "title": "Sequoia + Edelbyte: What VCs Really Look For in AI-First Startups",
+     "repeat": false
+    },
+    {
+     "id": "1791492160322001UoKZ",
+     "inst": "1791492160322001UoKZ",
+     "code": "recli8wra8cFYhkTx",
+     "title": "171 agents, 215 engineering hours saved: inside Halter's Clank and Mav",
+     "repeat": false
+    },
+    {
+     "id": "1791492158227001Uxdg",
+     "inst": "1791492158227001Uxdg",
+     "code": "recpmC6CftbwJbyIa",
+     "title": "AI-Native Security Panel",
+     "repeat": false
+    },
+    {
+     "id": "1791492158423001UkhQ",
+     "inst": "1791492158423001UkhQ",
+     "code": "recsd6SUw92uv03sr",
+     "title": "Containment vs. offense: security leaders debate the future",
+     "repeat": false
+    },
+    {
+     "id": "1791492158516001UBIt",
+     "inst": "1791492158516001UBIt",
+     "code": "recwe3FXq4mCeXfGP",
+     "title": "Building faster: AI-native development workflows",
+     "repeat": false
+    }
+   ],
+   "changed": [
+    {
+     "id": "1780441488437001GGhk",
+     "inst": "1780441488437001GGhk",
+     "code": "DVT210-S",
+     "title": "When Telemetry Steers the Robot: Observability for Physical AI (sponsored by groundcover)",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441485931001Goud",
+     "inst": "1780441485931001Goud",
+     "code": "SEC211-S",
+     "title": "Shipping AI at Full Velocity: Securing the Agentic Pipeline from IDE to Runtime (sponsored by Wiz)",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441487182001G3EO",
+     "inst": "1780441487182001G3EO",
+     "code": "COP204-S",
+     "title": "From Workloads to Agents: Rethinking Cloud Resilience (sponsored by Cohesity)",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1787852032358001jug5",
+     "inst": "1787852032358001jug5",
+     "code": "AWS113-R",
+     "title": "Partner Advantage Zone in Expo",
+     "f": {
+      "start": [
+       null,
+       "2026-12-01T00:00:00Z"
+      ],
+      "end": [
+       null,
+       "2026-12-01T03:00:00Z"
+      ],
+      "dur": [
+       0,
+       180
+      ],
+      "room": [
+       null,
+       "Venetian | Level 2 | Hall B | Expo | Booth 884"
+      ]
+     }
+    },
+    {
+     "id": "1787852032448001j0t4",
+     "inst": "1787852032448001j0t4",
+     "code": "AWS114-R",
+     "title": "Builder Zone in the Expo",
+     "f": {
+      "start": [
+       null,
+       "2026-12-01T00:00:00Z"
+      ],
+      "end": [
+       null,
+       "2026-12-01T03:00:00Z"
+      ],
+      "dur": [
+       0,
+       180
+      ],
+      "room": [
+       null,
+       "Venetian | Level 2 | Hall B | Expo | Booth 1502"
+      ]
+     }
+    },
+    {
+     "id": "1787852032549001jMSe",
+     "inst": "1787852032549001jMSe",
+     "code": "AWS115-R",
+     "title": "Global Impact Zone in Expo",
+     "f": {
+      "start": [
+       null,
+       "2026-12-01T00:00:00Z"
+      ],
+      "end": [
+       null,
+       "2026-12-01T03:00:00Z"
+      ],
+      "dur": [
+       0,
+       180
+      ],
+      "room": [
+       null,
+       "Venetian | Level 2 | Hall B | Expo | Booth 177"
+      ]
+     }
+    },
+    {
+     "id": "1787852033162001jTYr",
+     "inst": "1787852033162001jTYr",
+     "code": "AWS117-R",
+     "title": "Industry Zone in Expo",
+     "f": {
+      "start": [
+       null,
+       "2026-12-01T00:00:00Z"
+      ],
+      "end": [
+       null,
+       "2026-12-01T03:00:00Z"
+      ],
+      "dur": [
+       0,
+       180
+      ],
+      "room": [
+       null,
+       "Venetian | Level 2 | Hall B | Expo | Booth 111"
+      ]
+     }
+    },
+    {
+     "id": "1780442266564001c2mb",
+     "inst": "1780442266564001c2mb",
+     "code": "ARC101-S",
+     "title": "Duck, Duck, Iceberg: Query Your Lake From Your Laptop (sponsored by Fivetran)",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441488777001GRzl",
+     "inst": "1780441488777001GRzl",
+     "code": "ARC208-S",
+     "title": "Make AMD Your Default on AWS: Agentic AI and LSEG’s Market Data Transformation (sponsored by AMD)",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442280197001czBn",
+     "inst": "1780442280197001czBn",
+     "code": "AIM3304",
+     "title": "Evaluate, select, optimize your AI model",
+     "f": {
+      "start": [
+       null,
+       "2026-12-02T23:00:00Z"
+      ],
+      "end": [
+       null,
+       "2026-12-03T01:00:00Z"
+      ],
+      "room": [
+       null,
+       "MGM Grand | Level 1 | Grand 120"
+      ]
+     }
+    },
+    {
+     "id": "1780442227343001cTot",
+     "inst": "1780442227343001cTot",
+     "code": "AIM3305",
+     "title": "Building end-to-end agentic IDP Pipelines",
+     "f": {
+      "start": [
+       null,
+       "2026-12-02T23:00:00Z"
+      ],
+      "end": [
+       null,
+       "2026-12-03T00:00:00Z"
+      ],
+      "room": [
+       null,
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Builders' Session 1"
+      ]
+     }
+    },
+    {
+     "id": "1780442272072001cHdC",
+     "inst": "1780442272072001cHdC",
+     "code": "SEC379-S",
+     "title": "From containers to containment: trust the boundary, not the agent (sponsored by Docker)",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442269006001cn7j",
+     "inst": "1780442269006001cn7j",
+     "code": "SEC220-S",
+     "title": "Move AI agents from prototype to production with 1Password (sponsored by 1Password)",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442249114001cK1l",
+     "inst": "1780442249114001cK1l",
+     "code": "SEC3307",
+     "title": "Crossing the Kill Chain: Detection and Response When Attackers Pivot Between Clouds",
+     "f": {
+      "code": [
+       "SEC412",
+       "SEC3307"
+      ]
+     }
+    },
+    {
+     "id": "1780442279765001c3lN",
+     "inst": "1780442279765001c3lN",
+     "code": "AIM462",
+     "title": "Get hands on with new SageMaker Inference performance features",
+     "f": {
+      "start": [
+       null,
+       "2026-12-03T20:30:00Z"
+      ],
+      "end": [
+       null,
+       "2026-12-03T22:30:00Z"
+      ],
+      "room": [
+       null,
+       "MGM Grand | Level 1 | Grand 111"
+      ]
+     }
+    },
+    {
+     "id": "1780442260561001ceXP",
+     "inst": "1780442260561001ceXP",
+     "code": "AIM2211",
+     "title": "From Cost to Compliance: Scaling Scalable GenAI with Amazon Nova",
+     "f": {
+      "start": [
+       null,
+       "2026-12-03T22:30:00Z"
+      ],
+      "end": [
+       null,
+       "2026-12-03T22:50:00Z"
+      ],
+      "room": [
+       null,
+       "Venetian | Level 2 | Hall B | Expo | Global Impact Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780442272548001c81L",
+     "inst": "1780442272548001c81L",
+     "code": "IND109-S",
+     "title": "Reimagining Patient Engagement with AI and Cloud (sponsored by Incedo Inc.)",
+     "f": {
+      "desc": true
+     }
+    }
+   ]
+  },
+  {
    "at": "2026-10-27T07:02:28Z",
    "milestones": [],
    "added": [
