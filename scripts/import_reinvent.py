@@ -33,11 +33,13 @@ from zoneinfo import ZoneInfo
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import sync  # noqa: E402
+import venues  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(ROOT, "data", "reinvent2026")
 SNAPSHOT = os.path.join(DATA, "source", "reinvent2026_sessions.json")
 EVENT = "reinvent2026"
+VENUE = venues.CONFERENCE_VENUES[EVENT]   # the building patterns rooms are checked against
 PACIFIC = ZoneInfo("America/Los_Angeles")
 
 # Public widget config embedded in the catalog page (no login). If these stop working,
@@ -425,8 +427,11 @@ def run(args):
                           "stats": cs, "sessions": cur}, compact=True)
     changes = sync.load(cpath, {"batches": []})
     batch = None
+    # A room in a resort the venue model doesn't know, named once, in the batch where it appears.
+    unknown = venues.unknown_rooms(VENUE, cur, prev)
     if added or removed or changed:
-        batch = {"at": sync.iso(now), "milestones": [], "added": added, "removed": removed, "changed": changed}
+        batch = {"at": sync.iso(now), "milestones": [], "added": added, "removed": removed, "changed": changed,
+                 "unknownRooms": unknown}
         changes["batches"].insert(0, batch)
         del changes["batches"][sync.MAX_BATCHES:]
         sync.dump(cpath, changes)
@@ -443,9 +448,10 @@ def run(args):
         with open(args.summary_out, "w", encoding="utf-8") as f:
             f.write(sync.summary_markdown(batch, set()))
     print("reinvent: sessions=%d dates=%d rooms=%d (dropped %d test, %d not accepted, %d unpublished, %d malformed,"
-          " %d extra runs) | added=%d removed=%d changed=%d"
+          " %d extra runs) | added=%d removed=%d changed=%d%s"
           % (cs["sessions"], cs["withDates"], cs["withRooms"], dropped["test"], dropped["notAccepted"],
-             dropped["unpublished"], dropped["malformed"], dropped["extraRuns"], len(added), len(removed), len(changed)))
+             dropped["unpublished"], dropped["malformed"], dropped["extraRuns"], len(added), len(removed), len(changed),
+             " | " + venues.notice(unknown, "; ") if unknown else ""))
     return 0, bool(batch)
 
 

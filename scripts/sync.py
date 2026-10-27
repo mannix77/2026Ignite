@@ -26,6 +26,8 @@ import time
 import urllib.error
 import urllib.request
 
+import venues
+
 API = "https://api-v2.ignite.microsoft.com/api"
 CDN = "https://eventtools.event.microsoft.com/ignite2026-prod/fallback"
 # The CDN copy (what the official site and this app's live check read) first, so the
@@ -37,6 +39,7 @@ SOURCES = {
 }
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(ROOT, "data", "ignite2026")
+VENUE = venues.CONFERENCE_VENUES["ignite2026"]   # the building patterns rooms are checked against
 MAX_BATCHES = 400
 # Used when the site settings can't be fetched. Times outside the event window are
 # treated as placeholders (the 2026 index already holds fake times on Nov 14).
@@ -451,6 +454,12 @@ def summary_markdown(batch, watch):
     if hit:
         lines.append("**%d change(s) affect sessions on your watchlist:** %s"
                      % (len(hit), ", ".join(sorted({x["code"] for x in hit}))))
+    # A room in a building the venue model doesn't know (scripts/venues.py): walking times to
+    # it are guessed until assets/js/venue.js learns the building. Batches logged before this
+    # notice existed have no such key.
+    unknown = batch.get("unknownRooms") or []
+    if unknown:
+        lines.append("**%s:** %s" % (venues.count_phrase(len(unknown)), ", ".join(unknown)))
     # An extra run added to or dropped from a session (repeat=True; the session itself may be new or gone) is
     # reported apart from sessions added or removed, so it never reads as a cancellation.
     groups = {(key, run): [x for x in batch[key] if bool(x.get("repeat")) == run]
@@ -615,8 +624,12 @@ def run(args):
     # meta.json isn't committed, so derive "last change" from committed data, not from now.
     meta["lastChanged"] = changed_at
     batch = None
+    # Rooms in a building the venue model doesn't know, new since the last snapshot: they always
+    # come with a session added or a room change, so they ride in that batch and are named once.
+    unknown = venues.unknown_rooms(VENUE, cur, prev)
     if added or removed or changed or ms:
-        batch = {"at": iso(now), "milestones": ms, "added": added, "removed": removed, "changed": changed}
+        batch = {"at": iso(now), "milestones": ms, "added": added, "removed": removed, "changed": changed,
+                 "unknownRooms": unknown}
         changes["batches"].insert(0, batch)
         del changes["batches"][MAX_BATCHES:]
         dump(cpath, changes)
@@ -632,11 +645,11 @@ def run(args):
     if batch and args.summary_out:
         with open(args.summary_out, "w", encoding="utf-8") as f:
             f.write(summary_markdown(batch, watch))
-    print(console_summary(cs, draft, added, removed, changed, ms))
+    print(console_summary(cs, draft, added, removed, changed, ms, unknown))
     return 0, bool(batch)
 
 
-def console_summary(stats, draft, added, removed, changed, milestones):
+def console_summary(stats, draft, added, removed, changed, milestones, unknown=()):
     """One line for the run log. Sessions and extra runs are counted apart: a dropped extra run
     (repeat=True) of a session that stays listed is not a removed session."""
     def sessions(xs):
@@ -649,6 +662,8 @@ def console_summary(stats, draft, added, removed, changed, milestones):
         line += " | extra runs: added=%d dropped=%d" % (runs(added), runs(removed))
     if milestones:
         line += " | " + "; ".join(milestones)
+    if unknown:
+        line += " | " + venues.notice(unknown, "; ")
     return line
 
 

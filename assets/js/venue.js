@@ -48,7 +48,9 @@ export function createVenue(def) {
     else if (def.floorHints) {
       for (const [re, name] of def.floorHints) if (re.test(raw)) { floor = name; break; }
     }
-    if (floor == null && !def.floorHints) {
+    // The generic fallback (an exhibit hall, the first digit of a room number) is for Moscone;
+    // a venue with its own floorHints skips it unless it asks for both (genericFloors).
+    if (floor == null && (def.genericFloors || !def.floorHints)) {
       if (/the hub|expo|exhibit/i.test(raw)) floor = 'Hub';
       else {
         const room = /(?:room|rm\.?)\s*(\d{3,4})/i.exec(raw);
@@ -68,10 +70,12 @@ export function createVenue(def) {
 
 // ---------------------------------------------------------------- Moscone (Ignite)
 
-// Published locations look like (Ignite 2025, same venue):
+// Published locations look like (Ignite 2025 and 2026, same venue):
 //   "Moscone West, Level 3, Room 3016"     "Moscone South, The Hub, Theater A"
 //   "Moscone South, Level 3, Room 301"     "Marriott Marquis, Yerba Buena Ballroom, BO2"
+//   "AMC Metreon | Level 3, Theater 9"     "The Aviary, Labs" (the Metreon's rooftop, level 4)
 //   "Chase Center" (keynote)
+// The building patterns are mirrored in scripts/venues.py (tests/test_venues.py keeps them equal).
 export const MOSCONE_DEF = {
   id: 'moscone',
   buildings: [
@@ -80,28 +84,34 @@ export const MOSCONE_DEF = {
     { id: 'N', name: 'Moscone North', short: 'North', re: /moscone\s*north|^north\b/i, geo: [37.78470, -122.40250] },
     { id: 'M', name: 'Marriott Marquis', short: 'Marriott', re: /marriott|marquis/i, geo: [37.78543, -122.40449] },
     { id: 'C', name: 'Chase Center', short: 'Chase Ctr', re: /chase\s*center/i, geo: [37.76790, -122.38742], keynote: true },
-    { id: 'H', name: 'Other off-site', short: 'Off-site', re: /intercontinental|hilton|hyatt|westin|park central|four seasons|st\.? regis|yerba buena (center|gardens)|metreon|sfmoma|\bw hotel/i, offsite: true },
+    // 135 4th St, between Mission and Howard: AMC theaters on level 3, The Aviary (rooftop) on 4.
+    { id: 'E', name: 'Metreon', short: 'Metreon', re: /metreon|\baviary\b/i, geo: [37.78440, -122.40310] },
+    { id: 'H', name: 'Other off-site', short: 'Off-site', re: /intercontinental|hilton|hyatt|westin|park central|four seasons|st\.? regis|yerba buena (center|gardens)|sfmoma|\bw hotel/i, offsite: true },
     { id: 'O', name: 'Online only', short: 'Online', re: /^(online|virtual|on[- ]demand$)/i },
   ],
   // Door-to-door minutes at a changeover, including the badge/ID/bag check Ignite 2025 ran
   // at every building entrance and the crowds on 4th St / Howard St (typical, not worst
   // case: add ~50% right after a keynote). Derived from floor plans, walking routes and
-  // the 2025 schedule. All editable in Settings.
+  // the 2025 schedule; the Metreon numbers are estimates until walked. All editable in Settings.
   walk: {
     sameRoom: 0,
     sameFloor: 3,
-    diffFloor: 5,     // e.g. South Hub (exhibit level) <-> South Level 3
+    diffFloor: 5,     // e.g. South Hub (exhibit level) <-> South Level 3; Metreon theaters <-> The Aviary
     pairs: {
       'N|S': 7, 'N|W': 10, 'S|W': 12,
       'M|W': 13, 'M|S': 14, 'M|N': 13,
-      'C|W': 40, 'C|S': 40, 'C|N': 40, 'C|M': 40,
-      'H|W': 12, 'H|S': 12, 'H|N': 12, 'H|M': 12, 'C|H': 40, 'H|H': 12,
+      'E|W': 5, 'E|M': 5, 'E|S': 8, 'E|N': 8,
+      'C|W': 40, 'C|S': 40, 'C|N': 40, 'C|M': 40, 'C|E': 40,
+      'H|W': 12, 'H|S': 12, 'H|N': 12, 'H|M': 12, 'E|H': 12, 'C|H': 40, 'H|H': 12,
     },
     unknown: 12,      // room not published yet: assume a building change
   },
+  // The Aviary rooms carry no level ("The Aviary, Labs"); the Hub and room-number rules still apply.
+  floorHints: [[/\baviary\b/i, '4']],
+  genericFloors: true,
   startFrom: 'W',
   geoRadius: 180,   // metres from a building's centre that still counts as "at" it
-  notes: 'Includes the badge/bag check at building entrances. Moscone North and South connect inside; West is across 4th St; the Marriott Marquis is a block north of West; Chase Center (keynotes) is about 2 miles away, so plan on the shuttle.',
+  notes: 'Includes the badge/bag check at building entrances. Moscone North and South connect inside; West is across 4th St; the Metreon (AMC theaters, The Aviary on its roof) is a block north of West on 4th St, across from the Marriott Marquis; Chase Center (keynotes) is about 2 miles away, so plan on the shuttle.',
 };
 
 export const MOSCONE = createVenue(MOSCONE_DEF);

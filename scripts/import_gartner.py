@@ -27,9 +27,11 @@ from zoneinfo import ZoneInfo
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import sync  # noqa: E402
+import venues  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(ROOT, "data", "gartner2026")
+VENUE = venues.CONFERENCE_VENUES["gartner2026"]   # the building patterns rooms are checked against
 TZ = ZoneInfo("America/New_York")
 PRIVATE = re.compile(r"^(SM|SAM)\d")                      # strategic-account meetings: not public sessions
 RECORDED_TYPES = {"Keynote", "Signature Series", "Track Sessions"}   # replay assumed (unconfirmed); logistics: n/a
@@ -288,15 +290,19 @@ def main():
         changed_at = sync.iso(now) if (not prev_doc or added or removed or changed) else changed_at or sync.iso(now)
         sync.dump(spath, {"generatedAt": sync.iso(now), "changedAt": changed_at, "source": os.path.basename(args.export_json),
                           "dropped": dropped, "stats": cs, "sessions": cur}, compact=True)
+    # A room in a hotel the venue model doesn't know, named once, in the batch where it appears.
+    unknown = venues.unknown_rooms(VENUE, cur, prev)
     if added or removed or changed:
-        changes["batches"].insert(0, {"at": sync.iso(now), "milestones": [], "added": added, "removed": removed, "changed": changed})
+        changes["batches"].insert(0, {"at": sync.iso(now), "milestones": [], "added": added, "removed": removed,
+                                      "changed": changed, "unknownRooms": unknown})
         sync.dump(cpath, changes)
     elif not os.path.exists(cpath):
         sync.dump(cpath, changes)
     sync.dump(mpath, {"lastChecked": sync.iso(now), "lastChanged": changed_at, "ok": True, "error": None, "stats": cs,
                       "source": "Conference Navigator export"})
-    print("gartner: sessions=%d (dropped %d private, %d program-only) | added=%d removed=%d changed=%d"
-          % (len(cur), len(dropped), len(excluded), len(added), len(removed), len(changed)))
+    print("gartner: sessions=%d (dropped %d private, %d program-only) | added=%d removed=%d changed=%d%s"
+          % (len(cur), len(dropped), len(excluded), len(added), len(removed), len(changed),
+             " | " + venues.notice(unknown, "; ") if unknown else ""))
 
     if args.workbook:
         write_favorites(args, cur, now)
