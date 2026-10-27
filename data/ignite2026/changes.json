@@ -1,6 +1,378 @@
 {
  "batches": [
   {
+   "at": "2026-10-27T05:50:54Z",
+   "milestones": [],
+   "added": [
+    {
+     "id": "1793038085447001vody",
+     "inst": "1793038085447001vody-AAAAAAAAAAAAAAAAAAAA",
+     "code": "LAB683D",
+     "title": "Digital Lab: Secure local AI agents with end-to-end threat protection",
+     "repeat": true
+    }
+   ],
+   "removed": [],
+   "changed": [
+    {
+     "id": "1787856610200001EYMD",
+     "inst": "1787856610200001EYMD-1791587924228001FSUX",
+     "code": "BRK244",
+     "title": "Voice agents in Microsoft Foundry: Prototype to production in 45 mins",
+     "f": {
+      "start": [
+       "2026-11-19T18:15:00Z",
+       "2026-11-20T01:15:00Z"
+      ],
+      "end": [
+       "2026-11-19T19:00:00Z",
+       "2026-11-20T02:00:00Z"
+      ],
+      "room": [
+       "Moscone West | Level 3, Room 3004",
+       "Moscone West | Level 3, Room 3014"
+      ]
+     }
+    },
+    {
+     "id": "1787856632260001ERgd",
+     "inst": "1787856632260001ERgd-1791588242987001CGxY",
+     "code": "BRK388",
+     "title": "Build and deploy local AI at scale across enterprise PCs w/ Windows ML",
+     "f": {
+      "start": [
+       "2026-11-19T18:15:00Z",
+       "2026-11-19T19:30:00Z"
+      ],
+      "end": [
+       "2026-11-19T19:00:00Z",
+       "2026-11-19T20:15:00Z"
+      ],
+      "room": [
+       "Moscone West | Level 2, Room 2001",
+       "Moscone West | Level 2, Room 2014"
+      ]
+     }
+    },
+    {
+     "id": "1787856632415001E45R",
+     "inst": "1787856632415001E45R-1791588130329001C4aG",
+     "code": "BRK389",
+     "title": "Local AI on Windows: Offload coding tasks and build with APIs",
+     "f": {
+      "start": [
+       "2026-11-17T23:15:00Z",
+       "2026-11-18T21:45:00Z"
+      ],
+      "end": [
+       "2026-11-18T00:00:00Z",
+       "2026-11-18T22:30:00Z"
+      ],
+      "room": [
+       "Moscone West | Level 2, Room 2002",
+       "Moscone West | Level 3, Room 3004"
+      ]
+     }
+    },
+    {
+     "id": "1787856632584001E5Dw",
+     "inst": "1787856632584001E5Dw-1791588154118001C10P",
+     "code": "BRK390",
+     "title": "Deploying Agents You Can Trust on Windows",
+     "f": {
+      "start": [
+       "2026-11-18T00:30:00Z",
+       "2026-11-18T19:30:00Z"
+      ],
+      "end": [
+       "2026-11-18T01:15:00Z",
+       "2026-11-18T20:15:00Z"
+      ],
+      "room": [
+       "Moscone West | Level 3, Room 3005",
+       "Moscone West | Level 3, Room 3001"
+      ]
+     }
+    },
+    {
+     "id": "1787856632736001EDzS",
+     "inst": "1787856632736001EDzS-1791588285068001CR2r",
+     "code": "BRK391",
+     "title": "Manage and Govern AI Agents on Windows as Your Trusted Execution Layer",
+     "f": {
+      "start": [
+       "2026-11-19T19:30:00Z",
+       "2026-11-18T23:00:00Z"
+      ],
+      "end": [
+       "2026-11-19T20:15:00Z",
+       "2026-11-18T23:45:00Z"
+      ],
+      "room": [
+       "AMC Metreon | Level 3, Theater 12",
+       "Moscone West | Level 2, Room 2002"
+      ]
+     }
+    },
+    {
+     "id": "1787856633035001ES8o",
+     "inst": "1787856633035001ES8o-1791588216792001COCr",
+     "code": "BRK393",
+     "title": "Build and ship faster with enterprise-ready Windows developer tools​",
+     "f": {
+      "start": [
+       "2026-11-18T18:15:00Z",
+       "2026-11-20T00:00:00Z"
+      ],
+      "end": [
+       "2026-11-18T19:00:00Z",
+       "2026-11-20T00:45:00Z"
+      ],
+      "room": [
+       "Moscone West | Level 2, Room 2001",
+       "Marriott Marquis | Lower B2, Yerba Buena Salon 8"
+      ]
+     }
+    },
+    {
+     "id": "1787856633196001EAXC",
+     "inst": "1787856633196001EAXC-1791588232533001CWLE",
+     "code": "BRK394",
+     "title": "Building Windows apps with WinUI and agents​",
+     "f": {
+      "start": [
+       "2026-11-20T00:00:00Z",
+       "2026-11-19T17:00:00Z"
+      ],
+      "end": [
+       "2026-11-20T00:45:00Z",
+       "2026-11-19T17:45:00Z"
+      ],
+      "room": [
+       "Marriott Marquis | Lower B2, Yerba Buena Salon 8",
+       "Moscone West | Level 2, Room 2014"
+      ]
+     }
+    },
+    {
+     "id": "1787856633344001EnYU",
+     "inst": "1787856633344001EnYU-1791814911975001CWpv",
+     "code": "BRK395",
+     "title": "Inside WSL containers for application development ​",
+     "f": {
+      "start": [
+       "2026-11-20T19:30:00Z",
+       "2026-11-19T18:15:00Z"
+      ],
+      "end": [
+       "2026-11-20T20:15:00Z",
+       "2026-11-19T19:00:00Z"
+      ],
+      "room": [
+       "Moscone West | Level 3, Room 3001",
+       "Moscone West | Level 2, Room 2001"
+      ]
+     }
+    },
+    {
+     "id": "1787856633494001EZjH",
+     "inst": "1787856633494001EZjH-1791588070182001CQou",
+     "code": "BRK396",
+     "title": "Raising the Bar for Windows Quality: Built with Your Feedback",
+     "f": {
+      "start": [
+       "2026-11-19T00:15:00Z",
+       "2026-11-18T18:15:00Z"
+      ],
+      "end": [
+       "2026-11-19T01:00:00Z",
+       "2026-11-18T19:00:00Z"
+      ],
+      "room": [
+       "Moscone West | Level 2, Room 2005",
+       "Moscone West | Level 2, Room 2001"
+      ]
+     }
+    },
+    {
+     "id": "1787856633644001Eort",
+     "inst": "1787856633644001Eort-1791587923721001FVwl",
+     "code": "BRK397",
+     "title": "Edge for Business: Browser security in the age of AI productivity",
+     "f": {
+      "start": [
+       "2026-11-19T17:00:00Z",
+       "2026-11-19T21:30:00Z"
+      ],
+      "end": [
+       "2026-11-19T17:45:00Z",
+       "2026-11-19T22:15:00Z"
+      ],
+      "room": [
+       "Moscone West | Level 3, Room 3014",
+       "Moscone West | Level 2, Room 2001"
+      ]
+     }
+    },
+    {
+     "id": "1787856633795001E6cQ",
+     "inst": "1787856633795001E6cQ-1791587923965001FkP9",
+     "code": "BRK398",
+     "title": "From Prevention to Recovery: Building a More Resilient Windows Estate",
+     "f": {
+      "start": [
+       "2026-11-19T22:45:00Z",
+       "2026-11-20T01:15:00Z"
+      ],
+      "end": [
+       "2026-11-19T23:30:00Z",
+       "2026-11-20T02:00:00Z"
+      ],
+      "room": [
+       "Moscone West | Level 2, Room 2005",
+       "Marriott Marquis | Lower B2, Yerba Buena Salon 7"
+      ]
+     }
+    },
+    {
+     "id": "1787856633959001Ee8N",
+     "inst": "1787856633959001Ee8N-1791588117904001CT8v",
+     "code": "BRK399",
+     "title": "Intelligence on Windows: Unlocking the Full Value of Microsoft Copilot",
+     "f": {
+      "start": [
+       "2026-11-20T01:15:00Z",
+       "2026-11-20T17:00:00Z"
+      ],
+      "end": [
+       "2026-11-20T02:00:00Z",
+       "2026-11-20T17:45:00Z"
+      ],
+      "room": [
+       "Marriott Marquis | Lower B2, Yerba Buena Salon 7",
+       "Moscone West | Level 2, Room 2005"
+      ]
+     }
+    },
+    {
+     "id": "1787856634108001EZjL",
+     "inst": "1787856634108001EZjL-1791588267330001Cacc",
+     "code": "BRK400",
+     "title": "Windows 365 – Your flexible, trusted workspace for the age of AI",
+     "f": {
+      "start": [
+       "2026-11-18T21:45:00Z",
+       "2026-11-19T00:15:00Z"
+      ],
+      "end": [
+       "2026-11-18T22:30:00Z",
+       "2026-11-19T01:00:00Z"
+      ],
+      "room": [
+       "Moscone West | Level 3, Room 3014",
+       "Marriott Marquis | Lower B2, Yerba Buena Salon 9"
+      ]
+     }
+    },
+    {
+     "id": "1787856634424001Eth1",
+     "inst": "1787856634424001Eth1-1791588335374001ChBw",
+     "code": "BRK402",
+     "title": "Modernize on-prem VDI with Azure Virtual Desktop and Windows 365",
+     "f": {
+      "start": [
+       "2026-11-19T21:30:00Z",
+       "2026-11-19T22:45:00Z"
+      ],
+      "end": [
+       "2026-11-19T22:15:00Z",
+       "2026-11-19T23:30:00Z"
+      ],
+      "room": [
+       "Moscone West | Level 2, Room 2001",
+       "Moscone West | Level 2, Room 2005"
+      ]
+     }
+    },
+    {
+     "id": "1787856634576001Ereg",
+     "inst": "1787856634576001Ereg-1791814912210001Cp08",
+     "code": "BRK403",
+     "title": "Every developer and agent needs a computer: Building with Windows 365",
+     "f": {
+      "start": [
+       "2026-11-18T23:00:00Z",
+       "2026-11-18T17:00:00Z"
+      ],
+      "end": [
+       "2026-11-18T23:45:00Z",
+       "2026-11-18T17:45:00Z"
+      ],
+      "room": [
+       "Moscone West | Level 2, Room 2005",
+       "AMC Metreon | Level 3, Theater 12"
+      ]
+     }
+    },
+    {
+     "id": "1787856634726001E24O",
+     "inst": "1787856634726001E24O-1791814916437001CEUi",
+     "code": "BRK404",
+     "title": "AI ready endpoints: secure, manage and scale",
+     "f": {
+      "start": [
+       "2026-11-18T00:30:00Z",
+       "2026-11-17T22:00:00Z"
+      ],
+      "end": [
+       "2026-11-18T01:15:00Z",
+       "2026-11-17T22:45:00Z"
+      ]
+     }
+    },
+    {
+     "id": "1787856635039001EPGT",
+     "inst": "1787856635039001EPGT-1791588097705001CXCt",
+     "code": "BRK406",
+     "title": "From AI Pilots to Practice: Put Intelligence to Work with Windows",
+     "f": {
+      "start": [
+       "2026-11-17T22:00:00Z",
+       "2026-11-17T23:15:00Z"
+      ],
+      "end": [
+       "2026-11-17T22:45:00Z",
+       "2026-11-18T00:00:00Z"
+      ],
+      "room": [
+       "Moscone West | Level 3, Room 3014",
+       "Moscone West | Level 2, Room 2002"
+      ]
+     }
+    },
+    {
+     "id": "1787856635188001E4B8",
+     "inst": "1787856635188001E4B8-1791814920364001CPWy",
+     "code": "BRK407",
+     "title": "What's new in Windows Management",
+     "f": {
+      "start": [
+       "2026-11-18T19:30:00Z",
+       "2026-11-18T00:30:00Z"
+      ],
+      "end": [
+       "2026-11-18T20:15:00Z",
+       "2026-11-18T01:15:00Z"
+      ],
+      "room": [
+       "Moscone West | Level 3, Room 3018",
+       "Moscone West | Level 3, Room 3005"
+      ]
+     }
+    }
+   ]
+  },
+  {
    "at": "2026-10-27T05:25:36Z",
    "milestones": [],
    "added": [
