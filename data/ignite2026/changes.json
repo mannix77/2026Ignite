@@ -1,6 +1,544 @@
 {
  "batches": [
   {
+   "at": "2026-10-28T22:17:47Z",
+   "milestones": [],
+   "added": [],
+   "removed": [
+    {
+     "id": "1787856603950001Ei1j",
+     "inst": "1787856603950001Ei1j-1791588120207001CRWA",
+     "code": "BRK204",
+     "title": "Evolution of Chat",
+     "repeat": false
+    },
+    {
+     "id": "1787856908487001hnU8",
+     "inst": "1787856908487001hnU8-1791588192645001Cp3i",
+     "code": "TT1721",
+     "title": "Driving Accenture's Security Outcomes with EPI Security",
+     "repeat": false
+    },
+    {
+     "id": "1787856908646001hpCF",
+     "inst": "1787856908646001hpCF-1791588209436001C7Bd",
+     "code": "TT1722",
+     "title": "Accelerating Capgemini's Security Outcomes with EPI Security",
+     "repeat": false
+    },
+    {
+     "id": "1787856908809001hp9P",
+     "inst": "1787856908809001hp9P-1791588209666001Cvym",
+     "code": "TT1723",
+     "title": "Accelerating EY's Security Outcomes with EPI Security",
+     "repeat": false
+    },
+    {
+     "id": "1787856908988001hFjd",
+     "inst": "1787856908988001hFjd-1791588225458001CBEl",
+     "code": "TT1724",
+     "title": "Accelerating IBM's Security Outcomes with EPI Security",
+     "repeat": false
+    },
+    {
+     "id": "1787856909150001hxie",
+     "inst": "1787856909150001hxie-1791588225685001C67P",
+     "code": "TT1725",
+     "title": "Accelerating PwC's Security Outcomes with EPI Security",
+     "repeat": false
+    },
+    {
+     "id": "1787856910288001hswJ",
+     "inst": "1787856910288001hswJ-1791588262456001CLgM",
+     "code": "TT1732",
+     "title": "Accelerating NTT Data's Security Outcomes with EPI Security",
+     "repeat": false
+    }
+   ],
+   "changed": [
+    {
+     "id": "1787856610200001EYMD",
+     "inst": "1787856610200001EYMD-1791587924228001FSUX",
+     "code": "BRK244",
+     "title": "Voice agents in Microsoft Foundry: Prototype to production in 45 mins",
+     "f": {
+      "speakers": [
+       [
+        "Archer Zhao",
+        "Marvin Hsu",
+        "Matt Landis",
+        "Yiwen Rong"
+       ],
+       [
+        "Archer Zhao",
+        "Johnson Zhou",
+        "Marvin Hsu",
+        "Matt Landis",
+        "Yiwen Rong"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856611685001EYbD",
+     "inst": "1787856611685001EYbD-1791588120693001CWDZ",
+     "code": "BRK254",
+     "title": "Turn enterprise data in a durable advantage with Microsoft AI models",
+     "f": {
+      "speakers": [
+       [
+        "Alicia Frame",
+        "Ramachandra Kota",
+        "Shengtao Ma",
+        "Sophie Lebrecht"
+       ],
+       [
+        "Alicia Frame",
+        "Aniel Sud",
+        "Kevin Li",
+        "Ramachandra Kota",
+        "Shengtao Ma",
+        "Sophie Lebrecht"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856612609001ExWS",
+     "inst": "1787856612609001ExWS-1791588098847001C5fK",
+     "code": "BRK260",
+     "title": "The next evolution of AI FinOps: From cost to value",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1787856613640001EPcc",
+     "inst": "1787856613640001EPcc-1791587921531001Fi0n",
+     "code": "BRK267",
+     "title": "What's new in Copilot Studio",
+     "f": {
+      "speakers": [
+       [
+        "Jason Moore"
+       ],
+       [
+        "Jason Moore",
+        "Mark Kenyon"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856615873001Ew1V",
+     "inst": "1787856615873001Ew1V-1791588337175001CYir",
+     "code": "BRK282",
+     "title": "Always-on agentic security platform for code security",
+     "f": {
+      "title": [
+       "Detect, fix, and govern code and credential risk with AI",
+       "Always-on agentic security platform for code security"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1787856617825001EHOK",
+     "inst": "1787856617825001EHOK-1791588173700001CIOq",
+     "code": "BRK295",
+     "title": "Web IQ: The new search engine for agents",
+     "f": {
+      "speakers": [
+       [
+        "Roby Carli",
+        "Shannon Ridge Kaura"
+       ],
+       [
+        "Prerana Nayak",
+        "Roby Carli"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856619339001E1y8",
+     "inst": "1787856619339001E1y8-1791588155068001Ceog",
+     "code": "BRK305",
+     "title": "Microsoft IQ: Agents that know your business, under your rules",
+     "f": {
+      "speakers": [
+       [
+        "Dipti Borkar",
+        "Dorit Zilbershot",
+        "Yitzhak Kesselman"
+       ],
+       [
+        "Dipti Borkar",
+        "Dorit Zilbershot",
+        "Michel Porter",
+        "Yitzhak Kesselman"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856620252001EUUi",
+     "inst": "1787856620252001EUUi-1791814916888001CTVu",
+     "code": "BRK311",
+     "title": "Web IQ in action: How enterprises build grounded, governed AI agents",
+     "f": {
+      "speakers": [
+       [
+        "Brian King",
+        "Deena Minwalla",
+        "Louis Barone",
+        "Olga Lykova"
+       ],
+       [
+        "Brian King",
+        "Deena Minwalla",
+        "Jonah Williams",
+        "Louis Barone",
+        "Olga Lykova"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856622349001EKGC",
+     "inst": "1787856622349001EKGC-1791588130792001CK8Y",
+     "code": "BRK324",
+     "title": "The Alert Is Dead. The Blueprint for the Agentic SOC",
+     "f": {
+      "speakers": [
+       [
+        "Efrat Kliger",
+        "Rob Lefferts"
+       ],
+       [
+        "Jon Kuhn",
+        "Rob Lefferts"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856622951001Ew7y",
+     "inst": "1787856622951001Ew7y-1791588233205001C2bL",
+     "code": "BRK328",
+     "title": "Build a trusted device and app foundation for AI at scale",
+     "f": {
+      "speakers": [
+       [
+        "Jay Stamatis",
+        "Kevin Odom",
+        "Sangeetha Visweswaran"
+       ],
+       [
+        "James Stamatis",
+        "Kevin Odom",
+        "Sangeetha Visweswaran"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856626323001EznF",
+     "inst": "1787856626323001EznF-1791588232979001CUXf",
+     "code": "BRK350",
+     "title": "Building high-performance analytics with Fabric Data Warehouse",
+     "f": {
+      "speakers": [
+       [
+        "Rakesh Krishnan"
+       ],
+       [
+        "Maraki Ketema",
+        "Rakesh Krishnan"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856626929001EC2l",
+     "inst": "1787856626929001EC2l-1791588350937001C0TA",
+     "code": "BRK354",
+     "title": "Migrate to Microsoft Fabric: Modernize your data estate",
+     "f": {
+      "speakers": [
+       [
+        "Rakesh Krishnan"
+       ],
+       [
+        "Rakesh Krishnan",
+        "Wee hyong Tok"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856629261001EJny",
+     "inst": "1787856629261001EJny-1791588196937001CxBw",
+     "code": "BRK369",
+     "title": "Humans to agents: Mission-critical starts with Azure SQL Hyperscale",
+     "f": {
+      "title": [
+       "One database, many agents: Scaling AI apps with Azure SQL Hyperscale",
+       "Humans to agents: Mission-critical starts with Azure SQL Hyperscale"
+      ],
+      "speakers": [
+       [
+        "Aditya Badramraju",
+        "Bob Ward",
+        "Sameer Agarwal"
+       ],
+       [
+        "Anna Hoffman",
+        "Bob Ward",
+        "Sameer Agarwal"
+       ]
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1787856635794001EvWl",
+     "inst": "1787856635794001EvWl-1791588234103001CJ67",
+     "code": "BRK411",
+     "title": "Plan and execute mainframe modernization on your terms",
+     "f": {
+      "speakers": [
+       [
+        "Matt Sawyer",
+        "Tosca Colangeli"
+       ],
+       [
+        "Dave Byrne",
+        "Matt Sawyer",
+        "Tosca Colangeli"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856638686001EsPu",
+     "inst": "1787856638686001EsPu-1791588322196001Cv6Z",
+     "code": "BRK430",
+     "title": "Architecting your workloads for maximum compute flexibility",
+     "f": {
+      "speakers": [
+       [
+        "Rajeesh Ramachandran",
+        "Rohan Sacheti",
+        "Varun Shandilya"
+       ],
+       [
+        "Chris Bailey",
+        "Rajeesh Ramachandran",
+        "Rohan Sacheti",
+        "Varun Shandilya"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856641576001E9cm",
+     "inst": "1787856641576001E9cm-1791588196702001CBnU",
+     "code": "BRK449",
+     "title": "Modernize Windows Server apps with no code rewrite to App Service",
+     "f": {
+      "speakers": [
+       [
+        "Anders Skjonaa",
+        "Andrew Westgarth",
+        "Byron Tardif"
+       ],
+       [
+        "Anders Skjonaa",
+        "Andrew Westgarth",
+        "Aniel Sud",
+        "Byron Tardif",
+        "Kevin Li"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856645372001Euij",
+     "inst": "1787856645372001Euij-1791588243916001CFOX",
+     "code": "BRK474",
+     "title": "Modernization to AI transformation: How Aon enables better decisions",
+     "f": {
+      "title": [
+       "How Aon scaled AI to accelerate workforce transformation",
+       "Modernization to AI transformation: How Aon enables better decisions"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1787856645522001ESfS",
+     "inst": "1787856645522001ESfS-1791588217467001CtzI",
+     "code": "BRK475",
+     "title": "Industrial intelligence in action: Physical AI for factories",
+     "f": {
+      "title": [
+       "Industrial intelligence: Optimizing operations with data and AI agents",
+       "Industrial intelligence in action: Physical AI for factories"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1787856645825001E3uR",
+     "inst": "1787856645825001E3uR-1791588268452001Cfjk",
+     "code": "BRK477",
+     "title": "Signals into sales: The intelligence advantage in consumer goods",
+     "f": {
+      "speakers": [
+       [
+        "Keith Mercier",
+        "Lindsay Berg"
+       ],
+       [
+        "Ioannis Kesisoglou",
+        "Keith Mercier",
+        "Lindsay Berg",
+        "Ruchika Sachdeva"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856662254001E3LU",
+     "inst": "1787856662254001E3LU-1791588084721001Cbqe",
+     "code": "LTG1165",
+     "title": "Preparing for usage-based billing",
+     "f": {
+      "speakers": [
+       [
+        "Reshma Kapoor"
+       ],
+       [
+        "Peter Bergen"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856708798001EkEu",
+     "inst": "1787856708798001EkEu-1791588104147001C8Ga",
+     "code": "LTG1466",
+     "title": "Azure Local disconnected operations: Tenant onboarding and IDP setup",
+     "f": {
+      "title": [
+       "Azure Local Disconnected Operations: Tenant onboarding and IDP setup",
+       "Azure Local disconnected operations: Tenant onboarding and IDP setup"
+      ]
+     }
+    },
+    {
+     "id": "1787856600124001EIJS",
+     "inst": "1787856600124001EIJS-1791926728345001MSAE",
+     "code": "THR1015",
+     "title": "Foundry Discord Live: Product Updates & Community AMA",
+     "f": {
+      "speakers": [
+       [
+        "Amy Boyd",
+        "Lee Stott"
+       ],
+       [
+        "Amy Boyd",
+        "Lee Stott",
+        "Nick Brady"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856584265001EOXo",
+     "inst": "1787856584265001EOXo-1791588290668001CAgP",
+     "code": "THR913",
+     "title": "Industrial AI in Action: From Insight to Autonomous Operations",
+     "f": {
+      "title": [
+       "From prediction to frontline action: Industrial AI at ABB",
+       "Industrial AI in Action: From Insight to Autonomous Operations"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1787856585033001EYWe",
+     "inst": "1787856585033001EYWe-1791588214029001C6M9",
+     "code": "THR918",
+     "title": "How agentic AI is transforming education",
+     "f": {
+      "speakers": [
+       [
+        "Jethro Seghers",
+        "Juliano Menegazzo",
+        "Sadie Williams"
+       ],
+       [
+        "Jethro Seghers",
+        "Jethro Seghers",
+        "Juliano Menegazzo"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856589392001Eptt",
+     "inst": "1787856589392001Eptt-1791814915062001CVoZ",
+     "code": "THR946",
+     "title": "The AI-fluent workforce: A customer conversation",
+     "f": {
+      "speakers": [
+       [
+        "Chris Rice"
+       ],
+       [
+        "Amanda Trouba"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856589543001Er3V",
+     "inst": "1787856589543001Er3V-1791588095313001CQ3P",
+     "code": "THR947",
+     "title": "Skills for a world that won't stand still",
+     "f": {
+      "title": [
+       "A skilling playbook for a world that won't stand still",
+       "Skills for a world that won't stand still"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1787856592831001EM0b",
+     "inst": "1787856592831001EM0b-1791588316575001C9m4",
+     "code": "THR968",
+     "title": "Skill or will? Diagnose what’s stalling AI adoption",
+     "f": {
+      "speakers": [
+       [
+        "William Nations"
+       ],
+       [
+        "Julie-Anne Arsenault",
+        "William Nations"
+       ]
+      ]
+     }
+    }
+   ],
+   "unknownRooms": []
+  },
+  {
    "at": "2026-10-28T21:17:02Z",
    "milestones": [],
    "added": [
