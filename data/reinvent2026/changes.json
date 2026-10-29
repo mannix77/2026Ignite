@@ -1,6 +1,324 @@
 {
  "batches": [
   {
+   "at": "2026-10-29T00:56:00Z",
+   "milestones": [],
+   "added": [
+    {
+     "id": "1780442221624001cqr7",
+     "inst": "1780442221624001cqr7",
+     "code": "HMC322",
+     "title": "Designing Portable Multicloud Architectures with Open Specifications",
+     "repeat": false
+    }
+   ],
+   "removed": [],
+   "changed": [
+    {
+     "id": "1780441480013001G2C2",
+     "inst": "1780441480013001G2C2",
+     "code": "OPN311",
+     "title": "What's new with OpenSearch: AI-native search, agents & observability",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442275094001c8KG",
+     "inst": "1780442275094001c8KG",
+     "code": "ARC315-R",
+     "title": "Where embeddings live: Designing production retrieval on AWS",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1787852033701001jSzn",
+     "inst": "1787852033701001jSzn",
+     "code": "AWS015-R1",
+     "title": "Global Impact Zone in Expo",
+     "f": {
+      "level": [
+       null,
+       100
+      ]
+     }
+    },
+    {
+     "id": "1780441482222001G135",
+     "inst": "1780441482222001G135",
+     "code": "AIM234-S",
+     "title": "Machines on Call for Humans: Agents to run and fix your prod (sponsored by Resolve AI)",
+     "f": {
+      "title": [
+       "Machines on Call for Humans: Agents to run and fix your prod (sponsored by ResolveAI)",
+       "Machines on Call for Humans: Agents to run and fix your prod (sponsored by Resolve AI)"
+      ]
+     }
+    },
+    {
+     "id": "1780442267034001cC3t",
+     "inst": "1780442267034001cC3t",
+     "code": "AIM112-S",
+     "title": "Give agents governed access to your APIs over MCP with a domain model (sponsored by Apollo GraphQL)",
+     "f": {
+      "title": [
+       "Give agents governed access to your APIs over MCP with a domain model",
+       "Give agents governed access to your APIs over MCP with a domain model (sponsored by Apollo GraphQL)"
+      ]
+     }
+    },
+    {
+     "id": "1780442269117001cYyA",
+     "inst": "1780442269117001cYyA",
+     "code": "AIM3325-S",
+     "title": "How In-Context Learning Delivers Interpretable AI at 90% Lower Cost (sponsored by Sphinx AI)",
+     "f": {
+      "title": [
+       "How In-Context Learning Delivers Interpretable AI at 90% Lower Cost",
+       "How In-Context Learning Delivers Interpretable AI at 90% Lower Cost (sponsored by Sphinx AI)"
+      ],
+      "code": [
+       "AIM299-S",
+       "AIM3325-S"
+      ]
+     }
+    },
+    {
+     "id": "1780441483183001GUuU",
+     "inst": "1780441483183001GUuU",
+     "code": "AIM244-S",
+     "title": "Solving Problems Faster with AI SRE​ (sponsored by Splunk by Cisco)",
+     "f": {
+      "title": [
+       "Solving Problems Faster with AI SRE​ (sponsored by Splunk, a Cisco Company)",
+       "Solving Problems Faster with AI SRE​ (sponsored by Splunk by Cisco)"
+      ]
+     }
+    },
+    {
+     "id": "1780441483724001GLNR",
+     "inst": "1780441483724001GLNR",
+     "code": "AIM246-S",
+     "title": "Modernize the data layer, then scale the AI: A Cisco Case Study (sponsored by MongoDB)",
+     "f": {
+      "title": [
+       "Modernize the data layer, then scale the AI: A Cisco Case Study",
+       "Modernize the data layer, then scale the AI: A Cisco Case Study (sponsored by MongoDB)"
+      ]
+     }
+    },
+    {
+     "id": "1780442235071001cQ5J",
+     "inst": "1780442235071001cQ5J",
+     "code": "AIM362",
+     "title": "Which customization compute? A decision approach for model fine-tuning",
+     "f": {
+      "title": [
+       "Which customization path? A decision framework for fine-tuning on AWS",
+       "Which customization compute? A decision approach for model fine-tuning"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441484436001GLfe",
+     "inst": "1780441484436001GLfe",
+     "code": "MAM215-S",
+     "title": "Conversational AI at Scale: S&P Global Energy's 30+ Genie Agents (sponsored by Databricks)",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441484976002GfZN",
+     "inst": "1780441484976002GfZN",
+     "code": "AIM109-S",
+     "title": "Build Trust in AI with Agent Observability​ (sponsored by Splunk by Cisco)",
+     "f": {
+      "title": [
+       "Build Trust in AI with Agent Observability​ (sponsored by Splunk, a Cisco Company)",
+       "Build Trust in AI with Agent Observability​ (sponsored by Splunk by Cisco)"
+      ]
+     }
+    },
+    {
+     "id": "1780442270680001csK4",
+     "inst": "1780442270680001csK4",
+     "code": "HMC206-S",
+     "title": "Stop paying for idle GPUs on Amazon EKS (sponsored by Cloudability)",
+     "f": {
+      "title": [
+       "Stop paying for idle GPUs on Amazon EKS (sponsored by Apptio)",
+       "Stop paying for idle GPUs on Amazon EKS (sponsored by Cloudability)"
+      ]
+     }
+    },
+    {
+     "id": "1787852033828001j4da",
+     "inst": "1787852033828001j4da",
+     "code": "AWS015-R2",
+     "title": "Global Impact Zone in Expo",
+     "f": {
+      "level": [
+       null,
+       100
+      ]
+     }
+    },
+    {
+     "id": "1780441484694001GQSW",
+     "inst": "1780441484694001GQSW",
+     "code": "AIM249-S",
+     "title": "FinOps for AI: Open the black box on AI spend (sponsored by Cloudability)",
+     "f": {
+      "title": [
+       "FinOps for AI: Open the black box on AI spend (sponsored by Apptio)",
+       "FinOps for AI: Open the black box on AI spend (sponsored by Cloudability)"
+      ]
+     }
+    },
+    {
+     "id": "1780441489175001Gjf8",
+     "inst": "1780441489175001Gjf8",
+     "code": "SEC378-S",
+     "title": "Inside the frontier: What builders are creating at OpenAI (sponsored by OpenAI)",
+     "f": {
+      "title": [
+       "Inside the frontier: What builders are creating at OpenAI",
+       "Inside the frontier: What builders are creating at OpenAI (sponsored by OpenAI)"
+      ]
+     }
+    },
+    {
+     "id": "1780441485872001GDVq",
+     "inst": "1780441485872001GDVq",
+     "code": "ANT202-S",
+     "title": "Stop Moving AWS Data. Turn It into Action with Splunk​ (sponsored by Splunk by Cisco)",
+     "f": {
+      "title": [
+       "Stop Moving AWS Data. Turn It into Action with Splunk​ (sponsored by Splunk, a Cisco Company)",
+       "Stop Moving AWS Data. Turn It into Action with Splunk​ (sponsored by Splunk by Cisco)"
+      ]
+     }
+    },
+    {
+     "id": "1780441488381001GPQl",
+     "inst": "1780441488381001GPQl",
+     "code": "SEC225-S",
+     "title": "Shrink zero-day exposure time: Lessons in AI-driven defense (sponsored by TrendAI™)",
+     "f": {
+      "title": [
+       "Inside the Architecture: Building Secure AI Applications on AWS (sponsored by TrendAI™)",
+       "Shrink zero-day exposure time: Lessons in AI-driven defense (sponsored by TrendAI™)"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442277842001cCMx",
+     "inst": "1780442277842001cCMx",
+     "code": "CMP404",
+     "title": "Learn how to build a Genomics PCS pipeline on AWS",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1789513461903001LZPi",
+     "inst": "1789513461903001LZPi",
+     "code": "AWS017-R3",
+     "title": "Industry Zone in Expo",
+     "f": {
+      "code": [
+       "AWS117-R3",
+       "AWS017-R3"
+      ]
+     }
+    },
+    {
+     "id": "1780442389888001NPVg",
+     "inst": "1780442389888001NPVg",
+     "code": "SEC103-S",
+     "title": "Turn AWS Security Signals into Action with AI-First SecOps (sponsored by Splunk by Cisco)",
+     "f": {
+      "title": [
+       "Turn AWS Security Signals into Action with AI-First SecOps (sponsored by Splunk, a Cisco Company)",
+       "Turn AWS Security Signals into Action with AI-First SecOps (sponsored by Splunk by Cisco)"
+      ]
+     }
+    },
+    {
+     "id": "1780441484569001GdsM",
+     "inst": "1780441484569001GdsM",
+     "code": "SEC380-S",
+     "title": "Threat research: how attackers use AI to persist and how to evict them",
+     "f": {
+      "title": [
+       "When AI Moves Money: Secure the Agentic Future of Financial Services (sponsored by TrendAI™)",
+       "Threat research: how attackers use AI to persist and how to evict them"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442271883001caZT",
+     "inst": "1780442271883001caZT",
+     "code": "AIM291-S",
+     "title": "Architecting Intelligent Omni-Channel Communication Workflows with Twilio + AWS (sponsored by Twilio)",
+     "f": {
+      "title": [
+       "Architecting Intelligent Omni-Channel Communication Workflows with Twilio + AWS",
+       "Architecting Intelligent Omni-Channel Communication Workflows with Twilio + AWS (sponsored by Twilio)"
+      ]
+     }
+    },
+    {
+     "id": "1780441482522001GpXn",
+     "inst": "1780441482522001GpXn",
+     "code": "AIM232-S",
+     "title": "4 primitives to evaluate your on-call agent's autonomy (sponsored by Resolve AI)",
+     "f": {
+      "title": [
+       "4 primitives to evaluate your on-call agent's autonomy (sponsored by ResolveAI)",
+       "4 primitives to evaluate your on-call agent's autonomy (sponsored by Resolve AI)"
+      ]
+     }
+    },
+    {
+     "id": "1780442249290001csBt",
+     "inst": "1780442249290001csBt",
+     "code": "SEC426",
+     "title": "Penetration testing every deployment with AWS Continuum",
+     "f": {
+      "title": [
+       "How AWS Continuum validates security findings across the SDLC",
+       "Penetration testing every deployment with AWS Continuum"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1792450370692001snVp",
+     "inst": "1792450370692001snVp",
+     "code": "ACT017",
+     "title": "Building Together Reception",
+     "f": {
+      "title": [
+       "In This Together Networking Reception",
+       "Building Together Reception"
+      ],
+      "level": [
+       null,
+       100
+      ],
+      "desc": true
+     }
+    }
+   ],
+   "unknownRooms": []
+  },
+  {
    "at": "2026-10-28T18:44:06Z",
    "milestones": [],
    "added": [],
