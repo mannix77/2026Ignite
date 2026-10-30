@@ -1,6 +1,344 @@
 {
  "batches": [
   {
+   "at": "2026-10-30T18:43:50Z",
+   "milestones": [],
+   "added": [
+    {
+     "id": "1787852033592001jckd",
+     "inst": "1787852033592001jckd",
+     "code": "AWS013-R",
+     "title": "Expo",
+     "repeat": false
+    }
+   ],
+   "removed": [
+    {
+     "id": "1780442241932001cY7B",
+     "inst": "1780442241932001cY7B",
+     "code": "DVT224",
+     "title": "Brownfield development across large codebases with AI agents",
+     "repeat": false
+    },
+    {
+     "id": "1780442260861001cGPQ",
+     "inst": "1780442260861001cGPQ",
+     "code": "DVT225",
+     "title": "Best practices for helping agents understand code you didn't write",
+     "repeat": false
+    }
+   ],
+   "changed": [
+    {
+     "id": "1780442234745001cUk8",
+     "inst": "1780442234745001cUk8",
+     "code": "AIM346-R",
+     "title": "Deploy, tune, and scale AI workloads on AWS with self-managed agents",
+     "f": {
+      "title": [
+       "Deploy, scale, and tune AI model serving with self-managed agents",
+       "Deploy, tune, and scale AI workloads on AWS with self-managed agents"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442245030001cNQ0",
+     "inst": "1780442245030001cNQ0",
+     "code": "IND3338-R",
+     "title": "Accelerate Physical AI development with NVIDIA on AWS",
+     "f": {
+      "code": [
+       "IND3338",
+       "IND3338-R"
+      ]
+     }
+    },
+    {
+     "id": "1780441493928001GYcW",
+     "inst": "1780441493928001GYcW",
+     "code": "INV511",
+     "title": "Inside NKI: Evolution of the Trainium kernel language",
+     "f": {
+      "title": [
+       "Inside NKI: How AWS designed a kernel language for peak AI performance",
+       "Inside NKI: Evolution of the Trainium kernel language"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441462316001GfXD",
+     "inst": "1780441462316001GfXD",
+     "code": "ANT334",
+     "title": "Cut your data lake and lakehouse bills: Cost and performance tuning best practices",
+     "f": {
+      "start": [
+       "2026-11-30T22:30:00Z",
+       "2026-11-30T18:30:00Z"
+      ],
+      "end": [
+       "2026-11-30T23:30:00Z",
+       "2026-11-30T19:30:00Z"
+      ],
+      "room": [
+       "Caesars Palace | Promenade South | Octavius 4 | Content Hub | Red Theater",
+       "Caesars Palace | Promenade South | Octavius 4 | Content Hub | Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780442263133001c0uI",
+     "inst": "1780442263133001c0uI",
+     "code": "AIM3315",
+     "title": "Optimize agentic AI costs with EC2 Capacity Blocks and Spot Instances",
+     "f": {
+      "start": [
+       "2026-12-04T20:00:00Z",
+       "2026-11-30T19:00:00Z"
+      ],
+      "end": [
+       "2026-12-04T20:20:00Z",
+       "2026-11-30T19:20:00Z"
+      ]
+     }
+    },
+    {
+     "id": "1780442245791001cuf9",
+     "inst": "1780442245791001cuf9",
+     "code": "IND390",
+     "title": "Deploy a HIPPA-Eligible AI Agent with Amazon Bedrock Guardrails",
+     "f": {
+      "title": [
+       "Deploy a HIPAA-Eligible AI Agent with Amazon Bedrock Guardrails",
+       "Deploy a HIPPA-Eligible AI Agent with Amazon Bedrock Guardrails"
+      ]
+     }
+    },
+    {
+     "id": "1780441461602001Ge7H",
+     "inst": "1780441461602001Ge7H",
+     "code": "ANT407",
+     "title": "Govern data and AI agents with lineage and context in AWS Glue Data Catalog",
+     "f": {
+      "start": [
+       "2026-11-30T18:30:00Z",
+       "2026-11-30T22:30:00Z"
+      ],
+      "end": [
+       "2026-11-30T19:30:00Z",
+       "2026-11-30T23:30:00Z"
+      ],
+      "room": [
+       "Caesars Palace | Promenade South | Octavius 4 | Content Hub | Blue Theater",
+       "Caesars Palace | Promenade South | Octavius 4 | Content Hub | Red Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780442278352001chmU",
+     "inst": "1780442278352001chmU",
+     "code": "CON316-R",
+     "title": "Transform your SaaS for the agentic AI era on Amazon ECS",
+     "f": {
+      "code": [
+       "CON316",
+       "CON316-R"
+      ]
+     }
+    },
+    {
+     "id": "1780441496748001GEDU",
+     "inst": "1780441496748001GEDU",
+     "code": "API312-R",
+     "title": "Building event-driven, multi-agent swarms on serverless",
+     "f": {
+      "code": [
+       "API312",
+       "API312-R"
+      ]
+     }
+    },
+    {
+     "id": "1787852034734001jBZg",
+     "inst": "1787852034734001jBZg",
+     "code": "AWS017-R1",
+     "title": "Industry Zone in Expo",
+     "f": {
+      "code": [
+       "AWS117-R1",
+       "AWS017-R1"
+      ]
+     }
+    },
+    {
+     "id": "1786043770139001qLoo",
+     "inst": "1786043770139001qLoo",
+     "code": "CON344-R",
+     "title": "Multi-tenant SaaS and agentic apps on Amazon EKS",
+     "f": {
+      "code": [
+       "CON344",
+       "CON344-R"
+      ]
+     }
+    },
+    {
+     "id": "1780442226187001cn5s",
+     "inst": "1780442226187001cn5s",
+     "code": "CON312-R",
+     "title": "Resolve Amazon ECS incidents faster with AWS DevOps Agent",
+     "f": {
+      "code": [
+       "CON312",
+       "CON312-R"
+      ]
+     }
+    },
+    {
+     "id": "1780442241141001c9KR",
+     "inst": "1780442241141001c9KR",
+     "code": "DVT339-R",
+     "title": "Best practices for making coding agent orchestration more deterministic",
+     "f": {
+      "code": [
+       "DVT339",
+       "DVT339-R"
+      ]
+     }
+    },
+    {
+     "id": "1787852034826001j0Db",
+     "inst": "1787852034826001j0Db",
+     "code": "AWS017-R2",
+     "title": "Industry Zone in Expo",
+     "f": {
+      "code": [
+       "AWS117-R2",
+       "AWS017-R2"
+      ]
+     }
+    },
+    {
+     "id": "1780442225340001cQIF",
+     "inst": "1780442225340001cQIF",
+     "code": "COP306-R",
+     "title": "Cut through Kubernetes signal overload with unified observability",
+     "f": {
+      "code": [
+       "COP306",
+       "COP306-R"
+      ]
+     }
+    },
+    {
+     "id": "1780442235647001cIUJ",
+     "inst": "1780442235647001cIUJ",
+     "code": "AIM450-R",
+     "title": "Context engineering for production agents on AgentCore",
+     "f": {
+      "code": [
+       "AIM450",
+       "AIM450-R"
+      ]
+     }
+    },
+    {
+     "id": "1789513464377001Ljbo",
+     "inst": "1789513464377001Ljbo",
+     "code": "ACT002",
+     "title": "Magic the Gathering: Experienced Play",
+     "f": {
+      "start": [
+       "2026-12-02T02:30:00Z",
+       "2026-12-03T03:00:00Z"
+      ],
+      "end": [
+       "2026-12-02T05:30:00Z",
+       "2026-12-03T06:00:00Z"
+      ],
+      "room": [
+       "Caesars Palace | Emperors Level | Palace Ballroom III",
+       "Caesars Palace | Emperors Level | Augustus Ballroom I"
+      ]
+     }
+    },
+    {
+     "id": "1787852034298001jIKi",
+     "inst": "1787852034298001jIKi",
+     "code": "AWS014-R3",
+     "title": "Builder Zone in the Expo",
+     "f": {
+      "code": [
+       "AWS114-R3",
+       "AWS014-R3"
+      ]
+     }
+    },
+    {
+     "id": "1787852033927001jPsu",
+     "inst": "1787852033927001jPsu",
+     "code": "AWS015-R3",
+     "title": "Global Impact Zone in Expo",
+     "f": {
+      "code": [
+       "AWS115-R3",
+       "AWS015-R3"
+      ]
+     }
+    },
+    {
+     "id": "1787852035034001j3b0",
+     "inst": "1787852035034001j3b0",
+     "code": "AWS019-R3",
+     "title": "AWS Village in Expo",
+     "f": {
+      "code": [
+       "AWS119-R3",
+       "AWS019-R3"
+      ]
+     }
+    },
+    {
+     "id": "1780442229187001cllG",
+     "inst": "1780442229187001cllG",
+     "code": "IND421-R",
+     "title": "Grounding LLMs in Truth: Build a Live Fact-Checking Pipeline",
+     "f": {
+      "code": [
+       "IND421",
+       "IND421-R"
+      ]
+     }
+    },
+    {
+     "id": "1780442233338001cJVo",
+     "inst": "1780442233338001cJVo",
+     "code": "ARC323-R",
+     "title": "Deterministic meets probabilistic: Patterns for reliable AI integration",
+     "f": {
+      "code": [
+       "ARC323",
+       "ARC323-R"
+      ]
+     }
+    },
+    {
+     "id": "1780442254434001c7dn",
+     "inst": "1780442254434001c7dn",
+     "code": "COP408-R",
+     "title": "Correlate database query latency to user impact",
+     "f": {
+      "code": [
+       "COP408",
+       "COP408-R"
+      ]
+     }
+    }
+   ],
+   "unknownRooms": []
+  },
+  {
    "at": "2026-10-30T06:48:55Z",
    "milestones": [],
    "added": [],
