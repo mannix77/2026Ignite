@@ -1,7 +1,7 @@
 {
  "source": "https://catalog.awsevents.com/api/sessions",
  "event": "reinvent2026",
- "fetchedAt": "2026-10-31T06:44:12Z",
+ "fetchedAt": "2026-10-31T12:43:36Z",
  "count": 2412,
  "sessions": [
   {
@@ -7355,6 +7355,94 @@
    ]
   },
   {
+   "sessionID": "1790358248849001iHZj",
+   "code": "IND357-R1",
+   "title": "Agentic AI for software-defined vehicles: Compress the V-Cycle with Kiro",
+   "abstract": "Automotive embedded software teams face complex V-Cycle workflows, safety standards, and competitive pressure to ship faster. In this workshop, experience how agentic AI transforms the embedded software V-Cycle — compressing timelines from weeks to hours without sacrificing quality or traceability. Attendees build a remote start/stop feature for an autonomous mower platform, using Kiro to orchestrate agents across requirements engineering, code generation, virtual-target testing, and test automation.",
+   "type": "Workshop",
+   "length": 120,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-31T09:26:14Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Workshop"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Industry Solutions"
+    ],
+    "AreaofInterest": [
+     "Generative AI",
+     "Innovation & Transformation",
+     "Agentic AI"
+    ],
+    "Industry": [
+     "Automotive"
+    ],
+    "Role": [
+     "Academic / Researcher",
+     "Developer / Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Bedrock",
+     "Amazon Elastic Compute Cloud (Amazon EC2)",
+     "Kiro"
+    ],
+    "Venue": [
+     "Wynn/Encore"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Steven Miller",
+     "title": "Principal Consultant",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "John Vangelov",
+     "title": "AWS ProServe",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360401828001AIFU",
+     "date": "2026-12-01",
+     "startTime": "12:30",
+     "endTime": "14:30",
+     "utcStartTime": "2026/12/01 20:30:00",
+     "utcEndTime": "2026/12/01 22:30:00",
+     "length": 120,
+     "room": "Wynn/Encore | Upper Convention Promenade | Cristal 3",
+     "roomId": "1789591921417004bAHD",
+     "capacity": "140",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
    "sessionID": "1780442280970001cII1",
    "code": "IND357-R",
    "title": "Agentic AI for software-defined vehicles: Compress the V-Cycle with Kiro",
@@ -7436,94 +7524,6 @@
      "room": "Wynn/Encore | Convention Promenade | Mouton 2",
      "roomId": "1789591921042004bd3E",
      "capacity": "112",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
-   "sessionID": "1790358248849001iHZj",
-   "code": "IND357-R1",
-   "title": "Agentic AI for software-defined vehicles: Compress the V-Cycle with Kiro",
-   "abstract": "Automotive embedded software teams face complex V-Cycle workflows, safety standards, and competitive pressure to ship faster. In this workshop, experience how agentic AI transforms the embedded software V-Cycle — compressing timelines from weeks to hours without sacrificing quality or traceability. Attendees build a remote start/stop feature for an autonomous mower platform, using Kiro to orchestrate agents across requirements engineering, code generation, virtual-target testing, and test automation.",
-   "type": "Workshop",
-   "length": 120,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Workshop"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Industry Solutions"
-    ],
-    "AreaofInterest": [
-     "Generative AI",
-     "Innovation & Transformation",
-     "Agentic AI"
-    ],
-    "Industry": [
-     "Automotive"
-    ],
-    "Role": [
-     "Academic / Researcher",
-     "Developer / Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Bedrock",
-     "Amazon Elastic Compute Cloud (Amazon EC2)",
-     "Kiro"
-    ],
-    "Venue": [
-     "Wynn/Encore"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Steven Miller",
-     "title": "Principal Consultant",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "John Vangelov",
-     "title": "AWS ProServe",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360401828001AIFU",
-     "date": "2026-12-01",
-     "startTime": "12:30",
-     "endTime": "14:30",
-     "utcStartTime": "2026/12/01 20:30:00",
-     "utcEndTime": "2026/12/01 22:30:00",
-     "length": 120,
-     "room": "Wynn/Encore | Upper Convention Promenade | Cristal 3",
-     "roomId": "1789591921417004bAHD",
-     "capacity": "140",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -9784,7 +9784,7 @@
    "length": 240,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-10-31T09:26:14Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -55012,7 +55012,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-31T03:16:04Z",
+   "modified": "2026-10-31T08:48:14Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -55407,106 +55407,6 @@
    ]
   },
   {
-   "sessionID": "1790358249325001icSQ",
-   "code": "API303-R1",
-   "title": "Building real-time applications with event-driven architectures",
-   "abstract": "Build real-time features using AWS AppSync Events in this hands-on builders' session. Working in small groups with guidance from AWS experts, you'll implement in-app notifications and live updates, configure WebSocket connections, and design data persistence strategies. Using provided code samples, you'll gain practical experience creating responsive, event-driven applications that push updates to connected clients instantly. By the end of this 60-minute session, you'll have working real-time patterns you can apply directly to your own applications. Bring your laptop and come ready to code!",
-   "type": "Builders' session",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Builders' session"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Serverless"
-    ],
-    "AreaofInterest": [
-     "Event-Driven Architecture"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "DevOps Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon API Gateway",
-     "AWS Lambda"
-    ],
-    "Venue": [
-     "Wynn/Encore"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Diego Casas",
-     "title": "Senior Solutions Architect",
-     "company": "Amazon Web Services Colombia",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Cheryl Joseph",
-     "title": "Sr. Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Thomas Moore",
-     "title": "Senior Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Simon Lovering",
-     "title": "Partner Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Sean Kendall",
-     "title": "Principal Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360400534001AwXK",
-     "date": "2026-12-02",
-     "startTime": "10:30",
-     "endTime": "11:30",
-     "utcStartTime": "2026/12/02 18:30:00",
-     "utcEndTime": "2026/12/02 19:30:00",
-     "length": 60,
-     "room": "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Builders' Session 2",
-     "roomId": "1789591921339004bfOh",
-     "capacity": "50",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780441491675001GHkU",
    "code": "API303-R",
    "title": "Building real-time applications with event-driven architectures",
@@ -55558,9 +55458,9 @@
    },
    "speakers": [
     {
-     "name": "Diego Casas",
+     "name": "Thomas Moore",
      "title": "Senior Solutions Architect",
-     "company": "Amazon Web Services Colombia",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     },
     {
@@ -55570,15 +55470,15 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Thomas Moore",
-     "title": "Senior Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Simon Lovering",
      "title": "Partner Solutions Architect",
      "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Diego Casas",
+     "title": "Senior Solutions Architect",
+     "company": "Amazon Web Services Colombia",
      "role": "Internal Speaker"
     },
     {
@@ -55599,6 +55499,106 @@
      "length": 60,
      "room": "Caesars Forum | Level 1 | Forum 120 | Content Hub | Builders' Session 2",
      "roomId": "1789591919743001bno1",
+     "capacity": "50",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358249325001icSQ",
+   "code": "API303-R1",
+   "title": "Building real-time applications with event-driven architectures",
+   "abstract": "Build real-time features using AWS AppSync Events in this hands-on builders' session. Working in small groups with guidance from AWS experts, you'll implement in-app notifications and live updates, configure WebSocket connections, and design data persistence strategies. Using provided code samples, you'll gain practical experience creating responsive, event-driven applications that push updates to connected clients instantly. By the end of this 60-minute session, you'll have working real-time patterns you can apply directly to your own applications. Bring your laptop and come ready to code!",
+   "type": "Builders' session",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-30T21:40:30Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Builders' session"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Serverless"
+    ],
+    "AreaofInterest": [
+     "Event-Driven Architecture"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "DevOps Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon API Gateway",
+     "AWS Lambda"
+    ],
+    "Venue": [
+     "Wynn/Encore"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Thomas Moore",
+     "title": "Senior Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Cheryl Joseph",
+     "title": "Sr. Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Simon Lovering",
+     "title": "Partner Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Diego Casas",
+     "title": "Senior Solutions Architect",
+     "company": "Amazon Web Services Colombia",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Sean Kendall",
+     "title": "Principal Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360400534001AwXK",
+     "date": "2026-12-02",
+     "startTime": "10:30",
+     "endTime": "11:30",
+     "utcStartTime": "2026/12/02 18:30:00",
+     "utcEndTime": "2026/12/02 19:30:00",
+     "length": 60,
+     "room": "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Builders' Session 2",
+     "roomId": "1789591921339004bfOh",
      "capacity": "50",
      "inPersonTime": true,
      "virtualTime": false,
@@ -71036,7 +71036,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T23:44:28Z",
+   "modified": "2026-10-31T11:39:33Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -81527,68 +81527,6 @@
    ]
   },
   {
-   "sessionID": "1780441496270001GI4R",
-   "code": "INV506-R1",
-   "title": "Deterministic control for probabilistic agents: proving safety holds",
-   "abstract": "AI agents are probabilistic: vulnerable to prompt injection, hallucination, and unexpected tool composition. The controls around them must be deterministic. This session explores how to define provable safety envelopes for autonomous agents, drawing from the authorization and formal verification research behind AgentCore policy. We examine how automated reasoning guarantees policy correctness, how neuro-symbolic approaches combine LLM flexibility with mathematical verification for policy authoring, and how agents' action spaces can be reduced before execution. Attendees will also get a first look at new research extending these guarantees to emerging agentic authorization challenges.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-31T03:28:53Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "500 – Distinguished"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Artificial Intelligence"
-    ],
-    "AreaofInterest": [
-     "Agentic AI"
-    ],
-    "Role": [
-     "Academic / Researcher"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [],
-   "times": [
-    {
-     "sessionTimeID": "1793283377476001NmE5",
-     "date": "2026-11-30",
-     "startTime": "11:30",
-     "endTime": "12:30",
-     "utcStartTime": "2026/11/30 19:30:00",
-     "utcEndTime": "2026/11/30 20:30:00",
-     "length": 60,
-     "room": "MGM Grand | Level 1 | Boulevard 163",
-     "roomId": "1789591920202001b2p2",
-     "capacity": "94",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780441493639001GsJr",
    "code": "INV506-R",
    "title": "Deterministic control for probabilistic agents: proving safety holds",
@@ -81648,6 +81586,68 @@
      "room": "Wynn/Encore | Convention Promenade | Latour 5",
      "roomId": "1789591920978004bmWF",
      "capacity": "75",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780441496270001GI4R",
+   "code": "INV506-R1",
+   "title": "Deterministic control for probabilistic agents: proving safety holds",
+   "abstract": "AI agents are probabilistic: vulnerable to prompt injection, hallucination, and unexpected tool composition. The controls around them must be deterministic. This session explores how to define provable safety envelopes for autonomous agents, drawing from the authorization and formal verification research behind AgentCore policy. We examine how automated reasoning guarantees policy correctness, how neuro-symbolic approaches combine LLM flexibility with mathematical verification for policy authoring, and how agents' action spaces can be reduced before execution. Attendees will also get a first look at new research extending these guarantees to emerging agentic authorization challenges.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-31T11:38:33Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "500 – Distinguished"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Artificial Intelligence"
+    ],
+    "AreaofInterest": [
+     "Agentic AI"
+    ],
+    "Role": [
+     "Academic / Researcher"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [],
+   "times": [
+    {
+     "sessionTimeID": "1793283377476001NmE5",
+     "date": "2026-11-30",
+     "startTime": "11:30",
+     "endTime": "12:30",
+     "utcStartTime": "2026/11/30 19:30:00",
+     "utcEndTime": "2026/11/30 20:30:00",
+     "length": 60,
+     "room": "MGM Grand | Level 1 | Boulevard 163",
+     "roomId": "1789591920202001b2p2",
+     "capacity": "94",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -84455,6 +84455,75 @@
    ]
   },
   {
+   "sessionID": "1780441496076001GRZY",
+   "code": "INV530-R1",
+   "title": "EC2 at 20: Rebuilding the control plane while it is running",
+   "abstract": "Amazon EC2 launched in 2006 as four services backed by a single MySQL database. Twenty years later, it is one of the largest distributed systems ever built — and most of that original architecture had to be replaced while serving production traffic, with no maintenance window and no change to the API contract customers depend on. In this session, EC2 engineers dive deep on two of the hardest migrations: making the control plane Availability Zone independent so a single-AZ event cannot escalate into a regional one, and moving EC2 metadata off MySQL. We walk through the failure modes that forced each decision, how correctness was verified before every cutover, how we proved a single-AZ failure stays in a single AZ, and the things we got wrong along the way. You will leave with migration and isolation patterns you can apply to your own systems at any scale.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-31T09:26:14Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "500 – Distinguished"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Compute"
+    ],
+    "Role": [
+     "Academic / Researcher"
+    ],
+    "Services": [
+     "Amazon Elastic Compute Cloud (Amazon EC2)"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Don McGarry",
+     "title": "Senior Principal Engineer",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1792635625547001Ebhk",
+     "date": "2026-11-30",
+     "startTime": "11:30",
+     "endTime": "12:30",
+     "utcStartTime": "2026/11/30 19:30:00",
+     "utcEndTime": "2026/11/30 20:30:00",
+     "length": 60,
+     "room": "MGM Grand | Level 3 | Room 350",
+     "roomId": "1789591920582001b04E",
+     "capacity": "82",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
    "sessionID": "1780441495052001GeWQ",
    "code": "INV530-R",
    "title": "EC2 at 20: Rebuilding the control plane while it is running",
@@ -84513,75 +84582,6 @@
      "endTime": "15:30",
      "utcStartTime": "2026/12/02 22:30:00",
      "utcEndTime": "2026/12/02 23:30:00",
-     "length": 60,
-     "room": "MGM Grand | Level 3 | Room 350",
-     "roomId": "1789591920582001b04E",
-     "capacity": "82",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
-   "sessionID": "1780441496076001GRZY",
-   "code": "INV530-R1",
-   "title": "EC2 at 20: Rebuilding the control plane while it is running",
-   "abstract": "Amazon EC2 launched in 2006 as four services backed by a single MySQL database. Twenty years later, it is one of the largest distributed systems ever built — and most of that original architecture had to be replaced while serving production traffic, with no maintenance window and no change to the API contract customers depend on. In this session, EC2 engineers dive deep on two of the hardest migrations: making the control plane Availability Zone independent so a single-AZ event cannot escalate into a regional one, and moving EC2 metadata off MySQL. We walk through the failure modes that forced each decision, how correctness was verified before every cutover, how we proved a single-AZ failure stays in a single AZ, and the things we got wrong along the way. You will leave with migration and isolation patterns you can apply to your own systems at any scale.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-31T06:13:29Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "500 – Distinguished"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Compute"
-    ],
-    "Role": [
-     "Academic / Researcher"
-    ],
-    "Services": [
-     "Amazon Elastic Compute Cloud (Amazon EC2)"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Don McGarry",
-     "title": "Senior Principal Engineer",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1792635625547001Ebhk",
-     "date": "2026-11-30",
-     "startTime": "11:30",
-     "endTime": "12:30",
-     "utcStartTime": "2026/11/30 19:30:00",
-     "utcEndTime": "2026/11/30 20:30:00",
      "length": 60,
      "room": "MGM Grand | Level 3 | Room 350",
      "roomId": "1789591920582001b04E",
@@ -85095,7 +85095,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-10-31T08:48:14Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -91363,7 +91363,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T23:42:42Z",
+   "modified": "2026-10-31T11:39:33Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -100092,7 +100092,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-31T01:50:03Z",
+   "modified": "2026-10-31T07:59:25Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -116630,81 +116630,6 @@
    ]
   },
   {
-   "sessionID": "1780441495959001Gdm4",
-   "code": "INV510-R1",
-   "title": "Inside Amazon S3: How a one-page design reached planetary scale",
-   "abstract": "When Amazon S3 launched in 2006, its design requirements fit one page: scalable, reliable, fast, inexpensive, simple, with no single points of failure. The system was built to treat component failure as normal and use scale as an advantage. Today those founding principles describe an architecture serving hundreds of millions of requests per second across tens of millions of drives, maintaining eleven nines of durability while shipping features without downtime. Hear S3 principal engineers trace the decisions from single host to strong consistency at global scale, how formal methods verify correctness, and how the team balances innovation with operational safety.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "500 – Distinguished"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Storage"
-    ],
-    "Role": [
-     "Academic / Researcher"
-    ],
-    "Services": [
-     "Amazon Simple Storage Service (Amazon S3)"
-    ],
-    "Venue": [
-     "Wynn/Encore"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "James Bornholt",
-     "title": "Senior Principal Engineer",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "George Porter",
-     "title": "Sr. Principal Engineer",
-     "company": "Amazon AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1792635495399001m8XV",
-     "date": "2026-12-04",
-     "startTime": "09:00",
-     "endTime": "10:00",
-     "utcStartTime": "2026/12/04 17:00:00",
-     "utcEndTime": "2026/12/04 18:00:00",
-     "length": 60,
-     "room": "Wynn/Encore | Level 1 | Chopin 4",
-     "roomId": "1789591921128001bJpf",
-     "capacity": "88",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780441493872001Gs6G",
    "code": "INV510-R",
    "title": "Inside Amazon S3: How a one-page design reached planetary scale",
@@ -116773,6 +116698,81 @@
      "room": "MGM Grand | Level 3 | Room 350",
      "roomId": "1789591920582001b04E",
      "capacity": "82",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780441495959001Gdm4",
+   "code": "INV510-R1",
+   "title": "Inside Amazon S3: How a one-page design reached planetary scale",
+   "abstract": "When Amazon S3 launched in 2006, its design requirements fit one page: scalable, reliable, fast, inexpensive, simple, with no single points of failure. The system was built to treat component failure as normal and use scale as an advantage. Today those founding principles describe an architecture serving hundreds of millions of requests per second across tens of millions of drives, maintaining eleven nines of durability while shipping features without downtime. Hear S3 principal engineers trace the decisions from single host to strong consistency at global scale, how formal methods verify correctness, and how the team balances innovation with operational safety.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-31T10:54:11Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "500 – Distinguished"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Storage"
+    ],
+    "Role": [
+     "Academic / Researcher"
+    ],
+    "Services": [
+     "Amazon Simple Storage Service (Amazon S3)"
+    ],
+    "Venue": [
+     "Wynn/Encore"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "James Bornholt",
+     "title": "Senior Principal Engineer",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "George Porter",
+     "title": "Sr. Principal Engineer",
+     "company": "Amazon AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1792635495399001m8XV",
+     "date": "2026-12-04",
+     "startTime": "09:00",
+     "endTime": "10:00",
+     "utcStartTime": "2026/12/04 17:00:00",
+     "utcEndTime": "2026/12/04 18:00:00",
+     "length": 60,
+     "room": "Wynn/Encore | Level 1 | Chopin 4",
+     "roomId": "1789591921128001bJpf",
+     "capacity": "88",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -150784,79 +150784,6 @@
    ]
   },
   {
-   "sessionID": "1780442274351001cHMv",
-   "code": "ANT402-R",
-   "title": "Reduce spend and data movement with Amazon Redshift Data Sharing and Graviton",
-   "abstract": "Organizations sharing data across business units often rely on slow, error-prone ETL jobs that create costly duplication. Amazon Redshift Data Sharing enables secure, live access across provisioned and serverless warehouses — within or across accounts and regions — eliminating data movement entirely. Additionally, Graviton-powered Redshift RG instances accelerate workloads on Apache Iceberg tables through optimized columnar processing and parallel I/O. In this session, learn how to break down data silos with cross-warehouse data sharing and boost open data lakehouse performance with Redshift on Graviton.",
-   "type": "Workshop",
-   "length": 120,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Workshop"
-    ],
-    "Level": [
-     "400 – Expert"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Analytics"
-    ],
-    "Services": [
-     "Amazon Redshift"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Erika Nagamine",
-     "title": "Sr. Specialist SA, Data & AI",
-     "company": "Amazon Web Services (AWS)",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Poulomi Dasgupta",
-     "title": "Sr. Analytics Specialist Solutions Architect",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025511463001CglW",
-     "date": "2026-12-02",
-     "startTime": "08:00",
-     "endTime": "10:00",
-     "utcStartTime": "2026/12/02 16:00:00",
-     "utcEndTime": "2026/12/02 18:00:00",
-     "length": 120,
-     "room": "MGM Grand | Level 1 | Grand 113",
-     "roomId": "1789591920248001bj7J",
-     "capacity": "112",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358243199001inZR",
    "code": "ANT402-R1",
    "title": "Reduce spend and data movement with Amazon Redshift Data Sharing and Graviton",
@@ -150923,6 +150850,79 @@
      "room": "MGM Grand | Level 3 | Premier 317",
      "roomId": "1789591920505001bX6q",
      "capacity": "84",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442274351001cHMv",
+   "code": "ANT402-R",
+   "title": "Reduce spend and data movement with Amazon Redshift Data Sharing and Graviton",
+   "abstract": "Organizations sharing data across business units often rely on slow, error-prone ETL jobs that create costly duplication. Amazon Redshift Data Sharing enables secure, live access across provisioned and serverless warehouses — within or across accounts and regions — eliminating data movement entirely. Additionally, Graviton-powered Redshift RG instances accelerate workloads on Apache Iceberg tables through optimized columnar processing and parallel I/O. In this session, learn how to break down data silos with cross-warehouse data sharing and boost open data lakehouse performance with Redshift on Graviton.",
+   "type": "Workshop",
+   "length": 120,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-30T21:40:30Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Workshop"
+    ],
+    "Level": [
+     "400 – Expert"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Analytics"
+    ],
+    "Services": [
+     "Amazon Redshift"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Erika Nagamine",
+     "title": "Sr. Specialist SA, Data & AI",
+     "company": "Amazon Web Services (AWS)",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Poulomi Dasgupta",
+     "title": "Sr. Analytics Specialist Solutions Architect",
+     "company": "Amazon",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025511463001CglW",
+     "date": "2026-12-02",
+     "startTime": "08:00",
+     "endTime": "10:00",
+     "utcStartTime": "2026/12/02 16:00:00",
+     "utcEndTime": "2026/12/02 18:00:00",
+     "length": 120,
+     "room": "MGM Grand | Level 1 | Grand 113",
+     "roomId": "1789591920248001bj7J",
+     "capacity": "112",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -151897,7 +151897,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T23:39:15Z",
+   "modified": "2026-10-31T07:58:15Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -153080,7 +153080,7 @@
    "length": 240,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-31T04:29:13Z",
+   "modified": "2026-10-31T10:40:35Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -153155,7 +153155,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-31T06:13:29Z",
+   "modified": "2026-10-31T08:50:40Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -169641,7 +169641,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-31T03:47:13Z",
+   "modified": "2026-10-31T10:45:50Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -170130,7 +170130,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-10-31T09:21:17Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -170173,15 +170173,15 @@
    },
    "speakers": [
     {
-     "name": "Ryan Leavitt",
-     "title": "Technical Lab Developer",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Ryan Forger",
      "title": "Senior Technical Instructor",
      "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Ryan Leavitt",
+     "title": "Technical Lab Developer",
+     "company": "Amazon",
      "role": "Internal Speaker"
     }
    ],
@@ -180275,7 +180275,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-31T02:43:50Z",
+   "modified": "2026-10-31T07:51:03Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -181812,7 +181812,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-10-31T08:53:05Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -181845,14 +181845,14 @@
    },
    "speakers": [
     {
-     "name": "Manikanta Gona Grafsgaard",
-     "title": "Sr Solutions Architect",
+     "name": "Duncan Watson",
+     "title": "Solution Architect",
      "company": "AWS",
      "role": "Internal Speaker"
     },
     {
-     "name": "Duncan Watson",
-     "title": "Solution Architect",
+     "name": "Manikanta Gona Grafsgaard",
+     "title": "Sr Solutions Architect",
      "company": "AWS",
      "role": "Internal Speaker"
     }
@@ -192057,7 +192057,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-31T03:43:53Z",
+   "modified": "2026-10-31T09:24:33Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
