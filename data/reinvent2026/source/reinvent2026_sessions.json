@@ -1,7 +1,7 @@
 {
  "source": "https://catalog.awsevents.com/api/sessions",
  "event": "reinvent2026",
- "fetchedAt": "2026-10-31T00:49:13Z",
+ "fetchedAt": "2026-10-31T06:44:12Z",
  "count": 2412,
  "sessions": [
   {
@@ -15006,15 +15006,15 @@
      "role": "Sponsor Speaker"
     },
     {
-     "name": "Alex Halper",
-     "title": "Managing Director",
-     "company": "PricewaterhouseCoopers LLP",
-     "role": "Sponsor Speaker"
-    },
-    {
      "name": "Harsha Desai",
      "title": "Consumer and Commercial Lead",
      "company": "PepsiCo, Inc.",
+     "role": "Sponsor Speaker"
+    },
+    {
+     "name": "Alex Halper",
+     "title": "Managing Director",
+     "company": "PricewaterhouseCoopers LLP",
      "role": "Sponsor Speaker"
     }
    ],
@@ -35200,6 +35200,87 @@
    ]
   },
   {
+   "sessionID": "1780441495791001G9Dz",
+   "code": "INV503-R1",
+   "title": "Beyond Benchmarks: Evaluating AI Safety with Formal Guarantees",
+   "abstract": "As AI systems become increasingly capable and autonomous, safety evaluation is emerging as a critical challenge. While current evaluations largely rely on benchmark performance and empirical red-teaming, these approaches provide limited guarantees about real-world risk. This talk will explore an emerging direction in AI safety: evaluating model behavior with formal statistical guarantees. We will discuss how ideas from reliability engineering, robustness certification, and risk assessment can be applied to quantify catastrophic failure probabilities, the assumptions behind such guarantees, and their implications for deploying and governing frontier AI systems. This topic is highly relevant to the future of trustworthy and accountable AI.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-31T02:25:14Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "500 – Distinguished"
+    ],
+    "Features": [
+     "Customer story",
+     "Discussion"
+    ],
+    "Topic": [
+     "Artificial Intelligence"
+    ],
+    "AreaofInterest": [
+     "Generative AI"
+    ],
+    "Role": [
+     "Academic / Researcher",
+     "Data Scientist",
+     "Tech Explorer"
+    ],
+    "Services": [
+     "Amazon Bedrock"
+    ],
+    "Venue": [
+     "Wynn/Encore"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Qian Hu",
+     "title": "Applied Scientist",
+     "company": "Amazon",
+     "role": "External Speaker"
+    },
+    {
+     "name": "Weitong Ruan",
+     "title": "Senior Applied Science Manager",
+     "company": "Amazon",
+     "role": "External Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1792635434519001EZRs",
+     "date": "2026-12-04",
+     "startTime": "08:30",
+     "endTime": "09:30",
+     "utcStartTime": "2026/12/04 16:30:00",
+     "utcEndTime": "2026/12/04 17:30:00",
+     "length": 60,
+     "room": "Wynn/Encore | Level 1 | Chopin 2",
+     "roomId": "1789591921094001bT6B",
+     "capacity": "88",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
    "sessionID": "1780441493465001GUJI",
    "code": "INV503-R",
    "title": "Beyond Benchmarks: Evaluating AI Safety with Formal Guarantees",
@@ -35273,87 +35354,6 @@
      "room": "MGM Grand | Level 1 | Boulevard 155",
      "roomId": "1789591920164001btii",
      "capacity": "78",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
-   "sessionID": "1780441495791001G9Dz",
-   "code": "INV503-R1",
-   "title": "Beyond Benchmarks: Evaluating AI Safety with Formal Guarantees",
-   "abstract": "As AI systems become increasingly capable and autonomous, safety evaluation is emerging as a critical challenge. While current evaluations largely rely on benchmark performance and empirical red-teaming, these approaches provide limited guarantees about real-world risk. This talk will explore an emerging direction in AI safety: evaluating model behavior with formal statistical guarantees. We will discuss how ideas from reliability engineering, robustness certification, and risk assessment can be applied to quantify catastrophic failure probabilities, the assumptions behind such guarantees, and their implications for deploying and governing frontier AI systems. This topic is highly relevant to the future of trustworthy and accountable AI.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-31T00:12:47Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "500 – Distinguished"
-    ],
-    "Features": [
-     "Customer story",
-     "Discussion"
-    ],
-    "Topic": [
-     "Artificial Intelligence"
-    ],
-    "AreaofInterest": [
-     "Generative AI"
-    ],
-    "Role": [
-     "Academic / Researcher",
-     "Data Scientist",
-     "Tech Explorer"
-    ],
-    "Services": [
-     "Amazon Bedrock"
-    ],
-    "Venue": [
-     "Wynn/Encore"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Qian Hu",
-     "title": "Applied Scientist",
-     "company": "Amazon",
-     "role": "External Speaker"
-    },
-    {
-     "name": "Weitong Ruan",
-     "title": "Senior Applied Science Manager",
-     "company": "Amazon",
-     "role": "External Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1792635434519001EZRs",
-     "date": "2026-12-04",
-     "startTime": "08:30",
-     "endTime": "09:30",
-     "utcStartTime": "2026/12/04 16:30:00",
-     "utcEndTime": "2026/12/04 17:30:00",
-     "length": 60,
-     "room": "Wynn/Encore | Level 1 | Chopin 2",
-     "roomId": "1789591921094001bT6B",
-     "capacity": "88",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -35749,6 +35749,89 @@
    ]
   },
   {
+   "sessionID": "1780442234619001cJC9",
+   "code": "AIM312-R",
+   "title": "Beyond fine-tuning: RL for reasoning agents with AWS Trainium",
+   "abstract": "Supervised fine-tuning teaches a model to follow instructions, and reinforcement learning (RL) teaches it to reason. In this chalk talk, explore what RLHF and GRPO add beyond fine-tuning and how to run them on AWS Trainium. See a disaggregated loop on Ray and verl, in which TorchTitan trains the policy and vLLM generates rollouts, and a colocated GRPO loop in Hugging Face TRL on native PyTorch. Learn when each architecture fits, and leave ready to use the AWS Neuron SDK to implement RL loops that train agents to reason.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-31T05:36:27Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Artificial Intelligence",
+     "Compute"
+    ],
+    "AreaofInterest": [
+     "Generative AI",
+     "Machine Learning"
+    ],
+    "Role": [
+     "Academic / Researcher",
+     "Developer / Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Elastic Compute Cloud (Amazon EC2)",
+     "AWS Trainium"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Hiroshi Tokoyo",
+     "title": "Principal Solutions Architect",
+     "company": "Amazon Web Services Japan",
+     "role": "External Speaker"
+    },
+    {
+     "name": "Maen Suleiman",
+     "title": "Head of Neuron Product Management",
+     "company": "Annapurna Labs",
+     "role": "External Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025485873001CnrA",
+     "date": "2026-11-30",
+     "startTime": "13:00",
+     "endTime": "14:00",
+     "utcStartTime": "2026/11/30 21:00:00",
+     "utcEndTime": "2026/11/30 22:00:00",
+     "length": 60,
+     "room": "MGM Grand | Level 3 | Premier 320",
+     "roomId": "1789591920529001bl4U",
+     "capacity": "82",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
    "sessionID": "1790358245912001ii19",
    "code": "AIM312-R1",
    "title": "Beyond fine-tuning: RL for reasoning agents with AWS Trainium",
@@ -35826,89 +35909,6 @@
      "room": "Wynn/Encore | Level 1 | Debussy 1",
      "roomId": "1789591921139004bOia",
      "capacity": "78",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
-   "sessionID": "1780442234619001cJC9",
-   "code": "AIM312-R",
-   "title": "Beyond fine-tuning: RL for reasoning agents with AWS Trainium",
-   "abstract": "Supervised fine-tuning enables your model to follow instructions, but teaching it to reason requires reinforcement learning. RL workflows demand iterative loops that multiply compute costs, making the price performance of AWS Trainium, a chip built specifically for deep learning AI, critical. In this chalk talk, we explore what techniques like RLHF and GRPO bring to the table and how to run them on Trainium with the AWS Neuron software stack, Torchtitan, HuggingFace TRL, vLLM, and native PyTorch. We compare co-located and disaggregated RL architectures. You'll leave ready to implement cost-effective RL loops that train agents to reason.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Artificial Intelligence",
-     "Compute"
-    ],
-    "AreaofInterest": [
-     "Generative AI",
-     "Machine Learning"
-    ],
-    "Role": [
-     "Academic / Researcher",
-     "Developer / Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Elastic Compute Cloud (Amazon EC2)",
-     "AWS Trainium"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Hiroshi Tokoyo",
-     "title": "Principal Solutions Architect",
-     "company": "Amazon Web Services Japan",
-     "role": "External Speaker"
-    },
-    {
-     "name": "Maen Suleiman",
-     "title": "Head of Neuron Product Management",
-     "company": "Annapurna Labs",
-     "role": "External Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025485873001CnrA",
-     "date": "2026-11-30",
-     "startTime": "13:00",
-     "endTime": "14:00",
-     "utcStartTime": "2026/11/30 21:00:00",
-     "utcEndTime": "2026/11/30 22:00:00",
-     "length": 60,
-     "room": "MGM Grand | Level 3 | Premier 320",
-     "roomId": "1789591920529001bl4U",
-     "capacity": "82",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -36826,68 +36826,6 @@
    ]
   },
   {
-   "sessionID": "1791492157840001Uycj",
-   "code": "SUP201",
-   "title": "Beyond the hardware: The intelligence powering robots",
-   "abstract": "Making humanoid and autonomous robots useful requires more than a capable chassis. Leaders from NEURA Robotics, 1X, and Highlanders discuss the intelligence behind their robots, in a panel moderated by Deap Ubhi. The conversation examines how teams train and simulate robot behaviors, which AI models they use, and how data pipelines support development. Panelists also explore the application layer that turns robotic capabilities into products customers can use. Startup founders and robotics builders will hear how these teams connect training and simulation with application development as they bring robots out of the lab and into real-world use by customers. **",
-   "type": "Breakout session",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Breakout session"
-    ],
-    "Level": [
-     "200 – Intermediate"
-    ],
-    "Features": [
-     "Lecture-style"
-    ],
-    "Topic": [
-     "Artificial Intelligence",
-     "Industry Solutions"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "Entrepreneur (Founder/Co-Founder)",
-     "Press / Media Analyst"
-    ],
-    "Venue": [
-     "Caesars Forum"
-    ],
-    "Walkuponlysession": [
-     "Walk up only"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [],
-   "times": [
-    {
-     "sessionTimeID": "1793317278107001tjQa",
-     "date": "2026-12-02",
-     "startTime": "14:00",
-     "endTime": "15:00",
-     "utcStartTime": "2026/12/02 22:00:00",
-     "utcEndTime": "2026/12/02 23:00:00",
-     "length": 60,
-     "room": "Caesars Forum | Level 1 | Forum Event Plaza | Startup Plaza Theater",
-     "roomId": "1793125212614001R8xX",
-     "capacity": "70",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358243018001i1AK",
    "code": "DVT314-R1",
    "title": "Beyond the IDE: autonomous development with Kiro web and mobile",
@@ -37144,13 +37082,13 @@
   {
    "sessionID": "1791492157747001U5N1",
    "code": "SUP102",
-   "title": "Beyond the Pilot: Why VCs Are Betting on FDE-Led Growth",
+   "title": "Beyond the pilot: Why VCs are betting on FDE-led growth",
    "abstract": "Successful AI pilots no longer guarantee revenue. As enterprise pricing shifts to consumption and outcomes, startups get paid only when customers deploy, adopt, and realize value, and forward deployed engineering (FDE) is how AI-native companies close that gap. In this panel discussion moderated by [AWS FDE startup leader], Asa Kalvade (VP, AWS Forward Deployed Engineering), Anu Bharadwaj (Partner, ICONIQ), and a [insert second VC partner] discuss whether FDE is consulting under a new name or a compounding moat, how to separate margin-diluting services from deployment that drives retention and expansion, and when founders should tap AWS FDE rather than build the function alone. Series A+ founders and investors will leave knowing when to invest in FDE, which metrics prove deployment creates durable value, and how to get stalled enterprise deals into production.",
    "type": "Breakout session",
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-31T00:34:10Z",
+   "modified": "2026-10-31T01:16:32Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -51032,12 +50970,12 @@
    "sessionID": "1791492161456001Upa5",
    "code": "SUP215",
    "title": "Building AI products at startup speed",
-   "abstract": "Turn customer signals into AI products worth shipping. In this practical session, an AWS expert walks product owners through AIDLC-Discovery: an operating model for lean teams to validate demand, build with AI agents, and move beyond the prototype. See where agents compress the work across the entire lifecycle and how startups gain an edge by learning what to build sooner. Leave with a repeatable approach to getting from customer insight to a validated AI feature, plus open-source tools you can put to work the same week.",
+   "abstract": "Startups building AI products face a different speed problem than traditional software: models change weekly, and what worked last month may already be outdated. This session covers how to build AI products that keep pace, drawing on patterns for iterating quickly, evaluating new models, and shipping AI features without getting stuck re-architecting every time the underlying technology shifts.",
    "type": "Lightning talk",
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-10-31T01:27:22Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -55074,7 +55012,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-10-31T03:16:04Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -58735,7 +58673,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-10-31T05:52:39Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -70225,13 +70163,13 @@
   {
    "sessionID": "1791492158423001UkhQ",
    "code": "SUP203",
-   "title": "Containment vs. offense: security leaders debate the future",
-   "abstract": "Recent AI agent incidents revealed systems acting with agency their creators didn't authorize. But the security community is divided on the response. One view: it's a systemic containment failure that requires rethinking how we design agent environments. The other: containment is a losing game, and the only scaling answer is better AI defense. This debate explores two competing worldviews and what they mean for startups deploying agents in production right now.",
+   "title": "Containment or defense: a debate on securing agents in production",
+   "abstract": "METR and Horizon3 debate containment versus defense as the right approach to securing AI agents in production. This session covers the tradeoffs between containing agent behavior through strict boundaries versus building defenses that let agents operate with more autonomy, and what security teams should weigh when deciding how to secure agents running in production environments.",
    "type": "Breakout session",
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-10-31T01:21:34Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -73562,7 +73500,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T23:41:12Z",
+   "modified": "2026-10-31T01:44:46Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -74448,6 +74386,69 @@
      "room": "Caesars Palace | Promenade South | Octavius 4 | Content Hub | Blue Theater",
      "roomId": "1789591920099004bp4o",
      "capacity": "140",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1791492158706001UoLh",
+   "code": "SUP401",
+   "title": "Cyber defense at the frontier: What we learned building Vega on Amazon S3",
+   "abstract": "Vega runs AI threat detection directly on data sitting in Amazon S3. This session covers what the Vega team learned building AI-driven threat detection directly against data in S3, the architecture behind that approach, and what it means for the frontier of cyber defense as AI threat detection moves closer to where the data lives.",
+   "type": "Lightning talk",
+   "length": 20,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-31T01:39:19Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Lightning talk"
+    ],
+    "Level": [
+     "400 – Expert"
+    ],
+    "Features": [
+     "Lecture-style"
+    ],
+    "Topic": [
+     "Artificial Intelligence",
+     "Security & Identity",
+     "Storage"
+    ],
+    "Role": [
+     "Cloud Security Specialist",
+     "Developer / Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Venue": [
+     "Caesars Forum"
+    ],
+    "Walkuponlysession": [
+     "Walk up only"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [],
+   "times": [
+    {
+     "sessionTimeID": "1793317532088001GM0t",
+     "date": "2026-12-01",
+     "startTime": "12:20",
+     "endTime": "12:40",
+     "utcStartTime": "2026/12/01 20:20:00",
+     "utcEndTime": "2026/12/01 20:40:00",
+     "length": 20,
+     "room": "Caesars Forum | Level 1 | Forum Event Plaza | Startup Plaza Theater",
+     "roomId": "1793125212614001R8xX",
+     "capacity": "70",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -79570,7 +79571,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T23:44:28Z",
+   "modified": "2026-10-31T03:18:30Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -81534,7 +81535,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T23:59:28Z",
+   "modified": "2026-10-31T03:28:53Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -84531,7 +84532,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-10-31T06:13:29Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -97154,6 +97155,76 @@
    ]
   },
   {
+   "sessionID": "1790358238542001ipd6",
+   "code": "AIM434-R1",
+   "title": "From raw data to custom model: Dataset prep with Amazon SageMaker AI",
+   "abstract": "Great models start with great data. In this hands-on workshop, use SageMaker AI Agent skills to profile, curate, and validate datasets for the full model customization lifecycle — no infrastructure to manage. Assess data completeness and distribution, apply auto-labeling at scale, run human-in-the-loop review for edge cases, and fix quality issues like deduplication and toxicity filtering. Generate synthetic data to fill coverage gaps, then prepare datasets for Supervised Fine-Tuning, Direct Preference Optimization, Reinforcement Learning with Verifiable Rewards, and RLAIF. Launch training, evaluate with LLM-as-a-Judge, and deploy. Walk away ready to go from raw data to custom model in hours.",
+   "type": "Workshop",
+   "length": 120,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-31T03:35:10Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Workshop"
+    ],
+    "Level": [
+     "400 – Expert"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Artificial Intelligence"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Amin Dashti",
+     "title": "Sr. Data Scientist",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "gzappia Zappia",
+     "title": "Principal AI/ML Specialist Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360378296001AG1o",
+     "date": "2026-12-02",
+     "startTime": "15:30",
+     "endTime": "17:30",
+     "utcStartTime": "2026/12/02 23:30:00",
+     "utcEndTime": "2026/12/03 01:30:00",
+     "length": 120,
+     "room": "MGM Grand | Level 1 | Grand 111",
+     "roomId": "1789591920238004bouB",
+     "capacity": "112",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
    "sessionID": "1780442275740001cZAa",
    "code": "AIM434-R",
    "title": "From raw data to custom model: Dataset prep with Amazon SageMaker AI",
@@ -97216,76 +97287,6 @@
      "length": 120,
      "room": "MGM Grand | Level 1 | Grand 113",
      "roomId": "1789591920248001bj7J",
-     "capacity": "112",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
-   "sessionID": "1790358238542001ipd6",
-   "code": "AIM434-R1",
-   "title": "From raw data to custom model: Dataset prep with Amazon SageMaker AI",
-   "abstract": "Great models start with great data. In this hands-on workshop, use SageMaker AI Agent skills to profile, curate, and validate datasets for the full model customization lifecycle — no infrastructure to manage. Assess data completeness and distribution, apply auto-labeling at scale, run human-in-the-loop review for edge cases, and fix quality issues like deduplication and toxicity filtering. Generate synthetic data to fill coverage gaps, then prepare datasets for Supervised Fine-Tuning, Direct Preference Optimization, Reinforcement Learning with Verifiable Rewards, and RLAIF. Launch training, evaluate with LLM-as-a-Judge, and deploy. Walk away ready to go from raw data to custom model in hours.",
-   "type": "Workshop",
-   "length": 120,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-30T23:46:13Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Workshop"
-    ],
-    "Level": [
-     "400 – Expert"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Artificial Intelligence"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Amin Dashti",
-     "title": "Sr. Data Scientist",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "gzappia Zappia",
-     "title": "Principal AI/ML Specialist Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360378296001AG1o",
-     "date": "2026-12-02",
-     "startTime": "15:30",
-     "endTime": "17:30",
-     "utcStartTime": "2026/12/02 23:30:00",
-     "utcEndTime": "2026/12/03 01:30:00",
-     "length": 120,
-     "room": "MGM Grand | Level 1 | Grand 111",
-     "roomId": "1789591920238004bouB",
      "capacity": "112",
      "inPersonTime": true,
      "virtualTime": false,
@@ -97381,7 +97382,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T23:44:53Z",
+   "modified": "2026-10-31T02:42:20Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -98793,7 +98794,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T23:50:25Z",
+   "modified": "2026-10-31T05:20:07Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -100091,7 +100092,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T22:25:14Z",
+   "modified": "2026-10-31T01:50:03Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -107806,13 +107807,13 @@
   {
    "sessionID": "1791492159262001Uwh1",
    "code": "SUP205",
-   "title": "How Clay turns CRM + first-party data into a context graph for AI agents",
-   "abstract": "Clay, a Forbes AI 50 2026-listed market leader in go-to-market intelligence, helps sales teams identify promising accounts and decide how to engage them. Solange Levy, Head of AI, demonstrates how Clay combines CRM and first-party data into a context graph that guides AI agents through account research and prioritization. A product demo connects customer data to recommended sales actions, with examples from AI-native companies such as Cursor. The session examines how the emerging GTM Engineer role changes sales work and supports outbound campaigns. Founders and sales operations leaders can assess how this approach could shorten sales cycles and improve targeting of new accounts.",
+   "title": "How Clay turns CRM and first-party data into a context graph for GTM AI",
+   "abstract": "Clay built a platform that turns CRM and first-party data into a context graph that powers go-to-market AI. This session covers how Clay structures that context graph, how it feeds AI-driven GTM workflows, and what founders building GTM AI products can learn from Clay's approach to combining and enriching first-party data at scale.",
    "type": "Lightning talk",
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-10-31T01:23:35Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -119846,90 +119847,6 @@
    ]
   },
   {
-   "sessionID": "1780442245471001cBL6",
-   "code": "IND3304-R",
-   "title": "KNFSD File Cache: Extending Your NFS Storage into the Cloud",
-   "abstract": "Need to cache and serve NFS data from on-premises filers, across Availability Zones and Regions, or from other cloud providers with full read and write-back support? In this chalk talk, dive into KNFSD File Cache, an open-source, kernel-based NFS caching proxy on Amazon EC2 that transparently extends existing NFS storage into AWS. A single Terraform module stands up a production-ready, autoscaling cluster with high throughput and at low cost. Discuss hybrid and burst-compute patterns across M&E, HPC, Financial Services, and Life Sciences industries—eliminating latency without migration, client changes, or vendor lock-in.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Artificial Intelligence",
-     "Migration & Modernization"
-    ],
-    "AreaofInterest": [
-     "Agentic AI"
-    ],
-    "Industry": [
-     "Media & Entertainment"
-    ],
-    "Role": [
-     "Academic / Researcher",
-     "Developer / Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Elastic Compute Cloud (Amazon EC2)"
-    ],
-    "Venue": [
-     "Caesars Forum"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "DJ Rahming",
-     "title": "Senior Specialist Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Andy Hayes",
-     "title": "Snr Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025479059001CrSg",
-     "date": "2026-11-30",
-     "startTime": "10:30",
-     "endTime": "11:30",
-     "utcStartTime": "2026/11/30 18:30:00",
-     "utcEndTime": "2026/11/30 19:30:00",
-     "length": 60,
-     "room": "Caesars Forum | Level 1 | Alliance 314",
-     "roomId": "1789591919643004bRVK",
-     "capacity": "88",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358240915001ipNX",
    "code": "IND3304-R1",
    "title": "KNFSD File Cache: Extending Your NFS Storage into the Cloud",
@@ -120007,6 +119924,90 @@
      "length": 60,
      "room": "Caesars Forum | Level 1 | Forum 114",
      "roomId": "1789591919703003bevY",
+     "capacity": "88",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442245471001cBL6",
+   "code": "IND3304-R",
+   "title": "KNFSD File Cache: Extending Your NFS Storage into the Cloud",
+   "abstract": "Need to cache and serve NFS data from on-premises filers, across Availability Zones and Regions, or from other cloud providers with full read and write-back support? In this chalk talk, dive into KNFSD File Cache, an open-source, kernel-based NFS caching proxy on Amazon EC2 that transparently extends existing NFS storage into AWS. A single Terraform module stands up a production-ready, autoscaling cluster with high throughput and at low cost. Discuss hybrid and burst-compute patterns across M&E, HPC, Financial Services, and Life Sciences industries—eliminating latency without migration, client changes, or vendor lock-in.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-30T21:40:30Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Artificial Intelligence",
+     "Migration & Modernization"
+    ],
+    "AreaofInterest": [
+     "Agentic AI"
+    ],
+    "Industry": [
+     "Media & Entertainment"
+    ],
+    "Role": [
+     "Academic / Researcher",
+     "Developer / Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Elastic Compute Cloud (Amazon EC2)"
+    ],
+    "Venue": [
+     "Caesars Forum"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "DJ Rahming",
+     "title": "Senior Specialist Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Andy Hayes",
+     "title": "Snr Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025479059001CrSg",
+     "date": "2026-11-30",
+     "startTime": "10:30",
+     "endTime": "11:30",
+     "utcStartTime": "2026/11/30 18:30:00",
+     "utcEndTime": "2026/11/30 19:30:00",
+     "length": 60,
+     "room": "Caesars Forum | Level 1 | Alliance 314",
+     "roomId": "1789591919643004bRVK",
      "capacity": "88",
      "inPersonTime": true,
      "virtualTime": false,
@@ -125033,16 +125034,16 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Hillel Antonov",
-     "title": "Architect, Agentic Platform",
-     "company": "Bridgewater Associates",
-     "role": "External Speaker"
-    },
-    {
      "name": "Aaron Longwell",
      "title": "Software Development Manager",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
+    },
+    {
+     "name": "Hillel Antonov",
+     "title": "Architect, Agentic Platform",
+     "company": "Bridgewater Associates",
+     "role": "External Speaker"
     }
    ],
    "times": [
@@ -134500,7 +134501,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T23:52:10Z",
+   "modified": "2026-10-31T02:52:18Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -140243,7 +140244,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T23:44:28Z",
+   "modified": "2026-10-31T05:21:37Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -143933,99 +143934,6 @@
    ]
   },
   {
-   "sessionID": "1790358217033001i9ji",
-   "code": "IND322-R1",
-   "title": "Physical AI in Telecom: A Framework for Workload Placement",
-   "abstract": "Some physical AI workloads need sub-millisecond performance at edge cell sites, others are better suited to a full AWS Region, and many fall in between on AWS Local Zones or AWS Outposts. In this chalk talk, we provide a framework for matching each workload to the right option. We trace the physical AI development lifecycle, examining how data sovereignty, latency, data gravity, and token economics interact to shape placement decisions at each phase. Based on real-world use cases, we discuss the options so you leave with a placement framework you can apply immediately.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Networking & Content Delivery",
-     "Industry Solutions"
-    ],
-    "AreaofInterest": [
-     "Edge Computing",
-     "Global Infrastructure",
-     "Internet of Things"
-    ],
-    "Industry": [
-     "Telecommunications"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Elastic Kubernetes Service (Amazon EKS)",
-     "AWS Local Zones",
-     "AWS Outposts"
-    ],
-    "Venue": [
-     "Caesars Forum"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Umer Chaudhary",
-     "title": "Sr. Mgr Network Solutions",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Angelo Sampietro",
-     "title": "Principal Solutions Architect",
-     "company": "Amazon Web Service",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Young Jung",
-     "title": "Sr. Manager of Telco Network SA",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360364516001AYeG",
-     "date": "2026-12-01",
-     "startTime": "13:30",
-     "endTime": "14:30",
-     "utcStartTime": "2026/12/01 21:30:00",
-     "utcEndTime": "2026/12/01 22:30:00",
-     "length": 60,
-     "room": "Caesars Forum | Level 1 | Alliance 314",
-     "roomId": "1789591919643004bRVK",
-     "capacity": "88",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442244219001cHBq",
    "code": "IND322-R",
    "title": "Physical AI in Telecom: A Framework for Workload Placement",
@@ -144111,6 +144019,99 @@
      "length": 60,
      "room": "Caesars Forum | Level 1 | Academy 414",
      "roomId": "1789591919565003bZKk",
+     "capacity": "88",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358217033001i9ji",
+   "code": "IND322-R1",
+   "title": "Physical AI in Telecom: A Framework for Workload Placement",
+   "abstract": "Some physical AI workloads need sub-millisecond performance at edge cell sites, others are better suited to a full AWS Region, and many fall in between on AWS Local Zones or AWS Outposts. In this chalk talk, we provide a framework for matching each workload to the right option. We trace the physical AI development lifecycle, examining how data sovereignty, latency, data gravity, and token economics interact to shape placement decisions at each phase. Based on real-world use cases, we discuss the options so you leave with a placement framework you can apply immediately.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-30T21:40:30Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Networking & Content Delivery",
+     "Industry Solutions"
+    ],
+    "AreaofInterest": [
+     "Edge Computing",
+     "Global Infrastructure",
+     "Internet of Things"
+    ],
+    "Industry": [
+     "Telecommunications"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Elastic Kubernetes Service (Amazon EKS)",
+     "AWS Local Zones",
+     "AWS Outposts"
+    ],
+    "Venue": [
+     "Caesars Forum"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Umer Chaudhary",
+     "title": "Sr. Mgr Network Solutions",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Angelo Sampietro",
+     "title": "Principal Solutions Architect",
+     "company": "Amazon Web Service",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Young Jung",
+     "title": "Sr. Manager of Telco Network SA",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360364516001AYeG",
+     "date": "2026-12-01",
+     "startTime": "13:30",
+     "endTime": "14:30",
+     "utcStartTime": "2026/12/01 21:30:00",
+     "utcEndTime": "2026/12/01 22:30:00",
+     "length": 60,
+     "room": "Caesars Forum | Level 1 | Alliance 314",
+     "roomId": "1789591919643004bRVK",
      "capacity": "88",
      "inPersonTime": true,
      "virtualTime": false,
@@ -148172,7 +148173,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-10-31T02:34:18Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -148211,15 +148212,15 @@
    },
    "speakers": [
     {
-     "name": "Samuel Waymouth",
-     "title": "Senior Compliance Specialist",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Pravin Nair",
      "title": "Sr. Security Strategy SA",
      "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Samuel Waymouth",
+     "title": "Senior Compliance Specialist",
+     "company": "AWS",
      "role": "Internal Speaker"
     }
    ],
@@ -148847,12 +148848,6 @@
    },
    "speakers": [
     {
-     "name": "Vipul Patel",
-     "title": "Architect",
-     "company": "Comcast Technology Solutions",
-     "role": "External Speaker"
-    },
-    {
      "name": "Phil Harrison",
      "title": "Senior Product Manager",
      "company": "AWS Elemental",
@@ -148863,6 +148858,12 @@
      "title": "Senior Product Manager - Technical",
      "company": "AWS",
      "role": "Internal Speaker"
+    },
+    {
+     "name": "Vipul Patel",
+     "title": "Architect",
+     "company": "Comcast Technology Solutions",
+     "role": "External Speaker"
     }
    ],
    "times": [
@@ -150783,79 +150784,6 @@
    ]
   },
   {
-   "sessionID": "1790358243199001inZR",
-   "code": "ANT402-R1",
-   "title": "Reduce spend and data movement with Amazon Redshift Data Sharing and Graviton",
-   "abstract": "Organizations sharing data across business units often rely on slow, error-prone ETL jobs that create costly duplication. Amazon Redshift Data Sharing enables secure, live access across provisioned and serverless warehouses — within or across accounts and regions — eliminating data movement entirely. Additionally, Graviton-powered Redshift RG instances accelerate workloads on Apache Iceberg tables through optimized columnar processing and parallel I/O. In this session, learn how to break down data silos with cross-warehouse data sharing and boost open data lakehouse performance with Redshift on Graviton.",
-   "type": "Workshop",
-   "length": 120,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-30T23:29:06Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Workshop"
-    ],
-    "Level": [
-     "400 – Expert"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Analytics"
-    ],
-    "Services": [
-     "Amazon Redshift"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Erika Nagamine",
-     "title": "Sr. Specialist SA, Data & AI",
-     "company": "Amazon Web Services (AWS)",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Poulomi Dasgupta",
-     "title": "Sr. Analytics Specialist Solutions Architect",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360385237001AtqR",
-     "date": "2026-12-03",
-     "startTime": "15:00",
-     "endTime": "17:00",
-     "utcStartTime": "2026/12/03 23:00:00",
-     "utcEndTime": "2026/12/04 01:00:00",
-     "length": 120,
-     "room": "MGM Grand | Level 3 | Premier 317",
-     "roomId": "1789591920505001bX6q",
-     "capacity": "84",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442274351001cHMv",
    "code": "ANT402-R",
    "title": "Reduce spend and data movement with Amazon Redshift Data Sharing and Graviton",
@@ -150922,6 +150850,79 @@
      "room": "MGM Grand | Level 1 | Grand 113",
      "roomId": "1789591920248001bj7J",
      "capacity": "112",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358243199001inZR",
+   "code": "ANT402-R1",
+   "title": "Reduce spend and data movement with Amazon Redshift Data Sharing and Graviton",
+   "abstract": "Organizations sharing data across business units often rely on slow, error-prone ETL jobs that create costly duplication. Amazon Redshift Data Sharing enables secure, live access across provisioned and serverless warehouses — within or across accounts and regions — eliminating data movement entirely. Additionally, Graviton-powered Redshift RG instances accelerate workloads on Apache Iceberg tables through optimized columnar processing and parallel I/O. In this session, learn how to break down data silos with cross-warehouse data sharing and boost open data lakehouse performance with Redshift on Graviton.",
+   "type": "Workshop",
+   "length": 120,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-31T06:15:14Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Workshop"
+    ],
+    "Level": [
+     "400 – Expert"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Analytics"
+    ],
+    "Services": [
+     "Amazon Redshift"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Erika Nagamine",
+     "title": "Sr. Specialist SA, Data & AI",
+     "company": "Amazon Web Services (AWS)",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Poulomi Dasgupta",
+     "title": "Sr. Analytics Specialist Solutions Architect",
+     "company": "Amazon",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360385237001AtqR",
+     "date": "2026-12-03",
+     "startTime": "15:00",
+     "endTime": "17:00",
+     "utcStartTime": "2026/12/03 23:00:00",
+     "utcEndTime": "2026/12/04 01:00:00",
+     "length": 120,
+     "room": "MGM Grand | Level 3 | Premier 317",
+     "roomId": "1789591920505001bX6q",
+     "capacity": "84",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -153079,7 +153080,7 @@
    "length": 240,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T23:50:25Z",
+   "modified": "2026-10-31T04:29:13Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -153154,7 +153155,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-10-31T06:13:29Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -162089,7 +162090,7 @@
    "length": 180,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-31T00:11:06Z",
+   "modified": "2026-10-31T03:39:06Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -163157,13 +163158,13 @@
   {
    "sessionID": "1791492160417001UwPV",
    "code": "SUP107",
-   "title": "Sequoia + Edelbyte: What VCs Really Look For in AI-First Startups",
-   "abstract": "A fireside chat with Sequoia Capital to explore why the choose AI-first companies with seed investments of $50 million to $75 million. Drawing on investments in cybersecurity and data infrastructure, they examine how founders demonstrate technical defensibility and a credible path to enterprise adoption. The conversation covers unit economics and go-to-market strategy, including why deployment speed matters alongside model quality. Founders raising capital will hear how these investors assess competitive advantages, evaluate business models, and judge whether customers can adopt a product quickly. The fireside chat offers insight into the evidence investors seek when evaluating ambitious AI companies.",
+   "title": "Sequoia + Edelbyte: What VCs really look for in AI-first startups",
+   "abstract": "Sequoia and Edelbyte share what VCs are really looking for when evaluating AI-first startups. This session covers how investment criteria have shifted for AI-native companies, what separates fundable AI startups from the rest, and what founders should understand about how VCs are thinking about AI-first business models today.",
    "type": "Lightning talk",
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-10-31T01:18:28Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -166435,13 +166436,13 @@
   {
    "sessionID": "1791492160227001UGOY",
    "code": "SUP206",
-   "title": "Simile models consumer decisions with interview-trained AI twins",
-   "abstract": "Market research can be slow and expensive. Simile, a Stanford spinout, builds agentic twins: AI stand-ins trained on in-depth interviews with hundreds of people. Companies use these models to simulate consumer decisions instead of conducting a new survey for every question. Customers include CVS Health and Gallup. Joon Park, CEO and co-founder, explains how Simile collects interview data and turns it into behavioral models, then develops products for enterprises seeking better consumer understanding. The session examines what it takes to build and sell AI simulations for market research, with a focus on using interview-based models to explore consumer choices and test research questions. **VC Lightning Talks**",
+   "title": "Simile: Making interview-trained AI that predicts consumer decisions",
+   "abstract": "Simile built AI models trained on interviews that predict consumer decisions, essentially a “what-if” machine for consumer behavior. This session covers how Simile trains these interview-based models, the architecture behind predicting consumer decisions, and what it unlocks for companies trying to understand how customers will respond before they build.",
    "type": "Lightning talk",
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-10-31T01:06:27Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -167027,7 +167028,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T23:08:48Z",
+   "modified": "2026-10-31T02:40:19Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -169640,7 +169641,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-10-31T03:47:13Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -170039,6 +170040,88 @@
    ]
   },
   {
+   "sessionID": "1784231862630001EwND",
+   "code": "TNC334-R",
+   "title": "Streamlining Claims Processing with Amazon Quick",
+   "abstract": "Claims adjusters spend hours retrieving policy data, applying business rules, and drafting decision letters manually. In this SimuLearn session, you use Amazon Quick Automate to orchestrate the entire claims process. You configure REST API and MCP connectors, build a multi-step workflow with Custom Agent steps, and chain together policy retrieval, rules validation, and AI-powered letter generation. The workflow handles missing data gracefully and stores audit-ready decision letters in S3. ",
+   "type": "Lab",
+   "length": 120,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-31T06:10:28Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Lab"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Artificial Intelligence",
+     "Business Agents"
+    ],
+    "AreaofInterest": [
+     "Agentic AI",
+     "Training & Certification"
+    ],
+    "Role": [
+     "Data Engineer",
+     "IT Professional / Technical Manager"
+    ],
+    "Services": [
+     "Amazon Quick"
+    ],
+    "Venue": [
+     "Caesars Palace"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Ryan Forger",
+     "title": "Senior Technical Instructor",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Ryan Leavitt",
+     "title": "Technical Lab Developer",
+     "company": "Amazon",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790019305058001OiWu",
+     "date": "2026-11-30",
+     "startTime": "13:00",
+     "endTime": "15:00",
+     "utcStartTime": "2026/11/30 21:00:00",
+     "utcEndTime": "2026/11/30 23:00:00",
+     "length": 120,
+     "room": "Caesars Palace | Emperors Level | Augustus Ballroom V",
+     "roomId": "1789591919870001bKOb",
+     "capacity": "200",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
    "sessionID": "1789063766046001htb0",
    "code": "TNC334-R1",
    "title": "Streamlining Claims Processing with Amazon Quick",
@@ -170121,50 +170204,38 @@
    ]
   },
   {
-   "sessionID": "1784231862630001EwND",
-   "code": "TNC334-R",
-   "title": "Streamlining Claims Processing with Amazon Quick",
-   "abstract": "Claims adjusters spend hours retrieving policy data, applying business rules, and drafting decision letters manually. In this SimuLearn session, you use Amazon Quick Automate to orchestrate the entire claims process. You configure REST API and MCP connectors, build a multi-step workflow with Custom Agent steps, and chain together policy retrieval, rules validation, and AI-powered letter generation. The workflow handles missing data gracefully and stores audit-ready decision letters in S3. ",
-   "type": "Lab",
-   "length": 120,
+   "sessionID": "1790358217311001ieZk",
+   "code": "AIM355-R1",
+   "title": "Strengthen identity verification with Amazon Rekognition",
+   "abstract": "Learn how to use Amazon Rekognition Face Liveness to help confirm a real person is present during digital onboarding. This session explores how to integrate liveness checks into your application, detect spoofing attempts, and support identity verification workflows.",
+   "type": "Chalk talk",
+   "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-31T00:24:30Z",
+   "modified": "2026-10-31T03:27:38Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
      "No"
     ],
     "Type": [
-     "Lab"
+     "Chalk talk"
     ],
     "Level": [
      "300 – Advanced"
     ],
     "Features": [
-     "Hands-on"
+     "Customer story",
+     "Discussion"
     ],
     "Topic": [
-     "Artificial Intelligence",
-     "Business Agents"
-    ],
-    "AreaofInterest": [
-     "Agentic AI",
-     "Training & Certification"
-    ],
-    "Role": [
-     "Data Engineer",
-     "IT Professional / Technical Manager"
-    ],
-    "Services": [
-     "Amazon Quick"
+     "Artificial Intelligence"
     ],
     "Venue": [
-     "Caesars Palace"
+     "Wynn/Encore"
     ],
     "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
+     "Repeat"
     ],
     "HideSpeakers": [
      "No"
@@ -170172,30 +170243,36 @@
    },
    "speakers": [
     {
-     "name": "Ryan Forger",
-     "title": "Senior Technical Instructor",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
+     "name": "Vicky Katara",
+     "title": "Sr. Software Engineer",
+     "company": "Amazon",
+     "role": "External Speaker"
     },
     {
-     "name": "Ryan Leavitt",
-     "title": "Technical Lab Developer",
+     "name": "Sneha Choudhury",
+     "title": "Principal Product Manager Tech",
      "company": "Amazon",
-     "role": "Internal Speaker"
+     "role": "External Speaker"
+    },
+    {
+     "name": "Divyesha Malhotra",
+     "title": "Sr Product Manager Technical",
+     "company": "Amazon",
+     "role": "External Speaker"
     }
    ],
    "times": [
     {
-     "sessionTimeID": "1790019305058001OiWu",
-     "date": "2026-11-30",
-     "startTime": "13:00",
-     "endTime": "15:00",
-     "utcStartTime": "2026/11/30 21:00:00",
-     "utcEndTime": "2026/11/30 23:00:00",
-     "length": 120,
-     "room": "Caesars Palace | Emperors Level | Augustus Ballroom V",
-     "roomId": "1789591919870001bKOb",
-     "capacity": "200",
+     "sessionTimeID": "1790360395126001AjRD",
+     "date": "2026-12-02",
+     "startTime": "14:30",
+     "endTime": "15:30",
+     "utcStartTime": "2026/12/02 22:30:00",
+     "utcEndTime": "2026/12/02 23:30:00",
+     "length": 60,
+     "room": "Wynn/Encore | Level 1 | Chopin 2",
+     "roomId": "1789591921094001bT6B",
+     "capacity": "88",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -170271,82 +170348,6 @@
      "room": "MGM Grand | Level 1 | Boulevard 167",
      "roomId": "1789591920229001bkrV",
      "capacity": "78",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
-   "sessionID": "1790358217311001ieZk",
-   "code": "AIM355-R1",
-   "title": "Strengthen identity verification with Amazon Rekognition",
-   "abstract": "Learn how to use Amazon Rekognition Face Liveness to help confirm a real person is present during digital onboarding. This session explores how to integrate liveness checks into your application, detect spoofing attempts, and support identity verification workflows.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Customer story",
-     "Discussion"
-    ],
-    "Topic": [
-     "Artificial Intelligence"
-    ],
-    "Venue": [
-     "Wynn/Encore"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Vicky Katara",
-     "title": "Sr. Software Engineer",
-     "company": "Amazon",
-     "role": "External Speaker"
-    },
-    {
-     "name": "Sneha Choudhury",
-     "title": "Principal Product Manager Tech",
-     "company": "Amazon",
-     "role": "External Speaker"
-    },
-    {
-     "name": "Divyesha Malhotra",
-     "title": "Sr Product Manager Technical",
-     "company": "Amazon",
-     "role": "External Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360395126001AjRD",
-     "date": "2026-12-02",
-     "startTime": "14:30",
-     "endTime": "15:30",
-     "utcStartTime": "2026/12/02 22:30:00",
-     "utcEndTime": "2026/12/02 23:30:00",
-     "length": 60,
-     "room": "Wynn/Encore | Level 1 | Chopin 2",
-     "roomId": "1789591921094001bT6B",
-     "capacity": "88",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -177975,6 +177976,68 @@
    ]
   },
   {
+   "sessionID": "1791492157840001Uycj",
+   "code": "SUP201",
+   "title": "Training and simulation turn robot capabilities into useful products",
+   "abstract": "Making humanoid and autonomous robots useful takes more than a capable chassis. In this panel moderated by Deap Ubhi, who leads startup Solutions Architects globally at AWS, leaders from NEURA Robotics, 1X, and Highlanders dig into the intelligence behind their robots: how they train and simulate behaviors, which AI models they rely on, and how data pipelines support development. They also explore the application layer that turns raw capability into products. Founders and robotics builders will hear how these teams connect training and simulation with real-world deployment.",
+   "type": "Breakout session",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-31T00:58:52Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Breakout session"
+    ],
+    "Level": [
+     "200 – Intermediate"
+    ],
+    "Features": [
+     "Lecture-style"
+    ],
+    "Topic": [
+     "Artificial Intelligence",
+     "Industry Solutions"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "Entrepreneur (Founder/Co-Founder)",
+     "Press / Media Analyst"
+    ],
+    "Venue": [
+     "Caesars Forum"
+    ],
+    "Walkuponlysession": [
+     "Walk up only"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [],
+   "times": [
+    {
+     "sessionTimeID": "1793317278107001tjQa",
+     "date": "2026-12-02",
+     "startTime": "14:00",
+     "endTime": "15:00",
+     "utcStartTime": "2026/12/02 22:00:00",
+     "utcEndTime": "2026/12/02 23:00:00",
+     "length": 60,
+     "room": "Caesars Forum | Level 1 | Forum Event Plaza | Startup Plaza Theater",
+     "roomId": "1793125212614001R8xX",
+     "capacity": "70",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
    "sessionID": "1780442246483001cxJm",
    "code": "IND368",
    "title": "Transform Episodic Content into High-Converting Microdramas",
@@ -178398,12 +178461,12 @@
    "sessionID": "1791492158983001UZQ3",
    "code": "SUP304",
    "title": "Triomics speeds cancer trial matching with Amazon Bedrock",
-   "abstract": "Each week, over 10,000 cancer patients wait for a clinical trial match, but delayed chart reviews can prevent timely identification. Triomics uses Amazon Bedrock to process patient records at 10 million tokens per minute, reducing weeks of review to hours. Bedrock initially appeared 67% more expensive than GCP for its primary model. By matching Standard, Flex, and Batch tiers to workload patterns, Triomics achieved 25% net cost savings while preserving vendor flexibility. Hrituraj Singh, co-founder and CTO, explains the cost analysis and validation behind migrating off Azure, showing how workload-based pricing supports faster clinical review while controlling inference costs and preserving model choice.",
+   "abstract": "Triomics speeds up cancer clinical trial matching using Amazon Bedrock. This session covers how Triomics built its trial-matching pipeline on Bedrock, the challenges of applying AI to clinical trial workflows, and what it takes to speed up matching patients to trials in a high-stakes healthcare setting.",
    "type": "Lightning talk",
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-10-31T01:29:21Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -180212,7 +180275,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T22:44:29Z",
+   "modified": "2026-10-31T02:43:50Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -183168,7 +183231,7 @@
    "length": 180,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T22:34:59Z",
+   "modified": "2026-10-31T03:05:47Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -183217,6 +183280,74 @@
      "endTime": "17:30",
      "utcStartTime": "2026/12/02 22:30:00",
      "utcEndTime": "2026/12/03 01:30:00",
+     "length": 180,
+     "room": "Caesars Palace | Emperors Level | Emperors Ballroom II",
+     "roomId": "1789591919892004bpdn",
+     "capacity": "82",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1784231861722001EVTP",
+   "code": "TNC307-R1",
+   "title": "Validate your hands-on AWS skills & earn a Microcredential ",
+   "abstract": "In this session, you will be given time to attempt a microcredential exam of your choice on AWS Skill Builder. These timed, hands-on exams test your skills in a live, provisioned AWS environment and test on popular topics. The product and developer team will be onsite to walk you through the UI and introduce the exam. Please note - this is an individual exam, and you will not be provided any hints or guidance outside of what is provided in the typical test environment. This exam is free to take on AWS Skill Builder. Attendees are required to bring their own device to complete the exam. Those who pass will be issued a microcredential badge on Credly.",
+   "type": "Exam prep",
+   "length": 180,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-31T03:43:52Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Exam prep"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Artificial Intelligence",
+     "Serverless"
+    ],
+    "AreaofInterest": [
+     "Training & Certification"
+    ],
+    "Venue": [
+     "Caesars Palace"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Tom Lawlor",
+     "title": "Sr. Product Manager - Tech",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790892831342001rnTW",
+     "date": "2026-12-01",
+     "startTime": "14:00",
+     "endTime": "17:00",
+     "utcStartTime": "2026/12/01 22:00:00",
+     "utcEndTime": "2026/12/02 01:00:00",
      "length": 180,
      "room": "Caesars Palace | Emperors Level | Emperors Ballroom II",
      "roomId": "1789591919892004bpdn",
@@ -183364,74 +183495,6 @@
    ]
   },
   {
-   "sessionID": "1784231861722001EVTP",
-   "code": "TNC307-R1",
-   "title": "Validate your hands-on AWS skills & earn a Microcredential ",
-   "abstract": "In this session, you will be given time to attempt a microcredential exam of your choice on AWS Skill Builder. These timed, hands-on exams test your skills in a live, provisioned AWS environment and test on popular topics. The product and developer team will be onsite to walk you through the UI and introduce the exam. Please note - this is an individual exam, and you will not be provided any hints or guidance outside of what is provided in the typical test environment. This exam is free to take on AWS Skill Builder. Attendees are required to bring their own device to complete the exam. Those who pass will be issued a microcredential badge on Credly.",
-   "type": "Exam prep",
-   "length": 180,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Exam prep"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Artificial Intelligence",
-     "Serverless"
-    ],
-    "AreaofInterest": [
-     "Training & Certification"
-    ],
-    "Venue": [
-     "Caesars Palace"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Tom Lawlor",
-     "title": "Sr. Product Manager - Tech",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790892831342001rnTW",
-     "date": "2026-12-01",
-     "startTime": "14:00",
-     "endTime": "17:00",
-     "utcStartTime": "2026/12/01 22:00:00",
-     "utcEndTime": "2026/12/02 01:00:00",
-     "length": 180,
-     "room": "Caesars Palace | Emperors Level | Emperors Ballroom II",
-     "roomId": "1789591919892004bpdn",
-     "capacity": "82",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442226822001ckq0",
    "code": "DAT407",
    "title": "Vector search, agents, and image matching with Amazon DynamoDB",
@@ -183520,69 +183583,6 @@
      "room": "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Builders' Session 1",
      "roomId": "1789591920413001bvC3",
      "capacity": "50",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
-   "sessionID": "1791492158706001UoLh",
-   "code": "SUP401",
-   "title": "Vega runs AI threat detection directly on Amazon S3",
-   "abstract": "Vega Security’s AI-native Security Analytics Mesh runs threat detection directly on customer data in Amazon S3, avoiding costly ingestion and migration. Co-founder Eli Rozen explains the architecture behind the platform and how Vega reduced mean triage time from 25 minutes to under eight minutes and false positives by 48% for Fortune 500 customers. The session examines how Vega uses Amazon Bedrock and AWS Graviton for production AI inference, with AWS consumption reaching $2.3 million and growing 880% year over year. Security leaders and builders will explore the design choices behind detection on customer data and running untrusted AI workloads safely.",
-   "type": "Lightning talk",
-   "length": 20,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Lightning talk"
-    ],
-    "Level": [
-     "400 – Expert"
-    ],
-    "Features": [
-     "Lecture-style"
-    ],
-    "Topic": [
-     "Artificial Intelligence",
-     "Security & Identity",
-     "Storage"
-    ],
-    "Role": [
-     "Cloud Security Specialist",
-     "Developer / Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Venue": [
-     "Caesars Forum"
-    ],
-    "Walkuponlysession": [
-     "Walk up only"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [],
-   "times": [
-    {
-     "sessionTimeID": "1793317532088001GM0t",
-     "date": "2026-12-01",
-     "startTime": "12:20",
-     "endTime": "12:40",
-     "utcStartTime": "2026/12/01 20:20:00",
-     "utcEndTime": "2026/12/01 20:40:00",
-     "length": 20,
-     "room": "Caesars Forum | Level 1 | Forum Event Plaza | Startup Plaza Theater",
-     "roomId": "1793125212614001R8xX",
-     "capacity": "70",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -184148,7 +184148,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-10-31T03:30:34Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -189377,7 +189377,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-10-31T02:42:20Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -189417,15 +189417,15 @@
    },
    "speakers": [
     {
-     "name": "Jonathan Woods",
-     "title": "Sr. Solutions Architect",
-     "company": "Amazon Web Services (AWS)",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Julian Garcia",
      "title": "Senior Technical Account Manager",
      "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Jonathan Woods",
+     "title": "Sr. Solutions Architect",
+     "company": "Amazon Web Services (AWS)",
      "role": "Internal Speaker"
     }
    ],
@@ -192057,7 +192057,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-10-31T03:43:53Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
