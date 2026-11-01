@@ -1,7 +1,7 @@
 {
  "source": "https://catalog.awsevents.com/api/sessions",
  "event": "reinvent2026",
- "fetchedAt": "2026-11-01T06:43:16Z",
+ "fetchedAt": "2026-11-01T12:43:02Z",
  "count": 2412,
  "sessions": [
   {
@@ -24121,7 +24121,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T06:13:51Z",
+   "modified": "2026-11-01T09:57:55Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -38081,7 +38081,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-11-01T09:49:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -55012,7 +55012,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-31T08:48:14Z",
+   "modified": "2026-11-01T09:03:37Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -58665,93 +58665,6 @@
    ]
   },
   {
-   "sessionID": "1780442244775001cbB1",
-   "code": "IND405-R",
-   "title": "Build low latency real-time bidding workloads with AWS RTB Fabric",
-   "abstract": "With the growth of digital media, including streaming video and retail media, customers that operate advertising platforms need to buy, sell, deliver, and measure millions of ad transactions per second while meeting stringent latency requirements. In this chalk talk, you will learn how to run real-time bidding workloads with your AdTech partners on a dedicated network in the cloud using AWS RTB Fabric. You will learn how to setup, onboard, and integrate AWS RTB Fabric with your supply and demand-side-platforms. Additionally, you will learn about key features including the core network, modules, and pricing model of the service.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-31T20:22:39Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "400 – Expert"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Migration & Modernization",
-     "Industry Solutions"
-    ],
-    "AreaofInterest": [
-     "Innovation & Transformation",
-     "Machine Learning"
-    ],
-    "Industry": [
-     "Advertising & Marketing"
-    ],
-    "Role": [
-     "Data Engineer",
-     "Developer / Engineer",
-     "DevOps Engineer"
-    ],
-    "Services": [
-     "Amazon Elastic Compute Cloud (Amazon EC2)",
-     "Amazon Elastic Kubernetes Service (Amazon EKS)",
-     "AWS RTB Fabric"
-    ],
-    "Venue": [
-     "Caesars Forum"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Sergio Serra",
-     "title": "Product Leader",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Gerry Louw",
-     "title": "Global Tech Lead Advertising and Marketing Technology - AWS",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025514547001CU0C",
-     "date": "2026-12-02",
-     "startTime": "09:00",
-     "endTime": "10:00",
-     "utcStartTime": "2026/12/02 17:00:00",
-     "utcEndTime": "2026/12/02 18:00:00",
-     "length": 60,
-     "room": "Caesars Forum | Level 1 | Alliance 314",
-     "roomId": "1789591919643004bRVK",
-     "capacity": "88",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358223207001iA4U",
    "code": "IND405-R1",
    "title": "Build low latency real-time bidding workloads with AWS RTB Fabric",
@@ -58832,6 +58745,93 @@
      "length": 60,
      "room": "Caesars Forum | Level 1 | Forum 114",
      "roomId": "1789591919703003bevY",
+     "capacity": "88",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442244775001cbB1",
+   "code": "IND405-R",
+   "title": "Build low latency real-time bidding workloads with AWS RTB Fabric",
+   "abstract": "With the growth of digital media, including streaming video and retail media, customers that operate advertising platforms need to buy, sell, deliver, and measure millions of ad transactions per second while meeting stringent latency requirements. In this chalk talk, you will learn how to run real-time bidding workloads with your AdTech partners on a dedicated network in the cloud using AWS RTB Fabric. You will learn how to setup, onboard, and integrate AWS RTB Fabric with your supply and demand-side-platforms. Additionally, you will learn about key features including the core network, modules, and pricing model of the service.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-01T09:17:46Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "400 – Expert"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Migration & Modernization",
+     "Industry Solutions"
+    ],
+    "AreaofInterest": [
+     "Innovation & Transformation",
+     "Machine Learning"
+    ],
+    "Industry": [
+     "Advertising & Marketing"
+    ],
+    "Role": [
+     "Data Engineer",
+     "Developer / Engineer",
+     "DevOps Engineer"
+    ],
+    "Services": [
+     "Amazon Elastic Compute Cloud (Amazon EC2)",
+     "Amazon Elastic Kubernetes Service (Amazon EKS)",
+     "AWS RTB Fabric"
+    ],
+    "Venue": [
+     "Caesars Forum"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Sergio Serra",
+     "title": "Product Leader",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Gerry Louw",
+     "title": "Global Tech Lead Advertising and Marketing Technology - AWS",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025514547001CU0C",
+     "date": "2026-12-02",
+     "startTime": "09:00",
+     "endTime": "10:00",
+     "utcStartTime": "2026/12/02 17:00:00",
+     "utcEndTime": "2026/12/02 18:00:00",
+     "length": 60,
+     "room": "Caesars Forum | Level 1 | Alliance 314",
+     "roomId": "1789591919643004bRVK",
      "capacity": "88",
      "inPersonTime": true,
      "virtualTime": false,
@@ -71036,7 +71036,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T00:02:03Z",
+   "modified": "2026-11-01T09:06:03Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -81601,7 +81601,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T06:10:11Z",
+   "modified": "2026-11-01T11:20:49Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -84455,75 +84455,6 @@
    ]
   },
   {
-   "sessionID": "1780441496076001GRZY",
-   "code": "INV530-R1",
-   "title": "EC2 at 20: Rebuilding the control plane while it is running",
-   "abstract": "Amazon EC2 launched in 2006 as four services backed by a single MySQL database. Twenty years later, it is one of the largest distributed systems ever built — and most of that original architecture had to be replaced while serving production traffic, with no maintenance window and no change to the API contract customers depend on. In this session, EC2 engineers dive deep on two of the hardest migrations: making the control plane Availability Zone independent so a single-AZ event cannot escalate into a regional one, and moving EC2 metadata off MySQL. We walk through the failure modes that forced each decision, how correctness was verified before every cutover, how we proved a single-AZ failure stays in a single AZ, and the things we got wrong along the way. You will leave with migration and isolation patterns you can apply to your own systems at any scale.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-31T17:42:12Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "500 – Distinguished"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Compute"
-    ],
-    "Role": [
-     "Academic / Researcher"
-    ],
-    "Services": [
-     "Amazon Elastic Compute Cloud (Amazon EC2)"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Don McGarry",
-     "title": "Senior Principal Engineer",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1792635625547001Ebhk",
-     "date": "2026-11-30",
-     "startTime": "11:30",
-     "endTime": "12:30",
-     "utcStartTime": "2026/11/30 19:30:00",
-     "utcEndTime": "2026/11/30 20:30:00",
-     "length": 60,
-     "room": "MGM Grand | Level 3 | Room 350",
-     "roomId": "1789591920582001b04E",
-     "capacity": "82",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780441495052001GeWQ",
    "code": "INV530-R",
    "title": "EC2 at 20: Rebuilding the control plane while it is running",
@@ -84582,6 +84513,75 @@
      "endTime": "15:30",
      "utcStartTime": "2026/12/02 22:30:00",
      "utcEndTime": "2026/12/02 23:30:00",
+     "length": 60,
+     "room": "MGM Grand | Level 3 | Room 350",
+     "roomId": "1789591920582001b04E",
+     "capacity": "82",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780441496076001GRZY",
+   "code": "INV530-R1",
+   "title": "EC2 at 20: Rebuilding the control plane while it is running",
+   "abstract": "Amazon EC2 launched in 2006 as four services backed by a single MySQL database. Twenty years later, it is one of the largest distributed systems ever built — and most of that original architecture had to be replaced while serving production traffic, with no maintenance window and no change to the API contract customers depend on. In this session, EC2 engineers dive deep on two of the hardest migrations: making the control plane Availability Zone independent so a single-AZ event cannot escalate into a regional one, and moving EC2 metadata off MySQL. We walk through the failure modes that forced each decision, how correctness was verified before every cutover, how we proved a single-AZ failure stays in a single AZ, and the things we got wrong along the way. You will leave with migration and isolation patterns you can apply to your own systems at any scale.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-01T09:03:37Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "500 – Distinguished"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Compute"
+    ],
+    "Role": [
+     "Academic / Researcher"
+    ],
+    "Services": [
+     "Amazon Elastic Compute Cloud (Amazon EC2)"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Don McGarry",
+     "title": "Senior Principal Engineer",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1792635625547001Ebhk",
+     "date": "2026-11-30",
+     "startTime": "11:30",
+     "endTime": "12:30",
+     "utcStartTime": "2026/11/30 19:30:00",
+     "utcEndTime": "2026/11/30 20:30:00",
      "length": 60,
      "room": "MGM Grand | Level 3 | Room 350",
      "roomId": "1789591920582001b04E",
@@ -86042,6 +86042,12 @@
    },
    "speakers": [
     {
+     "name": "Margarita Rubio",
+     "title": "MD - Crew and Catering Technology",
+     "company": "United Airlines",
+     "role": "Sponsor Speaker"
+    },
+    {
      "name": "Lior Kenzin",
      "title": "Technology Lead, Core Transformation Domain",
      "company": "BANK HAPOALIM LTD.",
@@ -86052,12 +86058,6 @@
      "title": "Principal Product Manager",
      "company": "Amazon",
      "role": "Internal Speaker"
-    },
-    {
-     "name": "Margarita Rubio",
-     "title": "MD - Crew and Catering Technology",
-     "company": "United Airlines",
-     "role": "Sponsor Speaker"
     }
    ],
    "times": [
@@ -91363,7 +91363,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T01:21:23Z",
+   "modified": "2026-11-01T11:44:33Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -92993,7 +92993,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-31T16:01:28Z",
+   "modified": "2026-11-01T09:13:40Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -98794,7 +98794,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T01:45:12Z",
+   "modified": "2026-11-01T09:00:31Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -100092,7 +100092,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T06:12:06Z",
+   "modified": "2026-11-01T09:03:28Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -108756,7 +108756,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-10-31T03:17:35Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -115072,15 +115072,15 @@
    },
    "speakers": [
     {
-     "name": "Eran Balan",
-     "title": "Sr. Specialist Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Yaron Sananes",
      "title": "Senior Engineering Manager",
      "company": "Amazon",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Madelyn Olson",
+     "title": "Software Engineer",
+     "company": "AWS",
      "role": "Internal Speaker"
     },
     {
@@ -115096,8 +115096,8 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Madelyn Olson",
-     "title": "Software Engineer",
+     "name": "Eran Balan",
+     "title": "Sr. Specialist Solutions Architect",
      "company": "AWS",
      "role": "Internal Speaker"
     }
@@ -115218,7 +115218,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T23:42:42Z",
+   "modified": "2026-11-01T11:44:32Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -115513,7 +115513,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:57:44Z",
+   "modified": "2026-11-01T09:08:33Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -123488,7 +123488,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T00:07:30Z",
+   "modified": "2026-11-01T09:17:46Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -130076,7 +130076,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-31T15:34:49Z",
+   "modified": "2026-11-01T09:22:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -130240,7 +130240,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-31T17:13:00Z",
+   "modified": "2026-11-01T09:08:08Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -134501,7 +134501,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T03:22:10Z",
+   "modified": "2026-11-01T09:09:24Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -139747,89 +139747,6 @@
    ]
   },
   {
-   "sessionID": "1780441502967001G9cV",
-   "code": "STG328-R",
-   "title": "Optimize performance and cost of Amazon EBS at massive scale",
-   "abstract": "Managing production workloads across multiple regions while weighing cost and risk requires optimal strategy. With block storage, operating at scale can mean different things, including delivering high IOPS or I/O bandwidth to applications, managing and monitoring millions of volumes, or protecting petabytes of data with stringent RPO and RTO requirements. In this talk, learn best practices for scaling and managing your Amazon EBS environment, including automation, monitoring at scale, and cost-optimization techniques using cloud-native tools to meet your business needs. ",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-31T23:14:17Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Storage"
-    ],
-    "AreaofInterest": [
-     "Disaster Response & Recovery",
-     "Resilience",
-     "Innovation & Transformation"
-    ],
-    "Role": [
-     "IT Professional / Technical Manager",
-     "Solution / Systems Architect",
-     "System Administrator"
-    ],
-    "Services": [
-     "Amazon Elastic Block Store (Amazon EBS)",
-     "Amazon Elastic Compute Cloud (Amazon EC2)"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Nasan Tsengeg",
-     "title": "Sr. Product Manager - Technical",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Santhosh Arunuri",
-     "title": "Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790890905891001iukX",
-     "date": "2026-12-03",
-     "startTime": "12:00",
-     "endTime": "13:00",
-     "utcStartTime": "2026/12/03 20:00:00",
-     "utcEndTime": "2026/12/03 21:00:00",
-     "length": 60,
-     "room": "MGM Grand | Level 1 | Boulevard 165",
-     "roomId": "1789591920220001bzVv",
-     "capacity": "98",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358228818001iTPW",
    "code": "STG328-R1",
    "title": "Optimize performance and cost of Amazon EBS at massive scale",
@@ -139906,6 +139823,89 @@
      "room": "Wynn/Encore | Convention Promenade | Latour 5",
      "roomId": "1789591920978004bmWF",
      "capacity": "75",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780441502967001G9cV",
+   "code": "STG328-R",
+   "title": "Optimize performance and cost of Amazon EBS at massive scale",
+   "abstract": "Managing production workloads across multiple regions while weighing cost and risk requires optimal strategy. With block storage, operating at scale can mean different things, including delivering high IOPS or I/O bandwidth to applications, managing and monitoring millions of volumes, or protecting petabytes of data with stringent RPO and RTO requirements. In this talk, learn best practices for scaling and managing your Amazon EBS environment, including automation, monitoring at scale, and cost-optimization techniques using cloud-native tools to meet your business needs. ",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-01T09:12:30Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Storage"
+    ],
+    "AreaofInterest": [
+     "Disaster Response & Recovery",
+     "Resilience",
+     "Innovation & Transformation"
+    ],
+    "Role": [
+     "IT Professional / Technical Manager",
+     "Solution / Systems Architect",
+     "System Administrator"
+    ],
+    "Services": [
+     "Amazon Elastic Block Store (Amazon EBS)",
+     "Amazon Elastic Compute Cloud (Amazon EC2)"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Nasan Tsengeg",
+     "title": "Sr. Product Manager - Technical",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Santhosh Arunuri",
+     "title": "Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790890905891001iukX",
+     "date": "2026-12-03",
+     "startTime": "12:00",
+     "endTime": "13:00",
+     "utcStartTime": "2026/12/03 20:00:00",
+     "utcEndTime": "2026/12/03 21:00:00",
+     "length": 60,
+     "room": "MGM Grand | Level 1 | Boulevard 165",
+     "roomId": "1789591920220001bzVv",
+     "capacity": "98",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -148173,7 +148173,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-31T02:34:18Z",
+   "modified": "2026-11-01T09:24:58Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -150784,79 +150784,6 @@
    ]
   },
   {
-   "sessionID": "1790358243199001inZR",
-   "code": "ANT402-R1",
-   "title": "Reduce spend and data movement with Amazon Redshift Data Sharing and Graviton",
-   "abstract": "Organizations sharing data across business units often rely on slow, error-prone ETL jobs that create costly duplication. Amazon Redshift Data Sharing enables secure, live access across provisioned and serverless warehouses — within or across accounts and regions — eliminating data movement entirely. Additionally, Graviton-powered Redshift RG instances accelerate workloads on Apache Iceberg tables through optimized columnar processing and parallel I/O. In this session, learn how to break down data silos with cross-warehouse data sharing and boost open data lakehouse performance with Redshift on Graviton.",
-   "type": "Workshop",
-   "length": 120,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-31T23:50:25Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Workshop"
-    ],
-    "Level": [
-     "400 – Expert"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Analytics"
-    ],
-    "Services": [
-     "Amazon Redshift"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Erika Nagamine",
-     "title": "Sr. Specialist SA, Data & AI",
-     "company": "Amazon Web Services (AWS)",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Poulomi Dasgupta",
-     "title": "Sr. Analytics Specialist Solutions Architect",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360385237001AtqR",
-     "date": "2026-12-03",
-     "startTime": "15:00",
-     "endTime": "17:00",
-     "utcStartTime": "2026/12/03 23:00:00",
-     "utcEndTime": "2026/12/04 01:00:00",
-     "length": 120,
-     "room": "MGM Grand | Level 3 | Premier 317",
-     "roomId": "1789591920505001bX6q",
-     "capacity": "84",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442274351001cHMv",
    "code": "ANT402-R",
    "title": "Reduce spend and data movement with Amazon Redshift Data Sharing and Graviton",
@@ -150923,6 +150850,79 @@
      "room": "MGM Grand | Level 1 | Grand 113",
      "roomId": "1789591920248001bj7J",
      "capacity": "112",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358243199001inZR",
+   "code": "ANT402-R1",
+   "title": "Reduce spend and data movement with Amazon Redshift Data Sharing and Graviton",
+   "abstract": "Organizations sharing data across business units often rely on slow, error-prone ETL jobs that create costly duplication. Amazon Redshift Data Sharing enables secure, live access across provisioned and serverless warehouses — within or across accounts and regions — eliminating data movement entirely. Additionally, Graviton-powered Redshift RG instances accelerate workloads on Apache Iceberg tables through optimized columnar processing and parallel I/O. In this session, learn how to break down data silos with cross-warehouse data sharing and boost open data lakehouse performance with Redshift on Graviton.",
+   "type": "Workshop",
+   "length": 120,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-01T09:13:40Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Workshop"
+    ],
+    "Level": [
+     "400 – Expert"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Analytics"
+    ],
+    "Services": [
+     "Amazon Redshift"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Erika Nagamine",
+     "title": "Sr. Specialist SA, Data & AI",
+     "company": "Amazon Web Services (AWS)",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Poulomi Dasgupta",
+     "title": "Sr. Analytics Specialist Solutions Architect",
+     "company": "Amazon",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360385237001AtqR",
+     "date": "2026-12-03",
+     "startTime": "15:00",
+     "endTime": "17:00",
+     "utcStartTime": "2026/12/03 23:00:00",
+     "utcEndTime": "2026/12/04 01:00:00",
+     "length": 120,
+     "room": "MGM Grand | Level 3 | Premier 317",
+     "roomId": "1789591920505001bX6q",
+     "capacity": "84",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -153080,7 +153080,7 @@
    "length": 240,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-31T23:49:09Z",
+   "modified": "2026-11-01T09:14:41Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -153155,7 +153155,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T00:18:21Z",
+   "modified": "2026-11-01T07:50:55Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -155836,7 +155836,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-31T18:29:49Z",
+   "modified": "2026-11-01T09:14:41Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -162090,7 +162090,7 @@
    "length": 180,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T00:06:14Z",
+   "modified": "2026-11-01T10:49:50Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -167028,7 +167028,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-31T23:54:11Z",
+   "modified": "2026-11-01T09:22:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -167111,7 +167111,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T06:04:25Z",
+   "modified": "2026-11-01T12:22:22Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -169641,7 +169641,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-31T20:22:39Z",
+   "modified": "2026-11-01T09:17:42Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -170130,7 +170130,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T06:01:14Z",
+   "modified": "2026-11-01T07:49:35Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -174480,7 +174480,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T01:02:25Z",
+   "modified": "2026-11-01T07:49:35Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -180351,7 +180351,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T05:58:24Z",
+   "modified": "2026-11-01T12:25:28Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -183359,74 +183359,6 @@
    ]
   },
   {
-   "sessionID": "1784231861722001EVTP",
-   "code": "TNC307-R1",
-   "title": "Validate your hands-on AWS skills & earn a Microcredential ",
-   "abstract": "In this session, you will be given time to attempt a microcredential exam of your choice on AWS Skill Builder. These timed, hands-on exams test your skills in a live, provisioned AWS environment and test on popular topics. The product and developer team will be onsite to walk you through the UI and introduce the exam. Please note - this is an individual exam, and you will not be provided any hints or guidance outside of what is provided in the typical test environment. This exam is free to take on AWS Skill Builder. Attendees are required to bring their own device to complete the exam. Those who pass will be issued a microcredential badge on Credly.",
-   "type": "Exam prep",
-   "length": 180,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-01T06:09:31Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Exam prep"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Artificial Intelligence",
-     "Serverless"
-    ],
-    "AreaofInterest": [
-     "Training & Certification"
-    ],
-    "Venue": [
-     "Caesars Palace"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Tom Lawlor",
-     "title": "Sr. Product Manager - Tech",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790892831342001rnTW",
-     "date": "2026-12-01",
-     "startTime": "14:00",
-     "endTime": "17:00",
-     "utcStartTime": "2026/12/01 22:00:00",
-     "utcEndTime": "2026/12/02 01:00:00",
-     "length": 180,
-     "room": "Caesars Palace | Emperors Level | Emperors Ballroom II",
-     "roomId": "1789591919892004bpdn",
-     "capacity": "82",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1784231861650001EiWr",
    "code": "TNC307-R2",
    "title": "Validate your hands-on AWS skills & earn a Microcredential ",
@@ -183484,6 +183416,74 @@
      "endTime": "17:30",
      "utcStartTime": "2026/12/02 22:30:00",
      "utcEndTime": "2026/12/03 01:30:00",
+     "length": 180,
+     "room": "Caesars Palace | Emperors Level | Emperors Ballroom II",
+     "roomId": "1789591919892004bpdn",
+     "capacity": "82",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1784231861722001EVTP",
+   "code": "TNC307-R1",
+   "title": "Validate your hands-on AWS skills & earn a Microcredential ",
+   "abstract": "In this session, you will be given time to attempt a microcredential exam of your choice on AWS Skill Builder. These timed, hands-on exams test your skills in a live, provisioned AWS environment and test on popular topics. The product and developer team will be onsite to walk you through the UI and introduce the exam. Please note - this is an individual exam, and you will not be provided any hints or guidance outside of what is provided in the typical test environment. This exam is free to take on AWS Skill Builder. Attendees are required to bring their own device to complete the exam. Those who pass will be issued a microcredential badge on Credly.",
+   "type": "Exam prep",
+   "length": 180,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-01T09:22:48Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Exam prep"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Artificial Intelligence",
+     "Serverless"
+    ],
+    "AreaofInterest": [
+     "Training & Certification"
+    ],
+    "Venue": [
+     "Caesars Palace"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Tom Lawlor",
+     "title": "Sr. Product Manager - Tech",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790892831342001rnTW",
+     "date": "2026-12-01",
+     "startTime": "14:00",
+     "endTime": "17:00",
+     "utcStartTime": "2026/12/01 22:00:00",
+     "utcEndTime": "2026/12/02 01:00:00",
      "length": 180,
      "room": "Caesars Palace | Emperors Level | Emperors Ballroom II",
      "roomId": "1789591919892004bpdn",
@@ -189377,7 +189377,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-31T19:36:40Z",
+   "modified": "2026-11-01T09:24:58Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -192057,7 +192057,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-31T09:24:33Z",
+   "modified": "2026-11-01T07:47:25Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
