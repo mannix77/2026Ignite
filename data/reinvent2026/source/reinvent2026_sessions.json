@@ -1,7 +1,7 @@
 {
  "source": "https://catalog.awsevents.com/api/sessions",
  "event": "reinvent2026",
- "fetchedAt": "2026-11-01T12:43:02Z",
+ "fetchedAt": "2026-11-01T18:43:08Z",
  "count": 2412,
  "sessions": [
   {
@@ -1617,89 +1617,6 @@
    ]
   },
   {
-   "sessionID": "1780442252450001cXst",
-   "code": "STG357-R",
-   "title": "Accelerate database protection and testing with EBS Snapshots and clones",
-   "abstract": "Teams that rely on backups alone risk slow dev cycles, compliance gaps, and prolonged recovery times. Learn how Amazon EBS Snapshots and Volume Clones solve these challenges together. See how Snapshots deliver incremental, cross-region data protection with automated lifecycle policies for compliance, while Volume Clones create instant local copies for development and testing. We'll compare cost, performance, and architectural tradeoffs. You'll leave with a decision framework for when to snapshot, when to clone, and how to combine both in production architectures. ",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Architecture",
-     "Storage"
-    ],
-    "AreaofInterest": [
-     "Data Protection",
-     "Resilience",
-     "Cost Optimization"
-    ],
-    "Role": [
-     "IT Professional / Technical Manager",
-     "Solution / Systems Architect",
-     "System Administrator"
-    ],
-    "Services": [
-     "Amazon Elastic Block Store (Amazon EBS)"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Shibin Michaelraj",
-     "title": "Sr Product Manager",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Santhosh Arunuri",
-     "title": "Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025491504001CqLa",
-     "date": "2026-11-30",
-     "startTime": "14:30",
-     "endTime": "15:30",
-     "utcStartTime": "2026/11/30 22:30:00",
-     "utcEndTime": "2026/11/30 23:30:00",
-     "length": 60,
-     "room": "MGM Grand | Level 1 | Boulevard 167",
-     "roomId": "1789591920229001bkrV",
-     "capacity": "78",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358244996001iftL",
    "code": "STG357-R1",
    "title": "Accelerate database protection and testing with EBS Snapshots and clones",
@@ -1776,6 +1693,89 @@
      "room": "MGM Grand | Level 1 | Boulevard 163",
      "roomId": "1789591920202001b2p2",
      "capacity": "94",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442252450001cXst",
+   "code": "STG357-R",
+   "title": "Accelerate database protection and testing with EBS Snapshots and clones",
+   "abstract": "Teams that rely on backups alone risk slow dev cycles, compliance gaps, and prolonged recovery times. Learn how Amazon EBS Snapshots and Volume Clones solve these challenges together. See how Snapshots deliver incremental, cross-region data protection with automated lifecycle policies for compliance, while Volume Clones create instant local copies for development and testing. We'll compare cost, performance, and architectural tradeoffs. You'll leave with a decision framework for when to snapshot, when to clone, and how to combine both in production architectures. ",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-01T17:18:20Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Architecture",
+     "Storage"
+    ],
+    "AreaofInterest": [
+     "Data Protection",
+     "Resilience",
+     "Cost Optimization"
+    ],
+    "Role": [
+     "IT Professional / Technical Manager",
+     "Solution / Systems Architect",
+     "System Administrator"
+    ],
+    "Services": [
+     "Amazon Elastic Block Store (Amazon EBS)"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Shibin Michaelraj",
+     "title": "Sr Product Manager",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Santhosh Arunuri",
+     "title": "Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025491504001CqLa",
+     "date": "2026-11-30",
+     "startTime": "14:30",
+     "endTime": "15:30",
+     "utcStartTime": "2026/11/30 22:30:00",
+     "utcEndTime": "2026/11/30 23:30:00",
+     "length": 60,
+     "room": "MGM Grand | Level 1 | Boulevard 167",
+     "roomId": "1789591920229001bkrV",
+     "capacity": "78",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -11707,89 +11707,6 @@
    ]
   },
   {
-   "sessionID": "1780442255726001c1Fu",
-   "code": "DAT404-R",
-   "title": "AI agents for PostgreSQL replication and partitioning",
-   "abstract": "Recent PostgreSQL releases introduced transformative capabilities for logical replication and partitioning, including filtering, parallel apply, sequence replication, and improved planning for partition-heavy workloads. These features are powerful, but tuning them for a specific environment remains complex. In this session, learn to build agents for these core PostgreSQL concepts on Amazon Aurora PostgreSQL: one that analyzes workloads to recommend optimal logical replication configuration, and a partitioning agent that evaluates query patterns and table bloat to guide table partitioning strategy.",
-   "type": "Code talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Code talk"
-    ],
-    "Level": [
-     "400 – Expert"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Artificial Intelligence",
-     "Databases"
-    ],
-    "AreaofInterest": [
-     "Agentic AI"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "DevOps Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Aurora",
-     "Amazon Relational Database Service (Amazon RDS)",
-     "Amazon Aurora for PostgreSQL"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Chirag Dave",
-     "title": "Sr Manager, PostgreSQL DBE",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Jim Mlodgenski",
-     "title": "Senior Principal Engineer",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790033115264001qJ0z",
-     "date": "2026-11-30",
-     "startTime": "13:30",
-     "endTime": "14:30",
-     "utcStartTime": "2026/11/30 21:30:00",
-     "utcEndTime": "2026/11/30 22:30:00",
-     "length": 60,
-     "room": "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Code Talk",
-     "roomId": "1789591920430004bQ0h",
-     "capacity": "120",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358216940001iyMD",
    "code": "DAT404-R2",
    "title": "AI agents for PostgreSQL replication and partitioning",
@@ -11949,6 +11866,89 @@
      "room": "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Code Talk",
      "roomId": "1789591921351004b3ei",
      "capacity": "60",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442255726001c1Fu",
+   "code": "DAT404-R",
+   "title": "AI agents for PostgreSQL replication and partitioning",
+   "abstract": "Recent PostgreSQL releases introduced transformative capabilities for logical replication and partitioning, including filtering, parallel apply, sequence replication, and improved planning for partition-heavy workloads. These features are powerful, but tuning them for a specific environment remains complex. In this session, learn to build agents for these core PostgreSQL concepts on Amazon Aurora PostgreSQL: one that analyzes workloads to recommend optimal logical replication configuration, and a partitioning agent that evaluates query patterns and table bloat to guide table partitioning strategy.",
+   "type": "Code talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-01T18:31:16Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Code talk"
+    ],
+    "Level": [
+     "400 – Expert"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Artificial Intelligence",
+     "Databases"
+    ],
+    "AreaofInterest": [
+     "Agentic AI"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "DevOps Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Aurora",
+     "Amazon Relational Database Service (Amazon RDS)",
+     "Amazon Aurora for PostgreSQL"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Jim Mlodgenski",
+     "title": "Senior Principal Engineer",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Chirag Dave",
+     "title": "Sr Manager, PostgreSQL DBE",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790033115264001qJ0z",
+     "date": "2026-11-30",
+     "startTime": "13:30",
+     "endTime": "14:30",
+     "utcStartTime": "2026/11/30 21:30:00",
+     "utcEndTime": "2026/11/30 22:30:00",
+     "length": 60,
+     "room": "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Code Talk",
+     "roomId": "1789591920430004bQ0h",
+     "capacity": "120",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -21423,15 +21423,15 @@
    },
    "speakers": [
     {
-     "name": "Patrick Duffy",
-     "title": "Sr. Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Jonathan Woods",
      "title": "Sr. Solutions Architect",
      "company": "Amazon Web Services (AWS)",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Patrick Duffy",
+     "title": "Sr. Solutions Architect",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     }
    ],
@@ -24121,7 +24121,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T09:57:55Z",
+   "modified": "2026-11-01T17:58:19Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -38081,7 +38081,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T09:49:48Z",
+   "modified": "2026-11-01T16:47:34Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -48790,7 +48790,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-11-01T17:36:31Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -48824,15 +48824,15 @@
    },
    "speakers": [
     {
-     "name": "Pallavi Bhat",
-     "title": "Solutions Architect",
-     "company": "AWS",
+     "name": "Abilashkumar P C",
+     "title": "Sr Specialist Solutions Architect - Applied AI",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     },
     {
-     "name": "Abilashkumar P C",
-     "title": "Senior Specialist Solutions Architect",
-     "company": "Amazon Web Services",
+     "name": "Pallavi Bhat",
+     "title": "Solutions Architect",
+     "company": "AWS",
      "role": "Internal Speaker"
     }
    ],
@@ -48863,7 +48863,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-11-01T17:36:31Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -48897,15 +48897,15 @@
    },
    "speakers": [
     {
-     "name": "Pallavi Bhat",
-     "title": "Solutions Architect",
-     "company": "AWS",
+     "name": "Abilashkumar P C",
+     "title": "Sr Specialist Solutions Architect - Applied AI",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     },
     {
-     "name": "Abilashkumar P C",
-     "title": "Senior Specialist Solutions Architect",
-     "company": "Amazon Web Services",
+     "name": "Pallavi Bhat",
+     "title": "Solutions Architect",
+     "company": "AWS",
      "role": "Internal Speaker"
     }
    ],
@@ -67253,6 +67253,12 @@
    },
    "speakers": [
     {
+     "name": "Sanghwa Na",
+     "title": "Sr. Specialist SA, Gen AI",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
      "name": "Wei Chen",
      "title": "Sr. Solutions Architect",
      "company": "AWS",
@@ -67265,21 +67271,15 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Patrick Duffy",
-     "title": "Sr. Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Sanghwa Na",
-     "title": "Sr. Specialist SA, Gen AI",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Jonathan Woods",
      "title": "Sr. Solutions Architect",
      "company": "Amazon Web Services (AWS)",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Patrick Duffy",
+     "title": "Sr. Solutions Architect",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     }
    ],
@@ -81601,7 +81601,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T11:20:49Z",
+   "modified": "2026-11-01T18:34:36Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -83703,7 +83703,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-11-01T18:39:47Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -85095,7 +85095,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-31T20:18:53Z",
+   "modified": "2026-11-01T14:42:25Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -87734,16 +87734,16 @@
    },
    "speakers": [
     {
-     "name": "Olivier Leplus",
-     "title": "Senior Developer Advocate",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Luca Bianchi",
      "title": "Chief Technology and Innovation Officer",
      "company": "AWS AI Hero",
      "role": "External Speaker"
+    },
+    {
+     "name": "Olivier Leplus",
+     "title": "Senior Developer Advocate",
+     "company": "AWS",
+     "role": "Internal Speaker"
     }
    ],
    "times": [
@@ -92428,7 +92428,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-11-01T18:34:36Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -129159,7 +129159,7 @@
    "length": 90,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T06:10:11Z",
+   "modified": "2026-11-01T15:50:41Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -134501,7 +134501,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T09:09:24Z",
+   "modified": "2026-11-01T13:36:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -136297,108 +136297,6 @@
    ]
   },
   {
-   "sessionID": "1790358254824001i0fS",
-   "code": "COP319-R1",
-   "title": "Observe AI agents beyond your perimeter",
-   "abstract": "Your developers are burning tokens on AI coding agents with zero visibility. Claude Code and OpenAI Codex run on laptops, outside your perimeter, with no telemetry reaching your observability backend. In this session, we fix that. Using native OpenTelemetry export and Amazon CloudWatch's OTLP endpoint with a single bearer token, with no collectors, no sidecars, no credential wiring, we ship metrics (token usage, cost, productivity), logs (tool decisions, errors), and traces (agent reasoning chains) directly from developer machines. Then we build a live dashboard with per-team cost attribution and anomaly alerting, all queryable with PromQL. Walk out ready to deploy in minutes.",
-   "type": "Builders' session",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Builders' session"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Artificial Intelligence",
-     "Cloud Operations"
-    ],
-    "AreaofInterest": [
-     "Monitoring & Observability",
-     "Agentic AI"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "DevOps Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon CloudWatch",
-     "AWS Distro for OpenTelemetry"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Ainara Manlutac",
-     "title": "Technical Business Developer",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Gagandeep Singh",
-     "title": "Sr Technical Account Manager",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Kishore Vinjam",
-     "title": "WW CloudOps Principal PSA",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Anil Pathuri",
-     "title": "Sr. Technical Account Manager",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Garrett Johnson",
-     "title": "Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360382238001Aa9l",
-     "date": "2026-12-02",
-     "startTime": "16:00",
-     "endTime": "17:00",
-     "utcStartTime": "2026/12/03 00:00:00",
-     "utcEndTime": "2026/12/03 01:00:00",
-     "length": 60,
-     "room": "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Builders' Session 2",
-     "roomId": "1789591920422004b914",
-     "capacity": "50",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780441491971001GoIt",
    "code": "COP319-R",
    "title": "Observe AI agents beyond your perimeter",
@@ -136452,9 +136350,9 @@
    },
    "speakers": [
     {
-     "name": "Ainara Manlutac",
-     "title": "Technical Business Developer",
-     "company": "Amazon Web Services",
+     "name": "Garrett Johnson",
+     "title": "Solutions Architect",
+     "company": "AWS",
      "role": "Internal Speaker"
     },
     {
@@ -136470,15 +136368,15 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Anil Pathuri",
-     "title": "Sr. Technical Account Manager",
-     "company": "Amazon",
+     "name": "Ainara Manlutac",
+     "title": "Technical Business Developer",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     },
     {
-     "name": "Garrett Johnson",
-     "title": "Solutions Architect",
-     "company": "AWS",
+     "name": "Anil Pathuri",
+     "title": "Sr. Technical Account Manager",
+     "company": "Amazon",
      "role": "Internal Speaker"
     }
    ],
@@ -136493,6 +136391,108 @@
      "length": 60,
      "room": "Caesars Forum | Level 1 | Forum 120 | Content Hub | Builders' Session 2",
      "roomId": "1789591919743001bno1",
+     "capacity": "50",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358254824001i0fS",
+   "code": "COP319-R1",
+   "title": "Observe AI agents beyond your perimeter",
+   "abstract": "Your developers are burning tokens on AI coding agents with zero visibility. Claude Code and OpenAI Codex run on laptops, outside your perimeter, with no telemetry reaching your observability backend. In this session, we fix that. Using native OpenTelemetry export and Amazon CloudWatch's OTLP endpoint with a single bearer token, with no collectors, no sidecars, no credential wiring, we ship metrics (token usage, cost, productivity), logs (tool decisions, errors), and traces (agent reasoning chains) directly from developer machines. Then we build a live dashboard with per-team cost attribution and anomaly alerting, all queryable with PromQL. Walk out ready to deploy in minutes.",
+   "type": "Builders' session",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-30T21:40:30Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Builders' session"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Artificial Intelligence",
+     "Cloud Operations"
+    ],
+    "AreaofInterest": [
+     "Monitoring & Observability",
+     "Agentic AI"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "DevOps Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon CloudWatch",
+     "AWS Distro for OpenTelemetry"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Garrett Johnson",
+     "title": "Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Gagandeep Singh",
+     "title": "Sr Technical Account Manager",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Kishore Vinjam",
+     "title": "WW CloudOps Principal PSA",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Ainara Manlutac",
+     "title": "Technical Business Developer",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Anil Pathuri",
+     "title": "Sr. Technical Account Manager",
+     "company": "Amazon",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360382238001Aa9l",
+     "date": "2026-12-02",
+     "startTime": "16:00",
+     "endTime": "17:00",
+     "utcStartTime": "2026/12/03 00:00:00",
+     "utcEndTime": "2026/12/03 01:00:00",
+     "length": 60,
+     "room": "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Builders' Session 2",
+     "roomId": "1789591920422004b914",
      "capacity": "50",
      "inPersonTime": true,
      "virtualTime": false,
@@ -139595,7 +139595,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-31T21:22:31Z",
+   "modified": "2026-11-01T15:42:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -140327,7 +140327,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-31T22:02:27Z",
+   "modified": "2026-11-01T15:55:22Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -142222,90 +142222,6 @@
    ]
   },
   {
-   "sessionID": "1790358223663001iYna",
-   "code": "NET317-R1",
-   "title": "Origin management for multi-region applications with Amazon CloudFront",
-   "abstract": "In this session, you'll learn comprehensive origin management with Amazon CloudFront to build secure, resilient content delivery systems. We'll cover automatic failover mechanisms with CloudFront and Route 53, configure granular origin routing with CloudFront Functions, and secure origins using S3 with Origin Access Control (OAC) and VPC private origins for enhanced security. We'll explore integrating on-premises infrastructure through AWS Direct Connect for hybrid architectures, and deploy Origin Shield to further optimize cache performance and reduce origin load.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Networking & Content Delivery"
-    ],
-    "AreaofInterest": [
-     "Edge Computing",
-     "Global Infrastructure",
-     "Resilience"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "DevOps Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon CloudFront",
-     "Amazon Route 53",
-     "AWS Direct Connect"
-    ],
-    "Venue": [
-     "Wynn/Encore"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Carlos Salazar",
-     "title": "US, Specialist Sr. SA",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Jonathan Woods",
-     "title": "Sr. Solutions Architect",
-     "company": "Amazon Web Services (AWS)",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360396963001AtOP",
-     "date": "2026-12-01",
-     "startTime": "15:00",
-     "endTime": "16:00",
-     "utcStartTime": "2026/12/01 23:00:00",
-     "utcEndTime": "2026/12/02 00:00:00",
-     "length": 60,
-     "room": "Wynn/Encore | Level 1 | Debussy 1",
-     "roomId": "1789591921139004bOia",
-     "capacity": "78",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442247653001cle8",
    "code": "NET317-R",
    "title": "Origin management for multi-region resilient applications with Amazon CloudFront",
@@ -142382,6 +142298,90 @@
      "length": 60,
      "room": "MGM Grand | Level 1 | Boulevard 158",
      "roomId": "1789591920175001be2U",
+     "capacity": "78",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358223663001iYna",
+   "code": "NET317-R1",
+   "title": "Origin management for multi-region applications with Amazon CloudFront",
+   "abstract": "In this session, you'll learn comprehensive origin management with Amazon CloudFront to build secure, resilient content delivery systems. We'll cover automatic failover mechanisms with CloudFront and Route 53, configure granular origin routing with CloudFront Functions, and secure origins using S3 with Origin Access Control (OAC) and VPC private origins for enhanced security. We'll explore integrating on-premises infrastructure through AWS Direct Connect for hybrid architectures, and deploy Origin Shield to further optimize cache performance and reduce origin load.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-30T21:40:30Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Networking & Content Delivery"
+    ],
+    "AreaofInterest": [
+     "Edge Computing",
+     "Global Infrastructure",
+     "Resilience"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "DevOps Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon CloudFront",
+     "Amazon Route 53",
+     "AWS Direct Connect"
+    ],
+    "Venue": [
+     "Wynn/Encore"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Carlos Salazar",
+     "title": "US, Specialist Sr. SA",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Jonathan Woods",
+     "title": "Sr. Solutions Architect",
+     "company": "Amazon Web Services (AWS)",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360396963001AtOP",
+     "date": "2026-12-01",
+     "startTime": "15:00",
+     "endTime": "16:00",
+     "utcStartTime": "2026/12/01 23:00:00",
+     "utcEndTime": "2026/12/02 00:00:00",
+     "length": 60,
+     "room": "Wynn/Encore | Level 1 | Debussy 1",
+     "roomId": "1789591921139004bOia",
      "capacity": "78",
      "inPersonTime": true,
      "virtualTime": false,
@@ -148517,7 +148517,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-11-01T18:04:05Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -153080,7 +153080,7 @@
    "length": 240,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T09:14:41Z",
+   "modified": "2026-11-01T15:46:24Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -153155,7 +153155,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T07:50:55Z",
+   "modified": "2026-11-01T16:39:02Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -162090,7 +162090,7 @@
    "length": 180,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T10:49:50Z",
+   "modified": "2026-11-01T16:20:07Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -170048,7 +170048,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T04:11:52Z",
+   "modified": "2026-11-01T14:47:47Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -170130,7 +170130,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T07:49:35Z",
+   "modified": "2026-11-01T17:19:05Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -183359,74 +183359,6 @@
    ]
   },
   {
-   "sessionID": "1784231861650001EiWr",
-   "code": "TNC307-R2",
-   "title": "Validate your hands-on AWS skills & earn a Microcredential ",
-   "abstract": "In this session, you will be given time to attempt a microcredential exam of your choice on AWS Skill Builder. These timed, hands-on exams test your skills in a live, provisioned AWS environment and test on popular topics. The product and developer team will be onsite to walk you through the UI and introduce the exam. Please note - this is an individual exam, and you will not be provided any hints or guidance outside of what is provided in the typical test environment. This exam is free to take on AWS Skill Builder. Attendees are required to bring their own device to complete the exam. Those who pass will be issued a microcredential badge on Credly.",
-   "type": "Exam prep",
-   "length": 180,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-01T06:09:11Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Exam prep"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Artificial Intelligence",
-     "Serverless"
-    ],
-    "AreaofInterest": [
-     "Training & Certification"
-    ],
-    "Venue": [
-     "Caesars Palace"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Tom Lawlor",
-     "title": "Sr. Product Manager - Tech",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1791232313142001lVfK",
-     "date": "2026-12-02",
-     "startTime": "14:30",
-     "endTime": "17:30",
-     "utcStartTime": "2026/12/02 22:30:00",
-     "utcEndTime": "2026/12/03 01:30:00",
-     "length": 180,
-     "room": "Caesars Palace | Emperors Level | Emperors Ballroom II",
-     "roomId": "1789591919892004bpdn",
-     "capacity": "82",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1784231861722001EVTP",
    "code": "TNC307-R1",
    "title": "Validate your hands-on AWS skills & earn a Microcredential ",
@@ -183435,7 +183367,7 @@
    "length": 180,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T09:22:48Z",
+   "modified": "2026-11-01T14:37:19Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -183484,6 +183416,74 @@
      "endTime": "17:00",
      "utcStartTime": "2026/12/01 22:00:00",
      "utcEndTime": "2026/12/02 01:00:00",
+     "length": 180,
+     "room": "Caesars Palace | Emperors Level | Emperors Ballroom II",
+     "roomId": "1789591919892004bpdn",
+     "capacity": "82",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1784231861650001EiWr",
+   "code": "TNC307-R2",
+   "title": "Validate your hands-on AWS skills & earn a Microcredential ",
+   "abstract": "In this session, you will be given time to attempt a microcredential exam of your choice on AWS Skill Builder. These timed, hands-on exams test your skills in a live, provisioned AWS environment and test on popular topics. The product and developer team will be onsite to walk you through the UI and introduce the exam. Please note - this is an individual exam, and you will not be provided any hints or guidance outside of what is provided in the typical test environment. This exam is free to take on AWS Skill Builder. Attendees are required to bring their own device to complete the exam. Those who pass will be issued a microcredential badge on Credly.",
+   "type": "Exam prep",
+   "length": 180,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-01T14:42:11Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Exam prep"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Artificial Intelligence",
+     "Serverless"
+    ],
+    "AreaofInterest": [
+     "Training & Certification"
+    ],
+    "Venue": [
+     "Caesars Palace"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Tom Lawlor",
+     "title": "Sr. Product Manager - Tech",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1791232313142001lVfK",
+     "date": "2026-12-02",
+     "startTime": "14:30",
+     "endTime": "17:30",
+     "utcStartTime": "2026/12/02 22:30:00",
+     "utcEndTime": "2026/12/03 01:30:00",
      "length": 180,
      "room": "Caesars Palace | Emperors Level | Emperors Ballroom II",
      "roomId": "1789591919892004bpdn",
@@ -189377,7 +189377,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T09:24:58Z",
+   "modified": "2026-11-01T15:55:22Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -192192,7 +192192,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-11-01T18:41:12Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -192222,14 +192222,14 @@
    },
    "speakers": [
     {
-     "name": "Andrei Papancea",
-     "title": "Head of AI Engineering",
+     "name": "Joe Sullivan",
+     "title": "Senior Principal Engineer",
      "company": "AWS",
      "role": "Internal Speaker"
     },
     {
-     "name": "Joe Sullivan",
-     "title": "Senior Principal Engineer",
+     "name": "Andrei Papancea",
+     "title": "Head of AI Engineering",
      "company": "AWS",
      "role": "Internal Speaker"
     }
