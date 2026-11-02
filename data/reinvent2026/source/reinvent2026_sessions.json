@@ -1,7 +1,7 @@
 {
  "source": "https://catalog.awsevents.com/api/sessions",
  "event": "reinvent2026",
- "fetchedAt": "2026-11-02T00:50:39Z",
+ "fetchedAt": "2026-11-02T06:50:09Z",
  "count": 2415,
  "sessions": [
   {
@@ -7902,92 +7902,6 @@
    ]
   },
   {
-   "sessionID": "1790358248474001ibYK",
-   "code": "IND377-R1",
-   "title": "Agentic AI in Production: Natera Saves Lives, Cuts Costs, Grows Revenue",
-   "abstract": "Natera, a global leader in cell-free DNA testing for oncology, women's health, and organ health, built reusable agentic infrastructure on Amazon Bedrock and Amazon Bedrock AgentCore to power multiple internal platforms from a single framework. Natera's VP of Engineering will share the technical decisions behind this infrastructure and provides a blueprint for building once and scaling across your organization. See a live demo of one platform built on this foundation for revenue cycle management, cutting prior-authorization denial rates 6x, reducing touchpoints by 5x, and enabling new use cases to go live in less than a week. ",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Customer story",
-     "Discussion"
-    ],
-    "Topic": [
-     "Artificial Intelligence",
-     "Databases"
-    ],
-    "AreaofInterest": [
-     "Innovation & Transformation",
-     "Agentic AI"
-    ],
-    "Industry": [
-     "Healthcare & Life Sciences"
-    ],
-    "Role": [
-     "Academic / Researcher",
-     "Developer / Engineer",
-     "IT Professional / Technical Manager"
-    ],
-    "Services": [
-     "Amazon Bedrock"
-    ],
-    "Venue": [
-     "Wynn/Encore"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Tamara Gagliardi",
-     "title": "Sr. Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Mirko Buholzer",
-     "title": "VP Software Engineering",
-     "company": "Natera, Inc.",
-     "role": "External Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1791228922718001omou",
-     "date": "2026-12-01",
-     "startTime": "13:00",
-     "endTime": "14:00",
-     "utcStartTime": "2026/12/01 21:00:00",
-     "utcEndTime": "2026/12/01 22:00:00",
-     "length": 60,
-     "room": "Wynn/Encore | Convention Promenade | Latour 5",
-     "roomId": "1789591920978004bmWF",
-     "capacity": "75",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442246204001cVyF",
    "code": "IND377-R",
    "title": "Agentic AI in Production: Natera Saves Lives, Cuts Costs, Grows Revenue",
@@ -8066,6 +7980,92 @@
      "room": "Wynn/Encore | Level 1 | Chopin 2",
      "roomId": "1789591921094001bT6B",
      "capacity": "88",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358248474001ibYK",
+   "code": "IND377-R1",
+   "title": "Agentic AI in Production: Natera Saves Lives, Cuts Costs, Grows Revenue",
+   "abstract": "Natera, a global leader in cell-free DNA testing for oncology, women's health, and organ health, built reusable agentic infrastructure on Amazon Bedrock and Amazon Bedrock AgentCore to power multiple internal platforms from a single framework. Natera's VP of Engineering will share the technical decisions behind this infrastructure and provides a blueprint for building once and scaling across your organization. See a live demo of one platform built on this foundation for revenue cycle management, cutting prior-authorization denial rates 6x, reducing touchpoints by 5x, and enabling new use cases to go live in less than a week. ",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-02T05:24:55Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Customer story",
+     "Discussion"
+    ],
+    "Topic": [
+     "Artificial Intelligence",
+     "Databases"
+    ],
+    "AreaofInterest": [
+     "Innovation & Transformation",
+     "Agentic AI"
+    ],
+    "Industry": [
+     "Healthcare & Life Sciences"
+    ],
+    "Role": [
+     "Academic / Researcher",
+     "Developer / Engineer",
+     "IT Professional / Technical Manager"
+    ],
+    "Services": [
+     "Amazon Bedrock"
+    ],
+    "Venue": [
+     "Wynn/Encore"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Mirko Buholzer",
+     "title": "VP Software Engineering",
+     "company": "Natera, Inc.",
+     "role": "External Speaker"
+    },
+    {
+     "name": "Tamara Gagliardi",
+     "title": "Sr. Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1791228922718001omou",
+     "date": "2026-12-01",
+     "startTime": "13:00",
+     "endTime": "14:00",
+     "utcStartTime": "2026/12/01 21:00:00",
+     "utcEndTime": "2026/12/01 22:00:00",
+     "length": 60,
+     "room": "Wynn/Encore | Convention Promenade | Latour 5",
+     "roomId": "1789591920978004bmWF",
+     "capacity": "75",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -8663,93 +8663,6 @@
    ]
   },
   {
-   "sessionID": "1780442244829001cm9z",
-   "code": "IND362-R",
-   "title": "Agentic commerce: shopping assistants to agent-ready infrastructure",
-   "abstract": "AI agents are reshaping how consumers discover and purchase products, and retail and CPG brands have a massive opportunity to meet them where they are. This chalk talk covers both sides of the agentic commerce stack. First, we walk through how retailers can launch conversational shopping customized to their catalog and brand voice in weeks with the Agentic Shopping Assistant on AWS, powered by Amazon Bedrock AgentCore and inspired by Amazon's own AI shopping experience. Then we explore how to make your platform discoverable by external AI agents through structured product feeds, headless APIs, and payment orchestration for machine-initiated transactions.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Artificial Intelligence",
-     "Industry Solutions"
-    ],
-    "AreaofInterest": [
-     "Front-End Web & Mobile",
-     "Generative AI",
-     "Agentic AI"
-    ],
-    "Industry": [
-     "Retail & Consumer Goods"
-    ],
-    "Role": [
-     "Business Executive",
-     "Developer / Engineer",
-     "IT Executive"
-    ],
-    "Services": [
-     "Amazon Bedrock",
-     "Amazon OpenSearch Serverless"
-    ],
-    "Venue": [
-     "Caesars Forum"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Aditya Pendyala",
-     "title": "Principal Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Adler Oliveira",
-     "title": "Principal Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025533400001Cjy5",
-     "date": "2026-12-03",
-     "startTime": "09:00",
-     "endTime": "10:00",
-     "utcStartTime": "2026/12/03 17:00:00",
-     "utcEndTime": "2026/12/03 18:00:00",
-     "length": 60,
-     "room": "Caesars Forum | Level 1 | Alliance 314",
-     "roomId": "1789591919643004bRVK",
-     "capacity": "88",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358234675001ispU",
    "code": "IND362-R1",
    "title": "Agentic commerce: shopping assistants to agent-ready infrastructure",
@@ -8829,6 +8742,93 @@
      "length": 60,
      "room": "Caesars Forum | Level 1 | Forum 114",
      "roomId": "1789591919703003bevY",
+     "capacity": "88",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442244829001cm9z",
+   "code": "IND362-R",
+   "title": "Agentic commerce: shopping assistants to agent-ready infrastructure",
+   "abstract": "AI agents are reshaping how consumers discover and purchase products, and retail and CPG brands have a massive opportunity to meet them where they are. This chalk talk covers both sides of the agentic commerce stack. First, we walk through how retailers can launch conversational shopping customized to their catalog and brand voice in weeks with the Agentic Shopping Assistant on AWS, powered by Amazon Bedrock AgentCore and inspired by Amazon's own AI shopping experience. Then we explore how to make your platform discoverable by external AI agents through structured product feeds, headless APIs, and payment orchestration for machine-initiated transactions.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-02T05:26:56Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Artificial Intelligence",
+     "Industry Solutions"
+    ],
+    "AreaofInterest": [
+     "Front-End Web & Mobile",
+     "Generative AI",
+     "Agentic AI"
+    ],
+    "Industry": [
+     "Retail & Consumer Goods"
+    ],
+    "Role": [
+     "Business Executive",
+     "Developer / Engineer",
+     "IT Executive"
+    ],
+    "Services": [
+     "Amazon Bedrock",
+     "Amazon OpenSearch Serverless"
+    ],
+    "Venue": [
+     "Caesars Forum"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Aditya Pendyala",
+     "title": "Principal Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Adler Oliveira",
+     "title": "Principal Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025533400001Cjy5",
+     "date": "2026-12-03",
+     "startTime": "09:00",
+     "endTime": "10:00",
+     "utcStartTime": "2026/12/03 17:00:00",
+     "utcEndTime": "2026/12/03 18:00:00",
+     "length": 60,
+     "room": "Caesars Forum | Level 1 | Alliance 314",
+     "roomId": "1789591919643004bRVK",
      "capacity": "88",
      "inPersonTime": true,
      "virtualTime": false,
@@ -24121,7 +24121,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-02T00:19:22Z",
+   "modified": "2026-11-02T04:42:54Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -55012,7 +55012,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T09:03:37Z",
+   "modified": "2026-11-02T04:08:07Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -58761,7 +58761,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T09:17:46Z",
+   "modified": "2026-11-02T04:08:07Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -62026,12 +62026,6 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Munkyu Seong",
-     "title": "Sr. Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Jinsung Huh",
      "title": "Sr.Solutions Architect",
      "company": "Amazon Web Service",
@@ -62039,6 +62033,12 @@
     },
     {
      "name": "Hun KIM",
+     "title": "Sr. Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Munkyu Seong",
      "title": "Sr. Solutions Architect",
      "company": "AWS",
      "role": "Internal Speaker"
@@ -69163,7 +69163,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-11-02T04:55:07Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -69193,15 +69193,15 @@
    },
    "speakers": [
     {
-     "name": "Marshall Bunch",
-     "title": "Sr. Specialist Solutions Architect, Agentic AI",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Leo Mentis Raj Selvaraj",
      "title": "Senior Specialist Solutions Architect - GenAI",
      "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Marshall Bunch",
+     "title": "Sr. Specialist Solutions Architect, Agentic AI",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     }
    ],
@@ -71036,7 +71036,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-02T00:15:36Z",
+   "modified": "2026-11-02T06:33:26Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -78230,7 +78230,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-11-02T06:05:19Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -81601,7 +81601,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-02T00:37:23Z",
+   "modified": "2026-11-02T06:33:26Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -84532,7 +84532,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T20:59:21Z",
+   "modified": "2026-11-02T04:53:17Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -91513,7 +91513,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-02T00:28:40Z",
+   "modified": "2026-11-02T06:43:35Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -100242,7 +100242,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-02T00:19:23Z",
+   "modified": "2026-11-02T04:55:07Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -115368,7 +115368,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T22:30:16Z",
+   "modified": "2026-11-02T01:30:09Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -115567,93 +115567,6 @@
    ]
   },
   {
-   "sessionID": "1780442244158001c5Jb",
-   "code": "IND359-R",
-   "title": "In-Country HPC: How TGS Processes Seismic Data on AWS Brazil",
-   "abstract": "TGS -- one of the world's largest multi-client geoscience data providers -- faced a significant cost challenge running its business-critical Rackmon EFWI GPU workload at scale. By strategically deploying this workload on AWS infrastructure in Brazil, TGS leveraged Brazil's ReData Special Tax Regime to dramatically reduce the tax burden on GPU-intensive seismic processing. The result: material cost savings on one of the most computationally demanding workloads in the energy industry -- and a reusable in-country processing architecture that can serve future customers with data residency requirements in other geographies.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-01T09:08:33Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Compute",
-     "Migration & Modernization"
-    ],
-    "AreaofInterest": [
-     "Digital Sovereignty",
-     "Global Infrastructure",
-     "Cost Optimization"
-    ],
-    "Industry": [
-     "Energy & Utilities"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "IT Executive",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Elastic Compute Cloud (Amazon EC2)",
-     "Amazon Simple Storage Service (Amazon S3)"
-    ],
-    "Venue": [
-     "Wynn/Encore"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Kun Jiao",
-     "title": "Principal Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Faisal Asif",
-     "title": "Global Head, Cloud Transformation and Innovation",
-     "company": "TGS",
-     "role": "External Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025474823001C937",
-     "date": "2026-11-30",
-     "startTime": "09:00",
-     "endTime": "10:00",
-     "utcStartTime": "2026/11/30 17:00:00",
-     "utcEndTime": "2026/11/30 18:00:00",
-     "length": 60,
-     "room": "Wynn/Encore | Convention Promenade | La Tache 2",
-     "roomId": "1789591920958001b8NR",
-     "capacity": "78",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358232199001iAvH",
    "code": "IND359-R1",
    "title": "In-Country HPC: How TGS Processes Seismic Data on AWS Brazil",
@@ -115662,7 +115575,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T20:16:24Z",
+   "modified": "2026-11-02T02:36:41Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -115735,6 +115648,93 @@
      "room": "Wynn/Encore | Level 1 | Chopin 4",
      "roomId": "1789591921128001bJpf",
      "capacity": "88",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442244158001c5Jb",
+   "code": "IND359-R",
+   "title": "In-Country HPC: How TGS Processes Seismic Data on AWS Brazil",
+   "abstract": "TGS -- one of the world's largest multi-client geoscience data providers -- faced a significant cost challenge running its business-critical Rackmon EFWI GPU workload at scale. By strategically deploying this workload on AWS infrastructure in Brazil, TGS leveraged Brazil's ReData Special Tax Regime to dramatically reduce the tax burden on GPU-intensive seismic processing. The result: material cost savings on one of the most computationally demanding workloads in the energy industry -- and a reusable in-country processing architecture that can serve future customers with data residency requirements in other geographies.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-02T06:46:06Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Compute",
+     "Migration & Modernization"
+    ],
+    "AreaofInterest": [
+     "Digital Sovereignty",
+     "Global Infrastructure",
+     "Cost Optimization"
+    ],
+    "Industry": [
+     "Energy & Utilities"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "IT Executive",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Elastic Compute Cloud (Amazon EC2)",
+     "Amazon Simple Storage Service (Amazon S3)"
+    ],
+    "Venue": [
+     "Wynn/Encore"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Kun Jiao",
+     "title": "Principal Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Faisal Asif",
+     "title": "Global Head, Cloud Transformation and Innovation",
+     "company": "TGS",
+     "role": "External Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025474823001C937",
+     "date": "2026-11-30",
+     "startTime": "09:00",
+     "endTime": "10:00",
+     "utcStartTime": "2026/11/30 17:00:00",
+     "utcEndTime": "2026/11/30 18:00:00",
+     "length": 60,
+     "room": "Wynn/Encore | Convention Promenade | La Tache 2",
+     "roomId": "1789591920958001b8NR",
+     "capacity": "78",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -116780,81 +116780,6 @@
    ]
   },
   {
-   "sessionID": "1780441495959001Gdm4",
-   "code": "INV510-R1",
-   "title": "Inside Amazon S3: How a one-page design reached planetary scale",
-   "abstract": "When Amazon S3 launched in 2006, its design requirements fit one page: scalable, reliable, fast, inexpensive, simple, with no single points of failure. The system was built to treat component failure as normal and use scale as an advantage. Today those founding principles describe an architecture serving hundreds of millions of requests per second across tens of millions of drives, maintaining eleven nines of durability while shipping features without downtime. Hear S3 principal engineers trace the decisions from single host to strong consistency at global scale, how formal methods verify correctness, and how the team balances innovation with operational safety.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-31T17:14:25Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "500 – Distinguished"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Storage"
-    ],
-    "Role": [
-     "Academic / Researcher"
-    ],
-    "Services": [
-     "Amazon Simple Storage Service (Amazon S3)"
-    ],
-    "Venue": [
-     "Wynn/Encore"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "James Bornholt",
-     "title": "Senior Principal Engineer",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "George Porter",
-     "title": "Sr. Principal Engineer",
-     "company": "Amazon AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1792635495399001m8XV",
-     "date": "2026-12-04",
-     "startTime": "09:00",
-     "endTime": "10:00",
-     "utcStartTime": "2026/12/04 17:00:00",
-     "utcEndTime": "2026/12/04 18:00:00",
-     "length": 60,
-     "room": "Wynn/Encore | Level 1 | Chopin 4",
-     "roomId": "1789591921128001bJpf",
-     "capacity": "88",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780441493872001Gs6G",
    "code": "INV510-R",
    "title": "Inside Amazon S3: How a one-page design reached planetary scale",
@@ -116923,6 +116848,81 @@
      "room": "MGM Grand | Level 3 | Room 350",
      "roomId": "1789591920582001b04E",
      "capacity": "82",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780441495959001Gdm4",
+   "code": "INV510-R1",
+   "title": "Inside Amazon S3: How a one-page design reached planetary scale",
+   "abstract": "When Amazon S3 launched in 2006, its design requirements fit one page: scalable, reliable, fast, inexpensive, simple, with no single points of failure. The system was built to treat component failure as normal and use scale as an advantage. Today those founding principles describe an architecture serving hundreds of millions of requests per second across tens of millions of drives, maintaining eleven nines of durability while shipping features without downtime. Hear S3 principal engineers trace the decisions from single host to strong consistency at global scale, how formal methods verify correctness, and how the team balances innovation with operational safety.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-02T04:24:35Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "500 – Distinguished"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Storage"
+    ],
+    "Role": [
+     "Academic / Researcher"
+    ],
+    "Services": [
+     "Amazon Simple Storage Service (Amazon S3)"
+    ],
+    "Venue": [
+     "Wynn/Encore"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "James Bornholt",
+     "title": "Senior Principal Engineer",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "George Porter",
+     "title": "Sr. Principal Engineer",
+     "company": "Amazon AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1792635495399001m8XV",
+     "date": "2026-12-04",
+     "startTime": "09:00",
+     "endTime": "10:00",
+     "utcStartTime": "2026/12/04 17:00:00",
+     "utcEndTime": "2026/12/04 18:00:00",
+     "length": 60,
+     "room": "Wynn/Encore | Level 1 | Chopin 4",
+     "roomId": "1789591921128001bJpf",
+     "capacity": "88",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -119497,89 +119497,6 @@
    ]
   },
   {
-   "sessionID": "1785441035591001GjfZ",
-   "code": "OPN314-R",
-   "title": "Kiro Crew: Architecture of an open source AI coding agent built on Kiro",
-   "abstract": "Kiro Crew is an open source AI coding workspace built on Kiro CLI that grew from a side project to 39,000 users and nearly 500 contributors inside Amazon. Unlike single-session assistants, Kiro Crew combines multi-step task orchestration, tool-use planning, and a shared context layer for real engineering workflows. In this chalk talk, we'll walk through how Kiro Crew decomposes complex tasks, selects and chains tools, manages execution state, and integrates with existing developer environments. We'll discuss the design trade-offs that enabled rapid adoption and our journey to open source.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Artificial Intelligence",
-     "Developer Tools"
-    ],
-    "AreaofInterest": [
-     "Generative AI",
-     "Agentic AI",
-     "Machine Learning"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "DevOps Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Kiro"
-    ],
-    "Venue": [
-     "Caesars Forum"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Joe Guo",
-     "title": "Principle Software Engineer",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Bolin Chen",
-     "title": "SDE 3",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025546169001CO5i",
-     "date": "2026-12-03",
-     "startTime": "13:30",
-     "endTime": "14:30",
-     "utcStartTime": "2026/12/03 21:30:00",
-     "utcEndTime": "2026/12/03 22:30:00",
-     "length": 60,
-     "room": "Caesars Forum | Level 1 | Alliance 305",
-     "roomId": "1789591919601004bywY",
-     "capacity": "88",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358227757001i7w6",
    "code": "OPN314-R1",
    "title": "Kiro Crew: Architecture of an open source AI coding agent built on Kiro",
@@ -119588,7 +119505,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-10-31T20:21:09Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -119656,6 +119573,89 @@
      "room": "Caesars Palace | Promenade South | Octavius 9",
      "roomId": "1789591920153004bp8X",
      "capacity": "70",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1785441035591001GjfZ",
+   "code": "OPN314-R",
+   "title": "Kiro Crew: Architecture of an open source AI coding agent built on Kiro",
+   "abstract": "Kiro Crew is an open source AI coding workspace built on Kiro CLI that grew from a side project to 39,000 users and nearly 500 contributors inside Amazon. Unlike single-session assistants, Kiro Crew combines multi-step task orchestration, tool-use planning, and a shared context layer for real engineering workflows. In this chalk talk, we'll walk through how Kiro Crew decomposes complex tasks, selects and chains tools, manages execution state, and integrates with existing developer environments. We'll discuss the design trade-offs that enabled rapid adoption and our journey to open source.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-31T20:20:58Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Artificial Intelligence",
+     "Developer Tools"
+    ],
+    "AreaofInterest": [
+     "Generative AI",
+     "Agentic AI",
+     "Machine Learning"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "DevOps Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Kiro"
+    ],
+    "Venue": [
+     "Caesars Forum"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Joe Guo",
+     "title": "Principle Software Engineer",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Bolin Chen",
+     "title": "SDE 3",
+     "company": "Amazon",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025546169001CO5i",
+     "date": "2026-12-03",
+     "startTime": "13:30",
+     "endTime": "14:30",
+     "utcStartTime": "2026/12/03 21:30:00",
+     "utcEndTime": "2026/12/03 22:30:00",
+     "length": 60,
+     "room": "Caesars Forum | Level 1 | Alliance 305",
+     "roomId": "1789591919601004bywY",
+     "capacity": "88",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -120089,7 +120089,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T06:09:11Z",
+   "modified": "2026-11-02T06:35:41Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -121975,7 +121975,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-11-02T04:11:55Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -123638,7 +123638,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T09:17:46Z",
+   "modified": "2026-11-02T06:43:35Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -129309,7 +129309,7 @@
    "length": 90,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T15:50:41Z",
+   "modified": "2026-11-02T06:45:31Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -130132,92 +130132,6 @@
    ]
   },
   {
-   "sessionID": "1790358239613001itc4",
-   "code": "IND314-R1",
-   "title": "Modernizing Legacy Telecommunications OSS/BSS Systems",
-   "abstract": "Legacy modernization is one of the most complex challenges facing Telecommunications companies today. In this Chalk Talk, we will explore strategies to accelerate VMware and mainframe migrations using Agentic AI. Using a real-world scenario, we will walk through how AWS Transform and Amazon Bedrock are used to meet the technical and business requirements of these projects and explore trade-offs in migration design and infrastructure choices. Come ready to discuss your own migration challenges!",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-31T15:32:13Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Customer story",
-     "Discussion"
-    ],
-    "Topic": [
-     "Migration & Modernization",
-     "Industry Solutions"
-    ],
-    "AreaofInterest": [
-     "VMware"
-    ],
-    "Industry": [
-     "Telecommunications"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "IT Professional / Technical Manager",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Bedrock",
-     "AWS Transform"
-    ],
-    "Venue": [
-     "Caesars Forum"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Visu Sontam",
-     "title": "Principal SA, Telco",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Antonello Arpino",
-     "title": "Head Of OSS/BSS and Enterprise IT modernization",
-     "company": "amazon web services",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360363468001AWzA",
-     "date": "2026-11-30",
-     "startTime": "16:00",
-     "endTime": "17:00",
-     "utcStartTime": "2026/12/01 00:00:00",
-     "utcEndTime": "2026/12/01 01:00:00",
-     "length": 60,
-     "room": "Caesars Forum | Level 1 | Academy 417",
-     "roomId": "1789591919593004bmGP",
-     "capacity": "88",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780441500801001G20m",
    "code": "IND314-R",
    "title": "Modernizing Legacy Telecommunications OSS/BSS Systems",
@@ -130295,6 +130209,92 @@
      "length": 60,
      "room": "Caesars Forum | Level 1 | Alliance 305",
      "roomId": "1789591919601004bywY",
+     "capacity": "88",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358239613001itc4",
+   "code": "IND314-R1",
+   "title": "Modernizing Legacy Telecommunications OSS/BSS Systems",
+   "abstract": "Legacy modernization is one of the most complex challenges facing Telecommunications companies today. In this Chalk Talk, we will explore strategies to accelerate VMware and mainframe migrations using Agentic AI. Using a real-world scenario, we will walk through how AWS Transform and Amazon Bedrock are used to meet the technical and business requirements of these projects and explore trade-offs in migration design and infrastructure choices. Come ready to discuss your own migration challenges!",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-02T00:56:45Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Customer story",
+     "Discussion"
+    ],
+    "Topic": [
+     "Migration & Modernization",
+     "Industry Solutions"
+    ],
+    "AreaofInterest": [
+     "VMware"
+    ],
+    "Industry": [
+     "Telecommunications"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "IT Professional / Technical Manager",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Bedrock",
+     "AWS Transform"
+    ],
+    "Venue": [
+     "Caesars Forum"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Visu Sontam",
+     "title": "Principal SA, Telco",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Antonello Arpino",
+     "title": "Head Of OSS/BSS and Enterprise IT modernization",
+     "company": "amazon web services",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360363468001AWzA",
+     "date": "2026-11-30",
+     "startTime": "16:00",
+     "endTime": "17:00",
+     "utcStartTime": "2026/12/01 00:00:00",
+     "utcEndTime": "2026/12/01 01:00:00",
+     "length": 60,
+     "room": "Caesars Forum | Level 1 | Academy 417",
+     "roomId": "1789591919593004bmGP",
      "capacity": "88",
      "inPersonTime": true,
      "virtualTime": false,
@@ -130390,7 +130390,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T20:19:21Z",
+   "modified": "2026-11-02T06:47:01Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -134651,7 +134651,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T22:10:13Z",
+   "modified": "2026-11-02T06:47:01Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -135437,7 +135437,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-02T00:23:18Z",
+   "modified": "2026-11-02T04:46:40Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -136881,7 +136881,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-02T00:37:23Z",
+   "modified": "2026-11-02T01:36:28Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -140477,7 +140477,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T20:22:37Z",
+   "modified": "2026-11-02T06:49:12Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -143411,90 +143411,6 @@
    ]
   },
   {
-   "sessionID": "1780442253269001cDSp",
-   "code": "ARC319-R",
-   "title": "Patterns for embedding FinOps into cloud architectural decisions",
-   "abstract": "Every architectural decision carries a cost implication, yet cost is typically discovered in monthly bills rather than design reviews. In this code talk, we demonstrate how to shift FinOps left, optimising before you deploy rather than reacting after. Through two personas, a FinOps engineer and a builder, you will see live how to embed cost governance into infrastructure-as-code, tackle real architectural trade-offs then show how AI coding assistants accelerate this at scale. You will leave with deployable CloudFormation examples and a decision framework for choosing the right cost governance level for your organisation.",
-   "type": "Code talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Code talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Architecture",
-     "Cloud Operations"
-    ],
-    "AreaofInterest": [
-     "Well-Architected Framework",
-     "Cost Optimization"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "IT Executive",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "AWS Billing and Cost Management",
-     "AWS CloudFormation",
-     "AWS Organizations"
-    ],
-    "Venue": [
-     "Wynn/Encore"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Nataliya Godunok",
-     "title": "Sr Solutions Architect, AWS Well-Architected",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Steph Gooch",
-     "title": "Principal Tech Advocate",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025475941001CSsj",
-     "date": "2026-11-30",
-     "startTime": "09:00",
-     "endTime": "10:00",
-     "utcStartTime": "2026/11/30 17:00:00",
-     "utcEndTime": "2026/11/30 18:00:00",
-     "length": 60,
-     "room": "Wynn/Encore | Convention Promenade | Margaux 1",
-     "roomId": "1789591921003001bQQi",
-     "capacity": "84",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358221298001ioWj",
    "code": "ARC319-R1",
    "title": "Patterns for embedding FinOps into cloud architectural decisions",
@@ -143548,14 +143464,14 @@
    },
    "speakers": [
     {
-     "name": "Nataliya Godunok",
-     "title": "Sr Solutions Architect, AWS Well-Architected",
+     "name": "Steph Gooch",
+     "title": "Principal Tech Advocate",
      "company": "AWS",
      "role": "Internal Speaker"
     },
     {
-     "name": "Steph Gooch",
-     "title": "Principal Tech Advocate",
+     "name": "Nataliya Godunok",
+     "title": "Sr Solutions Architect, AWS Well-Architected",
      "company": "AWS",
      "role": "Internal Speaker"
     }
@@ -143572,6 +143488,90 @@
      "room": "Caesars Palace | Promenade South | Octavius 4 | Content Hub | Code Talk",
      "roomId": "1789591920119001bHvX",
      "capacity": "80",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442253269001cDSp",
+   "code": "ARC319-R",
+   "title": "Patterns for embedding FinOps into cloud architectural decisions",
+   "abstract": "Every architectural decision carries a cost implication, yet cost is typically discovered in monthly bills rather than design reviews. In this code talk, we demonstrate how to shift FinOps left, optimising before you deploy rather than reacting after. Through two personas, a FinOps engineer and a builder, you will see live how to embed cost governance into infrastructure-as-code, tackle real architectural trade-offs then show how AI coding assistants accelerate this at scale. You will leave with deployable CloudFormation examples and a decision framework for choosing the right cost governance level for your organisation.",
+   "type": "Code talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-30T21:40:30Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Code talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Architecture",
+     "Cloud Operations"
+    ],
+    "AreaofInterest": [
+     "Well-Architected Framework",
+     "Cost Optimization"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "IT Executive",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "AWS Billing and Cost Management",
+     "AWS CloudFormation",
+     "AWS Organizations"
+    ],
+    "Venue": [
+     "Wynn/Encore"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Steph Gooch",
+     "title": "Principal Tech Advocate",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Nataliya Godunok",
+     "title": "Sr Solutions Architect, AWS Well-Architected",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025475941001CSsj",
+     "date": "2026-11-30",
+     "startTime": "09:00",
+     "endTime": "10:00",
+     "utcStartTime": "2026/11/30 17:00:00",
+     "utcEndTime": "2026/11/30 18:00:00",
+     "length": 60,
+     "room": "Wynn/Encore | Convention Promenade | Margaux 1",
+     "roomId": "1789591921003001bQQi",
+     "capacity": "84",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -144185,7 +144185,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T23:37:53Z",
+   "modified": "2026-11-02T02:36:41Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -148323,7 +148323,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T09:24:58Z",
+   "modified": "2026-11-02T02:38:07Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -148667,7 +148667,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T18:04:05Z",
+   "modified": "2026-11-02T03:55:02Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -150214,15 +150214,15 @@
    },
    "speakers": [
     {
-     "name": "Aoife Egan",
-     "title": "Well-Architected Solutions Architect",
-     "company": "Amazon Web Services (AWS)",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Sanket Nasre",
      "title": "Sr. Solutions Architect",
      "company": "Amazon Web Services Inc.",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Aoife Egan",
+     "title": "Well-Architected Solutions Architect",
+     "company": "Amazon Web Services (AWS)",
      "role": "Internal Speaker"
     }
    ],
@@ -150298,15 +150298,15 @@
    },
    "speakers": [
     {
-     "name": "Aoife Egan",
-     "title": "Well-Architected Solutions Architect",
-     "company": "Amazon Web Services (AWS)",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Sanket Nasre",
      "title": "Sr. Solutions Architect",
      "company": "Amazon Web Services Inc.",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Aoife Egan",
+     "title": "Well-Architected Solutions Architect",
+     "company": "Amazon Web Services (AWS)",
      "role": "Internal Speaker"
     }
    ],
@@ -151015,7 +151015,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T23:55:06Z",
+   "modified": "2026-11-02T02:08:16Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -153305,7 +153305,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-02T00:07:44Z",
+   "modified": "2026-11-02T04:37:38Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -162240,7 +162240,7 @@
    "length": 180,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T22:51:14Z",
+   "modified": "2026-11-02T02:32:40Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -167170,89 +167170,6 @@
    ]
   },
   {
-   "sessionID": "1790358236681001iqVe",
-   "code": "STG338-R1",
-   "title": "Simplify secure file sharing with Transfer Family no-code web apps",
-   "abstract": "Traditional file transfer solutions often require complex client software, custom scripts, or technical expertise, creating barriers for business users who need to share data. Learn how AWS Transfer Family web apps enable secure, browser-based file transfers that automatically trigger data processing workflows. We'll show you how to build automated pipelines that process files upon upload while maintaining enterprise-grade security through AWS IAM Identity Center for your workforce or Amazon Cognito for external users. Discover how to streamline file ingestion, kick off validations, and orchestrate downstream processing, starting with a simple drag-and-drop interface for your end users.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-01T09:22:48Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Migration & Modernization",
-     "Storage"
-    ],
-    "AreaofInterest": [
-     "Application Security",
-     "Global Infrastructure",
-     "Automation"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "IT Professional / Technical Manager",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "AWS Transfer Family"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Emma Harrison",
-     "title": "Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Madhukumar Adavi",
-     "title": "Sr Storage Specialist Solution Architect",
-     "company": "Amazon Web Services Inc",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360382897001Am9C",
-     "date": "2026-12-01",
-     "startTime": "16:30",
-     "endTime": "17:30",
-     "utcStartTime": "2026/12/02 00:30:00",
-     "utcEndTime": "2026/12/02 01:30:00",
-     "length": 60,
-     "room": "MGM Grand | Level 3 | Premier 309",
-     "roomId": "1789591920464003baYW",
-     "capacity": "78",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780441502612001G2wh",
    "code": "STG338-R",
    "title": "Simplify secure file sharing with Transfer Family no-code web apps",
@@ -167261,7 +167178,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T21:06:42Z",
+   "modified": "2026-11-02T06:43:35Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -167329,6 +167246,89 @@
      "room": "MGM Grand | Level 1 | Boulevard 162",
      "roomId": "1789591920194001baD5",
      "capacity": "98",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358236681001iqVe",
+   "code": "STG338-R1",
+   "title": "Simplify secure file sharing with Transfer Family no-code web apps",
+   "abstract": "Traditional file transfer solutions often require complex client software, custom scripts, or technical expertise, creating barriers for business users who need to share data. Learn how AWS Transfer Family web apps enable secure, browser-based file transfers that automatically trigger data processing workflows. We'll show you how to build automated pipelines that process files upon upload while maintaining enterprise-grade security through AWS IAM Identity Center for your workforce or Amazon Cognito for external users. Discover how to streamline file ingestion, kick off validations, and orchestrate downstream processing, starting with a simple drag-and-drop interface for your end users.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-02T06:43:35Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Migration & Modernization",
+     "Storage"
+    ],
+    "AreaofInterest": [
+     "Application Security",
+     "Global Infrastructure",
+     "Automation"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "IT Professional / Technical Manager",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "AWS Transfer Family"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Emma Harrison",
+     "title": "Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Madhukumar Adavi",
+     "title": "Sr Storage Specialist Solution Architect",
+     "company": "Amazon Web Services Inc",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360382897001Am9C",
+     "date": "2026-12-01",
+     "startTime": "16:30",
+     "endTime": "17:30",
+     "utcStartTime": "2026/12/02 00:30:00",
+     "utcEndTime": "2026/12/02 01:30:00",
+     "length": 60,
+     "room": "MGM Grand | Level 3 | Premier 309",
+     "roomId": "1789591920464003baYW",
+     "capacity": "78",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -170198,7 +170198,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T14:47:47Z",
+   "modified": "2026-11-02T02:51:11Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -170280,7 +170280,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T20:59:21Z",
+   "modified": "2026-11-02T04:50:51Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -171368,15 +171368,9 @@
    },
    "speakers": [
     {
-     "name": "Mandeep Bhatia",
-     "title": "SVP, Global digital product and innovation",
-     "company": "Tapestry, Inc",
-     "role": "External Speaker"
-    },
-    {
-     "name": "Ann Scharenberg",
-     "title": "Director of Marketing Technology",
-     "company": "Nestlé S.A.",
+     "name": "Isabel Miranda",
+     "title": "Executive Director of Technology",
+     "company": "Grupo Boticário",
      "role": "External Speaker"
     },
     {
@@ -171386,9 +171380,15 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Isabel Miranda",
-     "title": "Executive Director of Technology",
-     "company": "Grupo Boticário",
+     "name": "Mandeep Bhatia",
+     "title": "SVP, Global digital product and innovation",
+     "company": "Tapestry, Inc",
+     "role": "External Speaker"
+    },
+    {
+     "name": "Ann Scharenberg",
+     "title": "Director of Marketing Technology",
+     "company": "Nestlé S.A.",
      "role": "External Speaker"
     }
    ],
@@ -172017,7 +172017,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-11-02T03:43:49Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -174630,7 +174630,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T07:49:35Z",
+   "modified": "2026-11-02T01:45:01Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -179720,8 +179720,14 @@
    },
    "speakers": [
     {
-     "name": "kiran kumar ballari",
-     "title": "Principal Solutions Architect",
+     "name": "Raja N",
+     "title": "Partner SA",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Aaron Sempf",
+     "title": "APJ Next Gen Tech Lead",
      "company": "AWS",
      "role": "Internal Speaker"
     },
@@ -179732,20 +179738,14 @@
      "role": "Internal Speaker"
     },
     {
+     "name": "kiran kumar ballari",
+     "title": "Principal Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
      "name": "Ansley Verzosa",
      "title": "Partner Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Raja N",
-     "title": "Partner SA",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Aaron Sempf",
-     "title": "APJ Next Gen Tech Lead",
      "company": "AWS",
      "role": "Internal Speaker"
     }
@@ -179822,8 +179822,14 @@
    },
    "speakers": [
     {
-     "name": "kiran kumar ballari",
-     "title": "Principal Solutions Architect",
+     "name": "Raja N",
+     "title": "Partner SA",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Aaron Sempf",
+     "title": "APJ Next Gen Tech Lead",
      "company": "AWS",
      "role": "Internal Speaker"
     },
@@ -179834,20 +179840,14 @@
      "role": "Internal Speaker"
     },
     {
+     "name": "kiran kumar ballari",
+     "title": "Principal Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
      "name": "Ansley Verzosa",
      "title": "Partner Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Raja N",
-     "title": "Partner SA",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Aaron Sempf",
-     "title": "APJ Next Gen Tech Lead",
      "company": "AWS",
      "role": "Internal Speaker"
     }
@@ -185087,15 +185087,15 @@
      "role": "External Speaker"
     },
     {
-     "name": "Arshad Zackeriya",
-     "title": "Senior Engineer",
-     "company": "Xero",
-     "role": "External Speaker"
-    },
-    {
      "name": "Geethika Guruge",
      "title": "Principal Consultant",
      "company": "Mantel Group",
+     "role": "External Speaker"
+    },
+    {
+     "name": "Arshad Zackeriya",
+     "title": "Senior Engineer",
+     "company": "Xero",
      "role": "External Speaker"
     }
    ],
@@ -189527,7 +189527,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T15:55:22Z",
+   "modified": "2026-11-02T03:53:22Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -192207,7 +192207,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T21:02:56Z",
+   "modified": "2026-11-02T06:17:29Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
