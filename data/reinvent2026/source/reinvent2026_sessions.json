@@ -1,8 +1,8 @@
 {
  "source": "https://catalog.awsevents.com/api/sessions",
  "event": "reinvent2026",
- "fetchedAt": "2026-11-01T18:43:08Z",
- "count": 2412,
+ "fetchedAt": "2026-11-02T00:50:39Z",
+ "count": 2415,
  "sessions": [
   {
    "sessionID": "1780442232110001cXAr",
@@ -1708,7 +1708,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T17:18:20Z",
+   "modified": "2026-11-01T18:45:28Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -1783,108 +1783,6 @@
    ]
   },
   {
-   "sessionID": "1780442231784001ctJu",
-   "code": "STG333-R",
-   "title": "Accelerate database protection, recovery, and testing with Amazon EBS",
-   "abstract": "Protecting your data and troubleshooting issues are essential for running production self-managed databases on AWS. This builders’ session tackles both. Get hands-on with EBS Snapshot Lock for immutable backups, Recycle Bin for accidental deletion recovery, and Amazon Data Lifecycle Manager for automated, application-consistent snapshots. Learn Provisioned Rate for Volume Initialization for predictable restore throughput and use EBS Volume Clones to create virtually instant point-in-time copies without impacting production. You will leave with a practical playbook to improve your database resilience. Bring your laptop to participate.",
-   "type": "Builders' session",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Builders' session"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Storage"
-    ],
-    "AreaofInterest": [
-     "Data Protection",
-     "Resilience",
-     "Cost Optimization"
-    ],
-    "Role": [
-     "IT Professional / Technical Manager",
-     "Solution / Systems Architect",
-     "System Administrator"
-    ],
-    "Services": [
-     "Amazon Elastic Block Store (Amazon EBS)",
-     "Amazon Elastic Compute Cloud (Amazon EC2)"
-    ],
-    "Venue": [
-     "Caesars Forum"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Sara Kilbride",
-     "title": "Technical Account Manager",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "James Kuhlke",
-     "title": "Principal solutions architect",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Kathy Huffstetler",
-     "title": "Senior Solutions Architect",
-     "company": "Amazom",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Tom Bailey",
-     "title": "Senior Technical Account Manager",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Juha Sarimaa",
-     "title": "Snr Storage Specialist Solution Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025513564001CEtL",
-     "date": "2026-12-02",
-     "startTime": "08:30",
-     "endTime": "09:30",
-     "utcStartTime": "2026/12/02 16:30:00",
-     "utcEndTime": "2026/12/02 17:30:00",
-     "length": 60,
-     "room": "Caesars Forum | Level 1 | Alliance 311",
-     "roomId": "1789591919636004boBN",
-     "capacity": "50",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358251522001ix0t",
    "code": "STG333-R1",
    "title": "Accelerate database protection, recovery, and testing with Amazon EBS",
@@ -1938,21 +1836,15 @@
    },
    "speakers": [
     {
-     "name": "Sara Kilbride",
-     "title": "Technical Account Manager",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "James Kuhlke",
      "title": "Principal solutions architect",
      "company": "Amazon",
      "role": "Internal Speaker"
     },
     {
-     "name": "Kathy Huffstetler",
-     "title": "Senior Solutions Architect",
-     "company": "Amazom",
+     "name": "Juha Sarimaa",
+     "title": "Snr Storage Specialist Solution Architect",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     },
     {
@@ -1962,9 +1854,15 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Juha Sarimaa",
-     "title": "Snr Storage Specialist Solution Architect",
-     "company": "Amazon Web Services",
+     "name": "Sara Kilbride",
+     "title": "Technical Account Manager",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Kathy Huffstetler",
+     "title": "Senior Solutions Architect",
+     "company": "Amazom",
      "role": "Internal Speaker"
     }
    ],
@@ -1979,6 +1877,108 @@
      "length": 60,
      "room": "MGM Grand | Level 3 | Room 301",
      "roomId": "1789591920540001bhYC",
+     "capacity": "50",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442231784001ctJu",
+   "code": "STG333-R",
+   "title": "Accelerate database protection, recovery, and testing with Amazon EBS",
+   "abstract": "Protecting your data and troubleshooting issues are essential for running production self-managed databases on AWS. This builders’ session tackles both. Get hands-on with EBS Snapshot Lock for immutable backups, Recycle Bin for accidental deletion recovery, and Amazon Data Lifecycle Manager for automated, application-consistent snapshots. Learn Provisioned Rate for Volume Initialization for predictable restore throughput and use EBS Volume Clones to create virtually instant point-in-time copies without impacting production. You will leave with a practical playbook to improve your database resilience. Bring your laptop to participate.",
+   "type": "Builders' session",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-10-30T21:40:30Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Builders' session"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Storage"
+    ],
+    "AreaofInterest": [
+     "Data Protection",
+     "Resilience",
+     "Cost Optimization"
+    ],
+    "Role": [
+     "IT Professional / Technical Manager",
+     "Solution / Systems Architect",
+     "System Administrator"
+    ],
+    "Services": [
+     "Amazon Elastic Block Store (Amazon EBS)",
+     "Amazon Elastic Compute Cloud (Amazon EC2)"
+    ],
+    "Venue": [
+     "Caesars Forum"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "James Kuhlke",
+     "title": "Principal solutions architect",
+     "company": "Amazon",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Juha Sarimaa",
+     "title": "Snr Storage Specialist Solution Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Tom Bailey",
+     "title": "Senior Technical Account Manager",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Sara Kilbride",
+     "title": "Technical Account Manager",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Kathy Huffstetler",
+     "title": "Senior Solutions Architect",
+     "company": "Amazom",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025513564001CEtL",
+     "date": "2026-12-02",
+     "startTime": "08:30",
+     "endTime": "09:30",
+     "utcStartTime": "2026/12/02 16:30:00",
+     "utcEndTime": "2026/12/02 17:30:00",
+     "length": 60,
+     "room": "Caesars Forum | Level 1 | Alliance 311",
+     "roomId": "1789591919636004boBN",
      "capacity": "50",
      "inPersonTime": true,
      "virtualTime": false,
@@ -11881,7 +11881,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T18:31:16Z",
+   "modified": "2026-11-02T00:04:08Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -24121,7 +24121,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T17:58:19Z",
+   "modified": "2026-11-02T00:19:22Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -38081,7 +38081,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T16:47:34Z",
+   "modified": "2026-11-01T22:50:04Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -45858,24 +45858,6 @@
    },
    "speakers": [
     {
-     "name": "Tomonori Shimomura",
-     "title": "Principal ML Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Anoop Saha",
-     "title": "Principal GTM Specialist, Gen AI",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Chakravarthy Nagarajan",
-     "title": "Sr Mgr, WW Spec SA - GenAI",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Ioan CATANA",
      "title": "AIML GenAI Specialist SA",
      "company": "AWS",
@@ -45885,6 +45867,24 @@
      "name": "Varun Rajan",
      "title": "Sol Architect",
      "company": "Amazon",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Chakravarthy Nagarajan",
+     "title": "Sr Mgr, WW Spec SA - GenAI",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Tomonori Shimomura",
+     "title": "Principal ML Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Anoop Saha",
+     "title": "Principal GTM Specialist, Gen AI",
+     "company": "AWS",
      "role": "Internal Speaker"
     }
    ],
@@ -71036,7 +71036,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T09:06:03Z",
+   "modified": "2026-11-02T00:15:36Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -73207,7 +73207,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-11-01T19:48:08Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -73241,26 +73241,26 @@
    },
    "speakers": [
     {
-     "name": "Freddy Jimenez",
-     "title": "Sr. Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Taylan Unal",
      "title": "Amazon Connect Customer - Specialist Solutions Architect",
      "company": "Amazon Web Services (AWS)",
      "role": "Internal Speaker"
     },
     {
-     "name": "Douglas Park",
-     "title": "Solutions Architect - Applied AI",
-     "company": "AWS",
+     "name": "Freddy Jimenez",
+     "title": "Sr. Solutions Architect",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     },
     {
      "name": "Jen Featherling",
      "title": "Specialist SA Manager Amazon Connect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Douglas Park",
+     "title": "Solutions Architect - Applied AI",
      "company": "AWS",
      "role": "Internal Speaker"
     },
@@ -81601,7 +81601,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T18:34:36Z",
+   "modified": "2026-11-02T00:37:23Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -83703,7 +83703,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T18:39:47Z",
+   "modified": "2026-11-01T19:55:26Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -84532,7 +84532,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T09:03:37Z",
+   "modified": "2026-11-01T20:59:21Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -85095,7 +85095,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T14:42:25Z",
+   "modified": "2026-11-01T19:58:17Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -90219,6 +90219,156 @@
    ]
   },
   {
+   "sessionID": "1793375389147001GUtP",
+   "code": "recdfUy8EEy2L8DyL",
+   "title": "Expo",
+   "abstract": "Explore Cloud and AI at the re:Invent Expo! Go hands-on across the AWS Village, Partner Advantage, Builder, Global Impact, and Industry Zones.",
+   "type": "Expo",
+   "length": 480,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-01T20:04:20Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Expo"
+    ],
+    "Level": [
+     "No Level"
+    ],
+    "Venue": [
+     "Venetian"
+    ],
+    "Walkuponlysession": [
+     "Walk up only"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [],
+   "times": [
+    {
+     "sessionTimeID": "1793380370233001Z7X2",
+     "date": "2026-12-03",
+     "startTime": "10:00",
+     "endTime": "18:00",
+     "utcStartTime": "2026/12/03 18:00:00",
+     "utcEndTime": "2026/12/04 02:00:00",
+     "length": 480,
+     "room": "Venetian | Level 2 | Hall B",
+     "roomId": "1789591920663001b5yt",
+     "capacity": "0",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1793375296537001ZmXr",
+   "code": "recLw6DPwGaKziCzS",
+   "title": "Expo",
+   "abstract": "Explore Cloud and AI at the re:Invent Expo! Go hands-on across the AWS Village, Partner Advantage, Builder, Global Impact, and Industry Zones.",
+   "type": "Expo",
+   "length": 360,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-01T20:04:19Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Expo"
+    ],
+    "Level": [
+     "No Level"
+    ],
+    "Venue": [
+     "Venetian"
+    ],
+    "Walkuponlysession": [
+     "Walk up only"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [],
+   "times": [
+    {
+     "sessionTimeID": "1793380428223001MCms",
+     "date": "2026-12-04",
+     "startTime": "10:00",
+     "endTime": "16:00",
+     "utcStartTime": "2026/12/04 18:00:00",
+     "utcEndTime": "2026/12/05 00:00:00",
+     "length": 360,
+     "room": "Venetian | Level 2 | Hall B",
+     "roomId": "1789591920663001b5yt",
+     "capacity": "0",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1793375087994001Oe3P",
+   "code": "rec3wtIQtXowJVl5E",
+   "title": "Expo",
+   "abstract": "Explore Cloud and AI at the re:Invent Expo! Go hands-on across the AWS Village, Partner Advantage, Builder, Global Impact, and Industry Zones.",
+   "type": "Expo",
+   "length": 480,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-01T20:04:20Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Expo"
+    ],
+    "Level": [
+     "No Level"
+    ],
+    "Venue": [
+     "Venetian"
+    ],
+    "Walkuponlysession": [
+     "Walk up only"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [],
+   "times": [
+    {
+     "sessionTimeID": "1793380300979001iOoy",
+     "date": "2026-12-02",
+     "startTime": "10:00",
+     "endTime": "18:00",
+     "utcStartTime": "2026/12/02 18:00:00",
+     "utcEndTime": "2026/12/03 02:00:00",
+     "length": 480,
+     "room": "Venetian | Level 2 | Hall B",
+     "roomId": "1789591920663001b5yt",
+     "capacity": "0",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
    "sessionID": "1787852032272001jpCU",
    "code": "AWS009",
    "title": "Expo Welcome Reception",
@@ -91363,7 +91513,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T11:44:33Z",
+   "modified": "2026-11-02T00:28:40Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -92428,7 +92578,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T18:34:36Z",
+   "modified": "2026-11-01T20:05:00Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -97374,79 +97524,6 @@
    ]
   },
   {
-   "sessionID": "1790358232292001iU51",
-   "code": "BIZ320-R1",
-   "title": "From Reactive to Proactive: Omnichannel AI Outreach with Connect Customer",
-   "abstract": "Every organization is building AI agents for inbound, but who's automating outreach? In this workshop, you become a carrier responding to a device safety recall. Instead of posting a notice and waiting for calls, you build a system that identifies affected customers, prioritizes them by risk and value, and uses an AI agent to reach them before they ever pick up the phone. Walk away with a working proactive outreach engine and the architecture to deploy anticipatory engagement at scale.",
-   "type": "Workshop",
-   "length": 120,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-31T02:42:20Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Workshop"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Business Agents"
-    ],
-    "Services": [
-     "Amazon Connect"
-    ],
-    "Venue": [
-     "Caesars Palace"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Bernie Valderrama",
-     "title": "Solutions Architect - Connect Customer",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Jeremy Puent",
-     "title": "Principal Solutions Architect - Amazon Connect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360399740001ApIK",
-     "date": "2026-12-01",
-     "startTime": "15:00",
-     "endTime": "17:00",
-     "utcStartTime": "2026/12/01 23:00:00",
-     "utcEndTime": "2026/12/02 01:00:00",
-     "length": 120,
-     "room": "Caesars Palace | Promenade Level | Milano I",
-     "roomId": "1789591919932001bVyh",
-     "capacity": "150",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442277051001cNyP",
    "code": "BIZ320-R",
    "title": "From Reactive to Proactive: Omnichannel AI Outreach with Connect Customer",
@@ -97513,6 +97590,79 @@
      "room": "Caesars Palace | Promenade Level | Pompeian IV",
      "roomId": "1789591919964004bHlA",
      "capacity": "85",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358232292001iU51",
+   "code": "BIZ320-R1",
+   "title": "From Reactive to Proactive: Omnichannel AI Outreach with Connect Customer",
+   "abstract": "Every organization is building AI agents for inbound, but who's automating outreach? In this workshop, you become a carrier responding to a device safety recall. Instead of posting a notice and waiting for calls, you build a system that identifies affected customers, prioritizes them by risk and value, and uses an AI agent to reach them before they ever pick up the phone. Walk away with a working proactive outreach engine and the architecture to deploy anticipatory engagement at scale.",
+   "type": "Workshop",
+   "length": 120,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-01T20:14:49Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Workshop"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Business Agents"
+    ],
+    "Services": [
+     "Amazon Connect"
+    ],
+    "Venue": [
+     "Caesars Palace"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Bernie Valderrama",
+     "title": "Solutions Architect - Connect Customer",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Jeremy Puent",
+     "title": "Principal Solutions Architect - Amazon Connect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360399740001ApIK",
+     "date": "2026-12-01",
+     "startTime": "15:00",
+     "endTime": "17:00",
+     "utcStartTime": "2026/12/01 23:00:00",
+     "utcEndTime": "2026/12/02 01:00:00",
+     "length": 120,
+     "room": "Caesars Palace | Promenade Level | Milano I",
+     "roomId": "1789591919932001bVyh",
+     "capacity": "150",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -98794,7 +98944,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T09:00:31Z",
+   "modified": "2026-11-02T00:27:20Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -100092,7 +100242,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T09:03:28Z",
+   "modified": "2026-11-02T00:19:23Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -110148,16 +110298,16 @@
    },
    "speakers": [
     {
-     "name": "Rayco Martínez Hernández",
-     "title": "Head of Cloud Center of Exellence",
-     "company": "MOEVE",
-     "role": "External Speaker"
-    },
-    {
      "name": "Luis Rodriguez Montilla",
      "title": "Sr. CloudOps Specialist SA",
      "company": "AWS",
      "role": "Internal Speaker"
+    },
+    {
+     "name": "Rayco Martínez Hernández",
+     "title": "Head of Cloud Center of Exellence",
+     "company": "MOEVE",
+     "role": "External Speaker"
     },
     {
      "name": "Nicole Klatt",
@@ -115218,7 +115368,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T11:44:32Z",
+   "modified": "2026-11-01T22:30:16Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -115417,94 +115567,6 @@
    ]
   },
   {
-   "sessionID": "1790358232199001iAvH",
-   "code": "IND359-R1",
-   "title": "In-Country HPC: How TGS Processes Seismic Data on AWS Brazil",
-   "abstract": "TGS -- one of the world's largest multi-client geoscience data providers -- faced a significant cost challenge running its business-critical Rackmon EFWI GPU workload at scale. By strategically deploying this workload on AWS infrastructure in Brazil, TGS leveraged Brazil's ReData Special Tax Regime to dramatically reduce the tax burden on GPU-intensive seismic processing. The result: material cost savings on one of the most computationally demanding workloads in the energy industry -- and a reusable in-country processing architecture that can serve future customers with data residency requirements in other geographies.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-31T21:12:15Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Customer story",
-     "Discussion"
-    ],
-    "Topic": [
-     "Compute",
-     "Migration & Modernization"
-    ],
-    "AreaofInterest": [
-     "Digital Sovereignty",
-     "Global Infrastructure",
-     "Cost Optimization"
-    ],
-    "Industry": [
-     "Energy & Utilities"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "IT Executive",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Elastic Compute Cloud (Amazon EC2)",
-     "Amazon Simple Storage Service (Amazon S3)"
-    ],
-    "Venue": [
-     "Wynn/Encore"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Kun Jiao",
-     "title": "Principal Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Faisal Asif",
-     "title": "Global Head, Cloud Transformation and Innovation",
-     "company": "TGS",
-     "role": "External Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360395499001AaZj",
-     "date": "2026-12-01",
-     "startTime": "12:00",
-     "endTime": "13:00",
-     "utcStartTime": "2026/12/01 20:00:00",
-     "utcEndTime": "2026/12/01 21:00:00",
-     "length": 60,
-     "room": "Wynn/Encore | Level 1 | Chopin 4",
-     "roomId": "1789591921128001bJpf",
-     "capacity": "88",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442244158001c5Jb",
    "code": "IND359-R",
    "title": "In-Country HPC: How TGS Processes Seismic Data on AWS Brazil",
@@ -115585,6 +115647,94 @@
      "room": "Wynn/Encore | Convention Promenade | La Tache 2",
      "roomId": "1789591920958001b8NR",
      "capacity": "78",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358232199001iAvH",
+   "code": "IND359-R1",
+   "title": "In-Country HPC: How TGS Processes Seismic Data on AWS Brazil",
+   "abstract": "TGS -- one of the world's largest multi-client geoscience data providers -- faced a significant cost challenge running its business-critical Rackmon EFWI GPU workload at scale. By strategically deploying this workload on AWS infrastructure in Brazil, TGS leveraged Brazil's ReData Special Tax Regime to dramatically reduce the tax burden on GPU-intensive seismic processing. The result: material cost savings on one of the most computationally demanding workloads in the energy industry -- and a reusable in-country processing architecture that can serve future customers with data residency requirements in other geographies.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-01T20:16:24Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Customer story",
+     "Discussion"
+    ],
+    "Topic": [
+     "Compute",
+     "Migration & Modernization"
+    ],
+    "AreaofInterest": [
+     "Digital Sovereignty",
+     "Global Infrastructure",
+     "Cost Optimization"
+    ],
+    "Industry": [
+     "Energy & Utilities"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "IT Executive",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Elastic Compute Cloud (Amazon EC2)",
+     "Amazon Simple Storage Service (Amazon S3)"
+    ],
+    "Venue": [
+     "Wynn/Encore"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Kun Jiao",
+     "title": "Principal Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Faisal Asif",
+     "title": "Global Head, Cloud Transformation and Innovation",
+     "company": "TGS",
+     "role": "External Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360395499001AaZj",
+     "date": "2026-12-01",
+     "startTime": "12:00",
+     "endTime": "13:00",
+     "utcStartTime": "2026/12/01 20:00:00",
+     "utcEndTime": "2026/12/01 21:00:00",
+     "length": 60,
+     "room": "Wynn/Encore | Level 1 | Chopin 4",
+     "roomId": "1789591921128001bJpf",
+     "capacity": "88",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -130240,7 +130390,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T09:08:08Z",
+   "modified": "2026-11-01T20:19:21Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -134501,7 +134651,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T13:36:48Z",
+   "modified": "2026-11-01T22:10:13Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -135287,7 +135437,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-31T15:42:07Z",
+   "modified": "2026-11-02T00:23:18Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -136731,7 +136881,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-11-02T00:37:23Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -139838,7 +139988,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T09:12:30Z",
+   "modified": "2026-11-01T20:22:37Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -140327,7 +140477,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T15:55:22Z",
+   "modified": "2026-11-01T20:22:37Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -144035,7 +144185,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T01:06:35Z",
+   "modified": "2026-11-01T23:37:53Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -150865,7 +151015,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T09:13:40Z",
+   "modified": "2026-11-01T23:55:06Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -153155,7 +153305,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T16:39:02Z",
+   "modified": "2026-11-02T00:07:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -162090,7 +162240,7 @@
    "length": 180,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T16:20:07Z",
+   "modified": "2026-11-01T22:51:14Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -167111,7 +167261,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T12:22:22Z",
+   "modified": "2026-11-01T21:06:42Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -170130,7 +170280,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T17:19:05Z",
+   "modified": "2026-11-01T20:59:21Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -170197,82 +170347,6 @@
      "room": "Caesars Palace | Emperors Level | Augustus Ballroom V",
      "roomId": "1789591919870001bKOb",
      "capacity": "200",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
-   "sessionID": "1790358217311001ieZk",
-   "code": "AIM355-R1",
-   "title": "Strengthen identity verification with Amazon Rekognition",
-   "abstract": "Learn how to use Amazon Rekognition Face Liveness to help confirm a real person is present during digital onboarding. This session explores how to integrate liveness checks into your application, detect spoofing attempts, and support identity verification workflows.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-31T03:27:38Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Customer story",
-     "Discussion"
-    ],
-    "Topic": [
-     "Artificial Intelligence"
-    ],
-    "Venue": [
-     "Wynn/Encore"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Vicky Katara",
-     "title": "Sr. Software Engineer",
-     "company": "Amazon",
-     "role": "External Speaker"
-    },
-    {
-     "name": "Sneha Choudhury",
-     "title": "Principal Product Manager Tech",
-     "company": "Amazon",
-     "role": "External Speaker"
-    },
-    {
-     "name": "Divyesha Malhotra",
-     "title": "Sr Product Manager Technical",
-     "company": "Amazon",
-     "role": "External Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360395126001AjRD",
-     "date": "2026-12-02",
-     "startTime": "14:30",
-     "endTime": "15:30",
-     "utcStartTime": "2026/12/02 22:30:00",
-     "utcEndTime": "2026/12/02 23:30:00",
-     "length": 60,
-     "room": "Wynn/Encore | Level 1 | Chopin 2",
-     "roomId": "1789591921094001bT6B",
-     "capacity": "88",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -170348,6 +170422,82 @@
      "room": "MGM Grand | Level 1 | Boulevard 167",
      "roomId": "1789591920229001bkrV",
      "capacity": "78",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358217311001ieZk",
+   "code": "AIM355-R1",
+   "title": "Strengthen identity verification with Amazon Rekognition",
+   "abstract": "Learn how to use Amazon Rekognition Face Liveness to help confirm a real person is present during digital onboarding. This session explores how to integrate liveness checks into your application, detect spoofing attempts, and support identity verification workflows.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-02T00:28:40Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Customer story",
+     "Discussion"
+    ],
+    "Topic": [
+     "Artificial Intelligence"
+    ],
+    "Venue": [
+     "Wynn/Encore"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Vicky Katara",
+     "title": "Sr. Software Engineer",
+     "company": "Amazon",
+     "role": "External Speaker"
+    },
+    {
+     "name": "Sneha Choudhury",
+     "title": "Principal Product Manager Tech",
+     "company": "Amazon",
+     "role": "External Speaker"
+    },
+    {
+     "name": "Divyesha Malhotra",
+     "title": "Sr Product Manager Technical",
+     "company": "Amazon",
+     "role": "External Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360395126001AjRD",
+     "date": "2026-12-02",
+     "startTime": "14:30",
+     "endTime": "15:30",
+     "utcStartTime": "2026/12/02 22:30:00",
+     "utcEndTime": "2026/12/02 23:30:00",
+     "length": 60,
+     "room": "Wynn/Encore | Level 1 | Chopin 2",
+     "roomId": "1789591921094001bT6B",
+     "capacity": "88",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -172790,7 +172940,7 @@
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-11-01T21:02:33Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -172836,8 +172986,8 @@
    "speakers": [
     {
      "name": "Harpreet Singh Siddhu",
-     "title": "Lead Software Engineer",
-     "company": "Penn Mutual Life Insurance",
+     "title": "Solutions Architect (Senior Associate)",
+     "company": "New York Life Insurance",
      "role": "External Speaker"
     }
    ],
@@ -180351,7 +180501,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T12:25:28Z",
+   "modified": "2026-11-02T00:06:39Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -183367,7 +183517,7 @@
    "length": 180,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T14:37:19Z",
+   "modified": "2026-11-01T21:54:36Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -183435,7 +183585,7 @@
    "length": 180,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T14:42:11Z",
+   "modified": "2026-11-01T23:37:53Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -192057,7 +192207,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T07:47:25Z",
+   "modified": "2026-11-01T21:02:56Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [

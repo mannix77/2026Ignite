@@ -3,6 +3,15 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-11-02T00:50:39Z · https://catalog.awsevents.com/api/sessions
+
+Added 3 · removed 0 · changed 0
+
+**Added**
+- `rec3wtIQtXowJVl5E` Expo
+- `recdfUy8EEy2L8DyL` Expo
+- `recLw6DPwGaKziCzS` Expo
+
 ## 2026-10-31T06:44:12Z · https://catalog.awsevents.com/api/sessions
 
 Added 0 · removed 0 · changed 10
