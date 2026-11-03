@@ -3,6 +3,83 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-11-03T00:49:26Z · https://catalog.awsevents.com/api/sessions
+
+Added 33 · removed 0 · changed 36
+
+**Added**
+- `SUP307` Training Agility’s Digit robot for manufacturing with Amazon SageMaker
+- `SUP226` Kiro as your founding engineer
+- `SUP309` From AI to enterprise impact: Deploy decision agents on AWS in one day
+- `SUP207` Scaling AI agents: How Forlex turned failures into mechanisms
+- `SUP317` The economics of inference: Where startups are finding efficiency
+- `SUP115` Catch risky changes and triage incidents with AWS DevOps agent
+- `SUP318` AI security without borders: A global defense strategy
+- `SUP222` Beyond the coding assistant: Build a software factory for your startup
+- `SUP221` Shipping your startup idea, not the plumbing, with AgentCore
+- `SUP110` Enterprise buying trends and the startup playbook for AWS Marketplace
+- `SUP204` Building faster: AI-native development workflows (SDLC)
+- `SUP114` Building a brain in under an hour: The knowledge layer for physical AI agents
+- `SUP406` Voice AI on AWS silicon: Cartesia’s sub-250ms AWS Trainium stack
+- `SUP113` FDE for startups: What it is, why you need it, and how to run it
+- `SUP301` Building AI agents you can trust: From models to supply chain
+- `BIZ211-S` You cannot write the eval for a failure you have not seen yet (sponsored by Arize AI)
+- `SUP209` Can self-improving AI overcome reward hacking and hardware limits?
+- `SUP111` Founder's therapy
+- `SUP225` Zero to one: Crafting a GTM playbook for frontier AI startups
+- `SUP223` Reshape AI-driven software development for your startup with harness engineering
+- `SUP316` Designing real-time voice AI experiences
+- `SUP405` Manifold Bio scales drug discovery workloads 4x across AWS regions
+- `SUP104` Serving world models in under 40ms across 10,000 concurrent sessions
+- `SUP312` For startups: Bringing vibe-coded apps to AWS
+- `SUP402` From $0 to $100M ARR: Scaling real-time voice AI on AWS
+- `SUP308` How AWS and Sierra are shaping agent-to-agent collaboration
+- `SUP313` Run agent evals and tuning on AgentCore without a QA team
+- `SUP103` Winning enterprise customers with AWS Global Startup Program
+- `SUP227` Get from idea to app in seconds
+- `SUP404` How Dharma-AI cut LLM costs 99% with fine-tuned models on AWS
+- `BIZ221-S` Your Business Is Multiplayer. Your AI Should Be Too.
+- `SUP303` How KOHO governs banking AI agents with Amazon Bedrock AgentCore
+- `SUP310` 171 agents at scale: How Halter automated internal ops and engineering
+
+**Changed**
+- `ACT014-R2` Wishing Booths — desc
+- `ACT064-R1` AWS BuilderCards: Learn about AWS security while you play! — code: recCJS9bz3B6bjHxB → ACT064-R1
+- `ACT064-R2` AWS BuilderCards: Learn about AWS security while you play! — code: recbKAWRHdwoNQo22 → ACT064-R2
+- `ACT068-R1` re:Invent SWAG — code: rec5wqOI4qbCHOUDM → ACT068-R1
+- `ACT068-R2` re:Invent SWAG — code: recbBLOIoDrlIRBu7 → ACT068-R2
+- `AIM112-S` Give agents governed access to your APIs over MCP with a domain model — title: …model (sponsored by Apollo GraphQL) → …model; desc
+- `AIM342` One Service, Every Workload: Build, Customize, and Deploy with SageMaker AI — start: 2026-12-03T16:30:00Z → 2026-12-02T21:00:00Z; end: 2026-12-03T17:30:00Z → 2026-12-02T22:00:00Z; room: MGM Grand | Level 3 | Chairman's 363 | Content Hub | Purp… → Wynn/Encore | Level 1 | Encore Ballroom 5
+- `AIM346-R1` Deploy, tune, and scale AI workloads on AWS with self-managed agents — title: …scale, and tune AI model serving with self-managed agents → …tune, and scale AI workloads on AWS with self-managed ag…; desc
+- `AIM381-S` Inside the frontier: What builders are creating at OpenAI — title: Build Production Grade Agents with OpenAI and Amazon Bedr… → Inside the frontier: What builders are creating at OpenAI; desc
+- `AIM384-S` Inside OpenAI’s Cyber Defense Factory (sponsored by OpenAI) — title: Build Your Defense Factory for Continuous Defense with Op… → Inside OpenAI’s Cyber Defense Factory (sponsored by OpenAI); desc
+- `AIM409-R1` Build a cost optimization playbook for your AI workload — desc
+- `ANT433` Powering your agentic AI experience with AWS streaming and messaging — desc
+- `ANT448-R1` Unified observability with Amazon OpenSearch Service — desc
+- `ARC202-R1` Where do agents fit? A capability-first approach to agentic AI — desc
+- `ARC202-R2` Where do agents fit? A capability-first approach to agentic AI — desc
+- `AWS013-R` Expo — start: 2026-12-02T00:00:00Z → 2026-12-01T00:00:00Z; end: 2026-12-02T03:00:00Z → 2026-12-01T03:00:00Z
+- `AWS013-R1` Expo — room: Venetian | Level 2 | Hall B | Expo → Venetian | Level 2 | Hall B
+- `AWS013-R2` Expo — start: 2026-12-04T18:00:00Z → 2026-12-02T18:00:00Z; end: 2026-12-05T00:00:00Z → 2026-12-03T02:00:00Z; dur: 360 → 480
+- `AWS013-R3` Expo — end: 2026-12-04T02:00:00Z → 2026-12-04T00:00:00Z; dur: 480 → 360
+- `CON306-R` Securing and optimizing your software supply chain with Amazon ECR — desc
+- `CON317-R1` Productionize, secure, and scale agentic applications on Amazon ECS — desc
+- `CON345` Eliminate wasted compute capacity with Amazon ECS — desc
+- `IND205` Modernizing Care for Medicaid and Medicare Patients: Montefiore's Cloud Journey — title: …the Underserved: Montefiore's Cloud Journey → …Medicaid and Medicare Patients: Montefiore's Cloud Journey
+- `IND212-S` Building Trust in AI Agents through Skills-Based Verification — title: Proof of What You Know: Building Trust in an AI Skills Ec… → Building Trust in AI Agents through Skills-Based Verifica…; desc
+- `IND323-R1` Telecom Contact Centers: Design Patterns for integrated AI Agents — desc
+- `IND3301` Instant Fan Gratification: AI-Powered Media Ops for Austin City Limits Music Festival — title: …Limits → …Limits Music Festival; desc
+- `IND352-R1` Gotta detect 'em all: finding rogue devices with Amazon Bedrock — desc
+- `IND353-R1` Agents under oath: Designing agentic AI to support HIPAA compliance on AWS — title: …HIPAA-compliant agentic AI on AWS → …Designing agentic AI to support HIPAA compliance on AWS
+- `NET325-R1` Resilient by design: Last Mile and Multicloud Interconnect — title: …Simplifying last-mile connectivity with AWS → …Last Mile and Multicloud Interconnect; desc
+- `NET327` Connectivity strategies across AWS Partitions — start: 2026-12-03T00:00:00Z → 2026-11-29T16:30:00Z; end: 2026-12-03T01:00:00Z → 2026-11-29T17:30:00Z
+- `NET404` Connect everything, everywhere: AWS global connectivity — start: 2026-11-30T16:30:00Z → 2026-12-03T00:00:00Z; end: 2026-11-30T17:30:00Z → 2026-12-03T01:00:00Z
+- `SEC315-R1` Advanced AWS network security: defending against emerging threats — desc
+- `SEC352-R1` Build a security boundary for AI agents with WAF and Network Firewall — desc
+- `SEC378-S` Your agent wants a bigger job: The next era of agents at work (sponsored by OpenAI) — title: Inside the frontier: What builders are creating at OpenAI… → Your agent wants a bigger job: The next era of agents at …; desc
+- `STG417-R1` The multi-account AWS Backup playbook: centralized data protection — title: Protecting hundreds of accounts from one place with AWS B… → The multi-account AWS Backup playbook: centralized data p…; desc
+- `TNC322-R1` Building Wealth Advisor Agents with Full Stack Architecture — desc
+
 ## 2026-11-02T18:43:47Z · https://catalog.awsevents.com/api/sessions
 
 Added 0 · removed 1 · changed 12
