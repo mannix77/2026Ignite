@@ -3,6 +3,15 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-11-03T06:43:32Z · https://catalog.awsevents.com/api/sessions
+
+Added 0 · removed 0 · changed 3
+
+**Changed**
+- `AIM206` AWS AI Factories: Bring production scale AI to your data center — desc
+- `AIM441` Set the Bar, Then Beat It: Architecting Tailored AI with Forge — title: First principles at LLM scale: Architecting Forge → Set the Bar, Then Beat It: Architecting Tailored AI with …; desc
+- `SUP406` Voice AI on AWS silicon: Cartesia’s AWS Trainium stack — title: …sub-250ms AWS Trainium stack → …AWS Trainium stack; desc
+
 ## 2026-11-03T00:49:26Z · https://catalog.awsevents.com/api/sessions
 
 Added 33 · removed 0 · changed 36
