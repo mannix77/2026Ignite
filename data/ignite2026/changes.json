@@ -1,6 +1,170 @@
 {
  "batches": [
   {
+   "at": "2026-11-03T19:16:13Z",
+   "milestones": [],
+   "added": [],
+   "removed": [
+    {
+     "id": "1787854993817001tjNn",
+     "inst": "1787854993817001tjNn-AAAAAAAAAAAAAAAAAAAA",
+     "code": "ODSP2105",
+     "title": "Intel Assured Supply Chain: Enhancing supply chain resilience",
+     "repeat": false
+    }
+   ],
+   "changed": [
+    {
+     "id": "1787856622349001EKGC",
+     "inst": "1787856622349001EKGC-1791588130792001CK8Y",
+     "code": "BRK324",
+     "title": "The Alert Is Dead. The Blueprint for the Agentic SOC",
+     "f": {
+      "start": [
+       "2026-11-17T23:15:00Z",
+       "2026-11-18T17:00:00Z"
+      ],
+      "end": [
+       "2026-11-18T00:00:00Z",
+       "2026-11-18T17:45:00Z"
+      ],
+      "room": [
+       "Moscone West | Level 2, Room 2001",
+       "Moscone West | Level 3, Room 3014"
+      ]
+     }
+    },
+    {
+     "id": "1787856625713001ED74",
+     "inst": "1787856625713001ED74-1791588244356001Cbj8",
+     "code": "BRK346",
+     "title": "Protect data and accelerate AI adoption with Microsoft Purview",
+     "f": {
+      "start": [
+       "2026-11-19T17:00:00Z",
+       "2026-11-18T19:30:00Z"
+      ],
+      "end": [
+       "2026-11-19T17:45:00Z",
+       "2026-11-18T20:15:00Z"
+      ],
+      "room": [
+       "Moscone West | Level 3, Room 3005",
+       "Moscone West | Level 3, Room 3014"
+      ]
+     }
+    },
+    {
+     "id": "1787856654883001EYY7",
+     "inst": "1787856654883001EYY7-1791588217020001C3Ii",
+     "code": "BRK536",
+     "title": "Guardrails That Accelerate: Matching AI Ambition to Risk Appetite",
+     "f": {
+      "start": [
+       "2026-11-20T01:15:00Z",
+       "2026-11-19T19:30:00Z"
+      ],
+      "end": [
+       "2026-11-20T02:00:00Z",
+       "2026-11-19T20:15:00Z"
+      ],
+      "room": [
+       "AMC Metreon | Level 3, Theater 14",
+       "Moscone West | Level 3, Room 3002"
+      ]
+     }
+    },
+    {
+     "id": "1787856726366001EV17",
+     "inst": "1787856726366001EV17-1789751960677001d6j0",
+     "code": "KEY02",
+     "title": "Microsoft Ignite Partner keynote",
+     "f": {
+      "title": [
+       "Ignite Frontier Transformation",
+       "Microsoft Ignite Partner keynote"
+      ],
+      "speakers": [
+       [
+        "Judson Althoff",
+        "Mala Anand",
+        "Nicole Dezen",
+        "Ralph Haupter",
+        "Stephen Boyle"
+       ],
+       [
+        "Judson Althoff",
+        "Nicole Dezen"
+       ]
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1787856691553001EEve",
+     "inst": "1787856691553001EEve-1791588334211001CQHr",
+     "code": "LTG1355",
+     "title": "AI Powered Development for Power Platform Professionals",
+     "f": {
+      "start": [
+       "2026-11-19T23:50:00Z",
+       "2026-11-18T20:15:00Z"
+      ],
+      "end": [
+       "2026-11-20T00:05:00Z",
+       "2026-11-18T20:30:00Z"
+      ],
+      "room": [
+       "Moscone South | The Hub, Lightning Talk 5",
+       "Moscone South | The Hub, Lightning Talk 7"
+      ]
+     }
+    },
+    {
+     "id": "1787858590418001SeX7",
+     "inst": "1787858590418001SeX7-1791588237951001CQKh",
+     "code": "THRSP1088",
+     "title": "Go from outage to online with hybrid cloud disaster recovery",
+     "f": {
+      "speakers": [
+       [
+        "Dwayne Lessner",
+        "Kalpan Raval",
+        "Nina Taneja"
+       ],
+       [
+        "Dwayne Lessner",
+        "Kalpan Raval",
+        "Nina Taneja",
+        "Nina Taneja"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856909630001ho7o",
+     "inst": "1787856909630001ho7o-1791588252659001CJPE",
+     "code": "TT1728",
+     "title": "From Custom Builds to a Repeatable Agent Factory",
+     "f": {
+      "start": [
+       "2026-11-19T17:00:00Z",
+       "2026-11-19T20:15:00Z"
+      ],
+      "end": [
+       "2026-11-19T17:45:00Z",
+       "2026-11-19T21:00:00Z"
+      ],
+      "room": [
+       "Moscone South | Upper Mezzanine, Esplanade Ballroom, Table 2",
+       "Moscone South | Upper Mezzanine, Esplanade Ballroom, Table 13"
+      ]
+     }
+    }
+   ],
+   "unknownRooms": []
+  },
+  {
    "at": "2026-11-03T18:18:31Z",
    "milestones": [],
    "added": [],
@@ -65471,90 +65635,6 @@
        "WIQD in 15 minutes: Build, validate, and publish plugins"
       ],
       "desc": true
-     }
-    }
-   ]
-  },
-  {
-   "at": "2026-10-13T18:54:36Z",
-   "milestones": [],
-   "added": [
-    {
-     "id": "1787856873633001hfmt",
-     "inst": "1787856873633001hfmt-1791825019170001Cni5",
-     "code": "LAB680",
-     "title": "AI Agents Are Sending Signals. Make Access Respond.",
-     "repeat": true
-    },
-    {
-     "id": "1787856873633001hfmt",
-     "inst": "1787856873633001hfmt-1791825205502001CyoH",
-     "code": "LAB680",
-     "title": "AI Agents Are Sending Signals. Make Access Respond.",
-     "repeat": true
-    },
-    {
-     "id": "1787856873633001hfmt",
-     "inst": "1787856873633001hfmt-1791825248614001CRY8",
-     "code": "LAB680",
-     "title": "AI Agents Are Sending Signals. Make Access Respond.",
-     "repeat": true
-    },
-    {
-     "id": "1787856874461001hhwp",
-     "inst": "1787856874461001hhwp-1791915692751001bjDG",
-     "code": "LAB685",
-     "title": "Deploy Copilot with confidence: Find & protect exposed sensitive data",
-     "repeat": true
-    },
-    {
-     "id": "1787856875425001h7SF",
-     "inst": "1787856875425001h7SF-1791916184495001pMDa",
-     "code": "LAB701",
-     "title": "Simplify SAP ECC Migration with Dynamics 365 Activate",
-     "repeat": true
-    },
-    {
-     "id": "1787856875425001h7SF",
-     "inst": "1787856875425001h7SF-1791916197586001MU1O",
-     "code": "LAB701",
-     "title": "Simplify SAP ECC Migration with Dynamics 365 Activate",
-     "repeat": true
-    },
-    {
-     "id": "1787856875425001h7SF",
-     "inst": "1787856875425001h7SF-1791916206838001zq1M",
-     "code": "LAB701",
-     "title": "Simplify SAP ECC Migration with Dynamics 365 Activate",
-     "repeat": true
-    },
-    {
-     "id": "1787856876559001h7CZ",
-     "inst": "1787856876559001h7CZ-1791906753491001JL9s",
-     "code": "LAB723",
-     "title": "Build, observe, and scale AI-ready apps and workloads with AKS",
-     "repeat": true
-    },
-    {
-     "id": "1787856876559001h7CZ",
-     "inst": "1787856876559001h7CZ-1791916344821001aady",
-     "code": "LAB723",
-     "title": "Build, observe, and scale AI-ready apps and workloads with AKS",
-     "repeat": true
-    }
-   ],
-   "removed": [],
-   "changed": [
-    {
-     "id": "1787856873633001hfmt",
-     "inst": "1787856873633001hfmt-1791588129150001C7V0",
-     "code": "LAB680",
-     "title": "AI Agents Are Sending Signals. Make Access Respond.",
-     "f": {
-      "room": [
-       "Moscone West | Level 2, Room 2011",
-       "Moscone West | Level 2, Room 2007"
-      ]
      }
     }
    ]
