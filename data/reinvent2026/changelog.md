@@ -3,6 +3,13 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-11-03T12:42:59Z · https://catalog.awsevents.com/api/sessions
+
+Added 0 · removed 0 · changed 1
+
+**Changed**
+- `MAM227-S` Sovereign Transformations: From Legacy to an AI-Ready Estate You Own — title: …Own (sponsored by Concierto by Trianz) → …Own; desc
+
 ## 2026-11-03T06:43:32Z · https://catalog.awsevents.com/api/sessions
 
 Added 0 · removed 0 · changed 3
