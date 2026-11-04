@@ -3,6 +3,13 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-11-04T12:43:19Z · https://catalog.awsevents.com/api/sessions
+
+Added 0 · removed 0 · changed 1
+
+**Changed**
+- `CMP204-S` Agentic AI on AWS with Intel and Databricks (sponsored by Intel) — title: …Intel® Xeon® 6 (sponsored by Intel) → …Intel and Databricks (sponsored by Intel); desc
+
 ## 2026-11-04T06:43:51Z · https://catalog.awsevents.com/api/sessions
 
 Added 1 · removed 0 · changed 3
