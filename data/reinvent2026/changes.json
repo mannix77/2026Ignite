@@ -1,6 +1,509 @@
 {
  "batches": [
   {
+   "at": "2026-11-05T18:43:13Z",
+   "milestones": [],
+   "added": [
+    {
+     "id": "1792528985802001tRoG",
+     "inst": "1792528985802001tRoG",
+     "code": "recbkJjam4IZPHEgU",
+     "title": "Women of the Cloud Networking Reception",
+     "repeat": false
+    },
+    {
+     "id": "1792529038012001dBqe",
+     "inst": "1792529038012001dBqe",
+     "code": "reccGizoNLytrQn3Z",
+     "title": "Women of the Cloud Women Walk the Floor",
+     "repeat": false
+    },
+    {
+     "id": "1787852035116001jeXM",
+     "inst": "1787852035116001jeXM",
+     "code": "WOC102",
+     "title": "The rules for AI are being written right now and nobody’s watching",
+     "repeat": false
+    }
+   ],
+   "removed": [
+    {
+     "id": "1791492160789001U1XZ",
+     "inst": "1791492160789001U1XZ",
+     "code": "SUP208",
+     "title": "Accelerating Physical AI with AWS for Startups",
+     "repeat": false
+    },
+    {
+     "id": "1780442234967001cDY1",
+     "inst": "1780442234967001cDY1",
+     "code": "AIM354",
+     "title": "Designing  AI Agents with Amazon Nova Multimodal Embeddings and Voice AI",
+     "repeat": false
+    },
+    {
+     "id": "1780441493583001GQiF",
+     "inst": "1780441493583001GQiF",
+     "code": "INV505",
+     "title": "Charting the AI Search Frontier: From Retrieval to Reasoning",
+     "repeat": false
+    }
+   ],
+   "changed": [
+    {
+     "id": "1789513463502001Lv80",
+     "inst": "1789513463502001Lv80",
+     "code": "ACT009-R",
+     "title": "Datadog Observaball",
+     "f": {
+      "code": [
+       "ACT009-S-R",
+       "ACT009-R"
+      ]
+     }
+    },
+    {
+     "id": "1793080305350001hme2",
+     "inst": "1793080305350001hme2",
+     "code": "ACT064-R",
+     "title": "AWS BuilderCards: Learn about AWS security while you play!",
+     "f": {
+      "code": [
+       "rec5HhOs4FQwIxUGu",
+       "ACT064-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358224000001iHhX",
+     "inst": "1790358224000001iHhX",
+     "code": "DAT307-R",
+     "title": "Build stateful agentic AI workflows with Aurora, MCP, and AgentCore",
+     "f": {
+      "code": [
+       "DAT307-R2",
+       "DAT307-R"
+      ]
+     }
+    },
+    {
+     "id": "1780441486954001GSJl",
+     "inst": "1780441486954001GSJl",
+     "code": "AIM257-S",
+     "title": "Building Your Software Factory: From Code to Production (sponsored by Harness)",
+     "f": {
+      "title": [
+       "Inside the Agentic Engineering Org of the Future (sponsored by Harness)",
+       "Building Your Software Factory: From Code to Production (sponsored by Harness)"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1787852032448001j0t4",
+     "inst": "1787852032448001j0t4",
+     "code": "AWS114-R",
+     "title": "Builder Zone in the Expo",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442231384001cmU0",
+     "inst": "1780442231384001cmU0",
+     "code": "SVS322-R",
+     "title": "Build self-healing Serverless applications with AWS DevOps Agent",
+     "f": {
+      "speakers": [
+       [
+        "Itziar Olivera Goicolea",
+        "Jay Colodner",
+        "Parnab Basak",
+        "Sahithi Ginjupalli",
+        "Udit Parikh"
+       ],
+       [
+        "Itziar Olivera Goicolea",
+        "Jay Colodner",
+        "Parnab Basak",
+        "Udit Parikh"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1793080554566001Hr1Z",
+     "inst": "1793080554566001Hr1Z",
+     "code": "ACT064-R1",
+     "title": "AWS BuilderCards: Learn about AWS security while you play!",
+     "f": {
+      "code": [
+       "ACT064-R2",
+       "ACT064-R1"
+      ]
+     }
+    },
+    {
+     "id": "1790358232385001i6gk",
+     "inst": "1790358232385001i6gk",
+     "code": "IND308-R1",
+     "title": "Automate dispute resolution with Amazon Connect and Amazon Bedrock",
+     "f": {
+      "speakers": [
+       [
+        "Ajay Desai",
+        "Arnab Chakraborty",
+        "Kalindi Parekh",
+        "Kayla Jing",
+        "Madhavi Evana"
+       ],
+       [
+        "Ajay Desai",
+        "Arnab Chakraborty",
+        "Kalindi Parekh",
+        "Madhavi Evana"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1790358221388001i3vN",
+     "inst": "1790358221388001i3vN",
+     "code": "ARC202-R",
+     "title": "Where do agents fit? A capability-first approach to agentic AI",
+     "f": {
+      "code": [
+       "ARC202-R2",
+       "ARC202-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358223207001iA4U",
+     "inst": "1790358223207001iA4U",
+     "code": "IND405-R1",
+     "title": "Build low latency real-time bidding workloads with AWS RTB Fabric",
+     "f": {
+      "speakers": [
+       [
+        "Gerry Louw",
+        "Sergio Serra"
+       ],
+       [
+        "Sergio Serra"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441466315001GqmS",
+     "inst": "1780441466315001GqmS",
+     "code": "BIZ214",
+     "title": "Empowering 155,000 people without compromising trust: Amazon Quick",
+     "f": {
+      "speakers": [
+       [
+        "Ben Haller",
+        "Lars Nettemann",
+        "Raji Sivasubramaniam"
+       ],
+       [
+        "Ben Haller",
+        "Dr. Axel Schell",
+        "Raji Sivasubramaniam"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1793080484863001IrG4",
+     "inst": "1793080484863001IrG4",
+     "code": "ACT064-R2",
+     "title": "AWS BuilderCards: Learn about AWS security while you play!",
+     "f": {
+      "code": [
+       "ACT064-R1",
+       "ACT064-R2"
+      ]
+     }
+    },
+    {
+     "id": "1790358234774001iDx4",
+     "inst": "1790358234774001iDx4",
+     "code": "SVS322-R1",
+     "title": "Build self-healing Serverless applications with AWS DevOps Agent",
+     "f": {
+      "speakers": [
+       [
+        "Itziar Olivera Goicolea",
+        "Jay Colodner",
+        "Parnab Basak",
+        "Sahithi Ginjupalli",
+        "Udit Parikh"
+       ],
+       [
+        "Itziar Olivera Goicolea",
+        "Jay Colodner",
+        "Parnab Basak",
+        "Udit Parikh"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442244775001cbB1",
+     "inst": "1780442244775001cbB1",
+     "code": "IND405-R",
+     "title": "Build low latency real-time bidding workloads with AWS RTB Fabric",
+     "f": {
+      "speakers": [
+       [
+        "Gerry Louw",
+        "Sergio Serra"
+       ],
+       [
+        "Sergio Serra"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441480490001G6MC",
+     "inst": "1780441480490001G6MC",
+     "code": "PEX312",
+     "title": "Turn AWS Marketplace listings into self-service buyer journeys",
+     "f": {
+      "speakers": [
+       [
+        "Nora Zhang",
+        "Salvador Lopez Beneyto"
+       ],
+       [
+        "Justin Cook",
+        "Nora Zhang",
+        "Salvador Lopez Beneyto"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442233886001cc67",
+     "inst": "1780442233886001cc67",
+     "code": "ARC202-R1",
+     "title": "Where do agents fit? A capability-first approach to agentic AI",
+     "f": {
+      "code": [
+       "ARC202-R",
+       "ARC202-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442240007001ci5A",
+     "inst": "1780442240007001ci5A",
+     "code": "DAT307-R2",
+     "title": "Build stateful agentic AI workflows with Aurora, MCP, and AgentCore",
+     "f": {
+      "code": [
+       "DAT307-R",
+       "DAT307-R2"
+      ]
+     }
+    },
+    {
+     "id": "1780442238724001cri1",
+     "inst": "1780442238724001cri1",
+     "code": "CON331",
+     "title": "AI-accelerated migration from self-managed Kubernetes to EKS Auto Mode",
+     "f": {
+      "speakers": [
+       [
+        "Aritra Nag",
+        "Ioannis Moustakis"
+       ],
+       [
+        "Aritra Nag"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441496541001GUuz",
+     "inst": "1780441496541001GUuz",
+     "code": "ANT316-R",
+     "title": "From prompt to pipeline: Agentic data engineering",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441500339001GuHM",
+     "inst": "1780441500339001GuHM",
+     "code": "HMC407",
+     "title": "What FanDuel learned running containers on dozens of AWS Outposts",
+     "f": {
+      "speakers": [
+       [
+        "Josh Coen",
+        "Ramsey McGrath",
+        "savallur Vallurupalli"
+       ],
+       [
+        "Josh Coen",
+        "Ramsey McGrath",
+        "Santosh Vallurupalli"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1790358254147001iOyq",
+     "inst": "1790358254147001iOyq",
+     "code": "ARC202-R2",
+     "title": "Where do agents fit? A capability-first approach to agentic AI",
+     "f": {
+      "code": [
+       "ARC202-R1",
+       "ARC202-R2"
+      ]
+     }
+    },
+    {
+     "id": "1789513463804001LeiZ",
+     "inst": "1789513463804001LeiZ",
+     "code": "ACT009-R4",
+     "title": "Datadog Observaball",
+     "f": {
+      "code": [
+       "ACT009-S-R4",
+       "ACT009-R4"
+      ]
+     }
+    },
+    {
+     "id": "1780442270405001coDF",
+     "inst": "1780442270405001coDF",
+     "code": "AIM240-S",
+     "title": "The Web Wasn't Built for AI Agents. Now What? (sponsored by Oxylabs)",
+     "f": {
+      "title": [
+       "The Infrastructure Behind AI: Scaling Access to Web Data (sponsored by Oxylabs)",
+       "The Web Wasn't Built for AI Agents. Now What? (sponsored by Oxylabs)"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441490688001GCMC",
+     "inst": "1780441490688001GCMC",
+     "code": "STG306",
+     "title": "Amazon S3 Tables: A deep dive into storage built for Apache Iceberg",
+     "f": {
+      "speakers": [
+       [
+        "Amy Yu",
+        "Yuri Zarubin"
+       ],
+       [
+        "Amy Yu"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441492907001GuAB",
+     "inst": "1780441492907001GuAB",
+     "code": "SVS403-R",
+     "title": "Building stateful AI workflows with Serverless orchestration",
+     "f": {
+      "speakers": [
+       [
+        "Anushree Umesh",
+        "Leandro Cavalcante Damascena",
+        "Sahithi Ginjupalli",
+        "Surya D",
+        "Theophilus Ajayi"
+       ],
+       [
+        "Anushree Umesh",
+        "Leandro Cavalcante Damascena",
+        "Surya D",
+        "Theophilus Ajayi"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441474644001GNoW",
+     "inst": "1780441474644001GNoW",
+     "code": "IND3345",
+     "title": "Robinhood: Scaling in-app agentic trading to every investor on AWS",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1789513463653001Lwms",
+     "inst": "1789513463653001Lwms",
+     "code": "ACT009-R5",
+     "title": "Datadog Observaball",
+     "f": {
+      "code": [
+       "ACT009-S-R5",
+       "ACT009-R5"
+      ]
+     }
+    },
+    {
+     "id": "1780442228427001cw61",
+     "inst": "1780442228427001cw61",
+     "code": "IND308-R",
+     "title": "Automate dispute resolution with Amazon Connect and Amazon Bedrock",
+     "f": {
+      "speakers": [
+       [
+        "Ajay Desai",
+        "Arnab Chakraborty",
+        "Kalindi Parekh",
+        "Kayla Jing",
+        "Madhavi Evana"
+       ],
+       [
+        "Ajay Desai",
+        "Arnab Chakraborty",
+        "Kalindi Parekh",
+        "Madhavi Evana"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1790358244337001it1l",
+     "inst": "1790358244337001it1l",
+     "code": "SVS403-R1",
+     "title": "Building stateful AI workflows with Serverless orchestration",
+     "f": {
+      "speakers": [
+       [
+        "Anushree Umesh",
+        "Leandro Cavalcante Damascena",
+        "Sahithi Ginjupalli",
+        "Surya D",
+        "Theophilus Ajayi"
+       ],
+       [
+        "Anushree Umesh",
+        "Leandro Cavalcante Damascena",
+        "Surya D",
+        "Theophilus Ajayi"
+       ]
+      ]
+     }
+    }
+   ],
+   "unknownRooms": []
+  },
+  {
    "at": "2026-11-05T12:43:07Z",
    "milestones": [],
    "added": [],
