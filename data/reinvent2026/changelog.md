@@ -3,6 +3,13 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-11-05T12:43:07Z · https://catalog.awsevents.com/api/sessions
+
+Added 0 · removed 0 · changed 1
+
+**Changed**
+- `DAT319-S` Edelbyte: The data platform for curious humans and tireless agents — title: Building the data architecture that survives agentic anal… → Edelbyte: The data platform for curious humans and tirele…; desc
+
 ## 2026-11-05T06:44:21Z · https://catalog.awsevents.com/api/sessions
 
 Added 0 · removed 0 · changed 4

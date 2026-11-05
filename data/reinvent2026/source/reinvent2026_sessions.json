@@ -1,7 +1,7 @@
 {
  "source": "https://catalog.awsevents.com/api/sessions",
  "event": "reinvent2026",
- "fetchedAt": "2026-11-05T06:44:21Z",
+ "fetchedAt": "2026-11-05T12:43:07Z",
  "count": 2468,
  "sessions": [
   {
@@ -2916,7 +2916,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-04T02:27:40Z",
+   "modified": "2026-11-04T22:20:20Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -3002,7 +3002,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-04T22:12:21Z",
+   "modified": "2026-11-04T22:20:20Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -18034,7 +18034,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-11-04T22:20:20Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -18078,14 +18078,14 @@
    },
    "speakers": [
     {
-     "name": "Alessandro Germer",
-     "title": "Senior SDE",
+     "name": "Sebastien Allamand",
+     "title": "Sr. Specialist Solution Architect",
      "company": "AWS",
      "role": "Internal Speaker"
     },
     {
-     "name": "Sebastien Allamand",
-     "title": "Sr. Specialist Solution Architect",
+     "name": "Alessandro Germer",
+     "title": "Senior SDE",
      "company": "AWS",
      "role": "Internal Speaker"
     }
@@ -18117,7 +18117,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-11-04T22:20:20Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -18161,14 +18161,14 @@
    },
    "speakers": [
     {
-     "name": "Alessandro Germer",
-     "title": "Senior SDE",
+     "name": "Sebastien Allamand",
+     "title": "Sr. Specialist Solution Architect",
      "company": "AWS",
      "role": "Internal Speaker"
     },
     {
-     "name": "Sebastien Allamand",
-     "title": "Sr. Specialist Solution Architect",
+     "name": "Alessandro Germer",
+     "title": "Senior SDE",
      "company": "AWS",
      "role": "Internal Speaker"
     }
@@ -23074,7 +23074,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-11-04T22:20:20Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -23113,14 +23113,14 @@
    },
    "speakers": [
     {
-     "name": "Aran Singh",
-     "title": "UKI Startup Sales Leader",
+     "name": "Ayushi Goyal",
+     "title": "Solutions Architect",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
     },
     {
-     "name": "Ayushi Goyal",
-     "title": "Solutions Architect",
+     "name": "Aran Singh",
+     "title": "UKI Startup Sales Leader",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
     }
@@ -41051,91 +41051,6 @@
    ]
   },
   {
-   "sessionID": "1790358217872001iSXw",
-   "code": "COP410-R1",
-   "title": "Build a fully managed open source observability stack on AWS",
-   "abstract": "You want open standards without the operational burden of self-managing backends. In this code talk, we live-code a complete open source observability architecture: instrument a service with OpenTelemetry (auto and manual), configure the OTel Collector pipeline, and route metrics to Amazon Managed Service for Prometheus, logs and traces to Amazon OpenSearch Service. Walk through each integration decision from SDK selection to collector topology, and leave with a working, production-ready stack built entirely on open source standards with zero infrastructure to manage.",
-   "type": "Code talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Code talk"
-    ],
-    "Level": [
-     "400 – Expert"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Cloud Operations",
-     "Open Source"
-    ],
-    "AreaofInterest": [
-     "Monitoring & Observability",
-     "Automation",
-     "DevOps"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "DevOps Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Managed Service for Prometheus",
-     "Amazon OpenSearch Service",
-     "AWS Distro for OpenTelemetry"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Anirudha Jadhav",
-     "title": "Sr. Software engineering manager",
-     "company": "AWS Opensearch",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Lucas Vieira",
-     "title": "Sr Customer Success Observability Specialist",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360376022001AVXv",
-     "date": "2026-12-01",
-     "startTime": "13:00",
-     "endTime": "14:00",
-     "utcStartTime": "2026/12/01 21:00:00",
-     "utcEndTime": "2026/12/01 22:00:00",
-     "length": 60,
-     "room": "MGM Grand | Level 1 | Boulevard 159",
-     "roomId": "1789591920185001bqzE",
-     "capacity": "66",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442254552001clrj",
    "code": "COP410-R",
    "title": "Build a fully managed open source observability stack on AWS",
@@ -41214,6 +41129,91 @@
      "room": "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Code Talk",
      "roomId": "1789591921351004b3ei",
      "capacity": "60",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358217872001iSXw",
+   "code": "COP410-R1",
+   "title": "Build a fully managed open source observability stack on AWS",
+   "abstract": "You want open standards without the operational burden of self-managing backends. In this code talk, we live-code a complete open source observability architecture: instrument a service with OpenTelemetry (auto and manual), configure the OTel Collector pipeline, and route metrics to Amazon Managed Service for Prometheus, logs and traces to Amazon OpenSearch Service. Walk through each integration decision from SDK selection to collector topology, and leave with a working, production-ready stack built entirely on open source standards with zero infrastructure to manage.",
+   "type": "Code talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-05T07:06:09Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Code talk"
+    ],
+    "Level": [
+     "400 – Expert"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Cloud Operations",
+     "Open Source"
+    ],
+    "AreaofInterest": [
+     "Monitoring & Observability",
+     "Automation",
+     "DevOps"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "DevOps Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Managed Service for Prometheus",
+     "Amazon OpenSearch Service",
+     "AWS Distro for OpenTelemetry"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Anirudha Jadhav",
+     "title": "Sr. Software engineering manager",
+     "company": "AWS Opensearch",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Lucas Vieira",
+     "title": "Sr Customer Success Observability Specialist",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360376022001AVXv",
+     "date": "2026-12-01",
+     "startTime": "13:00",
+     "endTime": "14:00",
+     "utcStartTime": "2026/12/01 21:00:00",
+     "utcEndTime": "2026/12/01 22:00:00",
+     "length": 60,
+     "room": "MGM Grand | Level 1 | Boulevard 159",
+     "roomId": "1789591920185001bqzE",
+     "capacity": "66",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -44147,7 +44147,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-05T06:30:16Z",
+   "modified": "2026-11-05T11:17:39Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -55935,7 +55935,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-05T01:03:42Z",
+   "modified": "2026-11-05T08:45:03Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -57788,85 +57788,6 @@
      "room": "Venetian | Level 2 | Hall B | Expo | Industry Theater",
      "roomId": "1789591920788003bsa2",
      "capacity": "50",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
-   "sessionID": "1780441483373001GDUV",
-   "code": "DAT319-S",
-   "title": "Building the data architecture that survives agentic analytics (sponsored by Edelbyte)",
-   "abstract": "Human queries are bounded, repeatable, and predictable, so techniques like caching, sampling, and precomputation keep them fast and affordable. AI agents are none of those. One prompt becomes dozens of novel, complex queries at machine speed, so caching an agent's curiosity is nearly impossible. At a leading automotive R&D group, 1,400 engineers and their agents query 200 petabytes of vehicle telemetry, with 600 terabytes ingested daily, to engineer higher-quality, more reliable vehicles and reach production faster. This session shows the AWS architecture behind it and how it delivers real-time analytics with full retention at the scale agents have made standard. This presentation is brought to you by Edelbyte, an AWS Partner.",
-   "type": "Breakout session",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Breakout session"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "AWS Partners",
-     "Lecture-style"
-    ],
-    "Topic": [
-     "Analytics",
-     "Architecture",
-     "Databases"
-    ],
-    "SponsorSessionPrimaryTopic": [
-     "Databases"
-    ],
-    "AreaofInterest": [
-     "Open Data",
-     "Agentic AI",
-     "Internet of Things"
-    ],
-    "Role": [
-     "Data Engineer",
-     "Data Scientist",
-     "Developer / Engineer"
-    ],
-    "Services": [
-     "Amazon Simple Storage Service (Amazon S3)",
-     "Amazon EC2 - Graviton"
-    ],
-    "Venue": [
-     "Wynn/Encore"
-    ],
-    "Walkuponlysession": [
-     "Walk up only"
-    ],
-    "SessionAppendices": [
-     "Sponsored"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [],
-   "times": [
-    {
-     "sessionTimeID": "1790025481873001C4ZU",
-     "date": "2026-11-30",
-     "startTime": "11:30",
-     "endTime": "12:30",
-     "utcStartTime": "2026/11/30 19:30:00",
-     "utcEndTime": "2026/11/30 20:30:00",
-     "length": 60,
-     "room": "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Blue Theater",
-     "roomId": "1789591921314004bo2v",
-     "capacity": "100",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -60205,7 +60126,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-03T22:06:21Z",
+   "modified": "2026-11-04T22:20:20Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -60286,7 +60207,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-03T22:06:21Z",
+   "modified": "2026-11-04T22:20:20Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -62583,7 +62504,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-11-05T08:08:02Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -69119,86 +69040,6 @@
    ]
   },
   {
-   "sessionID": "1780442253159001cbeT",
-   "code": "API317-R",
-   "title": "Coding event-driven retry patterns that prevent outages",
-   "abstract": "In this code talk, you'll instrument an event-driven integration layer with the patterns that contain failure: exponential backoff with jitter, circuit breakers, poison-pill isolation, and replay-from-archive - all live, in code. See how jittered retries prevent thundering herds, how circuit breakers protect healthy services from impaired ones, and how idempotency makes every replay safe. By the end, you'll have hands-on patterns for EventBridge and Step Functions that shrink your blast radius from total outage to graceful degradation.",
-   "type": "Code talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Code talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Application Integration"
-    ],
-    "AreaofInterest": [
-     "Event-Driven Architecture"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon EventBridge",
-     "AWS Step Functions"
-    ],
-    "Venue": [
-     "Caesars Forum"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Dirk Fröhner",
-     "title": "Principal Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Patrick Meiler",
-     "title": "Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790033114643001qBFk",
-     "date": "2026-12-02",
-     "startTime": "12:00",
-     "endTime": "13:00",
-     "utcStartTime": "2026/12/02 20:00:00",
-     "utcEndTime": "2026/12/02 21:00:00",
-     "length": 60,
-     "room": "Caesars Forum | Level 1 | Forum 120 | Content Hub | Code Talk",
-     "roomId": "1789591919752004bpPI",
-     "capacity": "120",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358254049001iaV4",
    "code": "API317-R1",
    "title": "Coding event-driven retry patterns that prevent outages",
@@ -69207,7 +69048,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-03T16:17:22Z",
+   "modified": "2026-11-04T22:20:20Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -69272,6 +69113,86 @@
      "room": "Caesars Palace | Promenade South | Octavius 4 | Content Hub | Code Talk",
      "roomId": "1789591920119001bHvX",
      "capacity": "80",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442253159001cbeT",
+   "code": "API317-R",
+   "title": "Coding event-driven retry patterns that prevent outages",
+   "abstract": "In this code talk, you'll instrument an event-driven integration layer with the patterns that contain failure: exponential backoff with jitter, circuit breakers, poison-pill isolation, and replay-from-archive - all live, in code. See how jittered retries prevent thundering herds, how circuit breakers protect healthy services from impaired ones, and how idempotency makes every replay safe. By the end, you'll have hands-on patterns for EventBridge and Step Functions that shrink your blast radius from total outage to graceful degradation.",
+   "type": "Code talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-04T22:20:20Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Code talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Application Integration"
+    ],
+    "AreaofInterest": [
+     "Event-Driven Architecture"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon EventBridge",
+     "AWS Step Functions"
+    ],
+    "Venue": [
+     "Caesars Forum"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Patrick Meiler",
+     "title": "Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Dirk Fröhner",
+     "title": "Principal Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790033114643001qBFk",
+     "date": "2026-12-02",
+     "startTime": "12:00",
+     "endTime": "13:00",
+     "utcStartTime": "2026/12/02 20:00:00",
+     "utcEndTime": "2026/12/02 21:00:00",
+     "length": 60,
+     "room": "Caesars Forum | Level 1 | Forum 120 | Content Hub | Code Talk",
+     "roomId": "1789591919752004bpPI",
+     "capacity": "120",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -70017,7 +69938,7 @@
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-11-04T22:20:20Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -71023,7 +70944,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-05T06:42:47Z",
+   "modified": "2026-11-05T06:46:49Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -74510,7 +74431,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-04T19:57:13Z",
+   "modified": "2026-11-04T22:20:20Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -74595,7 +74516,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-04T22:12:19Z",
+   "modified": "2026-11-04T22:20:20Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -74641,14 +74562,14 @@
    },
    "speakers": [
     {
-     "name": "Jon Loinaz Anton",
-     "title": "Enterprise Solutions Architect",
+     "name": "Borja Pérez Guasch",
+     "title": "Sr. Prototyping Engineer",
      "company": "AWS",
      "role": "Internal Speaker"
     },
     {
-     "name": "Borja Pérez Guasch",
-     "title": "Sr. Prototyping Engineer",
+     "name": "Jon Loinaz Anton",
+     "title": "Enterprise Solutions Architect",
      "company": "AWS",
      "role": "Internal Speaker"
     }
@@ -79887,7 +79808,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-11-04T22:20:20Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -79932,15 +79853,9 @@
    },
    "speakers": [
     {
-     "name": "Megan McKenzie",
-     "title": "Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Bashir Mohammed, PhD",
-     "title": "Sr. GenAI Solutions Architect",
-     "company": "AWS",
+     "name": "Steven Warren",
+     "title": "Senior Technical Account Manager",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     },
     {
@@ -79950,9 +79865,15 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Steven Warren",
-     "title": "Senior Technical Account Manager",
-     "company": "Amazon Web Services",
+     "name": "Megan McKenzie",
+     "title": "Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Bashir Mohammed, PhD",
+     "title": "Sr. GenAI Solutions Architect",
+     "company": "AWS",
      "role": "Internal Speaker"
     },
     {
@@ -79989,7 +79910,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-11-04T22:20:20Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -80035,15 +79956,9 @@
    },
    "speakers": [
     {
-     "name": "Megan McKenzie",
-     "title": "Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Bashir Mohammed, PhD",
-     "title": "Sr. GenAI Solutions Architect",
-     "company": "AWS",
+     "name": "Steven Warren",
+     "title": "Senior Technical Account Manager",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     },
     {
@@ -80053,9 +79968,15 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Steven Warren",
-     "title": "Senior Technical Account Manager",
-     "company": "Amazon Web Services",
+     "name": "Megan McKenzie",
+     "title": "Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Bashir Mohammed, PhD",
+     "title": "Sr. GenAI Solutions Architect",
+     "company": "AWS",
      "role": "Internal Speaker"
     },
     {
@@ -80984,7 +80905,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-05T06:34:17Z",
+   "modified": "2026-11-05T08:51:45Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -85909,6 +85830,85 @@
    ]
   },
   {
+   "sessionID": "1780441483373001GDUV",
+   "code": "DAT319-S",
+   "title": "Edelbyte: The data platform for curious humans and tireless agents",
+   "abstract": "Performance, scale, cost, functionality: most data platforms let you pick one, few let you pick two. AI agents make that trade worse. One prompt fans out into dozens of novel queries at machine speed, and caching, sampling and precomputation stop working. Edelbyte's founders spent more than a decade at Microsoft building and operating Azure Data Explorer, also known as Kusto. In our first session since leaving stealth, we show what they built next: an agent answering natural-language questions live on data attached straight from Amazon S3. We reveal the results of an independent benchmark. We close with how our business model works and what drives ingestion and query cost. Performance. Scale. Cost. Functionality. Pick all four and don’t look back.",
+   "type": "Breakout session",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-05T11:24:31Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Breakout session"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "AWS Partners",
+     "Lecture-style"
+    ],
+    "Topic": [
+     "Analytics",
+     "Architecture",
+     "Databases"
+    ],
+    "SponsorSessionPrimaryTopic": [
+     "Databases"
+    ],
+    "AreaofInterest": [
+     "Open Data",
+     "Agentic AI",
+     "Internet of Things"
+    ],
+    "Role": [
+     "Data Engineer",
+     "Data Scientist",
+     "Developer / Engineer"
+    ],
+    "Services": [
+     "Amazon Simple Storage Service (Amazon S3)",
+     "Amazon EC2 - Graviton"
+    ],
+    "Venue": [
+     "Wynn/Encore"
+    ],
+    "Walkuponlysession": [
+     "Walk up only"
+    ],
+    "SessionAppendices": [
+     "Sponsored"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [],
+   "times": [
+    {
+     "sessionTimeID": "1790025481873001C4ZU",
+     "date": "2026-11-30",
+     "startTime": "11:30",
+     "endTime": "12:30",
+     "utcStartTime": "2026/11/30 19:30:00",
+     "utcEndTime": "2026/11/30 20:30:00",
+     "length": 60,
+     "room": "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Blue Theater",
+     "roomId": "1789591921314004bo2v",
+     "capacity": "100",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
    "sessionID": "1780441488667001GjOD",
    "code": "AIM101-S",
    "title": "Edge-to-Action: Powering Agentic AI via Cloudera's Anywhere Cloud (sponsored by Cloudera)",
@@ -88284,7 +88284,7 @@
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-04T19:58:33Z",
+   "modified": "2026-11-04T22:20:20Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -96963,7 +96963,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-05T02:32:05Z",
+   "modified": "2026-11-05T08:27:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -99359,7 +99359,7 @@
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-02T19:35:31Z",
+   "modified": "2026-11-04T22:20:20Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -101551,7 +101551,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-05T01:09:33Z",
+   "modified": "2026-11-05T10:35:32Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -104862,7 +104862,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-05T05:24:23Z",
+   "modified": "2026-11-05T10:54:55Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -105574,7 +105574,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-11-04T22:20:20Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -105626,9 +105626,9 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Guillaume Marchand",
-     "title": "Principal Solutions Architect",
-     "company": "AWS France",
+     "name": "Iryna Oliinykova",
+     "title": "Senior Solutions Architect",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     },
     {
@@ -105644,9 +105644,9 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Iryna Oliinykova",
-     "title": "Senior Solutions Architect",
-     "company": "Amazon Web Services",
+     "name": "Guillaume Marchand",
+     "title": "Principal Solutions Architect",
+     "company": "AWS France",
      "role": "Internal Speaker"
     }
    ],
@@ -106045,91 +106045,6 @@
    ]
   },
   {
-   "sessionID": "1780442247479001cmEX",
-   "code": "MAM331-R",
-   "title": "Guide to deploying landing zones & modernized networks in hours",
-   "abstract": "Reimagine what migration looks like when landing zone setup and network translation go from weeks to hours. In this chalk talk, we show how AWS Transform's agentic AI compresses that timeline, from migration inventory to fully deployed, validated landing zones and modernized networks. See how production-ready account structures deploy through Control Tower with guardrails in place, and how firewall configurations become optimized VPCs, subnets, and security groups. Bring your questions and hear from the experts building these capabilities.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Migration & Modernization",
-     "Networking & Content Delivery"
-    ],
-    "AreaofInterest": [
-     "Network & Infrastructure Security",
-     "Automation",
-     "Agentic AI"
-    ],
-    "Role": [
-     "DevOps Engineer",
-     "IT Professional / Technical Manager",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Virtual Private Cloud (Amazon VPC)",
-     "AWS Control Tower",
-     "AWS Transform"
-    ],
-    "Venue": [
-     "Caesars Palace"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Evgeny Karasik",
-     "title": "Product Manager",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Efrat Manor Portnoy",
-     "title": "AWS Transform for Migrations Senior Product Manager",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025483547001C59Y",
-     "date": "2026-11-30",
-     "startTime": "12:00",
-     "endTime": "13:00",
-     "utcStartTime": "2026/11/30 20:00:00",
-     "utcEndTime": "2026/11/30 21:00:00",
-     "length": 60,
-     "room": "Caesars Palace | Promenade South | Octavius 9",
-     "roomId": "1789591920153004bp8X",
-     "capacity": "70",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358240014001i81w",
    "code": "MAM331-R1",
    "title": "Guide to deploying landing zones & modernized networks in hours",
@@ -106138,7 +106053,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-11-04T22:20:20Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -106185,14 +106100,14 @@
    },
    "speakers": [
     {
-     "name": "Evgeny Karasik",
-     "title": "Product Manager",
+     "name": "Efrat Manor Portnoy",
+     "title": "AWS Transform for Migrations Senior Product Manager",
      "company": "AWS",
      "role": "Internal Speaker"
     },
     {
-     "name": "Efrat Manor Portnoy",
-     "title": "AWS Transform for Migrations Senior Product Manager",
+     "name": "Evgeny Karasik",
+     "title": "Product Manager",
      "company": "AWS",
      "role": "Internal Speaker"
     }
@@ -106209,6 +106124,91 @@
      "room": "Wynn/Encore | Level 1 | Debussy 1",
      "roomId": "1789591921139004bOia",
      "capacity": "78",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442247479001cmEX",
+   "code": "MAM331-R",
+   "title": "Guide to deploying landing zones & modernized networks in hours",
+   "abstract": "Reimagine what migration looks like when landing zone setup and network translation go from weeks to hours. In this chalk talk, we show how AWS Transform's agentic AI compresses that timeline, from migration inventory to fully deployed, validated landing zones and modernized networks. See how production-ready account structures deploy through Control Tower with guardrails in place, and how firewall configurations become optimized VPCs, subnets, and security groups. Bring your questions and hear from the experts building these capabilities.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-04T22:20:20Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Migration & Modernization",
+     "Networking & Content Delivery"
+    ],
+    "AreaofInterest": [
+     "Network & Infrastructure Security",
+     "Automation",
+     "Agentic AI"
+    ],
+    "Role": [
+     "DevOps Engineer",
+     "IT Professional / Technical Manager",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Virtual Private Cloud (Amazon VPC)",
+     "AWS Control Tower",
+     "AWS Transform"
+    ],
+    "Venue": [
+     "Caesars Palace"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Efrat Manor Portnoy",
+     "title": "AWS Transform for Migrations Senior Product Manager",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Evgeny Karasik",
+     "title": "Product Manager",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025483547001C59Y",
+     "date": "2026-11-30",
+     "startTime": "12:00",
+     "endTime": "13:00",
+     "utcStartTime": "2026/11/30 20:00:00",
+     "utcEndTime": "2026/11/30 21:00:00",
+     "length": 60,
+     "room": "Caesars Palace | Promenade South | Octavius 9",
+     "roomId": "1789591920153004bp8X",
+     "capacity": "70",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -107504,7 +107504,7 @@
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-03T22:08:29Z",
+   "modified": "2026-11-04T22:20:20Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -109466,7 +109466,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-02T19:35:31Z",
+   "modified": "2026-11-04T22:20:20Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -110641,7 +110641,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-04T19:58:33Z",
+   "modified": "2026-11-04T22:20:20Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -113273,7 +113273,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-02T19:35:31Z",
+   "modified": "2026-11-04T22:20:20Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -115648,7 +115648,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-11-05T07:28:01Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -115747,7 +115747,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-11-04T22:20:20Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -118401,7 +118401,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-05T02:32:05Z",
+   "modified": "2026-11-05T10:48:36Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -122155,7 +122155,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-05T05:24:23Z",
+   "modified": "2026-11-05T06:46:49Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -123648,7 +123648,7 @@
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-11-04T22:20:20Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -131444,7 +131444,7 @@
    "length": 90,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-05T04:21:54Z",
+   "modified": "2026-11-05T09:39:30Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -132268,6 +132268,91 @@
    ]
   },
   {
+   "sessionID": "1780441500801001G20m",
+   "code": "IND314-R",
+   "title": "Modernizing Legacy Telecommunications OSS/BSS Systems",
+   "abstract": "Legacy modernization is one of the most complex challenges facing Telecommunications companies today. In this Chalk Talk, we will explore strategies to accelerate VMware and mainframe migrations using Agentic AI. Using a real-world scenario, we will walk through how AWS Transform and Amazon Bedrock are used to meet the technical and business requirements of these projects and explore trade-offs in migration design and infrastructure choices. Come ready to discuss your own migration challenges!",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-05T10:54:55Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Migration & Modernization",
+     "Industry Solutions"
+    ],
+    "AreaofInterest": [
+     "VMware"
+    ],
+    "Industry": [
+     "Telecommunications"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "IT Professional / Technical Manager",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Bedrock",
+     "AWS Transform"
+    ],
+    "Venue": [
+     "Caesars Forum"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Visu Sontam",
+     "title": "Principal SA, Telco",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Antonello Arpino",
+     "title": "Head Of OSS/BSS and Enterprise IT modernization",
+     "company": "amazon web services",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025507488001CfSx",
+     "date": "2026-12-01",
+     "startTime": "15:00",
+     "endTime": "16:00",
+     "utcStartTime": "2026/12/01 23:00:00",
+     "utcEndTime": "2026/12/02 00:00:00",
+     "length": 60,
+     "room": "Caesars Forum | Level 1 | Alliance 305",
+     "roomId": "1789591919601004bywY",
+     "capacity": "88",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
    "sessionID": "1790358239613001itc4",
    "code": "IND314-R1",
    "title": "Modernizing Legacy Telecommunications OSS/BSS Systems",
@@ -132276,7 +132361,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-05T02:03:38Z",
+   "modified": "2026-11-05T12:29:14Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -132346,91 +132431,6 @@
      "length": 60,
      "room": "Caesars Forum | Level 1 | Academy 417",
      "roomId": "1789591919593004bmGP",
-     "capacity": "88",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
-   "sessionID": "1780441500801001G20m",
-   "code": "IND314-R",
-   "title": "Modernizing Legacy Telecommunications OSS/BSS Systems",
-   "abstract": "Legacy modernization is one of the most complex challenges facing Telecommunications companies today. In this Chalk Talk, we will explore strategies to accelerate VMware and mainframe migrations using Agentic AI. Using a real-world scenario, we will walk through how AWS Transform and Amazon Bedrock are used to meet the technical and business requirements of these projects and explore trade-offs in migration design and infrastructure choices. Come ready to discuss your own migration challenges!",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-05T05:24:23Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Migration & Modernization",
-     "Industry Solutions"
-    ],
-    "AreaofInterest": [
-     "VMware"
-    ],
-    "Industry": [
-     "Telecommunications"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "IT Professional / Technical Manager",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Bedrock",
-     "AWS Transform"
-    ],
-    "Venue": [
-     "Caesars Forum"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Visu Sontam",
-     "title": "Principal SA, Telco",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Antonello Arpino",
-     "title": "Head Of OSS/BSS and Enterprise IT modernization",
-     "company": "amazon web services",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025507488001CfSx",
-     "date": "2026-12-01",
-     "startTime": "15:00",
-     "endTime": "16:00",
-     "utcStartTime": "2026/12/01 23:00:00",
-     "utcEndTime": "2026/12/02 00:00:00",
-     "length": 60,
-     "room": "Caesars Forum | Level 1 | Alliance 305",
-     "roomId": "1789591919601004bywY",
      "capacity": "88",
      "inPersonTime": true,
      "virtualTime": false,
@@ -137047,7 +137047,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-05T05:28:39Z",
+   "modified": "2026-11-05T12:22:21Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -137688,7 +137688,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-05T04:40:08Z",
+   "modified": "2026-11-05T09:03:33Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -146589,7 +146589,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-05T05:29:49Z",
+   "modified": "2026-11-05T10:45:29Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -152061,7 +152061,7 @@
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-11-04T22:20:20Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -153983,7 +153983,7 @@
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-04T19:58:33Z",
+   "modified": "2026-11-04T22:20:20Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -159522,7 +159522,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-04T23:41:47Z",
+   "modified": "2026-11-05T08:56:45Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -178126,7 +178126,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-02T18:46:18Z",
+   "modified": "2026-11-04T22:20:20Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -186632,7 +186632,7 @@
    "length": 180,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-05T03:49:04Z",
+   "modified": "2026-11-05T09:45:13Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -187345,7 +187345,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-01T01:02:25Z",
+   "modified": "2026-11-05T09:13:34Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -194653,7 +194653,7 @@
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-04T19:58:33Z",
+   "modified": "2026-11-04T22:20:20Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -195066,7 +195066,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-11-04T22:20:20Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -195145,7 +195145,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-11-04T22:20:20Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
