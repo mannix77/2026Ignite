@@ -3,6 +3,16 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-11-05T06:44:21Z · https://catalog.awsevents.com/api/sessions
+
+Added 0 · removed 0 · changed 4
+
+**Changed**
+- `AIM228-S` From Data Overload to Action: A Voice-Enabled Digital Assistant for O&G Field Ops — title: Building the Intelligent Utility: PG&E’s AI and Cloud Tra… → From Data Overload to Action: A Voice-Enabled Digital Ass…; desc
+- `COM312-R` Giving Your AI Agent a Wallet: The Architecture of Spend Control — speakers: David Victoria → David Victoria, Sebastian Marines
+- `COM312-R1` Giving Your AI Agent a Wallet: The Architecture of Spend Control — speakers: David Victoria → David Victoria, Sebastian Marines
+- `SUP105` Turning AI deserts into markets — 0 to 30+ countries in 18 months — title: Wonderful brings enterprise voice AI to 30+ countries → Turning AI deserts into markets — 0 to 30+ countries in 1…; level: 100 → 200; desc
+
 ## 2026-11-05T00:49:01Z · https://catalog.awsevents.com/api/sessions
 
 Added 21 · removed 1 · changed 53
