@@ -123,5 +123,44 @@ class CommitStepTests(unittest.TestCase):
         self.assertEqual(self.remote_file("sessions.json"), "theirs\n")
 
 
+def deploy_job_text():
+    text = open(WORKFLOW, encoding="utf-8").read()
+    return text.split("\n  deploy:")[1].split("\n  # One GitHub issue per production problem")[0]
+
+
+class DeployRetryTests(unittest.TestCase):
+    """A Pages API hiccup (HTTP 500 within ~3 s) is retried once after 60 s instead of failing the run."""
+
+    def steps(self):
+        body = deploy_job_text().split("\n    steps:\n")[1]
+        body = "\n".join(l for l in body.splitlines() if not l.lstrip().startswith("#"))
+        return [s.strip("\n") for s in re.split(r"\n(?=      - )", body.strip("\n"))]
+
+    def test_failed_first_deploy_waits_60s_then_deploys_again(self):
+        first, wait, retry = self.steps()
+        self.assertIn("id: deployment\n", first)
+        self.assertIn("actions/deploy-pages@", first)
+        self.assertIn("continue-on-error: true", first)  # the retry decides whether the job fails
+        self.assertIn("if: steps.deployment.outcome == 'failure'", wait)
+        self.assertRegex(wait, r"run: sleep 60\s*$")
+        self.assertIn("id: deployment_retry\n", retry)
+        self.assertIn("if: steps.deployment.outcome == 'failure'", retry)
+        self.assertNotIn("continue-on-error", retry)  # a second failure must fail the job
+        # Both attempts use the same pinned action, so the retry can't drift from the first try.
+        pin = re.compile(r"actions/deploy-pages@(\w{40}) # v[\d.]+")
+        self.assertEqual(pin.search(first).group(1), pin.search(retry).group(1))
+
+    def test_the_environment_url_comes_from_whichever_attempt_deployed(self):
+        self.assertIn(
+            "url: ${{ steps.deployment.outputs.page_url || steps.deployment_retry.outputs.page_url }}",
+            deploy_job_text())
+
+    def test_the_report_job_still_sees_the_deploy_job_result(self):
+        # A second failure fails the deploy job, which the report job turns into a production issue.
+        text = open(WORKFLOW, encoding="utf-8").read()
+        self.assertIn("needs: [sync, deploy]", text)
+        self.assertIn('DEPLOY: ${{ needs.deploy.result }}', text)
+
+
 if __name__ == "__main__":
     unittest.main()

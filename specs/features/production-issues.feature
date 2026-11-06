@@ -22,6 +22,23 @@ Feature: A GitHub issue for every production problem
       Then a production issue is opened for the redeploy
       And the open re:Invent issue is not closed
 
+  Rule: A one-off deploy failure is retried before it becomes a problem
+
+    Scenario: A deploy that fails once succeeds on the retry
+      Given the Ignite deploy fails on its first attempt
+      When the deploy is tried again after 60 seconds and succeeds
+      Then the run succeeds
+      And no production issue is opened
+
+    Scenario: A deploy that fails twice still opens an issue
+      Given the Ignite deploy fails on its first attempt
+      When the retry after 60 seconds fails too
+      Then a production issue is opened for the deploy
+
+    Scenario: A deploy that succeeds the first time is not retried
+      When the Ignite deploy succeeds on its first attempt
+      Then there is no wait and no second deployment
+
   Rule: The same problem again updates its issue instead of adding noise
 
     Scenario: A repeat of the same refusal updates the existing issue
