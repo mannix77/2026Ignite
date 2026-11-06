@@ -1,0 +1,85 @@
+<!-- summary:42139613324-1 -->
+Added 8 · removed 0 · changed 70
+
+**Added**
+- `TNC139-R` Self-Paced Training: Free Hands-On Cloud Learning
+- `SUP117` Accelerating physical AI with AWS for Startups
+- `TNC139-R1` Self-Paced Training: Free Hands-On Cloud Learning
+- `SUP106` Models are just math: Building efficient AI from lab to industry
+- `TNC139-R2` Self-Paced Training: Free Hands-On Cloud Learning
+- `NET221-S` The next chapter at eero.
+- `TNC139-R3` Self-Paced Training: Free Hands-On Cloud Learning
+- `COP212` Achieving Operational Excellence at Scale with AWS Unified Operations
+
+**Changed**
+- `ACT013-R` Amazon Connect Lounge: Meet the Team — title: AWS Connect Lounge: Meet the Team → Amazon Connect Lounge: Meet the Team
+- `ACT013-R1` Amazon Connect Lounge: Meet the Team — title: AWS Connect Lounge: Meet the Team → Amazon Connect Lounge: Meet the Team
+- `ACT013-R2` Amazon Connect Lounge: Meet the Team — title: AWS Connect Lounge: Meet the Team → Amazon Connect Lounge: Meet the Team
+- `ACT013-R3` Amazon Connect Lounge: Meet the Team — title: AWS Connect Lounge: Meet the Team → Amazon Connect Lounge: Meet the Team
+- `ACT053` AWS re:Invent 5K Run — title: AWS re:Invent 5K Race → AWS re:Invent 5K Run
+- `AIM132-S` From Observer to Builder: AI Observability at HubSpot (sponsored by Cribl) — title: Taming AI Token Costs and Security Risks with Cribl and A… → From Observer to Builder: AI Observability at HubSpot (sp…; desc
+- `AIM206` AWS AI Factories: Bring production scale AI to your data center — desc
+- `AIM214` How Vanguard uses SageMaker HyperPod from training to inference for custom LLMs — speakers: Kareem Syed-Mohammed, Ritesh Shah, Swapnil Palod → Kareem Syed-Mohammed, Ritesh Shah, Swapnil Palod, Vinay A…
+- `AIM2215` World Models & Physical AI: The next frontier in intelligent systems — speakers: Diwakar Bansal → Diwakar Bansal, Eric Saleh
+- `AIM228-S` From Data Overload to Action: A Voice-Enabled Digital Assistant for O&G Field Ops (sponsored by PwC) — title: …Ops → …Ops (sponsored by PwC)
+- `AIM234-S` Machines on-call for humans: how enterprises are transforming reliability with AI SRE — title: …on Call for Humans: Agents to run and fix your prod (spo… → …on-call for humans: how enterprises are transforming rel…; desc
+- `AIM249-S` AI spend decoded: Open the black box with FinOps for AI (sponsored by Cloudability) — title: FinOps for AI: Open the black box on AI spend (sponsored … → AI spend decoded: Open the black box with FinOps for AI (…
+- `AIM307` Turn your coding agent into an always-on dev team with AgentCore — speakers: Abhimanyu Siwach, Eashank Kaushik → Abhimanyu Siwach, Eashank Kaushik, Prajit Pabbati
+- `AIM342` Build, customize, and deploy on SageMaker AI with learnings from BMW Group — title: One Service, Every Workload: Build, Customize, and Deploy… → Build, customize, and deploy on SageMaker AI with learnin…; desc
+- `AIM379-S` Breaking up with closed frontier models — title: Scale reinforcement learning globally with sparse weight … → Breaking up with closed frontier models; level: 300 → 100; desc
+- `AIM458-S` The Physical AI Toolchain: A Full-Stack Solution with AWS and NVIDIA — title: …Blueprint: A Full-Stack Solution with AWS and NVIDIA (sp… → …Toolchain: A Full-Stack Solution with AWS and NVIDIA
+- `AMZ304` Instant Play Demos on Twitch – Increasing Player Engagement — speakers: Frank Zhu, Todd Sharp → Frank Zhu, Henry Goffin, Todd Sharp
+- `ANT339` Build scalable streaming and messaging applications with Amazon Kinesis and AmazonMSK — speakers: Ali Alemi → Ali Alemi, Nishit Nagar
+- `ANT415-R` Build a grounded AI support assistant on Amazon OpenSearch Service — code: ANT415 → ANT415-R
+- `ANT425` Trace Lineage From AI Endpoints and Models to Data — speakers: Nishchai JM → Karthik Devaraj, Nishchai JM
+- `ANT443` Build orchestration agents for AWS Glue ETL — speakers: John Oshodi, Raghu Prabhu, Sushovan Basak, Vivek Shrivastava → John Oshodi, Keerthi Chadalavada, Raghu Prabhu, Sushovan …
+- `ANT446` Build event-driven applications with AWS Streaming and Messaging — speakers: Amar Surjit, Ashley Millette, Charishma Makineni, Mayank … → Amar Surjit, Ashley Millette, Charishma Makineni, Mayank …
+- `ARC209-S` AI-ready tables, served fresh. Hold the custom pipelines. (sponsored by Confluent) — title: Make streaming data AI-ready before it goes stale (sponso… → AI-ready tables, served fresh. Hold the custom pipelines.…
+- `BIZ109` Citizens Bank: Building AI-Native CX from Vision to Production — speakers: — → Sheila Smith
+- `CMP305` Run your largest SAP HANA on AWS: EC2 High Memory deep dive — desc
+- `CON331` AI-accelerated migration from self-managed Kubernetes to EKS Auto Mode — speakers: Aritra Nag → Aritra Nag, Hari Charan Ayada
+- `COP321` Orchestrate multi-layer disaster recovery for critical workloads — speakers: Darshan Patel, Joe Chapman → Cristian Critelli, Darshan Patel, Joe Chapman
+- `COP347-S` AI at full speed without crashing: The enterprise blueprint (sponsored by HashiCorp) — title: Drive AI at full speed: The enterprise blueprint (sponsor… → AI at full speed without crashing: The enterprise bluepri…
+- `COP351` How Infor Uses AWS Agentic AI to Transform Cloud Operations at Scale — speakers: Durga Dash, Saurabh Saxena → Durga Dash, Neel Sendas, Saurabh Saxena
+- `DAT101-S` Multicloud in the Real World: Financial Services, Healthcare, and Retail — title: …Manufacturing (sponsored by Oracle) → …Retail; desc
+- `DAT319-S` Edelbyte: The data platform for curious humans and tireless agents (sponsored by Edelbyte) — title: …agents → …agents (sponsored by Edelbyte)
+- `DAT434-R1` Fast and easy bulk operations with Amazon DynamoDB — speakers: Colin Leek → Colin Leek, Ruskin Dantra
+- `DAT449` Build consistent, explainable agents with ontologies & graph memory in Neptune — title: …and graph memory in Neptune → …& graph memory in Neptune
+- `DVT213-S` Decision Mgmt at Scale: Common Patterns for Modernizing Real-Time Decisioning on AWS — title: Building an Open and Real-time Fraud and Decisioning Engi… → Decision Mgmt at Scale: Common Patterns for Modernizing R…; desc
+- `HMC206-S` Absorbing AI costs? Stop paying for idle GPUs on Amazon EKS — title: Stop paying for idle GPUs on Amazon EKS (sponsored by Clo… → Absorbing AI costs? Stop paying for idle GPUs on Amazon EKS
+- `HMC321` Multicloud Operating Models for ISVs — start: 2026-12-04T19:30:00Z → 2026-11-30T19:30:00Z; end: 2026-12-04T20:30:00Z → 2026-11-30T20:30:00Z; room: Venetian | Level 2 | Ballroom F | Content Hub | Purple Th… → Caesars Forum | Level 1 | Forum 120 | Content Hub | Purpl…
+- `HMC322` Designing Portable Multicloud Architectures with Open Specifications — start: 2026-11-30T19:30:00Z → 2026-12-04T19:30:00Z; end: 2026-11-30T20:30:00Z → 2026-12-04T20:30:00Z; room: Caesars Forum | Level 1 | Forum 120 | Content Hub | Purpl… → Venetian | Level 2 | Ballroom F | Content Hub | Purple Th…
+- `IND108-S` From AI that responds to AI that delivers measurable outcomes with Zendesk and AWS — title: Build an intelligent contact center with Zendesk and AWS … → From AI that responds to AI that delivers measurable outc…; desc
+- `IND215` Deploying Governed AI Agents in Clinical AI — speakers: Bret Borota, Dan Eakin → Bret Borota, Dan Eakin, Ekta Walia Bhullar
+- `IND3300` How WBD Became the First Media Company to Go Agentic Across AdTech — speakers: Dr. Nage Sethu, Ken Kanagaraj → Ashish Kapur, Dr. Nage Sethu, Ken Kanagaraj
+- `IND3348` A Context Gap, Not a Data Gap: Riot Games Rethinks Incident Learning — speakers: Cory Ramirez, Randy James → Ashwin Raghuraman, Cory Ramirez, Randy James
+- `IND351` Breathing Life into Game Worlds with Amazon Neptune & GraphRAG — speakers: Heungsu Ha, JP Velasco, Yeonho Lee, matthew nimmo → Daniel Lee, Heungsu Ha, JP Velasco, Yeonho Lee, matthew n…
+- `IND373` Build a Research Co-Scientist Using Amazon Quick — speakers: Ariella Sasson, Atul Chaudhari, Lisa McFerrin, Sujaya Sri… → Ariella Sasson, Atul Chaudhari, Lisa McFerrin, Mark Schre…
+- `IND390` Deploying AI Agents that handle PHI with Amazon Bedrock Guardrails — title: Deploy a HIPPA-Eligible AI Agent with Amazon Bedrock Guar… → Deploying AI Agents that handle PHI with Amazon Bedrock G…; desc
+- `INV301-S` Build Autonomous Agents and Run AI-Powered AppSec on Bedrock (sponsored by OpenAI) — desc
+- `MAM215-S` Conversational AI at Scale: S&P Global Energy's 30+ Genie Agents — title: …Agents (sponsored by Databricks) → …Agents; desc
+- `MAM221` Accelerating AI-powered business transformation and SAP Modernization — speakers: Tim Speicher → Steven Jones, Tim Speicher
+- `MAM318` British Airways: Using agentic AI to modernise Java services at scale — desc
+- `MAM325` Amazon EVS: How to deploy & operate your VMware stack in the cloud — speakers: Alastair Pooley, Andy Reedy → Alastair Pooley, Andy Reedy, Spiros Tsitsonis
+- `MAM350-R` Faster tech debt analysis and remediation — title: Faster tech debt remediation without the setup overhead → Faster tech debt analysis and remediation; desc
+- `PEX201` Building Your AI Practice: From Business Model to Partner Revenue — speakers: Erik Farr, Scott Bends → Erik Farr, Lynn Cain, Scott Bends
+- `PEX205` AI-Powered Profitability: How Partners Are Winning with AWS — speakers: Julia Chen → Julia Chen, Niraj Nath
+- `PEX206` Agentic Process Transformation at Enterprise Scale — speakers: Mark Mac Ewen → Mark Mac Ewen, Sawan Deswal
+- `SEC103-S` Expert Defense Within Reach: Agentic SecOps with Splunk and AWS — title: Turn AWS Security Signals into Action with AI-First SecOp… → Expert Defense Within Reach: Agentic SecOps with Splunk a…
+- `SEC219-S` Agentic AI meets critical infrastructure at UGI (sponsored by IBM) — title: When agentic AI meets critical infrastructure (sponsored … → Agentic AI meets critical infrastructure at UGI (sponsore…
+- `SEC229-S` From Signals to Action for SDG&E and SoCalGas: AI-Powered Cybersecurity on AWS — title: …Sempra: AI-Powered Cybersecurity on AWS (sponsored by Ac… → …SDG&E and SoCalGas: AI-Powered Cybersecurity on AWS; desc
+- `SEC316` Crypto escape room: race to migrate to quantum resistance — speakers: Arun Krishnaswamy, Jay Viera, Phoebe Sorkin, Shankar Raja… → Arun Krishnaswamy, Jay Viera, Margo Cronin, Phoebe Sorkin…
+- `SEC405` From vulnerability to exploit to fix: closing the loop with AWS Security Services — speakers: Aliaksei Ivanou, Jason Schamp, Kiran Dongara, Travis Rocco → Aliaksei Ivanou, Chad Short, Jason Schamp, Kiran Dongara,…
+- `SEC411` Processing PII without exposing it with AWS Nitro Enclaves for confidential computing — title: …using AWS Nitro Enclaves for confidential computin → …with AWS Nitro Enclaves for confidential computing
+- `SEC426` Penetration testing every deployment with AWS Continuum — speakers: Jeremy Schiefer → Jeremy Schiefer, Shuo Yang
+- `STG306` Amazon S3 Tables: A deep dive into storage built for Apache Iceberg — speakers: Amy Yu → Abhinav Goyle, Amy Yu
+- `STG310` Accelerating AI/ML Pipelines with Amazon EBS — speakers: Joe Stubenrauch, Sooraj Prasannan → Heather Horbochuk, Joe Stubenrauch, Sooraj Prasannan
+- `SUP102` Beyond the pilot: Why VCs are betting on FDE-led growth — speakers: — → Shane Rai
+- `SUP103` Winning enterprise customers with AWS Global Startup Program — speakers: — → Matt Nagle
+- `SUP230` Turning AI deserts into markets — 0 to 30+ countries in 18 months — code: SUP105 → SUP230
+- `SUP318` AI security without borders: A global defense strategy — speakers: — → Tiffany Bloomquist
+- `SVS209` Everything your web app needs in one place — speakers: — → David Castro
+- `TNC104` How T&C Empowers Partners to Build AI-Ready Teams and Drive Customer Impact? — speakers: Mark Daigle → Brian Henry, Mark Daigle
+- `WOC101` Managing Bots, Mentoring Brains: The Future of Hybrid Leadership — speakers: — → Purva Upasak
+- `WOC102` The rules for AI are being written right now and nobody’s watching — speakers: — → Christina Mitine
+
