@@ -1,6 +1,868 @@
 {
  "batches": [
   {
+   "at": "2026-11-06T18:43:10Z",
+   "milestones": [],
+   "added": [
+    {
+     "id": "1789513465440001LfXi",
+     "inst": "1789513465440001LfXi",
+     "code": "ACT012-R5",
+     "title": "Attendee Experience Desk",
+     "repeat": false
+    }
+   ],
+   "removed": [],
+   "changed": [
+    {
+     "id": "1789513463502001Lv80",
+     "inst": "1789513463502001Lv80",
+     "code": "ACT009-R",
+     "title": "Datadog Observaball",
+     "f": {
+      "end": [
+       "2026-11-30T03:30:00Z",
+       "2026-11-30T02:00:00Z"
+      ],
+      "dur": [
+       570,
+       480
+      ]
+     }
+    },
+    {
+     "id": "1789513463890001LLYb",
+     "inst": "1789513463890001LLYb",
+     "code": "ACT073",
+     "title": "Hydrate & Help",
+     "f": {
+      "code": [
+       "recFSgwOqCADZG9XT",
+       "ACT073"
+      ]
+     }
+    },
+    {
+     "id": "1789513463021001LmHI",
+     "inst": "1789513463021001LmHI",
+     "code": "ACT008-R",
+     "title": "Kiro Galaxy Run",
+     "f": {
+      "start": [
+       "2026-11-29T18:00:00Z",
+       "2026-11-29T20:00:00Z"
+      ],
+      "dur": [
+       480,
+       360
+      ]
+     }
+    },
+    {
+     "id": "1789513466024001Lsrh",
+     "inst": "1789513466024001Lsrh",
+     "code": "ACT014-R1",
+     "title": "Wishing Booths",
+     "f": {
+      "start": [
+       "2026-11-30T15:30:00Z",
+       "2026-11-30T14:30:00Z"
+      ],
+      "end": [
+       "2026-12-01T02:00:00Z",
+       "2026-12-01T03:30:00Z"
+      ],
+      "dur": [
+       630,
+       780
+      ]
+     }
+    },
+    {
+     "id": "1789513465073001LJyg",
+     "inst": "1789513465073001LJyg",
+     "code": "ACT012-R",
+     "title": "Attendee Experience Desk",
+     "f": {
+      "start": [
+       "2026-11-30T18:00:00Z",
+       "2026-11-30T15:30:00Z"
+      ],
+      "end": [
+       "2026-12-01T04:00:00Z",
+       "2026-12-01T04:30:00Z"
+      ],
+      "dur": [
+       600,
+       780
+      ]
+     }
+    },
+    {
+     "id": "1789513462179001LDwO",
+     "inst": "1789513462179001LDwO",
+     "code": "ACT004-R1",
+     "title": "AWS Merch Store",
+     "f": {
+      "end": [
+       "2026-12-01T03:30:00Z",
+       "2026-12-01T03:00:00Z"
+      ],
+      "dur": [
+       690,
+       660
+      ]
+     }
+    },
+    {
+     "id": "1789513463273001LgbN",
+     "inst": "1789513463273001LgbN",
+     "code": "ACT008-R1",
+     "title": "Kiro Galaxy Run",
+     "f": {
+      "end": [
+       "2026-12-01T03:00:00Z",
+       "2026-12-01T01:30:00Z"
+      ],
+      "dur": [
+       660,
+       570
+      ]
+     }
+    },
+    {
+     "id": "1789513464093001LD7m",
+     "inst": "1789513464093001LD7m",
+     "code": "ACT009-R1",
+     "title": "Datadog Observaball",
+     "f": {
+      "end": [
+       "2026-12-01T03:30:00Z",
+       "2026-12-01T03:00:00Z"
+      ],
+      "dur": [
+       690,
+       660
+      ]
+     }
+    },
+    {
+     "id": "1789513465590001Lwex",
+     "inst": "1789513465590001Lwex",
+     "code": "ACT013-R",
+     "title": "Amazon Connect Lounge: Meet the Team",
+     "f": {
+      "start": [
+       "2026-11-30T16:30:00Z",
+       "2026-11-30T16:00:00Z"
+      ],
+      "end": [
+       "2026-12-01T00:30:00Z",
+       "2026-12-01T01:30:00Z"
+      ],
+      "dur": [
+       480,
+       570
+      ]
+     }
+    },
+    {
+     "id": "1789513464555001Lih8",
+     "inst": "1789513464555001Lih8",
+     "code": "ACT074",
+     "title": "Hydrate & Help",
+     "f": {
+      "code": [
+       "recMTLGpP18gJ2Hyw",
+       "ACT074"
+      ]
+     }
+    },
+    {
+     "id": "1780441483373001GDUV",
+     "inst": "1780441483373001GDUV",
+     "code": "DAT319-S",
+     "title": "Edelbyte: The data platform for curious humans and tireless agents",
+     "f": {
+      "title": [
+       "Edelbyte: The data platform for curious humans and tireless agents (sponsored by Edelbyte)",
+       "Edelbyte: The data platform for curious humans and tireless agents"
+      ],
+      "level": [
+       300,
+       200
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442285389001cIeO",
+     "inst": "1780442285389001cIeO",
+     "code": "AIM222-S",
+     "title": "Build, Deploy, and Scale AI Agents with Cloudera on AWS",
+     "f": {
+      "title": [
+       "Hands-On Workshop: Build & Deploy AI Agents with Cloudera Agent Studio (sponsored by Cloudera)",
+       "Build, Deploy, and Scale AI Agents with Cloudera on AWS"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442278352001chmU",
+     "inst": "1780442278352001chmU",
+     "code": "CON316-R",
+     "title": "Transform your SaaS for the agentic AI era on Amazon ECS",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1792528985802001tRoG",
+     "inst": "1792528985802001tRoG",
+     "code": "WOC103",
+     "title": "Women of the Cloud Networking Reception",
+     "f": {
+      "code": [
+       "recbkJjam4IZPHEgU",
+       "WOC103"
+      ]
+     }
+    },
+    {
+     "id": "1789513462681001LlB1",
+     "inst": "1789513462681001LlB1",
+     "code": "ACT069",
+     "title": "Build & Give Back",
+     "f": {
+      "code": [
+       "recaP5XroK2U78uQF",
+       "ACT069"
+      ]
+     }
+    },
+    {
+     "id": "1780441486273001GfAM",
+     "inst": "1780441486273001GfAM",
+     "code": "DVT221-S",
+     "title": "Controlling the AI Software Factory (sponsored by LaunchDarkly)",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1792529038012001dBqe",
+     "inst": "1792529038012001dBqe",
+     "code": "WOC104",
+     "title": "Women of the Cloud Women Walk the Floor",
+     "f": {
+      "code": [
+       "reccGizoNLytrQn3Z",
+       "WOC104"
+      ]
+     }
+    },
+    {
+     "id": "1789513465366001LRln",
+     "inst": "1789513465366001LRln",
+     "code": "ACT075",
+     "title": "Hydrate & Help",
+     "f": {
+      "code": [
+       "recqrR7qNQbQJaf6l",
+       "ACT075"
+      ]
+     }
+    },
+    {
+     "id": "1789513463412001Lirj",
+     "inst": "1789513463412001Lirj",
+     "code": "ACT070",
+     "title": "Build & Give Back",
+     "f": {
+      "code": [
+       "recESgHo3kCuR8lOG",
+       "ACT070"
+      ]
+     }
+    },
+    {
+     "id": "1789513462248001LPaY",
+     "inst": "1789513462248001LPaY",
+     "code": "ACT004-R2",
+     "title": "AWS Merch Store",
+     "f": {
+      "start": [
+       "2026-12-01T16:00:00Z",
+       "2026-12-01T18:30:00Z"
+      ],
+      "dur": [
+       600,
+       450
+      ]
+     }
+    },
+    {
+     "id": "1789513463340001Lt3H",
+     "inst": "1789513463340001Lt3H",
+     "code": "ACT008-R2",
+     "title": "Kiro Galaxy Run",
+     "f": {
+      "end": [
+       "2026-12-02T02:00:00Z",
+       "2026-12-02T01:30:00Z"
+      ],
+      "dur": [
+       450,
+       420
+      ]
+     }
+    },
+    {
+     "id": "1789513464022001Lurq",
+     "inst": "1789513464022001Lurq",
+     "code": "ACT009-R2",
+     "title": "Datadog Observaball",
+     "f": {
+      "end": [
+       "2026-12-02T03:30:00Z",
+       "2026-12-02T02:00:00Z"
+      ],
+      "dur": [
+       540,
+       450
+      ]
+     }
+    },
+    {
+     "id": "1789513465149001LNkO",
+     "inst": "1789513465149001LNkO",
+     "code": "ACT012-R1",
+     "title": "Attendee Experience Desk",
+     "f": {
+      "start": [
+       "2026-12-01T16:00:00Z",
+       "2026-12-01T18:30:00Z"
+      ],
+      "end": [
+       "2026-12-02T03:00:00Z",
+       "2026-12-02T02:00:00Z"
+      ],
+      "dur": [
+       660,
+       450
+      ]
+     }
+    },
+    {
+     "id": "1789513465662001LTzl",
+     "inst": "1789513465662001LTzl",
+     "code": "ACT013-R1",
+     "title": "Amazon Connect Lounge: Meet the Team",
+     "f": {
+      "start": [
+       "2026-12-01T16:30:00Z",
+       "2026-12-01T18:30:00Z"
+      ],
+      "end": [
+       "2026-12-02T00:30:00Z",
+       "2026-12-02T01:30:00Z"
+      ],
+      "dur": [
+       480,
+       420
+      ]
+     }
+    },
+    {
+     "id": "1789513466090001LB2y",
+     "inst": "1789513466090001LB2y",
+     "code": "ACT014-R2",
+     "title": "Wishing Booths",
+     "f": {
+      "start": [
+       "2026-12-01T18:00:00Z",
+       "2026-12-01T18:30:00Z"
+      ],
+      "end": [
+       "2026-12-02T02:00:00Z",
+       "2026-12-02T02:30:00Z"
+      ]
+     }
+    },
+    {
+     "id": "1780442269768001cYHj",
+     "inst": "1780442269768001cYHj",
+     "code": "AIM388-S",
+     "title": "AWSome Automation: From Project Brief Prompt to Landing Page (sponsored by Storyblok)",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441482113001G5tc",
+     "inst": "1780441482113001G5tc",
+     "code": "ARC206-S",
+     "title": "Accelerating Fusion Innovation with AMD EPYC on AWS HPC, Analytics, and Agentic AI (sponsored by AMD)",
+     "f": {
+      "speakers": [
+       [
+        "Adam Reyes",
+        "Arijit Choudhury",
+        "Brody Bassett",
+        "Hardeep Sullan",
+        "Manish Amin"
+       ],
+       [
+        "Adam Reyes",
+        "Arijit Choudhury",
+        "Brody Bassett",
+        "Hardeep Sullan",
+        "Manish Amin",
+        "Stefano Amico"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442267034001cC3t",
+     "inst": "1780442267034001cC3t",
+     "code": "AIM112-S",
+     "title": "Beyond Tool Sprawl: Scalable, Trusted Access to APIs, MCP, and Data",
+     "f": {
+      "title": [
+       "Give agents governed access to your APIs over MCP with a domain model (sponsored by Apollo GraphQL)",
+       "Beyond Tool Sprawl: Scalable, Trusted Access to APIs, MCP, and Data"
+      ],
+      "level": [
+       100,
+       200
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441488208001GuO1",
+     "inst": "1780441488208001GuO1",
+     "code": "DVT222-S",
+     "title": "Inside Real AI Software Factories: Lessons From the Teams Building Them",
+     "f": {
+      "title": [
+       "Inside Real AI Software Factories: Lessons From the Teams Building Them (sponsored by LaunchDarkly)",
+       "Inside Real AI Software Factories: Lessons From the Teams Building Them"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1789513465297001LG0N",
+     "inst": "1789513465297001LG0N",
+     "code": "ACT012-R2",
+     "title": "Attendee Experience Desk",
+     "f": {
+      "start": [
+       "2026-12-02T18:30:00Z",
+       "2026-12-02T15:30:00Z"
+      ],
+      "dur": [
+       450,
+       630
+      ]
+     }
+    },
+    {
+     "id": "1789513463202001LOS7",
+     "inst": "1789513463202001LOS7",
+     "code": "ACT008-R3",
+     "title": "Kiro Galaxy Run",
+     "f": {
+      "start": [
+       "2026-12-02T18:30:00Z",
+       "2026-12-02T16:00:00Z"
+      ],
+      "end": [
+       "2026-12-03T02:00:00Z",
+       "2026-12-03T01:30:00Z"
+      ],
+      "dur": [
+       450,
+       570
+      ]
+     }
+    },
+    {
+     "id": "1789513463957001LbU2",
+     "inst": "1789513463957001LbU2",
+     "code": "ACT009-R3",
+     "title": "Datadog Observaball",
+     "f": {
+      "start": [
+       "2026-12-02T18:30:00Z",
+       "2026-12-02T16:00:00Z"
+      ],
+      "end": [
+       "2026-12-03T03:30:00Z",
+       "2026-12-03T02:00:00Z"
+      ],
+      "dur": [
+       540,
+       600
+      ]
+     }
+    },
+    {
+     "id": "1789513465800001LrwW",
+     "inst": "1789513465800001LrwW",
+     "code": "ACT013-R2",
+     "title": "Amazon Connect Lounge: Meet the Team",
+     "f": {
+      "start": [
+       "2026-12-02T16:30:00Z",
+       "2026-12-02T16:00:00Z"
+      ],
+      "end": [
+       "2026-12-03T02:30:00Z",
+       "2026-12-03T01:30:00Z"
+      ],
+      "dur": [
+       600,
+       570
+      ]
+     }
+    },
+    {
+     "id": "1789513466158001LhDV",
+     "inst": "1789513466158001LhDV",
+     "code": "ACT014-R3",
+     "title": "Wishing Booths",
+     "f": {
+      "start": [
+       "2026-12-02T15:30:00Z",
+       "2026-12-02T16:00:00Z"
+      ],
+      "end": [
+       "2026-12-03T02:00:00Z",
+       "2026-12-03T02:30:00Z"
+      ]
+     }
+    },
+    {
+     "id": "1780441488777001GRzl",
+     "inst": "1780441488777001GRzl",
+     "code": "ARC208-S",
+     "title": "Powering Agentic AI with Real - Time Market Data Transformation for LSEG (sponsored by AMD)",
+     "f": {
+      "speakers": [
+       [
+        "Madhusudhan Rangarajan",
+        "Mike Thompson",
+        "Stefano Amico",
+        "Stuart Bunyan"
+       ],
+       [
+        "Madhusudhan Rangarajan",
+        "Mike Thompson",
+        "Stuart Bunyan"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1793291508106001D7Sa",
+     "inst": "1793291508106001D7Sa",
+     "code": "COP212",
+     "title": "Achieving Operational Excellence at Scale with AWS Unified Operations",
+     "f": {
+      "start": [
+       null,
+       "2026-12-02T17:00:00Z"
+      ],
+      "end": [
+       null,
+       "2026-12-02T18:00:00Z"
+      ],
+      "dur": [
+       0,
+       60
+      ],
+      "room": [
+       null,
+       "MGM Grand | Level 1 | Grand 115"
+      ]
+     }
+    },
+    {
+     "id": "1789513466364001L6Qq",
+     "inst": "1789513466364001L6Qq",
+     "code": "ACT076",
+     "title": "Hydrate & Help",
+     "f": {
+      "code": [
+       "recX6D9fCEcXywvZK",
+       "ACT076"
+      ]
+     }
+    },
+    {
+     "id": "1789513463580001LlzB",
+     "inst": "1789513463580001LlzB",
+     "code": "ACT071",
+     "title": "Build & Give Back",
+     "f": {
+      "code": [
+       "recfaVPByT5gRSt3N",
+       "ACT071"
+      ]
+     }
+    },
+    {
+     "id": "1780442269063001cDiT",
+     "inst": "1780442269063001cDiT",
+     "code": "COP101-S",
+     "title": "Trust Issues: A Healthy Relationship With Your AI Agents (sponsored by MontyCloud)",
+     "f": {
+      "title": [
+       "Move Fast With AI Agents Without Betting the Business (sponsored by MontyCloud)",
+       "Trust Issues: A Healthy Relationship With Your AI Agents (sponsored by MontyCloud)"
+      ],
+      "level": [
+       100,
+       200
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441489411001Gsad",
+     "inst": "1780441489411001Gsad",
+     "code": "SEC212-S",
+     "title": "Detection in the Agent Era, and the Metrics That Matter",
+     "f": {
+      "title": [
+       "What Breaks First: Detection Engineering Lessons at AWS Scale (sponsored by Datadog)",
+       "Detection in the Agent Era, and the Metrics That Matter"
+      ]
+     }
+    },
+    {
+     "id": "1780442272602001c2G3",
+     "inst": "1780442272602001c2G3",
+     "code": "SEC221-S",
+     "title": "Get Mythos-ready: Continuous Offensive Security (sponsored by Terra)",
+     "f": {
+      "title": [
+       "Agentic AI Meets ‘Human-Guided-Autonomy’ (sponsored by Terra)",
+       "Get Mythos-ready: Continuous Offensive Security (sponsored by Terra)"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1789513465228001LKmK",
+     "inst": "1789513465228001LKmK",
+     "code": "ACT012-R3",
+     "title": "Attendee Experience Desk",
+     "f": {
+      "start": [
+       "2026-12-03T18:30:00Z",
+       "2026-12-03T15:30:00Z"
+      ],
+      "dur": [
+       450,
+       630
+      ]
+     }
+    },
+    {
+     "id": "1789513462399001L7DC",
+     "inst": "1789513462399001L7DC",
+     "code": "ACT004-R4",
+     "title": "AWS Merch Store",
+     "f": {
+      "end": [
+       "2026-12-04T02:00:00Z",
+       "2026-12-04T01:30:00Z"
+      ],
+      "dur": [
+       600,
+       570
+      ]
+     }
+    },
+    {
+     "id": "1789513463120001LrT1",
+     "inst": "1789513463120001LrT1",
+     "code": "ACT008-R4",
+     "title": "Kiro Galaxy Run",
+     "f": {
+      "start": [
+       "2026-12-03T18:30:00Z",
+       "2026-12-03T16:00:00Z"
+      ],
+      "end": [
+       "2026-12-04T00:00:00Z",
+       "2026-12-04T01:00:00Z"
+      ],
+      "dur": [
+       330,
+       540
+      ]
+     }
+    },
+    {
+     "id": "1789513463804001LeiZ",
+     "inst": "1789513463804001LeiZ",
+     "code": "ACT009-R4",
+     "title": "Datadog Observaball",
+     "f": {
+      "start": [
+       "2026-12-03T18:30:00Z",
+       "2026-12-03T16:00:00Z"
+      ],
+      "end": [
+       "2026-12-04T03:30:00Z",
+       "2026-12-04T01:30:00Z"
+      ],
+      "dur": [
+       540,
+       570
+      ]
+     }
+    },
+    {
+     "id": "1789513465877001LcNq",
+     "inst": "1789513465877001LcNq",
+     "code": "ACT013-R3",
+     "title": "Amazon Connect Lounge: Meet the Team",
+     "f": {
+      "start": [
+       "2026-12-03T16:30:00Z",
+       "2026-12-03T16:00:00Z"
+      ],
+      "end": [
+       "2026-12-04T00:30:00Z",
+       "2026-12-04T01:00:00Z"
+      ],
+      "dur": [
+       480,
+       540
+      ]
+     }
+    },
+    {
+     "id": "1789513466222001L6ca",
+     "inst": "1789513466222001L6ca",
+     "code": "ACT014-R4",
+     "title": "Wishing Booths",
+     "f": {
+      "start": [
+       "2026-12-03T15:30:00Z",
+       "2026-12-03T16:00:00Z"
+      ],
+      "end": [
+       "2026-12-04T02:00:00Z",
+       "2026-12-04T01:30:00Z"
+      ],
+      "dur": [
+       630,
+       570
+      ]
+     }
+    },
+    {
+     "id": "1780442275335001cqge",
+     "inst": "1780442275335001cqge",
+     "code": "AIM402-R",
+     "title": "Serverless model customization with SageMaker AI​",
+     "f": {
+      "title": [
+       "From dataset to a deployed fine-tuned LLM in hours on SageMaker AI",
+       "Serverless model customization with SageMaker AI​"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1789513466651001LCL0",
+     "inst": "1789513466651001LCL0",
+     "code": "ACT077",
+     "title": "Hydrate & Help",
+     "f": {
+      "code": [
+       "recYb7yIZBzBEcR5Z",
+       "ACT077"
+      ]
+     }
+    },
+    {
+     "id": "1789513463730001Lim4",
+     "inst": "1789513463730001Lim4",
+     "code": "ACT072",
+     "title": "Build & Give Back",
+     "f": {
+      "code": [
+       "recfLZaRkl6ANPpeC",
+       "ACT072"
+      ]
+     }
+    },
+    {
+     "id": "1780441482522001GpXn",
+     "inst": "1780441482522001GpXn",
+     "code": "AIM232-S",
+     "title": "4 primitives for an AI SRE that runs on-call and improves reliability",
+     "f": {
+      "title": [
+       "4 primitives to evaluate your on-call agent's autonomy (sponsored by Resolve AI)",
+       "4 primitives for an AI SRE that runs on-call and improves reliability"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1789513465513001LLJY",
+     "inst": "1789513465513001LLJY",
+     "code": "ACT012-R4",
+     "title": "Attendee Experience Desk",
+     "f": {
+      "start": [
+       "2026-12-04T18:30:00Z",
+       "2026-12-04T15:30:00Z"
+      ],
+      "end": [
+       "2026-12-05T00:00:00Z",
+       "2026-12-04T20:00:00Z"
+      ],
+      "dur": [
+       330,
+       270
+      ]
+     }
+    },
+    {
+     "id": "1780441477538001GAfK",
+     "inst": "1780441477538001GAfK",
+     "code": "IND378",
+     "title": "How Mercedes-Benz accelerates engineering and production with AI",
+     "f": {
+      "start": [
+       "2026-12-03T00:30:00Z",
+       "2026-12-04T17:00:00Z"
+      ],
+      "end": [
+       "2026-12-03T01:30:00Z",
+       "2026-12-04T18:00:00Z"
+      ],
+      "room": [
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Purple Theater",
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Red Theater"
+      ]
+     }
+    }
+   ],
+   "unknownRooms": []
+  },
+  {
    "at": "2026-11-06T06:44:21Z",
    "milestones": [],
    "added": [],
