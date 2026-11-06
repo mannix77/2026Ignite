@@ -1,7 +1,7 @@
 {
  "source": "https://catalog.awsevents.com/api/sessions",
  "event": "reinvent2026",
- "fetchedAt": "2026-11-06T06:44:21Z",
+ "fetchedAt": "2026-11-06T12:43:23Z",
  "count": 2476,
  "sessions": [
   {
@@ -3284,7 +3284,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T06:42:02Z",
+   "modified": "2026-11-06T07:39:58Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -9204,7 +9204,7 @@
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-11-05T19:12:18Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -16737,7 +16737,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-11-05T19:12:18Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -16778,16 +16778,16 @@
    },
    "speakers": [
     {
-     "name": "Helena Yin Koeppl",
-     "title": "Director, Executive in Residence",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Romeo Romeo",
      "title": "VP, AI Ventures and Tech M&A",
      "company": "Thomson Reuters (UK)",
      "role": "External Speaker"
+    },
+    {
+     "name": "Helena Yin Koeppl",
+     "title": "Director, Executive in Residence",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
     },
     {
      "name": "Simone Zucchet",
@@ -20564,7 +20564,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-02T19:35:31Z",
+   "modified": "2026-11-06T07:51:04Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -22434,7 +22434,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T06:41:01Z",
+   "modified": "2026-11-06T07:26:32Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -26074,7 +26074,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T05:59:30Z",
+   "modified": "2026-11-06T07:51:34Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -26715,7 +26715,7 @@
    "length": 90,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T06:05:07Z",
+   "modified": "2026-11-06T08:20:30Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -31022,7 +31022,7 @@
    "length": 180,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-04T00:13:43Z",
+   "modified": "2026-11-06T12:26:28Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -41623,79 +41623,6 @@
    ]
   },
   {
-   "sessionID": "1780442285558001c4PK",
-   "code": "STG331-R",
-   "title": "Build a fully managed data lake with Amazon S3 Tables",
-   "abstract": "Data lakes have evolved from raw Parquet files with Hive-style partitioning to fully managed Apache Iceberg tables. In this hands-on workshop, you'll understand that evolution, then build a working analytics data lake with Amazon S3 Tables in under two hours. You'll create an S3 table bucket, ingest real-world data, migrate data into the bucket, and query it with Amazon Athena. You'll also learn how to connect third-party tools like DuckDB for interactive exploration. Along the way we’ll cover the benefits of fully managed Iceberg tables and when to use Amazon S3 Tables as the storage foundation for open data architectures.",
-   "type": "Workshop",
-   "length": 120,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Workshop"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Storage"
-    ],
-    "Services": [
-     "Amazon Simple Storage Service (Amazon S3)"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Ran Pergamin",
-     "title": "Senior Solution Architect Data and Storage",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Sumaja Kapa",
-     "title": "US, Specialist SA",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025485439001CUtZ",
-     "date": "2026-11-30",
-     "startTime": "12:30",
-     "endTime": "14:30",
-     "utcStartTime": "2026/11/30 20:30:00",
-     "utcEndTime": "2026/11/30 22:30:00",
-     "length": 120,
-     "room": "MGM Grand | Level 1 | Grand 116",
-     "roomId": "1789591920281004b3ml",
-     "capacity": "84",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358217126001iArS",
    "code": "STG331-R1",
    "title": "Build a fully managed data lake with Amazon S3 Tables",
@@ -41704,7 +41631,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-04T22:12:34Z",
+   "modified": "2026-11-05T19:12:18Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -41738,15 +41665,15 @@
    },
    "speakers": [
     {
-     "name": "Ran Pergamin",
-     "title": "Senior Solution Architect Data and Storage",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Sumaja Kapa",
      "title": "US, Specialist SA",
      "company": "Amazon",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Ran Pergamin",
+     "title": "Senior Solution Architect Data and Storage",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     }
    ],
@@ -41761,6 +41688,79 @@
      "length": 120,
      "room": "Wynn/Encore | Level 1 | Brahms 4",
      "roomId": "1789591921070001bD8R",
+     "capacity": "84",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442285558001c4PK",
+   "code": "STG331-R",
+   "title": "Build a fully managed data lake with Amazon S3 Tables",
+   "abstract": "Data lakes have evolved from raw Parquet files with Hive-style partitioning to fully managed Apache Iceberg tables. In this hands-on workshop, you'll understand that evolution, then build a working analytics data lake with Amazon S3 Tables in under two hours. You'll create an S3 table bucket, ingest real-world data, migrate data into the bucket, and query it with Amazon Athena. You'll also learn how to connect third-party tools like DuckDB for interactive exploration. Along the way we’ll cover the benefits of fully managed Iceberg tables and when to use Amazon S3 Tables as the storage foundation for open data architectures.",
+   "type": "Workshop",
+   "length": 120,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-05T19:12:18Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Workshop"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Storage"
+    ],
+    "Services": [
+     "Amazon Simple Storage Service (Amazon S3)"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Sumaja Kapa",
+     "title": "US, Specialist SA",
+     "company": "Amazon",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Ran Pergamin",
+     "title": "Senior Solution Architect Data and Storage",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025485439001CUtZ",
+     "date": "2026-11-30",
+     "startTime": "12:30",
+     "endTime": "14:30",
+     "utcStartTime": "2026/11/30 20:30:00",
+     "utcEndTime": "2026/11/30 22:30:00",
+     "length": 120,
+     "room": "MGM Grand | Level 1 | Grand 116",
+     "roomId": "1789591920281004b3ml",
      "capacity": "84",
      "inPersonTime": true,
      "virtualTime": false,
@@ -43295,7 +43295,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T05:03:31Z",
+   "modified": "2026-11-06T12:33:23Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -44871,7 +44871,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T05:03:31Z",
+   "modified": "2026-11-06T10:40:04Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -69540,7 +69540,7 @@
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-03T22:06:21Z",
+   "modified": "2026-11-05T19:12:18Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -84102,7 +84102,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-11-05T19:12:18Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -84147,24 +84147,6 @@
    },
    "speakers": [
     {
-     "name": "Keita Watanabe",
-     "title": "Pr. WW Solutions Architect – GenAI",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Toshinobu Akazawa",
-     "title": "ISV/SaaS Solutions Architect",
-     "company": "AWS Japan",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Alex Iankoulski",
-     "title": "Principal Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Bailey (Sohyeon) Cho",
      "title": "Solutions Architect, GenAI Startups",
      "company": "Amazon Web Services",
@@ -84174,6 +84156,24 @@
      "name": "Henan Wang",
      "title": "Principle Applied Scientist",
      "company": "亚马逊通技术服务（北京）有限公司",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Toshinobu Akazawa",
+     "title": "ISV/SaaS Solutions Architect",
+     "company": "AWS Japan",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Keita Watanabe",
+     "title": "Pr. WW Solutions Architect – GenAI",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Alex Iankoulski",
+     "title": "Principal Solutions Architect",
+     "company": "AWS",
      "role": "Internal Speaker"
     }
    ],
@@ -89146,7 +89146,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T01:28:59Z",
+   "modified": "2026-11-06T02:23:04Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -93040,99 +93040,6 @@
    ]
   },
   {
-   "sessionID": "1790358233910001iFmB",
-   "code": "DAT415-R1",
-   "title": "Financial data modeling with Amazon DynamoDB",
-   "abstract": "Designing business applications for low latency, high throughput, high consistency, and high availability presents unique challenges at scale. In this session, learn how to model business entities including accounts, journals, and ledgers using Amazon DynamoDB to support workflows that process millions of requests per second. Explore distributed computing patterns that leverage multi-Region replication features in DynamoDB. Bring your laptop to participate.",
-   "type": "Builders' session",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Builders' session"
-    ],
-    "Level": [
-     "400 – Expert"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Databases"
-    ],
-    "AreaofInterest": [
-     "Innovation & Transformation"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "IT Professional / Technical Manager",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon DynamoDB"
-    ],
-    "Venue": [
-     "Wynn/Encore"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "John Terhune",
-     "title": "Sr. Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Robert McCauley",
-     "title": "DynamoDB Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Arjan Schaaf",
-     "title": "Senior Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Greg Krumm",
-     "title": "Sr. DynamoDB Specialist SA",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360400174001Ax2z",
-     "date": "2026-12-04",
-     "startTime": "11:30",
-     "endTime": "12:30",
-     "utcStartTime": "2026/12/04 19:30:00",
-     "utcEndTime": "2026/12/04 20:30:00",
-     "length": 60,
-     "room": "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Builders' Session 1",
-     "roomId": "1789591921325001bwuO",
-     "capacity": "50",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442226645001ciVq",
    "code": "DAT415-R",
    "title": "Financial data modeling with Amazon DynamoDB",
@@ -93141,7 +93048,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-11-05T19:12:18Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -93183,26 +93090,26 @@
    },
    "speakers": [
     {
-     "name": "John Terhune",
-     "title": "Sr. Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Robert McCauley",
      "title": "DynamoDB Solutions Architect",
      "company": "AWS",
      "role": "Internal Speaker"
     },
     {
-     "name": "Arjan Schaaf",
-     "title": "Senior Solutions Architect",
+     "name": "John Terhune",
+     "title": "Sr. Solutions Architect",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
     },
     {
      "name": "Greg Krumm",
      "title": "Sr. DynamoDB Specialist SA",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Arjan Schaaf",
+     "title": "Senior Solutions Architect",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
     }
@@ -93218,6 +93125,99 @@
      "length": 60,
      "room": "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Builders' Session 2",
      "roomId": "1789591920422004b914",
+     "capacity": "50",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358233910001iFmB",
+   "code": "DAT415-R1",
+   "title": "Financial data modeling with Amazon DynamoDB",
+   "abstract": "Designing business applications for low latency, high throughput, high consistency, and high availability presents unique challenges at scale. In this session, learn how to model business entities including accounts, journals, and ledgers using Amazon DynamoDB to support workflows that process millions of requests per second. Explore distributed computing patterns that leverage multi-Region replication features in DynamoDB. Bring your laptop to participate.",
+   "type": "Builders' session",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-05T19:12:18Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Builders' session"
+    ],
+    "Level": [
+     "400 – Expert"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Databases"
+    ],
+    "AreaofInterest": [
+     "Innovation & Transformation"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "IT Professional / Technical Manager",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon DynamoDB"
+    ],
+    "Venue": [
+     "Wynn/Encore"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Robert McCauley",
+     "title": "DynamoDB Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "John Terhune",
+     "title": "Sr. Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Greg Krumm",
+     "title": "Sr. DynamoDB Specialist SA",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Arjan Schaaf",
+     "title": "Senior Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360400174001Ax2z",
+     "date": "2026-12-04",
+     "startTime": "11:30",
+     "endTime": "12:30",
+     "utcStartTime": "2026/12/04 19:30:00",
+     "utcEndTime": "2026/12/04 20:30:00",
+     "length": 60,
+     "room": "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Builders' Session 1",
+     "roomId": "1789591921325001bwuO",
      "capacity": "50",
      "inPersonTime": true,
      "virtualTime": false,
@@ -94938,7 +94938,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T03:20:12Z",
+   "modified": "2026-11-06T06:48:29Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -96562,7 +96562,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-11-06T10:53:45Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -96592,15 +96592,15 @@
    },
    "speakers": [
     {
-     "name": "Ran Pergamin",
-     "title": "Senior Solution Architect Data and Storage",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Danny Jones",
      "title": "Software Development Engineer",
      "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Ran Pergamin",
+     "title": "Senior Solution Architect Data and Storage",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     }
    ],
@@ -97893,7 +97893,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T03:37:53Z",
+   "modified": "2026-11-06T08:10:56Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -98411,7 +98411,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-02T07:58:16Z",
+   "modified": "2026-11-06T12:26:28Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -98459,8 +98459,8 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Joe Rudd",
-     "title": "Sr. Technical Acount Manager",
+     "name": "Markus Rollwagen",
+     "title": "Senior Solution Architect",
      "company": "AWS",
      "role": "Internal Speaker"
     },
@@ -98471,14 +98471,14 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Desiree Brunner",
-     "title": "Security Specialist Solutions Architect",
+     "name": "Joe Rudd",
+     "title": "Sr. Technical Acount Manager",
      "company": "AWS",
      "role": "Internal Speaker"
     },
     {
-     "name": "Markus Rollwagen",
-     "title": "Senior Solution Architect",
+     "name": "Desiree Brunner",
+     "title": "Security Specialist Solutions Architect",
      "company": "AWS",
      "role": "Internal Speaker"
     }
@@ -105959,7 +105959,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T03:52:54Z",
+   "modified": "2026-11-06T12:25:32Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -113052,7 +113052,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-04T19:58:33Z",
+   "modified": "2026-11-05T19:12:18Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -113096,16 +113096,16 @@
    },
    "speakers": [
     {
-     "name": "Rayco Martínez Hernández",
-     "title": "Head of Cloud Center of Exellence",
-     "company": "MOEVE",
-     "role": "External Speaker"
-    },
-    {
      "name": "Luis Rodriguez Montilla",
      "title": "Sr. CloudOps Specialist SA",
      "company": "AWS",
      "role": "Internal Speaker"
+    },
+    {
+     "name": "Rayco Martínez Hernández",
+     "title": "Head of Cloud Center of Exellence",
+     "company": "MOEVE",
+     "role": "External Speaker"
     },
     {
      "name": "Nicole Klatt",
@@ -130622,7 +130622,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-03T22:06:21Z",
+   "modified": "2026-11-06T11:49:04Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -130703,7 +130703,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-04T19:31:39Z",
+   "modified": "2026-11-05T19:12:18Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -132607,7 +132607,7 @@
    "length": 90,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T02:44:14Z",
+   "modified": "2026-11-06T10:13:06Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -133443,92 +133443,6 @@
    ]
   },
   {
-   "sessionID": "1790358239613001itc4",
-   "code": "IND314-R1",
-   "title": "Modernizing Legacy Telecommunications OSS/BSS Systems",
-   "abstract": "Legacy modernization is one of the most complex challenges facing Telecommunications companies today. In this Chalk Talk, we will explore strategies to accelerate VMware and mainframe migrations using Agentic AI. Using a real-world scenario, we will walk through how AWS Transform and Amazon Bedrock are used to meet the technical and business requirements of these projects and explore trade-offs in migration design and infrastructure choices. Come ready to discuss your own migration challenges!",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-05T16:56:41Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Customer story",
-     "Discussion"
-    ],
-    "Topic": [
-     "Migration & Modernization",
-     "Industry Solutions"
-    ],
-    "AreaofInterest": [
-     "VMware"
-    ],
-    "Industry": [
-     "Telecommunications"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "IT Professional / Technical Manager",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Bedrock",
-     "AWS Transform"
-    ],
-    "Venue": [
-     "Caesars Forum"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Visu Sontam",
-     "title": "Principal SA, Telco",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Antonello Arpino",
-     "title": "Head Of OSS/BSS and Enterprise IT modernization",
-     "company": "amazon web services",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360363468001AWzA",
-     "date": "2026-11-30",
-     "startTime": "16:00",
-     "endTime": "17:00",
-     "utcStartTime": "2026/12/01 00:00:00",
-     "utcEndTime": "2026/12/01 01:00:00",
-     "length": 60,
-     "room": "Caesars Forum | Level 1 | Academy 417",
-     "roomId": "1789591919593004bmGP",
-     "capacity": "88",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780441500801001G20m",
    "code": "IND314-R",
    "title": "Modernizing Legacy Telecommunications OSS/BSS Systems",
@@ -133606,6 +133520,92 @@
      "length": 60,
      "room": "Caesars Forum | Level 1 | Alliance 305",
      "roomId": "1789591919601004bywY",
+     "capacity": "88",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358239613001itc4",
+   "code": "IND314-R1",
+   "title": "Modernizing Legacy Telecommunications OSS/BSS Systems",
+   "abstract": "Legacy modernization is one of the most complex challenges facing Telecommunications companies today. In this Chalk Talk, we will explore strategies to accelerate VMware and mainframe migrations using Agentic AI. Using a real-world scenario, we will walk through how AWS Transform and Amazon Bedrock are used to meet the technical and business requirements of these projects and explore trade-offs in migration design and infrastructure choices. Come ready to discuss your own migration challenges!",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-06T08:32:19Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Customer story",
+     "Discussion"
+    ],
+    "Topic": [
+     "Migration & Modernization",
+     "Industry Solutions"
+    ],
+    "AreaofInterest": [
+     "VMware"
+    ],
+    "Industry": [
+     "Telecommunications"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "IT Professional / Technical Manager",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Bedrock",
+     "AWS Transform"
+    ],
+    "Venue": [
+     "Caesars Forum"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Visu Sontam",
+     "title": "Principal SA, Telco",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Antonello Arpino",
+     "title": "Head Of OSS/BSS and Enterprise IT modernization",
+     "company": "amazon web services",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360363468001AWzA",
+     "date": "2026-11-30",
+     "startTime": "16:00",
+     "endTime": "17:00",
+     "utcStartTime": "2026/12/01 00:00:00",
+     "utcEndTime": "2026/12/01 01:00:00",
+     "length": 60,
+     "room": "Caesars Forum | Level 1 | Academy 417",
+     "roomId": "1789591919593004bmGP",
      "capacity": "88",
      "inPersonTime": true,
      "virtualTime": false,
@@ -135822,7 +135822,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-11-05T19:12:18Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -138240,7 +138240,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T04:02:53Z",
+   "modified": "2026-11-06T11:35:19Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -140541,7 +140541,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-05T19:12:18Z",
+   "modified": "2026-11-06T06:33:24Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -147746,7 +147746,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T05:23:07Z",
+   "modified": "2026-11-06T11:38:05Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -151122,7 +151122,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-11-06T11:34:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -151761,7 +151761,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T01:15:20Z",
+   "modified": "2026-11-06T08:10:56Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -153853,109 +153853,6 @@
    ]
   },
   {
-   "sessionID": "1782172385910001iEJA",
-   "code": "CMP319-R",
-   "title": "Reduce EKS cluster compute costs with EC2 Flex instances",
-   "abstract": "Container orchestration promises to improve resource utilization, but often we find ourselves with nodes that over-provision CPU, and therefore overspend. This might happen when our workloads have a high memory footprint, or when the number of replicas is driven by resilience targets and not actual load. In this session, we'll learn how easy it is to save cost in these situations without losing performance by taking advantage of EC2 Flex instances (e.g., C8i-flex, M8i-flex, R8i-flex). You'll migrate existing EKS cluster nodes, monitor relevant metrics, and measure the actual cost improvement.",
-   "type": "Builders' session",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Builders' session"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Compute",
-     "Serverless",
-     "Containers"
-    ],
-    "AreaofInterest": [
-     "Cost Optimization",
-     "DevOps"
-    ],
-    "Role": [
-     "DevOps Engineer",
-     "IT Professional / Technical Manager",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Elastic Compute Cloud (Amazon EC2)",
-     "Amazon Elastic Kubernetes Service (Amazon EKS)"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Christian Melendez",
-     "title": "Pr. Specialist SA Compute",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Santosh Kumar",
-     "title": "Sr. Specialist SA, EC2 Graviton",
-     "company": "AWS India",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Esra Kayabali",
-     "title": "Principal Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Saurabh Modh",
-     "title": "Principal Product Manager",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Nati Cohen",
-     "title": "Sr. Specialist Solutions Architect, Core Compute",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025536336001CU4g",
-     "date": "2026-12-03",
-     "startTime": "10:00",
-     "endTime": "11:00",
-     "utcStartTime": "2026/12/03 18:00:00",
-     "utcEndTime": "2026/12/03 19:00:00",
-     "length": 60,
-     "room": "MGM Grand | Level 3 | Room 301",
-     "roomId": "1789591920540001bhYC",
-     "capacity": "50",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358236977001i1xK",
    "code": "CMP319-R1",
    "title": "Reduce EKS cluster compute costs with EC2 Flex instances",
@@ -153964,7 +153861,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-11-05T19:12:18Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -154010,21 +153907,9 @@
    },
    "speakers": [
     {
-     "name": "Christian Melendez",
-     "title": "Pr. Specialist SA Compute",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Santosh Kumar",
      "title": "Sr. Specialist SA, EC2 Graviton",
      "company": "AWS India",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Esra Kayabali",
-     "title": "Principal Solutions Architect",
-     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     },
     {
@@ -154037,6 +153922,18 @@
      "name": "Nati Cohen",
      "title": "Sr. Specialist Solutions Architect, Core Compute",
      "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Christian Melendez",
+     "title": "Pr. Specialist SA Compute",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Esra Kayabali",
+     "title": "Principal Solutions Architect",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     }
    ],
@@ -154051,6 +153948,109 @@
      "length": 60,
      "room": "MGM Grand | Level 1 | Room 104",
      "roomId": "1789591920339004b67H",
+     "capacity": "50",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1782172385910001iEJA",
+   "code": "CMP319-R",
+   "title": "Reduce EKS cluster compute costs with EC2 Flex instances",
+   "abstract": "Container orchestration promises to improve resource utilization, but often we find ourselves with nodes that over-provision CPU, and therefore overspend. This might happen when our workloads have a high memory footprint, or when the number of replicas is driven by resilience targets and not actual load. In this session, we'll learn how easy it is to save cost in these situations without losing performance by taking advantage of EC2 Flex instances (e.g., C8i-flex, M8i-flex, R8i-flex). You'll migrate existing EKS cluster nodes, monitor relevant metrics, and measure the actual cost improvement.",
+   "type": "Builders' session",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-05T19:12:18Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Builders' session"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Compute",
+     "Serverless",
+     "Containers"
+    ],
+    "AreaofInterest": [
+     "Cost Optimization",
+     "DevOps"
+    ],
+    "Role": [
+     "DevOps Engineer",
+     "IT Professional / Technical Manager",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Elastic Compute Cloud (Amazon EC2)",
+     "Amazon Elastic Kubernetes Service (Amazon EKS)"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Santosh Kumar",
+     "title": "Sr. Specialist SA, EC2 Graviton",
+     "company": "AWS India",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Saurabh Modh",
+     "title": "Principal Product Manager",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Nati Cohen",
+     "title": "Sr. Specialist Solutions Architect, Core Compute",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Christian Melendez",
+     "title": "Pr. Specialist SA Compute",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Esra Kayabali",
+     "title": "Principal Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025536336001CU4g",
+     "date": "2026-12-03",
+     "startTime": "10:00",
+     "endTime": "11:00",
+     "utcStartTime": "2026/12/03 18:00:00",
+     "utcEndTime": "2026/12/03 19:00:00",
+     "length": 60,
+     "room": "MGM Grand | Level 3 | Room 301",
+     "roomId": "1789591920540001bhYC",
      "capacity": "50",
      "inPersonTime": true,
      "virtualTime": false,
@@ -156740,7 +156740,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T05:32:56Z",
+   "modified": "2026-11-06T06:48:29Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -167503,7 +167503,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-04T12:05:55Z",
+   "modified": "2026-11-06T12:09:09Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -170593,7 +170593,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T00:08:32Z",
+   "modified": "2026-11-06T07:51:34Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -173916,7 +173916,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T03:24:34Z",
+   "modified": "2026-11-06T11:09:40Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -187610,7 +187610,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-11-05T19:12:18Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -187645,16 +187645,16 @@
    },
    "speakers": [
     {
-     "name": "Steffen Grunwald",
-     "title": "Principal Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Francesca Stobbione",
      "title": "Science Manager",
      "company": "Amazon EU SARL",
      "role": "External Speaker"
+    },
+    {
+     "name": "Steffen Grunwald",
+     "title": "Principal Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
     },
     {
      "name": "Alexis Bateman",
@@ -188052,7 +188052,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-10-30T21:40:30Z",
+   "modified": "2026-11-05T19:12:18Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -188090,20 +188090,20 @@
    },
    "speakers": [
     {
-     "name": "Deepthi Mohan",
-     "title": "Principal Product Manager - Technical",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Mo Kamioner",
      "title": "Senior DynamoDB Specialist Solutions Architect",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
     },
     {
-     "name": "Arjan Schaaf",
-     "title": "Senior Solutions Architect",
+     "name": "Deepthi Mohan",
+     "title": "Principal Product Manager - Technical",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Lee Hannigan",
+     "title": "Principal Engineer",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
     },
@@ -188114,8 +188114,8 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Lee Hannigan",
-     "title": "Principal Engineer",
+     "name": "Arjan Schaaf",
+     "title": "Senior Solutions Architect",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
     }
@@ -189506,7 +189506,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T02:08:33Z",
+   "modified": "2026-11-06T08:04:03Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -193386,7 +193386,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-05T03:01:55Z",
+   "modified": "2026-11-06T10:44:46Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
