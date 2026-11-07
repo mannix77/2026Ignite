@@ -14,9 +14,27 @@ export function sameRoom(a, b) {
 // Minutes a floor adds to a walk that leaves or enters its building: a pair in walk.pairs is
 // door to door for a typical floor, and walk.floorExtra[building][floor] holds the floors that
 // sit further in (Moscone South's exhibit-level Hub, its Upper Mezzanine). Not user-editable.
-function floorExtra(loc, walk) {
-  const v = walk.floorExtra?.[loc.building]?.[loc.floor];
+// Exported for the walk from a GPS position outside the venue (app.js), which has no pair.
+export function floorExtra(loc, walk) {
+  const v = walk?.floorExtra?.[loc?.building]?.[loc?.floor];
   return Number.isFinite(v) && v > 0 ? v : 0;
+}
+
+// The walking matrix in force: the venue's defaults under what was saved in Settings. Settings
+// saves the whole matrix, so a saved pair that still equals the default it was saved with
+// (walk.previous.pairs, the defaults before a recalibration) was never tuned and takes the new
+// default; a pair that differs was tuned and stays. Scalars (sameFloor…) follow the saved values;
+// floorExtra and previous always come from the venue.
+export function mergeWalk(def, saved) {
+  if (!saved || typeof saved !== 'object') return def;
+  const out = { ...def, ...saved, pairs: { ...def.pairs }, floorExtra: def.floorExtra, previous: def.previous };
+  const previous = def.previous?.pairs || {};
+  for (const [key, v] of Object.entries(saved.pairs && typeof saved.pairs === 'object' ? saved.pairs : {})) {
+    if (!Number.isFinite(v)) continue;
+    if (Object.hasOwn(previous, key) && v === previous[key]) continue;   // saved along with the old default
+    out.pairs[key] = v;
+  }
+  return out;
 }
 
 export function walkMinutes(a, b, walk = current.walk) {
@@ -127,6 +145,10 @@ export const MOSCONE_DEF = {
     // Moscone South's Hub (exhibit level) is about 4 minutes further from every other building
     // than a Level 2 room, the Upper Mezzanine (Esplanade tables) about 1.
     floorExtra: { S: { Hub: 4, UM: 1 } },
+    // The defaults these pairs replaced (2026-11-07). A matrix saved from Settings holds every
+    // pair; one still equal to its old default was never tuned and follows the new value
+    // (mergeWalk). Update this map whenever a pair above changes.
+    previous: { pairs: { 'S|W': 12, 'E|W': 5, 'E|S': 8, 'E|N': 8 } },
     unknown: 12,      // room not published yet: assume a building change
   },
   // The Aviary rooms carry no level ("The Aviary, Labs") and the Esplanade tables name a mezzanine;

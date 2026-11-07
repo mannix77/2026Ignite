@@ -6,7 +6,7 @@ import { checkLive, diff as liveDiff, changeCounts, countsLine } from './live.js
 import { optimize, decisionGroups, transitions, fillers, nowNext, weigh, canBoth, overlaps, transition, compareOptions, lunchConfig, arrivalExtra, PRIORITY } from './planner.js';
 import { fmtTime, fmtDay, fmtDuration, relTime, nowLocal, addDays } from './time.js';
 import { upNext } from './upnext.js';
-import { createVenue, setVenue, walkMinutes } from './venue.js';
+import { createVenue, setVenue, walkMinutes, floorExtra, mergeWalk } from './venue.js';
 import { CONFERENCES, currentConferenceId, rememberConference, conferenceList } from './conferences.js';
 import { buildSuggester } from './suggest.js';
 import { createRanker, partition, profileConfig, profileGroups, GOALS } from './profile.js';
@@ -68,11 +68,10 @@ const hhmm = min => `${String(Math.floor(min / 60)).padStart(2, '0')}:${String(m
 const fromHHMM = v => { const [h, m] = String(v || '').split(':').map(Number); return Number.isFinite(h) && Number.isFinite(m) ? h * 60 + m : null; };
 const B = id => app.venue.BUILDING[id] || app.venue.BUILDING.U;
 
-// Your walking-time edits sit on top of the conference's matrix (a backup may hold only some keys).
+// Your walking-time edits sit on top of the conference's matrix (a backup may hold only some keys);
+// a saved pair that still equals the default it was saved with follows a recalibration (mergeWalk).
 function walkCfg() {
-  const w = store.settings().walk;
-  if (!w) return app.venue.walk;
-  return { ...app.venue.walk, ...w, pairs: { ...app.venue.walk.pairs, ...(w.pairs || {}) } };
+  return mergeWalk(app.venue.walk, store.settings().walk);
 }
 
 function ctx() {
@@ -333,7 +332,9 @@ function here() {
 function hereWalk(loc, h = here(), c = ctx()) {
   if (!h) return null;
   const b = app.venue.BUILDING[loc?.building];
-  if (!h.inside && h.geo && b?.geo && loc.known) return Math.ceil(haversine(h.geo, b.geo) / WALK_M_PER_MIN) + c.walk.sameFloor;
+  // From outside the venue: the straight-line walk to the building, then finding the room, plus the
+  // minutes a floor that sits further in adds (the pair matrix is not used here, so add it directly).
+  if (!h.inside && h.geo && b?.geo && loc.known) return Math.ceil(haversine(h.geo, b.geo) / WALK_M_PER_MIN) + c.walk.sameFloor + floorExtra(loc, c.walk);
   return walkMinutes(h.loc, loc, c.walk) + h.approach;
 }
 

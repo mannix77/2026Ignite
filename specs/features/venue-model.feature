@@ -45,6 +45,23 @@ Feature: Walking times reach every building the catalog uses
       When the next session is in Moscone South, Level 2, Room 209
       Then the walk between them is the different-floor allowance
 
+    Scenario: Walking in from the street to the Hub
+      Given Minesh is outside the venue with his location on
+      When his next session is in Moscone South, The Hub, Theater G
+      Then the walk counts the Hub's extra minutes on top of the way to the building
+
+  Rule: A saved walking matrix keeps what Minesh tuned and takes the recalibration for the rest
+
+    Scenario: A pair he never touched
+      Given Minesh once changed one pair in Settings, which saved every pair
+      When the planner recalibrates South to West from 12 to 7 minutes
+      Then South to West is 7 minutes on his device
+
+    Scenario: A pair he tuned himself
+      Given Minesh set South to West to 9 minutes in Settings
+      When the planner recalibrates South to West from 12 to 7 minutes
+      Then South to West stays 9 minutes on his device
+
   Rule: Dimes Gallery, across Howard Street, is a building of its own
 
     Scenario: A sponsor lightning talk at Dimes Gallery

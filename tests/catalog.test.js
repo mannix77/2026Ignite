@@ -5,7 +5,7 @@ import { sleep } from './shim.js';
 const { exportAge, customRecords, catalogMatch, buildModel } = await import('../assets/js/data.js');
 const { toISO } = await import('../assets/js/time.js');
 const { CONFERENCES } = await import('../assets/js/conferences.js');
-const { createVenue, walkMinutes } = await import('../assets/js/venue.js');
+const { createVenue, walkMinutes, floorExtra, mergeWalk } = await import('../assets/js/venue.js');
 const { transition, DEFAULT_PLANNER } = await import('../assets/js/planner.js');
 const store = await import('../assets/js/store.js');
 const { rsvpChip, rsvpOpensText, unknownRoomsNote } = await import('../assets/js/ui.js');
@@ -207,6 +207,34 @@ await test('should keep the floor extra when a pair is tuned in Settings, and ig
   const junk = { ...moscone.walk, floorExtra: { S: { Hub: 'four' } } };
   const none = { ...moscone.walk, floorExtra: undefined };
   eq([walkMinutes(hub, west3, tuned), walkMinutes(hub, west3, junk), walkMinutes(hub, west3, none)], [14, 7, 7]);
+});
+// The walk in from a GPS position outside the venue has no building pair; app.js adds the
+// destination floor's extra directly.
+await test('should give the Hub its extra minutes on their own, and nothing for a typical floor or a junk walk', () => {
+  eq([floorExtra(hub, moscone.walk), floorExtra(table, moscone.walk), floorExtra(south2, moscone.walk), floorExtra(west3, moscone.walk), floorExtra(hub, {}), floorExtra(null, moscone.walk)], [4, 1, 0, 0, 0, 0]);
+});
+
+// ---- a saved walking matrix keeps what was tuned and takes the recalibration for the rest
+// Settings saves every pair, so a saved pair still equal to the default it was saved with (the
+// matrix before 2026-11-07) was never tuned and follows the new default.
+await test('should take the recalibrated default for a saved pair that still equals the old one', () => {
+  const saved = { pairs: { ...moscone.walk.previous.pairs, 'N|S': 7 } };   // a whole matrix saved before the recalibration
+  const merged = mergeWalk(moscone.walk, saved);
+  eq([merged.pairs['S|W'], merged.pairs['E|W'], merged.pairs['E|S'], merged.pairs['E|N'], merged.pairs['N|S']], [7, 8, 9, 9, 7]);
+});
+await test('should keep a saved pair that was tuned away from the old default, and the scalars', () => {
+  const merged = mergeWalk(moscone.walk, { pairs: { 'S|W': 9, 'E|W': 5, 'D|S': 6 }, sameFloor: 4 });
+  eq([merged.pairs['S|W'], merged.pairs['E|W'], merged.pairs['D|S'], merged.sameFloor, merged.diffFloor], [9, 8, 6, 4, moscone.walk.diffFloor]);
+});
+await test('should always take the floor extras and the previous map from the venue, and cope with junk', () => {
+  const merged = mergeWalk(moscone.walk, { pairs: { 'S|W': 'nine', 'E|S': null }, floorExtra: { S: { Hub: 99 } }, previous: { pairs: { 'S|W': 1 } } });
+  eq([merged.pairs['S|W'], merged.pairs['E|S'], merged.floorExtra, merged.previous, mergeWalk(moscone.walk, null), mergeWalk(moscone.walk, { pairs: 'junk' }).pairs['S|W']],
+    [7, 9, moscone.walk.floorExtra, moscone.walk.previous, moscone.walk, 7]);
+});
+await test('should list every recalibrated pair in the previous map, and nothing else', () => {
+  const changed = ['S|W', 'E|W', 'E|S', 'E|N'];
+  eq(Object.keys(moscone.walk.previous.pairs).sort(), changed.sort());
+  eq(changed.every(k => moscone.walk.previous.pairs[k] !== moscone.walk.pairs[k]), true);
 });
 await test('should count a theater and the roof as different floors of one building', () => {
   eq(walkMinutes(place('AMC Metreon | Level 3, Theater 11'), place('The Aviary, Breakouts'), moscone.walk), moscone.walk.diffFloor);
