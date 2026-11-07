@@ -11,6 +11,14 @@ export function sameRoom(a, b) {
   return !!(a && b && !a.placeholder && !b.placeholder && a.label && a.label === b.label);
 }
 
+// Minutes a floor adds to a walk that leaves or enters its building: a pair in walk.pairs is
+// door to door for a typical floor, and walk.floorExtra[building][floor] holds the floors that
+// sit further in (Moscone South's exhibit-level Hub, its Upper Mezzanine). Not user-editable.
+function floorExtra(loc, walk) {
+  const v = walk.floorExtra?.[loc.building]?.[loc.floor];
+  return Number.isFinite(v) && v > 0 ? v : 0;
+}
+
 export function walkMinutes(a, b, walk = current.walk) {
   if (!a || !b) return walk.unknown;
   if (a.building === 'O' || b.building === 'O') return 0;
@@ -23,7 +31,8 @@ export function walkMinutes(a, b, walk = current.walk) {
     return walk.diffFloor;
   }
   const key = [a.building, b.building].sort().join('|');
-  return walk.pairs[key] ?? walk.unknown;
+  const pair = walk.pairs[key];
+  return pair == null ? walk.unknown : pair + floorExtra(a, walk) + floorExtra(b, walk);
 }
 
 export function createVenue(def) {
@@ -94,26 +103,35 @@ export const MOSCONE_DEF = {
     { id: 'H', name: 'Other off-site', short: 'Off-site', re: /intercontinental|hilton|hyatt|westin|park central|four seasons|st\.? regis|yerba buena (center|gardens)|sfmoma|\bw hotel/i, offsite: true },
     { id: 'O', name: 'Online only', short: 'Online', re: /^(online|virtual|on[- ]demand$)/i },
   ],
-  // Door-to-door minutes at a changeover, including the badge/ID/bag check Ignite 2025 ran
-  // at every building entrance and the crowds on 4th St / Howard St (typical, not worst
-  // case: add ~50% right after a keynote). Derived from floor plans, walking routes and
-  // the 2025 schedule; the Metreon numbers are estimates until walked. All editable in Settings.
+  // Door-to-door minutes at a changeover: the walk itself plus about 3 minutes for the badge/bag
+  // check Ignite runs at every building entrance and the crowds on 4th St / Howard St (typical,
+  // not worst case: add ~50% right after a keynote). The walks between Moscone West, South and the
+  // Metreon are calibrated against routes drawn by Ignite's official indoor map on 2026-11-07
+  // (accessible routes, about 1.4 m/s): South Level 2 to West Level 3 4 min 9 s, Metreon Theater 9
+  // to West 5 min 39 s, South Level 2 to the Metreon 6 min 12 s, the Hub to West 7 min 57 s, the
+  // Esplanade tables to the Metreon 7 min 31 s. The map does not route to the Marriott, Dimes
+  // Gallery or Chase Center, so those stay estimates. All pairs are editable in Settings.
   walk: {
     sameRoom: 0,
     sameFloor: 3,
-    diffFloor: 5,     // e.g. South Hub (exhibit level) <-> South Level 3; Metreon theaters <-> The Aviary
+    diffFloor: 5,     // e.g. South Hub (exhibit level) <-> South Level 3; West Level 2 <-> 3 is 2.4 min walked, plus the escalator queue
     pairs: {
-      'N|S': 7, 'N|W': 10, 'S|W': 12,
+      'N|S': 7, 'N|W': 10, 'S|W': 7,
       'M|W': 13, 'M|S': 14, 'M|N': 13,
-      'E|W': 5, 'E|M': 5, 'E|S': 8, 'E|N': 8,
+      'E|W': 8, 'E|M': 5, 'E|S': 9, 'E|N': 9,
       'D|S': 5, 'D|N': 7, 'D|W': 8, 'D|E': 8, 'D|M': 10,
       'C|W': 40, 'C|S': 40, 'C|N': 40, 'C|M': 40, 'C|E': 40, 'C|D': 40,
       'H|W': 12, 'H|S': 12, 'H|N': 12, 'H|M': 12, 'E|H': 12, 'D|H': 12, 'C|H': 40, 'H|H': 12,
     },
+    // Floors that sit further in than the pair assumes, added when a walk leaves or enters them:
+    // Moscone South's Hub (exhibit level) is about 4 minutes further from every other building
+    // than a Level 2 room, the Upper Mezzanine (Esplanade tables) about 1.
+    floorExtra: { S: { Hub: 4, UM: 1 } },
     unknown: 12,      // room not published yet: assume a building change
   },
-  // The Aviary rooms carry no level ("The Aviary, Labs"); the Hub and room-number rules still apply.
-  floorHints: [[/\baviary\b/i, '4']],
+  // The Aviary rooms carry no level ("The Aviary, Labs") and the Esplanade tables name a mezzanine;
+  // the Hub and room-number rules still apply (genericFloors).
+  floorHints: [[/\baviary\b/i, '4'], [/upper mezzanine/i, 'UM']],
   genericFloors: true,
   startFrom: 'W',
   geoRadius: 180,   // metres from a building's centre that still counts as "at" it

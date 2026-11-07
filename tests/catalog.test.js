@@ -171,11 +171,42 @@ await test('should still read the Hub and room numbers as Moscone floors', () =>
 await test('should keep the other off-site hotels apart from the Metreon', () => {
   eq(place('InterContinental, Grand Ballroom').building, 'H');
 });
-await test('should walk 5 minutes between the Metreon and Moscone West and 8 to South', () => {
+await test('should walk 8 minutes between the Metreon and Moscone West and 9 to a South meeting room', () => {
   const metreon = place('AMC Metreon | Level 3, Theater 9');
   const west = place('Moscone West | Level 3, Room 3001');
   const south = place('Moscone South | Level 2, Room 201');
-  eq([walkMinutes(metreon, west, moscone.walk), walkMinutes(west, metreon, moscone.walk), walkMinutes(metreon, south, moscone.walk)], [5, 5, 8]);
+  eq([walkMinutes(metreon, west, moscone.walk), walkMinutes(west, metreon, moscone.walk), walkMinutes(metreon, south, moscone.walk)], [8, 8, 9]);
+});
+
+// ---- walking times follow the routes the official map draws (2026-11-07), plus the badge check
+// Map: South Level 2 -> West Level 3 4 min 9 s; the Hub -> West 7 min 57 s; Esplanade tables ->
+// Metreon 7 min 31 s; South Level 2 -> Metreon 6 min 12 s. The Hub and the Upper Mezzanine sit
+// further in than a Level 2 room, so they add minutes to every walk that leaves South.
+const hub = place('Moscone South | The Hub, Theater G');
+const table = place('Moscone South | Upper Mezzanine, Esplanade Ballroom, Table 1');
+const south2 = place('Moscone South | Level 2, Room 209');
+const west3 = place('Moscone West | Level 3, Room 3014');
+const theater9 = place('AMC Metreon | Level 3, Theater 9');
+await test('should read the Hub and the Upper Mezzanine as floors of Moscone South', () => {
+  eq([hub.building, hub.floor, table.building, table.floor, south2.floor], ['S', 'Hub', 'S', 'UM', '2']);
+});
+await test('should walk 7 minutes from a South meeting room to a West meeting room, either way', () => {
+  eq([walkMinutes(south2, west3, moscone.walk), walkMinutes(west3, south2, moscone.walk)], [7, 7]);
+});
+await test('should add the Hub\'s extra minutes to a walk that leaves South', () => {
+  eq([walkMinutes(hub, west3, moscone.walk), walkMinutes(west3, hub, moscone.walk), walkMinutes(hub, theater9, moscone.walk)], [11, 11, 13]);
+});
+await test('should add the Upper Mezzanine\'s extra minute to a walk that leaves South', () => {
+  eq([walkMinutes(table, theater9, moscone.walk), walkMinutes(table, west3, moscone.walk)], [10, 8]);
+});
+await test('should treat the Hub to a South meeting room as a floor change, not a building change', () => {
+  eq(walkMinutes(hub, south2, moscone.walk), moscone.walk.diffFloor);
+});
+await test('should keep the floor extra when a pair is tuned in Settings, and ignore a junk extra', () => {
+  const tuned = { ...moscone.walk, pairs: { ...moscone.walk.pairs, 'S|W': 10 } };
+  const junk = { ...moscone.walk, floorExtra: { S: { Hub: 'four' } } };
+  const none = { ...moscone.walk, floorExtra: undefined };
+  eq([walkMinutes(hub, west3, tuned), walkMinutes(hub, west3, junk), walkMinutes(hub, west3, none)], [14, 7, 7]);
 });
 await test('should count a theater and the roof as different floors of one building', () => {
   eq(walkMinutes(place('AMC Metreon | Level 3, Theater 11'), place('The Aviary, Breakouts'), moscone.walk), moscone.walk.diffFloor);

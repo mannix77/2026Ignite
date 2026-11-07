@@ -17,11 +17,33 @@ Feature: Walking times reach every building the catalog uses
     Scenario: Walking from the Metreon to Moscone West
       Given a session in the Metreon
       When the next session is in Moscone West
-      Then the walk between them is 5 minutes
+      Then the walk between them is 8 minutes
 
     Scenario: The Metreon can be tuned in Settings
       When Minesh opens the walking matrix in Settings
       Then it has a Metreon row
+
+  Rule: Walking times follow the routes the official map draws, plus the badge check
+
+    Scenario: From a South meeting room to a West meeting room
+      Given a session in Moscone South, Level 2, Room 209
+      When the next session is in Moscone West, Level 3, Room 3014
+      Then the walk between them is 7 minutes
+
+    Scenario: From the Hub, which sits further in
+      Given a session in Moscone South, The Hub, Theater G
+      When the next session is in Moscone West, Level 3, Room 3014
+      Then the walk between them is 11 minutes
+
+    Scenario: From the Esplanade tables to the Metreon
+      Given a table talk at Esplanade Ballroom, Table 1, on the Upper Mezzanine of Moscone South
+      When the next session is in AMC Metreon, Level 3, Theater 9
+      Then the walk between them is 10 minutes
+
+    Scenario: The Hub to a South meeting room is a floor change, not a building change
+      Given a session in Moscone South, The Hub, Theater G
+      When the next session is in Moscone South, Level 2, Room 209
+      Then the walk between them is the different-floor allowance
 
   Rule: Dimes Gallery, across Howard Street, is a building of its own
 
