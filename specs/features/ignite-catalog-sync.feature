@@ -39,3 +39,11 @@ Feature: Keeping the Ignite catalog current without false alarms
       Given a change with 1 session added and 2 extra runs dropped
       Then the Changes tab headers, the live header and the sync log line each show 1 added and 2 extra runs dropped
       And none of them shows a removed session
+
+  Rule: A sync that hangs does not stop the next one
+
+    Scenario: The site publish of one run never finishes
+      Given a sync run has been waiting on the site publish since the morning
+      When the next scheduled sync starts
+      Then the waiting run is cancelled in favour of the new one
+      And no production issue is opened for the cancelled run
