@@ -230,8 +230,8 @@ await test('should read a negated status as open, not as the word it negates', (
   eq([occupancyLevel('Not full'), occupancyLevel({ status: 'No longer busy' }), occupancyLevel('Room is not at capacity'), occupancyLevel('Full')], ['open', 'open', 'open', 'full']);
 });
 await test('should give no reading for a status that denies the room has space, rather than calling it open', () => {
-  eq([occupancyLevel('Not available'), occupancyLevel({ status: 'not open' }), occupancyLevel("isn't empty"), occupancyLevel({ status: 'No longer low', percentage: 20 }), occupancyLevel('Available')],
-    [null, null, null, 'open', 'open']);
+  eq([occupancyLevel('Not available'), occupancyLevel({ status: 'not open' }), occupancyLevel("isn't empty"), occupancyLevel('No longer low'), occupancyLevel({ status: 'No longer low', percentage: 20 }), occupancyLevel('Available')],
+    [null, null, null, null, 'open', 'open']);
 });
 await test('should give no reading for a value it does not understand', () => {
   eq([occupancyLevel(null), occupancyLevel(undefined), occupancyLevel(true), occupancyLevel('Purple'), occupancyLevel({ status: 'Purple' }), occupancyLevel([95]), occupancyLevel({ count: 5 }), occupancyLevel({ count: 5, capacity: 0 }), occupancyLevel(NaN)],
