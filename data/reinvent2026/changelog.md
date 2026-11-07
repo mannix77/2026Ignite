@@ -3,6 +3,15 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-11-07T06:43:06Z · https://catalog.awsevents.com/api/sessions
+
+Added 3 · removed 0 · changed 0
+
+**Added**
+- `SEC001` The Future of Security
+- `SEC002` The Old Security Playbook Is Dead
+- `SEC003` Operationalizing security for the future with best practices today
+
 ## 2026-11-07T00:48:05Z · https://catalog.awsevents.com/api/sessions
 
 Added 9 · removed 5 · changed 86
