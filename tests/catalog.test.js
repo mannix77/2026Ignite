@@ -8,7 +8,7 @@ const { CONFERENCES } = await import('../assets/js/conferences.js');
 const { createVenue, walkMinutes } = await import('../assets/js/venue.js');
 const { transition, DEFAULT_PLANNER } = await import('../assets/js/planner.js');
 const store = await import('../assets/js/store.js');
-const { rsvpChip, rsvpOpensText, unknownRoomsNote, occupancyLevel, occupancyOf, occupancyChip, OCCUPANCY_MAX_AGE_MS, sessionCard } = await import('../assets/js/ui.js');
+const { rsvpChip, rsvpOpensText, unknownRoomsNote, occupancyLevel, occupancyOf, occupancyChip, sessionCard } = await import('../assets/js/ui.js');
 
 let pass = 0, fail = 0;
 async function test(name, fn) {
@@ -238,10 +238,11 @@ await test('should show a full room next to its room while the reading is fresh'
   eq(occupancyChip('full').includes('Room full') && occupancyChip('filling').includes('Filling'), true);
   eq([occupancyChip('open'), occupancyChip(null)], ['', '']);
 });
-await test('should show nothing for a reading too old to trust, on both sides of the limit', () => {
+await test('should show nothing for a reading too old to trust, or from more than a minute ahead of the clock, on both sides of each limit', () => {
   const at = Date.parse(readAt);
-  eq([occupancyOf(feed({ [room3014]: 100 }), room3014, at + OCCUPANCY_MAX_AGE_MS), occupancyOf(feed({ [room3014]: 100 }), room3014, at + OCCUPANCY_MAX_AGE_MS + 1),
-    occupancyOf(feed({ [room3014]: 100 }), room3014, at + 40 * 60000)], ['full', null, null]);
+  eq([occupancyOf(feed({ [room3014]: 100 }), room3014, at + 30 * 60000), occupancyOf(feed({ [room3014]: 100 }), room3014, at + 30 * 60000 + 1),
+    occupancyOf(feed({ [room3014]: 100 }), room3014, at + 40 * 60000),
+    occupancyOf(feed({ [room3014]: 100 }), room3014, at - 60000), occupancyOf(feed({ [room3014]: 100 }), room3014, at - 60001)], ['full', null, null, 'full', null]);
 });
 await test('should show nothing without a file, a readable time, the room, or a room name', () => {
   eq([occupancyOf(null, room3014, tenMinLater), occupancyOf({ rooms: { [room3014]: 100 } }, room3014, tenMinLater), occupancyOf({ fetchedAt: 'soon', rooms: { [room3014]: 100 } }, room3014, tenMinLater),

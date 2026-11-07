@@ -76,8 +76,12 @@ class RunTests(RunDir, unittest.TestCase):
     def test_should_write_the_feed_with_the_time_it_was_read(self):
         self.assertEqual(self.capture(GOOD), 0)
         doc = self.written()
-        self.assertEqual((doc["conference"], doc["fetchedAt"], doc["enabled"], sorted(doc["rooms"]), doc["source"]),
-                         ("ignite2026", "2026-11-18T17:10:00Z", True, sorted(occupancy.read_feed(GOOD)[0]), occupancy.URL))
+        self.assertEqual((doc["conference"], doc["fetchedAt"], doc["enabled"], doc["rooms"], doc["source"]),
+                         ("ignite2026", "2026-11-18T17:10:00Z", True, {
+                             "Moscone West | Level 3, Room 3014": {"status": "Full", "percentage": 100},
+                             "Moscone South | Level 2, Room 209": 42,
+                             "AMC Metreon | Level 3, Theater 9": "Available"},
+                          "https://wayfinding.event.microsoft.com/home/GetOccupancyList"))
 
     def test_should_keep_the_last_good_file_when_the_feed_fails(self):
         self.assertEqual(self.capture(GOOD), 0)
