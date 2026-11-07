@@ -42,7 +42,7 @@ def read_feed(doc):
     for label, reading in table.items():
         key = sync.text(label) if isinstance(label, str) else ""
         usable = isinstance(reading, (dict, str)) or (isinstance(reading, (int, float)) and not isinstance(reading, bool))
-        if not key or not usable:
+        if not key or not usable or key in rooms:   # a room listed twice: keep the first reading
             junk += 1
             continue
         rooms[key] = reading

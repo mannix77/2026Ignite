@@ -44,7 +44,12 @@ class FeedTests(unittest.TestCase):
         doc = {"success": True, "enabled": True, "occupancy": {
             "Moscone West | Level 3, Room 3014": 80, "": 10, "   ": 10, "Room A": None, "Room B": True, "Room C": [1, 2]}}
         rooms, enabled, junk = occupancy.read_feed(doc)
-        self.assertEqual((rooms, junk), ({"Moscone West | Level 3, Room 3014": 80}, 5))
+        self.assertEqual((rooms, enabled, junk), ({"Moscone West | Level 3, Room 3014": 80}, True, 5))
+
+    def test_should_keep_the_first_reading_of_a_room_listed_twice_and_count_the_second(self):
+        doc = {"success": True, "enabled": True, "occupancy": {
+            "Moscone West | Level 3, Room 3014": 80, " Moscone West | Level 3, Room 3014 ": 10, "AMC Metreon | Level 3, Theater 9": "Full"}}
+        self.assertEqual(occupancy.read_feed(doc), ({"Moscone West | Level 3, Room 3014": 80, "AMC Metreon | Level 3, Theater 9": "Full"}, True, 1))
 
     def test_should_report_a_feed_that_is_switched_off(self):
         self.assertEqual(occupancy.read_feed({"success": True, "enabled": False, "occupancy": {}}), ({}, False, 0))

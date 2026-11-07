@@ -64,7 +64,9 @@ export function unknownRoomsNote(batch) {
 export function occupancyLevel(entry) {
   const pct = v => (Number.isFinite(v) ? (v >= 95 ? 'full' : v >= 75 ? 'filling' : 'open') : null);
   // A negated status ("Not full", "No longer busy") means the opposite of its word: read it as open.
-  const word = s => (/\b(not|no longer|isn't|is not)\s+(full|closed|at capacity|busy|filling)\b/i.test(s) ? 'open'
+  // "Not available" denies the room has space without saying how full it is: no reading.
+  const word = s => (/\b(not|no longer|isn't|is not)\s+(available|open|low|empty)\b/i.test(s) ? null
+    : /\b(not|no longer|isn't|is not)\s+(full|closed|at capacity|busy|filling)\b/i.test(s) ? 'open'
     : /\b(full|closed|at capacity)\b/i.test(s) ? 'full' : /\b(moderate|busy|filling|high)\b/i.test(s) ? 'filling' : /\b(available|open|low|empty)\b/i.test(s) ? 'open' : null);
   if (typeof entry === 'number') return pct(entry);
   if (typeof entry === 'string') return word(entry);

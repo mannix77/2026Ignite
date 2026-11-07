@@ -32,6 +32,11 @@ Feature: Knowing a room is full before walking there
       When Minesh looks at a session in that room
       Then the session shows nothing about fullness
 
+    Scenario: A status that denies the room has space
+      Given the feed says the room is "Not available"
+      When Minesh looks at a session in that room
+      Then the session shows nothing about fullness
+
   Rule: The feed is captured only while it reads cleanly
 
     Scenario: The feed reports failure
@@ -43,3 +48,8 @@ Feature: Knowing a room is full before walking there
       When the feed lists rooms with a few junk entries among them
       Then the good rooms are captured
       And the junk entries are counted
+
+    Scenario: The same room listed twice
+      When the feed lists a room twice with different readings
+      Then the first reading is captured
+      And the second counts as a junk entry
