@@ -49,7 +49,9 @@ TRACKED = ["title", "code", "type", "start", "end", "dur", "room", "speakers",
            "level", "delivery", "recorded", "desc"]
 # The catalog has spelled these differently across years ("In person" vs "In-person").
 DELIVERY_NAMES = {"inperson": "In-person", "online": "Online", "ondemand": "On-demand"}
-PLACEHOLDER_ROOM = re.compile(r"^(ztest\S*|tbd|tba|)$", re.I)
+# Test rooms, TBD/TBA, blank, and "Rescheduling 3" / "Rescheduling Room" (a holding room while a
+# session moves). Same pattern in live.js, venue.js and venues.py.
+PLACEHOLDER_ROOM = re.compile(r"^(ztest\S*|tbd|tba|rescheduling(\s.*)?|)$", re.I)
 MAX_DUR = 1440
 # Whitespace trimmed from text fields; must match TRIM in assets/js/live.js.
 TRIM = re.compile("^[ \t\n\r\x0b\x0c\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]+|"

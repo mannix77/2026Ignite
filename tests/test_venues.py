@@ -55,6 +55,15 @@ class PlacementTests(unittest.TestCase):
     def test_should_treat_placeholders_and_blanks_as_no_room(self):
         self.assertEqual([venues.building("moscone", r) for r in ("zTest12", "TBD", "tba", "", None)], [None] * 5)
 
+    def test_should_place_dimes_gallery_in_its_own_building(self):
+        self.assertEqual(venues.building("moscone", "Dimes Gallery"), "D")
+
+    def test_should_treat_a_rescheduling_room_as_a_placeholder(self):
+        # "Rescheduling 3" / "Rescheduling Room" hold a session while Microsoft moves it: no room,
+        # so never an unknown building either. A real room that merely mentions the word is one.
+        self.assertEqual([venues.room_label(r) for r in ("Rescheduling 3", "Rescheduling Room", "rescheduling")], [None] * 3)
+        self.assertEqual(venues.room_label("Moscone West | Level 2, Rescheduling Desk"), "Moscone West | Level 2, Rescheduling Desk")
+
 
 @unittest.skipUnless(NODE, "needs node")
 class ParityTests(unittest.TestCase):
@@ -65,6 +74,7 @@ class ParityTests(unittest.TestCase):
         "ignite2026": {"AMC Metreon | Level 3, Theater 9": "E", "The Aviary, Labs": "E",
                        "Moscone West | Level 2, Room 2006": "W", "Moscone South | Level 2, Room 201": "S",
                        "Marriott Marquis | Lower B2, Yerba Buena Salon 8": "M", "Chase Center": "C",
+                       "Dimes Gallery": "D", "Rescheduling 3": None, "Rescheduling Room": None,
                        "Online": "O", NEW_ROOM: None},
         "gartner2026": {"Lark 1, WDW Swan Hotel": "S", "Stage 1, IT Xpo, Atlantic Hall, WDW Dolphin Hotel": "D",
                         "Grand Harbor Salon 1, Disney's Yacht & Beach Resort": "Y", "Somewhere new": None},
@@ -114,7 +124,8 @@ class UnknownRoomTests(unittest.TestCase):
         self.assertEqual(venues.unknown_rooms("moscone", cur, recs(NEW_ROOM)), [])
 
     def test_should_ignore_placeholders_and_blanks(self):
-        self.assertEqual(venues.unknown_rooms("moscone", recs("zTest12", "TBD", "", None), []), [])
+        self.assertEqual(venues.unknown_rooms("moscone", recs("zTest12", "TBD", "", None, "Rescheduling 3", "Rescheduling Room"), []), [])
+        self.assertEqual(venues.unknown_rooms("moscone", recs("Rescheduling 3", NEW_ROOM), []), [NEW_ROOM])
 
     def test_should_list_several_rooms_in_label_order(self):
         cur = recs("Zephyr Hall, Stage 1", NEW_ROOM, "Zephyr Hall, Stage 1")

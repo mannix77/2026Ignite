@@ -31,7 +31,9 @@ export function createVenue(def) {
   const BUILDING = Object.fromEntries(buildings.map(b => [b.id, b]));
   BUILDING.U = { id: 'U', name: 'Location TBA', short: 'TBA' };
   BUILDING.O = BUILDING.O || { id: 'O', name: 'Online only', short: 'Online' };
-  const placeholder = def.placeholder || /^(ztest\S*|tbd|tba)$/i;
+  // "Rescheduling 3" / "Rescheduling Room": Microsoft parks a session there while it moves it.
+  // Same pattern in live.js, sync.py and venues.py (the parity tests keep them equal).
+  const placeholder = def.placeholder || /^(ztest\S*|tbd|tba|rescheduling(\s.*)?)$/i;
 
   function parseLocation(label, overrides = {}) {
     const raw = (label || '').trim();
@@ -74,6 +76,7 @@ export function createVenue(def) {
 //   "Moscone West, Level 3, Room 3016"     "Moscone South, The Hub, Theater A"
 //   "Moscone South, Level 3, Room 301"     "Marriott Marquis, Yerba Buena Ballroom, BO2"
 //   "AMC Metreon | Level 3, Theater 9"     "The Aviary, Labs" (the Metreon's rooftop, level 4)
+//   "Dimes Gallery" (667 Howard St)        "Rescheduling 3" (a holding room while a session moves: a placeholder)
 //   "Chase Center" (keynote)
 // The building patterns are mirrored in scripts/venues.py (tests/test_venues.py keeps them equal).
 export const MOSCONE_DEF = {
@@ -86,6 +89,8 @@ export const MOSCONE_DEF = {
     { id: 'C', name: 'Chase Center', short: 'Chase Ctr', re: /chase\s*center/i, geo: [37.76790, -122.38742], keynote: true },
     // 135 4th St, between Mission and Howard: AMC theaters on level 3, The Aviary (rooftop) on 4.
     { id: 'E', name: 'Metreon', short: 'Metreon', re: /metreon|\baviary\b/i, geo: [37.78440, -122.40310] },
+    // 667 Howard St, across Howard from Moscone South (sponsor event space, lightning talks).
+    { id: 'D', name: 'Dimes Gallery', short: 'Dimes', re: /dimes\s*gallery/i, geo: [37.78570, -122.39990] },
     { id: 'H', name: 'Other off-site', short: 'Off-site', re: /intercontinental|hilton|hyatt|westin|park central|four seasons|st\.? regis|yerba buena (center|gardens)|sfmoma|\bw hotel/i, offsite: true },
     { id: 'O', name: 'Online only', short: 'Online', re: /^(online|virtual|on[- ]demand$)/i },
   ],
@@ -101,8 +106,9 @@ export const MOSCONE_DEF = {
       'N|S': 7, 'N|W': 10, 'S|W': 12,
       'M|W': 13, 'M|S': 14, 'M|N': 13,
       'E|W': 5, 'E|M': 5, 'E|S': 8, 'E|N': 8,
-      'C|W': 40, 'C|S': 40, 'C|N': 40, 'C|M': 40, 'C|E': 40,
-      'H|W': 12, 'H|S': 12, 'H|N': 12, 'H|M': 12, 'E|H': 12, 'C|H': 40, 'H|H': 12,
+      'D|S': 5, 'D|N': 7, 'D|W': 8, 'D|E': 8, 'D|M': 10,
+      'C|W': 40, 'C|S': 40, 'C|N': 40, 'C|M': 40, 'C|E': 40, 'C|D': 40,
+      'H|W': 12, 'H|S': 12, 'H|N': 12, 'H|M': 12, 'E|H': 12, 'D|H': 12, 'C|H': 40, 'H|H': 12,
     },
     unknown: 12,      // room not published yet: assume a building change
   },
