@@ -187,6 +187,31 @@ await test('should give the Settings matrix a Metreon row with a walk to every o
   eq(others.length > 0, true);
 });
 
+// ---- Dimes Gallery (667 Howard St, across from Moscone South) is a building of its own
+await test('should place Dimes Gallery in its own building', () => {
+  const loc = place('Dimes Gallery');
+  eq([loc.building, loc.known, moscone.BUILDING.D.name], ['D', true, 'Dimes Gallery']);
+});
+await test('should walk 5 minutes between Dimes Gallery and Moscone South and 8 to West', () => {
+  const dimes = place('Dimes Gallery');
+  const south = place('Moscone South | Level 2, Room 201');
+  const west = place('Moscone West | Level 3, Room 3001');
+  eq([walkMinutes(dimes, south, moscone.walk), walkMinutes(south, dimes, moscone.walk), walkMinutes(dimes, west, moscone.walk)], [5, 5, 8]);
+});
+await test('should give the Settings matrix a Dimes Gallery row with a walk to every other building', () => {
+  const others = moscone.ids.filter(id => id !== 'D' && id !== 'O');
+  eq([moscone.ids.includes('D'), others.length > 0, others.filter(id => moscone.walk.pairs[['D', id].sort().join('|')] == null)], [true, true, []]);
+});
+
+// ---- a room being rescheduled is not a room yet (a placeholder, like zTest)
+await test('should treat a rescheduling room as a placeholder, not an unknown building', () => {
+  const parked = place('Rescheduling 3');
+  const room = place('Rescheduling Room');
+  eq([parked.building, parked.known, parked.placeholder, room.placeholder], ['U', false, true, true]);
+  eq(place('Moscone South | Level 2, Room 201').placeholder, undefined);
+  eq(walkMinutes(parked, place('Moscone West | Level 3, Room 3001'), moscone.walk), moscone.walk.unknown);
+});
+
 // ---- the Changes tab shows the unknown-building notice the scripts wrote into the batch
 const batchWith = unknownRooms => ({ at: '2026-10-26T01:37:47Z', milestones: [], added: [], removed: [], changed: [], ...(unknownRooms === undefined ? {} : { unknownRooms }) });
 await test('should word the Changes tab notice like the sync summary', () => {

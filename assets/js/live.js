@@ -9,7 +9,9 @@ const DEFAULT_EVENT = 'ignite2026-prod';
 const DEFAULT_WINDOW = ['2026-11-17', '2026-11-20'];
 const DELIVERY_NAMES = { inperson: 'In-person', online: 'Online', ondemand: 'On-demand' };
 const MAX_DUR = 1440;
-const PLACEHOLDER_ROOM = /^(ztest\S*|tbd|tba|)$/i;
+// Test rooms, TBD/TBA, blank, and "Rescheduling 3" / "Rescheduling Room" (a holding room while a
+// session moves). Must match PLACEHOLDER_ROOM in scripts/sync.py.
+const PLACEHOLDER_ROOM = /^(ztest\S*|tbd|tba|rescheduling(\s.*)?|)$/i;
 const REPEAT_SUFFIX = /-R\d+$/i;
 // Must match TRIM in scripts/sync.py.
 const TRIM = /^[ \t\n\r\x0b\x0c\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]+|[ \t\n\r\x0b\x0c\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]+$/g;

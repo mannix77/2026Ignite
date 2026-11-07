@@ -295,6 +295,13 @@ class EdgeCaseTests(unittest.TestCase):
         self.assertIsNone(c["BRK823"]["dur"])                                      # 20000 minutes is not a session
         self.assertEqual(c["BRK823"]["room"], "Moscone South, Level 1, Room 101")
 
+    def test_rescheduling_room_is_a_placeholder_not_a_room(self):
+        # Microsoft parks a session in "Rescheduling 3" while it moves it: the label is kept (so a
+        # change notice can show it) but it is no room, so it never counts as one in a known or
+        # unknown building. tests/test_venues.py checks the Python and browser venue models agree.
+        self.assertEqual((self.c["BRK824"]["room"], self.c["BRK824"]["roomTbd"]), ("Rescheduling 3", True))
+        self.assertEqual((self.c["BRK823"]["room"], self.c["BRK823"]["roomTbd"]), ("Moscone South, Level 1, Room 101", False))
+
     def test_shared_session_id_runs_are_one_group(self):
         runs = [r for r in self.recs if r["id"] == "e6"]
         self.assertEqual(len(runs), 2)

@@ -23,6 +23,24 @@ Feature: Walking times reach every building the catalog uses
       When Minesh opens the walking matrix in Settings
       Then it has a Metreon row
 
+  Rule: Dimes Gallery, across Howard Street, is a building of its own
+
+    Scenario: A sponsor lightning talk at Dimes Gallery
+      When the catalog places a session in "Dimes Gallery"
+      Then the planner puts it in Dimes Gallery
+
+    Scenario: Walking from Dimes Gallery to Moscone South
+      Given a session at Dimes Gallery
+      When the next session is in Moscone South
+      Then the walk between them is 5 minutes
+
+  Rule: A room being rescheduled is not a room yet
+
+    Scenario: Microsoft parks a session in a rescheduling room
+      When the catalog places a session in "Rescheduling 3"
+      Then the planner treats its room as not published
+      And the change notice does not mention an unknown building
+
   Rule: A room in an unknown building is announced the first time it appears
 
     Scenario: A sponsor opens a new venue

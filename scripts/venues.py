@@ -9,8 +9,10 @@ import re
 
 CONFERENCE_VENUES = {"ignite2026": "moscone", "gartner2026": "swan-dolphin", "reinvent2026": "las-vegas"}
 
-# A room that is not a room yet (same as PLACEHOLDER_ROOM in sync.py and `placeholder` in venue.js).
-PLACEHOLDER = re.compile(r"^(ztest\S*|tbd|tba)$", re.I)
+# A room that is not a room yet (same as PLACEHOLDER_ROOM in sync.py and live.js and `placeholder` in
+# venue.js): test rooms, TBD/TBA, and "Rescheduling 3" / "Rescheduling Room", where Microsoft parks a
+# session while it moves it.
+PLACEHOLDER = re.compile(r"^(ztest\S*|tbd|tba|rescheduling(\s.*)?)$", re.I)
 
 # Buildings per venue, in the order the browser tests them (the first match wins).
 BUILDINGS = {
@@ -21,6 +23,7 @@ BUILDINGS = {
         ("M", r"marriott|marquis"),
         ("C", r"chase\s*center"),
         ("E", r"metreon|\baviary\b"),
+        ("D", r"dimes\s*gallery"),
         ("H", r"intercontinental|hilton|hyatt|westin|park central|four seasons|st\.? regis|yerba buena (center|gardens)|sfmoma|\bw hotel"),
         ("O", r"^(online|virtual|on[- ]demand$)"),
     ],
