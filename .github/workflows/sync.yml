@@ -14,9 +14,13 @@ on:
 permissions:
   contents: read
 
+# A run still going when the next scheduled one starts is cancelled: a healthy run takes about a
+# minute and schedules are 30 minutes or more apart, so the only run this stops is one that hung
+# (on 2026-11-05 a deploy sat in "waiting" for 35 hours and every later run queued behind it).
+# The report job skips a cancelled sync, so this never opens a production issue.
 concurrency:
   group: sync
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   sync:
