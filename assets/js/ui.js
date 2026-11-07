@@ -57,6 +57,50 @@ export function unknownRoomsNote(batch) {
   return `${rooms.length} room${rooms.length === 1 ? '' : 's'} in an unknown building: ${rooms.join(', ')}`;
 }
 
+// Live room occupancy from the official map's feed, captured into data/<conf>/occupancy.json
+// by .github/workflows/occupancy.yml during the event. The feed's per-room shape is not
+// published, so a reading is taken from whatever is recognisable (a percentage, a count with a
+// capacity, or a status word) and anything else is left out rather than shown wrong.
+export function occupancyLevel(entry) {
+  const pct = v => (Number.isFinite(v) ? (v >= 95 ? 'full' : v >= 75 ? 'filling' : 'open') : null);
+  // A negated status ("Not full", "No longer busy") means the opposite of its word: read it as open.
+  const word = s => (/\b(not|no longer|isn't|is not)\s+(full|closed|at capacity|busy|filling)\b/i.test(s) ? 'open'
+    : /\b(full|closed|at capacity)\b/i.test(s) ? 'full' : /\b(moderate|busy|filling|high)\b/i.test(s) ? 'filling' : /\b(available|open|low|empty)\b/i.test(s) ? 'open' : null);
+  if (typeof entry === 'number') return pct(entry);
+  if (typeof entry === 'string') return word(entry);
+  if (!entry || typeof entry !== 'object' || Array.isArray(entry)) return null;
+  for (const k of ['status', 'state', 'level', 'occupancyStatus']) {
+    if (typeof entry[k] === 'string') { const w = word(entry[k]); if (w) return w; }
+  }
+  for (const k of ['percentage', 'percent', 'occupancyPercentage', 'occupancy']) {
+    if (typeof entry[k] === 'number') return pct(entry[k]);
+  }
+  const count = ['count', 'occupied', 'current'].map(k => entry[k]).find(Number.isFinite);
+  const cap = ['capacity', 'max', 'total'].map(k => entry[k]).find(Number.isFinite);
+  if (Number.isFinite(count) && Number.isFinite(cap) && cap > 0) return pct(100 * count / cap);
+  return null;
+}
+
+// A reading older than this is not live any more: nothing is shown rather than something stale.
+export const OCCUPANCY_MAX_AGE_MS = 30 * 60000;
+
+// The room's level ('full' | 'filling' | 'open') from a captured occupancy file, or null when
+// the file is missing, stale, or has no readable entry for the room.
+export function occupancyOf(occupancy, room, now = Date.now()) {
+  if (!occupancy || typeof occupancy !== 'object' || typeof room !== 'string' || !room.trim()) return null;
+  const at = Date.parse(occupancy.fetchedAt);
+  if (!Number.isFinite(at) || now - at > OCCUPANCY_MAX_AGE_MS || at - now > 60000) return null;
+  const rooms = occupancy.rooms;
+  if (!rooms || typeof rooms !== 'object' || !Object.hasOwn(rooms, room.trim())) return null;
+  return occupancyLevel(rooms[room.trim()]);
+}
+
+export function occupancyChip(level) {
+  if (level === 'full') return '<span class="chip full" title="The official map reports this room as full right now">Room full</span>';
+  if (level === 'filling') return '<span class="chip few" title="The official map reports this room as filling up">Filling</span>';
+  return '';
+}
+
 export function recChip(s) {
   if (s.recorded === true) return `<span class="chip rec" title="Will be recorded: you can watch it later">${icon('rec')}Recorded</span>`;
   if (s.recorded === false) return `<span class="chip norec" title="Will not be recorded: in person is your only chance">${icon('norec')}Not recorded</span>`;
@@ -112,7 +156,7 @@ export function sessionCard(s, opts = {}) {
     <div class="top"><span class="code">${esc(s.code)}</span>·<span>${esc(s.type)}</span>${s.level ? `·<span>${esc(s.level)}</span>` : ''}${s.dur ? `·<span>${fmtDuration(s.dur)}</span>` : ''}
       ${opts.isNew ? '<span class="chip new">New</span>' : ''}${s.repeats?.length ? `<span class="chip" title="Also runs as ${attr(s.repeats.join(', '))}">Repeats</span>` : ''}${scoreChip(opts.score)}${opts.watch ? '<span class="chip watch" title="On your watch-later list, not in the live plan">Watch later</span>' : ''}</div>
     <a class="title" href="#/session/${encodeURIComponent(s.code)}" data-act="open" data-key="${attr(s.key)}">${esc(s.title)}</a>
-    <div class="meta">${timeChip}<span>${esc(whenText(s))}</span>${!s.onlineOnly ? `${s.loc.known ? bldgChip(s.loc) : ''}<span class="muted">${esc(s.roomLabel || '')}</span>` : ''}${recChip(s)}${opts.reserved ? '<span class="chip new" title="You reserved a seat for this run">Reserved</span>' : rsvpChip(s) + availChip(s)}</div>
+    <div class="meta">${timeChip}<span>${esc(whenText(s))}</span>${!s.onlineOnly ? `${s.loc.known ? bldgChip(s.loc) : ''}<span class="muted">${esc(s.roomLabel || '')}</span>${occupancyChip(opts.occupancy)}` : ''}${recChip(s)}${opts.reserved ? '<span class="chip new" title="You reserved a seat for this run">Reserved</span>' : rsvpChip(s) + availChip(s)}</div>
     ${!opts.compact && s.speakers?.length ? `<div class="who">${speakersLine(s)}</div>` : ''}
     ${opts.extra || ''}
     ${opts.noActions ? '' : `<div class="actions">${prioControl(s.key, p)}</div>`}

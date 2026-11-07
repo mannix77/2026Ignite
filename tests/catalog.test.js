@@ -8,7 +8,7 @@ const { CONFERENCES } = await import('../assets/js/conferences.js');
 const { createVenue, walkMinutes } = await import('../assets/js/venue.js');
 const { transition, DEFAULT_PLANNER } = await import('../assets/js/planner.js');
 const store = await import('../assets/js/store.js');
-const { rsvpChip, rsvpOpensText, unknownRoomsNote } = await import('../assets/js/ui.js');
+const { rsvpChip, rsvpOpensText, unknownRoomsNote, occupancyLevel, occupancyOf, occupancyChip, OCCUPANCY_MAX_AGE_MS, sessionCard } = await import('../assets/js/ui.js');
 
 let pass = 0, fail = 0;
 async function test(name, fn) {
@@ -210,6 +210,49 @@ await test('should treat a rescheduling room as a placeholder, not an unknown bu
   eq([parked.building, parked.known, parked.placeholder, room.placeholder], ['U', false, true, true]);
   eq(place('Moscone South | Level 2, Room 201').placeholder, undefined);
   eq(walkMinutes(parked, place('Moscone West | Level 3, Room 3001'), moscone.walk), moscone.walk.unknown);
+});
+
+// ---- room occupancy from the official map's feed (specs/features/room-occupancy.feature)
+// The feed's per-room shape is not published; readings come from whatever is recognisable.
+const readAt = '2026-11-18T17:10:00Z';
+const tenMinLater = Date.parse(readAt) + 10 * 60000;
+const feed = rooms => ({ fetchedAt: readAt, enabled: true, rooms });
+const room3014 = 'Moscone West | Level 3, Room 3014';
+await test('should read a full room from a status word, a percentage, or a count against a capacity', () => {
+  eq([occupancyLevel('Full'), occupancyLevel({ status: 'At capacity' }), occupancyLevel(100), occupancyLevel({ percentage: 96 }), occupancyLevel({ count: 190, capacity: 200 })],
+    ['full', 'full', 'full', 'full', 'full']);
+});
+await test('should read a filling room at four fifths and an open room at a third, on both sides of the lines', () => {
+  eq([occupancyLevel(80), occupancyLevel(75), occupancyLevel(74), occupancyLevel(33), occupancyLevel(94), occupancyLevel(95), occupancyLevel({ status: 'Moderate' }), occupancyLevel('Available')],
+    ['filling', 'filling', 'open', 'open', 'filling', 'full', 'filling', 'open']);
+});
+await test('should read a negated status as open, not as the word it negates', () => {
+  eq([occupancyLevel('Not full'), occupancyLevel({ status: 'No longer busy' }), occupancyLevel('Room is not at capacity'), occupancyLevel('Full')], ['open', 'open', 'open', 'full']);
+});
+await test('should give no reading for a value it does not understand', () => {
+  eq([occupancyLevel(null), occupancyLevel(undefined), occupancyLevel(true), occupancyLevel('Purple'), occupancyLevel({ status: 'Purple' }), occupancyLevel([95]), occupancyLevel({ count: 5 }), occupancyLevel({ count: 5, capacity: 0 }), occupancyLevel(NaN)],
+    [null, null, null, null, null, null, null, null, null]);
+});
+await test('should show a full room next to its room while the reading is fresh', () => {
+  eq(occupancyOf(feed({ [room3014]: { status: 'Full' } }), room3014, tenMinLater), 'full');
+  eq(occupancyChip('full').includes('Room full') && occupancyChip('filling').includes('Filling'), true);
+  eq([occupancyChip('open'), occupancyChip(null)], ['', '']);
+});
+await test('should show nothing for a reading too old to trust, on both sides of the limit', () => {
+  const at = Date.parse(readAt);
+  eq([occupancyOf(feed({ [room3014]: 100 }), room3014, at + OCCUPANCY_MAX_AGE_MS), occupancyOf(feed({ [room3014]: 100 }), room3014, at + OCCUPANCY_MAX_AGE_MS + 1),
+    occupancyOf(feed({ [room3014]: 100 }), room3014, at + 40 * 60000)], ['full', null, null]);
+});
+await test('should show nothing without a file, a readable time, the room, or a room name', () => {
+  eq([occupancyOf(null, room3014, tenMinLater), occupancyOf({ rooms: { [room3014]: 100 } }, room3014, tenMinLater), occupancyOf({ fetchedAt: 'soon', rooms: { [room3014]: 100 } }, room3014, tenMinLater),
+    occupancyOf(feed({ 'Moscone West | Level 2, Room 2006': 100 }), room3014, tenMinLater), occupancyOf(feed({ [room3014]: 100 }), '', tenMinLater), occupancyOf(feed('junk'), room3014, tenMinLater)],
+  [null, null, null, null, null, null]);
+});
+await test('should put the fullness chip on a session card next to the room, and leave it off when there is none', () => {
+  const s = { key: 'k1', code: 'BRK360', type: 'Breakout', title: 'T', onlineOnly: false, loc: { known: false }, roomLabel: room3014, speakers: [] };
+  const withChip = sessionCard(s, { occupancy: 'full' });
+  const without = sessionCard(s, {});
+  eq([withChip.includes('Room full'), withChip.indexOf('Room 3014') < withChip.indexOf('Room full'), without.includes('Room full'), without.includes('Room 3014')], [true, true, false, true]);
 });
 
 // ---- the Changes tab shows the unknown-building notice the scripts wrote into the batch
