@@ -8,7 +8,7 @@ const { CONFERENCES } = await import('../assets/js/conferences.js');
 const { createVenue, walkMinutes } = await import('../assets/js/venue.js');
 const { transition, DEFAULT_PLANNER } = await import('../assets/js/planner.js');
 const store = await import('../assets/js/store.js');
-const { rsvpChip, rsvpOpensText, unknownRoomsNote } = await import('../assets/js/ui.js');
+const { rsvpChip, rsvpOpensText, unknownRoomsNote, venueMapUrl, mapChip, sessionCard } = await import('../assets/js/ui.js');
 
 let pass = 0, fail = 0;
 async function test(name, fn) {
@@ -210,6 +210,36 @@ await test('should treat a rescheduling room as a placeholder, not an unknown bu
   eq([parked.building, parked.known, parked.placeholder, room.placeholder], ['U', false, true, true]);
   eq(place('Moscone South | Level 2, Room 201').placeholder, undefined);
   eq(walkMinutes(parked, place('Moscone West | Level 3, Room 3001'), moscone.walk), moscone.walk.unknown);
+});
+
+// ---- the Map link opens the room on the official indoor map (specs/features/venue-map-link.feature)
+// The expected URL shape is the one the Ignite event guide's own "View map" button opens.
+const roomed = { code: 'BRK360', room: 'Moscone West | Level 3, Room 3014', roomTbd: false, onlineOnly: false };
+await test('should link a roomed session to its room on the official map', () => {
+  eq(venueMapUrl(roomed, ignite), 'https://wayfinding.event.microsoft.com/ignite?nto=Moscone%20West%20%7C%20Level%203%2C%20Room%203014&sc=BRK360');
+});
+await test('should carry a room name with commas and symbols unchanged', () => {
+  const u = new URL(venueMapUrl({ ...roomed, code: 'TT1706', room: ' Moscone South | Upper Mezzanine, Esplanade Ballroom, Table 9 ' }, ignite));
+  eq([u.origin + u.pathname, u.searchParams.get('nto'), u.searchParams.get('sc')],
+    ['https://wayfinding.event.microsoft.com/ignite', 'Moscone South | Upper Mezzanine, Esplanade Ballroom, Table 9', 'TT1706']);
+});
+await test('should give no link for a placeholder room, an online-only session, a blank room, a preview room, or a conference without a map', () => {
+  eq([venueMapUrl({ ...roomed, room: 'Rescheduling 3', roomTbd: true }, ignite), venueMapUrl({ ...roomed, onlineOnly: true }, ignite),
+    venueMapUrl({ ...roomed, room: '  ' }, ignite), venueMapUrl({ ...roomed, timeSource: 'preview' }, ignite),
+    venueMapUrl({ ...roomed, room: 'Lark 1, WDW Swan Hotel' }, gartner), venueMapUrl(roomed, null)],
+  [null, null, null, null, null, null]);
+  eq(mapChip(null), '');
+});
+await test('should render the Map chip as an escaped link that opens in a new tab', () => {
+  const html = mapChip(venueMapUrl({ ...roomed, code: 'A&B' }, ignite));
+  eq(html.includes('href="https://wayfinding.event.microsoft.com/ignite?nto=Moscone%20West%20%7C%20Level%203%2C%20Room%203014&amp;sc=A%26B"'), true);
+  eq([html.includes('target="_blank"'), html.includes('rel="noopener"'), /Map<\/a>$/.test(html)], [true, true, true]);
+});
+await test('should put the Map chip on a session card next to the room, and leave it off without a map', () => {
+  const s = { key: 'k1', code: 'BRK360', type: 'Breakout', title: 'T', onlineOnly: false, loc: { known: false }, roomLabel: 'Moscone West | Level 3, Room 3014', speakers: [] };
+  const withMap = sessionCard(s, { mapUrl: venueMapUrl({ ...s, ...roomed }, ignite) });
+  const without = sessionCard(s, {});
+  eq([withMap.includes('class="chip map"'), withMap.indexOf('Room 3014') < withMap.indexOf('class="chip map"'), without.includes('chip map'), without.includes('Room 3014')], [true, true, false, true]);
 });
 
 // ---- the Changes tab shows the unknown-building notice the scripts wrote into the batch
