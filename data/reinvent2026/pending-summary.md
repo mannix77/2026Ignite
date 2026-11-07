@@ -1,0 +1,104 @@
+<!-- summary:42320395375-1 -->
+Added 9 · removed 5 · changed 86
+
+**Added**
+- `SUP112-R` Agentic cars: Build agents that compete
+- `AWS121` Why do we want robots to be like us?
+- `SUP112-R1` Agentic cars: Build agents that compete
+- `AWS122` The annual forecast for where sports AI is heading
+- `EXS025` A leader's guide to modernizing systems for AI, with AI
+- `EXS026` A leader's guide to what separates AI leaders from the rest
+- `ARC320-R2` Cell-based architecture: Designing blast-radius boundaries
+- `CON312-R1` Resolve Amazon ECS incidents faster with AWS DevOps Agent
+- `CON344-R1` Multi-tenant SaaS and agentic apps on Amazon EKS
+
+**Removed**
+- `ACT060-R` Showcase Theater
+- `ACT060-R1` Showcase Theater
+- `ACT060-R2` Showcase Theater
+- `ACT060-R3` Showcase Theater
+- `IND378` How Mercedes-Benz accelerates engineering and production with AI
+
+**Changed**
+- `ACT010-R1` Byte Club — start: 2026-12-01T16:00:00Z → 2026-12-01T18:30:00Z; dur: 570 → 420
+- `ACT010-R3` Byte Club — end: 2026-12-04T01:30:00Z → 2026-12-04T01:00:00Z; dur: 570 → 540
+- `ACT011-R1` Bling Bar — start: 2026-12-01T16:00:00Z → 2026-12-01T18:30:00Z; dur: 570 → 420
+- `ACT011-R3` Bling Bar — end: 2026-12-04T01:30:00Z → 2026-12-04T01:00:00Z; dur: 570 → 540
+- `ACT017` Building Together Reception — room: Madame Tussauds (located in The Venetian) → Tableau (located in Wynn)
+- `ACT073` Hydrate & Help — end: 2026-11-30T02:00:00Z → 2026-11-30T04:00:00Z; dur: 480 → 600
+- `ACT074` Hydrate & Help — start: 2026-11-30T18:00:00Z → 2026-11-30T15:30:00Z; end: 2026-12-01T02:00:00Z → 2026-12-01T04:30:00Z; dur: 480 → 780
+- `ACT075` Hydrate & Help — end: 2026-12-01T22:30:00Z → 2026-12-02T02:30:00Z; dur: 480 → 720
+- `ACT076` Hydrate & Help — end: 2026-12-03T01:30:00Z → 2026-12-03T02:30:00Z; dur: 480 → 540
+- `ACT077` Hydrate & Help — end: 2026-12-04T01:30:00Z → 2026-12-04T01:00:00Z; dur: 480 → 450
+- `AIM111-S` How Harvey and Majesco maximize AI ROI and drive more value per token — title: Deploying the foundation for successful enterprise AI (sp… → How Harvey and Majesco maximize AI ROI and drive more val…; desc
+- `AIM129-S` AI That Scales Fast for High-Growth Businesses. (sponsored by Accenture) — title: High Growth. Bold Innovation. The Kiwibank Story. (sponso… → AI That Scales Fast for High-Growth Businesses. (sponsore…; desc
+- `AIM134-S` Beyond Coding Agents: Inside the Self-Improving Software Factory — title: When Software Builds and Improves Itself (sponsored by Fa… → Beyond Coding Agents: Inside the Self-Improving Software …; desc
+- `AIM141-S` Breaking up with closed frontier models (sponsored by Modal) — title: Breaking up with closed frontier models → Breaking up with closed frontier models (sponsored by Modal); code: AIM379-S → AIM141-S
+- `AIM2225-S` Beyond Tool Sprawl: Scalable, Trusted Access to APIs, MCP, and Data — code: AIM112-S → AIM2225-S
+- `AIM228-S` From Data Overload to Action: A Voice-Enabled Digital Assistant for O&G Field Ops — title: …Ops (sponsored by PwC) → …Ops; desc
+- `AIM231-S` AI That Answers: PepsiCo Reimagines Customer Experience with Amazon Connect — title: …Customer Experiences Reimagined with Amazon Connect (spo… → …PepsiCo Reimagines Customer Experience with Amazon Connect; desc
+- `AIM241-S` 4 foundations for building the agentic enterprise on AWS​ (sponsored by IBM) — desc
+- `AIM245-S` AI at scale: practical lessons from Fortune 500 AI leaders — title: Stop Building Agents Without Unified Enterprise Context (… → AI at scale: practical lessons from Fortune 500 AI leaders; desc
+- `AIM248-S` 3-step blueprint for scaling AI with a modern enterprise core (sponsored by IBM) — desc
+- `AIM249-S` AI spend decoded: Open the black box with FinOps for AI (sponsored by Cloudability) — desc
+- `AIM252-S` Securing the Bedrock: A Strong API Foundation for AI Innovation (sponsored by Kong) — desc
+- `AIM259-S` Agents demand context. Build them a Streamhouse. (sponsored by Confluent) — desc
+- `AIM278-S` Evaluating AI Agents with Langfuse (Sponsored by ClickHouse) — title: Open source agent observability and evals with AgentCore … → Evaluating AI Agents with Langfuse (Sponsored by ClickHouse)
+- `AIM312-R1` Beyond fine-tuning: RL for reasoning agents with AWS Trainium — desc
+- `AIM3300-S` Agents at Work, Humans in Control: Stopping the Action No Single Check Can See — title: Defending the Three Lanes: Preventing Toxic Agentic Combi… → Agents at Work, Humans in Control: Stopping the Action No…; desc
+- `AIM343` Data Prep to Deployment: How Tencent Games Scaled to 1,000 GPUs on SageMaker HyperPod — desc
+- `AIM380-S` Clinical Trials, Reimagined at the Speed of AI (sponsored by PwC) — desc
+- `ANT204-S` Semantic Layer: The Foundation for AI-Ready R&D in Life Sciences (sponsored by ZS) — title: Turning Pharma Field Insights into Enterprise Intelligenc… → Semantic Layer: The Foundation for AI-Ready R&D in Life S…; desc
+- `ANT316-R1` From prompt to pipeline: Agentic data engineering — desc
+- `API309-R` Amazon API Gateway: Migration strategies and agent-ready APIs — desc
+- `API312-R` Building distributed multi-agent architectures on serverless — title: Building event-driven, multi-agent swarms on serverless → Building distributed multi-agent architectures on serverless; desc
+- `ARC209-S` AI-ready tables, served fresh. Hold the custom pipelines. (sponsored by Confluent) — desc
+- `AWS114-R1` Builder Zone in the Expo — desc
+- `AWS114-R2` Builder Zone in the Expo — desc
+- `AWS114-R3` Builder Zone in the Expo — desc
+- `BIZ203-S` Stop building agents that stop short of enterprise execution (sponsored by IBM) — desc
+- `BIZ313` Build agentic automations for business processes with Amazon Quick — title: …Quick Automate → …Quick
+- `BIZ319-R` Easy Self-Service AI: Design Agents with the Agentic CX Designer — desc
+- `BIZ325` Fix Data Gaps Fast: Agentic Onboarding with Amazon Connect Decisions — desc
+- `BIZ332-R` ​Every Candidate, Every Time: AI-Led Interviews with Connect Talent — code: BIZ332 → BIZ332-R
+- `COM319` Stop Rolling Back AI Agents: Production Patterns That Work — desc
+- `COP201-S` Trust Issues: A Healthy Relationship With Your AI Agents (sponsored by MontyCloud) — code: COP101-S → COP201-S; level: 200 → 100
+- `COP212` Achieving Operational Excellence at Scale with AWS Unified Operations — speakers: — → Josh Sherman
+- `COP319-R` Observe AI agents beyond your perimeter — desc
+- `COP337` Wrong, Not Broken, & Why your Observability should know the difference, feat. 3M — title: …difference → …difference, feat. 3M; desc
+- `COP347-S` AI at full speed without crashing: The enterprise blueprint (sponsored by HashiCorp) — desc
+- `DAT202-S` Building a live context layer at Crane Worldwide Logistics (Sponsored by Materialize) — title: Powering Interactive Agents with Live Context (sponsored … → Building a live context layer at Crane Worldwide Logistic…; desc
+- `DAT204-S` Edelbyte: The data platform for curious humans and tireless agents — code: DAT319-S → DAT204-S
+- `DAT421` Reduce LLM inference cost with Amazon ElastiCache for Valkey — title: …with Valkey → …for Valkey; desc
+- `DVT218-S` Change. Wait. Debug. Let AI drive the infrastructure loop. (sponsored by HashiCorp) — desc
+- `DVT227` Build a team shared agent workflow from issue to tested PR — speakers: Zezhen Xu → Sujay Narsale, Zezhen Xu
+- `DVT330` Outrun technical debt in the age of autonomous development — desc
+- `HMC205-S` Run hybrid multi-cloud networks with one operational model — title: From Dashboards to Agents: Building an Agentic NOC (spons… → Run hybrid multi-cloud networks with one operational model; desc
+- `HMC206-S` Absorbing AI costs? Stop paying for idle GPUs on Amazon EKS — desc
+- `HMC322` Designing Portable Multicloud Architectures with Open Standards — title: …Specifications → …Standards
+- `HMC409-R` Deployment strategies for highly available edge applications — speakers: George Oakes → Afaq Khan, George Oakes
+- `HMC409-R1` Deployment strategies for highly available edge applications — speakers: George Oakes → Afaq Khan, George Oakes
+- `MAM208` Building migration readiness when the timeline is tight — desc
+- `MAM222` AWS migration agents fast-tracking SAP modernization — speakers: Alex Kakhanovich, Erik Kamman → Alex Kakhanovich, Erik Kamman, Rob Lawrence
+- `MAM327` 5 steps to faster data center exits with AWS Transform — desc
+- `MAM330` Architect and optimize your VMware environment on Amazon EVS — desc
+- `MAM347-R` Meet Your AI Teammate for WorkSpaces Administration — code: MAM347 → MAM347-R
+- `MAM350-R` Continuous tech debt analysis and remediation, from findings to fixes — title: Faster tech debt analysis and remediation → Continuous tech debt analysis and remediation, from findi…; desc
+- `MAM420-S` Planning for migrations, and operating databases on AWS with Redgate (sponsored by RedGate) — title: …Red Gate) → …RedGate)
+- `NET203-R1` Resolve it all: Build hybrid DNS architectures on AWS — desc
+- `NET337` Extending your cloud network with Amazon Leo satellite connectivity — speakers: Camden Forgia, Catalina Villegas → Camden Forgia, May Riggle
+- `PEX313` AWS Marketplace Storefront: Maximize your  GTM Campaign Revenue — title: …checkout, your website, your brand → …Storefront: Maximize your  GTM Campaign Revenue; desc
+- `SEC219-S` Agentic AI meets critical infrastructure at UGI (sponsored by IBM) — desc
+- `STG308-R` Accelerate data migrations with AWS DataSync at any scale — speakers: Sravan Rachiraju, Tugba Goksel → Madhukumar Adavi, Tugba Goksel
+- `STG308-R1` Accelerate data migrations with AWS DataSync at any scale — speakers: Sravan Rachiraju, Tugba Goksel → Madhukumar Adavi, Tugba Goksel
+- `SUP101` The state of commercial open source in the age of AI — desc
+- `SUP102` Beyond the pilot: Why VCs are betting on FDE-led growth — desc
+- `SUP104` World Models: The New Frontier for Interactive Media — title: Serving world models in under 40ms across 10,000 concurre… → World Models: The New Frontier for Interactive Media; desc
+- `SUP106` From MIT Lab to Market: Building Efficient AI for Every Enterprise — title: Models are just math: Building efficient AI from lab to i… → From MIT Lab to Market: Building Efficient AI for Every E…; desc
+- `SUP110` Enterprise buying trends and the startup playbook for AWS Marketplace — desc
+- `SUP114` Building a brain in under an hour: The knowledge layer for physical AI agents — start: 2026-12-01T20:40:00Z → 2026-11-30T19:00:00Z; end: 2026-12-01T21:40:00Z → 2026-11-30T20:00:00Z
+- `SUP204` Building faster: AI-native development workflows — title: Building faster: AI-native development workflows (SDLC) → Building faster: AI-native development workflows; desc
+- `SUP209` Self-Improving AI: The Race to Autonomous Systems — title: Can self-improving AI overcome reward hacking and hardwar… → Self-Improving AI: The Race to Autonomous Systems; desc
+- `SUP226` Kiro as your founding engineer — start: 2026-11-30T19:00:00Z → 2026-12-01T20:40:00Z; end: 2026-11-30T20:00:00Z → 2026-12-01T21:40:00Z
+- …and 6 more
+

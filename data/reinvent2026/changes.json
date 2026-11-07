@@ -1,6 +1,1169 @@
 {
  "batches": [
   {
+   "at": "2026-11-07T00:48:05Z",
+   "milestones": [],
+   "added": [
+    {
+     "id": "1792018979032001LdIJ",
+     "inst": "1792018979032001LdIJ",
+     "code": "SUP112-R",
+     "title": "Agentic cars: Build agents that compete",
+     "repeat": false
+    },
+    {
+     "id": "1786406740557001LIxT",
+     "inst": "1786406740557001LIxT",
+     "code": "AWS121",
+     "title": "Why do we want robots to be like us?",
+     "repeat": false
+    },
+    {
+     "id": "1792018979420001L53M",
+     "inst": "1792018979420001L53M",
+     "code": "SUP112-R1",
+     "title": "Agentic cars: Build agents that compete",
+     "repeat": false
+    },
+    {
+     "id": "1786406740308001LMl3",
+     "inst": "1786406740308001LMl3",
+     "code": "AWS122",
+     "title": "The annual forecast for where sports AI is heading",
+     "repeat": false
+    },
+    {
+     "id": "1793298756641001oJW2",
+     "inst": "1793298756641001oJW2",
+     "code": "EXS025",
+     "title": "A leader's guide to modernizing systems for AI, with AI",
+     "repeat": false
+    },
+    {
+     "id": "1793298808907001rRBx",
+     "inst": "1793298808907001rRBx",
+     "code": "EXS026",
+     "title": "A leader's guide to what separates AI leaders from the rest",
+     "repeat": false
+    },
+    {
+     "id": "1793909762225001mfUR",
+     "inst": "1793909762225001mfUR",
+     "code": "ARC320-R2",
+     "title": "Cell-based architecture: Designing blast-radius boundaries",
+     "repeat": false
+    },
+    {
+     "id": "1793304913704001ofgO",
+     "inst": "1793304913704001ofgO",
+     "code": "CON312-R1",
+     "title": "Resolve Amazon ECS incidents faster with AWS DevOps Agent",
+     "repeat": false
+    },
+    {
+     "id": "1793306510004001XUZ1",
+     "inst": "1793306510004001XUZ1",
+     "code": "CON344-R1",
+     "title": "Multi-tenant SaaS and agentic apps on Amazon EKS",
+     "repeat": false
+    }
+   ],
+   "removed": [
+    {
+     "id": "1792712458978001Zo05",
+     "inst": "1792712458978001Zo05",
+     "code": "ACT060-R",
+     "title": "Showcase Theater",
+     "repeat": false
+    },
+    {
+     "id": "1792713992996001o2pT",
+     "inst": "1792713992996001o2pT",
+     "code": "ACT060-R1",
+     "title": "Showcase Theater",
+     "repeat": false
+    },
+    {
+     "id": "1792713992912001ooUU",
+     "inst": "1792713992912001ooUU",
+     "code": "ACT060-R2",
+     "title": "Showcase Theater",
+     "repeat": false
+    },
+    {
+     "id": "1792713993085001oMYd",
+     "inst": "1792713993085001oMYd",
+     "code": "ACT060-R3",
+     "title": "Showcase Theater",
+     "repeat": false
+    },
+    {
+     "id": "1780441477538001GAfK",
+     "inst": "1780441477538001GAfK",
+     "code": "IND378",
+     "title": "How Mercedes-Benz accelerates engineering and production with AI",
+     "repeat": false
+    }
+   ],
+   "changed": [
+    {
+     "id": "1789513463890001LLYb",
+     "inst": "1789513463890001LLYb",
+     "code": "ACT073",
+     "title": "Hydrate & Help",
+     "f": {
+      "end": [
+       "2026-11-30T02:00:00Z",
+       "2026-11-30T04:00:00Z"
+      ],
+      "dur": [
+       480,
+       600
+      ]
+     }
+    },
+    {
+     "id": "1789513464555001Lih8",
+     "inst": "1789513464555001Lih8",
+     "code": "ACT074",
+     "title": "Hydrate & Help",
+     "f": {
+      "start": [
+       "2026-11-30T18:00:00Z",
+       "2026-11-30T15:30:00Z"
+      ],
+      "end": [
+       "2026-12-01T02:00:00Z",
+       "2026-12-01T04:30:00Z"
+      ],
+      "dur": [
+       480,
+       780
+      ]
+     }
+    },
+    {
+     "id": "1780442256261001cAK4",
+     "inst": "1780442256261001cAK4",
+     "code": "MAM350-R",
+     "title": "Continuous tech debt analysis and remediation, from findings to fixes",
+     "f": {
+      "title": [
+       "Faster tech debt analysis and remediation",
+       "Continuous tech debt analysis and remediation, from findings to fixes"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442265811001cuPi",
+     "inst": "1780442265811001cuPi",
+     "code": "SVS206",
+     "title": "Building fast, serverless web apps with AWS Lambda Web Functions",
+     "f": {
+      "title": [
+       "Building lightning-fast web apps",
+       "Building fast, serverless web apps with AWS Lambda Web Functions"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442236897001cqDM",
+     "inst": "1780442236897001cqDM",
+     "code": "BIZ325",
+     "title": "Fix Data Gaps Fast: Agentic Onboarding with Amazon Connect Decisions",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442241479001cVUQ",
+     "inst": "1780442241479001cVUQ",
+     "code": "BIZ332-R",
+     "title": "​Every Candidate, Every Time: AI-Led Interviews with Connect Talent",
+     "f": {
+      "code": [
+       "BIZ332",
+       "BIZ332-R"
+      ]
+     }
+    },
+    {
+     "id": "1780441483312001GQN1",
+     "inst": "1780441483312001GQN1",
+     "code": "AIM245-S",
+     "title": "AI at scale: practical lessons from Fortune 500 AI leaders",
+     "f": {
+      "title": [
+       "Stop Building Agents Without Unified Enterprise Context (sponsored by Glean)",
+       "AI at scale: practical lessons from Fortune 500 AI leaders"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442233121001cSJo",
+     "inst": "1780442233121001cSJo",
+     "code": "API309-R",
+     "title": "Amazon API Gateway: Migration strategies and agent-ready APIs",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1792018978724001LvG9",
+     "inst": "1792018978724001LvG9",
+     "code": "SUP114",
+     "title": "Building a brain in under an hour: The knowledge layer for physical AI agents",
+     "f": {
+      "start": [
+       "2026-12-01T20:40:00Z",
+       "2026-11-30T19:00:00Z"
+      ],
+      "end": [
+       "2026-12-01T21:40:00Z",
+       "2026-11-30T20:00:00Z"
+      ]
+     }
+    },
+    {
+     "id": "1780441483373001GDUV",
+     "inst": "1780441483373001GDUV",
+     "code": "DAT204-S",
+     "title": "Edelbyte: The data platform for curious humans and tireless agents",
+     "f": {
+      "code": [
+       "DAT319-S",
+       "DAT204-S"
+      ]
+     }
+    },
+    {
+     "id": "1780441464093001GrWo",
+     "inst": "1780441464093001GrWo",
+     "code": "AIM343",
+     "title": "Data Prep to Deployment: How Tencent Games Scaled to 1,000 GPUs on SageMaker HyperPod",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442243591001c7Jq",
+     "inst": "1780442243591001c7Jq",
+     "code": "HMC409-R",
+     "title": "Deployment strategies for highly available edge applications",
+     "f": {
+      "speakers": [
+       [
+        "George Oakes"
+       ],
+       [
+        "Afaq Khan",
+        "George Oakes"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442247427001czMN",
+     "inst": "1780442247427001czMN",
+     "code": "MAM330",
+     "title": "Architect and optimize your VMware environment on Amazon EVS",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441486734001GZVC",
+     "inst": "1780441486734001GZVC",
+     "code": "AIM111-S",
+     "title": "How Harvey and Majesco maximize AI ROI and drive more value per token",
+     "f": {
+      "title": [
+       "Deploying the foundation for successful enterprise AI (sponsored by Glean)",
+       "How Harvey and Majesco maximize AI ROI and drive more value per token"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442276998001ceG7",
+     "inst": "1780442276998001ceG7",
+     "code": "BIZ319-R",
+     "title": "Easy Self-Service AI: Design Agents with the Agentic CX Designer",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442248268001cfyc",
+     "inst": "1780442248268001cfyc",
+     "code": "NET337",
+     "title": "Extending your cloud network with Amazon Leo satellite connectivity",
+     "f": {
+      "speakers": [
+       [
+        "Camden Forgia",
+        "Catalina Villegas"
+       ],
+       [
+        "Camden Forgia",
+        "May Riggle"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1790358231191001iOIF",
+     "inst": "1790358231191001iOIF",
+     "code": "NET203-R1",
+     "title": "Resolve it all: Build hybrid DNS architectures on AWS",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1791492157642001UYqf",
+     "inst": "1791492157642001UYqf",
+     "code": "SUP101",
+     "title": "The state of commercial open source in the age of AI",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441496748001GEDU",
+     "inst": "1780441496748001GEDU",
+     "code": "API312-R",
+     "title": "Building distributed multi-agent architectures on serverless",
+     "f": {
+      "title": [
+       "Building event-driven, multi-agent swarms on serverless",
+       "Building distributed multi-agent architectures on serverless"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441485447001GHnb",
+     "inst": "1780441485447001GHnb",
+     "code": "AIM252-S",
+     "title": "Securing the Bedrock: A Strong API Foundation for AI Innovation (sponsored by Kong)",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442248825001cx7l",
+     "inst": "1780442248825001cx7l",
+     "code": "PEX313",
+     "title": "AWS Marketplace Storefront: Maximize your  GTM Campaign Revenue",
+     "f": {
+      "title": [
+       "AWS Marketplace checkout, your website, your brand",
+       "AWS Marketplace Storefront: Maximize your  GTM Campaign Revenue"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1789513465366001LRln",
+     "inst": "1789513465366001LRln",
+     "code": "ACT075",
+     "title": "Hydrate & Help",
+     "f": {
+      "end": [
+       "2026-12-01T22:30:00Z",
+       "2026-12-02T02:30:00Z"
+      ],
+      "dur": [
+       480,
+       720
+      ]
+     }
+    },
+    {
+     "id": "1787852034046001jO69",
+     "inst": "1787852034046001jO69",
+     "code": "AWS114-R1",
+     "title": "Builder Zone in the Expo",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1789513464236001LHlV",
+     "inst": "1789513464236001LHlV",
+     "code": "ACT010-R1",
+     "title": "Byte Club",
+     "f": {
+      "start": [
+       "2026-12-01T16:00:00Z",
+       "2026-12-01T18:30:00Z"
+      ],
+      "dur": [
+       570,
+       420
+      ]
+     }
+    },
+    {
+     "id": "1789513464762001La7I",
+     "inst": "1789513464762001La7I",
+     "code": "ACT011-R1",
+     "title": "Bling Bar",
+     "f": {
+      "start": [
+       "2026-12-01T16:00:00Z",
+       "2026-12-01T18:30:00Z"
+      ],
+      "dur": [
+       570,
+       420
+      ]
+     }
+    },
+    {
+     "id": "1792018978486001LaNd",
+     "inst": "1792018978486001LaNd",
+     "code": "SUP110",
+     "title": "Enterprise buying trends and the startup playbook for AWS Marketplace",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1791492158516001UBIt",
+     "inst": "1791492158516001UBIt",
+     "code": "SUP204",
+     "title": "Building faster: AI-native development workflows",
+     "f": {
+      "title": [
+       "Building faster: AI-native development workflows (SDLC)",
+       "Building faster: AI-native development workflows"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441482005001Gzm0",
+     "inst": "1780441482005001Gzm0",
+     "code": "AIM241-S",
+     "title": "4 foundations for building the agentic enterprise on AWS​ (sponsored by IBM)",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441478690001G7ck",
+     "inst": "1780441478690001G7ck",
+     "code": "MAM327",
+     "title": "5 steps to faster data center exits with AWS Transform",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1790358246918001is3u",
+     "inst": "1790358246918001is3u",
+     "code": "HMC409-R1",
+     "title": "Deployment strategies for highly available edge applications",
+     "f": {
+      "speakers": [
+       [
+        "George Oakes"
+       ],
+       [
+        "Afaq Khan",
+        "George Oakes"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1792018979573001LXXb",
+     "inst": "1792018979573001LXXb",
+     "code": "SUP226",
+     "title": "Kiro as your founding engineer",
+     "f": {
+      "start": [
+       "2026-11-30T19:00:00Z",
+       "2026-12-01T20:40:00Z"
+      ],
+      "end": [
+       "2026-11-30T20:00:00Z",
+       "2026-12-01T21:40:00Z"
+      ]
+     }
+    },
+    {
+     "id": "1780442267034001cC3t",
+     "inst": "1780442267034001cC3t",
+     "code": "AIM2225-S",
+     "title": "Beyond Tool Sprawl: Scalable, Trusted Access to APIs, MCP, and Data",
+     "f": {
+      "code": [
+       "AIM112-S",
+       "AIM2225-S"
+      ]
+     }
+    },
+    {
+     "id": "1780441491971001GoIt",
+     "inst": "1780441491971001GoIt",
+     "code": "COP319-R",
+     "title": "Observe AI agents beyond your perimeter",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442273639001c8d0",
+     "inst": "1780442273639001c8d0",
+     "code": "DVT218-S",
+     "title": "Change. Wait. Debug. Let AI drive the infrastructure loop. (sponsored by HashiCorp)",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1791492159918001UIY8",
+     "inst": "1791492159918001UIY8",
+     "code": "SUP106",
+     "title": "From MIT Lab to Market: Building Efficient AI for Every Enterprise",
+     "f": {
+      "title": [
+       "Models are just math: Building efficient AI from lab to industry",
+       "From MIT Lab to Market: Building Efficient AI for Every Enterprise"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442267355001cmRv",
+     "inst": "1780442267355001cmRv",
+     "code": "AIM228-S",
+     "title": "From Data Overload to Action: A Voice-Enabled Digital Assistant for O&G Field Ops",
+     "f": {
+      "title": [
+       "From Data Overload to Action: A Voice-Enabled Digital Assistant for O&G Field Ops (sponsored by PwC)",
+       "From Data Overload to Action: A Voice-Enabled Digital Assistant for O&G Field Ops"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441484362001GWnJ",
+     "inst": "1780441484362001GWnJ",
+     "code": "AIM248-S",
+     "title": "3-step blueprint for scaling AI with a modern enterprise core (sponsored by IBM)",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441487523001GnAq",
+     "inst": "1780441487523001GnAq",
+     "code": "AIM259-S",
+     "title": "Agents demand context. Build them a Streamhouse. (sponsored by Confluent)",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442242053001cKxl",
+     "inst": "1780442242053001cKxl",
+     "code": "MAM347-R",
+     "title": "Meet Your AI Teammate for WorkSpaces Administration",
+     "f": {
+      "code": [
+       "MAM347",
+       "MAM347-R"
+      ]
+     }
+    },
+    {
+     "id": "1780441484504001G2GG",
+     "inst": "1780441484504001G2GG",
+     "code": "AIM278-S",
+     "title": "Evaluating AI Agents with Langfuse (Sponsored by ClickHouse)",
+     "f": {
+      "title": [
+       "Open source agent observability and evals with AgentCore and Langfuse (sponsored by ClickHouse)",
+       "Evaluating AI Agents with Langfuse (Sponsored by ClickHouse)"
+      ]
+     }
+    },
+    {
+     "id": "1780442268493001c9Yr",
+     "inst": "1780442268493001c9Yr",
+     "code": "SEC219-S",
+     "title": "Agentic AI meets critical infrastructure at UGI (sponsored by IBM)",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442266089001cOW3",
+     "inst": "1780442266089001cOW3",
+     "code": "AIM129-S",
+     "title": "AI That Scales Fast for High-Growth Businesses. (sponsored by Accenture)",
+     "f": {
+      "title": [
+       "High Growth. Bold Innovation. The Kiwibank Story. (sponsored by Accenture)",
+       "AI That Scales Fast for High-Growth Businesses. (sponsored by Accenture)"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441478579001GDtV",
+     "inst": "1780441478579001GDtV",
+     "code": "MAM208",
+     "title": "Building migration readiness when the timeline is tight",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1791492160881001UoAR",
+     "inst": "1791492160881001UoAR",
+     "code": "SUP209",
+     "title": "Self-Improving AI: The Race to Autonomous Systems",
+     "f": {
+      "title": [
+       "Can self-improving AI overcome reward hacking and hardware limits?",
+       "Self-Improving AI: The Race to Autonomous Systems"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442270680001csK4",
+     "inst": "1780442270680001csK4",
+     "code": "HMC206-S",
+     "title": "Absorbing AI costs? Stop paying for idle GPUs on Amazon EKS",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442271758001cdox",
+     "inst": "1780442271758001cdox",
+     "code": "DAT202-S",
+     "title": "Building a live context layer at Crane Worldwide Logistics (Sponsored by Materialize)",
+     "f": {
+      "title": [
+       "Powering Interactive Agents with Live Context (sponsored by Materialize)",
+       "Building a live context layer at Crane Worldwide Logistics (Sponsored by Materialize)"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1793291508106001D7Sa",
+     "inst": "1793291508106001D7Sa",
+     "code": "COP212",
+     "title": "Achieving Operational Excellence at Scale with AWS Unified Operations",
+     "f": {
+      "speakers": [
+       [],
+       [
+        "Josh Sherman"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1789513466364001L6Qq",
+     "inst": "1789513466364001L6Qq",
+     "code": "ACT076",
+     "title": "Hydrate & Help",
+     "f": {
+      "end": [
+       "2026-12-03T01:30:00Z",
+       "2026-12-03T02:30:00Z"
+      ],
+      "dur": [
+       480,
+       540
+      ]
+     }
+    },
+    {
+     "id": "1787852034150001jjQs",
+     "inst": "1787852034150001jjQs",
+     "code": "AWS114-R2",
+     "title": "Builder Zone in the Expo",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1784231861853001Etg9",
+     "inst": "1784231861853001Etg9",
+     "code": "TNC208",
+     "title": "Automate Penetration Tests with AWS Continuum for Penetration Testing",
+     "f": {
+      "title": [
+       "Automate Penetration Tests with AWS Security Agent",
+       "Automate Penetration Tests with AWS Continuum for Penetration Testing"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441488151001GHxU",
+     "inst": "1780441488151001GHxU",
+     "code": "AIM380-S",
+     "title": "Clinical Trials, Reimagined at the Speed of AI (sponsored by PwC)",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1790358221923001iYxw",
+     "inst": "1790358221923001iYxw",
+     "code": "STG308-R1",
+     "title": "Accelerate data migrations with AWS DataSync at any scale",
+     "f": {
+      "speakers": [
+       [
+        "Sravan Rachiraju",
+        "Tugba Goksel"
+       ],
+       [
+        "Madhukumar Adavi",
+        "Tugba Goksel"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442265981001crq3",
+     "inst": "1780442265981001crq3",
+     "code": "AIM134-S",
+     "title": "Beyond Coding Agents: Inside the Self-Improving Software Factory",
+     "f": {
+      "title": [
+       "When Software Builds and Improves Itself (sponsored by Factory)",
+       "Beyond Coding Agents: Inside the Self-Improving Software Factory"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1791492157747001U5N1",
+     "inst": "1791492157747001U5N1",
+     "code": "SUP102",
+     "title": "Beyond the pilot: Why VCs are betting on FDE-led growth",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441484694001GQSW",
+     "inst": "1780441484694001GQSW",
+     "code": "AIM249-S",
+     "title": "AI spend decoded: Open the black box with FinOps for AI (sponsored by Cloudability)",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442271456001cyFh",
+     "inst": "1780442271456001cyFh",
+     "code": "ANT204-S",
+     "title": "Semantic Layer: The Foundation for AI-Ready R&D in Life Sciences (sponsored by ZS)",
+     "f": {
+      "title": [
+       "Turning Pharma Field Insights into Enterprise Intelligence (sponsored by ZS)",
+       "Semantic Layer: The Foundation for AI-Ready R&D in Life Sciences (sponsored by ZS)"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442266498001ceks",
+     "inst": "1780442266498001ceks",
+     "code": "BIZ203-S",
+     "title": "Stop building agents that stop short of enterprise execution (sponsored by IBM)",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442276829001csCG",
+     "inst": "1780442276829001csCG",
+     "code": "BIZ313",
+     "title": "Build agentic automations for business processes with Amazon Quick",
+     "f": {
+      "title": [
+       "Build agentic automations for business processes with Amazon Quick Automate",
+       "Build agentic automations for business processes with Amazon Quick"
+      ]
+     }
+    },
+    {
+     "id": "1780441466902001GACP",
+     "inst": "1780441466902001GACP",
+     "code": "COP337",
+     "title": "Wrong, Not Broken, & Why your Observability should know the difference, feat. 3M",
+     "f": {
+      "title": [
+       "Wrong, Not Broken, & Why your Observability should know the difference",
+       "Wrong, Not Broken, & Why your Observability should know the difference, feat. 3M"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441469106001G8jt",
+     "inst": "1780441469106001G8jt",
+     "code": "DAT421",
+     "title": "Reduce LLM inference cost with Amazon ElastiCache for Valkey",
+     "f": {
+      "title": [
+       "Reduce LLM inference cost with Amazon ElastiCache with Valkey",
+       "Reduce LLM inference cost with Amazon ElastiCache for Valkey"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441490215001Gi9L",
+     "inst": "1780441490215001Gi9L",
+     "code": "AIM231-S",
+     "title": "AI That Answers: PepsiCo Reimagines Customer Experience with Amazon Connect",
+     "f": {
+      "title": [
+       "AI That Answers: Customer Experiences Reimagined with Amazon Connect (sponsored by PwC)",
+       "AI That Answers: PepsiCo Reimagines Customer Experience with Amazon Connect"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442268133001cruR",
+     "inst": "1780442268133001cruR",
+     "code": "AIM141-S",
+     "title": "Breaking up with closed frontier models (sponsored by Modal)",
+     "f": {
+      "title": [
+       "Breaking up with closed frontier models",
+       "Breaking up with closed frontier models (sponsored by Modal)"
+      ],
+      "code": [
+       "AIM379-S",
+       "AIM141-S"
+      ]
+     }
+    },
+    {
+     "id": "1780442269063001cDiT",
+     "inst": "1780442269063001cDiT",
+     "code": "COP201-S",
+     "title": "Trust Issues: A Healthy Relationship With Your AI Agents (sponsored by MontyCloud)",
+     "f": {
+      "code": [
+       "COP101-S",
+       "COP201-S"
+      ],
+      "level": [
+       200,
+       100
+      ]
+     }
+    },
+    {
+     "id": "1780442271094001cKAN",
+     "inst": "1780442271094001cKAN",
+     "code": "ARC209-S",
+     "title": "AI-ready tables, served fresh. Hold the custom pipelines. (sponsored by Confluent)",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441488097001G1EO",
+     "inst": "1780441488097001G1EO",
+     "code": "COP347-S",
+     "title": "AI at full speed without crashing: The enterprise blueprint (sponsored by HashiCorp)",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442268949001cp6f",
+     "inst": "1780442268949001cp6f",
+     "code": "MAM420-S",
+     "title": "Planning for migrations, and operating databases on AWS with Redgate (sponsored by RedGate)",
+     "f": {
+      "title": [
+       "Planning for migrations, and operating databases on AWS with Redgate (sponsored by Red Gate)",
+       "Planning for migrations, and operating databases on AWS with Redgate (sponsored by RedGate)"
+      ]
+     }
+    },
+    {
+     "id": "1780441467570001GW41",
+     "inst": "1780441467570001GW41",
+     "code": "COM319",
+     "title": "Stop Rolling Back AI Agents: Production Patterns That Work",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1789513464459001LpfS",
+     "inst": "1789513464459001LpfS",
+     "code": "ACT010-R3",
+     "title": "Byte Club",
+     "f": {
+      "end": [
+       "2026-12-04T01:30:00Z",
+       "2026-12-04T01:00:00Z"
+      ],
+      "dur": [
+       570,
+       540
+      ]
+     }
+    },
+    {
+     "id": "1789513465004001LBqA",
+     "inst": "1789513465004001LBqA",
+     "code": "ACT011-R3",
+     "title": "Bling Bar",
+     "f": {
+      "end": [
+       "2026-12-04T01:30:00Z",
+       "2026-12-04T01:00:00Z"
+      ],
+      "dur": [
+       570,
+       540
+      ]
+     }
+    },
+    {
+     "id": "1791492158123001UKPl",
+     "inst": "1791492158123001UKPl",
+     "code": "SUP104",
+     "title": "World Models: The New Frontier for Interactive Media",
+     "f": {
+      "title": [
+       "Serving world models in under 40ms across 10,000 concurrent sessions",
+       "World Models: The New Frontier for Interactive Media"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1789513466651001LCL0",
+     "inst": "1789513466651001LCL0",
+     "code": "ACT077",
+     "title": "Hydrate & Help",
+     "f": {
+      "end": [
+       "2026-12-04T01:30:00Z",
+       "2026-12-04T01:00:00Z"
+      ],
+      "dur": [
+       480,
+       450
+      ]
+     }
+    },
+    {
+     "id": "1787852034298001jIKi",
+     "inst": "1787852034298001jIKi",
+     "code": "AWS114-R3",
+     "title": "Builder Zone in the Expo",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441481766001Gm9D",
+     "inst": "1780441481766001Gm9D",
+     "code": "SVS339",
+     "title": "Managing APIs on AWS",
+     "f": {
+      "title": [
+       "What's new with Amazon API Gateway",
+       "Managing APIs on AWS"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442269999001csdv",
+     "inst": "1780442269999001csdv",
+     "code": "HMC205-S",
+     "title": "Run hybrid multi-cloud networks with one operational model",
+     "f": {
+      "title": [
+       "From Dashboards to Agents: Building an Agentic NOC (sponsored by Selector AI)",
+       "Run hybrid multi-cloud networks with one operational model"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1790358250972001iB0f",
+     "inst": "1790358250972001iB0f",
+     "code": "ANT316-R1",
+     "title": "From prompt to pipeline: Agentic data engineering",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442256149001ccAT",
+     "inst": "1780442256149001ccAT",
+     "code": "DVT227",
+     "title": "Build a team shared agent workflow from issue to tested PR",
+     "f": {
+      "speakers": [
+       [
+        "Zezhen Xu"
+       ],
+       [
+        "Sujay Narsale",
+        "Zezhen Xu"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441470313001GE2N",
+     "inst": "1780441470313001GE2N",
+     "code": "DVT330",
+     "title": "Outrun technical debt in the age of autonomous development",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441479036001GMnx",
+     "inst": "1780441479036001GMnx",
+     "code": "MAM222",
+     "title": "AWS migration agents fast-tracking SAP modernization",
+     "f": {
+      "speakers": [
+       [
+        "Alex Kakhanovich",
+        "Erik Kamman"
+       ],
+       [
+        "Alex Kakhanovich",
+        "Erik Kamman",
+        "Rob Lawrence"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1792018978955001Lvui",
+     "inst": "1792018978955001Lvui",
+     "code": "SUP313",
+     "title": "Implementing an eval strategy while building AgentCore agents without a QA team",
+     "f": {
+      "title": [
+       "Run agent evals and tuning on AgentCore without a QA team",
+       "Implementing an eval strategy while building AgentCore agents without a QA team"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442390221001Nwi2",
+     "inst": "1780442390221001Nwi2",
+     "code": "AIM3300-S",
+     "title": "Agents at Work, Humans in Control: Stopping the Action No Single Check Can See",
+     "f": {
+      "title": [
+       "Defending the Three Lanes: Preventing Toxic Agentic Combinations with Cyera and AWS (sponsored by Cyera)",
+       "Agents at Work, Humans in Control: Stopping the Action No Single Check Can See"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1790358245912001ii19",
+     "inst": "1790358245912001ii19",
+     "code": "AIM312-R1",
+     "title": "Beyond fine-tuning: RL for reasoning agents with AWS Trainium",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441502555001GzrA",
+     "inst": "1780441502555001GzrA",
+     "code": "STG308-R",
+     "title": "Accelerate data migrations with AWS DataSync at any scale",
+     "f": {
+      "speakers": [
+       [
+        "Sravan Rachiraju",
+        "Tugba Goksel"
+       ],
+       [
+        "Madhukumar Adavi",
+        "Tugba Goksel"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442251295001c8MV",
+     "inst": "1780442251295001c8MV",
+     "code": "SVS331-R",
+     "title": "Serverless Java in 2026",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441481890001GhKs",
+     "inst": "1780441481890001GhKs",
+     "code": "SVS348",
+     "title": "Serverless compute built for the web",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1792450370692001snVp",
+     "inst": "1792450370692001snVp",
+     "code": "ACT017",
+     "title": "Building Together Reception",
+     "f": {
+      "room": [
+       "Madame Tussauds (located in The Venetian)",
+       "Tableau (located in Wynn)"
+      ]
+     }
+    },
+    {
+     "id": "1780442221624001cqr7",
+     "inst": "1780442221624001cqr7",
+     "code": "HMC322",
+     "title": "Designing Portable Multicloud Architectures with Open Standards",
+     "f": {
+      "title": [
+       "Designing Portable Multicloud Architectures with Open Specifications",
+       "Designing Portable Multicloud Architectures with Open Standards"
+      ]
+     }
+    }
+   ],
+   "unknownRooms": []
+  },
+  {
    "at": "2026-11-06T18:43:10Z",
    "milestones": [],
    "added": [
