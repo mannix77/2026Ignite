@@ -1,7 +1,7 @@
 {
  "source": "https://catalog.awsevents.com/api/sessions",
  "event": "reinvent2026",
- "fetchedAt": "2026-11-07T06:43:06Z",
+ "fetchedAt": "2026-11-07T12:43:21Z",
  "count": 2484,
  "sessions": [
   {
@@ -5763,7 +5763,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T04:16:30Z",
+   "modified": "2026-11-07T11:11:25Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -13929,7 +13929,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T04:16:30Z",
+   "modified": "2026-11-07T11:11:25Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -43630,7 +43630,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T01:52:11Z",
+   "modified": "2026-11-07T08:17:22Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -67425,7 +67425,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T06:03:49Z",
+   "modified": "2026-11-07T12:13:35Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -103340,7 +103340,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T04:08:38Z",
+   "modified": "2026-11-07T11:03:58Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -116073,91 +116073,6 @@
    ]
   },
   {
-   "sessionID": "1790358219069001iXD0",
-   "code": "MAM317-R1",
-   "title": "How to decompose Oracle and SQL Server into purpose-built databases",
-   "abstract": "A monolithic traditional RDBMS databases serves transactions, reporting, and search, but serves none of them well. In this chalk talk, we'll whiteboard how to decompose a proprietary database into purpose-built layers on AWS, including Amazon Aurora PostgreSQL for transactional workloads, Aurora pgvector for semantic search and GenAI (RAG), and Amazon Redshift via zero-ETL for real-time analytics, for a smarter modernization approach. We'll walk through how this pattern eliminates licensing costs, removes ETL pipelines, and turns your operational data into an AI-ready platform. Come ready to whiteboard your decomposition use case.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-07T03:42:09Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Databases",
-     "Migration & Modernization"
-    ],
-    "AreaofInterest": [
-     "Microsoft & .NET",
-     "Oracle",
-     "Agentic AI"
-    ],
-    "Role": [
-     "Data Engineer",
-     "Developer / Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Aurora",
-     "Amazon DynamoDB",
-     "Amazon OpenSearch Service"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Anand Bilgaiyan",
-     "title": "Senior Specialist Partner solution Architect Enterprise Transformation",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Yogi Barot",
-     "title": "Tech Leader, Migration",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360376851001AU1j",
-     "date": "2026-12-01",
-     "startTime": "13:00",
-     "endTime": "14:00",
-     "utcStartTime": "2026/12/01 21:00:00",
-     "utcEndTime": "2026/12/01 22:00:00",
-     "length": 60,
-     "room": "MGM Grand | Level 1 | Boulevard 163",
-     "roomId": "1789591920202001b2p2",
-     "capacity": "94",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442247583001cddI",
    "code": "MAM317-R",
    "title": "How to decompose Oracle and SQL Server into purpose-built databases",
@@ -116236,6 +116151,91 @@
      "room": "Caesars Palace | Promenade South | Octavius 14",
      "roomId": "1789591920078001bjro",
      "capacity": "70",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358219069001iXD0",
+   "code": "MAM317-R1",
+   "title": "How to decompose Oracle and SQL Server into purpose-built databases",
+   "abstract": "A monolithic traditional RDBMS databases serves transactions, reporting, and search, but serves none of them well. In this chalk talk, we'll whiteboard how to decompose a proprietary database into purpose-built layers on AWS, including Amazon Aurora PostgreSQL for transactional workloads, Aurora pgvector for semantic search and GenAI (RAG), and Amazon Redshift via zero-ETL for real-time analytics, for a smarter modernization approach. We'll walk through how this pattern eliminates licensing costs, removes ETL pipelines, and turns your operational data into an AI-ready platform. Come ready to whiteboard your decomposition use case.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-07T08:30:55Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Databases",
+     "Migration & Modernization"
+    ],
+    "AreaofInterest": [
+     "Microsoft & .NET",
+     "Oracle",
+     "Agentic AI"
+    ],
+    "Role": [
+     "Data Engineer",
+     "Developer / Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Aurora",
+     "Amazon DynamoDB",
+     "Amazon OpenSearch Service"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Anand Bilgaiyan",
+     "title": "Senior Specialist Partner solution Architect Enterprise Transformation",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Yogi Barot",
+     "title": "Tech Leader, Migration",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360376851001AU1j",
+     "date": "2026-12-01",
+     "startTime": "13:00",
+     "endTime": "14:00",
+     "utcStartTime": "2026/12/01 21:00:00",
+     "utcEndTime": "2026/12/01 22:00:00",
+     "length": 60,
+     "room": "MGM Grand | Level 1 | Boulevard 163",
+     "roomId": "1789591920202001b2p2",
+     "capacity": "94",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -127574,15 +127574,15 @@
    },
    "speakers": [
     {
-     "name": "Emmanuel Isimah",
-     "title": "Senior Solutions Architect",
-     "company": "amazon web services",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Victor Okonyia",
      "title": "Senior Technical Account Manager",
      "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Emmanuel Isimah",
+     "title": "Senior Solutions Architect",
+     "company": "amazon web services",
      "role": "Internal Speaker"
     }
    ],
@@ -133482,7 +133482,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T03:52:51Z",
+   "modified": "2026-11-07T08:44:39Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -136855,7 +136855,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T06:23:18Z",
+   "modified": "2026-11-07T11:36:18Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -138844,7 +138844,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T04:07:03Z",
+   "modified": "2026-11-07T09:16:54Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -139485,7 +139485,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T03:48:56Z",
+   "modified": "2026-11-07T12:05:28Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -157228,7 +157228,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T04:02:22Z",
+   "modified": "2026-11-07T11:36:18Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -157408,7 +157408,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T06:03:49Z",
+   "modified": "2026-11-07T12:17:05Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -166379,89 +166379,6 @@
    ]
   },
   {
-   "sessionID": "1790358242568001iHNl",
-   "code": "NET301-R1",
-   "title": "See the routes change: Live BGP with AWS Direct Connect",
-   "abstract": "AWS Direct Connect can feel like a mystery beneath the surface, and many customers never get hands-on access. In this show and tell, we change that. Starting from a live connection and on-premises router, watch a Direct Connect maintenance unfold in real-time from both sides of the BGP session. See how AWS signals maintenance ahead of time through AS path prepending, graceful shutdown, and how traffic shifts to the backup path before any route is withdrawn. Whether you run 1G or hundreds of 100G ports, leave with the policy and checklist to get through your next maintenance without a page.",
-   "type": "Code talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-06T23:58:50Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Code talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Customer story",
-     "Discussion"
-    ],
-    "Topic": [
-     "Hybrid Cloud & Multicloud",
-     "Networking & Content Delivery"
-    ],
-    "AreaofInterest": [
-     "Network & Infrastructure Security"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "IT Administrator",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "AWS Direct Connect",
-     "AWS Interconnect"
-    ],
-    "Venue": [
-     "Caesars Palace"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Harold Lotz",
-     "title": "Senior Network Development Engineer",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Josh Dean",
-     "title": "Sr Product Manager-Tech, Direct Connect",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360373319001Aib6",
-     "date": "2026-12-01",
-     "startTime": "11:30",
-     "endTime": "12:30",
-     "utcStartTime": "2026/12/01 19:30:00",
-     "utcEndTime": "2026/12/01 20:30:00",
-     "length": 60,
-     "room": "Caesars Palace | Promenade South | Octavius 4 | Content Hub | Code Talk",
-     "roomId": "1789591920119001bHvX",
-     "capacity": "80",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442257039001cTAG",
    "code": "NET301-R",
    "title": "See the routes change: Live BGP with AWS Direct Connect",
@@ -166537,6 +166454,89 @@
      "room": "MGM Grand | Level 1 | Boulevard 159",
      "roomId": "1789591920185001bqzE",
      "capacity": "66",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358242568001iHNl",
+   "code": "NET301-R1",
+   "title": "See the routes change: Live BGP with AWS Direct Connect",
+   "abstract": "AWS Direct Connect can feel like a mystery beneath the surface, and many customers never get hands-on access. In this show and tell, we change that. Starting from a live connection and on-premises router, watch a Direct Connect maintenance unfold in real-time from both sides of the BGP session. See how AWS signals maintenance ahead of time through AS path prepending, graceful shutdown, and how traffic shifts to the backup path before any route is withdrawn. Whether you run 1G or hundreds of 100G ports, leave with the policy and checklist to get through your next maintenance without a page.",
+   "type": "Code talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-07T08:28:45Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Code talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Customer story",
+     "Discussion"
+    ],
+    "Topic": [
+     "Hybrid Cloud & Multicloud",
+     "Networking & Content Delivery"
+    ],
+    "AreaofInterest": [
+     "Network & Infrastructure Security"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "IT Administrator",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "AWS Direct Connect",
+     "AWS Interconnect"
+    ],
+    "Venue": [
+     "Caesars Palace"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Josh Dean",
+     "title": "Sr Product Manager-Tech, Direct Connect",
+     "company": "Amazon",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Harold Lotz",
+     "title": "Senior Network Development Engineer",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360373319001Aib6",
+     "date": "2026-12-01",
+     "startTime": "11:30",
+     "endTime": "12:30",
+     "utcStartTime": "2026/12/01 19:30:00",
+     "utcEndTime": "2026/12/01 20:30:00",
+     "length": 60,
+     "room": "Caesars Palace | Promenade South | Octavius 4 | Content Hub | Code Talk",
+     "roomId": "1789591920119001bHvX",
+     "capacity": "80",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -167294,7 +167294,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T22:52:14Z",
+   "modified": "2026-11-07T08:17:22Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -167329,15 +167329,15 @@
    },
    "speakers": [
     {
-     "name": "Weitong Ruan",
-     "title": "Senior Applied Science Manager",
-     "company": "Amazon",
-     "role": "External Speaker"
-    },
-    {
      "name": "Fan Yang",
      "title": "Senior Applied Scientist",
      "company": "Amazon.com Inc",
+     "role": "External Speaker"
+    },
+    {
+     "name": "Weitong Ruan",
+     "title": "Senior Applied Science Manager",
+     "company": "Amazon",
      "role": "External Speaker"
     }
    ],
@@ -174291,88 +174291,6 @@
    ]
   },
   {
-   "sessionID": "1789063766046001htb0",
-   "code": "TNC334-R1",
-   "title": "Streamlining Claims Processing with Amazon Quick",
-   "abstract": "Claims adjusters spend hours retrieving policy data, applying business rules, and drafting decision letters manually. In this SimuLearn session, you use Amazon Quick Automate to orchestrate the entire claims process. You configure REST API and MCP connectors, build a multi-step workflow with Custom Agent steps, and chain together policy retrieval, rules validation, and AI-powered letter generation. The workflow handles missing data gracefully and stores audit-ready decision letters in S3. ",
-   "type": "Lab",
-   "length": 120,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-07T02:48:30Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Lab"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Artificial Intelligence",
-     "Business Agents"
-    ],
-    "AreaofInterest": [
-     "Agentic AI",
-     "Training & Certification"
-    ],
-    "Role": [
-     "Data Engineer",
-     "IT Professional / Technical Manager"
-    ],
-    "Services": [
-     "Amazon Quick"
-    ],
-    "Venue": [
-     "Caesars Palace"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Ryan Forger",
-     "title": "Senior Technical Instructor",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Ryan Leavitt",
-     "title": "Technical Lab Developer",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1791232571347001megX",
-     "date": "2026-12-03",
-     "startTime": "12:30",
-     "endTime": "14:30",
-     "utcStartTime": "2026/12/03 20:30:00",
-     "utcEndTime": "2026/12/03 22:30:00",
-     "length": 120,
-     "room": "Caesars Palace | Emperors Level | Augustus Ballroom V",
-     "roomId": "1789591919870001bKOb",
-     "capacity": "200",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1784231862630001EwND",
    "code": "TNC334-R",
    "title": "Streamlining Claims Processing with Amazon Quick",
@@ -174444,6 +174362,88 @@
      "endTime": "15:00",
      "utcStartTime": "2026/11/30 21:00:00",
      "utcEndTime": "2026/11/30 23:00:00",
+     "length": 120,
+     "room": "Caesars Palace | Emperors Level | Augustus Ballroom V",
+     "roomId": "1789591919870001bKOb",
+     "capacity": "200",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1789063766046001htb0",
+   "code": "TNC334-R1",
+   "title": "Streamlining Claims Processing with Amazon Quick",
+   "abstract": "Claims adjusters spend hours retrieving policy data, applying business rules, and drafting decision letters manually. In this SimuLearn session, you use Amazon Quick Automate to orchestrate the entire claims process. You configure REST API and MCP connectors, build a multi-step workflow with Custom Agent steps, and chain together policy retrieval, rules validation, and AI-powered letter generation. The workflow handles missing data gracefully and stores audit-ready decision letters in S3. ",
+   "type": "Lab",
+   "length": 120,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-07T12:13:35Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Lab"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Artificial Intelligence",
+     "Business Agents"
+    ],
+    "AreaofInterest": [
+     "Agentic AI",
+     "Training & Certification"
+    ],
+    "Role": [
+     "Data Engineer",
+     "IT Professional / Technical Manager"
+    ],
+    "Services": [
+     "Amazon Quick"
+    ],
+    "Venue": [
+     "Caesars Palace"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Ryan Forger",
+     "title": "Senior Technical Instructor",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Ryan Leavitt",
+     "title": "Technical Lab Developer",
+     "company": "Amazon",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1791232571347001megX",
+     "date": "2026-12-03",
+     "startTime": "12:30",
+     "endTime": "14:30",
+     "utcStartTime": "2026/12/03 20:30:00",
+     "utcEndTime": "2026/12/03 22:30:00",
      "length": 120,
      "room": "Caesars Palace | Emperors Level | Augustus Ballroom V",
      "roomId": "1789591919870001bKOb",
