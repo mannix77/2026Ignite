@@ -1,7 +1,7 @@
 {
  "source": "https://catalog.awsevents.com/api/sessions",
  "event": "reinvent2026",
- "fetchedAt": "2026-11-08T00:51:00Z",
+ "fetchedAt": "2026-11-08T06:43:14Z",
  "count": 2484,
  "sessions": [
   {
@@ -8464,7 +8464,7 @@
    "length": 180,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-08T00:05:43Z",
+   "modified": "2026-11-08T01:58:09Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -26647,7 +26647,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-08T02:27:58Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -26696,14 +26696,14 @@
    },
    "speakers": [
     {
-     "name": "Chiara Marzano",
-     "title": "Customer Engineer",
+     "name": "Arnav Khare",
+     "title": "Principal Solutions Architect",
      "company": "AWS",
      "role": "Internal Speaker"
     },
     {
-     "name": "Arnav Khare",
-     "title": "Principal Solutions Architect",
+     "name": "Chiara Marzano",
+     "title": "Customer Engineer",
      "company": "AWS",
      "role": "Internal Speaker"
     }
@@ -35079,7 +35079,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-08T01:27:05Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -35125,15 +35125,15 @@
    },
    "speakers": [
     {
-     "name": "Yogesh Bhatia",
-     "title": "Principal Modernization PSA",
-     "company": "AWS Australia Pty Ltd",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Diego Dalmolin",
      "title": "Solutions Architect",
      "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Yogesh Bhatia",
+     "title": "Principal Modernization PSA",
+     "company": "AWS Australia Pty Ltd",
      "role": "Internal Speaker"
     }
    ],
@@ -39843,7 +39843,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T21:18:17Z",
+   "modified": "2026-11-08T01:36:15Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -58832,110 +58832,6 @@
    ]
   },
   {
-   "sessionID": "1790358249041001ilXF",
-   "code": "SVS318-R1",
-   "title": "Building Serverless applications at AI speed",
-   "abstract": "Manually wiring up Lambda functions, API Gateway routes, and IaC templates for every new service is repetitive work that AI handles well. In this builders' session, use Kiro to go from natural language specifications to a deployed serverless application. You'll configure MCP tool servers to give the AI agent access to AWS APIs, author steering documents that produce consistent output, and iterate on generated infrastructure until it passes validation. Walk away with techniques for getting reliable, production-ready code from AI-assisted workflows. Bring your laptop.",
-   "type": "Builders' session",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Builders' session"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Application Integration",
-     "Serverless"
-    ],
-    "AreaofInterest": [
-     "Generative AI",
-     "Lambda-Based Applications",
-     "DevOps"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "DevOps Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon API Gateway",
-     "AWS Lambda",
-     "Kiro"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Josh Rodgers",
-     "title": "Sr. Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Archana Venkitaramanan",
-     "title": "Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Charleston Telles",
-     "title": "Senior Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Sahil Malhotra",
-     "title": "Solutions Architect FSI, AWS",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "David Lamb",
-     "title": "Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360381480001ACc0",
-     "date": "2026-12-02",
-     "startTime": "09:00",
-     "endTime": "10:00",
-     "utcStartTime": "2026/12/02 17:00:00",
-     "utcEndTime": "2026/12/02 18:00:00",
-     "length": 60,
-     "room": "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Builders' Session 1",
-     "roomId": "1789591920413001bvC3",
-     "capacity": "50",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780441493074001GqcF",
    "code": "SVS318-R",
    "title": "Building Serverless applications at AI speed",
@@ -58991,15 +58887,15 @@
    },
    "speakers": [
     {
-     "name": "Josh Rodgers",
-     "title": "Sr. Solutions Architect",
+     "name": "Sahil Malhotra",
+     "title": "Solutions Architect FSI, AWS",
      "company": "AWS",
      "role": "Internal Speaker"
     },
     {
-     "name": "Archana Venkitaramanan",
-     "title": "Solutions Architect",
-     "company": "Amazon Web Services",
+     "name": "Josh Rodgers",
+     "title": "Sr. Solutions Architect",
+     "company": "AWS",
      "role": "Internal Speaker"
     },
     {
@@ -59009,15 +58905,15 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Sahil Malhotra",
-     "title": "Solutions Architect FSI, AWS",
+     "name": "David Lamb",
+     "title": "Solutions Architect",
      "company": "AWS",
      "role": "Internal Speaker"
     },
     {
-     "name": "David Lamb",
+     "name": "Archana Venkitaramanan",
      "title": "Solutions Architect",
-     "company": "AWS",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     }
    ],
@@ -59032,6 +58928,110 @@
      "length": 60,
      "room": "Caesars Forum | Level 1 | Alliance 311",
      "roomId": "1789591919636004boBN",
+     "capacity": "50",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358249041001ilXF",
+   "code": "SVS318-R1",
+   "title": "Building Serverless applications at AI speed",
+   "abstract": "Manually wiring up Lambda functions, API Gateway routes, and IaC templates for every new service is repetitive work that AI handles well. In this builders' session, use Kiro to go from natural language specifications to a deployed serverless application. You'll configure MCP tool servers to give the AI agent access to AWS APIs, author steering documents that produce consistent output, and iterate on generated infrastructure until it passes validation. Walk away with techniques for getting reliable, production-ready code from AI-assisted workflows. Bring your laptop.",
+   "type": "Builders' session",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-06T20:31:24Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Builders' session"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Application Integration",
+     "Serverless"
+    ],
+    "AreaofInterest": [
+     "Generative AI",
+     "Lambda-Based Applications",
+     "DevOps"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "DevOps Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon API Gateway",
+     "AWS Lambda",
+     "Kiro"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Sahil Malhotra",
+     "title": "Solutions Architect FSI, AWS",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Josh Rodgers",
+     "title": "Sr. Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Charleston Telles",
+     "title": "Senior Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "David Lamb",
+     "title": "Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Archana Venkitaramanan",
+     "title": "Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360381480001ACc0",
+     "date": "2026-12-02",
+     "startTime": "09:00",
+     "endTime": "10:00",
+     "utcStartTime": "2026/12/02 17:00:00",
+     "utcEndTime": "2026/12/02 18:00:00",
+     "length": 60,
+     "room": "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Builders' Session 1",
+     "roomId": "1789591920413001bvC3",
      "capacity": "50",
      "inPersonTime": true,
      "virtualTime": false,
@@ -63793,102 +63793,6 @@
    ]
   },
   {
-   "sessionID": "1780442223405001cufq",
-   "code": "API306-R",
-   "title": "Build secure APIs faster with Amazon API Gateway and Kiro CLI",
-   "abstract": "Secure your APIs with confidence and build them faster. In this builders' session, dive into Amazon API Gateway authorization strategies including Amazon Cognito user pools, Amazon Verified Permissions, Lambda custom authorizers, IAM authorizers, and machine-to-machine scenarios. Through hands-on exercises, implement each strategy and understand their trade-offs. Once secured, ship faster—use Kiro CLI, OpenAPI, and MCP servers to go from spec to deployed API in minutes. You must bring your laptop to participate.",
-   "type": "Builders' session",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Builders' session"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Application Integration"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon API Gateway",
-     "Kiro"
-    ],
-    "Venue": [
-     "Caesars Forum"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Jacob Cravinho",
-     "title": "Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Josh Rodgers",
-     "title": "Sr. Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Archana Venkitaramanan",
-     "title": "Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Raphael Lima",
-     "title": "Senior Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "David Lamb",
-     "title": "Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025517711001CVQ5",
-     "date": "2026-12-02",
-     "startTime": "11:30",
-     "endTime": "12:30",
-     "utcStartTime": "2026/12/02 19:30:00",
-     "utcEndTime": "2026/12/02 20:30:00",
-     "length": 60,
-     "room": "Caesars Forum | Level 1 | Forum 120 | Content Hub | Builders' Session 2",
-     "roomId": "1789591919743001bno1",
-     "capacity": "50",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358234383001inZT",
    "code": "API306-R1",
    "title": "Build secure APIs faster with Amazon API Gateway and Kiro CLI",
@@ -63936,21 +63840,9 @@
    },
    "speakers": [
     {
-     "name": "Jacob Cravinho",
-     "title": "Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Josh Rodgers",
      "title": "Sr. Solutions Architect",
      "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Archana Venkitaramanan",
-     "title": "Solutions Architect",
-     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     },
     {
@@ -63960,9 +63852,21 @@
      "role": "Internal Speaker"
     },
     {
+     "name": "Jacob Cravinho",
+     "title": "Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
      "name": "David Lamb",
      "title": "Solutions Architect",
      "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Archana Venkitaramanan",
+     "title": "Solutions Architect",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     }
    ],
@@ -63977,6 +63881,102 @@
      "length": 60,
      "room": "Caesars Forum | Level 1 | Alliance 311",
      "roomId": "1789591919636004boBN",
+     "capacity": "50",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442223405001cufq",
+   "code": "API306-R",
+   "title": "Build secure APIs faster with Amazon API Gateway and Kiro CLI",
+   "abstract": "Secure your APIs with confidence and build them faster. In this builders' session, dive into Amazon API Gateway authorization strategies including Amazon Cognito user pools, Amazon Verified Permissions, Lambda custom authorizers, IAM authorizers, and machine-to-machine scenarios. Through hands-on exercises, implement each strategy and understand their trade-offs. Once secured, ship faster—use Kiro CLI, OpenAPI, and MCP servers to go from spec to deployed API in minutes. You must bring your laptop to participate.",
+   "type": "Builders' session",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-06T20:31:24Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Builders' session"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Application Integration"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon API Gateway",
+     "Kiro"
+    ],
+    "Venue": [
+     "Caesars Forum"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Josh Rodgers",
+     "title": "Sr. Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Raphael Lima",
+     "title": "Senior Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Jacob Cravinho",
+     "title": "Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "David Lamb",
+     "title": "Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Archana Venkitaramanan",
+     "title": "Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025517711001CVQ5",
+     "date": "2026-12-02",
+     "startTime": "11:30",
+     "endTime": "12:30",
+     "utcStartTime": "2026/12/02 19:30:00",
+     "utcEndTime": "2026/12/02 20:30:00",
+     "length": 60,
+     "room": "Caesars Forum | Level 1 | Forum 120 | Content Hub | Builders' Session 2",
+     "roomId": "1789591919743001bno1",
      "capacity": "50",
      "inPersonTime": true,
      "virtualTime": false,
@@ -64375,7 +64375,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-08T00:32:51Z",
+   "modified": "2026-11-08T02:10:46Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -67735,7 +67735,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-08T00:37:16Z",
+   "modified": "2026-11-08T03:32:07Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -87976,7 +87976,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T23:39:32Z",
+   "modified": "2026-11-08T02:23:53Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -96198,7 +96198,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T19:17:54Z",
+   "modified": "2026-11-08T01:27:05Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -104468,92 +104468,6 @@
    ]
   },
   {
-   "sessionID": "1780441497901001GMk5",
-   "code": "CMP409-R",
-   "title": "Getting the capacity you need: EC2 Launch APIs and Intelligent Auto Scaling deep dive",
-   "abstract": "Getting the right compute at the right time is a two-part challenge: launching instances effectively and scaling them intelligently. This deep dive covers both. First, we explore RunInstances—EC2's oldest and most important API—sharing launch best practices, how flexibility helps you get the capacity you need, and how EC2 Fleet incorporates advanced strategies into your calls. Then we go under the hood of EC2 Auto Scaling, and the intelligence that also scales DynamoDB, WorkSpaces, EMR, SageMaker AI, and Aurora. Learn how to use target tracking, predictive scaling, and auto-tuning to automatically and intelligently scale your workloads.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "400 – Expert"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Artificial Intelligence",
-     "Cloud Operations",
-     "Compute"
-    ],
-    "AreaofInterest": [
-     "Event-Driven Architecture",
-     "Cost Optimization",
-     "Automation"
-    ],
-    "Role": [
-     "DevOps Engineer",
-     "IT Professional / Technical Manager",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Elastic Compute Cloud (Amazon EC2)",
-     "Amazon SageMaker",
-     "Amazon WorkSpaces"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Justin Kwong",
-     "title": "Sr. Software Dev Engineer",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Samruddhi Kochkar",
-     "title": "Senior Software Engineer",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025486367001Ck8I",
-     "date": "2026-11-30",
-     "startTime": "13:00",
-     "endTime": "14:00",
-     "utcStartTime": "2026/11/30 21:00:00",
-     "utcEndTime": "2026/11/30 22:00:00",
-     "length": 60,
-     "room": "MGM Grand | Level 1 | Boulevard 158",
-     "roomId": "1789591920175001be2U",
-     "capacity": "78",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358255097001ihbh",
    "code": "CMP409-R1",
    "title": "Getting the capacity you need: EC2 Launch APIs and Intelligent Auto Scaling deep dive",
@@ -104633,6 +104547,92 @@
      "room": "Caesars Palace | Promenade South | Octavius 14",
      "roomId": "1789591920078001bjro",
      "capacity": "70",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780441497901001GMk5",
+   "code": "CMP409-R",
+   "title": "Getting the capacity you need: EC2 Launch APIs and Intelligent Auto Scaling deep dive",
+   "abstract": "Getting the right compute at the right time is a two-part challenge: launching instances effectively and scaling them intelligently. This deep dive covers both. First, we explore RunInstances—EC2's oldest and most important API—sharing launch best practices, how flexibility helps you get the capacity you need, and how EC2 Fleet incorporates advanced strategies into your calls. Then we go under the hood of EC2 Auto Scaling, and the intelligence that also scales DynamoDB, WorkSpaces, EMR, SageMaker AI, and Aurora. Learn how to use target tracking, predictive scaling, and auto-tuning to automatically and intelligently scale your workloads.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-08T01:13:17Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "400 – Expert"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Artificial Intelligence",
+     "Cloud Operations",
+     "Compute"
+    ],
+    "AreaofInterest": [
+     "Event-Driven Architecture",
+     "Cost Optimization",
+     "Automation"
+    ],
+    "Role": [
+     "DevOps Engineer",
+     "IT Professional / Technical Manager",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Elastic Compute Cloud (Amazon EC2)",
+     "Amazon SageMaker",
+     "Amazon WorkSpaces"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Samruddhi Kochkar",
+     "title": "Senior Software Engineer",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Justin Kwong",
+     "title": "Sr. Software Dev Engineer",
+     "company": "Amazon",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025486367001Ck8I",
+     "date": "2026-11-30",
+     "startTime": "13:00",
+     "endTime": "14:00",
+     "utcStartTime": "2026/11/30 21:00:00",
+     "utcEndTime": "2026/11/30 22:00:00",
+     "length": 60,
+     "room": "MGM Grand | Level 1 | Boulevard 158",
+     "roomId": "1789591920175001be2U",
+     "capacity": "78",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -111839,16 +111839,16 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Jas Chhabra",
-     "title": "Sr. Software Dev Manager",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Vidheer Gadikota",
      "title": "General Manager",
      "company": "Delta Air Lines",
      "role": "External Speaker"
+    },
+    {
+     "name": "Jas Chhabra",
+     "title": "Sr. Software Dev Manager",
+     "company": "Amazon",
+     "role": "Internal Speaker"
     }
    ],
    "times": [
@@ -137453,7 +137453,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-08T00:34:32Z",
+   "modified": "2026-11-08T03:05:09Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -139454,7 +139454,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T21:51:08Z",
+   "modified": "2026-11-08T04:17:45Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -144019,7 +144019,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T21:41:31Z",
+   "modified": "2026-11-08T01:35:35Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -145182,7 +145182,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-08T02:20:42Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -147021,7 +147021,7 @@
    "length": 90,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T21:26:04Z",
+   "modified": "2026-11-08T02:29:08Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -152303,7 +152303,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-08T03:09:24Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -153915,7 +153915,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-08T01:42:52Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -153953,14 +153953,14 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Piyali Kamra",
-     "title": "Sr Solutions Architect",
+     "name": "Viraj Padte",
+     "title": "Sr. Solutions Architect",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
     },
     {
-     "name": "Viraj Padte",
-     "title": "Sr. Solutions Architect",
+     "name": "Piyali Kamra",
+     "title": "Sr Solutions Architect",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
     }
@@ -153992,7 +153992,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-08T01:58:09Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -157857,7 +157857,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T17:38:02Z",
+   "modified": "2026-11-08T03:05:09Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -158037,7 +158037,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T22:19:01Z",
+   "modified": "2026-11-08T06:37:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -171709,80 +171709,6 @@
    ]
   },
   {
-   "sessionID": "1780442232675001cSLS",
-   "code": "ANT424-R",
-   "title": "Simplify Data Analytics operations with AI-powered Apache Spark agents on AWS",
-   "abstract": "Running analytics workloads at scale carries a hidden operational tax: teams commonly lose significant engineering time to debugging failures, leave performance and cost improvements on the table, and spend months on each version upgrade. In this talk, we walk through a family of AI-powered agents for AWS Glue, Amazon EMR, and Amazon Athena. The Spark Troubleshooting Agent finds the root cause of a failure and recommends the code or config fix - cutting debugging time from hours to minutes. The Spark Upgrade Agent plans an upgrade, transforms the code, and validates both runtime and data quality - turning months into hours. We share what worked in production for both agents - the design choices, failure modes, and validation strategies that made them reliable - and distill lessons that generalize to any team applying LLMs to complex infrastructure.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "400 – Expert"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Analytics"
-    ],
-    "Services": [
-     "Amazon Athena",
-     "Amazon EMR",
-     "AWS Glue"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "David Zhang",
-     "title": "Sr. Solutions Architect - Data & AI",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Mohit Saxena",
-     "title": "Senior Manager, AWS Data Analytics & Agentic Applications",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025522746001CspX",
-     "date": "2026-12-02",
-     "startTime": "13:30",
-     "endTime": "14:30",
-     "utcStartTime": "2026/12/02 21:30:00",
-     "utcEndTime": "2026/12/02 22:30:00",
-     "length": 60,
-     "room": "MGM Grand | Level 1 | Boulevard 162",
-     "roomId": "1789591920194001baD5",
-     "capacity": "98",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358239722001iuit",
    "code": "ANT424-R1",
    "title": "Simplify Data Analytics operations with AI-powered Apache Spark agents on AWS",
@@ -171850,6 +171776,80 @@
      "room": "MGM Grand | Level 3 | Premier 311",
      "roomId": "1789591920480001bvoL",
      "capacity": "78",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442232675001cSLS",
+   "code": "ANT424-R",
+   "title": "Simplify Data Analytics operations with AI-powered Apache Spark agents on AWS",
+   "abstract": "Running analytics workloads at scale carries a hidden operational tax: teams commonly lose significant engineering time to debugging failures, leave performance and cost improvements on the table, and spend months on each version upgrade. In this talk, we walk through a family of AI-powered agents for AWS Glue, Amazon EMR, and Amazon Athena. The Spark Troubleshooting Agent finds the root cause of a failure and recommends the code or config fix - cutting debugging time from hours to minutes. The Spark Upgrade Agent plans an upgrade, transforms the code, and validates both runtime and data quality - turning months into hours. We share what worked in production for both agents - the design choices, failure modes, and validation strategies that made them reliable - and distill lessons that generalize to any team applying LLMs to complex infrastructure.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-08T02:29:23Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "400 – Expert"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Analytics"
+    ],
+    "Services": [
+     "Amazon Athena",
+     "Amazon EMR",
+     "AWS Glue"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "David Zhang",
+     "title": "Sr. Solutions Architect - Data & AI",
+     "company": "Amazon",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Mohit Saxena",
+     "title": "Senior Manager, AWS Data Analytics & Agentic Applications",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025522746001CspX",
+     "date": "2026-12-02",
+     "startTime": "13:30",
+     "endTime": "14:30",
+     "utcStartTime": "2026/12/02 21:30:00",
+     "utcEndTime": "2026/12/02 22:30:00",
+     "length": 60,
+     "room": "MGM Grand | Level 1 | Boulevard 162",
+     "roomId": "1789591920194001baD5",
+     "capacity": "98",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -176708,7 +176708,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-08T03:15:13Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -176789,7 +176789,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T15:03:53Z",
+   "modified": "2026-11-08T03:14:58Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -188092,7 +188092,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-08T00:05:43Z",
+   "modified": "2026-11-08T05:08:14Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
