@@ -12,7 +12,7 @@ import { buildSuggester } from './suggest.js';
 import { createRanker, partition, profileConfig, profileGroups, GOALS } from './profile.js';
 import { storageStatus, backupReminder, backupAge } from './health.js';
 import { INSTANCE_LABEL, nsKey, guideUrl } from './instance.js';
-import { esc, attr, icon, bldgChip, recChip, rsvpChip, rsvpOpensText, seatsDetail, prioPill, scoreChip, whenText, prioControl, sessionCard, cardClass, toast, shareOrDownload, copyText, speakersLine, setHostCompany, unknownRoomsNote } from './ui.js';
+import { esc, attr, icon, bldgChip, recChip, rsvpChip, rsvpOpensText, seatsDetail, prioPill, scoreChip, whenText, prioControl, sessionCard, cardClass, toast, shareOrDownload, copyText, speakersLine, setHostCompany, unknownRoomsNote, venueMapUrl, mapChip } from './ui.js';
 
 const $ = (sel, root = document) => root.querySelector(sel);
 const main = $('#main');
@@ -598,7 +598,7 @@ function facetBox(name, label, entries, selected, fmt = v => v) {
 
 function card(s, opts = {}) {
   const gp = groupPick(s.group);
-  return sessionCard(s, { p: gp?.p ?? null, reserved: gp?.reserved === s.key, score: gp?.score ?? null, watch: gp?.mode === 'watch', isNew: isNew(s), ...opts });
+  return sessionCard(s, { p: gp?.p ?? null, reserved: gp?.reserved === s.key, score: gp?.score ?? null, watch: gp?.mode === 'watch', isNew: isNew(s), mapUrl: venueMapUrl(s, app.conf), ...opts });
 }
 
 function favoritesBanner() {
@@ -1779,7 +1779,7 @@ function renderDetail(s) {
       ${sugg?.score >= 25 ? suggestExtra({ s, ...sugg }) : ''}
       <dl>
         <dt>When</dt><dd>${esc(whenText(s))}</dd>
-        <dt>Where</dt><dd>${s.onlineOnly ? 'Online' : `${bldgChip(s.loc)} ${esc(s.roomLabel)}`}</dd>
+        <dt>Where</dt><dd>${s.onlineOnly ? 'Online' : `${bldgChip(s.loc)} ${esc(s.roomLabel)} ${mapChip(venueMapUrl(s, app.conf))}`}</dd>
         <dt>Recording</dt><dd>${s.recorded === true ? 'Will be recorded: you can watch it later' : s.recorded === false ? '<b>Not recorded</b>: in person only' : 'Unknown'}</dd>
         ${s.rsvp ? `<dt>Reservation</dt><dd><b>Required</b>, seats are limited${typeof s.rsvp === 'string' ? `. Opens ${esc(rsvpOpensText(s.rsvp) || String(s.rsvp))} on ${esc(app.conf.siteName)}` : ''}${gp?.reserved ? '. <b>You reserved a seat.</b>' : ''}</dd>` : ''}
         ${seatsDetail(s) ? `<dt>Seats</dt><dd>${esc(seatsDetail(s))}</dd>` : ''}

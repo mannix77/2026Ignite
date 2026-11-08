@@ -57,6 +57,22 @@ export function unknownRoomsNote(batch) {
   return `${rooms.length} room${rooms.length === 1 ? '' : 's'} in an unknown building: ${rooms.join(', ')}`;
 }
 
+// The session's room on the conference's official indoor map (conf.mapUrl, Ignite), opened with the
+// room label as `nto` and the session code as `sc`: the building and floor with the room pinned,
+// the session, and a Start button for a drawn route. null when the conference has no map, the
+// session is online only, its room is not published yet (a placeholder), or the room is a
+// preview-mode simulation that the real map has never heard of.
+export function venueMapUrl(s, conf) {
+  if (typeof conf?.mapUrl !== 'string' || !conf.mapUrl) return null;
+  if (!s || s.onlineOnly || s.roomTbd || s.timeSource === 'preview') return null;
+  if (typeof s.room !== 'string' || !s.room.trim() || typeof s.code !== 'string' || !s.code.trim()) return null;
+  return `${conf.mapUrl}?nto=${encodeURIComponent(s.room.trim())}&sc=${encodeURIComponent(s.code.trim())}`;
+}
+
+export function mapChip(url) {
+  return url ? `<a class="chip map" href="${attr(url)}" target="_blank" rel="noopener" title="Open the room on the official indoor map (new tab)">${icon('ext')}Map</a>` : '';
+}
+
 export function recChip(s) {
   if (s.recorded === true) return `<span class="chip rec" title="Will be recorded: you can watch it later">${icon('rec')}Recorded</span>`;
   if (s.recorded === false) return `<span class="chip norec" title="Will not be recorded: in person is your only chance">${icon('norec')}Not recorded</span>`;
@@ -112,7 +128,7 @@ export function sessionCard(s, opts = {}) {
     <div class="top"><span class="code">${esc(s.code)}</span>·<span>${esc(s.type)}</span>${s.level ? `·<span>${esc(s.level)}</span>` : ''}${s.dur ? `·<span>${fmtDuration(s.dur)}</span>` : ''}
       ${opts.isNew ? '<span class="chip new">New</span>' : ''}${s.repeats?.length ? `<span class="chip" title="Also runs as ${attr(s.repeats.join(', '))}">Repeats</span>` : ''}${scoreChip(opts.score)}${opts.watch ? '<span class="chip watch" title="On your watch-later list, not in the live plan">Watch later</span>' : ''}</div>
     <a class="title" href="#/session/${encodeURIComponent(s.code)}" data-act="open" data-key="${attr(s.key)}">${esc(s.title)}</a>
-    <div class="meta">${timeChip}<span>${esc(whenText(s))}</span>${!s.onlineOnly ? `${s.loc.known ? bldgChip(s.loc) : ''}<span class="muted">${esc(s.roomLabel || '')}</span>` : ''}${recChip(s)}${opts.reserved ? '<span class="chip new" title="You reserved a seat for this run">Reserved</span>' : rsvpChip(s) + availChip(s)}</div>
+    <div class="meta">${timeChip}<span>${esc(whenText(s))}</span>${!s.onlineOnly ? `${s.loc.known ? bldgChip(s.loc) : ''}<span class="muted">${esc(s.roomLabel || '')}</span>${mapChip(opts.mapUrl)}` : ''}${recChip(s)}${opts.reserved ? '<span class="chip new" title="You reserved a seat for this run">Reserved</span>' : rsvpChip(s) + availChip(s)}</div>
     ${!opts.compact && s.speakers?.length ? `<div class="who">${speakersLine(s)}</div>` : ''}
     ${opts.extra || ''}
     ${opts.noActions ? '' : `<div class="actions">${prioControl(s.key, p)}</div>`}
