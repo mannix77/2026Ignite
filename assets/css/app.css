@@ -189,6 +189,8 @@ h3 { font-size: 15px; margin: 0 0 6px; }
 .chip.norec { background: var(--want-soft); color: var(--want); }
 .chip.rsvp { background: var(--maybe-soft); color: var(--maybe); }
 .chip.score { background: var(--want-soft); color: var(--want); }
+a.chip.map { background: var(--accent-soft); color: var(--accent); text-decoration: none; }
+a.chip.map:hover { text-decoration: underline; }
 .chip.watch { background: var(--skip-soft); color: var(--text-2); }
 .chip.sugg { background: var(--ok-soft); color: var(--ok); }
 .chip.full { background: var(--bad-soft); color: var(--bad); }

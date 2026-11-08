@@ -6,13 +6,13 @@ import { checkLive, diff as liveDiff, changeCounts, countsLine } from './live.js
 import { optimize, decisionGroups, transitions, fillers, nowNext, weigh, canBoth, overlaps, transition, compareOptions, lunchConfig, arrivalExtra, PRIORITY } from './planner.js';
 import { fmtTime, fmtDay, fmtDuration, relTime, nowLocal, addDays } from './time.js';
 import { upNext } from './upnext.js';
-import { createVenue, setVenue, walkMinutes } from './venue.js';
+import { createVenue, setVenue, walkMinutes, floorExtra, mergeWalk } from './venue.js';
 import { CONFERENCES, currentConferenceId, rememberConference, conferenceList } from './conferences.js';
 import { buildSuggester } from './suggest.js';
 import { createRanker, partition, profileConfig, profileGroups, GOALS } from './profile.js';
 import { storageStatus, backupReminder, backupAge } from './health.js';
 import { INSTANCE_LABEL, nsKey, guideUrl } from './instance.js';
-import { esc, attr, icon, bldgChip, recChip, rsvpChip, rsvpOpensText, seatsDetail, prioPill, scoreChip, whenText, prioControl, sessionCard, cardClass, toast, shareOrDownload, copyText, speakersLine, setHostCompany, unknownRoomsNote, occupancyOf, occupancyChip } from './ui.js';
+import { esc, attr, icon, bldgChip, recChip, rsvpChip, rsvpOpensText, seatsDetail, prioPill, scoreChip, whenText, prioControl, sessionCard, cardClass, toast, shareOrDownload, copyText, speakersLine, setHostCompany, unknownRoomsNote, venueMapUrl, mapChip, occupancyOf, occupancyChip } from './ui.js';
 
 const $ = (sel, root = document) => root.querySelector(sel);
 const main = $('#main');
@@ -68,11 +68,10 @@ const hhmm = min => `${String(Math.floor(min / 60)).padStart(2, '0')}:${String(m
 const fromHHMM = v => { const [h, m] = String(v || '').split(':').map(Number); return Number.isFinite(h) && Number.isFinite(m) ? h * 60 + m : null; };
 const B = id => app.venue.BUILDING[id] || app.venue.BUILDING.U;
 
-// Your walking-time edits sit on top of the conference's matrix (a backup may hold only some keys).
+// Your walking-time edits sit on top of the conference's matrix (a backup may hold only some keys);
+// a saved pair that still equals the default it was saved with follows a recalibration (mergeWalk).
 function walkCfg() {
-  const w = store.settings().walk;
-  if (!w) return app.venue.walk;
-  return { ...app.venue.walk, ...w, pairs: { ...app.venue.walk.pairs, ...(w.pairs || {}) } };
+  return mergeWalk(app.venue.walk, store.settings().walk);
 }
 
 function ctx() {
@@ -333,7 +332,9 @@ function here() {
 function hereWalk(loc, h = here(), c = ctx()) {
   if (!h) return null;
   const b = app.venue.BUILDING[loc?.building];
-  if (!h.inside && h.geo && b?.geo && loc.known) return Math.ceil(haversine(h.geo, b.geo) / WALK_M_PER_MIN) + c.walk.sameFloor;
+  // From outside the venue: the straight-line walk to the building, then finding the room, plus the
+  // minutes a floor that sits further in adds (the pair matrix is not used here, so add it directly).
+  if (!h.inside && h.geo && b?.geo && loc.known) return Math.ceil(haversine(h.geo, b.geo) / WALK_M_PER_MIN) + c.walk.sameFloor + floorExtra(loc, c.walk);
   return walkMinutes(h.loc, loc, c.walk) + h.approach;
 }
 
@@ -598,7 +599,7 @@ function facetBox(name, label, entries, selected, fmt = v => v) {
 
 function card(s, opts = {}) {
   const gp = groupPick(s.group);
-  return sessionCard(s, { p: gp?.p ?? null, reserved: gp?.reserved === s.key, score: gp?.score ?? null, watch: gp?.mode === 'watch', isNew: isNew(s),
+  return sessionCard(s, { p: gp?.p ?? null, reserved: gp?.reserved === s.key, score: gp?.score ?? null, watch: gp?.mode === 'watch', isNew: isNew(s), mapUrl: venueMapUrl(s, app.conf),
     occupancy: occupancyOf(app.snapshot?.occupancy, s.room), ...opts });
 }
 
@@ -1780,7 +1781,7 @@ function renderDetail(s) {
       ${sugg?.score >= 25 ? suggestExtra({ s, ...sugg }) : ''}
       <dl>
         <dt>When</dt><dd>${esc(whenText(s))}</dd>
-        <dt>Where</dt><dd>${s.onlineOnly ? 'Online' : `${bldgChip(s.loc)} ${esc(s.roomLabel)} ${occupancyChip(occupancyOf(app.snapshot?.occupancy, s.room))}`}</dd>
+        <dt>Where</dt><dd>${s.onlineOnly ? 'Online' : `${bldgChip(s.loc)} ${esc(s.roomLabel)} ${mapChip(venueMapUrl(s, app.conf))} ${occupancyChip(occupancyOf(app.snapshot?.occupancy, s.room))}`}</dd>
         <dt>Recording</dt><dd>${s.recorded === true ? 'Will be recorded: you can watch it later' : s.recorded === false ? '<b>Not recorded</b>: in person only' : 'Unknown'}</dd>
         ${s.rsvp ? `<dt>Reservation</dt><dd><b>Required</b>, seats are limited${typeof s.rsvp === 'string' ? `. Opens ${esc(rsvpOpensText(s.rsvp) || String(s.rsvp))} on ${esc(app.conf.siteName)}` : ''}${gp?.reserved ? '. <b>You reserved a seat.</b>' : ''}</dd>` : ''}
         ${seatsDetail(s) ? `<dt>Seats</dt><dd>${esc(seatsDetail(s))}</dd>` : ''}

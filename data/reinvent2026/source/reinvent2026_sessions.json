@@ -1,7 +1,7 @@
 {
  "source": "https://catalog.awsevents.com/api/sessions",
  "event": "reinvent2026",
- "fetchedAt": "2026-11-07T12:43:21Z",
+ "fetchedAt": "2026-11-08T00:51:00Z",
  "count": 2484,
  "sessions": [
   {
@@ -961,7 +961,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T22:34:02Z",
+   "modified": "2026-11-07T21:46:24Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -1007,6 +1007,18 @@
     ]
    },
    "speakers": [
+    {
+     "name": "Barbara Jenny Wilson",
+     "title": "Head of IT & Digital, Sales and eCommerce",
+     "company": "Nestlé S.A.",
+     "role": "Sponsor Speaker"
+    },
+    {
+     "name": "Preeti Somal",
+     "title": "EVP of R&D",
+     "company": "Temporal Technologies",
+     "role": "Sponsor Speaker"
+    },
     {
      "name": "Neel Sundaresan",
      "title": "GM",
@@ -1379,7 +1391,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T23:25:22Z",
+   "modified": "2026-11-07T21:49:50Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -1427,6 +1439,12 @@
      "title": "Senior Manager, Product",
      "company": "AWS",
      "role": "Internal Speaker"
+    },
+    {
+     "name": "Adam Seyer",
+     "title": "CIO",
+     "company": "STARHUB LTD.",
+     "role": "External Speaker"
     },
     {
      "name": "Ahuva Hazan-Fuchs",
@@ -2604,86 +2622,6 @@
    ]
   },
   {
-   "sessionID": "1780442222927001cDcT",
-   "code": "ANT437-R",
-   "title": "Accelerate lakehouse analytics with Apache Iceberg materialized views",
-   "abstract": "Apache Iceberg Materialized Views on AWS store pre-computed query results as Iceberg tables on Amazon S3 or Amazon S3 Tables. These views are not only open, as in compute once and consume from any Iceberg-compatible engine – they accelerate your lakehouse analytics while reducing costs. Join this hands-on session to experience how Apache Iceberg Materialized Views on AWS simplify medallion architectures, lakehouse migrations, accelerate BI query transactions and complex joins.",
-   "type": "Builders' session",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Builders' session"
-    ],
-    "Level": [
-     "400 – Expert"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Analytics"
-    ],
-    "Services": [
-     "Amazon Athena",
-     "Amazon EMR"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Saunak Chandra",
-     "title": "Principal Solutions Architect",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Santiago Abarca",
-     "title": "Sr Sales Specialist Data-AI",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Sharad Pai",
-     "title": "Sr. Solutions Architect",
-     "company": "Amazon Web Services India Private Limited",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025536474001CzRB",
-     "date": "2026-12-03",
-     "startTime": "10:30",
-     "endTime": "11:30",
-     "utcStartTime": "2026/12/03 18:30:00",
-     "utcEndTime": "2026/12/03 19:30:00",
-     "length": 60,
-     "room": "MGM Grand | Level 3 | Room 304",
-     "roomId": "1789591920550004bDgg",
-     "capacity": "50",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358215164001ij4P",
    "code": "ANT437-R1",
    "title": "Accelerate lakehouse analytics with Apache Iceberg materialized views",
@@ -2692,7 +2630,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-08T00:31:10Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -2727,6 +2665,18 @@
    },
    "speakers": [
     {
+     "name": "Vova Nevski",
+     "title": "Sr. Analytics Specialist SA",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Sanjoli Agarwal",
+     "title": "Senior Software Engineer",
+     "company": "Amazon",
+     "role": "Internal Speaker"
+    },
+    {
      "name": "Saunak Chandra",
      "title": "Principal Solutions Architect",
      "company": "Amazon",
@@ -2739,9 +2689,9 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Sharad Pai",
-     "title": "Sr. Solutions Architect",
-     "company": "Amazon Web Services India Private Limited",
+     "name": "Sherin Chandy",
+     "title": "Specialist TAM",
+     "company": "AWS",
      "role": "Internal Speaker"
     }
    ],
@@ -2756,6 +2706,98 @@
      "length": 60,
      "room": "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Builders' Session 1",
      "roomId": "1789591920413001bvC3",
+     "capacity": "50",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442222927001cDcT",
+   "code": "ANT437-R",
+   "title": "Accelerate lakehouse analytics with Apache Iceberg materialized views",
+   "abstract": "Apache Iceberg Materialized Views on AWS store pre-computed query results as Iceberg tables on Amazon S3 or Amazon S3 Tables. These views are not only open, as in compute once and consume from any Iceberg-compatible engine – they accelerate your lakehouse analytics while reducing costs. Join this hands-on session to experience how Apache Iceberg Materialized Views on AWS simplify medallion architectures, lakehouse migrations, accelerate BI query transactions and complex joins.",
+   "type": "Builders' session",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-08T00:30:32Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Builders' session"
+    ],
+    "Level": [
+     "400 – Expert"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Analytics"
+    ],
+    "Services": [
+     "Amazon Athena",
+     "Amazon EMR"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Vova Nevski",
+     "title": "Sr. Analytics Specialist SA",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Sanjoli Agarwal",
+     "title": "Senior Software Engineer",
+     "company": "Amazon",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Saunak Chandra",
+     "title": "Principal Solutions Architect",
+     "company": "Amazon",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Santiago Abarca",
+     "title": "Sr Sales Specialist Data-AI",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Sherin Chandy",
+     "title": "Specialist TAM",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025536474001CzRB",
+     "date": "2026-12-03",
+     "startTime": "10:30",
+     "endTime": "11:30",
+     "utcStartTime": "2026/12/03 18:30:00",
+     "utcEndTime": "2026/12/03 19:30:00",
+     "length": 60,
+     "room": "MGM Grand | Level 3 | Room 304",
+     "roomId": "1789591920550004bDgg",
      "capacity": "50",
      "inPersonTime": true,
      "virtualTime": false,
@@ -3534,92 +3576,6 @@
    ]
   },
   {
-   "sessionID": "1780442257238001cKB7",
-   "code": "PEX310-R",
-   "title": "Accelerate Your FDE Journey: The Harness & FDE Delivery Kit",
-   "abstract": "The AWS FDE Delivery Kit replaces linear agent pipelines with delivery loops: each program's output enriches shared state and feeds the next. Live-coding: from plain-English intention to production CDK infrastructure, Bedrock agents with guardrails, and AgentCore via re-resolve cycles.",
-   "type": "Code talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Code talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Artificial Intelligence",
-     "Developer Tools"
-    ],
-    "AreaofInterest": [
-     "Governance, Risk & Compliance",
-     "Partner Enablement",
-     "Agentic AI",
-     "DevOps"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "DevOps Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Bedrock",
-     "AWS Cloud Development Kit (AWS CDK)",
-     "Kiro"
-    ],
-    "Venue": [
-     "Caesars Forum"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Dhana Vadivelan",
-     "title": "EMEA Partner Solutions Architecture Leader",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Phani Kumar Lingamallu",
-     "title": "Pr. Partner Solution Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790033114365001qV6r",
-     "date": "2026-12-01",
-     "startTime": "13:30",
-     "endTime": "14:30",
-     "utcStartTime": "2026/12/01 21:30:00",
-     "utcEndTime": "2026/12/01 22:30:00",
-     "length": 60,
-     "room": "Caesars Forum | Level 1 | Forum 120 | Content Hub | Code Talk",
-     "roomId": "1789591919752004bpPI",
-     "capacity": "120",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358219171001iMrp",
    "code": "PEX310-R1",
    "title": "Accelerate Your FDE Journey: The Harness & FDE Delivery Kit",
@@ -3675,15 +3631,15 @@
    },
    "speakers": [
     {
-     "name": "Dhana Vadivelan",
-     "title": "EMEA Partner Solutions Architecture Leader",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Phani Kumar Lingamallu",
      "title": "Pr. Partner Solution Architect",
      "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Dhana Vadivelan",
+     "title": "EMEA Partner Solutions Architecture Leader",
+     "company": "AWS",
      "role": "Internal Speaker"
     }
    ],
@@ -3699,6 +3655,92 @@
      "room": "Caesars Palace | Promenade South | Octavius 4 | Content Hub | Code Talk",
      "roomId": "1789591920119001bHvX",
      "capacity": "80",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442257238001cKB7",
+   "code": "PEX310-R",
+   "title": "Accelerate Your FDE Journey: The Harness & FDE Delivery Kit",
+   "abstract": "The AWS FDE Delivery Kit replaces linear agent pipelines with delivery loops: each program's output enriches shared state and feeds the next. Live-coding: from plain-English intention to production CDK infrastructure, Bedrock agents with guardrails, and AgentCore via re-resolve cycles.",
+   "type": "Code talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-06T20:31:24Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Code talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Artificial Intelligence",
+     "Developer Tools"
+    ],
+    "AreaofInterest": [
+     "Governance, Risk & Compliance",
+     "Partner Enablement",
+     "Agentic AI",
+     "DevOps"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "DevOps Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Bedrock",
+     "AWS Cloud Development Kit (AWS CDK)",
+     "Kiro"
+    ],
+    "Venue": [
+     "Caesars Forum"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Phani Kumar Lingamallu",
+     "title": "Pr. Partner Solution Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Dhana Vadivelan",
+     "title": "EMEA Partner Solutions Architecture Leader",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790033114365001qV6r",
+     "date": "2026-12-01",
+     "startTime": "13:30",
+     "endTime": "14:30",
+     "utcStartTime": "2026/12/01 21:30:00",
+     "utcEndTime": "2026/12/01 22:30:00",
+     "length": 60,
+     "room": "Caesars Forum | Level 1 | Forum 120 | Content Hub | Code Talk",
+     "roomId": "1789591919752004bpPI",
+     "capacity": "120",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -4501,7 +4543,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-08T00:35:03Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -4565,28 +4607,22 @@
      "role": "Sponsor Speaker"
     },
     {
-     "name": "Arijit Choudhury",
-     "title": "Principal Product Manager",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Hardeep Sullan",
      "title": "Head of HPC",
      "company": "Pacific Fusion",
      "role": "Sponsor Speaker"
     },
     {
-     "name": "Stefano Amico",
-     "title": "samico@amazon.com",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Adam Reyes",
      "title": "Computational Physicist",
      "company": "Pacific Fusion",
      "role": "Sponsor Speaker"
+    },
+    {
+     "name": "Stefano Amico",
+     "title": "WW HPC instances GTM Lead",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
     }
    ],
    "times": [
@@ -4750,7 +4786,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:46:17Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -4802,6 +4838,12 @@
     ]
    },
    "speakers": [
+    {
+     "name": "Matt Arellano",
+     "title": "Senior Vice President AWS Business Group",
+     "company": "Genpact",
+     "role": "Sponsor Speaker"
+    },
     {
      "name": "Giorgio Piazza",
      "title": "CTO",
@@ -5450,7 +5492,7 @@
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T22:33:30Z",
+   "modified": "2026-11-07T21:43:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -5493,7 +5535,14 @@
      "No"
     ]
    },
-   "speakers": [],
+   "speakers": [
+    {
+     "name": "Subhash Talluri",
+     "title": "Principal SA, Applied AI",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
    "times": [
     {
      "sessionTimeID": "1790033121386001qjhY",
@@ -5763,7 +5812,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T11:11:25Z",
+   "modified": "2026-11-07T15:01:42Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -7775,89 +7824,6 @@
    ]
   },
   {
-   "sessionID": "1780442257296001cWnw",
-   "code": "PEX311-R",
-   "title": "Agentic AI Governance for Regulated Industries",
-   "abstract": "As agentic AI expands into regulated industries, autonomous decisions must meet compliance before production. This session gives partners a governance framework spanning technical and non-technical requirements — not just architecture. We demo a working multi-agent system and share the code.",
-   "type": "Code talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Code talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Artificial Intelligence"
-    ],
-    "AreaofInterest": [
-     "Responsible AI",
-     "Governance, Risk & Compliance",
-     "Partner Enablement",
-     "Agentic AI"
-    ],
-    "Role": [
-     "Advisor / Consultant",
-     "Developer / Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Bedrock"
-    ],
-    "Venue": [
-     "Caesars Palace"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Jayanthi Rajaraman",
-     "title": "Senior Partner Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Ranjan Banerji",
-     "title": "Principal Partner Solutions Architect",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790033112602001qZOD",
-     "date": "2026-12-02",
-     "startTime": "13:00",
-     "endTime": "14:00",
-     "utcStartTime": "2026/12/02 21:00:00",
-     "utcEndTime": "2026/12/02 22:00:00",
-     "length": 60,
-     "room": "Caesars Palace | Promenade South | Octavius 4 | Content Hub | Code Talk",
-     "roomId": "1789591920119001bHvX",
-     "capacity": "80",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358224155001iBqU",
    "code": "PEX311-R1",
    "title": "Agentic AI Governance for Regulated Industries",
@@ -7935,6 +7901,95 @@
      "room": "Wynn/Encore | Convention Promenade | Margaux 1",
      "roomId": "1789591921003001bQQi",
      "capacity": "84",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442257296001cWnw",
+   "code": "PEX311-R",
+   "title": "Agentic AI Governance for Regulated Industries",
+   "abstract": "As agentic AI expands into regulated industries, autonomous decisions must meet compliance before production. This session gives partners a governance framework spanning technical and non-technical requirements — not just architecture. We demo a working multi-agent system and share the code.",
+   "type": "Code talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-07T21:49:50Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Code talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Artificial Intelligence"
+    ],
+    "AreaofInterest": [
+     "Responsible AI",
+     "Governance, Risk & Compliance",
+     "Partner Enablement",
+     "Agentic AI"
+    ],
+    "Role": [
+     "Advisor / Consultant",
+     "Developer / Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Bedrock"
+    ],
+    "Venue": [
+     "Caesars Palace"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Jennifer Bergstrom",
+     "title": "VP, Cloud and Data Solutions",
+     "company": "Parsons",
+     "role": "External Speaker"
+    },
+    {
+     "name": "Ranjan Banerji",
+     "title": "Principal Partner Solutions Architect",
+     "company": "Amazon",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Jayanthi Rajaraman",
+     "title": "Senior Partner Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790033112602001qZOD",
+     "date": "2026-12-02",
+     "startTime": "13:00",
+     "endTime": "14:00",
+     "utcStartTime": "2026/12/02 21:00:00",
+     "utcEndTime": "2026/12/02 22:00:00",
+     "length": 60,
+     "room": "Caesars Palace | Promenade South | Octavius 4 | Content Hub | Code Talk",
+     "roomId": "1789591920119001bHvX",
+     "capacity": "80",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -8317,89 +8372,6 @@
    ]
   },
   {
-   "sessionID": "1780442258762001cLQZ",
-   "code": "GHJ308-S-R1",
-   "title": "Agentic AI Jam - sponsored by Nvidia",
-   "abstract": "Come with your team of 2 or join one on the spot. Compete head-to-head, race the leaderboard, and win prizes. Solve real-world Gen AI and Agentic AI scenarios using Amazon Bedrock, SageMaker AI & Kiro - including a sponsored challenge from NVIDIA to build and optimize GenAI workloads using NVIDIA's accelerated computing and AI inference stack on AWS. Challenges suit all skill levels, with AWS experts and helpful clues throughout. All you need: a laptop, curiosity, and a competitive spirit.",
-   "type": "Gamified learning",
-   "length": 180,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Gamified learning"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Artificial Intelligence"
-    ],
-    "AreaofInterest": [
-     "Agentic AI"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Bedrock",
-     "Kiro",
-     "Amazon Quick"
-    ],
-    "Venue": [
-     "Caesars Palace"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Sponsored",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Varad Ram",
-     "title": "Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Nir Pilo",
-     "title": "Sr. Manager Immersive learning",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790020732141001fwfN",
-     "date": "2026-12-02",
-     "startTime": "09:00",
-     "endTime": "12:00",
-     "utcStartTime": "2026/12/02 17:00:00",
-     "utcEndTime": "2026/12/02 20:00:00",
-     "length": 180,
-     "room": "Caesars Palace | Emperors Level | Palace Ballroom I",
-     "roomId": "1789591919905001bNuN",
-     "capacity": "176",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780441504229001Gmvx",
    "code": "GHJ308-S-R",
    "title": "Agentic AI Jam - sponsored by Nvidia",
@@ -8484,6 +8456,89 @@
    ]
   },
   {
+   "sessionID": "1780442258762001cLQZ",
+   "code": "GHJ308-S-R1",
+   "title": "Agentic AI Jam - sponsored by Nvidia",
+   "abstract": "Come with your team of 2 or join one on the spot. Compete head-to-head, race the leaderboard, and win prizes. Solve real-world Gen AI and Agentic AI scenarios using Amazon Bedrock, SageMaker AI & Kiro - including a sponsored challenge from NVIDIA to build and optimize GenAI workloads using NVIDIA's accelerated computing and AI inference stack on AWS. Challenges suit all skill levels, with AWS experts and helpful clues throughout. All you need: a laptop, curiosity, and a competitive spirit.",
+   "type": "Gamified learning",
+   "length": 180,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-08T00:05:43Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Gamified learning"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Artificial Intelligence"
+    ],
+    "AreaofInterest": [
+     "Agentic AI"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Bedrock",
+     "Kiro",
+     "Amazon Quick"
+    ],
+    "Venue": [
+     "Caesars Palace"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Sponsored",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Nir Pilo",
+     "title": "Sr. Manager Immersive learning",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Varad Ram",
+     "title": "Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790020732141001fwfN",
+     "date": "2026-12-02",
+     "startTime": "09:00",
+     "endTime": "12:00",
+     "utcStartTime": "2026/12/02 17:00:00",
+     "utcEndTime": "2026/12/02 20:00:00",
+     "length": 180,
+     "room": "Caesars Palace | Emperors Level | Palace Ballroom I",
+     "roomId": "1789591919905001bNuN",
+     "capacity": "176",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
    "sessionID": "1780442268493001c9Yr",
    "code": "SEC219-S",
    "title": "Agentic AI meets critical infrastructure at UGI (sponsored by IBM)",
@@ -8492,7 +8547,7 @@
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T22:33:42Z",
+   "modified": "2026-11-07T21:46:24Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -8538,7 +8593,20 @@
      "No"
     ]
    },
-   "speakers": [],
+   "speakers": [
+    {
+     "name": "Vishal Ahuja",
+     "title": "Vice President",
+     "company": "IBM",
+     "role": "Sponsor Speaker"
+    },
+    {
+     "name": "Thomas Lord",
+     "title": "VP, CIO UGI Utilities",
+     "company": "UGI Corporation",
+     "role": "Sponsor Speaker"
+    }
+   ],
    "times": [
     {
      "sessionTimeID": "1790033124174001qJJ2",
@@ -15767,7 +15835,7 @@
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T22:33:47Z",
+   "modified": "2026-11-07T21:46:24Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -15819,7 +15887,14 @@
      "No"
     ]
    },
-   "speakers": [],
+   "speakers": [
+    {
+     "name": "Nick End",
+     "title": "COO",
+     "company": "Row Zero",
+     "role": "Sponsor Speaker"
+    }
+   ],
    "times": [
     {
      "sessionTimeID": "1790033124340001qLJ6",
@@ -15832,86 +15907,6 @@
      "room": "Venetian | Level 2 | Hall B | Expo | Partner Advantage Theater",
      "roomId": "1789591920812001bXzB",
      "capacity": "150",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
-   "sessionID": "1790358233821001ij2I",
-   "code": "AIM347-R1",
-   "title": "AI Systems Performance Engineering on AWS: A practitioner's deep dive",
-   "abstract": "Extracting useful throughput from GPU clusters is a discipline: profiling kernels, tuning collectives, keeping the GPUs fed, and handling the failures that grow with scale. In this hands-on workshop, work through the full stack on Slurm-managed NVIDIA GPU-based Amazon EC2 instances, covering compute, network, storage, and the ML software stack from drivers to distributed frameworks. Set up the observability that ties them together, from GPU, EFA, and Lustre counters to training throughput and MFU. At each layer, measure, attribute, and fix with the right tool. The workshop concludes with self-built dashboards and a goodput methodology for training clusters.",
-   "type": "Workshop",
-   "length": 120,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Workshop"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Artificial Intelligence"
-    ],
-    "AreaofInterest": [
-     "Generative AI",
-     "Resilience",
-     "Machine Learning"
-    ],
-    "Role": [
-     "Academic / Researcher",
-     "Developer / Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Venue": [
-     "Wynn/Encore"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Keita Watanabe",
-     "title": "Pr. WW Solutions Architect – GenAI",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Aravind Neelakantan",
-     "title": "WW Specialist Solution Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360394114001Amrj",
-     "date": "2026-12-03",
-     "startTime": "12:00",
-     "endTime": "14:00",
-     "utcStartTime": "2026/12/03 20:00:00",
-     "utcEndTime": "2026/12/03 22:00:00",
-     "length": 120,
-     "room": "Wynn/Encore | Level 1 | Brahms 4",
-     "roomId": "1789591921070001bD8R",
-     "capacity": "84",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -15999,6 +15994,86 @@
    ]
   },
   {
+   "sessionID": "1790358233821001ij2I",
+   "code": "AIM347-R1",
+   "title": "AI Systems Performance Engineering on AWS: A practitioner's deep dive",
+   "abstract": "Extracting useful throughput from GPU clusters is a discipline: profiling kernels, tuning collectives, keeping the GPUs fed, and handling the failures that grow with scale. In this hands-on workshop, work through the full stack on Slurm-managed NVIDIA GPU-based Amazon EC2 instances, covering compute, network, storage, and the ML software stack from drivers to distributed frameworks. Set up the observability that ties them together, from GPU, EFA, and Lustre counters to training throughput and MFU. At each layer, measure, attribute, and fix with the right tool. The workshop concludes with self-built dashboards and a goodput methodology for training clusters.",
+   "type": "Workshop",
+   "length": 120,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-06T20:31:24Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Workshop"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Artificial Intelligence"
+    ],
+    "AreaofInterest": [
+     "Generative AI",
+     "Resilience",
+     "Machine Learning"
+    ],
+    "Role": [
+     "Academic / Researcher",
+     "Developer / Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Venue": [
+     "Wynn/Encore"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Keita Watanabe",
+     "title": "Pr. WW Solutions Architect – GenAI",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Aravind Neelakantan",
+     "title": "WW Specialist Solution Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360394114001Amrj",
+     "date": "2026-12-03",
+     "startTime": "12:00",
+     "endTime": "14:00",
+     "utcStartTime": "2026/12/03 20:00:00",
+     "utcEndTime": "2026/12/03 22:00:00",
+     "length": 120,
+     "room": "Wynn/Encore | Level 1 | Brahms 4",
+     "roomId": "1789591921070001bD8R",
+     "capacity": "84",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
    "sessionID": "1780441490215001Gi9L",
    "code": "AIM231-S",
    "title": "AI That Answers: PepsiCo Reimagines Customer Experience with Amazon Connect",
@@ -16007,7 +16082,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T21:38:12Z",
+   "modified": "2026-11-07T22:56:29Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -16052,21 +16127,15 @@
    },
    "speakers": [
     {
-     "name": "Mathew Thomas",
-     "title": "Vice President, Chief Architect",
-     "company": "Autodesk, Inc.",
+     "name": "Harsha Desai",
+     "title": "Consumer and Commercial Lead",
+     "company": "PepsiCo, Inc.",
      "role": "Sponsor Speaker"
     },
     {
      "name": "Alex Halper",
      "title": "Managing Director",
      "company": "PricewaterhouseCoopers LLP",
-     "role": "Sponsor Speaker"
-    },
-    {
-     "name": "Harsha Desai",
-     "title": "Consumer and Commercial Lead",
-     "company": "PepsiCo, Inc.",
      "role": "Sponsor Speaker"
     }
    ],
@@ -16097,7 +16166,7 @@
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T22:33:42Z",
+   "modified": "2026-11-07T22:24:09Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -16147,12 +16216,6 @@
     ]
    },
    "speakers": [
-    {
-     "name": "Serena Smorti",
-     "title": "Business development director",
-     "company": "Accenture",
-     "role": "Sponsor Speaker"
-    },
     {
      "name": "Dusshyant Roy",
      "title": "Managing Director",
@@ -17640,7 +17703,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:49:50Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -17683,6 +17746,12 @@
      "title": "Head of Applied AI & Emerging Technology Strategy",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
+    },
+    {
+     "name": "Jennifer Nason",
+     "title": "Corporate Strategist & Board Director",
+     "company": "Nason Co",
+     "role": "External Speaker"
     },
     {
      "name": "Taimur Rashid",
@@ -19027,109 +19096,6 @@
    ]
   },
   {
-   "sessionID": "1790358240519001iPhG",
-   "code": "CON319-R1",
-   "title": "Amazon EKS incident response and remediation with AWS DevOps Agent",
-   "abstract": "When an incident hits, engineers lose time pivoting between kubectl, metrics, logs, and traces to find root cause. In this builder session, you'll drive the AWS DevOps Agent through a production-realistic incident end to end: detect the anomaly from observability signals, correlate metrics, logs, and traces to a root cause, and execute automated remediation with a human-in-the-loop gate. You'll wire the observability inputs the agent consumes, review its diagnosis journal, and validate recovery. Leave with a repeatable detect-diagnose-remediate-verify pattern and a permission-scoped remediation playbook you can adapt to your own clusters.",
-   "type": "Builders' session",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Builders' session"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Cloud Operations",
-     "Containers"
-    ],
-    "AreaofInterest": [
-     "Monitoring & Observability",
-     "DevSecOps",
-     "Kubernetes"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "DevOps Engineer",
-     "System Administrator"
-    ],
-    "Services": [
-     "Amazon CloudWatch",
-     "Amazon Elastic Kubernetes Service (Amazon EKS)"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Balachandra Hebbagilu Nagaraj",
-     "title": "Sr. Cloud Support Eng. (CONT)",
-     "company": "Amazon Web Services (AWS)",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Frank Fan",
-     "title": "Principal Container Solution Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Swarna Kunnath",
-     "title": "Senior Cloud Application Architect - AppMod",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Shyam Sunder Kulkarni",
-     "title": "Sr. Technical Account Manager",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Luis Arcega",
-     "title": "Sr Partner Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360382342001AMCz",
-     "date": "2026-12-03",
-     "startTime": "16:00",
-     "endTime": "17:00",
-     "utcStartTime": "2026/12/04 00:00:00",
-     "utcEndTime": "2026/12/04 01:00:00",
-     "length": 60,
-     "room": "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Builders' Session 2",
-     "roomId": "1789591920422004b914",
-     "capacity": "50",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442226415001ceEI",
    "code": "CON319-R",
    "title": "Amazon EKS incident response and remediation with AWS DevOps Agent",
@@ -19138,7 +19104,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T19:59:19Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -19184,24 +19150,6 @@
    },
    "speakers": [
     {
-     "name": "Balachandra Hebbagilu Nagaraj",
-     "title": "Sr. Cloud Support Eng. (CONT)",
-     "company": "Amazon Web Services (AWS)",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Frank Fan",
-     "title": "Principal Container Solution Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Swarna Kunnath",
-     "title": "Senior Cloud Application Architect - AppMod",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Shyam Sunder Kulkarni",
      "title": "Sr. Technical Account Manager",
      "company": "Amazon Web Services",
@@ -19211,6 +19159,24 @@
      "name": "Luis Arcega",
      "title": "Sr Partner Solutions Architect",
      "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Swarna Kunnath",
+     "title": "Senior Solutions Architect , AWS",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Balachandra Hebbagilu Nagaraj",
+     "title": "Sr. Cloud Support Eng. (CONT)",
+     "company": "Amazon Web Services (AWS)",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Frank Fan",
+     "title": "Principal Container Solution Architect",
+     "company": "AWS",
      "role": "Internal Speaker"
     }
    ],
@@ -19225,6 +19191,109 @@
      "length": 60,
      "room": "Caesars Forum | Level 1 | Alliance 311",
      "roomId": "1789591919636004boBN",
+     "capacity": "50",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358240519001iPhG",
+   "code": "CON319-R1",
+   "title": "Amazon EKS incident response and remediation with AWS DevOps Agent",
+   "abstract": "When an incident hits, engineers lose time pivoting between kubectl, metrics, logs, and traces to find root cause. In this builder session, you'll drive the AWS DevOps Agent through a production-realistic incident end to end: detect the anomaly from observability signals, correlate metrics, logs, and traces to a root cause, and execute automated remediation with a human-in-the-loop gate. You'll wire the observability inputs the agent consumes, review its diagnosis journal, and validate recovery. Leave with a repeatable detect-diagnose-remediate-verify pattern and a permission-scoped remediation playbook you can adapt to your own clusters.",
+   "type": "Builders' session",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-07T19:59:19Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Builders' session"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Cloud Operations",
+     "Containers"
+    ],
+    "AreaofInterest": [
+     "Monitoring & Observability",
+     "DevSecOps",
+     "Kubernetes"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "DevOps Engineer",
+     "System Administrator"
+    ],
+    "Services": [
+     "Amazon CloudWatch",
+     "Amazon Elastic Kubernetes Service (Amazon EKS)"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Shyam Sunder Kulkarni",
+     "title": "Sr. Technical Account Manager",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Luis Arcega",
+     "title": "Sr Partner Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Swarna Kunnath",
+     "title": "Senior Solutions Architect , AWS",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Balachandra Hebbagilu Nagaraj",
+     "title": "Sr. Cloud Support Eng. (CONT)",
+     "company": "Amazon Web Services (AWS)",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Frank Fan",
+     "title": "Principal Container Solution Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360382342001AMCz",
+     "date": "2026-12-03",
+     "startTime": "16:00",
+     "endTime": "17:00",
+     "utcStartTime": "2026/12/04 00:00:00",
+     "utcEndTime": "2026/12/04 01:00:00",
+     "length": 60,
+     "room": "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Builders' Session 2",
+     "roomId": "1789591920422004b914",
      "capacity": "50",
      "inPersonTime": true,
      "virtualTime": false,
@@ -19496,7 +19565,7 @@
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T22:33:31Z",
+   "modified": "2026-11-07T21:46:24Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -19542,6 +19611,12 @@
     {
      "name": "Nick Matthews",
      "title": "Principal Solutions Architect",
+     "company": "Amazon Leo",
+     "role": "Sponsor Speaker"
+    },
+    {
+     "name": "Damian Robo",
+     "title": "Sr. Solutions Architect",
      "company": "Amazon Leo",
      "role": "Sponsor Speaker"
     }
@@ -20050,7 +20125,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T01:51:08Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -24599,7 +24674,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T21:37:32Z",
+   "modified": "2026-11-07T21:46:24Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -24647,6 +24722,12 @@
    },
    "speakers": [
     {
+     "name": "Josh Linder",
+     "title": "Team Lead, Partner Engineering",
+     "company": "ServiceNow",
+     "role": "Sponsor Speaker"
+    },
+    {
      "name": "Steve Clark",
      "title": "AWS Alliance Lead",
      "company": "Servicenow",
@@ -24686,7 +24767,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:46:24Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -24737,6 +24818,12 @@
      "title": "VP, Content Intelligence",
      "company": "Arc XP/The Washington Post",
      "role": "Sponsor Speaker"
+    },
+    {
+     "name": "Ashwin Gangadhar",
+     "title": "Manager, Solutions Architect",
+     "company": "MongoDB",
+     "role": "Sponsor Speaker"
     }
    ],
    "times": [
@@ -24766,7 +24853,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:43:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -24808,18 +24895,6 @@
    },
    "speakers": [
     {
-     "name": "Chris Bilbo",
-     "title": "Senior System Development Engineer",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Frederick Lefebvre",
-     "title": "Principal Engineer",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Ovais Siddiqui",
      "title": "Software Development Manager",
      "company": "AWS",
@@ -24832,9 +24907,27 @@
      "role": "Internal Speaker"
     },
     {
+     "name": "Sai Harsha Suryadevara",
+     "title": "Software Engineer",
+     "company": "Amazon",
+     "role": "Internal Speaker"
+    },
+    {
      "name": "Stewart Smith",
      "title": "Principal Engineer",
      "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Frederick Lefebvre",
+     "title": "Principal Engineer",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Chris Bilbo",
+     "title": "Senior System Development Engineer",
+     "company": "Amazon",
      "role": "Internal Speaker"
     }
    ],
@@ -25206,7 +25299,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T23:01:42Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -25254,7 +25347,14 @@
      "No"
     ]
    },
-   "speakers": [],
+   "speakers": [
+    {
+     "name": "Thad Szell",
+     "title": "CTO",
+     "company": "The Access Group",
+     "role": "Sponsor Speaker"
+    }
+   ],
    "times": [
     {
      "sessionTimeID": "1790025504196001Csk3",
@@ -26635,7 +26735,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:43:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -26688,6 +26788,12 @@
      "name": "Madhavi Evana",
      "title": "Solutions Architect",
      "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Nirav Patel",
+     "title": "Sr. Solutions Architect",
+     "company": "AWS Inc.",
      "role": "Internal Speaker"
     },
     {
@@ -26736,7 +26842,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:43:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -26789,6 +26895,12 @@
      "name": "Madhavi Evana",
      "title": "Solutions Architect",
      "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Nirav Patel",
+     "title": "Sr. Solutions Architect",
+     "company": "AWS Inc.",
      "role": "Internal Speaker"
     },
     {
@@ -27873,7 +27985,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-08T00:25:07Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -27913,8 +28025,8 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Asif Abbasi",
-     "title": "Principal Solutions Architect",
+     "name": "Utkarsh Mittal",
+     "title": "Principal Product Manager",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
     }
@@ -27946,7 +28058,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-08T00:25:26Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -27980,14 +28092,14 @@
    },
    "speakers": [
     {
-     "name": "Sudipta Bagchi",
-     "title": "Sr. Specialist Solutions Architect",
+     "name": "Utkarsh Mittal",
+     "title": "Principal Product Manager",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
     },
     {
-     "name": "Asif Abbasi",
-     "title": "Principal Solutions Architect",
+     "name": "Sudipta Bagchi",
+     "title": "Sr. Specialist Solutions Architect",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
     }
@@ -35863,7 +35975,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:43:28Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -35897,6 +36009,12 @@
      "name": "Isaac Privitera",
      "title": "Principal Data Scientist",
      "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Anila Joshi",
+     "title": "GenAIIC Geo Leader, AWSI",
+     "company": "Amazon",
      "role": "Internal Speaker"
     },
     {
@@ -38066,7 +38184,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T16:59:57Z",
+   "modified": "2026-11-07T21:43:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -38096,7 +38214,20 @@
      "No"
     ]
    },
-   "speakers": [],
+   "speakers": [
+    {
+     "name": "alkrok Krok",
+     "title": "Senior AI Engineer",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Karl Baria",
+     "title": "Sr Customer Solutions Manager",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    }
+   ],
    "times": [
     {
      "sessionTimeID": "1793658037291001oX6H",
@@ -39712,7 +39843,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T23:27:48Z",
+   "modified": "2026-11-07T21:18:17Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -39876,7 +40007,7 @@
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T22:58:36Z",
+   "modified": "2026-11-07T22:31:04Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -39930,8 +40061,8 @@
    },
    "speakers": [
     {
-     "name": "Nan Jiang",
-     "title": "Member of Technical Stuff",
+     "name": "Omkaar Kamath",
+     "title": "Forward Deployed Engineer",
      "company": "Modal Labs",
      "role": "Sponsor Speaker"
     }
@@ -41420,101 +41551,6 @@
    ]
   },
   {
-   "sessionID": "1790873637672001JSD3",
-   "code": "SEC408-R1",
-   "title": "Build a container pipeline that blocks tampered images at the gate",
-   "abstract": "What if you want to prove cryptographically that every container in your environment is untampered and fully inventoried? In this builders' session, you build exactly that. Dive deep into the AWS Signer cryptographic model: KMS-backed keys, ECDSA P-256, COSE_Sign1 envelopes, and notation trust policies. Implement ECR managed signing, generate SBOMs with Amazon Inspector, slim images to reduce attack surface, and enforce admission on EKS with Kyverno. Then stress test it with attack simulations against the pipeline you just built.",
-   "type": "Builders' session",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Builders' session"
-    ],
-    "Level": [
-     "400 – Expert"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Security & Identity"
-    ],
-    "AreaofInterest": [
-     "Application Security",
-     "DevSecOps"
-    ],
-    "Role": [
-     "Cloud Security Specialist",
-     "DevOps Engineer"
-    ],
-    "Services": [
-     "Amazon Elastic Container Registry (Amazon ECR)",
-     "AWS Key Management Service (AWS KMS)",
-     "AWS Signer"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Andre Baumeier",
-     "title": "Senior Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Andrea Rossi",
-     "title": "AWS Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Desiree Brunner",
-     "title": "Security Specialist Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Michael Tschannen",
-     "title": "Sr. Specialist SA Security",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790873920285001aLbP",
-     "date": "2026-12-01",
-     "startTime": "13:00",
-     "endTime": "14:00",
-     "utcStartTime": "2026/12/01 21:00:00",
-     "utcEndTime": "2026/12/01 22:00:00",
-     "length": 60,
-     "room": "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Builders' Session 2",
-     "roomId": "1789591920422004b914",
-     "capacity": "50",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442231149001cSe5",
    "code": "SEC408-R",
    "title": "Build a container pipeline that blocks tampered images at the gate",
@@ -41523,7 +41559,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:43:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -41567,9 +41603,9 @@
    },
    "speakers": [
     {
-     "name": "Michael Tschannen",
-     "title": "Sr. Specialist SA Security",
-     "company": "Amazon Web Services",
+     "name": "Andrea Rossi",
+     "title": "AWS Solutions Architect",
+     "company": "AWS",
      "role": "Internal Speaker"
     },
     {
@@ -41585,9 +41621,15 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Andrea Rossi",
-     "title": "AWS Solutions Architect",
-     "company": "AWS",
+     "name": "Jann Wild",
+     "title": "Senior Solutions Architect",
+     "company": "Amazon Web Services EMEA SARL",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Michael Tschannen",
+     "title": "Sr. Specialist SA Security",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     }
    ],
@@ -41602,6 +41644,107 @@
      "length": 60,
      "room": "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Builders' Session 1",
      "roomId": "1789591921325001bwuO",
+     "capacity": "50",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790873637672001JSD3",
+   "code": "SEC408-R1",
+   "title": "Build a container pipeline that blocks tampered images at the gate",
+   "abstract": "What if you want to prove cryptographically that every container in your environment is untampered and fully inventoried? In this builders' session, you build exactly that. Dive deep into the AWS Signer cryptographic model: KMS-backed keys, ECDSA P-256, COSE_Sign1 envelopes, and notation trust policies. Implement ECR managed signing, generate SBOMs with Amazon Inspector, slim images to reduce attack surface, and enforce admission on EKS with Kyverno. Then stress test it with attack simulations against the pipeline you just built.",
+   "type": "Builders' session",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-07T21:43:44Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Builders' session"
+    ],
+    "Level": [
+     "400 – Expert"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Security & Identity"
+    ],
+    "AreaofInterest": [
+     "Application Security",
+     "DevSecOps"
+    ],
+    "Role": [
+     "Cloud Security Specialist",
+     "DevOps Engineer"
+    ],
+    "Services": [
+     "Amazon Elastic Container Registry (Amazon ECR)",
+     "AWS Key Management Service (AWS KMS)",
+     "AWS Signer"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Jann Wild",
+     "title": "Senior Solutions Architect",
+     "company": "Amazon Web Services EMEA SARL",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Andre Baumeier",
+     "title": "Senior Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Andrea Rossi",
+     "title": "AWS Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Desiree Brunner",
+     "title": "Security Specialist Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Michael Tschannen",
+     "title": "Sr. Specialist SA Security",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790873920285001aLbP",
+     "date": "2026-12-01",
+     "startTime": "13:00",
+     "endTime": "14:00",
+     "utcStartTime": "2026/12/01 21:00:00",
+     "utcEndTime": "2026/12/01 22:00:00",
+     "length": 60,
+     "room": "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Builders' Session 2",
+     "roomId": "1789591920422004b914",
      "capacity": "50",
      "inPersonTime": true,
      "virtualTime": false,
@@ -42006,6 +42149,12 @@
    },
    "speakers": [
     {
+     "name": "Mike Kuznetsov",
+     "title": "Principal SA, Migration & Modernization",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
      "name": "Kiran Kuppa",
      "title": "Principal SA",
      "company": "AWS",
@@ -42020,12 +42169,6 @@
     {
      "name": "Hrushikesh Shah",
      "title": "Sr. Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Mike Kuznetsov",
-     "title": "Principal SA, Migration & Modernization",
      "company": "AWS",
      "role": "Internal Speaker"
     },
@@ -42107,6 +42250,12 @@
    },
    "speakers": [
     {
+     "name": "Mike Kuznetsov",
+     "title": "Principal SA, Migration & Modernization",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
      "name": "Kiran Kuppa",
      "title": "Principal SA",
      "company": "AWS",
@@ -42121,12 +42270,6 @@
     {
      "name": "Hrushikesh Shah",
      "title": "Sr. Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Mike Kuznetsov",
-     "title": "Principal SA, Migration & Modernization",
      "company": "AWS",
      "role": "Internal Speaker"
     },
@@ -47407,7 +47550,7 @@
    "length": 360,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:43:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -47455,7 +47598,14 @@
      "No"
     ]
    },
-   "speakers": [],
+   "speakers": [
+    {
+     "name": "Ronak Shah",
+     "title": "Principal Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    }
+   ],
    "times": [
     {
      "sessionTimeID": "1790365865414001q4r2",
@@ -47483,7 +47633,7 @@
    "length": 570,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:43:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -47531,7 +47681,14 @@
      "No"
     ]
    },
-   "speakers": [],
+   "speakers": [
+    {
+     "name": "Ronak Shah",
+     "title": "Principal Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    }
+   ],
    "times": [
     {
      "sessionTimeID": "1790794810215001V7Oc",
@@ -47559,7 +47716,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T23:51:12Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -47589,14 +47746,14 @@
    },
    "speakers": [
     {
-     "name": "Hector Lopez",
-     "title": "Senior Applied Scientist",
+     "name": "Reilly Manton",
+     "title": "Solutions Architect",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
     },
     {
-     "name": "Reilly Manton",
-     "title": "Solutions Architect",
+     "name": "Hector Lopez",
+     "title": "Senior Applied Scientist",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
     },
@@ -47607,9 +47764,9 @@
      "role": "External Speaker"
     },
     {
-     "name": "Nitin Eusebius",
-     "title": "Principal Solutions Architect",
-     "company": "Amazon Web Services",
+     "name": "Veda Raman",
+     "title": "Pr Solutions Architect",
+     "company": "AWS",
      "role": "Internal Speaker"
     }
    ],
@@ -48016,7 +48173,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:43:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -48065,20 +48222,14 @@
    },
    "speakers": [
     {
+     "name": "Jay Galvin",
+     "title": "Principal Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
      "name": "Khozaima Motiwala",
      "title": "Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Karim Akacem",
-     "title": "Sr TAM",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Deepika Prabhakara",
-     "title": "Senior Customer Solutions Manager",
      "company": "AWS",
      "role": "Internal Speaker"
     },
@@ -48089,9 +48240,21 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Jay Galvin",
-     "title": "Principal Solutions Architect",
-     "company": "Amazon Web Services",
+     "name": "Ramasamy Seranthaiya",
+     "title": "Senior Solutions Architect",
+     "company": "Amazon Web Services Inc.",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Deepika Prabhakara",
+     "title": "Senior Customer Solutions Manager",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Karim Akacem",
+     "title": "Sr TAM",
+     "company": "AWS",
      "role": "Internal Speaker"
     }
    ],
@@ -48122,7 +48285,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:43:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -48171,20 +48334,14 @@
    },
    "speakers": [
     {
+     "name": "Jay Galvin",
+     "title": "Principal Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
      "name": "Khozaima Motiwala",
      "title": "Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Karim Akacem",
-     "title": "Sr TAM",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Deepika Prabhakara",
-     "title": "Senior Customer Solutions Manager",
      "company": "AWS",
      "role": "Internal Speaker"
     },
@@ -48195,9 +48352,21 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Jay Galvin",
-     "title": "Principal Solutions Architect",
-     "company": "Amazon Web Services",
+     "name": "Ramasamy Seranthaiya",
+     "title": "Senior Solutions Architect",
+     "company": "Amazon Web Services Inc.",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Deepika Prabhakara",
+     "title": "Senior Customer Solutions Manager",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Karim Akacem",
+     "title": "Sr TAM",
+     "company": "AWS",
      "role": "Internal Speaker"
     }
    ],
@@ -48389,100 +48558,6 @@
    ]
   },
   {
-   "sessionID": "1780442224208001c3DV",
-   "code": "AIM407-R",
-   "title": "Build a production multi-Agent Systems with Strands",
-   "abstract": "Build, deploy, and scale agents with re-usable multi-agent patterns in Strands Agents. You will create an agentic system that is capable of decomposing complex tasks and delegating sub-tasks to specialized worker agents. These agents will manage shared state and memory across boundaries, gracefully handle failures, and enforce quality guardrails. Subsequently, these agents will be deployed to Amazon Bedrock AgentCore for production scaling and observability, featuring harness capabilities for checkpointing and long-running multi-agent workflow capabilities. Upon completion, you will be equipped with reusable design patterns and industry best practices to construct production-grade multi-agent systems utilizing the Strands Agent SDK. ",
-   "type": "Builders' session",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Builders' session"
-    ],
-    "Level": [
-     "400 – Expert"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Artificial Intelligence"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Nicholas Clegg",
-     "title": "Senior Software Engineer",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Elizabeth Fuentes Leone",
-     "title": "Developer Advocate, GenAI",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Jonathan Segev",
-     "title": "Software Development Manager",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Albert Zhao",
-     "title": "Developer Experience Engineer",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Joy Chakraborty",
-     "title": "Sr. Technical Program Manager",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Owen Kaplan",
-     "title": "SDE II",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025482420001Co3V",
-     "date": "2026-11-30",
-     "startTime": "12:00",
-     "endTime": "13:00",
-     "utcStartTime": "2026/11/30 20:00:00",
-     "utcEndTime": "2026/11/30 21:00:00",
-     "length": 60,
-     "room": "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Builders' Session 1",
-     "roomId": "1789591920413001bvC3",
-     "capacity": "50",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358228435001iVxp",
    "code": "AIM407-R1",
    "title": "Build a production multi-Agent Systems with Strands",
@@ -48491,7 +48566,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-08T00:06:35Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -48523,24 +48598,6 @@
    },
    "speakers": [
     {
-     "name": "Nicholas Clegg",
-     "title": "Senior Software Engineer",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Elizabeth Fuentes Leone",
-     "title": "Developer Advocate, GenAI",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Jonathan Segev",
-     "title": "Software Development Manager",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Albert Zhao",
      "title": "Developer Experience Engineer",
      "company": "Amazon",
@@ -48549,6 +48606,18 @@
     {
      "name": "Joy Chakraborty",
      "title": "Sr. Technical Program Manager",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Nicholas Clegg",
+     "title": "Senior Software Engineer",
+     "company": "Amazon",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Elizabeth Fuentes Leone",
+     "title": "Developer Advocate, GenAI",
      "company": "AWS",
      "role": "Internal Speaker"
     },
@@ -48570,6 +48639,94 @@
      "length": 60,
      "room": "MGM Grand | Level 1 | Room 104",
      "roomId": "1789591920339004b67H",
+     "capacity": "50",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442224208001c3DV",
+   "code": "AIM407-R",
+   "title": "Build a production multi-Agent Systems with Strands",
+   "abstract": "Build, deploy, and scale agents with re-usable multi-agent patterns in Strands Agents. You will create an agentic system that is capable of decomposing complex tasks and delegating sub-tasks to specialized worker agents. These agents will manage shared state and memory across boundaries, gracefully handle failures, and enforce quality guardrails. Subsequently, these agents will be deployed to Amazon Bedrock AgentCore for production scaling and observability, featuring harness capabilities for checkpointing and long-running multi-agent workflow capabilities. Upon completion, you will be equipped with reusable design patterns and industry best practices to construct production-grade multi-agent systems utilizing the Strands Agent SDK. ",
+   "type": "Builders' session",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-08T00:06:12Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Builders' session"
+    ],
+    "Level": [
+     "400 – Expert"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Artificial Intelligence"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Albert Zhao",
+     "title": "Developer Experience Engineer",
+     "company": "Amazon",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Joy Chakraborty",
+     "title": "Sr. Technical Program Manager",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Nicholas Clegg",
+     "title": "Senior Software Engineer",
+     "company": "Amazon",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Elizabeth Fuentes Leone",
+     "title": "Developer Advocate, GenAI",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Owen Kaplan",
+     "title": "SDE II",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025482420001Co3V",
+     "date": "2026-11-30",
+     "startTime": "12:00",
+     "endTime": "13:00",
+     "utcStartTime": "2026/11/30 20:00:00",
+     "utcEndTime": "2026/11/30 21:00:00",
+     "length": 60,
+     "room": "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Builders' Session 1",
+     "roomId": "1789591920413001bvC3",
      "capacity": "50",
      "inPersonTime": true,
      "virtualTime": false,
@@ -49564,7 +49721,7 @@
    "length": 570,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:43:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -49611,7 +49768,14 @@
      "No"
     ]
    },
-   "speakers": [],
+   "speakers": [
+    {
+     "name": "Sunil Bemarkar",
+     "title": "Sr. Partner Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
    "times": [
     {
      "sessionTimeID": "1790366010803001jpZU",
@@ -49728,7 +49892,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:43:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -49764,6 +49928,12 @@
      "name": "Andre Hass",
      "title": "Sr. Specialist TAM - Analytics",
      "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "David Pasha",
+     "title": "Sr TAM",
+     "company": "AWS",
      "role": "Internal Speaker"
     },
     {
@@ -50463,7 +50633,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T23:45:29Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -50496,9 +50666,21 @@
    },
    "speakers": [
     {
-     "name": "Kanwaljit Khurmi",
-     "title": "Sr Mgr, Solutions Architecture",
-     "company": "AMAZON WEB SERVICES INC",
+     "name": "Naidile Murali",
+     "title": "Sr. Product Manager Technical",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Marco Goergmaier",
+     "title": "Vice President Enterprise Platforms, Data & AI",
+     "company": "BMW",
+     "role": "External Speaker"
+    },
+    {
+     "name": "Jason Berkowitz",
+     "title": "Head of Product Marketing for AI Model Development and Inference",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     }
    ],
@@ -51504,7 +51686,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T19:59:19Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -51545,21 +51727,15 @@
    },
    "speakers": [
     {
-     "name": "Diego Santiviago",
-     "title": "Principal Engineer",
+     "name": "Jas Narula",
+     "title": "Senior Product Manager(Technical)",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
     },
     {
      "name": "Swarna Kunnath",
-     "title": "Senior Cloud Application Architect - AppMod",
+     "title": "Senior Solutions Architect , AWS",
      "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Rahul Pisal",
-     "title": "Senior Solutions Architect",
-     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     },
     {
@@ -51569,8 +51745,14 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Jas Narula",
-     "title": "Senior Product Manager(Technical)",
+     "name": "Diego Santiviago",
+     "title": "Principal Engineer",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Rahul Pisal",
+     "title": "Senior Solutions Architect",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
     }
@@ -52426,7 +52608,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:12:09Z",
+   "modified": "2026-11-07T21:43:29Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -52457,7 +52639,14 @@
      "No"
     ]
    },
-   "speakers": [],
+   "speakers": [
+    {
+     "name": "Ankit Patel",
+     "title": "Manager, Solutions Architecture",
+     "company": "Amazon AWS",
+     "role": "Internal Speaker"
+    }
+   ],
    "times": [
     {
      "sessionTimeID": "1793995928763001PcII",
@@ -54704,7 +54893,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:49:50Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -54754,6 +54943,12 @@
      "title": "Specialist Solutions Architect Quantum Tech",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
+    },
+    {
+     "name": "Tong Shen",
+     "title": "Research Scientist",
+     "company": "Quantum Elements",
+     "role": "External Speaker"
     }
    ],
    "times": [
@@ -55015,7 +55210,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:43:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -55054,6 +55249,12 @@
     ]
    },
    "speakers": [
+    {
+     "name": "Ganesh Suryanarayanan",
+     "title": "Prinicipal Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
     {
      "name": "Arne Knoeller",
      "title": "Principal Solutions Architect",
@@ -55240,7 +55441,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T23:18:40Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -55276,10 +55477,16 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Anubhav Mangal",
-     "title": "Principal Product Manager",
+     "name": "Madhu Pai",
+     "title": "Principal GenAI Specialist SA",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
+    },
+    {
+     "name": "Pankaj Sharma",
+     "title": "Sr. Manager AI Engineering",
+     "company": "Southwest Airlines",
+     "role": "External Speaker"
     }
    ],
    "times": [
@@ -55754,7 +55961,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:43:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -55805,6 +56012,12 @@
      "title": "Senior Solutions Architect",
      "company": "Amazon",
      "role": "Internal Speaker"
+    },
+    {
+     "name": "Geoffroy Weyer",
+     "title": "Senior Software Engineer",
+     "company": "AWS",
+     "role": "Internal Speaker"
     }
    ],
    "times": [
@@ -55834,7 +56047,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:43:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -55883,6 +56096,12 @@
      "name": "Katherine Vishnevskaya",
      "title": "Senior Solutions Architect",
      "company": "Amazon",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Geoffroy Weyer",
+     "title": "Senior Software Engineer",
+     "company": "AWS",
      "role": "Internal Speaker"
     }
    ],
@@ -58829,7 +59048,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:43:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -58875,12 +59094,6 @@
    },
    "speakers": [
     {
-     "name": "Mukunthan Doraiswamy",
-     "title": "Delivery Consultant - AI/ML",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Anshuman Chakravarty",
      "title": "Senior Technical Account Manager",
      "company": "Amazon Web Services",
@@ -58893,15 +59106,27 @@
      "role": "Internal Speaker"
     },
     {
+     "name": "Jesus Bernal",
+     "title": "Sr. Startup SA",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
      "name": "Praveen Koorse",
      "title": "Sr. Solutions Architect",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
     },
     {
-     "name": "Jesus Bernal",
-     "title": "Sr. Startup SA",
-     "company": "Amazon Web Services",
+     "name": "Mukunthan Doraiswamy",
+     "title": "Delivery Consultant - AI/ML",
+     "company": "Amazon",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Hanish Garg",
+     "title": "Sr. Regional Lead SA - GovTech",
+     "company": "Amazon",
      "role": "Internal Speaker"
     }
    ],
@@ -59006,7 +59231,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:43:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -59065,6 +59290,12 @@
      "role": "Internal Speaker"
     },
     {
+     "name": "Mark Curtis",
+     "title": "Senior Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
      "name": "Anushree Umesh",
      "title": "Solutions Architect",
      "company": "Amazon Web Services",
@@ -59074,6 +59305,12 @@
      "name": "Surya D",
      "title": "Technical Account Manager",
      "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Hanish Garg",
+     "title": "Sr. Regional Lead SA - GovTech",
+     "company": "Amazon",
      "role": "Internal Speaker"
     }
    ],
@@ -59104,7 +59341,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:43:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -59163,6 +59400,12 @@
      "role": "Internal Speaker"
     },
     {
+     "name": "Mark Curtis",
+     "title": "Senior Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
      "name": "Anushree Umesh",
      "title": "Solutions Architect",
      "company": "Amazon Web Services",
@@ -59172,6 +59415,12 @@
      "name": "Surya D",
      "title": "Technical Account Manager",
      "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Hanish Garg",
+     "title": "Sr. Regional Lead SA - GovTech",
+     "company": "Amazon",
      "role": "Internal Speaker"
     }
    ],
@@ -60468,7 +60717,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:46:24Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -60516,6 +60765,12 @@
     ]
    },
    "speakers": [
+    {
+     "name": "Trevor Stuart",
+     "title": "General Manager & SVP",
+     "company": "Harness",
+     "role": "Sponsor Speaker"
+    },
     {
      "name": "Nick Durkin",
      "title": "Global Field CTO",
@@ -61097,7 +61352,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-08T00:16:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -61128,6 +61383,12 @@
      "title": "Principal Gen AI Architect",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
+    },
+    {
+     "name": "Dheeraj Hegde",
+     "title": "Sr. GenAI/ML Geo SSA",
+     "company": "AWS",
+     "role": "Internal Speaker"
     }
    ],
    "times": [
@@ -61157,7 +61418,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:49:50Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -61209,6 +61470,12 @@
      "title": "Product Leader",
      "company": "AWS",
      "role": "Internal Speaker"
+    },
+    {
+     "name": "Luca Passani",
+     "title": "CTO",
+     "company": "ScientiaMobile",
+     "role": "External Speaker"
     }
    ],
    "times": [
@@ -61238,7 +61505,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:49:50Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -61291,6 +61558,12 @@
      "title": "Product Leader",
      "company": "AWS",
      "role": "Internal Speaker"
+    },
+    {
+     "name": "Luca Passani",
+     "title": "CTO",
+     "company": "ScientiaMobile",
+     "role": "External Speaker"
     }
    ],
    "times": [
@@ -62327,7 +62600,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T23:59:16Z",
+   "modified": "2026-11-07T19:59:02Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -62358,7 +62631,7 @@
    "speakers": [
     {
      "name": "Jed Lechner",
-     "title": "Senior Specialist Solutions Architect - Amazon Quick",
+     "title": "Sr Specialist Solutions Architect - Amazon Quick",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
     },
@@ -62396,7 +62669,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:33:50Z",
+   "modified": "2026-11-07T23:48:28Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -62438,16 +62711,22 @@
    },
    "speakers": [
     {
+     "name": "Louise Ping",
+     "title": "Sr. GTM Specialist",
+     "company": "Annapurna Labs (AWS)",
+     "role": "External Speaker"
+    },
+    {
      "name": "Jeff Boudier",
      "title": "CPGO",
      "company": "Hugging Face",
      "role": "External Speaker"
     },
     {
-     "name": "Louise Ping",
-     "title": "Sr. GTM Specialist",
-     "company": "Annapurna Labs (AWS)",
-     "role": "External Speaker"
+     "name": "Andre Gomes",
+     "title": "Frontier AI Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
     }
    ],
    "times": [
@@ -63029,7 +63308,7 @@
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T22:33:06Z",
+   "modified": "2026-11-08T00:39:47Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -63081,6 +63360,12 @@
      "name": "Muneer Mirza",
      "title": "Vice President, Multicloud",
      "company": "Oracle Corporation",
+     "role": "Sponsor Speaker"
+    },
+    {
+     "name": "Vishal Patil",
+     "title": "Lead Principal Product Manager",
+     "company": "Oracle",
      "role": "Sponsor Speaker"
     }
    ],
@@ -63426,7 +63711,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:43:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -63481,6 +63766,12 @@
      "title": "SVP, Ecosystem & Standards",
      "company": "Okta",
      "role": "Sponsor Speaker"
+    },
+    {
+     "name": "Jose Alvarez",
+     "title": "Senior Partner Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
     }
    ],
    "times": [
@@ -63876,7 +64167,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:43:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -63929,8 +64220,8 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Itziar Olivera Goicolea",
-     "title": "TAM",
+     "name": "Mark Curtis",
+     "title": "Senior Solutions Architect",
      "company": "AWS",
      "role": "Internal Speaker"
     },
@@ -63938,6 +64229,12 @@
      "name": "Jay Colodner",
      "title": "Technical Account Manager II",
      "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Itziar Olivera Goicolea",
+     "title": "TAM",
+     "company": "AWS",
      "role": "Internal Speaker"
     },
     {
@@ -63974,7 +64271,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:43:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -64027,8 +64324,8 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Itziar Olivera Goicolea",
-     "title": "TAM",
+     "name": "Mark Curtis",
+     "title": "Senior Solutions Architect",
      "company": "AWS",
      "role": "Internal Speaker"
     },
@@ -64036,6 +64333,12 @@
      "name": "Jay Colodner",
      "title": "Technical Account Manager II",
      "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Itziar Olivera Goicolea",
+     "title": "TAM",
+     "company": "AWS",
      "role": "Internal Speaker"
     },
     {
@@ -64072,7 +64375,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-08T00:32:51Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -64794,7 +65097,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-08T00:12:55Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -64824,15 +65127,15 @@
    },
    "speakers": [
     {
-     "name": "Rajesh Kumar Ravi",
-     "title": "Sr. Solutions Architect, WWSO Agentic AI",
-     "company": "Amazon Web Services",
+     "name": "Ben Coombs",
+     "title": "Product Manager",
+     "company": "AWS",
      "role": "Internal Speaker"
     },
     {
-     "name": "Abhinav Krishna",
-     "title": "Principal Product Manager (Technical), External Services",
-     "company": "AWS",
+     "name": "Rajesh Kumar Ravi",
+     "title": "Sr. Solutions Architect, WWSO Agentic AI",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     }
    ],
@@ -67205,7 +67508,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T16:59:57Z",
+   "modified": "2026-11-07T21:43:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -67236,7 +67539,14 @@
      "No"
     ]
    },
-   "speakers": [],
+   "speakers": [
+    {
+     "name": "Sean Helmes",
+     "title": "Sr. Product Manager, Technical, External Services",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
    "times": [
     {
      "sessionTimeID": "1793658956141001n0HG",
@@ -67425,7 +67735,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T12:13:35Z",
+   "modified": "2026-11-08T00:37:16Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -67462,7 +67772,20 @@
      "No"
     ]
    },
-   "speakers": [],
+   "speakers": [
+    {
+     "name": "Mark Jones",
+     "title": "FSI Senior Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Jennifer Tipecska",
+     "title": "Senior Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
    "times": [
     {
      "sessionTimeID": "1793909859451001Dqsk",
@@ -68610,7 +68933,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T22:06:34Z",
+   "modified": "2026-11-07T21:49:50Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -68655,16 +68978,22 @@
    },
    "speakers": [
     {
-     "name": "Shivam Saggar",
-     "title": "Sr. Product Manager (Tech)",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Shelby Seward",
      "title": "DMTS, Sr. Director",
      "company": "T-Mobile",
      "role": "External Speaker"
+    },
+    {
+     "name": "Hai Lu",
+     "title": "Sr. Engineering Manager",
+     "company": "Databricks",
+     "role": "External Speaker"
+    },
+    {
+     "name": "Shivam Saggar",
+     "title": "Sr. Product Manager (Tech)",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
     },
     {
      "name": "Chris McEvilly",
@@ -68763,7 +69092,7 @@
    "length": 570,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:43:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -68809,7 +69138,20 @@
      "No"
     ]
    },
-   "speakers": [],
+   "speakers": [
+    {
+     "name": "Alex Weeden",
+     "title": "WW GenAI PSA, Anthropic",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Shan Kandaswamy",
+     "title": "Senior Partner Solutions Architect - Anthropic",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
    "times": [
     {
      "sessionTimeID": "1790621067443001hcQP",
@@ -72345,7 +72687,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:43:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -72370,7 +72712,14 @@
      "No"
     ]
    },
-   "speakers": [],
+   "speakers": [
+    {
+     "name": "Joe Wagner",
+     "title": "Senior Security Solution Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
    "times": [
     {
      "sessionTimeID": "1791227186755001Sf7b",
@@ -72876,7 +73225,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-08T00:15:05Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -72906,9 +73255,9 @@
    },
    "speakers": [
     {
-     "name": "Akarsha Sehwag",
-     "title": "Sr. GenAI Data Scientist - Agentcore Memory",
-     "company": "Amazon Web Services",
+     "name": "Phelipe Fabres",
+     "title": "Sr. Solutions Architect GenAI - Frontier",
+     "company": "AWS",
      "role": "Internal Speaker"
     },
     {
@@ -73747,15 +74096,15 @@
    },
    "speakers": [
     {
-     "name": "Alex Livingstone",
-     "title": "Principal Specialist Solutions Architect, Cloud Operations",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Phani Kumar Lingamallu",
      "title": "Pr. Partner Solution Architect",
      "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Alex Livingstone",
+     "title": "Principal Specialist Solutions Architect, Cloud Operations",
+     "company": "AWS",
      "role": "Internal Speaker"
     }
    ],
@@ -73852,7 +74201,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-08T00:24:27Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -73890,12 +74239,6 @@
      "title": "Principal Data and AI Solutions Architect",
      "company": "Amazon.com Services, Inc.",
      "role": "Internal Speaker"
-    },
-    {
-     "name": "Raghuveer Reddy",
-     "title": "Managing Director",
-     "company": "Goldman Sachs",
-     "role": "External Speaker"
     },
     {
      "name": "Shrey Malpani",
@@ -75151,7 +75494,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-08T00:04:00Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -75181,9 +75524,21 @@
    },
    "speakers": [
     {
+     "name": "Echeyde Cubillo",
+     "title": "Principal Engineer",
+     "company": "Intuit",
+     "role": "External Speaker"
+    },
+    {
      "name": "Haritez Narrisetty",
      "title": "Sr Director Scalable Design Solutions",
      "company": "GlobalFoundries",
+     "role": "External Speaker"
+    },
+    {
+     "name": "Sharlina Keshava",
+     "title": "Applied Science Manager",
+     "company": "Amazon Web Services",
      "role": "External Speaker"
     },
     {
@@ -75193,22 +75548,16 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Echeyde Cubillo",
-     "title": "Principal Engineer",
-     "company": "Intuit",
-     "role": "External Speaker"
-    },
-    {
-     "name": "Sharlina Keshava",
-     "title": "Applied Science Manager",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Heng Zhang",
      "title": "AI/ML Engineering Lead",
      "company": "SAP Labs",
      "role": "External Speaker"
+    },
+    {
+     "name": "Nicole Meyers",
+     "title": "Sr. GenAI Strategist",
+     "company": "AWS",
+     "role": "Internal Speaker"
     }
    ],
    "times": [
@@ -82047,7 +82396,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:49:50Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -82089,15 +82438,21 @@
    },
    "speakers": [
     {
-     "name": "Ekta Walia Bhullar",
-     "title": "Principal Cloud Architect",
-     "company": "Amazon web Services",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Dan Eakin",
      "title": "Sales Leader",
      "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Mark Logan",
+     "title": "SVP IT, Clinical Tech Products",
+     "company": "Mosaic Clinical Technologies",
+     "role": "External Speaker"
+    },
+    {
+     "name": "Ekta Walia Bhullar",
+     "title": "Principal Cloud Architect",
+     "company": "Amazon web Services",
      "role": "Internal Speaker"
     },
     {
@@ -83246,7 +83601,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T16:59:57Z",
+   "modified": "2026-11-07T21:43:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -83274,7 +83629,20 @@
      "No"
     ]
    },
-   "speakers": [],
+   "speakers": [
+    {
+     "name": "Juan Diego Medina",
+     "title": "Sr Startup Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Jose Antonio Gomez Mora",
+     "title": "Startup Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
    "times": [
     {
      "sessionTimeID": "1793656326753001nSME",
@@ -86194,7 +86562,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T04:00:12Z",
+   "modified": "2026-11-07T15:19:41Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -87338,7 +87706,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:57:01Z",
+   "modified": "2026-11-07T21:46:24Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -87389,7 +87757,20 @@
      "No"
     ]
    },
-   "speakers": [],
+   "speakers": [
+    {
+     "name": "Henning Rauch",
+     "title": "Product, CEO Edelbyte GmbH",
+     "company": "Edelbyte",
+     "role": "Sponsor Speaker"
+    },
+    {
+     "name": "Daniel Seybold",
+     "title": "Entrepreneur (Founder/Co-Founder)",
+     "company": "benchANT GmbH",
+     "role": "Sponsor Speaker"
+    }
+   ],
    "times": [
     {
      "sessionTimeID": "1790025481873001C4ZU",
@@ -87595,7 +87976,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:43:47Z",
+   "modified": "2026-11-07T23:39:32Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -89805,7 +90186,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T21:44:11Z",
+   "modified": "2026-11-07T21:43:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -89835,7 +90216,20 @@
      "No"
     ]
    },
-   "speakers": [],
+   "speakers": [
+    {
+     "name": "Lewis Howarth",
+     "title": "WW AWS Marketplace Adoption",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Aaron Edell",
+     "title": "Global Head of AWS Startups, Accelerators and Universities",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
    "times": [
     {
      "sessionTimeID": "1793395036282001BrKK",
@@ -90981,7 +91375,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:46:24Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -91032,6 +91426,18 @@
     ]
    },
    "speakers": [
+    {
+     "name": "Lotte Verheyden",
+     "title": "Developer Relations Engineer",
+     "company": "Langfuse (part of Clickhouse)",
+     "role": "Sponsor Speaker"
+    },
+    {
+     "name": "Doneyli De Jesus",
+     "title": "AI Engineering Lead",
+     "company": "Langfuse (by ClickHouse)",
+     "role": "Sponsor Speaker"
+    },
     {
      "name": "Marc Klingen",
      "title": "Co-Founder",
@@ -93819,7 +94225,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T16:59:57Z",
+   "modified": "2026-11-07T21:43:28Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -93847,7 +94253,14 @@
      "No"
     ]
    },
-   "speakers": [],
+   "speakers": [
+    {
+     "name": "Mo Ahmed",
+     "title": "Global Head of Frontier AI for Startups and Private Equity",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    }
+   ],
    "times": [
     {
      "sessionTimeID": "1793395079537001YX23",
@@ -95220,7 +95633,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T16:59:57Z",
+   "modified": "2026-11-07T21:43:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -95250,7 +95663,20 @@
      "No"
     ]
    },
-   "speakers": [],
+   "speakers": [
+    {
+     "name": "Shrey Kapoor",
+     "title": "Sr Product Manager - Technical",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Les Lamprecht",
+     "title": "Sr Manager, Software Dev",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
    "times": [
     {
      "sessionTimeID": "1793656377404001MHxU",
@@ -95431,7 +95857,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T16:59:57Z",
+   "modified": "2026-11-07T21:43:35Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -95460,7 +95886,26 @@
      "No"
     ]
    },
-   "speakers": [],
+   "speakers": [
+    {
+     "name": "Dave Abrameto",
+     "title": "Sr. Manager, AWS Startups Investor Management",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Aaron Edell",
+     "title": "Global Head of AWS Startups, Accelerators and Universities",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Karlo Delos Reyes",
+     "title": "Principal Investor Manager",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
    "times": [
     {
      "sessionTimeID": "1793395115638001xVLC",
@@ -95480,93 +95925,6 @@
    ]
   },
   {
-   "sessionID": "1780442253453001c22b",
-   "code": "AIM337-R",
-   "title": "Four agents, one answer: multi-agent synthesis on AWS",
-   "abstract": "Turning messy, unstructured sources into summaries you can trust takes more than one model. We walk through a working multi-agent system where four specialized agents (a searcher, an analyst, a verifier, and a synthesizer) collaborate to produce cited, evidence-backed results, each running on the Bedrock model best suited to its job. We dissect the hard parts of multi-agent design (message routing, shared state, bounded retries, and cost control). Leave with patterns you can replicate for evidence-backed synthesis in your own domain.",
-   "type": "Code talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-06T22:30:40Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Code talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Artificial Intelligence"
-    ],
-    "AreaofInterest": [
-     "Inclusion",
-     "Agentic AI"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "IT Professional / Technical Manager",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Bedrock"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Matt Bollinger",
-     "title": "Sr. Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Aneel Murari",
-     "title": "Sr. Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Sindhu Pillai",
-     "title": "Sr. SA Manager, US NonProfit",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790033115209001qk08",
-     "date": "2026-11-30",
-     "startTime": "12:00",
-     "endTime": "13:00",
-     "utcStartTime": "2026/11/30 20:00:00",
-     "utcEndTime": "2026/11/30 21:00:00",
-     "length": 60,
-     "room": "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Code Talk",
-     "roomId": "1789591920430004bQ0h",
-     "capacity": "120",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358248757001iSTh",
    "code": "AIM337-R1",
    "title": "Four agents, one answer: multi-agent synthesis on AWS",
@@ -95575,7 +95933,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T22:31:06Z",
+   "modified": "2026-11-07T23:43:30Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -95616,12 +95974,6 @@
     ]
    },
    "speakers": [
-    {
-     "name": "Matt Bollinger",
-     "title": "Sr. Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
     {
      "name": "Aneel Murari",
      "title": "Sr. Solutions Architect",
@@ -95643,6 +95995,87 @@
      "endTime": "14:30",
      "utcStartTime": "2026/12/03 21:30:00",
      "utcEndTime": "2026/12/03 22:30:00",
+     "length": 60,
+     "room": "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Code Talk",
+     "roomId": "1789591920430004bQ0h",
+     "capacity": "120",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442253453001c22b",
+   "code": "AIM337-R",
+   "title": "Four agents, one answer: multi-agent synthesis on AWS",
+   "abstract": "Turning messy, unstructured sources into summaries you can trust takes more than one model. We walk through a working multi-agent system where four specialized agents (a searcher, an analyst, a verifier, and a synthesizer) collaborate to produce cited, evidence-backed results, each running on the Bedrock model best suited to its job. We dissect the hard parts of multi-agent design (message routing, shared state, bounded retries, and cost control). Leave with patterns you can replicate for evidence-backed synthesis in your own domain.",
+   "type": "Code talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-07T23:43:12Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Code talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Artificial Intelligence"
+    ],
+    "AreaofInterest": [
+     "Inclusion",
+     "Agentic AI"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "IT Professional / Technical Manager",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Bedrock"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Aneel Murari",
+     "title": "Sr. Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Sindhu Pillai",
+     "title": "Sr. SA Manager, US NonProfit",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790033115209001qk08",
+     "date": "2026-11-30",
+     "startTime": "12:00",
+     "endTime": "13:00",
+     "utcStartTime": "2026/11/30 20:00:00",
+     "utcEndTime": "2026/11/30 21:00:00",
      "length": 60,
      "room": "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Code Talk",
      "roomId": "1789591920430004bQ0h",
@@ -95765,7 +96198,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T19:17:54Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -95811,15 +96244,15 @@
    },
    "speakers": [
     {
-     "name": "Mangesh Budkule",
-     "title": "Sr. Specialist Solution Architect",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Khurram Khawaja",
      "title": "Principal PMT-ES",
      "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Mangesh Budkule",
+     "title": "Sr. Specialist Solution Architect",
+     "company": "Amazon",
      "role": "Internal Speaker"
     }
    ],
@@ -95850,7 +96283,7 @@
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T22:33:31Z",
+   "modified": "2026-11-07T23:16:10Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -95896,9 +96329,9 @@
    },
    "speakers": [
     {
-     "name": "Emilio Rodas",
-     "title": "Solutions Engineer",
-     "company": "Booz Allen",
+     "name": "Joseph Gillespie",
+     "title": "Senior Vice President",
+     "company": "Booz Allen Hamilton",
      "role": "Sponsor Speaker"
     }
    ],
@@ -97546,7 +97979,7 @@
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T22:33:41Z",
+   "modified": "2026-11-07T22:55:10Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -97594,21 +98027,27 @@
    },
    "speakers": [
     {
-     "name": "Madhav Ravipati",
-     "title": "Principal technical lead",
-     "company": "Pacific gas and electric",
+     "name": "Russell King",
+     "title": "Sr. Director",
+     "company": "Continental Resources",
      "role": "Sponsor Speaker"
     },
     {
-     "name": "Satish Patharkar",
-     "title": "Technology",
-     "company": "PG&E",
+     "name": "Brian Morris",
+     "title": "Principal Architect",
+     "company": "Continental Resources",
      "role": "Sponsor Speaker"
     },
     {
-     "name": "Puneet Goel",
-     "title": "Director Cloud Managed Services",
-     "company": "PriceWaterHouseCoppers",
+     "name": "Dhruv Shah",
+     "title": "Director, AI and Data Science",
+     "company": "PwC",
+     "role": "Sponsor Speaker"
+    },
+    {
+     "name": "Liz Morris",
+     "title": "Sr IT Manager",
+     "company": "Continental Resources, Inc.",
      "role": "Sponsor Speaker"
     }
    ],
@@ -100248,7 +100687,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:43:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -100296,9 +100735,21 @@
      "role": "Internal Speaker"
     },
     {
+     "name": "Mitul Patel",
+     "title": "Senior GenAI/ML Specialist Solution Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
      "name": "Shankar Ramachandran",
      "title": "Principal Technologist",
      "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Guillermo Tantachuco",
+     "title": "Principal Technologist, AI",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     }
    ],
@@ -102624,7 +103075,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:43:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -102657,9 +103108,9 @@
    },
    "speakers": [
     {
-     "name": "Lee Kear",
-     "title": "Sr. Manager Solutions Architecture - S3",
-     "company": "AWS",
+     "name": "Sumaja Kapa",
+     "title": "US, Specialist SA",
+     "company": "Amazon",
      "role": "Internal Speaker"
     },
     {
@@ -102669,15 +103120,21 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Fabio Lattanzi",
-     "title": "Solutions Architect",
+     "name": "Lee Kear",
+     "title": "Sr. Manager Solutions Architecture - S3",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Lokesh AP",
+     "title": "Senior Solutions Architect",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
     },
     {
-     "name": "Sumaja Kapa",
-     "title": "US, Specialist SA",
-     "company": "Amazon",
+     "name": "Fabio Lattanzi",
+     "title": "Solutions Architect",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     }
    ],
@@ -103282,7 +103739,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T16:59:57Z",
+   "modified": "2026-11-07T21:43:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -103312,7 +103769,20 @@
      "No"
     ]
    },
-   "speakers": [],
+   "speakers": [
+    {
+     "name": "Aaron Edell",
+     "title": "Global Head of AWS Startups, Accelerators and Universities",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Danilo Muniz",
+     "title": "Frontier AI Account Manager",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    }
+   ],
    "times": [
     {
      "sessionTimeID": "1793657023907001fVQe",
@@ -103340,7 +103810,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T11:03:58Z",
+   "modified": "2026-11-08T00:19:25Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -103381,14 +103851,7 @@
      "Yes"
     ]
    },
-   "speakers": [
-    {
-     "name": "Deepak Singh",
-     "title": "Sr GenAI/ML Solutions Architect",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    }
-   ],
+   "speakers": [],
    "times": [
     {
      "sessionTimeID": "1793087022377001C1kz",
@@ -103416,7 +103879,7 @@
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T22:33:42Z",
+   "modified": "2026-11-07T21:46:24Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -103463,7 +103926,14 @@
      "No"
     ]
    },
-   "speakers": [],
+   "speakers": [
+    {
+     "name": "Shahar Peled",
+     "title": "Co-Founder & CEO",
+     "company": "TERRA SECURITY LTD",
+     "role": "Sponsor Speaker"
+    }
+   ],
    "times": [
     {
      "sessionTimeID": "1790033125287001qXe1",
@@ -103623,76 +104093,6 @@
    ]
   },
   {
-   "sessionID": "1780442275454001cwcV",
-   "code": "AIM439-R",
-   "title": "Getting Started with AgentCore: ship an agent to production in 2 hours",
-   "abstract": "You can build an agent in an afternoon. Getting it to production takes months. Not because the AI is hard, but because the infrastructure around it is: memory, tool access, identity, policy, observability, evaluation. This workshop closes that gap in two hours. Build a customer support agent from scratch and progressively add each production capability using the AgentCore CLI: runtime, memory, gateway, identity, policy, observability, and evaluation. AgentCore is framework and model agnostic, so everything applies whether you use LangGraph, CrewAI, Strands, or your own stack. Leave ready to ship.",
-   "type": "Workshop",
-   "length": 120,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Workshop"
-    ],
-    "Level": [
-     "400 – Expert"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Artificial Intelligence"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Madhu Samhitha Vangara",
-     "title": "Specialist Solution Architect - GenAI",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Robert Belson",
-     "title": "Senior Developer Advocate",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025471783001CYIw",
-     "date": "2026-11-30",
-     "startTime": "08:30",
-     "endTime": "10:30",
-     "utcStartTime": "2026/11/30 16:30:00",
-     "utcEndTime": "2026/11/30 18:30:00",
-     "length": 120,
-     "room": "MGM Grand | Level 1 | Grand 124",
-     "roomId": "1789591920329003bjkj",
-     "capacity": "112",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358238826001ikw2",
    "code": "AIM439-R1",
    "title": "Getting Started with AgentCore: ship an agent to production in 2 hours",
@@ -103701,7 +104101,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-08T00:12:12Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -103732,12 +104132,6 @@
    },
    "speakers": [
     {
-     "name": "Madhu Samhitha Vangara",
-     "title": "Specialist Solution Architect - GenAI",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Robert Belson",
      "title": "Senior Developer Advocate",
      "company": "Amazon Web Services",
@@ -103756,6 +104150,70 @@
      "room": "Wynn/Encore | Upper Convention Promenade | Cristal 5",
      "roomId": "1789591921434004bXob",
      "capacity": "140",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442275454001cwcV",
+   "code": "AIM439-R",
+   "title": "Getting Started with AgentCore: ship an agent to production in 2 hours",
+   "abstract": "You can build an agent in an afternoon. Getting it to production takes months. Not because the AI is hard, but because the infrastructure around it is: memory, tool access, identity, policy, observability, evaluation. This workshop closes that gap in two hours. Build a customer support agent from scratch and progressively add each production capability using the AgentCore CLI: runtime, memory, gateway, identity, policy, observability, and evaluation. AgentCore is framework and model agnostic, so everything applies whether you use LangGraph, CrewAI, Strands, or your own stack. Leave ready to ship.",
+   "type": "Workshop",
+   "length": 120,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-08T00:11:54Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Workshop"
+    ],
+    "Level": [
+     "400 – Expert"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Artificial Intelligence"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Robert Belson",
+     "title": "Senior Developer Advocate",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025471783001CYIw",
+     "date": "2026-11-30",
+     "startTime": "08:30",
+     "endTime": "10:30",
+     "utcStartTime": "2026/11/30 16:30:00",
+     "utcEndTime": "2026/11/30 18:30:00",
+     "length": 120,
+     "room": "MGM Grand | Level 1 | Grand 124",
+     "roomId": "1789591920329003bjkj",
+     "capacity": "112",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -106207,7 +106665,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:43:27Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -106243,6 +106701,12 @@
      "name": "Navneet Srivastava",
      "title": "Leader, Data and Analytics HCLS",
      "company": "Amazon",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Abbas Makhdum",
+     "title": "Head of Product Marketing, Data & AI Governance",
+     "company": "AWS",
      "role": "Internal Speaker"
     },
     {
@@ -106745,7 +107209,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-08T00:27:23Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -106783,6 +107247,12 @@
      "title": "Principal Big Data Specialist Solutions Architect",
      "company": "AWS",
      "role": "Internal Speaker"
+    },
+    {
+     "name": "Emily Zhu",
+     "title": "Sr. Product Manager, AWS Context, AWS",
+     "company": "Amazon",
+     "role": "Internal Speaker"
     }
    ],
    "times": [
@@ -106812,7 +107282,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-08T00:26:51Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -106849,6 +107319,12 @@
      "name": "Leonardo Gomez Virahonda",
      "title": "Principal Big Data Specialist Solutions Architect",
      "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Emily Zhu",
+     "title": "Sr. Product Manager, AWS Context, AWS",
+     "company": "Amazon",
      "role": "Internal Speaker"
     }
    ],
@@ -108122,7 +108598,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T23:42:18Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -108172,6 +108648,12 @@
      "title": "AI/ML Solutions Architect",
      "company": "AWS",
      "role": "External Speaker"
+    },
+    {
+     "name": "Hanno Bever",
+     "title": "Senior ML Engineer",
+     "company": "AWS",
+     "role": "Internal Speaker"
     }
    ],
    "times": [
@@ -108201,7 +108683,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T23:41:45Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -108250,6 +108732,12 @@
      "title": "AI/ML Solutions Architect",
      "company": "AWS",
      "role": "External Speaker"
+    },
+    {
+     "name": "Hanno Bever",
+     "title": "Senior ML Engineer",
+     "company": "AWS",
+     "role": "Internal Speaker"
     }
    ],
    "times": [
@@ -109004,93 +109492,6 @@
    ]
   },
   {
-   "sessionID": "1780442281224001czWO",
-   "code": "IND355-R",
-   "title": "Healthcare & Life Sciences AI Agents: From Spec to Demo in 120 Min",
-   "abstract": "Healthcare and life sciences teams face pressure to apply generative AI, but they struggle to move from proof-of-concept to prototype. In this hands-on workshop, you’ll use Kiro IDE and spec-driven development to build a functional AI agent, progressing through requirements, design, implementation, and live demo. Choose from four use cases: extract data from handwritten GMP batch records, orchestrate single-cell RNA-seq pipelines on AWS HealthOmics, identify clinical trial candidates using biomarker analysis, or build a patient access agent on Amazon Connect Health. You'll create a deployable agent, reusable specs, and a repeatable methodology for rapid AI development in regulated environments. ",
-   "type": "Workshop",
-   "length": 120,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Workshop"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Artificial Intelligence",
-     "Databases"
-    ],
-    "AreaofInterest": [
-     "Agentic AI"
-    ],
-    "Industry": [
-     "Healthcare & Life Sciences"
-    ],
-    "Role": [
-     "Academic / Researcher",
-     "Developer / Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Connect",
-     "AWS HealthOmics",
-     "Kiro"
-    ],
-    "Venue": [
-     "Wynn/Encore"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Ariella Sasson",
-     "title": "Worldwide Data and AI Tech Leader, HCLS",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Necibe Ahat",
-     "title": "Senior AI/ML Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025508412001CcGP",
-     "date": "2026-12-01",
-     "startTime": "15:30",
-     "endTime": "17:30",
-     "utcStartTime": "2026/12/01 23:30:00",
-     "utcEndTime": "2026/12/02 01:30:00",
-     "length": 120,
-     "room": "Wynn/Encore | Level 1 | Encore Ballroom 1",
-     "roomId": "1789591921156004bqEA",
-     "capacity": "84",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358227258001i93R",
    "code": "IND355-R1",
    "title": "Healthcare & Life Sciences AI Agents: From Spec to Demo in 120 Min",
@@ -109170,6 +109571,99 @@
      "length": 120,
      "room": "Wynn/Encore | Level 1 | Brahms 4",
      "roomId": "1789591921070001bD8R",
+     "capacity": "84",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442281224001czWO",
+   "code": "IND355-R",
+   "title": "Healthcare & Life Sciences AI Agents: From Spec to Demo in 120 Min",
+   "abstract": "Healthcare and life sciences teams face pressure to apply generative AI, but they struggle to move from proof-of-concept to prototype. In this hands-on workshop, you’ll use Kiro IDE and spec-driven development to build a functional AI agent, progressing through requirements, design, implementation, and live demo. Choose from four use cases: extract data from handwritten GMP batch records, orchestrate single-cell RNA-seq pipelines on AWS HealthOmics, identify clinical trial candidates using biomarker analysis, or build a patient access agent on Amazon Connect Health. You'll create a deployable agent, reusable specs, and a repeatable methodology for rapid AI development in regulated environments. ",
+   "type": "Workshop",
+   "length": 120,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-07T21:43:44Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Workshop"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Artificial Intelligence",
+     "Databases"
+    ],
+    "AreaofInterest": [
+     "Agentic AI"
+    ],
+    "Industry": [
+     "Healthcare & Life Sciences"
+    ],
+    "Role": [
+     "Academic / Researcher",
+     "Developer / Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Connect",
+     "AWS HealthOmics",
+     "Kiro"
+    ],
+    "Venue": [
+     "Wynn/Encore"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Nadeem Bulsara",
+     "title": "Principal Solutions Architect, Genomics",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Ariella Sasson",
+     "title": "Worldwide Data and AI Tech Leader, HCLS",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Necibe Ahat",
+     "title": "Senior AI/ML Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025508412001CcGP",
+     "date": "2026-12-01",
+     "startTime": "15:30",
+     "endTime": "17:30",
+     "utcStartTime": "2026/12/01 23:30:00",
+     "utcEndTime": "2026/12/02 01:30:00",
+     "length": 120,
+     "room": "Wynn/Encore | Level 1 | Encore Ballroom 1",
+     "roomId": "1789591921156004bqEA",
      "capacity": "84",
      "inPersonTime": true,
      "virtualTime": false,
@@ -109504,7 +109998,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-08T00:46:32Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -109534,21 +110028,21 @@
    },
    "speakers": [
     {
-     "name": "Srikanth Baheti",
-     "title": "Principal Solutions Architect Amazon Quick",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Steve Vinsik",
      "title": "Principal Product Mgr. - Quick",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
     },
     {
-     "name": "Avinash Kalyankar",
-     "title": "Senior Manager Data Engineering",
-     "company": "Cox Automotive Inc",
+     "name": "Katie Travis",
+     "title": "Product Director, Everyday AI",
+     "company": "Cox Automotive",
+     "role": "External Speaker"
+    },
+    {
+     "name": "Mark Huber",
+     "title": "AVP, Engineering Enablement",
+     "company": "Cox Automotive",
      "role": "External Speaker"
     }
    ],
@@ -110024,16 +110518,16 @@
      "role": "External Speaker"
     },
     {
-     "name": "Garry Galinsky",
-     "title": "Principal Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Soham Kale",
      "title": "Senior Software Developer",
      "company": "Amazon",
      "role": "External Speaker"
+    },
+    {
+     "name": "Garry Galinsky",
+     "title": "Principal Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
     }
    ],
    "times": [
@@ -110121,16 +110615,16 @@
      "role": "External Speaker"
     },
     {
-     "name": "Garry Galinsky",
-     "title": "Principal Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Soham Kale",
      "title": "Senior Software Developer",
      "company": "Amazon",
      "role": "External Speaker"
+    },
+    {
+     "name": "Garry Galinsky",
+     "title": "Principal Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
     }
    ],
    "times": [
@@ -110236,7 +110730,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T05:28:27Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -110283,10 +110777,10 @@
    },
    "speakers": [
     {
-     "name": "Pramod Halapeti",
-     "title": "Senior Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
+     "name": "Siddiq Syed",
+     "title": "DevOps/Arch",
+     "company": "GA Dept of Community Supervision",
+     "role": "External Speaker"
     },
     {
      "name": "Jarbas Carvalho",
@@ -110295,10 +110789,10 @@
      "role": "External Speaker"
     },
     {
-     "name": "Siddiq Syed",
-     "title": "DevOps/Arch",
-     "company": "GA Dept of Community Supervision",
-     "role": "External Speaker"
+     "name": "Pramod Halapeti",
+     "title": "Senior Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
     }
    ],
    "times": [
@@ -110903,7 +111397,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T23:53:29Z",
+   "modified": "2026-11-07T02:38:28Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -110956,16 +111450,16 @@
      "role": "External Speaker"
     },
     {
-     "name": "Steve Blackwell",
-     "title": "Manufacturing & Engineering CoE Leader",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Tyler Splitt",
      "title": "Lead, Cloud Infrastructure Architect",
      "company": "Chamberlain Group",
      "role": "External Speaker"
+    },
+    {
+     "name": "Steve Blackwell",
+     "title": "Manufacturing & Engineering CoE Leader",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
     }
    ],
    "times": [
@@ -111082,7 +111576,7 @@
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:49:50Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -111116,7 +111610,14 @@
      "No"
     ]
    },
-   "speakers": [],
+   "speakers": [
+    {
+     "name": "Solange Levy",
+     "title": "Majors Sales Manager",
+     "company": "Clay",
+     "role": "External Speaker"
+    }
+   ],
    "times": [
     {
      "sessionTimeID": "1793317631207001RQ8t",
@@ -111456,7 +111957,7 @@
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:43:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -111491,6 +111992,12 @@
     ]
    },
    "speakers": [
+    {
+     "name": "Phelipe Fabres",
+     "title": "Sr. Solutions Architect GenAI - Frontier",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
     {
      "name": "Elisa Mussumeci",
      "title": "CTO",
@@ -113199,7 +113706,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T22:48:32Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -113247,6 +113754,12 @@
      "name": "Kamran Khan",
      "title": "Annapurna Labs, BD/GTM",
      "company": "Amazon",
+     "role": "External Speaker"
+    },
+    {
+     "name": "Arjun Desai",
+     "title": "Founder",
+     "company": "Cartesia AI",
      "role": "External Speaker"
     }
    ],
@@ -113442,7 +113955,7 @@
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T22:33:07Z",
+   "modified": "2026-11-07T21:49:43Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -113471,6 +113984,12 @@
     ]
    },
    "speakers": [
+    {
+     "name": "Kenny Hammerlund",
+     "title": "Sr. Director - AI Platforms",
+     "company": "Marriott International",
+     "role": "External Speaker"
+    },
     {
      "name": "Bharat Lakhiyani",
      "title": "Solutions Architect",
@@ -113834,7 +114353,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:00:49Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -114268,7 +114787,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:43:29Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -114325,6 +114844,12 @@
      "title": "VP AI Operations",
      "company": "Koninklijke Philips N.V.",
      "role": "Sponsor Speaker"
+    },
+    {
+     "name": "Ahmer Memon",
+     "title": "Principal Solutions Architect",
+     "company": "Amazon",
+     "role": "Internal Speaker"
     }
    ],
    "times": [
@@ -114439,7 +114964,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:49:50Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -114468,6 +114993,12 @@
     ]
    },
    "speakers": [
+    {
+     "name": "Ranil Piyaratna",
+     "title": "Co-founder",
+     "company": "PulsedIn",
+     "role": "External Speaker"
+    },
     {
      "name": "Kate Totaro",
      "title": "Principal PMT",
@@ -116334,7 +116865,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:49:50Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -116389,6 +116920,12 @@
      "title": "Sr Solutions Architect",
      "company": "Amazon Web Services(AWS)",
      "role": "Internal Speaker"
+    },
+    {
+     "name": "Janak Ramachandran",
+     "title": "Head of AI",
+     "company": "Innovaccer",
+     "role": "External Speaker"
     }
    ],
    "times": [
@@ -117013,15 +117550,15 @@
    },
    "speakers": [
     {
-     "name": "Ayush Sharma",
-     "title": "Group Client Partner",
-     "company": "Capgemini",
-     "role": "Sponsor Speaker"
-    },
-    {
      "name": "Piyush Saxena",
      "title": "Head of AIML",
      "company": "Vanguard",
+     "role": "Sponsor Speaker"
+    },
+    {
+     "name": "Ayush Sharma",
+     "title": "Group Client Partner",
+     "company": "Capgemini",
      "role": "Sponsor Speaker"
     },
     {
@@ -117058,7 +117595,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T22:35:43Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -117109,6 +117646,12 @@
      "name": "Ritesh Shah",
      "title": "CHIEF ARCHITECT - AI/ML",
      "company": "The Vanguard Group",
+     "role": "External Speaker"
+    },
+    {
+     "name": "Jithin Pradeep",
+     "title": "Head of Enterprise AI & Research",
+     "company": "Vanguard",
      "role": "External Speaker"
     }
    ],
@@ -119283,7 +119826,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T03:43:24Z",
+   "modified": "2026-11-07T22:17:21Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -120953,7 +121496,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:46:24Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -121005,6 +121548,18 @@
      "name": "Jonathan Nolen",
      "title": "",
      "company": "",
+     "role": "Sponsor Speaker"
+    },
+    {
+     "name": "Shardul Vaidya",
+     "title": "Partner Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Dylan Garcia",
+     "title": "Senior Staff Software Engineer",
+     "company": "Ramp",
      "role": "Sponsor Speaker"
     },
     {
@@ -121112,7 +121667,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-08T00:01:23Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -121164,8 +121719,14 @@
    },
    "speakers": [
     {
-     "name": "Chris Dickens",
-     "title": "Product Lead",
+     "name": "Dominik Kundel",
+     "title": "Developer Experience Lead",
+     "company": "OpenAI",
+     "role": "Sponsor Speaker"
+    },
+    {
+     "name": "Evan Weiss",
+     "title": "Demo Studio Lead",
      "company": "OpenAI",
      "role": "Sponsor Speaker"
     }
@@ -123231,7 +123792,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:11:21Z",
+   "modified": "2026-11-07T21:43:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -123259,7 +123820,14 @@
      "No"
     ]
    },
-   "speakers": [],
+   "speakers": [
+    {
+     "name": "Phelipe Fabres",
+     "title": "Sr. Solutions Architect GenAI - Frontier",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
    "times": [
     {
      "sessionTimeID": "1793995880804001XYDN",
@@ -123881,7 +124449,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T01:23:37Z",
+   "modified": "2026-11-07T15:30:04Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -126951,26 +127519,26 @@
    },
    "speakers": [
     {
-     "name": "Bruno Arnal",
-     "title": "Director, AFT, Catalyst & Ops, Amazon Fulfillment Technology",
-     "company": "Amazon",
-     "role": "External Speaker"
-    },
-    {
      "name": "Mark Wu",
      "title": "Director, Finance Systems",
      "company": "Amazon",
      "role": "External Speaker"
     },
     {
-     "name": "Jeffrey Eckhaus",
-     "title": "Principal Tech BD",
+     "name": "Junjie Tang",
+     "title": "Sr. Principal ProServe",
      "company": "AWS",
      "role": "Internal Speaker"
     },
     {
-     "name": "Junjie Tang",
-     "title": "Sr. Principal ProServe",
+     "name": "Bruno Arnal",
+     "title": "Director, AFT, Catalyst & Ops, Amazon Fulfillment Technology",
+     "company": "Amazon",
+     "role": "External Speaker"
+    },
+    {
+     "name": "Jeffrey Eckhaus",
+     "title": "Principal Tech BD",
      "company": "AWS",
      "role": "Internal Speaker"
     }
@@ -129645,7 +130213,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:43:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -129677,6 +130245,12 @@
     ]
    },
    "speakers": [
+    {
+     "name": "Tamrah Barber",
+     "title": "Executive and Orals Coach",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
     {
      "name": "Leila Langlois",
      "title": "Director, Talent Acquisition",
@@ -132329,7 +132903,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:49:50Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -132373,12 +132947,6 @@
    },
    "speakers": [
     {
-     "name": "Peter Dachnowicz",
-     "title": "Principal Technical Account Manager",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Nikita Buldakov",
      "title": "Sr. Product Manager Technical - External Service",
      "company": "AWS",
@@ -132388,6 +132956,18 @@
      "name": "Jason Rupard",
      "title": "Principal Engineer",
      "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Aylmer Britto Rex Harison",
+     "title": "Sr Software Engineer",
+     "company": "Rivian",
+     "role": "External Speaker"
+    },
+    {
+     "name": "Peter Dachnowicz",
+     "title": "Principal Technical Account Manager",
+     "company": "Amazon",
      "role": "Internal Speaker"
     }
    ],
@@ -133225,7 +133805,7 @@
    "length": 90,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T23:48:52Z",
+   "modified": "2026-11-07T19:37:07Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -133385,7 +133965,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T22:59:37Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -133437,21 +134017,21 @@
    },
    "speakers": [
     {
-     "name": "Srikrishna Srinivasan",
-     "title": "Director, AI Engineering",
-     "company": "T-Mobile",
+     "name": "Rajiv Papneja",
+     "title": "Global Head - AI Modernization Services",
+     "company": "MongoDB",
+     "role": "Sponsor Speaker"
+    },
+    {
+     "name": "Abhijit Chakraborty",
+     "title": "Senior Partner Solutions Architect",
+     "company": "MongoDB",
      "role": "Sponsor Speaker"
     },
     {
      "name": "Mohammed Hamzeh",
      "title": "Principal Engineer - Machine Learning",
      "company": "Cisco Systems",
-     "role": "Sponsor Speaker"
-    },
-    {
-     "name": "Rajiv Papneja",
-     "title": "Global Head - AI Modernization Services",
-     "company": "MongoDB",
      "role": "Sponsor Speaker"
     }
    ],
@@ -133735,7 +134315,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T22:49:20Z",
+   "modified": "2026-11-07T19:37:07Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -133984,7 +134564,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:49:50Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -134029,6 +134609,12 @@
     ]
    },
    "speakers": [
+    {
+     "name": "Ekjot Basra",
+     "title": "Systems Development Manager",
+     "company": "Amazon.com",
+     "role": "External Speaker"
+    },
     {
      "name": "Andrea Rodolico",
      "title": "GTM Specialist Lead, IMPACT",
@@ -135943,7 +136529,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:46:24Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -135994,6 +136580,18 @@
     ]
    },
    "speakers": [
+    {
+     "name": "Sharjeel Farooq",
+     "title": "Area Vice President",
+     "company": "Oracle",
+     "role": "Sponsor Speaker"
+    },
+    {
+     "name": "Doug Palmer",
+     "title": "Group Vice President, Healthcare & Life Sciences",
+     "company": "Oracle",
+     "role": "Sponsor Speaker"
+    },
     {
      "name": "Edwin Upson",
      "title": "Senior Vice President",
@@ -136855,7 +137453,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T11:36:18Z",
+   "modified": "2026-11-08T00:34:32Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -137397,15 +137995,15 @@
    },
    "speakers": [
     {
-     "name": "Brian Westmoreland",
-     "title": "Sr. Delivery Consultant - CIA",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Luke Notley",
      "title": "Senior Solution Architect",
      "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Brian Westmoreland",
+     "title": "Sr. Delivery Consultant - CIA",
+     "company": "AWS",
      "role": "Internal Speaker"
     }
    ],
@@ -137428,98 +138026,6 @@
    ]
   },
   {
-   "sessionID": "1790358246094001i5t9",
-   "code": "SEC309-R1",
-   "title": "Network firewall deployment without the guesswork: codify, deploy, done",
-   "abstract": "Level up your firewall policy operations at scale in this hands-on workshop. Learn to integrate AWS Network Firewall into an existing AWS environment using Terraform. Starting with a realistic multi-VPC setup with AWS Transit Gateway, you will deploy Network Firewall and configure routing, inspection, and logging in minutes using reusable modules. You will then implement the latest Network Firewall features such as web category filtering, JA4 fingerprinting, and EventBridge automation. By the end of this session you will have both practical experience adding Network Firewall to existing environments and reusable patterns ready for your own infrastructure.",
-   "type": "Builders' session",
-   "length": 120,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Builders' session"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Security & Identity"
-    ],
-    "AreaofInterest": [
-     "Network & Infrastructure Security",
-     "Governance, Risk & Compliance",
-     "Automation"
-    ],
-    "Services": [
-     "Amazon Virtual Private Cloud (Amazon VPC)",
-     "AWS Network Firewall",
-     "AWS Transit Gateway"
-    ],
-    "Venue": [
-     "Wynn/Encore"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Pål-Magnus Slåtto",
-     "title": "Senior Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Lawton Pittenger",
-     "title": "WW Network Security Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "David Fowler",
-     "title": "Principal EAE",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Preetkumar Shah",
-     "title": "Technical Account Manager",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360402528001AdG9",
-     "date": "2026-12-02",
-     "startTime": "12:00",
-     "endTime": "14:00",
-     "utcStartTime": "2026/12/02 20:00:00",
-     "utcEndTime": "2026/12/02 22:00:00",
-     "length": 120,
-     "room": "Wynn/Encore | Upper Convention Promenade | Cristal 5",
-     "roomId": "1789591921434004bXob",
-     "capacity": "140",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442230252001c47O",
    "code": "SEC309-R",
    "title": "Network firewall deployment without the guesswork: codify, deploy, done.",
@@ -137528,7 +138034,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:43:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -137569,14 +138075,14 @@
    },
    "speakers": [
     {
-     "name": "Pål-Magnus Slåtto",
-     "title": "Senior Solutions Architect",
+     "name": "Preetkumar Shah",
+     "title": "Technical Account Manager",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
     },
     {
-     "name": "Lawton Pittenger",
-     "title": "WW Network Security Solutions Architect",
+     "name": "Pål-Magnus Slåtto",
+     "title": "Senior Solutions Architect",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
     },
@@ -137587,9 +138093,15 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Preetkumar Shah",
-     "title": "Technical Account Manager",
+     "name": "Lawton Pittenger",
+     "title": "WW Network Security Solutions Architect",
      "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Daniel O. Deter",
+     "title": "Senior Security Specialist",
+     "company": "Amazon",
      "role": "Internal Speaker"
     }
    ],
@@ -137605,6 +138117,104 @@
      "room": "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Builders' Session 1",
      "roomId": "1789591921325001bwuO",
      "capacity": "50",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358246094001i5t9",
+   "code": "SEC309-R1",
+   "title": "Network firewall deployment without the guesswork: codify, deploy, done",
+   "abstract": "Level up your firewall policy operations at scale in this hands-on workshop. Learn to integrate AWS Network Firewall into an existing AWS environment using Terraform. Starting with a realistic multi-VPC setup with AWS Transit Gateway, you will deploy Network Firewall and configure routing, inspection, and logging in minutes using reusable modules. You will then implement the latest Network Firewall features such as web category filtering, JA4 fingerprinting, and EventBridge automation. By the end of this session you will have both practical experience adding Network Firewall to existing environments and reusable patterns ready for your own infrastructure.",
+   "type": "Builders' session",
+   "length": 120,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-07T21:43:44Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Builders' session"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Security & Identity"
+    ],
+    "AreaofInterest": [
+     "Network & Infrastructure Security",
+     "Governance, Risk & Compliance",
+     "Automation"
+    ],
+    "Services": [
+     "Amazon Virtual Private Cloud (Amazon VPC)",
+     "AWS Network Firewall",
+     "AWS Transit Gateway"
+    ],
+    "Venue": [
+     "Wynn/Encore"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Preetkumar Shah",
+     "title": "Technical Account Manager",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Pål-Magnus Slåtto",
+     "title": "Senior Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "David Fowler",
+     "title": "Principal EAE",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Lawton Pittenger",
+     "title": "WW Network Security Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Daniel O. Deter",
+     "title": "Senior Security Specialist",
+     "company": "Amazon",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360402528001AdG9",
+     "date": "2026-12-02",
+     "startTime": "12:00",
+     "endTime": "14:00",
+     "utcStartTime": "2026/12/02 20:00:00",
+     "utcEndTime": "2026/12/02 22:00:00",
+     "length": 120,
+     "room": "Wynn/Encore | Upper Convention Promenade | Cristal 5",
+     "roomId": "1789591921434004bXob",
+     "capacity": "140",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -138844,7 +139454,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T09:16:54Z",
+   "modified": "2026-11-07T21:51:08Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -139485,7 +140095,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T12:05:28Z",
+   "modified": "2026-11-07T22:29:23Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -143409,7 +144019,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:41:31Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -143762,7 +144372,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T22:52:13Z",
+   "modified": "2026-11-07T13:00:32Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -148325,7 +148935,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T01:17:05Z",
+   "modified": "2026-11-07T17:36:42Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -150086,7 +150696,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:43:27Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -150124,6 +150734,12 @@
     ]
    },
    "speakers": [
+    {
+     "name": "Abhi Yadav",
+     "title": "Principal Product Manager",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
     {
      "name": "Nitin Kulkarni",
      "title": "Sr. Solutions Architect",
@@ -150176,7 +150792,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:43:28Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -150214,6 +150830,12 @@
     ]
    },
    "speakers": [
+    {
+     "name": "Abhi Yadav",
+     "title": "Principal Product Manager",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
     {
      "name": "Nitin Kulkarni",
      "title": "Sr. Solutions Architect",
@@ -152249,7 +152871,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T04:02:22Z",
+   "modified": "2026-11-07T21:15:42Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -156764,7 +157386,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T16:59:57Z",
+   "modified": "2026-11-07T21:43:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -156794,7 +157416,14 @@
      "No"
     ]
    },
-   "speakers": [],
+   "speakers": [
+    {
+     "name": "Rutwik Bangali",
+     "title": "Startups Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
    "times": [
     {
      "sessionTimeID": "1793657769670001ofKx",
@@ -157228,7 +157857,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T11:36:18Z",
+   "modified": "2026-11-07T17:38:02Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -157408,7 +158037,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T12:17:05Z",
+   "modified": "2026-11-07T22:19:01Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -158224,14 +158853,14 @@
    },
    "speakers": [
     {
-     "name": "Stephan Schiller",
-     "title": "Solutions Architect",
+     "name": "Marco Jahn",
+     "title": "Sr. Solutions Architect",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
     },
     {
-     "name": "Marco Jahn",
-     "title": "Sr. Solutions Architect",
+     "name": "Stephan Schiller",
+     "title": "Solutions Architect",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
     }
@@ -160725,7 +161354,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T19:59:19Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -160769,26 +161398,20 @@
    },
    "speakers": [
     {
-     "name": "Daniel Abib",
-     "title": "Specialist Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Rafael Barbosa",
      "title": "Solutions Architect",
      "company": "AWS",
      "role": "Internal Speaker"
     },
     {
-     "name": "Nicolas Tarzia",
-     "title": "TAM",
+     "name": "Daniel Abib",
+     "title": "Specialist Solutions Architect",
      "company": "AWS",
      "role": "Internal Speaker"
     },
     {
      "name": "Swarna Kunnath",
-     "title": "Senior Cloud Application Architect - AppMod",
+     "title": "Senior Solutions Architect , AWS",
      "company": "AWS",
      "role": "Internal Speaker"
     },
@@ -160796,6 +161419,12 @@
      "name": "Michael Costa",
      "title": "Sr. Solutions Architect",
      "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Nicolas Tarzia",
+     "title": "TAM",
+     "company": "AWS",
      "role": "Internal Speaker"
     }
    ],
@@ -161889,7 +162518,7 @@
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:43:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -161917,7 +162546,14 @@
      "No"
     ]
    },
-   "speakers": [],
+   "speakers": [
+    {
+     "name": "Danilo Muniz",
+     "title": "Frontier AI Account Manager",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    }
+   ],
    "times": [
     {
      "sessionTimeID": "1793658563985001opAC",
@@ -162194,7 +162830,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T00:21:09Z",
+   "modified": "2026-11-07T21:43:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -162234,6 +162870,12 @@
     ]
    },
    "speakers": [
+    {
+     "name": "Sirena Akopyan",
+     "title": "Compute Specialist",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
     {
      "name": "Chad Schmutzer",
      "title": "Principal Solutions Architect",
@@ -164527,7 +165169,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:46:24Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -164576,6 +165218,12 @@
      "name": "Chad Larter",
      "title": "Managing Director, Infrastructure & Security",
      "company": "National Association for Stock Car Auto Racing (NASCAR)",
+     "role": "Sponsor Speaker"
+    },
+    {
+     "name": "Ali Bidabadi",
+     "title": "VP, Global Cloud Solutions Architects",
+     "company": "Fortinet",
      "role": "Sponsor Speaker"
     }
    ],
@@ -166166,7 +166814,7 @@
    "length": 180,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T04:07:03Z",
+   "modified": "2026-11-07T17:23:11Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -167525,7 +168173,7 @@
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T22:33:12Z",
+   "modified": "2026-11-07T21:46:24Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -167571,7 +168219,14 @@
      "No"
     ]
    },
-   "speakers": [],
+   "speakers": [
+    {
+     "name": "Pranava Goundan",
+     "title": "Principal",
+     "company": "Zs Associates, Inc.",
+     "role": "Sponsor Speaker"
+    }
+   ],
    "times": [
     {
      "sessionTimeID": "1790033118512001qypc",
@@ -168828,7 +169483,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T23:16:48Z",
+   "modified": "2026-11-07T22:17:50Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -168876,6 +169531,12 @@
    },
    "speakers": [
     {
+     "name": "Martin Ristov",
+     "title": "Sr. AI Technologist",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
      "name": "Gian Mario Deluigi",
      "title": "Staff Outbound Product Manager",
      "company": "ServiceNow",
@@ -168915,7 +169576,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T23:37:46Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -168955,20 +169616,7 @@
      "No"
     ]
    },
-   "speakers": [
-    {
-     "name": "Josh Longenecker",
-     "title": "Annapurna ML Solutions Architect",
-     "company": "AWS",
-     "role": "External Speaker"
-    },
-    {
-     "name": "Diwakar Bansal",
-     "title": "Principal GenAI Specialist",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    }
-   ],
+   "speakers": [],
    "times": [
     {
      "sessionTimeID": "1790025496300001Cw8g",
@@ -170116,7 +170764,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:46:24Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -170168,6 +170816,12 @@
      "name": "Jiong Liu",
      "title": "VP of Product Marketing",
      "company": "Wiz",
+     "role": "Sponsor Speaker"
+    },
+    {
+     "name": "Luke Beeson",
+     "title": "Group CISO",
+     "company": "Capita",
      "role": "Sponsor Speaker"
     }
    ],
@@ -170815,7 +171469,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T22:00:41Z",
+   "modified": "2026-11-07T21:46:24Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -170869,20 +171523,26 @@
    },
    "speakers": [
     {
+     "name": "JJ Willette",
+     "title": "Director, Cybersecurity Services",
+     "company": "Pegasystems",
+     "role": "Sponsor Speaker"
+    },
+    {
      "name": "Johnny Hand",
      "title": "CIO",
-     "company": "Savannah College of Art and Design",
+     "company": "TrendAI",
+     "role": "Sponsor Speaker"
+    },
+    {
+     "name": "Satya Mishra",
+     "title": "Senior Director, Product Management, Pega Cloud",
+     "company": "Pegasystems",
      "role": "Sponsor Speaker"
     },
     {
      "name": "Ramzi Souri",
      "title": "VP, Cloud Technologies",
-     "company": "Pegasystems",
-     "role": "Sponsor Speaker"
-    },
-    {
-     "name": "JJ Willette",
-     "title": "Director, Cybersecurity Services",
      "company": "Pegasystems",
      "role": "Sponsor Speaker"
     }
@@ -171585,7 +172245,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T22:13:16Z",
+   "modified": "2026-11-07T15:31:29Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -172331,7 +172991,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:46:24Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -172382,7 +173042,14 @@
      "No"
     ]
    },
-   "speakers": [],
+   "speakers": [
+    {
+     "name": "Prashant Bhavaraju",
+     "title": "Vice President",
+     "company": "Trianz",
+     "role": "Sponsor Speaker"
+    }
+   ],
    "times": [
     {
      "sessionTimeID": "1791998631433001Hcj1",
@@ -174381,7 +175048,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T12:13:35Z",
+   "modified": "2026-11-07T14:57:32Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -174455,87 +175122,6 @@
    ]
   },
   {
-   "sessionID": "1780442235020001cGiD",
-   "code": "AIM355-R",
-   "title": "Strengthen identity verification with Amazon Rekognition",
-   "abstract": "Learn how to use Amazon Rekognition Face Liveness to help confirm a real person is present during digital onboarding. This session explores how to integrate liveness checks into your application, detect spoofing attempts, and support identity verification workflows.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-06T20:38:32Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Artificial Intelligence"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Sneha Choudhury",
-     "title": "Principal Product Manager Tech",
-     "company": "Amazon",
-     "role": "External Speaker"
-    },
-    {
-     "name": "Divyesha Malhotra",
-     "title": "Sr Product Manager Technical",
-     "company": "Amazon",
-     "role": "External Speaker"
-    },
-    {
-     "name": "Vicky Katara",
-     "title": "Sr. Software Engineer",
-     "company": "Amazon",
-     "role": "External Speaker"
-    },
-    {
-     "name": "Palak Mehta",
-     "title": "Sr. Software Development Manager",
-     "company": "Amazon",
-     "role": "External Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025471646001CkqM",
-     "date": "2026-11-30",
-     "startTime": "08:30",
-     "endTime": "09:30",
-     "utcStartTime": "2026/11/30 16:30:00",
-     "utcEndTime": "2026/11/30 17:30:00",
-     "length": 60,
-     "room": "MGM Grand | Level 1 | Boulevard 167",
-     "roomId": "1789591920229001bkrV",
-     "capacity": "78",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358217311001ieZk",
    "code": "AIM355-R1",
    "title": "Strengthen identity verification with Amazon Rekognition",
@@ -174544,7 +175130,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T03:56:57Z",
+   "modified": "2026-11-07T23:52:08Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -174581,12 +175167,6 @@
      "role": "External Speaker"
     },
     {
-     "name": "Sneha Choudhury",
-     "title": "Principal Product Manager Tech",
-     "company": "Amazon",
-     "role": "External Speaker"
-    },
-    {
      "name": "Divyesha Malhotra",
      "title": "Sr Product Manager Technical",
      "company": "Amazon",
@@ -174611,6 +175191,81 @@
      "room": "Wynn/Encore | Level 1 | Chopin 2",
      "roomId": "1789591921094001bT6B",
      "capacity": "88",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442235020001cGiD",
+   "code": "AIM355-R",
+   "title": "Strengthen identity verification with Amazon Rekognition",
+   "abstract": "Learn how to use Amazon Rekognition Face Liveness to help confirm a real person is present during digital onboarding. This session explores how to integrate liveness checks into your application, detect spoofing attempts, and support identity verification workflows.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-07T23:51:47Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Artificial Intelligence"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Divyesha Malhotra",
+     "title": "Sr Product Manager Technical",
+     "company": "Amazon",
+     "role": "External Speaker"
+    },
+    {
+     "name": "Vicky Katara",
+     "title": "Sr. Software Engineer",
+     "company": "Amazon",
+     "role": "External Speaker"
+    },
+    {
+     "name": "Palak Mehta",
+     "title": "Sr. Software Development Manager",
+     "company": "Amazon",
+     "role": "External Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025471646001CkqM",
+     "date": "2026-11-30",
+     "startTime": "08:30",
+     "endTime": "09:30",
+     "utcStartTime": "2026/11/30 16:30:00",
+     "utcEndTime": "2026/11/30 17:30:00",
+     "length": 60,
+     "room": "MGM Grand | Level 1 | Boulevard 167",
+     "roomId": "1789591920229001bkrV",
+     "capacity": "78",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -176134,7 +176789,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T22:52:14Z",
+   "modified": "2026-11-07T15:03:53Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -177689,94 +178344,6 @@
    ]
   },
   {
-   "sessionID": "1780442244891001cgCd",
-   "code": "IND406-R",
-   "title": "The agentic restaurant: AI agents that run your kitchen",
-   "abstract": "The restaurant industry is transforming as AI agents move from pilots to production. Leading QSR and casual dining brands are deploying a \"virtual general manager,\" multiple specialized agents orchestrated together to optimize drive-thru ordering, kitchen workflows, labor scheduling, and guest experience in real time. In this chalk talk, we whiteboard a multi-agent architecture using Amazon Bedrock AgentCore and Strands Agents SDK, with Amazon Nova Sonic powering voice ordering at sub-2-second latency. We design a supervisor agent coordinating specialists across drive-thru, kitchen prep, inventory, and labor scheduling. Explore how agents share context, resolve conflicts, validate decisions against synthetic personas before deployment, and maintain human-in-the-loop oversight. Bring your architecture challenges.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "400 – Expert"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Architecture",
-     "Artificial Intelligence"
-    ],
-    "AreaofInterest": [
-     "Generative AI",
-     "Innovation & Transformation",
-     "Agentic AI"
-    ],
-    "Industry": [
-     "Retail & Consumer Goods"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "IT Executive",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Bedrock",
-     "Amazon Connect",
-     "Amazon Nova"
-    ],
-    "Venue": [
-     "Caesars Forum"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Pranjit Biswas",
-     "title": "SOLUTION ARCHITECT",
-     "company": "AMAZON WEB SERVICES",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "David Bounds",
-     "title": "Senior Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025537404001C5du",
-     "date": "2026-12-03",
-     "startTime": "10:30",
-     "endTime": "11:30",
-     "utcStartTime": "2026/12/03 18:30:00",
-     "utcEndTime": "2026/12/03 19:30:00",
-     "length": 60,
-     "room": "Caesars Forum | Level 1 | Forum 114",
-     "roomId": "1789591919703003bevY",
-     "capacity": "88",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358240803001iD7i",
    "code": "IND406-R1",
    "title": "The agentic restaurant: AI agents that run your kitchen",
@@ -177834,15 +178401,15 @@
    },
    "speakers": [
     {
-     "name": "Pranjit Biswas",
-     "title": "SOLUTION ARCHITECT",
-     "company": "AMAZON WEB SERVICES",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "David Bounds",
      "title": "Senior Solutions Architect",
      "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Pranjit Biswas",
+     "title": "SOLUTION ARCHITECT",
+     "company": "AMAZON WEB SERVICES",
      "role": "Internal Speaker"
     }
    ],
@@ -177857,6 +178424,94 @@
      "length": 60,
      "room": "Caesars Forum | Level 1 | Academy 409",
      "roomId": "1789591919519001bKv3",
+     "capacity": "88",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442244891001cgCd",
+   "code": "IND406-R",
+   "title": "The agentic restaurant: AI agents that run your kitchen",
+   "abstract": "The restaurant industry is transforming as AI agents move from pilots to production. Leading QSR and casual dining brands are deploying a \"virtual general manager,\" multiple specialized agents orchestrated together to optimize drive-thru ordering, kitchen workflows, labor scheduling, and guest experience in real time. In this chalk talk, we whiteboard a multi-agent architecture using Amazon Bedrock AgentCore and Strands Agents SDK, with Amazon Nova Sonic powering voice ordering at sub-2-second latency. We design a supervisor agent coordinating specialists across drive-thru, kitchen prep, inventory, and labor scheduling. Explore how agents share context, resolve conflicts, validate decisions against synthetic personas before deployment, and maintain human-in-the-loop oversight. Bring your architecture challenges.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-06T20:31:24Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "400 – Expert"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Architecture",
+     "Artificial Intelligence"
+    ],
+    "AreaofInterest": [
+     "Generative AI",
+     "Innovation & Transformation",
+     "Agentic AI"
+    ],
+    "Industry": [
+     "Retail & Consumer Goods"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "IT Executive",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Bedrock",
+     "Amazon Connect",
+     "Amazon Nova"
+    ],
+    "Venue": [
+     "Caesars Forum"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "David Bounds",
+     "title": "Senior Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Pranjit Biswas",
+     "title": "SOLUTION ARCHITECT",
+     "company": "AMAZON WEB SERVICES",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025537404001C5du",
+     "date": "2026-12-03",
+     "startTime": "10:30",
+     "endTime": "11:30",
+     "utcStartTime": "2026/12/03 18:30:00",
+     "utcEndTime": "2026/12/03 19:30:00",
+     "length": 60,
+     "room": "Caesars Forum | Level 1 | Forum 114",
+     "roomId": "1789591919703003bevY",
      "capacity": "88",
      "inPersonTime": true,
      "virtualTime": false,
@@ -180703,7 +181358,7 @@
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T22:33:30Z",
+   "modified": "2026-11-07T21:46:24Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -180749,6 +181404,12 @@
     {
      "name": "Jackie Lipman",
      "title": "Managing Director, Global BD",
+     "company": "eero",
+     "role": "Sponsor Speaker"
+    },
+    {
+     "name": "Megan Mullins",
+     "title": "Head of Enterprise Partner Success",
      "company": "eero",
      "role": "Sponsor Speaker"
     }
@@ -180921,7 +181582,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T21:34:07Z",
+   "modified": "2026-11-08T00:18:23Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -180973,12 +181634,6 @@
    },
    "speakers": [
     {
-     "name": "Shaun Kirby",
-     "title": "Principal ProServe Cloud Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Ali Shahrokni",
      "title": "Sr. Developer Relations Manager",
      "company": "NVIDIA",
@@ -181018,7 +181673,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:49:50Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -181058,10 +181713,28 @@
    },
    "speakers": [
     {
+     "name": "Soumya Srinagesh Tulloss",
+     "title": "Senior Vice President",
+     "company": "Fireworks AI",
+     "role": "External Speaker"
+    },
+    {
+     "name": "Caroline McKee",
+     "title": "Staff Software Engineer",
+     "company": "National Basketball Association",
+     "role": "External Speaker"
+    },
+    {
      "name": "Christina Mitine",
      "title": "Sr. GTM Lead, Compute",
      "company": "AWS",
      "role": "Internal Speaker"
+    },
+    {
+     "name": "Sarah Eichten",
+     "title": "GTM Leadership",
+     "company": "OpenAI",
+     "role": "External Speaker"
     }
    ],
    "times": [
@@ -181173,7 +181846,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:41:53Z",
+   "modified": "2026-11-07T21:49:50Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -181207,7 +181880,14 @@
      "No"
     ]
    },
-   "speakers": [],
+   "speakers": [
+    {
+     "name": "Thomas Dohmke",
+     "title": "CEO",
+     "company": "Entire Inc",
+     "role": "External Speaker"
+    }
+   ],
    "times": [
     {
      "sessionTimeID": "1793317114892001DKRQ",
@@ -183005,7 +183685,7 @@
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:49:50Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -183039,7 +183719,14 @@
      "No"
     ]
    },
-   "speakers": [],
+   "speakers": [
+    {
+     "name": "Rian Bogle",
+     "title": "Principal Architect",
+     "company": "Agility Robotics",
+     "role": "External Speaker"
+    }
+   ],
    "times": [
     {
      "sessionTimeID": "1793648883160001XZSR",
@@ -183067,7 +183754,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:43:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -183107,6 +183794,12 @@
      "title": "-",
      "company": "Highlanders, Inc.",
      "role": "External Speaker"
+    },
+    {
+     "name": "Deap Ubhi",
+     "title": "Global Director of Tech for Startups",
+     "company": "AWS",
+     "role": "Internal Speaker"
     }
    ],
    "times": [
@@ -184613,7 +185306,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T22:11:23Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -184668,12 +185361,6 @@
      "role": "Sponsor Speaker"
     },
     {
-     "name": "Art Rogers",
-     "title": "Director, Enterprise Monitoring and Incident Response Engineering",
-     "company": "Cox Automotive",
-     "role": "Sponsor Speaker"
-    },
-    {
      "name": "Nick Whiley",
      "title": "Head of Video Operations",
      "company": "Echostar",
@@ -184686,9 +185373,9 @@
      "role": "Sponsor Speaker"
     },
     {
-     "name": "Eric Johsnon",
-     "title": "CIO",
-     "company": "Pagerduty, Inc.",
+     "name": "Art Rogers",
+     "title": "Director, Enterprise Monitoring and Incident Response Engineering",
+     "company": "Cox Automotive",
      "role": "Sponsor Speaker"
     }
    ],
@@ -186117,7 +186804,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T23:21:07Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -186150,18 +186837,6 @@
      "name": "Prajit Pabbati",
      "title": "Sr SDM",
      "company": "Amazon",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Abhimanyu Siwach",
-     "title": "Principal Engineer",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Eashank Kaushik",
-     "title": "Specialist SA, AI/ML",
-     "company": "AWS",
      "role": "Internal Speaker"
     }
    ],
@@ -186861,7 +187536,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-08T00:38:28Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -186905,8 +187580,8 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Donald Quindardo",
-     "title": "Principal TAM",
+     "name": "Steve Bruggeman",
+     "title": "Principal Technical Account Manager",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
     }
@@ -187417,7 +188092,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T03:59:32Z",
+   "modified": "2026-11-08T00:05:43Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -188636,7 +189311,7 @@
    "length": 180,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T04:02:18Z",
+   "modified": "2026-11-07T22:40:54Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -189022,7 +189697,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:49:50Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -189077,6 +189752,12 @@
     {
      "name": "Anil Vatti",
      "title": "Sr Director",
+     "company": "Visa",
+     "role": "External Speaker"
+    },
+    {
+     "name": "Luke Wilson",
+     "title": "Senior Cybersecurity Engineer",
      "company": "Visa",
      "role": "External Speaker"
     },
@@ -193891,7 +194572,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T22:12:56Z",
+   "modified": "2026-11-07T23:52:51Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -193927,8 +194608,8 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Jason Berkowitz",
-     "title": "Head of Product Marketing for AI Model Development and Inference",
+     "name": "Shashi Kiran",
+     "title": "Sr AI ML Specialist SA",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
     }
@@ -194194,7 +194875,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T22:21:04Z",
+   "modified": "2026-11-08T00:43:02Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -194235,6 +194916,12 @@
      "title": "Director, AWS Frontier AI Science & Engineering",
      "company": "AWS",
      "role": "Premier Internal Speaker"
+    },
+    {
+     "name": "Catie Cuan",
+     "title": "Founder and CEO",
+     "company": "ART Lab Technologies",
+     "role": "Premier External Speaker"
     }
    ],
    "times": [
@@ -194356,7 +195043,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T23:05:09Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -194406,14 +195093,14 @@
    },
    "speakers": [
     {
-     "name": "Nina Lopatina",
-     "title": "Staff AI Developer Advocate",
+     "name": "Anuj Panchal",
+     "title": "Partner Solutions Architect",
      "company": "MongoDB",
      "role": "Sponsor Speaker"
     },
     {
-     "name": "Lydia Eichelberg",
-     "title": "Strategic Events",
+     "name": "Luiz Alves",
+     "title": "Solutions Architect",
      "company": "MongoDB",
      "role": "Sponsor Speaker"
     }
@@ -195796,7 +196483,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T23:27:10Z",
+   "modified": "2026-11-07T21:46:24Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -195847,6 +196534,12 @@
     {
      "name": "Teri Yu",
      "title": "Multimodal Product",
+     "company": "OpenAI",
+     "role": "Sponsor Speaker"
+    },
+    {
+     "name": "Madhav Thattai",
+     "title": "Product",
      "company": "OpenAI",
      "role": "Sponsor Speaker"
     }
@@ -198003,7 +198696,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T21:43:27Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -198051,6 +198744,12 @@
      "name": "Shimi Rokah",
      "title": "Senior Solutions Architect",
      "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Arvind Ayyaswamy",
+     "title": "Sr. Technical Account Manager",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     },
     {

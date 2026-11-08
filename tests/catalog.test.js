@@ -5,10 +5,10 @@ import { sleep } from './shim.js';
 const { exportAge, customRecords, catalogMatch, buildModel } = await import('../assets/js/data.js');
 const { toISO } = await import('../assets/js/time.js');
 const { CONFERENCES } = await import('../assets/js/conferences.js');
-const { createVenue, walkMinutes } = await import('../assets/js/venue.js');
+const { createVenue, walkMinutes, floorExtra, mergeWalk } = await import('../assets/js/venue.js');
 const { transition, DEFAULT_PLANNER } = await import('../assets/js/planner.js');
 const store = await import('../assets/js/store.js');
-const { rsvpChip, rsvpOpensText, unknownRoomsNote, occupancyLevel, occupancyOf, occupancyChip, sessionCard } = await import('../assets/js/ui.js');
+const { rsvpChip, rsvpOpensText, unknownRoomsNote, venueMapUrl, mapChip, sessionCard, occupancyLevel, occupancyOf, occupancyChip } = await import('../assets/js/ui.js');
 
 let pass = 0, fail = 0;
 async function test(name, fn) {
@@ -171,11 +171,70 @@ await test('should still read the Hub and room numbers as Moscone floors', () =>
 await test('should keep the other off-site hotels apart from the Metreon', () => {
   eq(place('InterContinental, Grand Ballroom').building, 'H');
 });
-await test('should walk 5 minutes between the Metreon and Moscone West and 8 to South', () => {
+await test('should walk 8 minutes between the Metreon and Moscone West and 9 to a South meeting room', () => {
   const metreon = place('AMC Metreon | Level 3, Theater 9');
   const west = place('Moscone West | Level 3, Room 3001');
   const south = place('Moscone South | Level 2, Room 201');
-  eq([walkMinutes(metreon, west, moscone.walk), walkMinutes(west, metreon, moscone.walk), walkMinutes(metreon, south, moscone.walk)], [5, 5, 8]);
+  eq([walkMinutes(metreon, west, moscone.walk), walkMinutes(west, metreon, moscone.walk), walkMinutes(metreon, south, moscone.walk)], [8, 8, 9]);
+});
+
+// ---- walking times follow the routes the official map draws (2026-11-07), plus the badge check
+// Map: South Level 2 -> West Level 3 4 min 9 s; the Hub -> West 7 min 57 s; Esplanade tables ->
+// Metreon 7 min 31 s; South Level 2 -> Metreon 6 min 12 s. The Hub and the Upper Mezzanine sit
+// further in than a Level 2 room, so they add minutes to every walk that leaves South.
+const hub = place('Moscone South | The Hub, Theater G');
+const table = place('Moscone South | Upper Mezzanine, Esplanade Ballroom, Table 1');
+const south2 = place('Moscone South | Level 2, Room 209');
+const west3 = place('Moscone West | Level 3, Room 3014');
+const theater9 = place('AMC Metreon | Level 3, Theater 9');
+await test('should read the Hub and the Upper Mezzanine as floors of Moscone South', () => {
+  eq([hub.building, hub.floor, table.building, table.floor, south2.floor], ['S', 'Hub', 'S', 'UM', '2']);
+});
+await test('should walk 7 minutes from a South meeting room to a West meeting room, either way', () => {
+  eq([walkMinutes(south2, west3, moscone.walk), walkMinutes(west3, south2, moscone.walk)], [7, 7]);
+});
+await test('should add the Hub\'s extra minutes to a walk that leaves South', () => {
+  eq([walkMinutes(hub, west3, moscone.walk), walkMinutes(west3, hub, moscone.walk), walkMinutes(hub, theater9, moscone.walk)], [11, 11, 13]);
+});
+await test('should add the Upper Mezzanine\'s extra minute to a walk that leaves South', () => {
+  eq([walkMinutes(table, theater9, moscone.walk), walkMinutes(table, west3, moscone.walk)], [10, 8]);
+});
+await test('should treat the Hub to a South meeting room as a floor change, not a building change', () => {
+  eq(walkMinutes(hub, south2, moscone.walk), moscone.walk.diffFloor);
+});
+await test('should keep the floor extra when a pair is tuned in Settings, and ignore a junk extra', () => {
+  const tuned = { ...moscone.walk, pairs: { ...moscone.walk.pairs, 'S|W': 10 } };
+  const junk = { ...moscone.walk, floorExtra: { S: { Hub: 'four' } } };
+  const none = { ...moscone.walk, floorExtra: undefined };
+  eq([walkMinutes(hub, west3, tuned), walkMinutes(hub, west3, junk), walkMinutes(hub, west3, none)], [14, 7, 7]);
+});
+// The walk in from a GPS position outside the venue has no building pair; app.js adds the
+// destination floor's extra directly.
+await test('should give the Hub its extra minutes on their own, and nothing for a typical floor or a junk walk', () => {
+  eq([floorExtra(hub, moscone.walk), floorExtra(table, moscone.walk), floorExtra(south2, moscone.walk), floorExtra(west3, moscone.walk), floorExtra(hub, {}), floorExtra(null, moscone.walk)], [4, 1, 0, 0, 0, 0]);
+});
+
+// ---- a saved walking matrix keeps what was tuned and takes the recalibration for the rest
+// Settings saves every pair, so a saved pair still equal to the default it was saved with (the
+// matrix before 2026-11-07) was never tuned and follows the new default.
+await test('should take the recalibrated default for a saved pair that still equals the old one', () => {
+  const saved = { pairs: { ...moscone.walk.previous.pairs, 'N|S': 7 } };   // a whole matrix saved before the recalibration
+  const merged = mergeWalk(moscone.walk, saved);
+  eq([merged.pairs['S|W'], merged.pairs['E|W'], merged.pairs['E|S'], merged.pairs['E|N'], merged.pairs['N|S']], [7, 8, 9, 9, 7]);
+});
+await test('should keep a saved pair that was tuned away from the old default, and the scalars', () => {
+  const merged = mergeWalk(moscone.walk, { pairs: { 'S|W': 9, 'E|W': 5, 'D|S': 6 }, sameFloor: 4 });
+  eq([merged.pairs['S|W'], merged.pairs['E|W'], merged.pairs['D|S'], merged.sameFloor, merged.diffFloor], [9, 8, 6, 4, moscone.walk.diffFloor]);
+});
+await test('should always take the floor extras and the previous map from the venue, and cope with junk', () => {
+  const merged = mergeWalk(moscone.walk, { pairs: { 'S|W': 'nine', 'E|S': null }, floorExtra: { S: { Hub: 99 } }, previous: { pairs: { 'S|W': 1 } } });
+  eq([merged.pairs['S|W'], merged.pairs['E|S'], merged.floorExtra, merged.previous, mergeWalk(moscone.walk, null), mergeWalk(moscone.walk, { pairs: 'junk' }).pairs['S|W']],
+    [7, 9, moscone.walk.floorExtra, moscone.walk.previous, moscone.walk, 7]);
+});
+await test('should list every recalibrated pair in the previous map, and nothing else', () => {
+  const changed = ['S|W', 'E|W', 'E|S', 'E|N'];
+  eq(Object.keys(moscone.walk.previous.pairs).sort(), changed.sort());
+  eq(changed.every(k => moscone.walk.previous.pairs[k] !== moscone.walk.pairs[k]), true);
 });
 await test('should count a theater and the roof as different floors of one building', () => {
   eq(walkMinutes(place('AMC Metreon | Level 3, Theater 11'), place('The Aviary, Breakouts'), moscone.walk), moscone.walk.diffFloor);
@@ -210,6 +269,36 @@ await test('should treat a rescheduling room as a placeholder, not an unknown bu
   eq([parked.building, parked.known, parked.placeholder, room.placeholder], ['U', false, true, true]);
   eq(place('Moscone South | Level 2, Room 201').placeholder, undefined);
   eq(walkMinutes(parked, place('Moscone West | Level 3, Room 3001'), moscone.walk), moscone.walk.unknown);
+});
+
+// ---- the Map link opens the room on the official indoor map (specs/features/venue-map-link.feature)
+// The expected URL shape is the one the Ignite event guide's own "View map" button opens.
+const roomed = { code: 'BRK360', room: 'Moscone West | Level 3, Room 3014', roomTbd: false, onlineOnly: false };
+await test('should link a roomed session to its room on the official map', () => {
+  eq(venueMapUrl(roomed, ignite), 'https://wayfinding.event.microsoft.com/ignite?nto=Moscone%20West%20%7C%20Level%203%2C%20Room%203014&sc=BRK360');
+});
+await test('should carry a room name with commas and symbols unchanged', () => {
+  const u = new URL(venueMapUrl({ ...roomed, code: 'TT1706', room: ' Moscone South | Upper Mezzanine, Esplanade Ballroom, Table 9 ' }, ignite));
+  eq([u.origin + u.pathname, u.searchParams.get('nto'), u.searchParams.get('sc')],
+    ['https://wayfinding.event.microsoft.com/ignite', 'Moscone South | Upper Mezzanine, Esplanade Ballroom, Table 9', 'TT1706']);
+});
+await test('should give no link for a placeholder room, an online-only session, a blank room, a preview room, or a conference without a map', () => {
+  eq([venueMapUrl({ ...roomed, room: 'Rescheduling 3', roomTbd: true }, ignite), venueMapUrl({ ...roomed, onlineOnly: true }, ignite),
+    venueMapUrl({ ...roomed, room: '  ' }, ignite), venueMapUrl({ ...roomed, timeSource: 'preview' }, ignite),
+    venueMapUrl({ ...roomed, room: 'Lark 1, WDW Swan Hotel' }, gartner), venueMapUrl(roomed, null)],
+  [null, null, null, null, null, null]);
+  eq(mapChip(null), '');
+});
+await test('should render the Map chip as an escaped link that opens in a new tab', () => {
+  const html = mapChip(venueMapUrl({ ...roomed, code: 'A&B' }, ignite));
+  eq(html.includes('href="https://wayfinding.event.microsoft.com/ignite?nto=Moscone%20West%20%7C%20Level%203%2C%20Room%203014&amp;sc=A%26B"'), true);
+  eq([html.includes('target="_blank"'), html.includes('rel="noopener"'), /Map<\/a>$/.test(html)], [true, true, true]);
+});
+await test('should put the Map chip on a session card next to the room, and leave it off without a map', () => {
+  const s = { key: 'k1', code: 'BRK360', type: 'Breakout', title: 'T', onlineOnly: false, loc: { known: false }, roomLabel: 'Moscone West | Level 3, Room 3014', speakers: [] };
+  const withMap = sessionCard(s, { mapUrl: venueMapUrl({ ...s, ...roomed }, ignite) });
+  const without = sessionCard(s, {});
+  eq([withMap.includes('class="chip map"'), withMap.indexOf('Room 3014') < withMap.indexOf('class="chip map"'), without.includes('chip map'), without.includes('Room 3014')], [true, true, false, true]);
 });
 
 // ---- room occupancy from the official map's feed (specs/features/room-occupancy.feature)

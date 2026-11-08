@@ -115,6 +115,10 @@ export const CONFERENCES = {
     rsvp: { 'Lab': '2026-10-26T08:00:00+08:00', 'Lightning Talk': '2026-10-26T08:00:00+08:00', 'Table Talk': '2026-10-26T08:00:00+08:00', 'Invite Only': '2026-10-26T08:00:00+08:00' },
     // The site resolves both the instance id (canonical) and the session code.
     sessionUrl: s => `https://ignite.microsoft.com/en-US/sessions/${encodeURIComponent(s.inst || s.code)}`,
+    // The official indoor map (Mappedin, embedded in the event guide). Opened with the room label
+    // as `nto` and the session code as `sc`, it shows the building and floor with the room pinned,
+    // the session, and a Start button for a drawn route; no sign-in needed. venueMapUrl() in ui.js.
+    mapUrl: 'https://wayfinding.event.microsoft.com/ignite',
     siteName: 'the Ignite site',
     lunch: { from: 690, to: 810 },
     hint: 'Dates and rooms arrive late (expected late October); the app watches for them.',
