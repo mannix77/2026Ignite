@@ -1293,7 +1293,13 @@ function renderDecision(d, plan, c) {
   const tie = rankTie(ranked);
   // The recommendation is the best-ranked option that can still be chosen: a lock elsewhere can
   // rule out the first one (its button is disabled below), so the next possible option is it.
-  const possible = x => { const o = outcome.get(x.key); return !o || !!o.feasible; };
+  // An option beyond the compare cap has no outcome: it is checked against the locks outside
+  // this card directly (the locks inside it are released by "Go to this").
+  const outsideLocks = plan.items.filter(i => i.locked && !d.items.some(m => m.key === i.key));
+  const possible = x => {
+    const o = outcome.get(x.key);
+    return o ? !!o.feasible : outsideLocks.every(l => l.id === x.id || canBoth(l, x, c));
+  };
   const topKey = (ranked.find(r => possible(r.item)) || ranked[0]).item.key;
   const decided = d.resolved ? d.items.find(x => x.locked) : null;
   const lockedOthers = x => d.items.filter(o => o.locked && o.id !== x.id && !canBoth(o, x, c)).map(o => o.id);
@@ -1307,6 +1313,7 @@ function renderDecision(d, plan, c) {
     const miss = d.items.filter(y => y !== x && !groupsX.has(y.id));
     const r = rowOf.get(x.key);
     const top = x.key === topKey;
+    const can = possible(x);
     const label = x.locked ? (x.reserved ? 'Reserved seat' : 'Your choice') : decided ? '' : top ? (tie ? 'Toss-up: your call' : 'Go here') : r.elsewhere.length ? 'Catch it at the other run' : `#${r.rank}`;
     const diff = Math.round(best - o.value);
     return `<div class="option ${(x.locked || (!decided && top)) ? 'rec' : ''}">
@@ -1315,7 +1322,7 @@ function renderDecision(d, plan, c) {
         <div class="row small"><b>${fmtTime(x.startMin)}–${fmtTime(x.endMin)}</b>${prioPill(x.priority)}${scoreChip(x.score)}${bldgChip(x.loc)}${recChip(x)}</div>
         <a class="title" href="#/session/${encodeURIComponent(x.code)}" data-act="open" data-key="${attr(x.key)}" style="font-weight:700;display:block;margin:4px 0;color:var(--text);text-decoration:none">${esc(x.code)} · ${esc(x.title)}</a>
         <div class="why">${r.reasons.map(esc).join(' · ')}</div>
-        ${o.unrated ? `<div class="why">Not compared with the whole plan (only the top options are). <b>Go to this</b> shows what it would change.</div>` : !o.feasible ? `<div class="lose">Not possible with the sessions or blocked time you've locked</div>` : `
+        ${!can ? `<div class="lose">Not possible with the sessions or blocked time you've locked</div>` : o.unrated ? `<div class="why">Not compared with the whole plan (only the top options are). <b>Go to this</b> shows what it would change.</div>` : `
         ${also.length ? `<div class="why">${icon('check')} Then you also make ${esc(also.map(y => y.code).join(', '))}</div>` : ''}
         ${moved.length ? `<div class="why">${icon('check')} ${moved.map(m => `${esc(m.y.code)} moves to ${esc(m.to.code)} ${esc(fmtDay(m.to.day))} ${fmtTime(m.to.startMin)}`).join(' · ')}</div>` : ''}
         ${miss.length ? `<div class="lose">You'd miss ${esc(missSummary(miss, o.chosen, c))}</div>` : ''}
@@ -1323,7 +1330,7 @@ function renderDecision(d, plan, c) {
       </div>
       <div class="btns">
         ${x.locked ? `<button class="btn small" data-act="unlock" data-key="${attr(x.key)}">Undo choice</button>`
-          : `<button class="btn small ${!decided && top && !tie ? 'primary' : ''}" data-act="lock" data-key="${attr(x.key)}" data-release="${attr(lockedOthers(x).join(' '))}" ${o.feasible ? '' : 'disabled'}>${icon('check')}Go to this</button>`}
+          : `<button class="btn small ${!decided && top && !tie ? 'primary' : ''}" data-act="lock" data-key="${attr(x.key)}" data-release="${attr(lockedOthers(x).join(' '))}" ${can ? '' : 'disabled'}>${icon('check')}Go to this</button>`}
         ${x.recorded !== false ? `<button class="btn small ghost" data-act="watch-later" data-key="${attr(x.key)}" title="Keep it on the watch-later list instead">Watch later</button>` : ''}
         <button class="btn small ghost" data-act="not-going" data-key="${attr(x.key)}" ${preview ? 'data-preview="1"' : ''} title="Mark as Skip">Not going</button>
       </div>
