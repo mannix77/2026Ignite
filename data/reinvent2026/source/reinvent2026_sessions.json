@@ -1,7 +1,7 @@
 {
  "source": "https://catalog.awsevents.com/api/sessions",
  "event": "reinvent2026",
- "fetchedAt": "2026-11-08T06:43:14Z",
+ "fetchedAt": "2026-11-08T12:43:34Z",
  "count": 2484,
  "sessions": [
   {
@@ -35079,7 +35079,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-08T01:27:05Z",
+   "modified": "2026-11-08T08:14:00Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -40434,86 +40434,6 @@
    ]
   },
   {
-   "sessionID": "1790358228908001ivwY",
-   "code": "CMP343-R1",
-   "title": "Bringing better Amazon EC2 price performance to your pipeline with AWS Graviton",
-   "abstract": "Which workload should move to AWS Graviton first? And what actually changes in your pipeline? In this code talk, we answer both live. We profile an application portfolio to find strong Arm64 candidates, check dependency and library compatibility, and update a working CI/CD pipeline to build multi-architecture container images for x86 and Arm64, so you see exactly what changes and why. Then we deploy the workload and run a side-by-side load test to compare price performance. You'll leave with a repeatable workload-selection checklist and pipeline patterns you can apply to your own AWS Graviton adoption with minimal disruption.",
-   "type": "Code talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-06T21:40:14Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Code talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Compute"
-    ],
-    "AreaofInterest": [
-     "Cost Optimization"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "DevOps Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Elastic Compute Cloud (Amazon EC2)"
-    ],
-    "Venue": [
-     "Caesars Palace"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Diego Nieto Marin",
-     "title": "Senior Geo Specialist Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Allan Henrique Homenhuck",
-     "title": "Sr GTM Specialist SA, EFF Compute",
-     "company": "AWS Brazil",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360373507001AzeE",
-     "date": "2026-12-01",
-     "startTime": "16:00",
-     "endTime": "17:00",
-     "utcStartTime": "2026/12/02 00:00:00",
-     "utcEndTime": "2026/12/02 01:00:00",
-     "length": 60,
-     "room": "Caesars Palace | Promenade South | Octavius 4 | Content Hub | Code Talk",
-     "roomId": "1789591920119001bHvX",
-     "capacity": "80",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442255177001cgVo",
    "code": "CMP343-R",
    "title": "Bringing better Amazon EC2 price performance to your pipeline with AWS Graviton",
@@ -40587,6 +40507,86 @@
      "room": "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Code Talk",
      "roomId": "1789591920430004bQ0h",
      "capacity": "120",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358228908001ivwY",
+   "code": "CMP343-R1",
+   "title": "Bringing better Amazon EC2 price performance to your pipeline with AWS Graviton",
+   "abstract": "Which workload should move to AWS Graviton first? And what actually changes in your pipeline? In this code talk, we answer both live. We profile an application portfolio to find strong Arm64 candidates, check dependency and library compatibility, and update a working CI/CD pipeline to build multi-architecture container images for x86 and Arm64, so you see exactly what changes and why. Then we deploy the workload and run a side-by-side load test to compare price performance. You'll leave with a repeatable workload-selection checklist and pipeline patterns you can apply to your own AWS Graviton adoption with minimal disruption.",
+   "type": "Code talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-08T09:37:58Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Code talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Compute"
+    ],
+    "AreaofInterest": [
+     "Cost Optimization"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "DevOps Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Elastic Compute Cloud (Amazon EC2)"
+    ],
+    "Venue": [
+     "Caesars Palace"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Allan Henrique Homenhuck",
+     "title": "Sr GTM Specialist SA, EFF Compute",
+     "company": "AWS Brazil",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Diego Nieto Marin",
+     "title": "Senior Geo Specialist Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360373507001AzeE",
+     "date": "2026-12-01",
+     "startTime": "16:00",
+     "endTime": "17:00",
+     "utcStartTime": "2026/12/02 00:00:00",
+     "utcEndTime": "2026/12/02 01:00:00",
+     "length": 60,
+     "room": "Caesars Palace | Promenade South | Octavius 4 | Content Hub | Code Talk",
+     "roomId": "1789591920119001bHvX",
+     "capacity": "80",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -67735,7 +67735,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-08T03:32:07Z",
+   "modified": "2026-11-08T09:29:16Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -86562,7 +86562,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T15:19:41Z",
+   "modified": "2026-11-08T08:15:36Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -87625,7 +87625,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-08T09:40:39Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -103562,91 +103562,6 @@
    ]
   },
   {
-   "sessionID": "1790358223348001ikwx",
-   "code": "CMP324-R1",
-   "title": "GenAI chip selection: From training to inference",
-   "abstract": "Every GenAI workload hits the same question: GPU, Trainium, Graviton, or Inferentia—and when do you use each? In this chalk talk, we walk through a practical decision tree covering model training, real-time inference, and agentic AI workloads. We then go deep on inference cost optimization: right-sizing GPU instances, offloading pre/post-processing to Graviton, using Spot for batch inference, prompt caching, and moving production inference to Inferentia2. Expect opinionated guidance, real customer math from teams that cut inference costs without sacrificing latency, and a whiteboard framework you can take back to your team on Monday.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Customer story",
-     "Discussion"
-    ],
-    "Topic": [
-     "Artificial Intelligence",
-     "Compute"
-    ],
-    "AreaofInterest": [
-     "Generative AI",
-     "Cost Optimization"
-    ],
-    "Role": [
-     "Data Scientist",
-     "Developer / Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Elastic Compute Cloud (Amazon EC2)",
-     "AWS Trainium",
-     "Amazon EC2 - Graviton"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Kumar Shubham",
-     "title": "TAM (ENT)",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Barak Nissim",
-     "title": "Sr. AI/ML Specialist",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360376938001AlFq",
-     "date": "2026-12-01",
-     "startTime": "14:30",
-     "endTime": "15:30",
-     "utcStartTime": "2026/12/01 22:30:00",
-     "utcEndTime": "2026/12/01 23:30:00",
-     "length": 60,
-     "room": "MGM Grand | Level 1 | Boulevard 163",
-     "roomId": "1789591920202001b2p2",
-     "capacity": "94",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442238674001c8MS",
    "code": "CMP324-R",
    "title": "GenAI chip selection: From training to inference",
@@ -103724,6 +103639,91 @@
      "room": "MGM Grand | Level 1 | Boulevard 162",
      "roomId": "1789591920194001baD5",
      "capacity": "98",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358223348001ikwx",
+   "code": "CMP324-R1",
+   "title": "GenAI chip selection: From training to inference",
+   "abstract": "Every GenAI workload hits the same question: GPU, Trainium, Graviton, or Inferentia—and when do you use each? In this chalk talk, we walk through a practical decision tree covering model training, real-time inference, and agentic AI workloads. We then go deep on inference cost optimization: right-sizing GPU instances, offloading pre/post-processing to Graviton, using Spot for batch inference, prompt caching, and moving production inference to Inferentia2. Expect opinionated guidance, real customer math from teams that cut inference costs without sacrificing latency, and a whiteboard framework you can take back to your team on Monday.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-08T11:32:21Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Customer story",
+     "Discussion"
+    ],
+    "Topic": [
+     "Artificial Intelligence",
+     "Compute"
+    ],
+    "AreaofInterest": [
+     "Generative AI",
+     "Cost Optimization"
+    ],
+    "Role": [
+     "Data Scientist",
+     "Developer / Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Elastic Compute Cloud (Amazon EC2)",
+     "AWS Trainium",
+     "Amazon EC2 - Graviton"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Kumar Shubham",
+     "title": "TAM (ENT)",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Barak Nissim",
+     "title": "Sr. AI/ML Specialist",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360376938001AlFq",
+     "date": "2026-12-01",
+     "startTime": "14:30",
+     "endTime": "15:30",
+     "utcStartTime": "2026/12/01 22:30:00",
+     "utcEndTime": "2026/12/01 23:30:00",
+     "length": 60,
+     "room": "MGM Grand | Level 1 | Boulevard 163",
+     "roomId": "1789591920202001b2p2",
+     "capacity": "94",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -104468,92 +104468,6 @@
    ]
   },
   {
-   "sessionID": "1790358255097001ihbh",
-   "code": "CMP409-R1",
-   "title": "Getting the capacity you need: EC2 Launch APIs and Intelligent Auto Scaling deep dive",
-   "abstract": "Getting the right compute at the right time is a two-part challenge: launching instances effectively and scaling them intelligently. This deep dive covers both. First, we explore RunInstances—EC2's oldest and most important API—sharing launch best practices, how flexibility helps you get the capacity you need, and how EC2 Fleet incorporates advanced strategies into your calls. Then we go under the hood of EC2 Auto Scaling, and the intelligence that also scales DynamoDB, WorkSpaces, EMR, SageMaker AI, and Aurora. Learn how to use target tracking, predictive scaling, and auto-tuning to automatically and intelligently scale your workloads.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "400 – Expert"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Artificial Intelligence",
-     "Cloud Operations",
-     "Compute"
-    ],
-    "AreaofInterest": [
-     "Event-Driven Architecture",
-     "Cost Optimization",
-     "Automation"
-    ],
-    "Role": [
-     "DevOps Engineer",
-     "IT Professional / Technical Manager",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Elastic Compute Cloud (Amazon EC2)",
-     "Amazon SageMaker",
-     "Amazon WorkSpaces"
-    ],
-    "Venue": [
-     "Caesars Palace"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Justin Kwong",
-     "title": "Sr. Software Dev Engineer",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Samruddhi Kochkar",
-     "title": "Senior Software Engineer",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360372048001A3lW",
-     "date": "2026-12-03",
-     "startTime": "13:30",
-     "endTime": "14:30",
-     "utcStartTime": "2026/12/03 21:30:00",
-     "utcEndTime": "2026/12/03 22:30:00",
-     "length": 60,
-     "room": "Caesars Palace | Promenade South | Octavius 14",
-     "roomId": "1789591920078001bjro",
-     "capacity": "70",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780441497901001GMk5",
    "code": "CMP409-R",
    "title": "Getting the capacity you need: EC2 Launch APIs and Intelligent Auto Scaling deep dive",
@@ -104633,6 +104547,92 @@
      "room": "MGM Grand | Level 1 | Boulevard 158",
      "roomId": "1789591920175001be2U",
      "capacity": "78",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358255097001ihbh",
+   "code": "CMP409-R1",
+   "title": "Getting the capacity you need: EC2 Launch APIs and Intelligent Auto Scaling deep dive",
+   "abstract": "Getting the right compute at the right time is a two-part challenge: launching instances effectively and scaling them intelligently. This deep dive covers both. First, we explore RunInstances—EC2's oldest and most important API—sharing launch best practices, how flexibility helps you get the capacity you need, and how EC2 Fleet incorporates advanced strategies into your calls. Then we go under the hood of EC2 Auto Scaling, and the intelligence that also scales DynamoDB, WorkSpaces, EMR, SageMaker AI, and Aurora. Learn how to use target tracking, predictive scaling, and auto-tuning to automatically and intelligently scale your workloads.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-08T09:48:09Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "400 – Expert"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Artificial Intelligence",
+     "Cloud Operations",
+     "Compute"
+    ],
+    "AreaofInterest": [
+     "Event-Driven Architecture",
+     "Cost Optimization",
+     "Automation"
+    ],
+    "Role": [
+     "DevOps Engineer",
+     "IT Professional / Technical Manager",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Elastic Compute Cloud (Amazon EC2)",
+     "Amazon SageMaker",
+     "Amazon WorkSpaces"
+    ],
+    "Venue": [
+     "Caesars Palace"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Samruddhi Kochkar",
+     "title": "Senior Software Engineer",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Justin Kwong",
+     "title": "Sr. Software Dev Engineer",
+     "company": "Amazon",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360372048001A3lW",
+     "date": "2026-12-03",
+     "startTime": "13:30",
+     "endTime": "14:30",
+     "utcStartTime": "2026/12/03 21:30:00",
+     "utcEndTime": "2026/12/03 22:30:00",
+     "length": 60,
+     "room": "Caesars Palace | Promenade South | Octavius 14",
+     "roomId": "1789591920078001bjro",
+     "capacity": "70",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -122143,7 +122143,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-08T09:37:58Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -122189,10 +122189,10 @@
    },
    "speakers": [
     {
-     "name": "Todd Sharp",
-     "title": "Principal Specialist Solutions Architect - GameLift",
-     "company": "AWS",
-     "role": "Internal Speaker"
+     "name": "Frank Zhu",
+     "title": "Sr. Product Manager-Tech",
+     "company": "Twitch Advertising",
+     "role": "External Speaker"
     },
     {
      "name": "Henry Goffin",
@@ -122201,10 +122201,10 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Frank Zhu",
-     "title": "Sr. Product Manager-Tech",
-     "company": "Twitch Advertising",
-     "role": "External Speaker"
+     "name": "Todd Sharp",
+     "title": "Principal Specialist Solutions Architect - GameLift",
+     "company": "AWS",
+     "role": "Internal Speaker"
     }
    ],
    "times": [
@@ -124449,7 +124449,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T15:30:04Z",
+   "modified": "2026-11-08T08:17:26Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -127724,7 +127724,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-08T08:14:00Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -127755,15 +127755,15 @@
    },
    "speakers": [
     {
-     "name": "Fletcher Woodruff",
-     "title": "Senior Software Development Engineer",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Todd Neal",
      "title": "Principal Software Engineer",
      "company": "Amazon",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Fletcher Woodruff",
+     "title": "Senior Software Development Engineer",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     }
    ],
@@ -137453,7 +137453,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-08T03:05:09Z",
+   "modified": "2026-11-08T11:46:18Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -139454,7 +139454,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-08T04:17:45Z",
+   "modified": "2026-11-08T09:29:16Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -145182,7 +145182,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-08T02:20:42Z",
+   "modified": "2026-11-08T08:14:00Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -148507,7 +148507,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T03:45:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -148548,15 +148548,15 @@
    },
    "speakers": [
     {
-     "name": "Jeremy Schiefer",
-     "title": "Pr. Security SA",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Shuo Yang",
      "title": "Software Development Manager",
      "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Jeremy Schiefer",
+     "title": "Pr. Security SA",
+     "company": "AWS",
      "role": "Internal Speaker"
     }
    ],
@@ -152871,7 +152871,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T21:15:42Z",
+   "modified": "2026-11-08T07:39:54Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -153915,7 +153915,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-08T01:42:52Z",
+   "modified": "2026-11-08T08:11:34Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -153992,7 +153992,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-08T01:58:09Z",
+   "modified": "2026-11-08T08:17:26Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -172320,89 +172320,6 @@
    ]
   },
   {
-   "sessionID": "1790358225718001iKoH",
-   "code": "AIM302-R1",
-   "title": "Six Ways AI Fails Who Your Nonprofit Serves — And How to Stop Each One",
-   "abstract": "Every AI application touching real people can fail in ways that cause harm. In this chalk talk, we walk one application through six failure modes — PII exposure, phantom citations, out-of-scope advice, unreviewed judgments, hidden bias, and unaccountable decisions — and whiteboard a defense-in-depth architecture using Amazon Bedrock Guardrails, AgentCore, Automated Reasoning, and human-in-the-loop patterns. Leave with a responsible AI stack applicable to any form factor — chatbot, agent, RAG pipeline, or model call — whether you serve donors, patients, customers, or citizens.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-06T20:41:29Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Architecture",
-     "Security & Identity"
-    ],
-    "AreaofInterest": [
-     "Generative AI",
-     "Tech for Impact",
-     "Agentic AI"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "IT Executive",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Bedrock"
-    ],
-    "Venue": [
-     "Wynn/Encore"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Sam Grace",
-     "title": "Solutions Architect,",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Annie Cimack",
-     "title": "Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360388560001AkwI",
-     "date": "2026-12-02",
-     "startTime": "12:00",
-     "endTime": "13:00",
-     "utcStartTime": "2026/12/02 20:00:00",
-     "utcEndTime": "2026/12/02 21:00:00",
-     "length": 60,
-     "room": "Wynn/Encore | Convention Promenade | La Tache 2",
-     "roomId": "1789591920958001b8NR",
-     "capacity": "78",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442234003001c3tS",
    "code": "AIM302-R",
    "title": "Six Ways AI Fails Who Your Nonprofit Serves — And How to Stop Each One",
@@ -172479,6 +172396,89 @@
      "room": "MGM Grand | Level 1 | Boulevard 162",
      "roomId": "1789591920194001baD5",
      "capacity": "98",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358225718001iKoH",
+   "code": "AIM302-R1",
+   "title": "Six Ways AI Fails Who Your Nonprofit Serves — And How to Stop Each One",
+   "abstract": "Every AI application touching real people can fail in ways that cause harm. In this chalk talk, we walk one application through six failure modes — PII exposure, phantom citations, out-of-scope advice, unreviewed judgments, hidden bias, and unaccountable decisions — and whiteboard a defense-in-depth architecture using Amazon Bedrock Guardrails, AgentCore, Automated Reasoning, and human-in-the-loop patterns. Leave with a responsible AI stack applicable to any form factor — chatbot, agent, RAG pipeline, or model call — whether you serve donors, patients, customers, or citizens.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-08T09:39:53Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Architecture",
+     "Security & Identity"
+    ],
+    "AreaofInterest": [
+     "Generative AI",
+     "Tech for Impact",
+     "Agentic AI"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "IT Executive",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Bedrock"
+    ],
+    "Venue": [
+     "Wynn/Encore"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Sam Grace",
+     "title": "Solutions Architect,",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Annie Cimack",
+     "title": "Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360388560001AkwI",
+     "date": "2026-12-02",
+     "startTime": "12:00",
+     "endTime": "13:00",
+     "utcStartTime": "2026/12/02 20:00:00",
+     "utcEndTime": "2026/12/02 21:00:00",
+     "length": 60,
+     "room": "Wynn/Encore | Convention Promenade | La Tache 2",
+     "roomId": "1789591920958001b8NR",
+     "capacity": "78",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -175048,7 +175048,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T14:57:32Z",
+   "modified": "2026-11-08T08:17:26Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -175609,7 +175609,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-08T09:36:23Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -187613,7 +187613,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-08T11:59:05Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -187646,14 +187646,14 @@
    },
    "speakers": [
     {
-     "name": "Manikanta Gona Grafsgaard",
-     "title": "Sr Solutions Architect",
+     "name": "Duncan Watson",
+     "title": "Solution Architect",
      "company": "AWS",
      "role": "Internal Speaker"
     },
     {
-     "name": "Duncan Watson",
-     "title": "Solution Architect",
+     "name": "Manikanta Gona Grafsgaard",
+     "title": "Sr Solutions Architect",
      "company": "AWS",
      "role": "Internal Speaker"
     }
@@ -189311,7 +189311,7 @@
    "length": 180,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T22:40:54Z",
+   "modified": "2026-11-08T11:29:51Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -198264,7 +198264,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-08T09:36:23Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
