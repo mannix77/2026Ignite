@@ -3,9 +3,10 @@
 import * as store from './store.js';
 import { fetchAll, buildModel, diffKnown, snapshot, cacheUrl, exportAge, customRecords, catalogMatch, seatsSig, CUSTOM_DATA, DATA_OVERRIDE } from './data.js';
 import { checkLive, diff as liveDiff, changeCounts, countsLine } from './live.js';
-import { optimize, decisionGroups, transitions, fillers, nowNext, weigh, canBoth, overlaps, transition, compareOptions, lunchConfig, arrivalExtra, PRIORITY } from './planner.js';
+import { optimize, transitions, fillers, nowNext, canBoth, overlaps, transition, compareOptions, lunchConfig, arrivalExtra, PRIORITY } from './planner.js';
 import { fmtTime, fmtDay, fmtDuration, relTime, nowLocal, addDays } from './time.js';
 import { upNext } from './upnext.js';
+import { slotGroups, rankOptions, rankTie } from './clash.js';
 import { createVenue, setVenue, walkMinutes, floorExtra, mergeWalk } from './venue.js';
 import { CONFERENCES, currentConferenceId, rememberConference, conferenceList } from './conferences.js';
 import { buildSuggester } from './suggest.js';
@@ -472,7 +473,7 @@ function computePlan() {
   const blockedKeys = new Set(items.filter(x => blocks.some(b => b.day === x.day && !canBoth(b, x, c))).map(x => x.key));
   // A run whose repeat is already in the plan isn't a real decision either.
   const contested = items.filter(x => !blockedKeys.has(x.key) && (chosen.has(x.key) || !chosenGroups.has(x.id)));
-  const decisions = decisionGroups(contested, c);
+  const decisions = slotGroups(contested, c);   // one card per start time (clash.js)
   const oneEach = list => [...new Map(list.map(x => [x.id, x])).values()];
   app.plan = {
     items, blocks, res, chosen, chosenGroups, decisions, contested, blockedKeys, lunch: L, watch,
@@ -1282,11 +1283,14 @@ function renderDecision(d, plan, c) {
   plan.compare ||= new Map();
   const ck = d.items.map(x => x.key).join('|');
   if (!plan.compare.has(ck)) plan.compare.set(ck, compareOptions([...plan.items, ...plan.blocks], d.items, c, plan.lunch, { cap: OPTION_CAP }));
-  const { outcomes: outcome, order: opts } = plan.compare.get(ck); // best outcome first
+  const { outcomes: outcome } = plan.compare.get(ck);
   const feasibleVals = [...outcome.values()].filter(o => o.feasible).map(o => o.value);
   const best = feasibleVals.length ? Math.max(...feasibleVals) : 0;
-  const isBest = x => !!outcome.get(x.key)?.feasible && outcome.get(x.key).value >= best - 0.5;
-  const ties = d.items.filter(isBest).length;
+  // The order is the fixed rule in clash.js (reserved, other runs, tier, score, recording, building).
+  const ranked = rankOptions(d.items, { plan: plan.res.plan, ctx: c, runsOf: id => plan.items.filter(i => i.id === id) });
+  const opts = ranked.map(r => r.item);
+  const rowOf = new Map(ranked.map(r => [r.item.key, r]));
+  const tie = rankTie(ranked);
   const decided = d.resolved ? d.items.find(x => x.locked) : null;
   const lockedOthers = x => d.items.filter(o => o.locked && o.id !== x.id && !canBoth(o, x, c)).map(o => o.id);
   const preview = app.model.mode === 'preview';
@@ -1297,27 +1301,25 @@ function renderDecision(d, plan, c) {
     const also = d.items.filter(y => y !== x && keysX.has(y.key));
     const moved = d.items.filter(y => y !== x && !keysX.has(y.key) && groupsX.has(y.id)).map(y => ({ y, to: o.chosen.find(z => z.id === y.id) }));
     const miss = d.items.filter(y => y !== x && !groupsX.has(y.id));
-    const top = isBest(x);
-    const label = x.locked ? (x.reserved ? 'Reserved seat' : 'Your choice') : decided ? '' : top ? (ties > 1 ? 'Toss-up: your call' : 'Best for your plan') : '';
-    const w = weigh(x, c);
-    const repeat = (app.model.byGroup.get(x.s.group) || []).filter(r => r.key !== x.key && r.day);
+    const r = rowOf.get(x.key);
+    const top = r.rank === 1;
+    const label = x.locked ? (x.reserved ? 'Reserved seat' : 'Your choice') : decided ? '' : top ? (tie ? 'Toss-up: your call' : 'Go here') : r.elsewhere.length ? 'Catch it at the other run' : `#${r.rank}`;
     const diff = Math.round(best - o.value);
     return `<div class="option ${(x.locked || (!decided && top)) ? 'rec' : ''}">
       <div>
         ${label ? `<div class="tag-rec">${esc(label)}</div>` : ''}
         <div class="row small"><b>${fmtTime(x.startMin)}–${fmtTime(x.endMin)}</b>${prioPill(x.priority)}${scoreChip(x.score)}${bldgChip(x.loc)}${recChip(x)}</div>
         <a class="title" href="#/session/${encodeURIComponent(x.code)}" data-act="open" data-key="${attr(x.key)}" style="font-weight:700;display:block;margin:4px 0;color:var(--text);text-decoration:none">${esc(x.code)} · ${esc(x.title)}</a>
-        <div class="why">${w.why.map(esc).join(' · ')}</div>
-        ${o.unrated ? `<div class="why">Lower priority than the options above, so not compared. <b>Go to this</b> shows what it would change.</div>` : !o.feasible ? `<div class="lose">Not possible with the sessions or blocked time you've locked</div>` : `
+        <div class="why">${r.reasons.map(esc).join(' · ')}</div>
+        ${o.unrated ? `<div class="why">Not compared with the whole plan (only the top options are). <b>Go to this</b> shows what it would change.</div>` : !o.feasible ? `<div class="lose">Not possible with the sessions or blocked time you've locked</div>` : `
         ${also.length ? `<div class="why">${icon('check')} Then you also make ${esc(also.map(y => y.code).join(', '))}</div>` : ''}
         ${moved.length ? `<div class="why">${icon('check')} ${moved.map(m => `${esc(m.y.code)} moves to ${esc(m.to.code)} ${esc(fmtDay(m.to.day))} ${fmtTime(m.to.startMin)}`).join(' · ')}</div>` : ''}
         ${miss.length ? `<div class="lose">You'd miss ${esc(missSummary(miss, o.chosen, c))}</div>` : ''}
         <div class="why">Plan value ${Math.round(o.value)}${diff > 0 ? ` (${diff} less than the best option)` : ''}</div>`}
-        ${repeat.length ? `<div class="why">Also runs ${repeat.map(r => `${r.code} ${fmtDay(r.day)} ${fmtTime(r.startMin)}`).map(esc).join(', ')}</div>` : ''}
       </div>
       <div class="btns">
         ${x.locked ? `<button class="btn small" data-act="unlock" data-key="${attr(x.key)}">Undo choice</button>`
-          : `<button class="btn small ${!decided && top && ties === 1 ? 'primary' : ''}" data-act="lock" data-key="${attr(x.key)}" data-release="${attr(lockedOthers(x).join(' '))}" ${o.feasible ? '' : 'disabled'}>${icon('check')}Go to this</button>`}
+          : `<button class="btn small ${!decided && top && !tie ? 'primary' : ''}" data-act="lock" data-key="${attr(x.key)}" data-release="${attr(lockedOthers(x).join(' '))}" ${o.feasible ? '' : 'disabled'}>${icon('check')}Go to this</button>`}
         ${x.recorded !== false ? `<button class="btn small ghost" data-act="watch-later" data-key="${attr(x.key)}" title="Keep it on the watch-later list instead">Watch later</button>` : ''}
         <button class="btn small ghost" data-act="not-going" data-key="${attr(x.key)}" ${preview ? 'data-preview="1"' : ''} title="Mark as Skip">Not going</button>
       </div>
@@ -1325,7 +1327,7 @@ function renderDecision(d, plan, c) {
   };
   const SHOW = 3;
   return `<section class="decision" aria-label="Clash">
-    <header>${icon('warn')}${fmtTime(d.start)}–${fmtTime(d.end)} · ${opts.length} picks clash <span class="muted">${decided ? `· decided: ${esc(decided.code)}` : ties > 1 ? '· equally good options' : '· best option first'}</span></header>
+    <header>${icon('warn')}${fmtTime(d.start)} · ${opts.length} picks clash <span class="muted">${decided ? `· decided: ${esc(decided.code)}` : tie ? '· toss-up between the top two' : '· ranked for you'}</span></header>
     <div class="options">${opts.slice(0, SHOW).map(row).join('')}
       ${opts.length > SHOW ? `<details class="more-opts"><summary>${opts.length - SHOW} more option${opts.length - SHOW > 1 ? 's' : ''}</summary>${opts.slice(SHOW).map(row).join('')}</details>` : ''}</div></section>`;
 }
