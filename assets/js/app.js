@@ -12,7 +12,7 @@ import { buildSuggester } from './suggest.js';
 import { createRanker, partition, profileConfig, profileGroups, GOALS } from './profile.js';
 import { storageStatus, backupReminder, backupAge } from './health.js';
 import { INSTANCE_LABEL, nsKey, guideUrl } from './instance.js';
-import { esc, attr, icon, bldgChip, recChip, rsvpChip, rsvpOpensText, seatsDetail, prioPill, scoreChip, whenText, prioControl, sessionCard, cardClass, toast, shareOrDownload, copyText, speakersLine, setHostCompany, unknownRoomsNote, venueMapUrl, mapChip } from './ui.js';
+import { esc, attr, icon, bldgChip, recChip, rsvpChip, rsvpOpensText, seatsDetail, prioPill, scoreChip, whenText, prioControl, sessionCard, cardClass, toast, shareOrDownload, copyText, speakersLine, setHostCompany, unknownRoomsNote, venueMapUrl, mapChip, occupancyOf, occupancyChip } from './ui.js';
 
 const $ = (sel, root = document) => root.querySelector(sel);
 const main = $('#main');
@@ -599,7 +599,8 @@ function facetBox(name, label, entries, selected, fmt = v => v) {
 
 function card(s, opts = {}) {
   const gp = groupPick(s.group);
-  return sessionCard(s, { p: gp?.p ?? null, reserved: gp?.reserved === s.key, score: gp?.score ?? null, watch: gp?.mode === 'watch', isNew: isNew(s), mapUrl: venueMapUrl(s, app.conf), ...opts });
+  return sessionCard(s, { p: gp?.p ?? null, reserved: gp?.reserved === s.key, score: gp?.score ?? null, watch: gp?.mode === 'watch', isNew: isNew(s), mapUrl: venueMapUrl(s, app.conf),
+    occupancy: occupancyOf(app.snapshot?.occupancy, s.room), ...opts });
 }
 
 function favoritesBanner() {
@@ -1780,7 +1781,7 @@ function renderDetail(s) {
       ${sugg?.score >= 25 ? suggestExtra({ s, ...sugg }) : ''}
       <dl>
         <dt>When</dt><dd>${esc(whenText(s))}</dd>
-        <dt>Where</dt><dd>${s.onlineOnly ? 'Online' : `${bldgChip(s.loc)} ${esc(s.roomLabel)} ${mapChip(venueMapUrl(s, app.conf))}`}</dd>
+        <dt>Where</dt><dd>${s.onlineOnly ? 'Online' : `${bldgChip(s.loc)} ${esc(s.roomLabel)} ${mapChip(venueMapUrl(s, app.conf))} ${occupancyChip(occupancyOf(app.snapshot?.occupancy, s.room))}`}</dd>
         <dt>Recording</dt><dd>${s.recorded === true ? 'Will be recorded: you can watch it later' : s.recorded === false ? '<b>Not recorded</b>: in person only' : 'Unknown'}</dd>
         ${s.rsvp ? `<dt>Reservation</dt><dd><b>Required</b>, seats are limited${typeof s.rsvp === 'string' ? `. Opens ${esc(rsvpOpensText(s.rsvp) || String(s.rsvp))} on ${esc(app.conf.siteName)}` : ''}${gp?.reserved ? '. <b>You reserved a seat.</b>' : ''}</dd>` : ''}
         ${seatsDetail(s) ? `<dt>Seats</dt><dd>${esc(seatsDetail(s))}</dd>` : ''}
@@ -2526,6 +2527,7 @@ async function refreshData(manual = false) {
   if (!manual && Date.now() - app.lastRefresh < MIN_REFRESH_GAP) return;
   app.lastRefresh = Date.now();
   let snapErr = null;
+  const occupancyWas = app.snapshot?.occupancy?.fetchedAt ?? null;
   try {
     const fresh = await fetchAll(app.conf.dataDir);
     if (fresh.doc?.generatedAt && fresh.doc.generatedAt < app.snapshot.doc.generatedAt) fresh.doc = app.snapshot.doc; // never go backwards
@@ -2533,10 +2535,12 @@ async function refreshData(manual = false) {
   } catch (err) { snapErr = err; }
   await checkLiveNow(manual);
   const changed = applyData();
+  // A new occupancy capture changes what the cards show without changing the catalog.
+  const occupancyChanged = (app.snapshot?.occupancy?.fetchedAt ?? null) !== occupancyWas;
   if (changed) {
     renderOrDefer();
     announce();
-  } else if (app.tab === 'changes') renderOrDefer(); // refresh the sync status shown there
+  } else if (app.tab === 'changes' || occupancyChanged) renderOrDefer(); // refresh the sync status shown there, or the room chips
   if (!changed && manual) {
     toast(app.liveError ? `Couldn't check ${app.conf.siteName}: ${app.liveError}`
       : snapErr ? `Couldn't load the synced copy: ${snapErr.message}`

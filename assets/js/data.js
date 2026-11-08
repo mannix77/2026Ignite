@@ -18,19 +18,20 @@ async function getJSON(path) {
 
 export async function fetchAll(dataDir) {
   const dir = DATA_OVERRIDE || dataDir;
-  const [doc, meta, changes, favorites, profile, seats] = await Promise.all([
+  const [doc, meta, changes, favorites, profile, seats, occupancy] = await Promise.all([
     getJSON(`${dir}/sessions.json`),
     getJSON(`${dir}/meta.json`).catch(() => ({})),
     getJSON(`${dir}/changes.json`).catch(() => ({ batches: [] })),
     getJSON(`${dir}/favorites.json`).catch(() => null),
     getJSON(`${dir}/profile.json`).catch(() => null), // starting preferences (profile.js)
     getJSON(`${dir}/seats.json`).catch(() => null),   // seat availability from a portal export (re:Invent)
+    getJSON(`${dir}/occupancy.json`).catch(() => null), // live room occupancy captured during the event (Ignite)
   ]);
   // The service worker can hand back a cached sessions.json next to a fresh meta/changes
   // (slow Wi-Fi). Flag it so the app refreshes once the newer copy has landed.
   const newest = [meta.lastChanged, changes.batches?.[0]?.at].filter(Boolean).sort().pop();
   const stale = !!(newest && doc.generatedAt && newest > doc.generatedAt);
-  return { doc, meta, changes, favorites, profile, seats, stale };
+  return { doc, meta, changes, favorites, profile, seats, occupancy, stale };
 }
 
 // Preview mode only: deterministic fake day/room so the planner can be rehearsed
