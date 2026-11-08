@@ -53,6 +53,7 @@ jobs:
       - name: Run tests
         run: |
           node tests/planner.test.js
+          node tests/clash.test.js
           node tests/robustness.test.js
           node tests/profile.test.js
           node tests/catalog.test.js

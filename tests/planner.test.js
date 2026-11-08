@@ -418,6 +418,17 @@ test("leave-by counts from where you are, not from your last session's room", ()
   const r = nowNext([done, next], H(10.5), DEFAULT_PLANNER, here);
   eq([r.from.key, r.leaveBy], ['origin', H(11) - walkMinutes(here, W3) - DEFAULT_PLANNER.buffer]);
 });
+test('compareOptions releases the session\'s own lock on another run, but never blocked time', () => {
+  // The locked Tuesday run of a lab sits inside blocked time; its Wednesday run is on a card.
+  const tue = item(H(9), H(10.25), W2, { id: 'lab', code: 'LAB', priority: 3, locked: true, day: '2026-11-17' });
+  const block = { key: 'block:1', id: 'block:1', code: 'Dinner', title: 'Dinner', pseudo: 'block', weight: 1e7, locked: true, priority: 0, day: '2026-11-17', startMin: H(9), endMin: H(11), loc: W2 };
+  const wed = item(H(9), H(10.25), W2, { id: 'lab', code: 'LAB-R1', priority: 3, day: '2026-11-18' });
+  const other = item(H(9.5), H(10.5), S1, { priority: 2, day: '2026-11-18' });
+  const { outcomes } = compareOptions([tue, block, wed, other], [wed, other]);
+  eq(outcomes.get(wed.key).feasible, true, 'choosing the Wednesday run replaces the Tuesday lock');
+  eq(outcomes.get(wed.key).chosen.find(x => x.key === block.key)?.locked, true, 'the blocked time stays, and stays locked');
+  eq(outcomes.get(wed.key).chosen.some(x => x.key === tue.key), false);
+});
 test('choosing the other side of a clash with a locked session is possible: the lock gives way', () => {
   const locked = item(H(9), H(10), W2, { priority: 3, locked: true }), other = item(H(9.5), H(10.5), S1, { priority: 2 });
   const { outcomes } = compareOptions([locked, other], [locked, other]);
