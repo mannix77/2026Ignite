@@ -426,7 +426,7 @@ test('compareOptions releases the session\'s own lock on another run, but never 
   const other = item(H(9.5), H(10.5), S1, { priority: 2, day: '2026-11-18' });
   const { outcomes } = compareOptions([tue, block, wed, other], [wed, other]);
   eq(outcomes.get(wed.key).feasible, true, 'choosing the Wednesday run replaces the Tuesday lock');
-  eq(outcomes.get(wed.key).chosen.some(x => x.key === block.key), true, 'the blocked time stays');
+  eq(outcomes.get(wed.key).chosen.find(x => x.key === block.key)?.locked, true, 'the blocked time stays, and stays locked');
   eq(outcomes.get(wed.key).chosen.some(x => x.key === tue.key), false);
 });
 test('choosing the other side of a clash with a locked session is possible: the lock gives way', () => {
