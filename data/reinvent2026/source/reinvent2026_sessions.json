@@ -1,7 +1,7 @@
 {
  "source": "https://catalog.awsevents.com/api/sessions",
  "event": "reinvent2026",
- "fetchedAt": "2026-11-08T12:43:34Z",
+ "fetchedAt": "2026-11-08T18:43:10Z",
  "count": 2484,
  "sessions": [
   {
@@ -4303,7 +4303,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-08T18:28:56Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -4349,12 +4349,6 @@
      "name": "Jimmy Yang",
      "title": "Principal Product Manager",
      "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Mary Nachimov",
-     "title": "Sr. Technical Product Manager",
-     "company": "AWS",
      "role": "Internal Speaker"
     }
    ],
@@ -8785,7 +8779,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-08T18:32:56Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -8841,12 +8835,6 @@
      "title": "CEO",
      "company": "ScaleOps Labs Ltd.",
      "role": "Sponsor Speaker"
-    },
-    {
-     "name": "Gilad Elyashar",
-     "title": "CPO",
-     "company": "ScaleOps",
-     "role": "Sponsor Speaker"
     }
    ],
    "times": [
@@ -8876,7 +8864,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T23:15:15Z",
+   "modified": "2026-11-08T18:02:23Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -8928,22 +8916,16 @@
    },
    "speakers": [
     {
-     "name": "Diego Bailon Humpert",
-     "title": "AWS Sales Development Manager",
-     "company": "Banco BPM",
-     "role": "Sponsor Speaker"
+     "name": "Mickey Iqbal",
+     "title": "Senior Principal Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
     },
     {
      "name": "Farid Chalouhi",
      "title": "Principal solutions architect",
      "company": "intel",
      "role": "Sponsor Speaker"
-    },
-    {
-     "name": "Mickey Iqbal",
-     "title": "Senior Principal Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
     }
    ],
    "times": [
@@ -19648,7 +19630,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-08T18:01:19Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -19693,15 +19675,15 @@
    },
    "speakers": [
     {
-     "name": "Frederick Lefebvre",
-     "title": "Principal Engineer",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Sree Sunku",
      "title": "Sr. Product Manager",
      "company": "Amazon",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Stewart Smith",
+     "title": "Principal Engineer",
+     "company": "AWS",
      "role": "Internal Speaker"
     }
    ],
@@ -24853,7 +24835,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T21:43:44Z",
+   "modified": "2026-11-08T18:04:57Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -24914,12 +24896,6 @@
     },
     {
      "name": "Stewart Smith",
-     "title": "Principal Engineer",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Frederick Lefebvre",
      "title": "Principal Engineer",
      "company": "AWS",
      "role": "Internal Speaker"
@@ -29119,7 +29095,7 @@
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T22:34:48Z",
+   "modified": "2026-11-08T18:35:50Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -29149,16 +29125,16 @@
    },
    "speakers": [
     {
+     "name": "Manik Chopra",
+     "title": "Principal Technical Account Manager",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
      "name": "Prem Dhayalan",
      "title": "Senior Distinguished Engineer",
      "company": "Capitalone Bank",
      "role": "External Speaker"
-    },
-    {
-     "name": "Saurabh Saxena",
-     "title": "Sr Principal, AWS",
-     "company": "Amazon",
-     "role": "Internal Speaker"
     }
    ],
    "times": [
@@ -31835,7 +31811,7 @@
    "length": 180,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-08T15:00:22Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -36711,87 +36687,6 @@
    ]
   },
   {
-   "sessionID": "1780441495791001G9Dz",
-   "code": "INV503-R1",
-   "title": "Beyond Benchmarks: Evaluating AI Safety with Formal Guarantees",
-   "abstract": "As AI systems become increasingly capable and autonomous, safety evaluation is emerging as a critical challenge. While current evaluations largely rely on benchmark performance and empirical red-teaming, these approaches provide limited guarantees about real-world risk. This talk will explore an emerging direction in AI safety: evaluating model behavior with formal statistical guarantees. We will discuss how ideas from reliability engineering, robustness certification, and risk assessment can be applied to quantify catastrophic failure probabilities, the assumptions behind such guarantees, and their implications for deploying and governing frontier AI systems. This topic is highly relevant to the future of trustworthy and accountable AI.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "500 – Distinguished"
-    ],
-    "Features": [
-     "Customer story",
-     "Discussion"
-    ],
-    "Topic": [
-     "Artificial Intelligence"
-    ],
-    "AreaofInterest": [
-     "Generative AI"
-    ],
-    "Role": [
-     "Academic / Researcher",
-     "Data Scientist",
-     "Tech Explorer"
-    ],
-    "Services": [
-     "Amazon Bedrock"
-    ],
-    "Venue": [
-     "Wynn/Encore"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Qian Hu",
-     "title": "Applied Scientist",
-     "company": "Amazon",
-     "role": "External Speaker"
-    },
-    {
-     "name": "Weitong Ruan",
-     "title": "Senior Applied Science Manager",
-     "company": "Amazon",
-     "role": "External Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1792635434519001EZRs",
-     "date": "2026-12-04",
-     "startTime": "08:30",
-     "endTime": "09:30",
-     "utcStartTime": "2026/12/04 16:30:00",
-     "utcEndTime": "2026/12/04 17:30:00",
-     "length": 60,
-     "room": "Wynn/Encore | Level 1 | Chopin 2",
-     "roomId": "1789591921094001bT6B",
-     "capacity": "88",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780441493465001GUJI",
    "code": "INV503-R",
    "title": "Beyond Benchmarks: Evaluating AI Safety with Formal Guarantees",
@@ -36865,6 +36760,87 @@
      "room": "MGM Grand | Level 1 | Boulevard 155",
      "roomId": "1789591920164001btii",
      "capacity": "78",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780441495791001G9Dz",
+   "code": "INV503-R1",
+   "title": "Beyond Benchmarks: Evaluating AI Safety with Formal Guarantees",
+   "abstract": "As AI systems become increasingly capable and autonomous, safety evaluation is emerging as a critical challenge. While current evaluations largely rely on benchmark performance and empirical red-teaming, these approaches provide limited guarantees about real-world risk. This talk will explore an emerging direction in AI safety: evaluating model behavior with formal statistical guarantees. We will discuss how ideas from reliability engineering, robustness certification, and risk assessment can be applied to quantify catastrophic failure probabilities, the assumptions behind such guarantees, and their implications for deploying and governing frontier AI systems. This topic is highly relevant to the future of trustworthy and accountable AI.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-08T16:36:25Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "500 – Distinguished"
+    ],
+    "Features": [
+     "Customer story",
+     "Discussion"
+    ],
+    "Topic": [
+     "Artificial Intelligence"
+    ],
+    "AreaofInterest": [
+     "Generative AI"
+    ],
+    "Role": [
+     "Academic / Researcher",
+     "Data Scientist",
+     "Tech Explorer"
+    ],
+    "Services": [
+     "Amazon Bedrock"
+    ],
+    "Venue": [
+     "Wynn/Encore"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Qian Hu",
+     "title": "Applied Scientist",
+     "company": "Amazon",
+     "role": "External Speaker"
+    },
+    {
+     "name": "Weitong Ruan",
+     "title": "Senior Applied Science Manager",
+     "company": "Amazon",
+     "role": "External Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1792635434519001EZRs",
+     "date": "2026-12-04",
+     "startTime": "08:30",
+     "endTime": "09:30",
+     "utcStartTime": "2026/12/04 16:30:00",
+     "utcEndTime": "2026/12/04 17:30:00",
+     "length": 60,
+     "room": "Wynn/Encore | Level 1 | Chopin 2",
+     "roomId": "1789591921094001bT6B",
+     "capacity": "88",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -39843,7 +39819,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-08T01:36:15Z",
+   "modified": "2026-11-08T13:26:45Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -45706,92 +45682,6 @@
    ]
   },
   {
-   "sessionID": "1790358256016001iRei",
-   "code": "IND329-R1",
-   "title": "Build a multi-agent system for hyper-personalized customer journeys",
-   "abstract": "Delivering personalized experiences across complex customer journeys requires agents that understand intent, maintain context, and coordinate across systems. In this workshop, build a multi-agent AI personal banker using a home buying scenario as the example. Your agents extract intent from natural conversation, build dynamic customer profiles, and orchestrate workflows across internal banking systems and external ecosystem APIs. Implement multi-agent patterns for shared memory, readiness signals, and coordinated decisioning using Amazon Bedrock AgentCore, Strands Agents Framework, and MCP. Walk away with reusable orchestration patterns you can apply to any personalized customer experience.",
-   "type": "Workshop",
-   "length": 120,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Workshop"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Artificial Intelligence"
-    ],
-    "AreaofInterest": [
-     "Event-Driven Architecture",
-     "Generative AI",
-     "Agentic AI"
-    ],
-    "Industry": [
-     "Financial Services"
-    ],
-    "Role": [
-     "Data Engineer",
-     "Developer / Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Bedrock"
-    ],
-    "Venue": [
-     "Wynn/Encore"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Islam Elhamaky",
-     "title": "Senior FSI SA",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Sachin Kulkarni",
-     "title": "Senior Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360388950001AyDo",
-     "date": "2026-11-30",
-     "startTime": "08:30",
-     "endTime": "10:30",
-     "utcStartTime": "2026/11/30 16:30:00",
-     "utcEndTime": "2026/11/30 18:30:00",
-     "length": 120,
-     "room": "Wynn/Encore | Convention Promenade | Latour 2",
-     "roomId": "1789591920970001blWB",
-     "capacity": "84",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442281157001c18P",
    "code": "IND329-R",
    "title": "Build a multi-agent system for hyper-personalized customer journeys",
@@ -45870,6 +45760,92 @@
      "length": 120,
      "room": "Wynn/Encore | Convention Promenade | Margaux 2",
      "roomId": "1789591921011001bigA",
+     "capacity": "84",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358256016001iRei",
+   "code": "IND329-R1",
+   "title": "Build a multi-agent system for hyper-personalized customer journeys",
+   "abstract": "Delivering personalized experiences across complex customer journeys requires agents that understand intent, maintain context, and coordinate across systems. In this workshop, build a multi-agent AI personal banker using a home buying scenario as the example. Your agents extract intent from natural conversation, build dynamic customer profiles, and orchestrate workflows across internal banking systems and external ecosystem APIs. Implement multi-agent patterns for shared memory, readiness signals, and coordinated decisioning using Amazon Bedrock AgentCore, Strands Agents Framework, and MCP. Walk away with reusable orchestration patterns you can apply to any personalized customer experience.",
+   "type": "Workshop",
+   "length": 120,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-08T18:15:16Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Workshop"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Artificial Intelligence"
+    ],
+    "AreaofInterest": [
+     "Event-Driven Architecture",
+     "Generative AI",
+     "Agentic AI"
+    ],
+    "Industry": [
+     "Financial Services"
+    ],
+    "Role": [
+     "Data Engineer",
+     "Developer / Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Bedrock"
+    ],
+    "Venue": [
+     "Wynn/Encore"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Islam Elhamaky",
+     "title": "Senior FSI SA",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Sachin Kulkarni",
+     "title": "Senior Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360388950001AyDo",
+     "date": "2026-11-30",
+     "startTime": "08:30",
+     "endTime": "10:30",
+     "utcStartTime": "2026/11/30 16:30:00",
+     "utcEndTime": "2026/11/30 18:30:00",
+     "length": 120,
+     "room": "Wynn/Encore | Convention Promenade | Latour 2",
+     "roomId": "1789591920970001blWB",
      "capacity": "84",
      "inPersonTime": true,
      "virtualTime": false,
@@ -67735,7 +67711,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-08T09:29:16Z",
+   "modified": "2026-11-08T18:02:58Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -86562,7 +86538,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-08T08:15:36Z",
+   "modified": "2026-11-08T17:06:35Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -98078,7 +98054,7 @@
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T22:34:48Z",
+   "modified": "2026-11-08T17:39:26Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -98129,8 +98105,8 @@
     },
     {
      "name": "Diana Castro Cordero",
-     "title": "Cloud Engieneer",
-     "company": "Bac",
+     "title": "Senior Cloud and Infrastructure Consultant",
+     "company": "West Monroe",
      "role": "External Speaker"
     }
    ],
@@ -109355,7 +109331,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-08T18:40:14Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -109399,15 +109375,15 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Rahi Patel",
-     "title": "Technical Account Manager",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Preetkumar Shah",
      "title": "Technical Account Manager",
      "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Rahi Patel",
+     "title": "Technical Account Manager",
+     "company": "Amazon",
      "role": "Internal Speaker"
     },
     {
@@ -112647,16 +112623,16 @@
    },
    "speakers": [
     {
-     "name": "Asma Ali",
-     "title": "AI Engineering Leader",
-     "company": "GE Vernova",
-     "role": "External Speaker"
-    },
-    {
      "name": "Abhishek Naik",
      "title": "Sr Manager Solution Architecture",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
+    },
+    {
+     "name": "Asma Ali",
+     "title": "AI Engineering Leader",
+     "company": "GE Vernova",
+     "role": "External Speaker"
     },
     {
      "name": "Tony Miles",
@@ -113164,7 +113140,7 @@
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T22:34:48Z",
+   "modified": "2026-11-08T18:34:47Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -113193,12 +113169,6 @@
     ]
    },
    "speakers": [
-    {
-     "name": "Saurabh Saxena",
-     "title": "Sr Principal, AWS",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    },
     {
      "name": "Neel Sendas",
      "title": "Principal Technical Account Manager",
@@ -119826,7 +119796,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T22:17:21Z",
+   "modified": "2026-11-08T17:27:10Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -122143,7 +122113,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-08T09:37:58Z",
+   "modified": "2026-11-08T15:00:22Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -124449,7 +124419,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-08T08:17:26Z",
+   "modified": "2026-11-08T17:12:47Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -125024,7 +124994,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-08T18:08:30Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -125080,12 +125050,6 @@
      "name": "S Logesh",
      "title": "AI Architect",
      "company": "ShellKode",
-     "role": "External Speaker"
-    },
-    {
-     "name": "Poobalan P",
-     "title": "Software Engineer 3",
-     "company": "Factset",
      "role": "External Speaker"
     }
    ],
@@ -127724,7 +127688,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-08T08:14:00Z",
+   "modified": "2026-11-08T16:48:52Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -131484,7 +131448,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-08T18:06:27Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -131523,15 +131487,15 @@
    },
    "speakers": [
     {
-     "name": "Ian Bablewski",
-     "title": "Principal Product Manager - Tech",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Qi Wu",
      "title": "Software Development Manager",
      "company": "Amazon",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Sanjeev Malladi",
+     "title": "Sr Product Manager - Technical",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     }
    ],
@@ -137453,7 +137417,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-08T11:46:18Z",
+   "modified": "2026-11-08T18:24:02Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -137497,7 +137461,20 @@
      "No"
     ]
    },
-   "speakers": [],
+   "speakers": [
+    {
+     "name": "Abraham Arellano",
+     "title": "Senior Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Kunal Ghosh",
+     "title": "Sr SA, Strategic Accounts",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    }
+   ],
    "times": [
     {
      "sessionTimeID": "1793306565820001YvE0",
@@ -139454,7 +139431,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-08T09:29:16Z",
+   "modified": "2026-11-08T15:51:47Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -146108,7 +146085,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-08T18:31:33Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -146153,12 +146130,6 @@
     {
      "name": "Darshan Patel",
      "title": "Sr. Technical Account Manager",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Joe Chapman",
-     "title": "Principal Solutions Architect",
      "company": "AWS",
      "role": "Internal Speaker"
     },
@@ -147021,7 +146992,7 @@
    "length": 90,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-08T02:29:08Z",
+   "modified": "2026-11-08T17:54:51Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -152056,90 +152027,6 @@
    ]
   },
   {
-   "sessionID": "1790358255277001iEq1",
-   "code": "STG339-R1",
-   "title": "Protect, recover, validate: Data resiliency for AWS storage",
-   "abstract": "Data protection strategies today must span workloads and prove recovery works before an incident demands it. In this workshop, you'll implement recovery and data protection strategies for Amazon S3, Amazon EFS, and Amazon EBS with AWS Backup. Using a financial services application architecture, you'll configure protection mechanisms for ransomware and insider threats and execute step-by-step recovery procedures against simulated cyber threats. Recover across multiple services, validate restored data integrity, and walk away with patterns to strengthen your own recovery capabilities. Participants must bring a laptop for this session.",
-   "type": "Workshop",
-   "length": 120,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-06T22:10:52Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Workshop"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Security & Identity",
-     "Storage"
-    ],
-    "AreaofInterest": [
-     "Data Protection",
-     "Disaster Response & Recovery",
-     "Resilience"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "IT Professional / Technical Manager",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "AWS Backup"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Rucha Kiwlekar",
-     "title": "Technical Account Manager",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Allyn Henderson",
-     "title": "Storage SA",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360380037001AYgP",
-     "date": "2026-12-02",
-     "startTime": "08:30",
-     "endTime": "10:30",
-     "utcStartTime": "2026/12/02 16:30:00",
-     "utcEndTime": "2026/12/02 18:30:00",
-     "length": 120,
-     "room": "MGM Grand | Level 1 | Grand 124",
-     "roomId": "1789591920329003bjkj",
-     "capacity": "112",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442285971001cRuS",
    "code": "STG339-R",
    "title": "Protect, recover, validate: Data resiliency for AWS storage",
@@ -152213,6 +152100,90 @@
      "endTime": "14:30",
      "utcStartTime": "2026/11/30 20:30:00",
      "utcEndTime": "2026/11/30 22:30:00",
+     "length": 120,
+     "room": "MGM Grand | Level 1 | Grand 124",
+     "roomId": "1789591920329003bjkj",
+     "capacity": "112",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358255277001iEq1",
+   "code": "STG339-R1",
+   "title": "Protect, recover, validate: Data resiliency for AWS storage",
+   "abstract": "Data protection strategies today must span workloads and prove recovery works before an incident demands it. In this workshop, you'll implement recovery and data protection strategies for Amazon S3, Amazon EFS, and Amazon EBS with AWS Backup. Using a financial services application architecture, you'll configure protection mechanisms for ransomware and insider threats and execute step-by-step recovery procedures against simulated cyber threats. Recover across multiple services, validate restored data integrity, and walk away with patterns to strengthen your own recovery capabilities. Participants must bring a laptop for this session.",
+   "type": "Workshop",
+   "length": 120,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-08T18:32:03Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Workshop"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Security & Identity",
+     "Storage"
+    ],
+    "AreaofInterest": [
+     "Data Protection",
+     "Disaster Response & Recovery",
+     "Resilience"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "IT Professional / Technical Manager",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "AWS Backup"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Rucha Kiwlekar",
+     "title": "Technical Account Manager",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Allyn Henderson",
+     "title": "Storage SA",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360380037001AYgP",
+     "date": "2026-12-02",
+     "startTime": "08:30",
+     "endTime": "10:30",
+     "utcStartTime": "2026/12/02 16:30:00",
+     "utcEndTime": "2026/12/02 18:30:00",
      "length": 120,
      "room": "MGM Grand | Level 1 | Grand 124",
      "roomId": "1789591920329003bjkj",
@@ -157857,7 +157828,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-08T03:05:09Z",
+   "modified": "2026-11-08T16:51:27Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -157980,9 +157951,15 @@
    },
    "speakers": [
     {
-     "name": "Rajalakshmi Ramasubramanian",
-     "title": "Senior Software Development Engineer",
-     "company": "Amazon",
+     "name": "Olawale Olaleye",
+     "title": "Senior GenAI/ML Specialist SA",
+     "company": "AWS EMEA SARL (Irish Branch)",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Premdass Ravidass",
+     "title": "Specialist TAM - Containers",
+     "company": "AWS",
      "role": "Internal Speaker"
     },
     {
@@ -157994,19 +157971,13 @@
     {
      "name": "Bharath Gajendran",
      "title": "Sr. Technical Account Manager",
-     "company": "Amazon WebServices India",
+     "company": "Amazon Web Services India",
      "role": "Internal Speaker"
     },
     {
-     "name": "Olawale Olaleye",
-     "title": "Senior GenAI/ML Specialist SA",
-     "company": "AWS EMEA SARL (Irish Branch)",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Premdass Ravidass",
-     "title": "Specialist TAM - Containers",
-     "company": "AWS",
+     "name": "Rajalakshmi Ramasubramanian",
+     "title": "Senior Software Development Engineer",
+     "company": "Amazon",
      "role": "Internal Speaker"
     }
    ],
@@ -158037,7 +158008,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-08T06:37:44Z",
+   "modified": "2026-11-08T18:18:02Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -158080,7 +158051,38 @@
      "No"
     ]
    },
-   "speakers": [],
+   "speakers": [
+    {
+     "name": "Bharath Gajendran",
+     "title": "Sr. Technical Account Manager",
+     "company": "Amazon Web Services India",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Olawale Olaleye",
+     "title": "Senior GenAI/ML Specialist SA",
+     "company": "AWS EMEA SARL (Irish Branch)",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Rajalakshmi Ramasubramanian",
+     "title": "Senior Software Development Engineer",
+     "company": "Amazon",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Yaki Ratz",
+     "title": "Senior Technical Account Manager",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Premdass Ravidass",
+     "title": "Specialist TAM - Containers",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
    "times": [
     {
      "sessionTimeID": "1793305009653001DCKx",
@@ -160457,7 +160459,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T21:52:13Z",
+   "modified": "2026-11-08T18:21:53Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -160504,6 +160506,12 @@
      "name": "Carlos Santana",
      "title": "Sr. WW Specialist Solutions Architect",
      "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Matthew Meckes",
+     "title": "Principal Containers Specialist",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     }
    ],
@@ -172411,7 +172419,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-08T09:39:53Z",
+   "modified": "2026-11-08T15:58:13Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -175048,7 +175056,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-08T08:17:26Z",
+   "modified": "2026-11-08T18:02:58Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -175609,7 +175617,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-08T09:36:23Z",
+   "modified": "2026-11-08T13:39:17Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -185220,7 +185228,7 @@
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T23:40:31Z",
+   "modified": "2026-11-08T18:29:50Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -185271,14 +185279,7 @@
      "No"
     ]
    },
-   "speakers": [
-    {
-     "name": "Eric Morrissey",
-     "title": "Director of Sales Engineering",
-     "company": "MontyCloud",
-     "role": "Sponsor Speaker"
-    }
-   ],
+   "speakers": [],
    "times": [
     {
      "sessionTimeID": "1790033120576001qwPQ",
