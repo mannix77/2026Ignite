@@ -1291,6 +1291,10 @@ function renderDecision(d, plan, c) {
   const opts = ranked.map(r => r.item);
   const rowOf = new Map(ranked.map(r => [r.item.key, r]));
   const tie = rankTie(ranked);
+  // The recommendation is the best-ranked option that can still be chosen: a lock elsewhere can
+  // rule out the first one (its button is disabled below), so the next possible option is it.
+  const possible = x => { const o = outcome.get(x.key); return !o || !!o.feasible; };
+  const topKey = (ranked.find(r => possible(r.item)) || ranked[0]).item.key;
   const decided = d.resolved ? d.items.find(x => x.locked) : null;
   const lockedOthers = x => d.items.filter(o => o.locked && o.id !== x.id && !canBoth(o, x, c)).map(o => o.id);
   const preview = app.model.mode === 'preview';
@@ -1302,7 +1306,7 @@ function renderDecision(d, plan, c) {
     const moved = d.items.filter(y => y !== x && !keysX.has(y.key) && groupsX.has(y.id)).map(y => ({ y, to: o.chosen.find(z => z.id === y.id) }));
     const miss = d.items.filter(y => y !== x && !groupsX.has(y.id));
     const r = rowOf.get(x.key);
-    const top = r.rank === 1;
+    const top = x.key === topKey;
     const label = x.locked ? (x.reserved ? 'Reserved seat' : 'Your choice') : decided ? '' : top ? (tie ? 'Toss-up: your call' : 'Go here') : r.elsewhere.length ? 'Catch it at the other run' : `#${r.rank}`;
     const diff = Math.round(best - o.value);
     return `<div class="option ${(x.locked || (!decided && top)) ? 'rec' : ''}">

@@ -60,6 +60,13 @@ test('should keep runs of the same session out of one slot and keep days apart',
   const b = item(H(14), H(14.75), { code: 'B' }), thu = item(H(14), H(14.75), { code: 'THU', day: THU }), thu2 = item(H(14), H(14.75), { code: 'THU2', day: THU });
   eq(slotGroups([a, a2, b, thu, thu2], ctx).map(s => [s.day, codes(s.items)]), [[TUE, ['A', 'A-R1', 'B']], [THU, ['THU', 'THU2']]]);
 });
+test('should put two picks on one card when the walk between them is too long for the gap, and not when it fits', () => {
+  const M = parseLocation('Marriott Marquis, Yerba Buena Ballroom, Salon 8');
+  const a = item(H(14), H(14.75), { code: 'A', loc: W }), b = item(H(14.75) + 5, H(15.5) + 5, { code: 'B', loc: M });
+  eq(slotGroups([a, b], ctx).map(s => [s.start, codes(s.items)]), [[H(14), ['A', 'B']]], 'a 5 min gap for a 13 min walk is a clash');
+  const later = item(H(15.25), H(16), { code: 'B2', loc: M });
+  eq(slotGroups([a, later], ctx), [], 'a 30 min gap is not');
+});
 test('should call a slot decided when a lock settles it', () => {
   const a = item(H(14), H(14.75), { code: 'A', locked: true }), b = item(H(14), H(14.75), { code: 'B' });
   eq(slotGroups([a, b], ctx).map(s => s.resolved), [true]);
@@ -93,6 +100,18 @@ test('should break a tie by the building of the session before or after', () => 
   eq(codes(r.map(o => o.item)), ['B-SOUTH', 'A-WEST']);
   eq(r[0].reasons.includes('same building as the session before'), true);
   eq(codes(rank([west, south]).map(o => o.item)), ['A-WEST', 'B-SOUTH'], 'without a neighbour the order falls back to the code');
+});
+
+test('should never call two unknown rooms the same building', () => {
+  const U = parseLocation('');
+  const a = item(H(14), H(14.75), { code: 'A-TBA', loc: U }), b = item(H(14), H(14.75), { code: 'B-TBA', loc: U });
+  const before = item(H(13), H(13.75), { code: 'PREV', loc: U });
+  const r = rank([b, a], { [TUE]: [before] });
+  eq(codes(r.map(o => o.item)), ['A-TBA', 'B-TBA'], 'the order is the code fallback');
+  eq(r.map(o => o.reasons.some(t => t.startsWith('same building'))), [false, false]);
+  eq(rankTie(r), true);
+  const known = item(H(13), H(13.75), { code: 'PREV2', loc: W });
+  eq(rank([b, item(H(14), H(14.75), { code: 'C-WEST', loc: W })], { [TUE]: [known] })[0].item.code, 'C-WEST', 'a known building still counts');
 });
 
 // ---- other runs

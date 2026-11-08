@@ -19,20 +19,22 @@ const timed = x => !!x && !x.pseudo && typeof x.day === 'string' && x.day !== ''
 const byStart = (a, b) => (a.day < b.day ? -1 : a.day > b.day ? 1 : 0) || a.startMin - b.startMin || a.endMin - b.endMin || String(a.code).localeCompare(String(b.code));
 
 // One card per start time, and every option on exactly one card: the earliest option not yet
-// on a card anchors a card holding every unplaced option that overlaps it in time. An option
-// that would be alone on its card (everything it overlaps is already placed) joins the card
-// it overlaps most, so a late starter lands on the card of the picks it competes with.
+// on a card anchors a card holding every unplaced option it cannot be combined with (an
+// overlap in time, or a walk between buildings too long for the gap). An option that would be
+// alone on its card (everything it competes with is already placed) joins the card it competes
+// with most, so a late starter lands on the card of the picks it competes with.
 export function slotGroups(items, ctx = DEFAULT_PLANNER) {
   const xs = (Array.isArray(items) ? items : []).filter(timed).sort(byStart);
+  const clash = (a, b) => a.day === b.day && !canBoth(a, b, ctx);
   const placed = new Set();
   const cards = [];
   for (const anchor of xs) {
     if (placed.has(anchor.key)) continue;
-    const members = xs.filter(x => !placed.has(x.key) && overlaps(anchor, x));
+    const members = xs.filter(x => !placed.has(x.key) && (x === anchor || clash(anchor, x)));
     if (members.length < 2) {
-      const home = cards.filter(c => c.day === anchor.day).map(c => [c, c.items.filter(x => overlaps(anchor, x)).length])
+      const home = cards.filter(c => c.day === anchor.day).map(c => [c, c.items.filter(x => clash(anchor, x)).length])
         .filter(([, n]) => n > 0).sort((a, b) => b[1] - a[1])[0];
-      if (!home) continue;                                  // overlaps nothing: not a clash
+      if (!home) continue;                                  // competes with nothing: not a clash
       home[0].items.push(anchor);
       placed.add(anchor.key);
       continue;
@@ -71,8 +73,10 @@ export function rankOptions(opts, { plan = {}, ctx = DEFAULT_PLANNER, runsOf = (
     const others = planned(x.day).filter(p => !inCard.has(p.key) && p.id !== x.id);
     const before = others.filter(p => p.endMin <= x.startMin).sort((a, b) => b.endMin - a.endMin)[0];
     const after = others.filter(p => p.startMin >= x.endMin).sort((a, b) => a.startMin - b.startMin)[0];
-    const sameBefore = !!before && !!x.loc?.building && before.loc?.building === x.loc.building;
-    const sameAfter = !!after && !!x.loc?.building && after.loc?.building === x.loc.building;
+    // Only a recognised building counts: an unknown or placeholder room is 'U' for everyone.
+    const sameBuilding = (p, q) => !!p?.loc?.known && !!q?.loc?.known && p.loc.building === q.loc.building;
+    const sameBefore = !!before && sameBuilding(x, before);
+    const sameAfter = !!after && sameBuilding(x, after);
     const key = [x.locked ? 1 : 0, x.locked || !elsewhere.length ? 1 : 0, x.priority || 0,
       Number.isFinite(x.score) ? x.score : -1, x.recorded === false ? 1 : 0, sameBefore || sameAfter ? 1 : 0];
     const reasons = [];

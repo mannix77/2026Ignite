@@ -23,6 +23,11 @@ Feature: Deciding a clash quickly
       When Minesh looks at the clashes for that day
       Then that pick is not in a clash
 
+    Scenario: Too long a walk for the gap is a clash too
+      Given a pick in Moscone West ends five minutes before one at the Marriott starts
+      When Minesh looks at the clashes for that day
+      Then the two picks are on one card
+
   Rule: Options are ranked by one fixed rule
 
     Scenario: A reserved seat comes first
@@ -45,6 +50,12 @@ Feature: Deciding a clash quickly
       And the session before it is in Moscone South
       When Minesh reads the clash
       Then the one in Moscone South is ranked first
+
+    Scenario: Rooms not yet published are not the same building
+      Given a clash between two equal Wants whose rooms are not published
+      And the session before it has no room either
+      When Minesh reads the clash
+      Then neither is said to be in the same building
 
   Rule: A session that runs again is pushed down, with the other run described
 
