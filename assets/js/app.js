@@ -1290,7 +1290,6 @@ function renderDecision(d, plan, c) {
   const ranked = rankOptions(d.items, { plan: plan.res.plan, ctx: c, runsOf: id => plan.items.filter(i => i.id === id) });
   const opts = ranked.map(r => r.item);
   const rowOf = new Map(ranked.map(r => [r.item.key, r]));
-  const tie = rankTie(ranked);
   // The recommendation is the best-ranked option that can still be chosen: a lock elsewhere can
   // rule out the first one (its button is disabled below), so the next possible option is it.
   // An option beyond the compare cap has no outcome: it is checked against the locks outside
@@ -1300,7 +1299,9 @@ function renderDecision(d, plan, c) {
     const o = outcome.get(x.key);
     return o ? !!o.feasible : outsideLocks.every(l => l.id === x.id || canBoth(l, x, c));
   };
-  const topKey = (ranked.find(r => possible(r.item)) || ranked[0]).item.key;
+  const selectable = ranked.filter(r => possible(r.item));
+  const topKey = (selectable[0] || ranked[0]).item.key;
+  const tie = rankTie(selectable.length ? selectable : ranked);   // a toss-up only among options that can be chosen
   const decided = d.resolved ? d.items.find(x => x.locked) : null;
   const lockedOthers = x => d.items.filter(o => o.locked && o.id !== x.id && !canBoth(o, x, c)).map(o => o.id);
   const preview = app.model.mode === 'preview';
