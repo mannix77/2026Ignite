@@ -16,6 +16,26 @@ Feature: Keeping the Ignite catalog current without false alarms
       When Microsoft's catalog lists 119 of them with 3 runs each
       Then the sync keeps the last good catalog
 
+  Rule: A feed whose field shapes changed is refused, never read as empty
+
+    Scenario: The room field arrives in a new shape
+      Given the last good catalog has rooms for four hundred sessions
+      When Microsoft's feed carries every room in a shape the sync has never seen
+      Then the sync keeps the last good catalog
+      And the refusal names the room field with an example of the new shape
+
+    Scenario: A few odd records are not a format change
+      When one session in twenty carries a room in an unknown shape
+      Then the sync accepts the catalog
+
+    Scenario: Unpublished values are blank, not a new shape
+      When every session's room is still blank
+      Then the sync accepts the catalog
+
+    Scenario: The browser agrees with the sync
+      When the live check reads a feed whose room field changed shape
+      Then it refuses the feed with the same words as the sync
+
   Rule: Change notices tell runs apart from sessions
 
     Scenario: A dropped run is not reported as a cancelled session

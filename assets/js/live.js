@@ -250,6 +250,55 @@ async function getCdn(base, name, timeoutMs = 25000) {
 
 const MALFORMED_SHARE = 0.05;
 
+// The fields the app relies on, each with the shapes it is read in (blank always allowed). Any
+// other shape on more than SHAPE_SHARE of the records means the feed format changed: the feed
+// is refused instead of being read as empty. Must match SHAPE_* and field_shapes() in sync.py.
+const SHAPE_FIELDS = ['sessionId', 'sessionInstanceId', 'title', 'location', 'startDateTime'];
+const SHAPE_ACCEPTED = {
+  sessionId: ['text', 'number'],
+  sessionInstanceId: ['text', 'number'],
+  title: ['text', 'object', 'list'],
+  location: ['text', 'object', 'list'],
+  startDateTime: ['text'],
+};
+const SHAPE_SHARE = 0.05;
+const hasDisplay = v => !!v && typeof v === 'object' && !Array.isArray(v) && typeof v.displayValue === 'string';
+
+// blank | text | number | object (has a displayValue) | list (of those) | unknown.
+export function valueShape(v) {
+  if (v == null || v === '' || (Array.isArray(v) && v.length === 0)) return 'blank';
+  if (typeof v === 'boolean') return 'unknown';
+  if (typeof v === 'number') return Number.isFinite(v) ? 'number' : 'unknown';
+  if (typeof v === 'string') return 'text';
+  if (Array.isArray(v)) return v.every(x => typeof x === 'string' || hasDisplay(x)) ? 'list' : 'unknown';
+  if (typeof v === 'object') return hasDisplay(v) ? 'object' : 'unknown';
+  return 'unknown';
+}
+
+// Per relied-upon field: the records read, how many carry an unrecognised shape, one example.
+export function fieldShapes(rawSessions) {
+  const recs = (Array.isArray(rawSessions) ? rawSessions : []).filter(s => s && typeof s === 'object' && !Array.isArray(s));
+  const out = {};
+  for (const f of SHAPE_FIELDS) {
+    const unknown = recs.map(s => s[f]).filter(v => !['blank', ...SHAPE_ACCEPTED[f]].includes(valueShape(v)));
+    // A number too large for a double is Infinity here (JSON.stringify would say null); sync.py prints the same word.
+    const example = v => (typeof v === 'number' && !Number.isFinite(v) ? 'Infinity' : JSON.stringify(v).slice(0, 60));
+    out[f] = { records: recs.length, unknown: unknown.length, example: unknown.length ? example(unknown[0]) : null };
+  }
+  return out;
+}
+
+// Why the feed looks like a format change, or null (same wording as sync.py).
+export function shapeProblem(shapes, share = SHAPE_SHARE) {
+  for (const f of SHAPE_FIELDS) {
+    const sh = shapes?.[f] || {};
+    if (sh.records && (sh.unknown || 0) > share * sh.records) {
+      return `feed format changed: \`${f}\` has an unrecognised shape in ${sh.unknown} of ${sh.records} sessions (e.g. ${sh.example}); keeping last good data`;
+    }
+  }
+  return null;
+}
+
 // The event days the live catalog's times are checked against: the site's dates when both
 // are usable and in order (same rule as sync.py event_window), else the conference's days.
 export function liveWindow(settings, conf = {}) {
@@ -267,6 +316,9 @@ export async function checkLive(snapshotDoc, conf = {}) {
   // Many non-session entries mean a broken feed, not cancellations (same limit as sync.py).
   const bad = raw.filter(s => !s || typeof s !== 'object' || Array.isArray(s) || s.sessionId == null || s.sessionId === '').length;
   if (bad > MALFORMED_SHARE * raw.length) throw new Error(`live catalog has ${bad} malformed entries`);
+  // A relied-upon field in a shape never read before is a format change, not many blanks (same rule as sync.py).
+  const shapeWhy = shapeProblem(fieldShapes(raw));
+  if (shapeWhy) throw new Error(shapeWhy);
   const prev = snapshotDoc.sessions || [];
   const byName = new Map();
   for (const r of prev) for (const p of r.speakers || []) if (p[1] || p[2]) byName.set(p[0], p);

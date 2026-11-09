@@ -865,5 +865,138 @@ class WithdrawalGuardTests(unittest.TestCase):
         self.assertEqual(proc.returncode, 0, proc.stderr)
 
 
+class FeedShapeTests(SyncDir, unittest.TestCase):
+    """A field the app relies on arriving in a shape the sync has never seen is a format change
+    (specs/features/ignite-catalog-sync.feature): the catalog is refused, never read as empty."""
+
+    def odd_rooms(self, n, odd):
+        raw = catalog_of(n)
+        for r in raw[:odd]:
+            r["location"] = {"id": 7}
+        return raw
+
+    def test_should_accept_the_committed_feed_samples(self):
+        for name in ("raw_2026_sample.json", "raw_2025_sample.json", "raw_edge_cases.json", "raw_window_bounds.json"):
+            with self.subTest(name=name):
+                self.assertIsNone(sync.shape_problem(sync.field_shapes(load(name))))
+
+    def test_should_refuse_a_field_in_a_new_shape_and_name_it_with_an_example(self):
+        why = sync.shape_problem(sync.field_shapes(self.odd_rooms(20, 20)))
+        self.assertEqual(why, 'feed format changed: `location` has an unrecognised shape in 20 of 20 sessions '
+                              '(e.g. {"id":7}); keeping last good data')
+
+    def test_should_tolerate_odd_shapes_in_up_to_one_session_in_twenty(self):
+        self.assertIsNone(sync.shape_problem(sync.field_shapes(self.odd_rooms(20, 1))))
+        self.assertIn("2 of 20", sync.shape_problem(sync.field_shapes(self.odd_rooms(20, 2))))
+
+    def test_should_treat_blank_values_as_unpublished_not_as_a_new_shape(self):
+        raw = catalog_of(20)
+        for i, r in enumerate(raw):
+            r["location"] = "" if i % 2 else None
+            r["startDateTime"] = None
+        self.assertIsNone(sync.shape_problem(sync.field_shapes(raw)))
+        self.assertEqual(sync.field_shapes(raw)["location"], {"records": 20, "unknown": 0, "example": None})
+
+    def test_should_accept_every_shape_each_field_is_read_in_and_no_other(self):
+        raw = catalog_of(4)
+        raw[0].update(sessionId=12, sessionInstanceId=34, title={"displayValue": "T"},
+                      location=[{"displayValue": "Room 1"}], startDateTime="2025-11-18T17:00:00Z")
+        raw[1].update(location=["Room 2"], title=["T2"])
+        raw[2].update(location={"displayValue": "Room 3", "logicalValue": "r3"})
+        self.assertIsNone(sync.shape_problem(sync.field_shapes(raw)))
+        odd = catalog_of(4)
+        odd[0].update(sessionId=True, sessionInstanceId=[1], title={"name": "x"}, location=[{"name": "x"}], startDateTime=1700000000)
+        shapes = sync.field_shapes(odd)
+        self.assertEqual({f: shapes[f]["unknown"] for f in sync.SHAPE_FIELDS},
+                         {"sessionId": 1, "sessionInstanceId": 1, "title": 1, "location": 1, "startDateTime": 1})
+        self.assertEqual(shapes["startDateTime"]["example"], "1700000000")
+
+    def test_should_call_a_number_the_browser_cannot_hold_unknown(self):
+        # JSON's 1e400 parses to inf here and to Infinity in the browser; an integer beyond a
+        # double is finite here but Infinity there. Both sides must call them unknown.
+        self.assertEqual([sync.value_shape(float("inf")), sync.value_shape(10 ** 400), sync.value_shape(12), sync.value_shape(1.5)],
+                         ["unknown", "unknown", "number", "number"])
+        raw = catalog_of(20)
+        for r in raw[:2]:
+            r["sessionInstanceId"] = 10 ** 400
+        self.assertIn("`sessionInstanceId` has an unrecognised shape in 2 of 20", sync.shape_problem(sync.field_shapes(raw)))
+
+    @unittest.skipUnless(JS_RUNNER, "needs node or jsc")
+    def test_should_agree_with_the_browser_on_numbers_too_large_for_it(self):
+        # Written as JSON text: Python's json module would otherwise emit Infinity, which is not JSON.
+        recs = ['{"sessionId":"s%d","sessionInstanceId":%s,"title":"T","location":"R"}' % (i, "1e400" if i == 0 else "1" + "0" * 400 if i == 1 else "7" if i == 2 else "7.5")
+                for i in range(20)]
+        path = os.path.join(self.tmp, "big.json")
+        with open(path, "w", encoding="utf-8") as f:
+            f.write("[" + ",".join(recs) + "]")
+        with open(path, encoding="utf-8") as f:
+            raw = json.load(f)
+        shapes = sync.field_shapes(raw)
+        # The expected result first (rule 7), then that the browser agrees with it.
+        self.assertEqual(shapes["sessionInstanceId"], {"records": 20, "unknown": 2, "example": "Infinity"})
+        self.assertEqual(sync.shape_problem(shapes),
+                         "feed format changed: `sessionInstanceId` has an unrecognised shape in 2 of 20 sessions (e.g. Infinity); keeping last good data")
+        self.assertEqual(js_run("shapes_cli.js", path), {"shapes": shapes, "problem": sync.shape_problem(shapes)})
+
+    @unittest.skipUnless(JS_RUNNER, "needs node or jsc")
+    def test_should_print_a_whole_number_example_the_way_the_browser_does(self):
+        # JSON 1.0 is a float here and prints as 1.0; JSON.stringify prints 1. Same for one inside an object.
+        recs = ['{"sessionId":"s%d","sessionInstanceId":"s%d","title":"T","location":%s,"startDateTime":%s}'
+                % (i, i, '{"x":2.0}' if i < 2 else '"R"', "1.0" if i < 2 else '"2026-11-17T17:00:00Z"') for i in range(20)]
+        path = os.path.join(self.tmp, "floats.json")
+        with open(path, "w", encoding="utf-8") as f:
+            f.write("[" + ",".join(recs) + "]")
+        with open(path, encoding="utf-8") as f:
+            raw = json.load(f)
+        shapes = sync.field_shapes(raw)
+        self.assertEqual([shapes["startDateTime"]["example"], shapes["location"]["example"]], ["1", '{"x":2}'])
+        self.assertEqual(sync.shape_problem(shapes),
+                         "feed format changed: `location` has an unrecognised shape in 2 of 20 sessions (e.g. {\"x\":2}); keeping last good data")
+        self.assertEqual(js_run("shapes_cli.js", path), {"shapes": shapes, "problem": sync.shape_problem(shapes)})
+
+    def test_should_print_numbers_as_javascript_does(self):
+        # Expected strings are what Number.prototype.toString / JSON.stringify print in a browser.
+        cases = [(1.0, "1"), (100.0, "100"), (0.5, "0.5"), (1234.5, "1234.5"), (0.001, "0.001"), (0.000001, "0.000001"),
+                 (1e-7, "1e-7"), (1e21, "1e+21"), (-1e21, "-1e+21"), (1.5e300, "1.5e+300"), (123456789012345680000.0, "123456789012345680000"),
+                 (12345678901234567890, "12345678901234567000"), (10 ** 22, "1e+22"), (-0.25, "-0.25"), (0.0, "0"), (7, "7")]
+        self.assertEqual([sync.js_number(v) for v, _ in cases], [want for _, want in cases])
+        self.assertEqual(sync.js_json({"a": [1.0, -2.5, None, True, "é\"x"], "b": {"c": 1e21}}), '{"a":[1,-2.5,null,true,"é\\"x"],"b":{"c":1e+21}}')
+        self.assertEqual(sync.js_json({"x": float("inf")}), '{"x":null}', "a number the browser cannot hold is null inside a value, as JSON.stringify prints it")
+
+    @unittest.skipUnless(JS_RUNNER, "needs node or jsc")
+    def test_should_agree_with_the_browser_on_every_number_format_in_an_example(self):
+        # Each case: the JSON text of an unknown `location` value and the example the browser prints for it.
+        cases = [('{"x":1e21}', '{"x":1e+21}'), ('{"x":-1e21}', '{"x":-1e+21}'), ('{"x":1e-7}', '{"x":1e-7}'), ('{"x":0.000001}', '{"x":0.000001}'),
+                 ('{"x":123456789012345680000}', '{"x":123456789012345680000}'), ('{"x":12345678901234567890}', '{"x":12345678901234567000}'),
+                 ('{"x":-0.25}', '{"x":-0.25}'), ('{"x":1e400}', '{"x":null}'), ('[7.0,"a",{"y":2.50}]', '[7,"a",{"y":2.5}]')]
+        for text, want in cases:
+            with self.subTest(text=text):
+                recs = ['{"sessionId":"s%d","sessionInstanceId":"s%d","title":"T","location":%s}' % (i, i, text if i < 2 else '"R"') for i in range(20)]
+                path = os.path.join(self.tmp, "num.json")
+                with open(path, "w", encoding="utf-8") as f:
+                    f.write("[" + ",".join(recs) + "]")
+                with open(path, encoding="utf-8") as f:
+                    shapes = sync.field_shapes(json.load(f))
+                self.assertEqual(shapes["location"]["example"], want)
+                self.assertEqual(sync.shape_problem(shapes),
+                                 "feed format changed: `location` has an unrecognised shape in 2 of 20 sessions (e.g. %s); keeping last good data" % want)
+                self.assertEqual(js_run("shapes_cli.js", path), {"shapes": shapes, "problem": sync.shape_problem(shapes)})
+
+    def test_should_keep_the_last_good_catalog_and_say_why(self):
+        self.run_sync(catalog_of(60))
+        before = self.data("sessions.json")
+        self.assertEqual(self.run_sync(self.odd_rooms(60, 60)), (3, False))
+        self.assertEqual(self.data("sessions.json"), before)
+        self.assertEqual(self.data("meta.json")["ok"], False)
+        self.assertIn("`location`", self.data("meta.json")["error"])
+
+    @unittest.skipUnless(JS_RUNNER, "needs node or jsc")
+    def test_should_agree_with_the_browser_on_shapes_and_the_refusal(self):
+        for raw in (load("raw_2026_sample.json"), self.odd_rooms(20, 2), self.odd_rooms(20, 1)):
+            shapes = sync.field_shapes(raw)
+            self.assertEqual(js_run("shapes_cli.js", raw), {"shapes": shapes, "problem": sync.shape_problem(shapes)})
+        self.assertIn("2 of 20", sync.shape_problem(sync.field_shapes(self.odd_rooms(20, 2))))
+
+
 if __name__ == "__main__":
     unittest.main()
