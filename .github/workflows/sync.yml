@@ -108,6 +108,27 @@ jobs:
             echo "__DETAILS__"
           } >> "$GITHUB_OUTPUT"
 
+      # The AI guide's worked example uses real session codes; when a catalog drops one, an issue
+      # under its own workflow name says so and closes itself once the example is fixed. Never
+      # fails the run (specs/features/ai-guide-examples.feature).
+      - name: Check the AI guide's example codes
+        id: llms
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          python3 scripts/check_llms.py --guide llms.txt --data data --problem-out "$RUNNER_TEMP/llms-problem.md" \
+            --verified-out "$RUNNER_TEMP/llms-verified"
+          if [ -s "$RUNNER_TEMP/llms-problem.md" ]; then
+            python3 scripts/prod_issue.py report --workflow "AI guide examples" --kind stale-example \
+              --title "The AI guide's example codes are no longer in the catalog" \
+              --message-file "$RUNNER_TEMP/llms-problem.md" --run-url "$RUN_URL" || true
+          elif [ -e "$RUNNER_TEMP/llms-verified" ]; then
+            # Closed only when every example was checked: an unreadable catalog leaves it open.
+            python3 scripts/prod_issue.py resolve --workflow "AI guide examples" --run-url "$RUN_URL" || true
+          fi
+
       # The summary is announced only after the catalog is pushed (specs/features/change-notices.feature):
       # it is queued in data/ignite2026/pending-summary.md, committed and pushed with the catalog,
       # posted, and the cleared file is pushed again. A failed push posts nothing; a failed post

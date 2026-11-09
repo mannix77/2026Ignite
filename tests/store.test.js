@@ -346,7 +346,7 @@ await test("should import the guide's worked example as the guide describes it",
   eq(summary(receive(tokensOf(example))), {
     'AIM314-R': [3, null, null, 'AIM314-R1'],   // Must, the AIM314-R1 run locked
     'AIM326-R': [2, 87.5, null, null],          // Want, own score 87.5
-    BIZ333: [1, null, 'watch', null],            // Maybe, watch the recording later
+    'BIZ333-R': [1, null, 'watch', null],        // Maybe, watch the recording later
     'CMP323-R': [0, null, null, null],           // Skip
   });
 });
