@@ -140,7 +140,7 @@ function lunchBetween(a, b, t, L) {
 // Exact max-weight chain for one day, with at most one lunch taken in a gap that fits it
 // alongside the walking. Returns { chosen (time order), total, lunch: slot | null }.
 export function optimizeDay(items, ctx = DEFAULT_PLANNER, lunch = null) {
-  return solveDay(dayTable(items, ctx, lunch), null, ctx);
+  return solveDay(dayTable(items, ctx, lunch), null);
 }
 
 // A day's items sorted and weighed once, with each pair's transition (and the lunch that fits
@@ -152,7 +152,7 @@ function dayTable(items, ctx, lunch) {
   const L = lunch;
   const pairs = new Map();
   return {
-    xs, L,
+    xs, L, ctx,
     wt: xs.map(x => weigh(x, ctx).score),
     before: xs.map(x => (L ? lunchBefore(x, L) : null)),
     after: xs.map(x => (L ? lunchAfter(x, L) : null)),
@@ -174,8 +174,8 @@ function dayTable(items, ctx, lunch) {
 }
 
 // The best chain over the table's items where include[i] (all when include is null).
-function solveDay(tab, include, ctx) {
-  const { xs, wt, L } = tab;
+function solveDay(tab, include) {
+  const { xs, wt, L, ctx } = tab;
   const idx = [];
   for (let i = 0; i < xs.length; i++) if (!include || include[i]) idx.push(i);
   const m = idx.length;
@@ -258,9 +258,10 @@ export function optimize(items, ctx = DEFAULT_PLANNER, lunch = null) {
   const memo = new Map();
   let daySolves = 0;
   const solveOnce = (day, include) => {
-    const k = `${day}:${include ? include.map(b => (b ? 1 : 0)).join('') : 'all'}`;
+    const all = !include || include.every(Boolean);   // the unconstrained day, however it is asked for
+    const k = `${day}:${all ? 'all' : include.map(b => (b ? 1 : 0)).join('')}`;
     let r = memo.get(k);
-    if (!r) { r = solveDay(tables[day], include, ctx); memo.set(k, r); daySolves++; }
+    if (!r) { r = solveDay(tables[day], all ? null : include); memo.set(k, r); daySolves++; }
     return r;
   };
   const solve = day => solveOnce(day, tables[day].xs.map(isIn));

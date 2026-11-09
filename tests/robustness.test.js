@@ -135,6 +135,7 @@ await test('should re-plan 300 picks on the real re:Invent catalog within a gene
   for (let i = 0; i < 300; i++) for (const s of groups[Math.floor(i * step)][1]) {
     if (s.day && s.endMin > s.startMin && !s.onlineOnly) items.push({ key: s.key, id: s.group, code: s.code, type: s.type, day: s.day, startMin: s.startMin, endMin: s.endMin, loc: s.loc, recorded: s.recorded, priority: 3 - (i % 3), locked: false });
   }
+  eq([new Set(items.map(x => x.id)).size, new Set(items.map(x => x.key)).size], [300, items.length], 'precondition: 300 distinct sessions, no run twice');
   const repeated = new Set(items.filter(x => items.filter(y => y.id === x.id).length > 1).map(x => x.id)).size;
   eq(repeated > 50, true);   // the slow case: coordinate descent over many repeat runs
   const t = performance.now();
