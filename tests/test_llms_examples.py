@@ -67,6 +67,18 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(check_llms.load_catalog(tmp, "reinvent2026"), {"A1", "B2"})
         self.assertIsNone(check_llms.load_catalog(tmp, "gartner2026"))
 
+    def test_should_treat_an_unreadable_catalog_as_unverifiable(self):
+        tmp = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, tmp)
+        for conf, text in (("truncated", '{"sessions": [{"code": "A1"'), ("a-list", '[{"code": "A1"}]'), ("no-list", '{"sessions": "A1"}'), ("ok", '{"sessions": [{"code": "A1"}]}')):
+            os.makedirs(os.path.join(tmp, conf))
+            with open(os.path.join(tmp, conf, "sessions.json"), "w", encoding="utf-8") as f:
+                f.write(text)
+        self.assertEqual([check_llms.load_catalog(tmp, c) for c in ("truncated", "a-list", "no-list", "ok")], [None, None, None, {"A1"}])
+        guide = "https://x/?conf=truncated#/import/A1.3 and https://x/?conf=ok#/import/A1.3"
+        r = check_llms.check(guide, {c: check_llms.load_catalog(tmp, c) for c in ("truncated", "ok")})
+        self.assertEqual((r["stale"], r["unverifiable"], r["checked"]), ([], ["truncated"], 1))
+
 
 class LiveGuideTests(unittest.TestCase):
     """The committed guide against the committed catalogs: a stale example fails this test."""

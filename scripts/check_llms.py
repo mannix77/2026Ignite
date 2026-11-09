@@ -40,13 +40,18 @@ def example_links(text):
 
 
 def load_catalog(data_dir, conf):
-    """The set of session codes in data/<conf>/sessions.json, or None when there is no catalog."""
+    """The set of session codes in data/<conf>/sessions.json, or None when there is no catalog or it
+    can't be read (truncated, not JSON, or not the expected shape): unverifiable, never a crash."""
     path = os.path.join(data_dir, conf, "sessions.json")
-    if not os.path.exists(path):
+    try:
+        with open(path, encoding="utf-8") as f:
+            doc = json.load(f)
+    except (OSError, ValueError):
         return None
-    with open(path, encoding="utf-8") as f:
-        doc = json.load(f)
-    return {r["code"] for r in doc.get("sessions", []) if isinstance(r, dict) and isinstance(r.get("code"), str)}
+    sessions = doc.get("sessions") if isinstance(doc, dict) else None
+    if not isinstance(sessions, list):
+        return None
+    return {r["code"] for r in sessions if isinstance(r, dict) and isinstance(r.get("code"), str)}
 
 
 def check(text, catalogs):
