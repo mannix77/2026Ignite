@@ -208,12 +208,14 @@ await test('should report save-ok once a failing save succeeds again, and only t
   globalThis.__quota = null;
   store.mutatePicks(p => { p.S2 = { p: 2, lock: null, note: '', at: 2 }; });
   await sleep(SAVE);
+  const stored = () => Object.fromEntries(Object.entries((JSON.parse(localStorage.getItem('ignite26.planner.v1:save-recovery')) ?? { picks: {} }).picks).map(([id, x]) => [id, [x.p, x.at]]).sort());
+  const afterRecovery = [[...seen], store.saveFailing(), stored()];
   store.mutatePicks(p => { p.S3 = { p: 1, lock: null, note: '', at: 3 }; });
   await sleep(SAVE);
   off();
   eq(whileFull, [true, null]);
-  eq([seen, store.saveFailing()], [['save-error', 'save-ok'], false], 'one save-ok after recovering, none for the next ordinary save');
-  eq(Object.keys(JSON.parse(localStorage.getItem('ignite26.planner.v1:save-recovery')).picks).sort(), ['S1', 'S2', 'S3'], 'the change made while full was saved too');
+  eq(afterRecovery, [['save-error', 'save-ok'], false, { S1: [3, 1], S2: [2, 2] }], 'the recovery save itself wrote the change made while full, and reported save-ok');
+  eq([seen, store.saveFailing(), stored()], [['save-error', 'save-ok'], false, { S1: [3, 1], S2: [2, 2], S3: [1, 3] }], 'none for the next ordinary save, which saved too');
 });
 
 await test('should restore "preferences never set" when replacing from such a backup', () => {
