@@ -2224,7 +2224,8 @@ function onClick(e) {
         if (!gp || !first) continue;
         const run = (gp.lock && runs.find(r => r.key === gp.lock)) || runs.find(r => r.day) || first;
         items.push({ code: first.code, title: first.title, when: run.day ? whenText(run) : null, p: gp.p, score: gp.score,
-          mode: gp.mode, note: gp.note, lockedRun: gp.lock ? runs.find(r => r.key === gp.lock)?.code || null : null });
+          mode: gp.mode, note: gp.note, lockedRun: gp.lock ? runs.find(r => r.key === gp.lock)?.code || null : null,
+          lockPreview: !!gp.lock && gp.lock !== gp.reserved && store.pick(gp.holder)?.lockMode === 'preview' });
       }
       items.sort((a, b) => (b.p ?? -1) - (a.p ?? -1) || a.code.localeCompare(b.code));
       const text = picksForAI({ conference: app.conf.name, items, guideUrl: guideUrl(location.href),

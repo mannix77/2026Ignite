@@ -532,15 +532,22 @@ await test('should carry the score, watch later and the note, and name a locked 
   eq(lines[5], 'TT1706 | Must | Tue, Nov 17 2:00 PM | From prior auth to appeals | attending run TT1706');
 });
 await test('should leave unrated sessions out and say so when nothing is rated', () => {
-  eq(picksForAI({ ...aiOpts, items: [...aiRows, { code: 'X1', title: 'Unrated', when: null, p: null }] }).split('\n').length,
-    picksForAI({ ...aiOpts, items: aiRows }).split('\n').length);
+  const text = picksForAI({ ...aiOpts, items: [...aiRows, { code: 'X1', title: 'Unrated', when: null, p: null }] });
+  eq(text.includes('X1') || text.includes('Unrated'), false, 'the unrated session is not in the copy');
+  eq([text.split('\n')[0], text.split('\n').includes('BRK101 | Must | Tue, Nov 17 1:30 PM | Ignite 101'), text.split('\n').some(l => l.startsWith('LAB654 | Want |'))],
+    ['My picks for Microsoft Ignite 2026, copied from the planner on 2026-11-09: 4 rated sessions.', true, true], 'and the rated ones still are');
   eq(picksForAI({ ...aiOpts, items: [] }).split('\n')[0], 'My picks for Microsoft Ignite 2026, copied from the planner on 2026-11-09: no rated sessions yet.');
+});
+await test('should write a run chosen on the preview schedule as *RUN, never as a lock on the official one', () => {
+  const lines = picksForAI({ ...aiOpts, items: [{ code: 'LAB1', title: 'Lab', when: 'Wed', p: 3, lockedRun: 'LAB1-R1', lockPreview: true }, { code: 'LAB2', title: 'Lab 2', when: 'Thu', p: 3, lockedRun: 'LAB2' }] }).split('\n');
+  eq(lines[3], 'LAB1 | Must | Wed | Lab | run LAB1-R1 chosen on the preview schedule (keep it as *LAB1-R1)');
+  eq(lines[4], 'LAB2 | Must | Thu | Lab 2 | attending run LAB2');
 });
 await test('should end with the import link format, the rating digits and the guide address', () => {
   const text = picksForAI({ ...aiOpts, items: aiRows });
   const tail = text.trimEnd().split('\n').slice(-3);
   eq(tail[0], 'To change these, answer with an import link: https://mannix77.github.io/2026Ignite/?conf=ignite2026#/import/ followed by one token per session joined by ~, each CODE.P[sSCORE][w][!RUN].');
-  eq(tail[1], 'P is the rating (3 Must, 2 Want, 1 Maybe, 0 Skip); sSCORE an own score 0-100; w watch the recording later; !RUN the code of the run to attend.');
+  eq(tail[1], 'P is the rating (3 Must, 2 Want, 1 Maybe, 0 Skip); sSCORE an own score 0-100; w watch the recording later; !RUN the code of the run to attend (*RUN instead for a run chosen on the preview schedule).');
   eq(tail[2], 'Full guide: https://mannix77.github.io/2026Ignite/llms.txt');
 });
 await test('should escape nothing and keep a note on one line', () => {
