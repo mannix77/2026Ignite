@@ -1,4 +1,4 @@
-# Issue 98 covers every rule except the last (detour, issue 100, @pending).
+# Issue 98 covered the first four rules; issue 100 the detour rule.
 Feature: Up next shows what is coming up that I care about, and how far it is
   Standing in a building between sessions, I want every upcoming session I have picked or
   would likely want, grouped by start time, each with where it is and how long it takes to
@@ -45,24 +45,47 @@ Feature: Up next shows what is coming up that I care about, and how far it is
       Given I have not said where I am
       Then sessions are listed with their room and building but no walk time
 
-  @pending
-  Rule: A detour is judged against where I need to be next (issue 100)
+  Rule: A detour is judged against where Minesh needs to be next
 
-    Scenario: Default destination is my next planned item
-      Given I am in the Dolphin at 11:00 and my next planned session is at 12:30 in the Swan
-      And a candidate session runs 11:20 to 11:50 in the Yacht and Beach Club, 18 minutes from here and 20 from the Swan
-      When I look at the candidate
-      Then it shows 18 to get there, 30 in the session, 20 on to the Swan
-      And it says I would reach the Swan at 12:10 with 20 minutes to spare
+    Scenario: The next planned session is the default destination
+      Given Minesh is in the Dolphin at 11:00 with his next planned session at 12:30 in the Swan
+      And a candidate session runs 11:20 to 11:50 in the Yacht Club
+      When he looks at the candidate
+      Then it shows the walk there, the time in the session, then the walk on to the Swan
+      And it says he would reach the Swan at 12:10 with 20 minutes to spare
 
-    Scenario: The detour makes me late
-      Given the same candidate but my next planned session is at 12:05
-      Then it says I would be 5 minutes late for it
+    Scenario: The detour makes him late
+      Given the same candidate with his next planned session at 12:05
+      When he looks at the candidate
+      Then it says he would be 5 minutes late for it
 
-    Scenario: I choose a different place to be next
-      Given I choose the Dolphin as where I need to be next
-      Then the candidate shows the walk on to the Dolphin in place of the Swan
+    Scenario: Minesh picks a different place to be next
+      Given Minesh picked the Dolphin as where he needs to be next
+      When he looks at the candidate
+      Then it shows the walk on to the Dolphin in place of the Swan
 
     Scenario: Nothing planned after it
-      Given I have nothing else planned today
-      Then the candidate shows the walk there and the session length, with no walk on
+      Given Minesh has nothing else planned today
+      When he looks at the candidate
+      Then it shows the walk there with the session length
+      And no walk on
+
+    Scenario: The candidate is the next planned session itself
+      Given the candidate is the session Minesh planned next
+      When he looks at it
+      Then it shows the walk there with no detour
+
+    Scenario: The walk on would be a guess
+      Given the candidate's room is in a building the venue does not know
+      When he looks at the candidate
+      Then it shows no walk on rather than an arrival time built on a guess
+
+    Scenario: The venue has no walking time between the two buildings
+      Given the candidate's building has no walking time to the destination's building
+      When he looks at the candidate
+      Then it shows no walk on
+
+    Scenario: Lunch comes before the next planned session
+      Given the plan has lunch next, then a planned session at 1:00 PM
+      When Minesh looks at a candidate
+      Then the detour is judged against the 1:00 PM session, not the lunch

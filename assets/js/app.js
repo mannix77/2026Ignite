@@ -5,7 +5,7 @@ import { fetchAll, buildModel, diffKnown, snapshot, cacheUrl, exportAge, customR
 import { checkLive, diff as liveDiff, changeCounts, countsLine } from './live.js';
 import { optimize, transitions, fillers, nowNext, canBoth, overlaps, transition, compareOptions, lunchConfig, arrivalExtra, PRIORITY } from './planner.js';
 import { fmtTime, fmtDay, fmtDuration, relTime, nowLocal, addDays } from './time.js';
-import { upNext } from './upnext.js';
+import { upNext, onwardWalk, nextPlanned } from './upnext.js';
 import { slotGroups, rankOptions, rankTie } from './clash.js';
 import { createVenue, setVenue, walkMinutes, floorExtra, mergeWalk } from './venue.js';
 import { CONFERENCES, currentConferenceId, rememberConference, conferenceList } from './conferences.js';
@@ -1439,10 +1439,17 @@ function renderNow() {
 // Up next: what's coming up that I care about, by start time, with where and how far.
 function upNextHtml(t, h, nn, plan, c) {
   const sg = suggester();
+  // Where I need to be after a candidate (issue 100): a building I picked for this visit, else
+  // my next planned session; the detour is the walk there, the session, and the walk on.
+  const next = nextPlanned(plan.res.plan[t.day], t.min);   // the next planned session, even when lunch or blocked time comes first
+  const picked = app.destChoice && app.venue.BUILDING[app.destChoice] ? app.destChoice : null;
+  const dest = picked ? { loc: { label: B(picked).name, building: picked, floor: null, known: true }, startMin: null, label: B(picked).name }
+    : next ? { key: next.key, loc: next.loc, startMin: next.startMin, label: next.code } : null;
   const slots = upNext({
     sessions: app.model.sessions, day: t.day, nowMin: t.min, horizon: 120, tolerance: c.tolerance,
     walkTo: x => (h ? hereWalk(x.loc, h, c) : null), // no position, no walk: the plan's origin isn't where you are
     prio: prioOf, interest: x => (sg.ready && !(prioOf(x) == null && ranker().evaluate(x).hidden) ? sg.score(x).score : 0), chosen: x => plan.chosen.has(x.key), minInterest: 25,
+    dest, walkBetween: (a, b) => onwardWalk(a, b, c.walk),   // null for a room in a building the venue does not know: no arrival built on a guess
   });
   const verdict = it => {
     const w = it.walk != null ? `${it.walk} min walk` : 'distance unknown';
@@ -1451,12 +1458,24 @@ function upNextHtml(t, h, nn, plan, c) {
     if (it.status === 'ok') return { cls: 'ok', text: `${w} · ${it.slack >= 0 ? `${it.slack} min to spare` : `${-it.slack} min late, within your tolerance`}` };
     return { cls: '', text: w };
   };
+  const detour = it => {
+    const d = it.detour;
+    if (!d) return '';
+    const stay = it.s.startMin <= t.min ? `until ${fmtTime(it.s.endMin)}` : `${it.s.endMin - it.s.startMin} min session`;   // already running: what is left matters
+    const on = `${stay} · ${d.onward} min on to ${dest.label}`;
+    if (d.slack == null) return `${on}, there by ${fmtTime(d.arrive)}`;
+    return d.slack >= 0 ? `${on}, there by ${fmtTime(d.arrive)} with ${d.slack} min to spare`
+      : `${on}: ${-d.slack} min late for ${dest.label} at ${fmtTime(dest.startMin)}`;
+  };
   const body = slots.map(sl => `<h3 class="slot">${fmtTime(sl.startMin)}${sl.startMin <= t.min ? ' · started' : ` · in ${fmtDuration(sl.startMin - t.min)}`}</h3>
     <div class="list">${sl.items.map(it => {
       const v = verdict(it);
-      return card(it.s, { compact: true, extra: `<div class="reason ${v.cls}">${icon(v.cls ? 'walk' : 'warn')}<span>${it.planned ? '<b>In your plan</b> · ' : ''}${esc(v.text)}</span></div>` });
+      const d = detour(it);
+      return card(it.s, { compact: true, extra: `<div class="reason ${v.cls}">${icon(v.cls ? 'walk' : 'warn')}<span>${it.planned ? '<b>In your plan</b> · ' : ''}${esc(v.text)}${d ? `<br>${esc(d)}` : ''}</span></div>` });
     }).join('')}</div>`).join('');
-  return `<section class="up-next"><h2>Up next</h2><p class="small muted">Sessions you've planned, rated or would likely want in the next 2 hours${h ? ', from where you are' : ''}.</p>${body || '<p class="muted">Nothing you care about starts in the next 2 hours. See "Nearby now" below.</p>'}</section>`;
+  const destOpts = app.venue.buildings.filter(b => b.id !== 'O').map(b => `<option value="${attr(b.id)}" ${picked === b.id ? 'selected' : ''}>${esc(b.name)}</option>`).join('');
+  const destBar = `<label class="small">Then I need to be at <select id="dest-select" aria-label="Where you need to be next"><option value="">${next ? `${esc(next.code)} at ${fmtTime(next.startMin)} (next in your plan)` : 'Nothing planned'}</option>${destOpts}</select></label>`;
+  return `<section class="up-next"><h2>Up next</h2><p class="small muted">Sessions you've planned, rated or would likely want in the next 2 hours${h ? ', from where you are' : ''}. Each shows the walk there, the time in the session, and the walk on to where you need to be next.</p>${destBar}${body || '<p class="muted">Nothing you care about starts in the next 2 hours. See "Nearby now" below.</p>'}</section>`;
 }
 
 // ---------------------------------------------------------------- changes
@@ -2316,6 +2335,10 @@ main.addEventListener('change', e => {
   else if (t.id === 'here-select') {
     app.hereManual = t.value || null;
     store.setUI({ here: t.value ? { building: t.value, day: nowLocal(app.simNow, app.conf.tz).day } : null });
+    render();
+  }
+  else if (t.id === 'dest-select') {   // where I need to be after a candidate (issue 100); for this visit only
+    app.destChoice = t.value || null;
     render();
   }
   else if (t.dataset.set) {
