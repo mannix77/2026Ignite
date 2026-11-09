@@ -590,6 +590,79 @@ await test('should report a conference the device does not know and leave the li
   eq(store.importAllData(doc, CONFS, { replace: false }), {});
 });
 
+// Saved data that can't be read, or that a newer version wrote, is never lost to a backup or a restore.
+const ALL_OTHER = 'ignite26.planner.v1:all-other', ALL_UNTOUCHED = 'ignite26.planner.v1:all-untouched';
+const CORRUPT = '{"v":1,"picks":{"G1":{"p":2,';
+const NEWER_RAW = JSON.stringify({ v: 99, picks: { G9: { p: 3, lock: null, note: '', at: 5 } }, prefs: {}, profile: null, future: 'kept' });
+const gartnerDoc = picks => ({ app: BACKUP, v: 1, kind: 'all', conferences: { ignite2026: { picks: { S5: { p: 2, at: 9 } }, settings: {}, profile: null }, gartner2026: { picks, settings: {}, profile: null } } });
+
+await test('should name a conference it cannot back up, and back up the rest', () => {
+  localStorage.setItem(ALL_OTHER, CORRUPT);
+  localStorage.setItem(ALL_UNTOUCHED, NEWER_RAW);
+  store.load('all-live');
+  store.mutatePicks(p => { p.S1 = { p: 3, lock: null, note: '', at: 7 }; });
+  const report = {};
+  const doc = store.exportAll(CONFS, new Date('2026-11-09T05:00:00Z'), report);
+  eq([Object.keys(doc.conferences), report.skipped], [['ignite2026'], [{ id: 'gartner2026', reason: 'unreadable' }, { id: 'reinvent2026', reason: 'newer' }]]);
+});
+
+await test('should count a saved backup for every conference in the file, and only those', () => {
+  const unbacked = { at: null, changes: 5, dismissed: null };
+  localStorage.setItem(ALL_OTHER, JSON.stringify({ v: 1, picks: { G1: { p: 2, lock: null, note: '', at: 5 } }, prefs: {}, profile: null, backup: unbacked }));
+  localStorage.setItem(ALL_UNTOUCHED, JSON.stringify({ v: 1, picks: { R1: { p: 1, lock: null, note: '', at: 5 } }, prefs: {}, profile: null, backup: unbacked }));
+  store.load('all-live');
+  store.markBackupFor(CONFS, ['ignite2026', 'gartner2026'], 1234);
+  eq([store.get().backup.at, savedOf('all-other').backup, savedOf('all-other').picks.G1.p], [1234, { at: 1234, changes: 0, dismissed: null }, 2]);
+  eq(savedOf('all-untouched').backup, unbacked, 'a conference not in the file still needs its backup');
+});
+
+await test('should keep unreadable saved data aside before restoring over it', () => {
+  localStorage.setItem(ALL_OTHER, CORRUPT);
+  localStorage.removeItem(`${ALL_OTHER}#unreadable`);
+  store.load('all-live');
+  const doc = gartnerDoc({ G1: { p: 3, at: 9 } });
+  const pv = store.previewImportAll(doc, CONFS, { replace: false });
+  eq([pv.parts.gartner2026?.added, pv.unreadable, pv.blocked], [['G1'], ['gartner2026'], []]);
+  const report = {};
+  eq(store.importAllData(doc, CONFS, { replace: false }, report), { ignite2026: 1, gartner2026: 1 });
+  eq([localStorage.getItem(`${ALL_OTHER}#unreadable`), savedOf('all-other').picks.G1.p, report.failed], [CORRUPT, 3, []]);
+});
+
+await test('should not restore over unreadable data it could not keep a copy of', () => {
+  localStorage.setItem(ALL_OTHER, CORRUPT);
+  localStorage.removeItem(`${ALL_OTHER}#unreadable`);
+  store.load('all-live');
+  const report = {};
+  globalThis.__quota = CORRUPT.length - 1;   // the copy (the unreadable text itself) doesn't fit
+  let applied;
+  try { applied = store.importAllData(gartnerDoc({ G1: { p: 3, at: 9 } }), CONFS, { replace: false }, report); } finally { globalThis.__quota = null; }
+  eq([applied, report.failed, localStorage.getItem(ALL_OTHER), localStorage.getItem(`${ALL_OTHER}#unreadable`)],
+    [{ ignite2026: 1 }, [{ id: 'gartner2026', reason: 'copy-failed' }], CORRUPT, null]);
+});
+
+await test('should leave a conference saved by a newer version untouched, and restore the rest', () => {
+  localStorage.setItem(ALL_OTHER, NEWER_RAW);
+  store.load('all-live');
+  const doc = gartnerDoc({ G1: { p: 3, at: 9 } });
+  const pv = store.previewImportAll(doc, CONFS, { replace: true });
+  eq([Object.keys(pv.parts), pv.blocked], [['ignite2026'], [{ id: 'gartner2026', reason: 'newer' }]]);
+  const report = {};
+  eq(store.importAllData(doc, CONFS, { replace: true }, report), { ignite2026: 1 });
+  eq([localStorage.getItem(ALL_OTHER), report.failed, store.pick('S5')?.p], [NEWER_RAW, [{ id: 'gartner2026', reason: 'newer' }], 2]);
+});
+
+await test('should name a conference whose restored picks could not be written, and keep what it had', async () => {
+  const before = JSON.stringify({ v: 1, picks: { G1: { p: 1, lock: null, note: '', at: 5 } }, prefs: {}, profile: null });
+  localStorage.setItem(ALL_OTHER, before);
+  store.load('all-live');
+  const report = {};
+  globalThis.__quota = before.length + 20;   // the restored Gartner state is longer than this
+  let applied;
+  try { applied = store.importAllData(gartnerDoc({ G1: { p: 3, at: 9 }, G2: { p: 2, at: 9 }, G3: { p: 2, at: 9 } }), CONFS, { replace: false }, report); } finally { globalThis.__quota = null; }
+  eq([applied, report.failed, localStorage.getItem(ALL_OTHER)], [{ ignite2026: 1 }, [{ id: 'gartner2026', reason: 'save-failed' }], before]);
+  await sleep(SAVE);
+});
+
 await test('should refuse a file that calls itself a backup of everything but holds none', () => {
   eq(throws(() => store.previewImportAll({ app: BACKUP, kind: 'all', conferences: 'junk' }, CONFS, {})), 'Not an Ignite planner backup file');
   eq(throws(() => store.previewImportAll({ app: 'other', kind: 'all', conferences: {} }, CONFS, {})), 'Not an Ignite planner backup file');

@@ -2006,6 +2006,9 @@ importDialog.addEventListener('click', e => {
 });
 importDialog.addEventListener('cancel', () => { pendingImport = null; }); // Esc
 
+const confShort = id => (Object.hasOwn(CONFERENCES, id) ? CONFERENCES[id].short : id);
+const RESTORE_FAILED = { newer: 'saved by a newer version; reload and restore again', 'copy-failed': "its unreadable data couldn't be kept aside first", 'save-failed': 'storage is full' };
+
 // Restore a backup of every conference (issue #19). The conference on screen is previewed in
 // detail as before; the others are summarized, since their sessions are not loaded. A file made
 // in another copy of the site (main vs a colleague's) asks first: it holds someone else's picks.
@@ -2019,18 +2022,26 @@ function restoreAll(doc) {
   const add = store.previewImportAll(doc, confs, { replace: false });
   const replace = store.previewImportAll(doc, confs, { replace: true });
   const empty = { added: [], changed: [], unchanged: 0, removed: [], after: {} };
-  const name = id => CONFERENCES[id]?.short || id;
+  const name = confShort;
   const others = Object.keys(add.parts).filter(id => id !== app.conf.id);
   const otherText = others.map(id => `${name(id)}: ${add.parts[id].added.length} new, ${add.parts[id].changed.length} changed`).join('; ');
   const otherRemoved = others.reduce((n, id) => n + (replace.parts[id]?.removed.length || 0), 0);
   const note = [`Adding keeps the newer rating for each session, and this device's notes and reserved seats, in every conference.`,
     others.length ? `Also in this backup: ${otherText}.` : '',
     otherRemoved ? `Replacing also makes the other conferences match the backup (${otherRemoved} pick${otherRemoved > 1 ? 's' : ''} there would go).` : '',
-    add.missing.length ? `Left out (not a conference this planner knows): ${add.missing.join(', ')}.` : ''].filter(Boolean).join(' ');
+    add.missing.length ? `Left out (not a conference this planner knows): ${add.missing.join(', ')}.` : '',
+    add.blocked.length ? `Not restored: ${add.blocked.map(b => name(b.id)).join(', ')} (saved by a newer version of the planner; reload the page, then restore again).` : '',
+    add.unreadable.length ? `${add.unreadable.map(name).join(', ')}: the saved data on this device can't be read; a copy of it is kept before restoring.` : ''].filter(Boolean).join(' ');
   const summary = applied => Object.entries(applied).map(([id, n]) => `${name(id)} ${n}`).join(', ') || 'nothing';
+  const restore = replacing => {
+    const report = {};
+    const applied = store.importAllData(doc, confs, { replace: replacing }, report);
+    const failed = report.failed.length ? ` Not restored: ${report.failed.map(f => `${name(f.id)} (${RESTORE_FAILED[f.reason] || f.reason})`).join(', ')}.` : '';
+    toast((replacing ? 'Every conference restored from the backup now matches it on this device.' : `Added from the backup: ${summary(applied)}.`) + failed);
+  };
   showImportPreview({ title: `Restore backup${doc.exportedAt ? ` from ${fmtStamp(doc.exportedAt)}` : ''} · ${app.conf.short} shown`, pv: add.parts[app.conf.id] || empty, note,
-    apply: () => toast(`Added from the backup: ${summary(store.importAllData(doc, confs, { replace: false }))}`),
-    replace: { pv: replace.parts[app.conf.id] || empty, apply: () => { store.importAllData(doc, confs, { replace: true }); toast('Every conference in the backup now matches it on this device'); } } });
+    apply: () => restore(false),
+    replace: { pv: replace.parts[app.conf.id] || empty, apply: () => restore(true) } });
 }
 
 function importFavorites() {
@@ -2152,10 +2163,12 @@ function onClick(e) {
     // One file for every conference on this device (issue #19); the live conference comes from
     // the store, the others from their own saved state.
     export: async () => {
-      const doc = store.exportAll(conferenceList().map(cf => ({ id: cf.id, namespace: cf.namespace })));
-      const names = Object.keys(doc.conferences).map(id => CONFERENCES[id]?.short || id);
+      const confs = conferenceList().map(cf => ({ id: cf.id, namespace: cf.namespace })), report = {};
+      const doc = store.exportAll(confs, new Date(), report);
+      const names = Object.keys(doc.conferences).map(confShort);
+      const skipped = report.skipped.length ? ` Not in it: ${report.skipped.map(x => `${confShort(x.id)} (${x.reason === 'newer' ? 'saved by a newer version; reload and save again' : "its saved data on this device can't be read"})`).join(', ')}.` : '';
       const r = await shareOrDownload(`planner-backup-${new Date().toISOString().slice(0, 10)}.json`, JSON.stringify(doc, null, 1), 'application/json');
-      if (r !== 'cancelled') { store.markBackup(); toast(`Backup saved (${names.join(', ') || 'nothing rated yet'}). Keep it somewhere that is backed up`); }
+      if (r !== 'cancelled') { store.markBackupFor(confs, Object.keys(doc.conferences)); toast(`Backup saved (${names.join(', ') || 'nothing rated yet'}). Keep it somewhere that is backed up.${skipped}`); }
     },
     'backup-dismiss': () => store.dismissBackupReminder(Date.now(), nowLocal(null, app.conf.tz).day),
     'install-app': async () => {

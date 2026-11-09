@@ -17,6 +17,16 @@ Feature: One backup file for every conference on this device
       When Minesh saves a backup
       Then the file has no re:Invent part
 
+    Scenario: A conference whose saved data cannot be read is named
+      Given Gartner's saved data on this device cannot be read
+      When Minesh saves a backup
+      Then Minesh is told Gartner is not in the file
+
+    Scenario: Saving counts as a backup for every conference in the file
+      Given Gartner has picks not yet backed up
+      When Minesh saves a backup while viewing Ignite
+      Then Gartner no longer reminds Minesh to back up
+
   Rule: Restore puts each conference back in its own place
 
     Scenario: A fresh device
@@ -36,6 +46,25 @@ Feature: One backup file for every conference on this device
       Given a backup file made before backups covered every conference
       When Minesh restores it
       Then it restores as it always did
+
+  Rule: Restoring never loses what is already saved on the device
+
+    Scenario: Unreadable saved data is kept aside
+      Given Gartner's saved data on this device cannot be read
+      When Minesh restores a backup holding Gartner picks
+      Then the unreadable Gartner data is kept as a copy
+      And Gartner has the backup's picks
+
+    Scenario: Data saved by a newer version is left alone
+      Given Gartner was last saved by a newer version of the planner
+      When Minesh restores a backup holding Gartner picks
+      Then Gartner's saved data is unchanged
+      And Minesh is told Gartner was not restored
+
+    Scenario: A conference that cannot be written is named
+      Given the device's storage is too full for Gartner's restored picks
+      When Minesh restores a backup holding Gartner picks
+      Then Minesh is told Gartner was not restored
 
   Rule: A backup belongs to the copy of the site it was made in
 
