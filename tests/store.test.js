@@ -370,7 +370,8 @@ await test('should import each token the guide lists as accepted the way the gui
   const documented = documentedTokens('Accepted tokens');
   const got = Object.fromEntries(documented.map(t => [t, summary(receive(t)).BRK201]));
   eq(got, expected);
-  eq([receive('BRK201.2*BRK201').BRK201.lockMode, receive('BRK201.2!BRK201').BRK201.lockMode ?? null], ['preview', null], '*RUN is a preview choice, !RUN is not');
+  const lockOf = t => { const r = receive(t).BRK201; return [r.lock, r.lockMode ?? null]; };
+  eq([lockOf('BRK201.2*BRK201'), lockOf('BRK201.2!BRK201')], [['BRK201', 'preview'], ['BRK201', null]], 'both lock the run; only *RUN marks it a preview choice');
 });
 
 await test('should ignore each token the guide lists as ignored, and still import the rest of the link', async () => {
