@@ -94,12 +94,14 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
-          python3 scripts/check_llms.py --guide llms.txt --data data --problem-out "$RUNNER_TEMP/llms-problem.md"
+          python3 scripts/check_llms.py --guide llms.txt --data data --problem-out "$RUNNER_TEMP/llms-problem.md" \
+            --verified-out "$RUNNER_TEMP/llms-verified"
           if [ -s "$RUNNER_TEMP/llms-problem.md" ]; then
             python3 scripts/prod_issue.py report --workflow "AI guide examples" --kind stale-example \
               --title "The AI guide's example codes are no longer in the catalog" \
               --message-file "$RUNNER_TEMP/llms-problem.md" --run-url "$RUN_URL" || true
-          else
+          elif [ -e "$RUNNER_TEMP/llms-verified" ]; then
+            # Closed only when every example was checked: an unreadable catalog leaves it open.
             python3 scripts/prod_issue.py resolve --workflow "AI guide examples" --run-url "$RUN_URL" || true
           fi
 

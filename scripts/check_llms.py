@@ -7,10 +7,12 @@ cleanly. This reads every import link in the guide, looks each code up in the ca
 conference the link names, and reports the stale ones. It never fails: the workflow turns a
 stale example into a production issue under its own workflow name, and the deploy goes ahead.
 
-    check_llms.py --guide llms.txt --data data [--problem-out FILE]
+    check_llms.py --guide llms.txt --data data [--problem-out FILE] [--verified-out FILE]
 
 Prints one line; writes stale=true|false to $GITHUB_OUTPUT when set; writes the problem text
-to --problem-out only when something is stale. Spec: specs/features/ai-guide-examples.feature
+to --problem-out only when something is stale, and touches --verified-out only when every
+example was checked and found (a missing or unreadable catalog proves nothing, so an open issue
+stays open). Spec: specs/features/ai-guide-examples.feature
 """
 import argparse
 import json
@@ -82,6 +84,7 @@ def main(argv=None):
     ap.add_argument("--guide", default="llms.txt")
     ap.add_argument("--data", default="data")
     ap.add_argument("--problem-out", help="write the problem text here when an example is stale")
+    ap.add_argument("--verified-out", help="create this file only when every example was checked and found")
     args = ap.parse_args(argv)
     with open(args.guide, encoding="utf-8") as f:
         text = f.read()
@@ -93,9 +96,14 @@ def main(argv=None):
         if args.problem_out:
             with open(args.problem_out, "w", encoding="utf-8") as f:
                 f.write(problem_text(result))
+    elif result["unverifiable"]:
+        print("guide examples: %d codes checked, all in their catalogs; could not check %s (catalog missing or unreadable)" % (
+            result["checked"], ", ".join(result["unverifiable"])))
     else:
-        print("guide examples: %d codes checked, all in their catalogs%s" % (
-            result["checked"], "; no catalog for %s" % ", ".join(result["unverifiable"]) if result["unverifiable"] else ""))
+        print("guide examples: %d codes checked, all in their catalogs" % result["checked"])
+        if args.verified_out:
+            with open(args.verified_out, "w", encoding="utf-8") as f:
+                f.write("verified\n")
     gh_out = os.environ.get("GITHUB_OUTPUT")
     if gh_out:
         with open(gh_out, "a", encoding="utf-8") as f:

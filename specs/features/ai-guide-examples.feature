@@ -22,6 +22,13 @@ Feature: The AI guide's example codes stay valid
       When a sync finds every example code in its catalog
       Then the issue is closed
 
+    Scenario: A catalog that can't be read
+      Given an issue for the guide is open
+      And the re:Invent catalog file is damaged
+      When the next sync runs
+      Then the issue stays open
+      And the deploy goes ahead
+
   Rule: The check reads every import link in the guide
 
     Scenario: Codes in tokens and locked runs

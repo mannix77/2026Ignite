@@ -107,10 +107,12 @@ class CommandTests(unittest.TestCase):
         out = os.path.join(self.tmp, "out.txt")
         env = dict(os.environ, GITHUB_OUTPUT=out)
         proc = subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "check_llms.py"), "--guide", os.path.join(self.tmp, "llms.txt"),
-                               "--data", os.path.join(self.tmp, "data"), "--problem-out", os.path.join(self.tmp, "problem.md")],
+                               "--data", os.path.join(self.tmp, "data"), "--problem-out", os.path.join(self.tmp, "problem.md"),
+                               "--verified-out", os.path.join(self.tmp, "verified")],
                               capture_output=True, text=True, timeout=60, env=env)
         outputs = open(out, encoding="utf-8").read() if os.path.exists(out) else ""
         problem = open(os.path.join(self.tmp, "problem.md"), encoding="utf-8").read() if os.path.exists(os.path.join(self.tmp, "problem.md")) else None
+        self.verified = os.path.exists(os.path.join(self.tmp, "verified"))
         return proc, outputs, problem
 
     def test_should_exit_zero_and_write_the_problem_when_an_example_is_stale(self):
@@ -119,12 +121,13 @@ class CommandTests(unittest.TestCase):
         self.assertIn("stale=true", outputs)
         self.assertIn("reinvent2026: `BIZ333-R` is no longer in the catalog", problem)
         self.assertIn("BIZ333-R", proc.stdout)
+        self.assertFalse(self.verified, "a stale example is not verified")
 
     def test_should_exit_zero_and_write_no_problem_when_every_example_is_current(self):
         with open(os.path.join(self.tmp, "data", "reinvent2026", "sessions.json"), "w", encoding="utf-8") as f:
             json.dump({"sessions": [{"code": c} for c in ("AIM314-R", "AIM314-R1", "AIM326-R", "BIZ333-R", "CMP323-R")]}, f)
         proc, outputs, problem = self.run_check()
-        self.assertEqual((proc.returncode, "stale=false" in outputs, problem), (0, True, None))
+        self.assertEqual((proc.returncode, "stale=false" in outputs, problem, self.verified), (0, True, None, True))
 
 
 class WorkflowTests(unittest.TestCase):
@@ -154,6 +157,51 @@ class WorkflowTests(unittest.TestCase):
         self.assertIsNotNone(re.search(r"prod_issue\.py report.*?--message-file", body, re.S), "the problem text reaches the issue")
         self.assertIn("prod_issue.py resolve", body)
         self.assertNotIn("exit 1", body, "the guide never holds up the deploy")
+
+
+class StepRunTests(unittest.TestCase):
+    """Runs the workflow step's own script, with prod_issue.py replaced by a stub that logs what
+    it was asked to do: an open issue is closed only when every example could be checked."""
+
+    def setUp(self):
+        with open(os.path.join(ROOT, ".github", "workflows", "sync.yml"), encoding="utf-8") as f:
+            text = f.read()
+        m = re.search(r"- name: Check the AI guide's example codes\n(?:\s{8}.*\n)*?\s{8}run: \|\n((?:\s{10}.*\n|\n)+)", text)
+        self.assertIsNotNone(m, "the sync job needs the check step")
+        self.script = "\n".join(line[10:] for line in m.group(1).splitlines()) + "\n"
+        self.tmp = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, self.tmp)
+        os.makedirs(os.path.join(self.tmp, "scripts"))
+        shutil.copy(os.path.join(ROOT, "scripts", "check_llms.py"), os.path.join(self.tmp, "scripts"))
+        with open(os.path.join(self.tmp, "scripts", "prod_issue.py"), "w", encoding="utf-8") as f:
+            f.write("import sys\nopen('issue-calls.log', 'a').write(sys.argv[1] + '\\n')\n")
+        os.makedirs(os.path.join(self.tmp, "data", "reinvent2026"))
+        with open(os.path.join(self.tmp, "llms.txt"), "w", encoding="utf-8") as f:
+            f.write("https://x/?conf=reinvent2026#/import/AIM314-R.3\n")
+        os.makedirs(os.path.join(self.tmp, "runner"))
+
+    def run_step(self, catalog_text):
+        with open(os.path.join(self.tmp, "data", "reinvent2026", "sessions.json"), "w", encoding="utf-8") as f:
+            f.write(catalog_text)
+        env = dict(os.environ, RUNNER_TEMP=os.path.join(self.tmp, "runner"), RUN_URL="https://run", GH_TOKEN="")
+        env.pop("GITHUB_OUTPUT", None)
+        proc = subprocess.run(["bash", "-e", "-c", self.script], cwd=self.tmp, capture_output=True, text=True, timeout=60, env=env)
+        log = os.path.join(self.tmp, "issue-calls.log")
+        calls = open(log, encoding="utf-8").read().split() if os.path.exists(log) else []
+        return proc, calls
+
+    def test_should_close_the_issue_when_every_example_is_found(self):
+        proc, calls = self.run_step('{"sessions": [{"code": "AIM314-R"}]}')
+        self.assertEqual((proc.returncode, calls), (0, ["resolve"]), proc.stderr)
+
+    def test_should_report_when_an_example_is_missing(self):
+        proc, calls = self.run_step('{"sessions": [{"code": "OTHER"}]}')
+        self.assertEqual((proc.returncode, calls), (0, ["report"]), proc.stderr)
+
+    def test_should_leave_the_issue_open_when_the_catalog_cannot_be_read(self):
+        proc, calls = self.run_step('{"sessions": [{"code": "AIM3')
+        self.assertEqual((proc.returncode, calls), (0, []), proc.stderr)
+        self.assertIn("could not check reinvent2026", proc.stdout)
 
 
 if __name__ == "__main__":
