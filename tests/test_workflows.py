@@ -147,13 +147,15 @@ class DeployRetryTests(unittest.TestCase):
         failed = "        if: steps.deployment.outcome == 'failure'"
         self.assertIn("      - id: deployment", first)
         self.assertIn("        continue-on-error: true", first)  # the retry decides whether the job fails
+        # The first attempt must always run: a skipped first step is not a failure, so no retry would follow.
+        self.assertFalse([l for l in first if l.strip().startswith("if:")])
         self.assertIn(failed, wait)
         self.assertIn("        run: sleep 60", wait)
         self.assertIn("      - id: deployment_retry", retry)
         self.assertIn(failed, retry)
         self.assertFalse([l for l in retry if l.strip().startswith("continue-on-error")])  # a second failure must fail the job
         # Both attempts use the same pinned action, so the retry can't drift from the first try.
-        pin = re.compile(r"^        uses: actions/deploy-pages@(\w{40}) # v[\d.]+$")
+        pin = re.compile(r"^        uses: actions/deploy-pages@([0-9a-f]{40}) # v[\d.]+$")
         pins = [[m.group(1) for m in map(pin.match, lines) if m] for lines in (first, retry)]
         self.assertEqual(len(pins[0]), 1)
         self.assertEqual(pins[0], pins[1])
