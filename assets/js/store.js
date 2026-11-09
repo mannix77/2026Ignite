@@ -497,7 +497,8 @@ function planShared(picks, siblings = {}) {
     if (s) { next[id] = s; n++; }
     for (const sib of Array.isArray(siblings[id]) ? siblings[id] : []) {
       const other = next[sib];
-      if (sib === id || !other || !other.lock || other.reserved) continue;
+      // A run the link itself carries keeps what the link says for it, in any order.
+      if (sib === id || Object.hasOwn(picks, sib) || !other || !other.lock || other.reserved) continue;
       next[sib] = { ...other, lock: null };
       delete next[sib].lockMode;
       if (!scope.includes(sib)) scope.push(sib);

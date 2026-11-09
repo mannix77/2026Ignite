@@ -55,6 +55,12 @@ Feature: Seeing what a backup or link will change before it is applied
       When he applies the link
       Then no run of the lab is locked
 
+    Scenario: The run a link locks stays locked
+      Given a picks link locks the Thursday run of a lab
+      And the same link also rates the lab's Tuesday run
+      When Minesh applies the link
+      Then the Thursday run is locked
+
     Scenario: A reserved seat stays
       Given Minesh reserved a seat on the Thursday run of a lab
       And a picks link rates that lab Must without naming a run

@@ -543,6 +543,16 @@ await test('should clear a lock held by another record of the same session, in t
   eq([store.pick('A1').lock, store.pick('A1').note, store.pick('A1').p, store.pick('A2').p, store.pick('A2').lock], [null, 'mine', 3, 3, null]);
   await sleep(SAVE);
 });
+await test('should keep the lock a link sets on one record when the link also carries a sibling record, in either order', async () => {
+  for (const order of [['A1', 'A2'], ['A2', 'A1']]) {
+    seed('link-group-both', { A1: { p: 2, lock: null, note: '', at: 10 }, A2: { p: 2, lock: 'OLD', note: '', at: 10 }, A3: { p: 2, lock: 'OLD3', note: '', at: 10 } });
+    const recs = { A1: { p: 3, code: 'LAB1', lock: 'RUN2', at: 20 }, A2: { p: 3, code: 'LAB1-R1', at: 20 } };
+    const link = Object.fromEntries(order.map(id => [id, recs[id]]));
+    store.applyShared(link, { A1: ['A2', 'A3'], A2: ['A1', 'A3'] });
+    eq([store.pick('A1').lock, store.pick('A2').lock, store.pick('A3').lock], ['RUN2', null, null], `order ${order}: the link's lock stays, the old ones go`);
+    await sleep(SAVE);
+  }
+});
 await test('should keep a reserved seat held by another record of the session', async () => {
   seed('link-group-seat', { A1: { p: 3, lock: 'RUN2', reserved: 'RUN2', note: '', at: 10 }, A2: { p: 2, lock: null, note: '', at: 10 } });
   store.applyShared({ A2: { p: 3, code: 'LAB1', at: 20 } }, { A2: ['A1'] });
