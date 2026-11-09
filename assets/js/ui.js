@@ -243,6 +243,35 @@ export async function copyText(text) {
   }
 }
 
+// "Copy my picks for AI" (specs/features/copy-picks-for-ai.feature): a readable list of every rated
+// session for an assistant to read back as an import link. items: one row per repeat group,
+// { code, title, when (text or null), p (0-3 or null), score, mode ('watch'), note, lockedRun }.
+// Notes travel only here, never in share links. Pure text; app.js builds the rows and copies it.
+const RATING_NAMES = { 3: 'Must', 2: 'Want', 1: 'Maybe', 0: 'Skip' };
+export function picksForAI({ conference, items, guideUrl, importBase, now }) {
+  const rated = (items || []).filter(x => x && Object.hasOwn(RATING_NAMES, x.p));
+  const head = `My picks for ${conference}, copied from the planner on ${now}: ${rated.length ? `${rated.length} rated session${rated.length === 1 ? '' : 's'}.` : 'no rated sessions yet.'}`;
+  const oneLine = s => String(s).replace(/\s*\n\s*/g, ' / ').trim();
+  const rows = rated.map(x => {
+    const details = [];
+    if (Number.isFinite(x.score)) details.push(`score ${x.score}`);
+    if (x.mode === 'watch') details.push('watch the recording later');
+    if (x.lockedRun) details.push(`attending run ${x.lockedRun}`);
+    if (x.note && String(x.note).trim()) details.push(`note: ${oneLine(x.note)}`);
+    return [x.code, RATING_NAMES[x.p], x.when || 'time not published', oneLine(x.title || ''), ...(details.length ? [details.join('; ')] : [])].join(' | ');
+  });
+  return [
+    head,
+    'Columns: code | rating | when | title | details',
+    '',
+    ...rows,
+    '',
+    `To change these, answer with an import link: ${importBase} followed by one token per session joined by ~, each CODE.P[sSCORE][w][!RUN].`,
+    'P is the rating (3 Must, 2 Want, 1 Maybe, 0 Skip); sSCORE an own score 0-100; w watch the recording later; !RUN the code of the run to attend.',
+    `Full guide: ${guideUrl}`,
+  ].join('\n') + '\n';
+}
+
 const SEAT_TEXT = {
   reserved: 'You hold a reserved seat',
   reserve_a_seat: few => `Seats to reserve${few ? ', few left' : ''}`,

@@ -13,7 +13,7 @@ import { buildSuggester } from './suggest.js';
 import { createRanker, partition, profileConfig, profileGroups, GOALS } from './profile.js';
 import { storageStatus, backupReminder, backupAge } from './health.js';
 import { INSTANCE_LABEL, nsKey, guideUrl } from './instance.js';
-import { esc, attr, icon, bldgChip, recChip, rsvpChip, rsvpOpensText, seatsDetail, prioPill, scoreChip, whenText, prioControl, sessionCard, cardClass, toast, shareOrDownload, copyText, speakersLine, setHostCompany, unknownRoomsNote, venueMapUrl, mapChip, occupancyOf, occupancyChip } from './ui.js';
+import { esc, attr, icon, bldgChip, recChip, rsvpChip, rsvpOpensText, seatsDetail, prioPill, scoreChip, whenText, prioControl, sessionCard, cardClass, toast, shareOrDownload, copyText, speakersLine, setHostCompany, unknownRoomsNote, venueMapUrl, mapChip, occupancyOf, occupancyChip, picksForAI } from './ui.js';
 
 const $ = (sel, root = document) => root.querySelector(sel);
 const main = $('#main');
@@ -1731,7 +1731,8 @@ function renderSettings() {
       <p class="small muted">Picks live on this device${STANDALONE ? ' (in this Home Screen app)' : ''}. Use a backup file or a share link to move them between devices.</p>
       <div class="row"><button class="btn small" data-act="export">Save a backup</button>
         <label class="btn small">Restore backup<input type="file" accept="application/json,.json" id="import-file" hidden></label>
-        <button class="btn small" data-act="share">Copy link to my picks</button></div>
+        <button class="btn small" data-act="share">Copy link to my picks</button>
+        <button class="btn small" data-act="copy-ai" title="A readable list of every rated session, with notes, for an AI assistant to read back as an import link">Copy my picks for AI</button></div>
       <div class="field" style="grid-template-columns:1fr;margin-top:10px"><label for="import-code">Import picks from a link<small>Paste a link copied on another device (e.g. Safari → Home Screen app)</small></label></div>
       <div class="row"><input id="import-code" type="text" inputmode="url" autocomplete="off" placeholder="https://…#/import/…" style="flex:1;min-width:0;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--surface)">
         <button class="btn small" data-act="import-code">Import</button></div>
@@ -2211,6 +2212,25 @@ function onClick(e) {
       for (const g of pickedGroups()) if (groupPick(g)?.p >= 2) for (const x of app.model.byGroup.get(g) || []) codes.add(x.code);
       const json = JSON.stringify({ codes: [...codes].sort() }, null, 1);
       toast((await copyText(json)) ? `Copied ${codes.size} codes. Paste into ${app.conf.dataDir}/watchlist.json` : 'Could not copy');
+    },
+    // Every rated group as one readable line (with notes, which share links never carry), plus how
+    // to answer with an import link; for an AI assistant that updates your picks (issue #22).
+    'copy-ai': async () => {
+      const items = [];
+      for (const g of app.picks.byGroup.keys()) {
+        const gp = groupPick(g);
+        const runs = app.model.byGroup.get(g) || [];
+        const first = runs[0];
+        if (!gp || !first) continue;
+        const run = (gp.lock && runs.find(r => r.key === gp.lock)) || runs.find(r => r.day) || first;
+        items.push({ code: first.code, title: first.title, when: run.day ? whenText(run) : null, p: gp.p, score: gp.score,
+          mode: gp.mode, note: gp.note, lockedRun: gp.lock ? runs.find(r => r.key === gp.lock)?.code || null : null });
+      }
+      items.sort((a, b) => (b.p ?? -1) - (a.p ?? -1) || a.code.localeCompare(b.code));
+      const text = picksForAI({ conference: app.conf.name, items, guideUrl: guideUrl(location.href),
+        importBase: `${location.origin}${location.pathname}?conf=${encodeURIComponent(app.conf.id)}#/import/`, now: nowLocal(app.simNow, app.conf.tz).day });
+      const n = items.filter(x => x.p != null).length;
+      toast((await copyText(text)) ? `Copied ${n} rated session${n === 1 ? '' : 's'} with notes. Paste it to your assistant along with the guide link` : 'Could not copy');
     },
     'block-add': () => {
       const day = $('#blk-day').value, start = fromHHMM($('#blk-start').value), end = fromHHMM($('#blk-end').value);

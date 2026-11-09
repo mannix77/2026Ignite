@@ -508,5 +508,45 @@ await test('should leave a catalog without a seat file exactly as it is', () => 
   eq(a, [['i1', '2026-10-06T16:00:00Z', undefined, 84], ['s2', '2026-10-06T16:00:00Z', undefined, 84], ['a1', '2026-10-06T16:00:00Z', undefined, 84], ['x1', '2026-10-06T16:00:00Z', undefined, 84]]);
 });
 
+// ---- "Copy my picks for AI" (specs/features/copy-picks-for-ai.feature): the readable list an
+// assistant reads back as an import link. Pure text from rows app.js builds per repeat group.
+const { picksForAI } = await import('../assets/js/ui.js');
+const aiRows = [
+  { code: 'BRK101', title: 'Ignite 101', when: 'Tue, Nov 17 1:30 PM', p: 3 },
+  { code: 'LAB654', title: 'Copilot Connectors', when: 'Wed, Nov 18 12:00 PM', p: 2, score: 87.5, mode: 'watch', note: 'ask about Graph connectors' },
+  { code: 'TT1706', title: 'From prior auth to appeals', when: 'Tue, Nov 17 2:00 PM', p: 3, lockedRun: 'TT1706' },
+  { code: 'BRK999', title: 'Skipped one', when: null, p: 0 },
+];
+const aiOpts = { conference: 'Microsoft Ignite 2026', guideUrl: 'https://mannix77.github.io/2026Ignite/llms.txt', importBase: 'https://mannix77.github.io/2026Ignite/?conf=ignite2026#/import/', now: '2026-11-09' };
+
+await test('should list every rated session as code, rating, when and title, in that order', () => {
+  const lines = picksForAI({ ...aiOpts, items: aiRows }).split('\n');
+  eq(lines[0], 'My picks for Microsoft Ignite 2026, copied from the planner on 2026-11-09: 4 rated sessions.');
+  eq(lines[1], 'Columns: code | rating | when | title | details');
+  eq(lines[3], 'BRK101 | Must | Tue, Nov 17 1:30 PM | Ignite 101');
+  eq(lines[6], 'BRK999 | Skip | time not published | Skipped one');
+});
+await test('should carry the score, watch later and the note, and name a locked run', () => {
+  const lines = picksForAI({ ...aiOpts, items: aiRows }).split('\n');
+  eq(lines[4], 'LAB654 | Want | Wed, Nov 18 12:00 PM | Copilot Connectors | score 87.5; watch the recording later; note: ask about Graph connectors');
+  eq(lines[5], 'TT1706 | Must | Tue, Nov 17 2:00 PM | From prior auth to appeals | attending run TT1706');
+});
+await test('should leave unrated sessions out and say so when nothing is rated', () => {
+  eq(picksForAI({ ...aiOpts, items: [...aiRows, { code: 'X1', title: 'Unrated', when: null, p: null }] }).split('\n').length,
+    picksForAI({ ...aiOpts, items: aiRows }).split('\n').length);
+  eq(picksForAI({ ...aiOpts, items: [] }).split('\n')[0], 'My picks for Microsoft Ignite 2026, copied from the planner on 2026-11-09: no rated sessions yet.');
+});
+await test('should end with the import link format, the rating digits and the guide address', () => {
+  const text = picksForAI({ ...aiOpts, items: aiRows });
+  const tail = text.trimEnd().split('\n').slice(-3);
+  eq(tail[0], 'To change these, answer with an import link: https://mannix77.github.io/2026Ignite/?conf=ignite2026#/import/ followed by one token per session joined by ~, each CODE.P[sSCORE][w][!RUN].');
+  eq(tail[1], 'P is the rating (3 Must, 2 Want, 1 Maybe, 0 Skip); sSCORE an own score 0-100; w watch the recording later; !RUN the code of the run to attend.');
+  eq(tail[2], 'Full guide: https://mannix77.github.io/2026Ignite/llms.txt');
+});
+await test('should escape nothing and keep a note on one line', () => {
+  const text = picksForAI({ ...aiOpts, items: [{ code: 'A1', title: 'T <b>', when: 'Mon', p: 1, note: 'line one\nline two' }] });
+  eq(text.split('\n')[3], 'A1 | Maybe | Mon | T <b> | note: line one / line two');
+});
+
 console.log(`${pass} passed, ${fail} failed`);
 if (fail) process.exitCode = 1;
