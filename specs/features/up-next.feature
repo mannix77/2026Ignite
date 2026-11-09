@@ -79,3 +79,13 @@ Feature: Up next shows what is coming up that I care about, and how far it is
       Given the candidate's room is in a building the venue does not know
       When he looks at the candidate
       Then it shows no walk on rather than an arrival time built on a guess
+
+    Scenario: The venue has no walking time between the two buildings
+      Given the candidate's building has no walking time to the destination's building
+      When he looks at the candidate
+      Then it shows no walk on
+
+    Scenario: Lunch comes before the next planned session
+      Given the plan has lunch next, then a planned session at 1:00 PM
+      When Minesh looks at a candidate
+      Then the detour is judged against the 1:00 PM session, not the lunch

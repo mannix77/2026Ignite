@@ -5,7 +5,7 @@ import { fetchAll, buildModel, diffKnown, snapshot, cacheUrl, exportAge, customR
 import { checkLive, diff as liveDiff, changeCounts, countsLine } from './live.js';
 import { optimize, transitions, fillers, nowNext, canBoth, overlaps, transition, compareOptions, lunchConfig, arrivalExtra, PRIORITY } from './planner.js';
 import { fmtTime, fmtDay, fmtDuration, relTime, nowLocal, addDays } from './time.js';
-import { upNext, onwardWalk } from './upnext.js';
+import { upNext, onwardWalk, nextPlanned } from './upnext.js';
 import { slotGroups, rankOptions, rankTie } from './clash.js';
 import { createVenue, setVenue, walkMinutes, floorExtra, mergeWalk } from './venue.js';
 import { CONFERENCES, currentConferenceId, rememberConference, conferenceList } from './conferences.js';
@@ -1441,7 +1441,7 @@ function upNextHtml(t, h, nn, plan, c) {
   const sg = suggester();
   // Where I need to be after a candidate (issue 100): a building I picked for this visit, else
   // my next planned session; the detour is the walk there, the session, and the walk on.
-  const next = nn.next && !nn.next.pseudo ? nn.next : null;
+  const next = nextPlanned(plan.res.plan[t.day], t.min);   // the next planned session, even when lunch or blocked time comes first
   const picked = app.destChoice && app.venue.BUILDING[app.destChoice] ? app.destChoice : null;
   const dest = picked ? { loc: { label: B(picked).name, building: picked, floor: null, known: true }, startMin: null, label: B(picked).name }
     : next ? { key: next.key, loc: next.loc, startMin: next.startMin, label: next.code } : null;

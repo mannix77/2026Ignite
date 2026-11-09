@@ -13,7 +13,16 @@ export function onwardWalk(a, b, walk) {
   if (a.building === 'O' || b.building === 'O') return 0;
   if (sameRoom(a, b)) return 0;
   if (!a.known || !b.known) return null;
+  // Two known buildings the matrix has no pair for would also fall back to the guess.
+  if (a.building !== b.building && walk?.pairs?.[[a.building, b.building].sort().join('|')] == null) return null;
   return walkMinutes(a, b, walk);
+}
+
+// Where I need to be next by default: the first planned session that starts after now, skipping
+// lunch and blocked time (pseudo items), which are not places to walk on to.
+export function nextPlanned(dayPlan, nowMin) {
+  return (dayPlan || []).filter(x => x && !x.pseudo && Number.isFinite(x.startMin) && x.startMin > nowMin)
+    .sort((a, b) => a.startMin - b.startMin)[0] || null;
 }
 
 // sessions: model sessions. walkTo(s) -> minutes from here or null when position is unknown.

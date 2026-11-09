@@ -8,7 +8,7 @@ import { localParts, fromISO, parseSlot, fmtTime, fmtDay, addDays, relTime, fmtD
 import { createVenue } from '../assets/js/venue.js';
 import { CONFERENCES, LAS_VEGAS_DEF, SWAN_DOLPHIN_DEF } from '../assets/js/conferences.js';
 import { parseShare } from '../assets/js/store.js';
-import { upNext, onwardWalk } from '../assets/js/upnext.js';
+import { upNext, onwardWalk, nextPlanned } from '../assets/js/upnext.js';
 import { arrivalExtra, lunchConfig, compareOptions } from '../assets/js/planner.js';
 
 const log = typeof print === 'function' && typeof window === 'undefined' ? print : console.log;
@@ -726,6 +726,20 @@ test("onwardWalk: the venue matrix for known rooms, 0 for the same room or onlin
   eq(onwardWalk(W2, { label: 'Online', building: 'O', floor: null, known: true }, DEFAULT_WALK), 0);
   eq([onwardWalk(W2, zTest, DEFAULT_WALK), onwardWalk(zTest, W2, DEFAULT_WALK), onwardWalk(W2, null, DEFAULT_WALK)], [null, null, null], 'never the matrix\'s unknown guess');
   eq(walkMinutes(W2, zTest, DEFAULT_WALK), DEFAULT_WALK.unknown, 'which the raw matrix would have given');
+  const noPair = { ...DEFAULT_WALK, pairs: { ...DEFAULT_WALK.pairs } };
+  delete noPair.pairs['S|W'];
+  eq([onwardWalk(W2, S1, noPair), walkMinutes(W2, S1, noPair), onwardWalk(W2, W3, noPair)], [null, DEFAULT_WALK.unknown, DEFAULT_WALK.diffFloor],
+    'two known buildings without a pair in the matrix: null, where the matrix would have guessed; the same building still works');
+});
+test('nextPlanned: the first planned session after now, skipping lunch and blocked time', () => {
+  const now = H(11);
+  const lunch = { key: 'lunch', pseudo: 'lunch', startMin: H(11.5), endMin: H(12) };
+  const block = { key: 'block:1', pseudo: 'block', startMin: H(12), endMin: H(12.5), locked: true };
+  const later = item(H(13), H(13.75), S1, { code: 'LATER' }), sooner = item(H(12.5), H(13), W2, { code: 'SOONER' }), running = item(H(10.5), H(11.5), W2, { code: 'NOW' });
+  eq(nextPlanned([running, lunch, block, later, sooner], now)?.code, 'SOONER');
+  eq(nextPlanned([running, lunch, block], now), null, 'only lunch and a block ahead: nothing to walk on to');
+  eq(nextPlanned([], now), null);
+  eq(nextPlanned(null, now), null);
 });
 
 test('online-only, other-day and ended sessions are not listed', () => {
