@@ -3,6 +3,13 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-11-09T12:43:15Z · https://catalog.awsevents.com/api/sessions
+
+Added 0 · removed 0 · changed 1
+
+**Changed**
+- `AIM115-S` When the Lights Flicker: Engineer Minimum Viable Enterprises for Sovereign Resilience — title: Agentic AI Control Plane on AWS: govern agents at enterpr… → When the Lights Flicker: Engineer Minimum Viable Enterpri…; desc
+
 ## 2026-11-09T00:51:29Z · https://catalog.awsevents.com/api/sessions
 
 Added 0 · removed 0 · changed 34

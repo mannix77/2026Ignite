@@ -41,6 +41,7 @@ One token per session, joined by `~`. A token is:
 - `sSCORE` (optional): the person's own score, 0 to 100 with at most one decimal (`s87.5`). It ranks sessions within a rating. A score above 100 is dropped and the rating kept.
 - `w` (optional): watch the recording later instead of attending.
 - `!RUN` (optional): lock this run, using the `code` of the run to attend (the same code, or one from `repeats`).
+- `*RUN` (optional, instead of `!RUN`): the same choice made while the conference's schedule was only simulated (a preview). It is never applied as a lock once the real schedule is out. Use it only to keep a preview choice that the person's copied picks show as `*RUN`.
 
 Tokens the app can't read are skipped; the rest of the link still imports.
 
@@ -53,6 +54,7 @@ Tokens the app can't read are skipped; the rest of the link still imports.
 - `BRK201.2s100.5` Want; the score is dropped (above 100)
 - `BRK201.1w` Maybe, watch the recording later
 - `BRK201.3s92.5w!BRK201` Must, own score 92.5, watch later, run BRK201 locked
+- `BRK201.2*BRK201` Want, run BRK201 chosen on the preview schedule
 
 ### Ignored tokens
 
@@ -76,6 +78,10 @@ https://mannix77.github.io/2026Ignite/?conf=reinvent2026#/import/AIM314-R.3!AIM3
 - The person's notes are kept, and so is a seat they reserved (a reserved run stays locked).
 - The person sees "Import N picks from the link?" and must confirm; nothing changes if they cancel.
 
+## Starting from what the person already picked
+
+Ask the person to tap **Settings → Your data → Copy my picks for AI** and paste the text to you. It lists every rated session as `code | rating | when | title | details` (their own score, watch-later, the run they attend, their notes), then repeats the token format. Build your import link from that list: a session you leave out of the link keeps its rating. Notes travel only in this copy, never in links.
+
 ## Limits
 
 - Keep each link under about 2,000 characters (roughly 100 sessions). For more, split the tokens over several links and have the person open them one after another; each one merges.
@@ -84,7 +90,5 @@ https://mannix77.github.io/2026Ignite/?conf=reinvent2026#/import/AIM314-R.3!AIM3
 
 ## Coming soon
 
-- Reading the person's current picks: a "Copy my picks for AI" button that gives the person text to paste to you.
 - A link that sets the person's preferences (interests, goals) as well as ratings.
 
-Until then, ask the person which sessions they have already rated.
