@@ -157,9 +157,14 @@ class DeployRetryTests(unittest.TestCase):
 
     def test_the_report_job_still_sees_the_deploy_job_result(self):
         # A second failure fails the deploy job, which the report job turns into a production issue.
-        text = open(WORKFLOW, encoding="utf-8").read()
-        self.assertIn("needs: [sync, deploy]", text)
-        self.assertIn('DEPLOY: ${{ needs.deploy.result }}', text)
+        # Scoped to the report job and the one step that files the issue, so moving the mapping
+        # elsewhere in the file can't leave this passing.
+        with open(WORKFLOW, encoding="utf-8") as f:
+            report = f.read().split("\n  report:\n")[1]
+        self.assertIn("needs: [sync, deploy]", report.split("\n    steps:\n")[0])
+        step = report.split("- name: Open, update or close the production issue\n")[1].split("\n      - name:")[0]
+        env = step.split("        env:\n")[1].split("        run:")[0]
+        self.assertIn("DEPLOY: ${{ needs.deploy.result }}", env)
 
 
 if __name__ == "__main__":
