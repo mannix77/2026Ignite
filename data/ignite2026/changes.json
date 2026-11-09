@@ -1,6 +1,130 @@
 {
  "batches": [
   {
+   "at": "2026-11-09T08:23:40Z",
+   "milestones": [],
+   "added": [],
+   "removed": [],
+   "changed": [
+    {
+     "id": "1787856622951001Ew7y",
+     "inst": "1787856622951001Ew7y-1791588233205001C2bL",
+     "code": "BRK328",
+     "title": "Build a trusted device and app foundation for AI at scale",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1787856624031001EWH5",
+     "inst": "1787856624031001EWH5-1791588353204001CkJ1",
+     "code": "BRK335",
+     "title": "How Microsoft got its data ready for Copilot",
+     "f": {
+      "title": [
+       "Insights from Microsoft's journey to prepare its data for AI adoption",
+       "How Microsoft got its data ready for Copilot"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1787856626014001EdXu",
+     "inst": "1787856626014001EdXu-1791814914336001CbgA",
+     "code": "BRK348",
+     "title": "Microsoft Purview: From understanding sensitive data to protecting it",
+     "f": {
+      "title": [
+       "Microsoft Purview: Build the Trusted Data Foundation for AI",
+       "Microsoft Purview: From understanding sensitive data to protecting it"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1787856675132001E9jR",
+     "inst": "1787856675132001E9jR-1791588259787001CLdg",
+     "code": "LTG1248",
+     "title": "Snowflake and Microsoft Fabric: Open data, one copy",
+     "f": {
+      "start": [
+       "2026-11-19T17:50:00Z",
+       "2026-11-18T17:00:00Z"
+      ],
+      "end": [
+       "2026-11-19T18:05:00Z",
+       "2026-11-18T17:15:00Z"
+      ],
+      "room": [
+       "Moscone South | The Hub, Lightning Talk 9",
+       "Moscone South | The Hub, Lightning Talk 2"
+      ]
+     }
+    },
+    {
+     "id": "1787856680813001E6hI",
+     "inst": "1787856680813001E6hI-1791588251100001CVQx",
+     "code": "LTG1285",
+     "title": "Operationalize MCP with enterprise governance controls",
+     "f": {
+      "start": [
+       "2026-11-19T17:00:00Z",
+       "2026-11-19T19:00:00Z"
+      ],
+      "end": [
+       "2026-11-19T17:15:00Z",
+       "2026-11-19T19:15:00Z"
+      ],
+      "room": [
+       "Moscone South | The Hub, Lightning Talk 5",
+       "Moscone South | The Hub, Lightning Talk 7"
+      ]
+     }
+    },
+    {
+     "id": "1787856682543001Eckd",
+     "inst": "1787856682543001Eckd-1791588273617001CGMW",
+     "code": "LTG1296",
+     "title": "Reimagine agentic business processes with Logic Apps Automation",
+     "f": {
+      "start": [
+       "2026-11-19T19:00:00Z",
+       "2026-11-19T17:00:00Z"
+      ],
+      "end": [
+       "2026-11-19T19:15:00Z",
+       "2026-11-19T17:15:00Z"
+      ],
+      "room": [
+       "Moscone South | The Hub, Lightning Talk 7",
+       "Moscone South | The Hub, Lightning Talk 5"
+      ]
+     }
+    },
+    {
+     "id": "1787856706480001ET4P",
+     "inst": "1787856706480001ET4P-1791588183730001CaF4",
+     "code": "LTG1451",
+     "title": "From prompt to finished with Fabric data engineering agent",
+     "f": {
+      "start": [
+       "2026-11-18T17:00:00Z",
+       "2026-11-19T17:50:00Z"
+      ],
+      "end": [
+       "2026-11-18T17:15:00Z",
+       "2026-11-19T18:05:00Z"
+      ],
+      "room": [
+       "Moscone South | The Hub, Lightning Talk 2",
+       "Moscone South | The Hub, Lightning Talk 9"
+      ]
+     }
+    }
+   ],
+   "unknownRooms": []
+  },
+  {
    "at": "2026-11-09T07:19:51Z",
    "milestones": [],
    "added": [],
@@ -64678,167 +64802,6 @@
       "title": [
        "From pilot to production: Building agentic workflows in insurance",
        "Inside Aon’s contact center: Putting Microsoft AI to work"
-      ],
-      "desc": true
-     }
-    }
-   ]
-  },
-  {
-   "at": "2026-10-15T20:26:57Z",
-   "milestones": [],
-   "added": [
-    {
-     "id": "1787856873633001hfmt",
-     "inst": "1787856873633001hfmt-1791825019170001Cni5",
-     "code": "LAB680",
-     "title": "AI Agents Are Sending Signals. Make Access Respond.",
-     "repeat": true
-    },
-    {
-     "id": "1787856873633001hfmt",
-     "inst": "1787856873633001hfmt-1791825205502001CyoH",
-     "code": "LAB680",
-     "title": "AI Agents Are Sending Signals. Make Access Respond.",
-     "repeat": true
-    },
-    {
-     "id": "1787856874461001hhwp",
-     "inst": "1787856874461001hhwp-1791915692751001bjDG",
-     "code": "LAB685",
-     "title": "Deploy Copilot with confidence: Find & protect exposed sensitive data",
-     "repeat": true
-    }
-   ],
-   "removed": [],
-   "changed": [
-    {
-     "id": "1787856607975001Ec0U",
-     "inst": "1787856607975001Ec0U-1791588156290001C5z7",
-     "code": "BRK230",
-     "title": "How customers are unlocking value & growth with Copilot",
-     "f": {
-      "speakers": [
-       [
-        "Matt Firestone"
-       ],
-       [
-        "Carl Wilson",
-        "Ken Meyer",
-        "Matt Firestone",
-        "Silvia Neumann"
-       ]
-      ]
-     }
-    },
-    {
-     "id": "1787856633494001EZjH",
-     "inst": "1787856633494001EZjH-1791588070182001CQou",
-     "code": "BRK396",
-     "title": "Raising the Bar for Windows Quality: Built with Your Feedback",
-     "f": {
-      "speakers": [
-       [
-        "Ian LeGrow",
-        "Marcus Ash"
-       ],
-       [
-        "Ian LeGrow"
-       ]
-      ]
-     }
-    },
-    {
-     "id": "1787856644921001EHQp",
-     "inst": "1787856644921001EHQp-1791814918034001CG4d",
-     "code": "BRK471",
-     "title": "AI for frontline workers: Guidance in the flow of work",
-     "f": {
-      "speakers": [
-       [
-        "Ben Woods",
-        "Chris Crowley",
-        "Jonathan Sobel",
-        "Parag Ladha"
-       ],
-       [
-        "Chris Crowley",
-        "Jonathan Sobel",
-        "Matt Marcotte",
-        "Parag Ladha"
-       ]
-      ]
-     }
-    },
-    {
-     "id": "1787856873633001hfmt",
-     "inst": "1787856873633001hfmt-1791588129150001C7V0",
-     "code": "LAB680",
-     "title": "AI Agents Are Sending Signals. Make Access Respond.",
-     "f": {
-      "room": [
-       "Moscone West | Level 2, Room 2011",
-       "Moscone West | Level 2, Room 2007"
-      ],
-      "level": [
-       400,
-       200
-      ]
-     }
-    },
-    {
-     "id": "1787856873633001hfmt",
-     "inst": "1787856873633001hfmt-1791825248614001CRY8",
-     "code": "LAB680",
-     "title": "AI Agents Are Sending Signals. Make Access Respond.",
-     "f": {
-      "level": [
-       400,
-       200
-      ]
-     }
-    },
-    {
-     "id": "1787856582905001EHwj",
-     "inst": "1787856582905001EHwj-1791588180877001CpU0",
-     "code": "THR904",
-     "title": "The AI-native operator: Building telecom’s next advantage",
-     "f": {
-      "speakers": [
-       [
-        "Derrick Buckley",
-        "Monica Hamilton"
-       ],
-       [
-        "Dave Lu",
-        "Derrick Buckley",
-        "Monica Hamilton"
-       ]
-      ]
-     }
-    },
-    {
-     "id": "1787856584566001ECtm",
-     "inst": "1787856584566001ECtm-1791588342148001C3OT",
-     "code": "THR915",
-     "title": "Transforming agent-to-agent trading at BNY",
-     "f": {
-      "title": [
-       "From pilot to production: Building agentic workflows in banking",
-       "Transforming agent-to-agent trading at BNY"
-      ],
-      "desc": true
-     }
-    },
-    {
-     "id": "1787856584719001EqrK",
-     "inst": "1787856584719001EqrK-1791588293549001CGwG",
-     "code": "THR916",
-     "title": "How Vanguard is transforming advisor productivity with data and AI",
-     "f": {
-      "title": [
-       "From pilot to production: Building capital markets agentic workflows",
-       "How Vanguard is transforming advisor productivity with data and AI"
       ],
       "desc": true
      }
