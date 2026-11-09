@@ -6,6 +6,15 @@ on:
     - cron: "13,43 * 20-31 10 *"    # twice an hour from Oct 20 (the schedule is expected ~Oct 26-30)
     - cron: "13,43 * 1-21 11 *"     # twice an hour through the event (Nov 17-20)
   workflow_dispatch:
+    inputs:
+      # One tap from the GitHub app when a guard refused a catalog that is real (the production
+      # issue carries the diagnosis): partial = fewer sessions (above the 50-session floor);
+      # withdrawal = dates or rooms gone. Applies to this run only and is logged in changes.json.
+      accept:
+        description: "Accept a refused catalog for this run: partial (fewer sessions) or withdrawal (dates/rooms gone)"
+        type: choice
+        options: [none, partial, withdrawal]
+        default: none
   push:
     branches: [main]
     paths-ignore: ["data/**"]
@@ -35,6 +44,7 @@ jobs:
       outcome: ${{ steps.sync.outcome }}
       notify: ${{ steps.notify.outcome }}
       error: ${{ steps.why.outputs.error }}
+      details: ${{ steps.why.outputs.details }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
@@ -65,12 +75,19 @@ jobs:
       - name: Sync the catalog
         id: sync
         # A failed fetch keeps the last good data; the app shows the error from data/meta.json,
-        # and the "report" job below fails the run so GitHub notifies you.
+        # and the "report" job below fails the run so GitHub notifies you. A refusal writes its
+        # diagnosis to refusal.md for that issue. ACCEPT is the dispatch input (empty on a schedule).
         continue-on-error: true
         timeout-minutes: 6
-        run: python3 scripts/sync.py --summary-out "$RUNNER_TEMP/summary.md"
+        env:
+          ACCEPT: ${{ inputs.accept }}
+        run: |
+          set -- --summary-out "$RUNNER_TEMP/summary.md" --refusal-out "$RUNNER_TEMP/refusal.md"
+          if [ -n "$ACCEPT" ] && [ "$ACCEPT" != none ]; then set -- "$@" --accept "$ACCEPT"; fi
+          python3 scripts/sync.py "$@"
 
-      # The reason a failed sync gives (meta.json isn't committed), for the production issue.
+      # The reason a failed sync gives (meta.json isn't committed) and its diagnosis (refusal.md,
+      # absent when the failure was not a guard), for the production issue.
       - name: Read why the sync failed
         id: why
         if: steps.sync.outcome == 'failure'
@@ -83,6 +100,12 @@ jobs:
               e = ""
           print("error=" + " ".join(str(e).split())[:1000])
           PY
+          {
+            echo "details<<__DETAILS__"
+            if [ -f "$RUNNER_TEMP/refusal.md" ]; then head -c 6000 "$RUNNER_TEMP/refusal.md"; fi
+            echo
+            echo "__DETAILS__"
+          } >> "$GITHUB_OUTPUT"
 
       # The summary is announced only after the catalog is pushed (specs/features/change-notices.feature):
       # it is queued in data/ignite2026/pending-summary.md, committed and pushed with the catalog,
@@ -255,14 +278,22 @@ jobs:
           NOTIFY: ${{ needs.sync.outputs.notify }}
           DEPLOY: ${{ needs.deploy.result }}
           ERROR: ${{ needs.sync.outputs.error }}
+          DETAILS: ${{ needs.sync.outputs.details }}
           WORKFLOW: ${{ github.workflow }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           set -o pipefail
+          # The sync's diagnosis of a refusal (DETAILS) goes on the issue; it is not part of the
+          # problem key, so a repeat with other examples updates the same issue.
           report() {
             printf '%s\n' "$3" > "$RUNNER_TEMP/problem.txt"
+            set -- "$1" "$2"
+            if [ -n "${DETAILS:-}" ]; then
+              printf '%s\n' "$DETAILS" > "$RUNNER_TEMP/details.txt"
+              set -- "$@" --details-file "$RUNNER_TEMP/details.txt"
+            fi
             python3 scripts/prod_issue.py report --workflow "$WORKFLOW" --kind "$1" --title "$2" \
-              --message-file "$RUNNER_TEMP/problem.txt" --run-url "$RUN_URL"
+              --message-file "$RUNNER_TEMP/problem.txt" --run-url "$RUN_URL" "${@:3}"
           }
           if [ "$SYNC_JOB" = "failure" ]; then
             report job-failed "The sync job failed" "A step of the sync job failed (tests, commit or site build); the site keeps the last deploy. See the run log for the failing step."

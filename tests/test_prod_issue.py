@@ -104,6 +104,37 @@ class ResolveTests(unittest.TestCase):
 
 
 class ProblemKeyTests(unittest.TestCase):
+    # specs/features/production-issues.feature, "The issue carries the diagnosis"
+    DIAG = "### Catalog refused: partial catalog\n- Sessions: 1817 → 953\n- Examples: `BRK101` Title (Room 2001)"
+    DIAG2 = "### Catalog refused: partial catalog\n- Sessions: 1817 → 951\n- Examples: `BRK202` Other (Room 3003)"
+
+    def test_should_put_the_diagnosis_in_the_issue_body(self):
+        gh = FakeGitHub()
+        p.report_problem(gh, IGNITE, "sync-refused", "T", REFUSED, RUN1, "2026-10-12T14:40Z", details=self.DIAG)
+        (issue,) = gh.issues.values()
+        self.assertEqual((REFUSED in issue["body"], "### Diagnosis" in issue["body"], "`BRK101` Title (Room 2001)" in issue["body"]), (True, True, True))
+
+    def test_should_refresh_the_diagnosis_on_a_repeat_without_opening_another_issue(self):
+        gh = FakeGitHub()
+        p.report_problem(gh, IGNITE, "sync-refused", "T", REFUSED, RUN1, "2026-10-12T14:40Z", details=self.DIAG)
+        result = p.report_problem(gh, IGNITE, "sync-refused", "T", REFUSED_AGAIN, RUN2, "2026-10-12T16:40Z", details=self.DIAG2)
+        (issue,) = gh.issues.values()
+        self.assertEqual((result, "`BRK202` Other (Room 3003)" in issue["body"], "`BRK101`" in issue["body"], "**Occurrences:** 2" in issue["body"]),
+                         ("updated", True, False, True))
+
+    def test_should_keep_the_old_diagnosis_when_a_repeat_brings_none(self):
+        gh = FakeGitHub()
+        p.report_problem(gh, IGNITE, "sync-refused", "T", REFUSED, RUN1, "2026-10-12T14:40Z", details=self.DIAG)
+        p.report_problem(gh, IGNITE, "sync-refused", "T", REFUSED_AGAIN, RUN2, "2026-10-12T16:40Z")
+        (issue,) = gh.issues.values()
+        self.assertEqual(("`BRK101`" in issue["body"], "**Occurrences:** 2" in issue["body"]), (True, True))
+
+    def test_should_write_no_diagnosis_section_without_details(self):
+        gh = FakeGitHub()
+        report(gh)
+        (issue,) = gh.issues.values()
+        self.assertNotIn("### Diagnosis", issue["body"])
+
     def test_should_treat_messages_that_differ_only_in_numbers_as_one_problem(self):
         self.assertEqual(p.problem_key("sync-refused", REFUSED), p.problem_key("sync-refused", REFUSED_AGAIN))
 
@@ -127,7 +158,10 @@ with open(sys.argv[0] + ".calls", "a", encoding="utf-8") as f:
     msg = ""
     if "--message-file" in args:
         msg = open(args[args.index("--message-file") + 1], encoding="utf-8").read().strip()
-    f.write(args[0] + " " + (args[args.index("--kind") + 1] if "--kind" in args else "-") + " | " + msg + "\\n")
+    details = ""
+    if "--details-file" in args:
+        details = " || details: " + open(args[args.index("--details-file") + 1], encoding="utf-8").read().strip()
+    f.write(args[0] + " " + (args[args.index("--kind") + 1] if "--kind" in args else "-") + " | " + msg + details + "\\n")
 print("opened" if args[0] == "report" else "closed nothing")
 '''
 
@@ -179,6 +213,17 @@ class WorkflowWiringTests(unittest.TestCase):
         calls, output = self.run_step("sync.yml", SYNC="failure", ERROR="catalog returned 953 sessions (previously 1817)")
         self.assertEqual((calls, output), (["report sync-refused | catalog returned 953 sessions (previously 1817) The site keeps the last good data."],
                                            "result=opened"))
+
+    def test_should_pass_the_refusal_diagnosis_to_the_ignite_issue(self):
+        calls, output = self.run_step("sync.yml", SYNC="failure", ERROR="catalog returned 953 sessions (previously 1817)",
+                                      DETAILS="### Catalog refused: partial catalog · Sessions: 1817 → 953")
+        self.assertEqual(calls, ["report sync-refused | catalog returned 953 sessions (previously 1817) The site keeps the last good data."
+                                 " || details: ### Catalog refused: partial catalog · Sessions: 1817 → 953"])
+        self.assertEqual(output, "result=opened")
+
+    def test_should_pass_no_diagnosis_when_the_sync_gave_none(self):
+        calls, _ = self.run_step("sync.yml", SYNC="failure", ERROR="catalog returned 953 sessions (previously 1817)", DETAILS="")
+        self.assertNotIn("details:", calls[0])
 
     def test_should_report_a_failed_ignite_job_before_anything_else(self):
         calls, output = self.run_step("sync.yml", SYNC_JOB="failure", SYNC="", DEPLOY="skipped")
