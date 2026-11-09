@@ -64,3 +64,15 @@ Feature: Keeping picks safe on the device
       And the other tab saved without touching that session
       When the two tabs reconcile
       Then the rating stays cleared
+
+    Scenario: This tab released a lock the other tab left alone
+      Given Minesh moved a session's lock to another run in this tab a moment ago
+      And the other tab saved without touching that session
+      When the two tabs reconcile
+      Then only the new run is locked
+
+    Scenario: This tab's rating could not be saved yet
+      Given Minesh rated a session while the device's storage was full
+      And another tab saved a rating for a different session
+      When the two tabs reconcile
+      Then both ratings are kept

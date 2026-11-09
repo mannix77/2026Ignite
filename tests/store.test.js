@@ -12,6 +12,7 @@ globalThis.window = { addEventListener: (type, fn) => { (pageEvents[type] ||= []
 globalThis.document = { visibilityState: 'visible', querySelector: () => null, addEventListener: (type, fn) => { (pageEvents[type] ||= []).push(fn); } };
 const fire = type => { for (const fn of pageEvents[type] || []) fn({}); };
 const store = await import('../assets/js/store.js');
+const { lockPicks, ratePicks } = await import('../assets/js/picks.js');
 
 let pass = 0, fail = 0;
 async function test(name, fn) {
@@ -589,6 +590,51 @@ await test('should simply adopt the other tab\'s save when nothing here is pendi
   await sleep(SAVE);
   otherTabSaves('tabs-idle', { S1: { p: 0, lock: null, note: '', at: T }, S9: { p: 1, lock: null, note: '', at: T } });
   eq([store.pick('S1').p, store.pick('S9').p], [0, 1], 'the other tab\'s save wins outright: nothing here was unsaved');
+});
+
+// lockPicks clears the group's other locks without giving those records a new time.
+await test('should keep a lock released here when the other tab left that session alone', async () => {
+  localStorage.removeItem(keyOf('tabs-lock'));
+  store.load('tabs-lock');
+  const A1 = { p: 3, lock: 'RUN1', note: '', at: T + 1 }, A2 = { p: 3, lock: null, note: '', at: T + 1 };
+  store.mutatePicks(p => { p.A1 = { ...A1 }; p.A2 = { ...A2 }; });
+  await sleep(SAVE);                                               // RUN1 locked on A1, saved
+  store.mutatePicks(p => lockPicks(p, { gp: { ids: ['A1', 'A2'], holder: 'A2', p: 3 }, meta: {}, instKey: 'RUN2' }, T + 60));
+  eq([store.pick('A1').lock, store.pick('A1').at, store.pick('A2').lock], [null, T + 1, 'RUN2'], 'precondition: A1 lost its lock but kept its time');
+  otherTabSaves('tabs-lock', { A1, A2, S9: { p: 1, lock: null, note: '', at: T + 70 } });
+  eq([store.pick('A1').lock, store.pick('A2').lock, store.pick('S9')?.p], [null, 'RUN2', 1], 'only the new run is locked, and the other tab\'s pick is in');
+  await sleep(SAVE);
+  const saved = savedPicks('tabs-lock');
+  eq([saved.A1.lock, saved.A2.lock, saved.S9?.p], [null, 'RUN2', 1], 'and saved that way');
+});
+
+// The app writes picks in its own shape (ratePicks: {g, code, p, at}, no lock or note); the
+// other tab's copy comes back sanitized. "The other tab left it alone" must still hold.
+await test('should keep a cleared rating cleared when it was rated through the app\'s own write', async () => {
+  localStorage.removeItem(keyOf('tabs-shape'));
+  store.load('tabs-shape');
+  store.mutatePicks(p => ratePicks(p, ['S1'], { g: 'G1', code: 'K1' }, 2, T + 1));
+  await sleep(SAVE);
+  eq(Object.keys(savedPicks('tabs-shape').S1), ['note', 'g', 'code', 'p', 'at'], 'precondition: saved in the app\'s shape (no lock), not the sanitized one');
+  store.mutatePicks(p => { delete p.S1; });
+  otherTabSaves('tabs-shape', { ...savedPicks('tabs-shape'), S9: { p: 1, lock: null, note: '', at: T + 70 } });
+  eq([store.pick('S1') ?? null, store.pick('S9')?.p], [null, 1]);
+  await sleep(SAVE);
+  eq([savedPicks('tabs-shape').S1 ?? null, savedPicks('tabs-shape').S9?.p], [null, 1], 'and saved that way');
+});
+
+await test('should keep a rating that failed to save when another tab saves', async () => {
+  localStorage.removeItem(keyOf('tabs-failed'));
+  store.load('tabs-failed');
+  globalThis.__quota = 10;
+  store.mutatePicks(p => { p.S1 = { p: 3, lock: null, note: '', at: T + 10 }; });
+  await sleep(SAVE);
+  globalThis.__quota = null;
+  eq([store.saveFailing(), localStorage.getItem(keyOf('tabs-failed'))], [true, null], 'precondition: the save failed and nothing is pending');
+  otherTabSaves('tabs-failed', { S9: { p: 1, lock: null, note: '', at: T + 20 } });
+  eq([store.pick('S1')?.p, store.pick('S9')?.p], [3, 1]);
+  await sleep(SAVE);
+  eq([savedPicks('tabs-failed').S1?.p, savedPicks('tabs-failed').S9?.p, store.saveFailing()], [3, 1, false], 'and both saved once storage allows it');
 });
 
 // ---- a picks link sets the session's choice across all its runs (restoring-picks.feature; issue #130)

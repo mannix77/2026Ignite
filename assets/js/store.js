@@ -60,10 +60,11 @@ function merge(base, extra) {
 
 let state = blank();
 let cachedSettings = null;
-// The picks as they were last read from or written to storage: what an unsaved change is measured
-// against when another tab's save arrives (#75).
+// The picks as they were last read from or written to storage, in the shape another tab's save is
+// read back in (sanitized): what an unsaved change is measured against when that save arrives (#75).
 let savedPicks = {};
-const snapshotPicks = () => { savedPicks = JSON.parse(JSON.stringify(state.picks)); };
+const canonical = p => JSON.stringify(sanitizePick(p, 0));
+const snapshotPicks = () => { savedPicks = Object.fromEntries(Object.entries(state.picks).map(([id, p]) => [id, canonical(p)])); };
 let conferenceDefaults = {};
 const listeners = new Set();
 let saveTimer = null;
@@ -152,28 +153,29 @@ if (typeof document !== 'undefined' && document.addEventListener) {
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') flushPending(); });
 }
 
-// The picks this tab changed since its last save: id -> { mine (null = cleared here), base }.
+// The picks this tab changed since its last save: id -> { mine (null = cleared here), base (canonical text) }.
 function unsavedPicks() {
   const out = {};
   for (const id of new Set([...Object.keys(state.picks), ...Object.keys(savedPicks)])) {
-    const mine = state.picks[id] ?? null, base = savedPicks[id] ?? null;
-    if (JSON.stringify(mine) !== JSON.stringify(base)) out[id] = { mine, base };
+    const mine = state.picks[id] ?? null, base = savedPicks[id] ?? canonical(null);
+    if (canonical(mine) !== base) out[id] = { mine, base };
   }
   return out;
 }
 
-// After adopting another tab's save, put back what this tab changed and had not saved yet: a
-// pick rated here wins when it is newer than the other tab's (the same rule a merged backup
-// uses); a pick cleared here stays cleared unless the other tab changed it too. Returns
-// whether anything was put back.
+// After adopting another tab's save, put back what this tab changed and had not saved yet. A
+// pick the other tab left alone takes this tab's change outright, even one with no new time
+// (lockPicks releases a group's other locks without one). A pick both tabs changed goes to the
+// newer (the same rule a merged backup uses), and a pick cleared here that the other tab changed
+// keeps their version. Returns whether anything was put back.
 function reapply(unsaved) {
   let changed = false;
   for (const [id, { mine, base }] of Object.entries(unsaved)) {
     const theirs = state.picks[id] ?? null;
-    if (mine) {
-      if (!theirs || (mine.at || 0) > (theirs.at || 0)) { state.picks[id] = mine; changed = true; }
-    } else if (theirs && JSON.stringify(theirs) === JSON.stringify(base)) {
-      delete state.picks[id];
+    const untouched = canonical(theirs) === base;
+    if (mine ? untouched || !theirs || (mine.at || 0) > (theirs.at || 0) : untouched && theirs) {
+      if (mine) state.picks[id] = mine;
+      else delete state.picks[id];
       changed = true;
     }
   }
@@ -185,7 +187,7 @@ function reapply(unsaved) {
 if (typeof window !== 'undefined') {
   window.addEventListener('storage', e => {
     if (e.key !== KEY || e.newValue == null) return;
-    const unsaved = saveTimer ? unsavedPicks() : {};
+    const unsaved = unsavedPicks();   // pending, or failed to save (storage full); empty when all saved
     clearTimeout(saveTimer);
     saveTimer = null;
     load(namespace());
