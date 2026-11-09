@@ -488,6 +488,19 @@ await test('should show seats left in the detail even when the capacity is missi
   eq(seatsDetail({}), '');
 });
 
+// A reserved seat belongs to one run; the seat file is keyed by session, so the UI is told
+// whether this run holds it (true), another run does (false), or nothing is known (undefined).
+await test('should say the seat is held only on the run that holds it, and point the other runs elsewhere', () => {
+  const held = { availability: 'reserved', capacity: 64 };
+  eq(seatsDetail(held, true), 'You hold a reserved seat · 64 seats');
+  eq(seatsDetail(held, false), 'Your reserved seat is in another run of this session · 64 seats');
+  eq(seatsDetail(held), 'You hold a reserved seat · 64 seats', 'with no pick to go by, the exported status stands');
+  eq([seatsDetail({ availability: 'reserve_a_seat' }, false), seatsDetail({ availability: 'session_full' }, true)],
+    ['Seats to reserve', 'Full: reservations are gone; a walk-up line forms before the start (arrive 15 min early)'], 'other statuses ignore the flag');
+  eq(seatsDetail(held, 'lost'), 'Your reserved seat was in a run no longer in the catalog · 64 seats', 'the reserved run left the catalog');
+  eq(seatsDetail({ availability: 'reserve_a_seat' }, 'lost'), 'Seats to reserve');
+});
+
 await test('should leave a catalog without a seat file exactly as it is', () => {
   const a = seatModel(null).sessions.map(x => [x.id, x.rsvp, x.availability, x.capacity]);
   const b = seatModel({ kind: 'seats', seats: {} }).sessions.map(x => [x.id, x.rsvp, x.availability, x.capacity]);

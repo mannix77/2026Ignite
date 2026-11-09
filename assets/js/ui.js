@@ -252,11 +252,16 @@ const SEAT_TEXT = {
 };
 
 // The "Seats" row of the session detail: the availability, then capacity and seats left, each shown
-// when it is known (seats left needs no capacity).
-export function seatsDetail(s) {
+// when it is known (seats left needs no capacity). The seat file is keyed by session while a
+// reservation belongs to one run, so `held` says whether this run holds it (true), another run
+// of the session does (false), the reserved run has left the catalog ('lost'), or there is no
+// pick to go by (undefined: the exported status stands).
+export function seatsDetail(s, held) {
   const t = s.availability && Object.hasOwn(SEAT_TEXT, s.availability) ? SEAT_TEXT[s.availability] : null;
   if (t == null) return '';
-  const base = typeof t === 'function' ? t(s.fewSeatsLeft) : t;
+  const base = s.availability === 'reserved' && held === false ? 'Your reserved seat is in another run of this session'
+    : s.availability === 'reserved' && held === 'lost' ? 'Your reserved seat was in a run no longer in the catalog'
+    : typeof t === 'function' ? t(s.fewSeatsLeft) : t;
   const cap = Number.isInteger(s.capacity) ? `${s.capacity} seats` : '';
   const left = Number.isInteger(s.seatsRemaining) ? `${s.seatsRemaining} left at export` : '';
   const extra = [cap, left].filter(Boolean).join(', ');

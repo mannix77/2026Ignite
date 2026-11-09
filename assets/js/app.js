@@ -140,11 +140,15 @@ function groupPick(g) {
   const keys = new Set((app.model.byGroup.get(g) || []).map(s => s.key));
   const lockRec = byAt.find(r => r.lock && !(official && r.lockMode === 'preview'));
   const reserved = byAt.map(r => r.reserved).find(k => k && keys.has(k)) || null;
+  // A reservation whose run has left the catalog: not a lock on anything, but the detail view
+  // must not let another run claim the seat (#115).
+  const reservedLost = reserved ? null : byAt.map(r => r.reserved).find(Boolean) || null;
   const scored = byAt.find(r => Number.isFinite(r.score));
   return {
     p: latest.p ?? null,
     lock: (lockRec && keys.has(lockRec.lock) ? lockRec.lock : null) || reserved,
     reserved,
+    reservedLost,
     score: scored ? scored.score : null,
     mode: latest.mode === 'watch' ? 'watch' : null,
     note: recs.map(r => r.note).filter(Boolean).join('\n\n'),
@@ -1777,6 +1781,11 @@ function renderDetail(s) {
   const sg = suggester();
   const sugg = p == null && sg.ready ? sg.score(s) : null;
   const sp = s.speakers || [];
+  // The seat file is keyed by session; the reservation belongs to one run (#115). A reserved
+  // run that has left the catalog must not let another run claim the seat.
+  const heldHere = gp?.reserved ? gp.reserved === s.key : gp?.reservedLost ? 'lost' : undefined;
+  const heldRun = heldHere === false ? app.model.byKey.get(gp.reserved) : null;
+  const seats = seatsDetail(s, heldHere);
   const runRow = o => {
     const locked = gp?.lock === o.key, reserved = gp?.reserved === o.key;
     const btns = [];
@@ -1797,8 +1806,8 @@ function renderDetail(s) {
         <dt>When</dt><dd>${esc(whenText(s))}</dd>
         <dt>Where</dt><dd>${s.onlineOnly ? 'Online' : `${bldgChip(s.loc)} ${esc(s.roomLabel)} ${mapChip(venueMapUrl(s, app.conf))} ${occupancyChip(occupancyOf(app.snapshot?.occupancy, s.room))}`}</dd>
         <dt>Recording</dt><dd>${s.recorded === true ? 'Will be recorded: you can watch it later' : s.recorded === false ? '<b>Not recorded</b>: in person only' : 'Unknown'}</dd>
-        ${s.rsvp ? `<dt>Reservation</dt><dd><b>Required</b>, seats are limited${typeof s.rsvp === 'string' ? `. Opens ${esc(rsvpOpensText(s.rsvp) || String(s.rsvp))} on ${esc(app.conf.siteName)}` : ''}${gp?.reserved ? '. <b>You reserved a seat.</b>' : ''}</dd>` : ''}
-        ${seatsDetail(s) ? `<dt>Seats</dt><dd>${esc(seatsDetail(s))}</dd>` : ''}
+        ${s.rsvp ? `<dt>Reservation</dt><dd><b>Required</b>, seats are limited${typeof s.rsvp === 'string' ? `. Opens ${esc(rsvpOpensText(s.rsvp) || String(s.rsvp))} on ${esc(app.conf.siteName)}` : ''}${heldHere === true ? '. <b>You reserved a seat.</b>' : heldHere === false ? `. Your reserved seat is in the run on ${esc(heldRun ? whenText(heldRun) : 'another day')}.` : heldHere === 'lost' ? '. Your reserved seat was in a run no longer in the catalog.' : ''}</dd>` : ''}
+        ${seats ? `<dt>Seats</dt><dd>${esc(seats)}</dd>` : ''}
         <dt>Format</dt><dd>${esc((s.delivery || []).join(', ') || '—')}${s.remote ? ' · remote viewing rooms available' : ''}</dd>
         ${s.audience?.length ? `<dt>${app.conf.id === 'gartner2026' ? 'Program' : 'Audience'}</dt><dd>${esc(s.audience.join(', '))}</dd>` : ''}
         ${s.topics?.length ? `<dt>Topics</dt><dd>${esc(s.topics.join(', '))}</dd>` : ''}
