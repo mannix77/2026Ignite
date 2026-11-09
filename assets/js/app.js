@@ -1991,10 +1991,17 @@ function importShare(str) {
   if (app.model.mode === 'official') for (const p of Object.values(parsed)) if (p.lockMode === 'preview') { p.lock = null; delete p.lockMode; }
   const n = Object.keys(parsed).length;
   if (!n) { toast(`That link had no picks this catalog knows${skipped ? ` (${skipped})` : ''}`); return; }
-  const pv = store.previewShared(parsed);
+  // The other saved records of each session's repeat group: the link's choice replaces their
+  // locks too (a reserved seat stays), or an old run would stay locked (#130).
+  const siblings = {};
+  for (const id of Object.keys(parsed)) {
+    const g = sessionById(id)?.group;
+    siblings[id] = g ? (app.picks.byGroup.get(g) || []).map(r => r.id).filter(x => x !== id) : [];
+  }
+  const pv = store.previewShared(parsed, siblings);
   if (!pv.added.length && !pv.changed.length) { toast(`All ${n} picks in that link are already here${skipped ? `. ${skipped}` : ''}`); return; }
   showImportPreview({ title: 'Picks from a link', pv, warn: skipped, note: 'Only the sessions in the link change. Your notes and reserved seats stay.',
-    apply: () => { store.applyShared(parsed); toast(`Applied ${pv.added.length + pv.changed.length} picks from the link`); } });
+    apply: () => { store.applyShared(parsed, siblings); toast(`Applied ${pv.added.length + pv.changed.length} picks from the link`); } });
 }
 
 // ---------------------------------------------------------------- import preview

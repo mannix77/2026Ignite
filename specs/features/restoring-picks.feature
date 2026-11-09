@@ -46,3 +46,29 @@ Feature: Seeing what a backup or link will change before it is applied
       When Gino opens the link
       Then he sees what the link will change
       And his picks are unchanged until he applies it
+
+  Rule: A picks link sets the session's choice across all its runs
+
+    Scenario: A lock held by another run's record gives way
+      Given Minesh locked the Thursday run of a lab
+      And a picks link rates that lab Must without naming a run
+      When he applies the link
+      Then no run of the lab is locked
+
+    Scenario: A reserved seat stays
+      Given Minesh reserved a seat on the Thursday run of a lab
+      And a picks link rates that lab Must without naming a run
+      When he applies the link
+      Then his seat on the Thursday run is still reserved
+
+    Scenario: A preview choice next to a reserved seat stays a preview choice
+      Given Minesh has a reserved seat, with a different run chosen on the preview schedule
+      When he applies a picks link that only changes the lab's rating
+      Then the other run is still marked as a preview choice
+
+  Rule: A session Minesh added himself can be in a picks link
+
+    Scenario: An added session in a link
+      Given a picks link rating a session Minesh added to his plan
+      When he applies the link
+      Then the added session gets that rating

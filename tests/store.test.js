@@ -532,6 +532,48 @@ await test('should apply exactly the previewed changes from a picks link', async
   await sleep(SAVE);
 });
 
+// ---- a picks link sets the session's choice across all its runs (restoring-picks.feature; issue #130)
+// siblings: the other saved records of the same repeat group, by record id (app.js passes them).
+await test('should clear a lock held by another record of the same session, in the preview and when applied', async () => {
+  seed('link-group', { A1: { p: 3, lock: 'RUN2', note: 'mine', at: 10 }, A2: { p: 2, lock: null, note: '', at: 10 } });
+  const link = { A2: { p: 3, code: 'LAB1', at: 20 } }, siblings = { A2: ['A1'] };
+  const pv = store.previewShared(link, siblings);
+  eq([pv.changed.map(c => c.id).sort(), store.pick('A1').lock], [['A1', 'A2'], 'RUN2'], 'previewed, nothing changed yet');
+  store.applyShared(link, siblings);
+  eq([store.pick('A1').lock, store.pick('A1').note, store.pick('A1').p, store.pick('A2').p, store.pick('A2').lock], [null, 'mine', 3, 3, null]);
+  await sleep(SAVE);
+});
+await test('should keep a reserved seat held by another record of the session', async () => {
+  seed('link-group-seat', { A1: { p: 3, lock: 'RUN2', reserved: 'RUN2', note: '', at: 10 }, A2: { p: 2, lock: null, note: '', at: 10 } });
+  store.applyShared({ A2: { p: 3, code: 'LAB1', at: 20 } }, { A2: ['A1'] });
+  eq([store.pick('A1').lock, store.pick('A1').reserved, store.pick('A2').p], ['RUN2', 'RUN2', 3]);
+  await sleep(SAVE);
+});
+await test('should leave other sessions\' locks alone, and work as before without siblings', async () => {
+  seed('link-group-none', { A1: { p: 3, lock: 'RUN2', note: '', at: 10 }, B1: { p: 3, lock: 'B1', note: '', at: 10 } });
+  store.applyShared({ A2: { p: 3, code: 'LAB1', at: 20 } });
+  eq([store.pick('A1').lock, store.pick('B1').lock, store.pick('A2').p], ['RUN2', 'B1', 3]);
+  await sleep(SAVE);
+});
+await test('should keep a preview marker on a lock kept beside a reserved seat', async () => {
+  seed('link-preview-seat', { A1: { p: 2, lock: 'RUN3', lockMode: 'preview', reserved: 'RUN2', note: '', at: 10 } });
+  store.applyShared({ A1: { p: 3, code: 'LAB1', at: 20 } });
+  eq([store.pick('A1').p, store.pick('A1').lock, store.pick('A1').lockMode, store.pick('A1').reserved], [3, 'RUN3', 'preview', 'RUN2']);
+  seed('link-seat-only', { A1: { p: 2, lock: 'RUN2', reserved: 'RUN2', note: '', at: 10 } });
+  store.applyShared({ A1: { p: 3, code: 'LAB1', lock: 'RUN4', lockMode: 'preview', at: 20 } });
+  eq([store.pick('A1').lock, store.pick('A1').lockMode ?? null], ['RUN2', null], 'the reserved run itself is never a preview lock');
+  await sleep(SAVE);
+});
+await test('should read a session the person added (MY-…) in a picks link, and write it in one', () => {
+  const ids = { 'MY-mh5x2k3l': 'my-mh5x2k3l', BRK1: 'S1' };
+  eq(Object.keys(store.parseShare('MY-mh5x2k3l.2~BRK1.3', c => ids[c] || null, () => null)), ['my-mh5x2k3l', 'S1']);
+  store.load('share-custom');
+  store.mutatePicks(p => { p['my-mh5x2k3l'] = { p: 2, lock: null, note: '', at: 1 }; });
+  const link = store.shareString(id => (id === 'my-mh5x2k3l' ? 'MY-mh5x2k3l' : null), () => null);
+  eq([link, Object.keys(store.parseShare(link, c => ids[c] || null, () => null))], ['MY-mh5x2k3l.2', ['my-mh5x2k3l']]);
+  eq(Object.keys(store.parseShare('MY-.2~MY-a b.2~my-abc.2', c => c, () => null)), [], 'only MY- followed by the id characters');
+});
+
 await sleep(SAVE);
 console.log(`${pass} passed, ${fail} failed`);
 if (fail) process.exit(1);
