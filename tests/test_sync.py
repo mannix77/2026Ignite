@@ -468,12 +468,12 @@ class SyncDir:
             json.dump(obj, f)
         return path
 
-    def run_sync(self, raw, window=W25, settings=None):
+    def run_sync(self, raw, window=W25, settings=None, **more):
         args = types.SimpleNamespace(
             from_file=self.write("raw.json", raw), speakers_file=None,
             settings_file=self.write("settings.json", settings) if settings else None,
             event_window="%s:%s" % window, summary_out=os.path.join(self.tmp, "summary.md"),
-            data_dir=os.path.join(self.tmp, "data"))
+            data_dir=os.path.join(self.tmp, "data"), **more)
         return sync.run(args)
 
     def data(self, name):
@@ -996,6 +996,131 @@ class FeedShapeTests(SyncDir, unittest.TestCase):
             shapes = sync.field_shapes(raw)
             self.assertEqual(js_run("shapes_cli.js", raw), {"shapes": shapes, "problem": sync.shape_problem(shapes)})
         self.assertIn("2 of 20", sync.shape_problem(sync.field_shapes(self.odd_rooms(20, 2))))
+
+
+def placeholder_runs(n, start=0):
+    """n placeholder sessions: a zTest room and no time, as Ignite published before rooms were out."""
+    recs = catalog_of(n + start)[start:]
+    for r in recs:
+        r["location"] = "zTest%d" % start
+        r["startDateTime"] = r["endDateTime"] = None
+    return recs
+
+
+class RefusalTests(SyncDir, unittest.TestCase):
+    """A refused catalog is diagnosed, not just refused (specs/features/ignite-catalog-sync.feature,
+    "A refusal explains itself"): the guard, the counts, examples, and whether only placeholders went."""
+
+    def refusal_md(self):
+        with open(os.path.join(self.tmp, "refusal.md"), encoding="utf-8") as f:
+            return f.read()
+
+    def test_should_diagnose_a_partial_catalog_with_counts_and_examples(self):
+        self.run_sync(catalog_of(200))
+        code, changed = self.run_sync(catalog_of(90), refusal_out=os.path.join(self.tmp, "refusal.md"))
+        self.assertEqual((code, changed), (3, False))
+        r = self.data("meta.json")["refusal"]
+        self.assertEqual((r["guard"], r["before"], r["after"], r["missing"], r["emptied"], r["allPlaceholders"], len(r["examples"])),
+                         ("partial", {"sessions": 200, "runs": 200}, {"sessions": 90, "runs": 90}, 110, 0, False, 10))
+        self.assertEqual(r["examples"][0], {"code": "BRK090", "title": catalog_of(91)[90]["title"], "room": sync.text(sync.one(catalog_of(91)[90]["location"]))})
+        self.assertEqual(r["message"], self.data("meta.json")["error"])
+        md = self.refusal_md()
+        self.assertIn("### Catalog refused: partial catalog", md)
+        self.assertIn("Sessions: 200 → 90 (runs 200 → 90)", md)
+        self.assertIn("Missing sessions: 110", md)
+        self.assertIn("`BRK090`", md)
+        self.assertIn("…and 100 more", md)
+        self.assertIn("Was every missing session a placeholder: no", md)
+        self.assertIn("`accept: partial`", md)
+
+    def test_should_say_when_only_placeholders_went_missing(self):
+        self.run_sync(catalog_of(100) + placeholder_runs(100, 100))
+        self.assertEqual(self.run_sync(catalog_of(100))[0], 3)   # 100 of 200 sessions: refused
+        r = self.data("meta.json")["refusal"]
+        self.assertEqual((r["missing"], r["allPlaceholders"], r["examples"][0]["room"]), (100, True, "zTest100"))
+        self.assertIn("Was every missing session a placeholder: yes", sync.refusal_markdown(r))
+
+    def test_should_diagnose_withdrawn_rooms_with_the_sessions_that_lost_them(self):
+        self.run_sync(catalog_of(100))
+        bare = catalog_of(100)
+        for r in bare:
+            r["location"] = ""
+        self.assertEqual(self.run_sync(bare)[0], 3)
+        r = self.data("meta.json")["refusal"]
+        self.assertEqual((r["guard"], r["missing"], r["emptied"], len(r["examples"]), r["examples"][0]["code"], r["allPlaceholders"]),
+                         ("withdrawal", 0, 100, 10, "BRK000", None))
+        self.assertIn("### Catalog refused: dates or rooms withdrawn", sync.refusal_markdown(r))
+        self.assertIn("lost a room or time: 100", sync.refusal_markdown(r))
+        self.assertIn("`accept: withdrawal`", sync.refusal_markdown(r))
+
+    def test_should_diagnose_a_feed_whose_shape_changed(self):
+        self.run_sync(catalog_of(60))
+        odd = catalog_of(60)
+        for r in odd:
+            r["location"] = {"id": 7}
+        self.assertEqual(self.run_sync(odd)[0], 3)
+        r = self.data("meta.json")["refusal"]
+        self.assertEqual((r["guard"], r["before"]["sessions"], r["after"]), ("shape", 60, None))
+        self.assertIn("### Catalog refused: feed format changed", sync.refusal_markdown(r))
+        self.assertNotIn("accept:", sync.refusal_markdown(r), "a format change needs code, not acceptance")
+
+    def test_should_clear_the_refusal_when_the_next_run_succeeds(self):
+        self.run_sync(catalog_of(200))
+        self.run_sync(catalog_of(90))
+        self.assertIn("refusal", self.data("meta.json"))
+        self.run_sync(catalog_of(200))
+        self.assertEqual((self.data("meta.json")["ok"], "refusal" in self.data("meta.json")), (True, False))
+
+
+class AcceptTests(SyncDir, unittest.TestCase):
+    """The owner accepts a refused catalog for one run (specs/features/ignite-catalog-sync.feature,
+    "A refused catalog can be accepted from a phone")."""
+
+    def test_should_accept_a_partial_catalog_and_record_who_did(self):
+        self.run_sync(catalog_of(200))
+        self.assertEqual(self.run_sync(catalog_of(90))[0], 3)
+        code, changed = self.run_sync(catalog_of(90), accept=["partial"], accepted_by="minesh")
+        self.assertEqual((code, changed), (0, True))
+        self.assertEqual(len(self.data("sessions.json")["sessions"]), 90)
+        batch = self.data("changes.json")["batches"][0]
+        self.assertEqual((batch["accepted"]["guard"], batch["accepted"]["by"], batch["accepted"]["at"]),
+                         ("partial", "minesh", batch["at"]))
+        self.assertIn("catalog returned 90 sessions (previously 200)", batch["accepted"]["reason"])
+        self.assertEqual(self.data("meta.json")["accepted"], batch["accepted"])
+        with open(os.path.join(self.tmp, "summary.md"), encoding="utf-8") as f:
+            self.assertIn("Catalog accepted by hand (minesh): catalog returned 90 sessions (previously 200)", f.read())
+
+    def test_should_accept_for_one_run_only(self):
+        self.run_sync(catalog_of(200))
+        self.run_sync(catalog_of(90), accept=["partial"], accepted_by="minesh")
+        self.assertEqual(self.run_sync(catalog_of(40)), (3, False))   # below the 50 floor too
+        self.assertEqual(self.run_sync(catalog_of(52)), (3, False))   # 52 of 90: refused again without acceptance
+        self.assertEqual(len(self.data("sessions.json")["sessions"]), 90)
+
+    def test_should_keep_the_fifty_session_floor_even_when_accepting(self):
+        self.run_sync(catalog_of(200))
+        self.assertEqual(self.run_sync(catalog_of(40), accept=["partial"], accepted_by="minesh"), (3, False))
+        self.assertEqual(len(self.data("sessions.json")["sessions"]), 200)
+
+    def test_should_accept_withdrawn_rooms_the_same_way(self):
+        self.run_sync(catalog_of(100))
+        bare = catalog_of(100)
+        for r in bare:
+            r["location"] = ""
+        self.assertEqual(self.run_sync(bare)[0], 3)
+        self.assertEqual(self.run_sync(bare, accept=["withdrawal"], accepted_by="minesh")[0], 0)
+        self.assertEqual(self.data("changes.json")["batches"][0]["accepted"]["guard"], "withdrawal")
+
+    def test_should_not_let_one_acceptance_cover_the_other_guard(self):
+        self.run_sync(catalog_of(200))
+        self.assertEqual(self.run_sync(catalog_of(90), accept=["withdrawal"], accepted_by="minesh"), (3, False))
+        self.assertEqual(self.data("meta.json")["refusal"]["guard"], "partial")
+
+    def test_should_record_nothing_when_no_guard_tripped(self):
+        self.run_sync(catalog_of(200))
+        self.run_sync(catalog_of(201), accept=["partial"], accepted_by="minesh")   # nothing refused: one session added
+        self.assertNotIn("accepted", self.data("changes.json")["batches"][0])
+        self.assertNotIn("accepted", self.data("meta.json"))
 
 
 if __name__ == "__main__":

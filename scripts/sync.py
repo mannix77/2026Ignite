@@ -459,6 +459,9 @@ def code_span(label):
 
 def summary_markdown(batch, watch):
     lines = ["### 🚨 " + m for m in batch["milestones"]]
+    if batch.get("accepted"):
+        a = batch["accepted"]
+        lines.append("### ⚠️ Catalog accepted by hand (%s): %s" % (a["by"], a["reason"]))
     hit = [x for x in batch["added"] + batch["removed"] + batch["changed"] if x["code"] in watch]
     if hit:
         lines.append("**%d change(s) affect sessions on your watchlist:** %s"
@@ -652,6 +655,68 @@ def shape_problem(shapes, share=SHAPE_SHARE):
     return None
 
 
+GUARD_TITLES = {"partial": "partial catalog", "withdrawal": "dates or rooms withdrawn",
+                "shape": "feed format changed", "malformed": "malformed feed"}
+ACCEPTABLE = ("partial", "withdrawal")   # a format change needs code, not acceptance
+EXAMPLES = 10
+
+
+def _placeholder(r):
+    """A run that was never really published: a placeholder room and no time."""
+    return bool(r.get("roomTbd")) and not r.get("start")
+
+
+def refusal(guard, message, prev, cur=None):
+    """Why a catalog was refused, with what the guard saw: the counts before and after, the
+    sessions that went missing (or that lost a room or time), examples of them, and whether
+    every missing session was a placeholder. `cur` is None when the feed could not be read."""
+    prev = prev or []
+    by_id = {}
+    for r in prev:
+        by_id.setdefault(r["id"], []).append(r)
+    cur_ids = {r["id"] for r in (cur or [])}
+    missing = [sid for sid in by_id if sid not in cur_ids] if cur is not None else []
+    had = lambda runs, k: any(r.get(k) and not (k == "room" and r.get("roomTbd")) for r in runs)  # noqa: E731
+    cur_by_id = {}
+    for r in cur or []:
+        cur_by_id.setdefault(r["id"], []).append(r)
+    emptied = [sid for sid, runs in by_id.items() if sid in cur_by_id
+               and ((had(runs, "room") and not had(cur_by_id[sid], "room")) or (had(runs, "start") and not had(cur_by_id[sid], "start")))]
+    examples = [{"code": by_id[sid][0]["code"], "title": by_id[sid][0]["title"], "room": by_id[sid][0].get("room") or ""}
+                for sid in (missing or emptied)[:EXAMPLES]]
+    counts = lambda lst: {"sessions": len({r["id"] for r in lst}), "runs": len(lst)}  # noqa: E731
+    return {
+        "guard": guard, "message": message,
+        "before": counts(prev), "after": counts(cur) if cur is not None else None,
+        "missing": len(missing), "emptied": len(emptied), "examples": examples,
+        "allPlaceholders": all(all(_placeholder(r) for r in by_id[sid]) for sid in missing) if missing else None,
+    }
+
+
+def refusal_markdown(r):
+    """The diagnosis for the production issue (and the run log)."""
+    lines = ["### Catalog refused: %s" % GUARD_TITLES.get(r["guard"], r["guard"]), r["message"], ""]
+    b, a = r["before"], r.get("after")
+    if a:
+        lines.append("- Sessions: %d → %d (runs %d → %d)" % (b["sessions"], a["sessions"], b["runs"], a["runs"]))
+    else:
+        lines.append("- Sessions in the last good catalog: %d (runs %d); the feed could not be read" % (b["sessions"], b["runs"]))
+    lines.append("- Missing sessions: %d; sessions that lost a room or time: %d" % (r["missing"], r["emptied"]))
+    if r.get("allPlaceholders") is not None:
+        lines.append("- Was every missing session a placeholder: %s" % ("yes" if r["allPlaceholders"] else "no"))
+    if r["examples"]:
+        what = "missing" if r["missing"] else "emptied"
+        lines.append("- Examples (%s): " % what + "; ".join("`%s` %s%s" % (x["code"], x["title"], " (%s)" % x["room"] if x["room"] else "") for x in r["examples"]))
+        total = r["missing"] or r["emptied"]
+        if total > len(r["examples"]):
+            lines.append("- …and %d more" % (total - len(r["examples"])))
+    if r["guard"] in ACCEPTABLE:
+        lines.append("- If this is real, accept it from the Actions tab: run the workflow with `accept: %s`." % r["guard"])
+    else:
+        lines.append("- This needs a code change (the feed's shape, not its content, changed); acceptance does not apply.")
+    return "\n".join(lines) + "\n"
+
+
 def run(args):
     now = utcnow()
     data = os.path.abspath(args.data_dir) if args.data_dir else DATA
@@ -664,6 +729,17 @@ def run(args):
     changes = load(cpath, {"batches": []})
     meta = load(mpath, {})
     meta["lastChecked"] = iso(now)
+
+    # What the owner accepted for this run (--accept partial|withdrawal; --allow-withdrawal is the
+    # older spelling), who they are, and the diagnosis if a guard refuses after all.
+    accept = set(getattr(args, "accept", None) or [])
+    if getattr(args, "allow_withdrawal", False):
+        accept.add("withdrawal")
+    accepts = lambda kind: kind in accept  # noqa: E731
+    actor = getattr(args, "accepted_by", None) or os.environ.get("GITHUB_ACTOR") or "local"
+    accept_note = lambda kind, why: {"guard": kind, "by": actor, "at": iso(now), "reason": why}  # noqa: E731
+    accepted = None
+    refused = None
 
     try:
         if args.from_file:
@@ -693,6 +769,7 @@ def run(args):
         # A field we rely on in a shape we have never read is a format change, not many blanks.
         shape_why = shape_problem(field_shapes(raw))
         if shape_why:
+            refused = refusal("shape", shape_why, prev)
             raise RuntimeError(shape_why)
         # If the speaker feed is down, keep companies/titles from the last snapshot.
         by_name = {p[0]: p for r in prev for p in r.get("speakers") or [] if p[1] or p[2]}
@@ -700,18 +777,40 @@ def run(args):
         # Guard: an outage or partial index must not look like hundreds of cancellations.
         # It counts sessions, not runs: dropping a session's extra run (Ignite deleted its
         # placeholder runs once rooms were published) loses nothing. Same rule in live.js.
+        # The owner can accept a real shrink for one run (--accept partial); the 50-session
+        # floor stays, since that is a broken feed, not a smaller catalog.
         n_cur, n_prev = len({r["id"] for r in cur}), len({r["id"] for r in prev})
         if n_cur < 50 or (prev and n_cur < 0.6 * n_prev):
-            raise RuntimeError("catalog returned %d sessions (previously %d); keeping last good data"
-                               % (n_cur, n_prev))
-        why = withdrawal(session_stats(prev), session_stats(cur)) if prev and not getattr(args, "allow_withdrawal", False) else None
+            why = "catalog returned %d sessions (previously %d); keeping last good data" % (n_cur, n_prev)
+            if n_cur >= 50 and accepts("partial"):
+                accepted = accept_note("partial", why)
+            else:
+                refused = refusal("partial", why, prev, cur)
+                raise RuntimeError(why)
+        # The withdrawal guard asks whether the sessions still listed lost their rooms or times;
+        # after an accepted shrink it must not count the sessions that went with the shrink.
+        base = [r for r in prev if r["id"] in {x["id"] for x in cur}] if accepted else prev
+        why = withdrawal(session_stats(base), session_stats(cur)) if prev else None
         if why:
-            raise RuntimeError(why)
+            if accepts("withdrawal"):
+                accepted = accepted or accept_note("withdrawal", why)
+            else:
+                refused = refusal("withdrawal", why, prev, cur)
+                raise RuntimeError(why)
     except RuntimeError as e:
         meta.update({"ok": False, "error": str(e)})
+        meta.pop("accepted", None)
+        if refused:
+            meta["refusal"] = refused
+            if getattr(args, "refusal_out", None):
+                with open(args.refusal_out, "w", encoding="utf-8") as f:
+                    f.write(refusal_markdown(refused))
+        else:
+            meta.pop("refusal", None)
         dump(mpath, meta)
         print("sync failed:", e, file=sys.stderr)
         return 3, False
+    meta.pop("refusal", None)
 
     # Carry "firstSeen" forward so the app can badge new sessions.
     # Sessions present in the baseline snapshot keep firstSeen = None ("always there").
@@ -751,12 +850,18 @@ def run(args):
     if added or removed or changed or ms:
         batch = {"at": iso(now), "milestones": ms, "added": added, "removed": removed, "changed": changed,
                  "unknownRooms": unknown}
+        if accepted:
+            batch["accepted"] = accepted   # who took a guard's refusal on themselves, and why
         changes["batches"].insert(0, batch)
         del changes["batches"][MAX_BATCHES:]
         dump(cpath, changes)
     elif not os.path.exists(cpath):
         dump(cpath, changes)
     meta.update({"ok": True, "error": None, "stats": cs, "source": src})
+    if accepted:
+        meta["accepted"] = accepted
+    else:
+        meta.pop("accepted", None)
     if flags:
         meta["siteFlags"] = flags
     meta["lastLogged"] = changes["batches"][0]["at"] if changes["batches"] else None
@@ -798,7 +903,12 @@ def main():
     ap.add_argument("--summary-out", help="write a markdown change summary here when something changed")
     ap.add_argument("--data-dir", help="output directory (default: data/ignite2026/ in the repo)")
     ap.add_argument("--allow-withdrawal", action="store_true",
-                    help="accept a catalog in which more than half of the published dates/rooms disappeared")
+                    help="accept a catalog in which more than half of the published dates/rooms disappeared (same as --accept withdrawal)")
+    ap.add_argument("--accept", action="append", choices=list(ACCEPTABLE), default=[],
+                    help="take a guard's refusal on yourself for this run only: partial (fewer sessions, above the 50-session floor) "
+                         "or withdrawal (dates/rooms gone); logged in changes.json with who accepted it")
+    ap.add_argument("--accepted-by", help="who accepts (default: $GITHUB_ACTOR, else 'local')")
+    ap.add_argument("--refusal-out", help="write the diagnosis of a refused catalog here (markdown, for the production issue)")
     args = ap.parse_args()
     try:
         code, changed = run(args)
