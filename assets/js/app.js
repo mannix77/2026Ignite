@@ -11,7 +11,7 @@ import * as picks from './picks.js';
 import { createVenue, setVenue, walkMinutes, floorExtra, mergeWalk } from './venue.js';
 import { CONFERENCES, currentConferenceId, rememberConference, conferenceList } from './conferences.js';
 import { buildSuggester } from './suggest.js';
-import { createRanker, partition, profileConfig, profileGroups, GOALS, parsePrefsLink, applyPrefs, prefsSummary } from './profile.js';
+import { createRanker, partition, profileConfig, profileGroups, GOALS, parsePrefsLink, applyPrefs, prefsSummary, prefsLinkFrom } from './profile.js';
 import { storageStatus, backupReminder, backupAge } from './health.js';
 import { INSTANCE_LABEL, nsKey, guideUrl } from './instance.js';
 import { esc, attr, icon, bldgChip, recChip, rsvpChip, rsvpOpensText, seatsDetail, prioPill, scoreChip, whenText, prioControl, sessionCard, cardClass, toast, shareOrDownload, copyText, speakersLine, setHostCompany, unknownRoomsNote, venueMapUrl, mapChip, occupancyOf, occupancyChip, picksForAI } from './ui.js';
@@ -2155,7 +2155,12 @@ function onClick(e) {
     },
     'import-code': () => {
       const raw = ($('#import-code')?.value || '').trim();
-      if (raw.includes('#/prefs/')) { applyPrefsLink(raw.split('#/prefs/')[1]); return; }
+      const prefs = prefsLinkFrom(raw);
+      if (prefs?.conf && prefs.conf !== app.conf.id) {   // a link is for the conference it names
+        toast(`That link is for ${Object.hasOwn(CONFERENCES, prefs.conf) ? CONFERENCES[prefs.conf].name : prefs.conf}. Switch to it, then paste the link again.`);
+        return;
+      }
+      if (prefs) { applyPrefsLink(prefs.query); return; }
       importShare(safeDecode(raw.includes('#/import/') ? raw.split('#/import/')[1] : raw));
     },
     'favorites-import': () => { if (confirm('Import your workbook favorites? Ratings, scores and watch-later marks for those sessions will be set from the spreadsheet; your notes are kept.')) importFavorites(); },

@@ -36,3 +36,16 @@ Feature: Setting Triage preferences from a link
       When Minesh opens it
       Then the confirmation names the unknown role as left out
       And confirming sets the AI goal
+
+  Rule: A pasted link applies only to the conference it names
+
+    Scenario: Pasting another conference's preferences link
+      Given Minesh is planning Ignite
+      When Minesh pastes a preferences link made for Gartner
+      Then Minesh is told the link is for Gartner
+      And the Ignite preferences are unchanged
+
+    Scenario: Pasting a link without a conference
+      Given Minesh is planning Ignite
+      When Minesh pastes only the preferences part of a link
+      Then the preferences are read for Ignite

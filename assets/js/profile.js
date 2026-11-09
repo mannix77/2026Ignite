@@ -197,6 +197,17 @@ export function parsePrefsLink(str, { cfg, sessions = [] }) {
   return { set, groups, ignored };
 }
 
+// Pasted text holding a preferences link: the conference its ?conf= names (null when it names
+// none: the one being planned) and the part after #/prefs/. Null when it isn't one.
+export function prefsLinkFrom(text) {
+  const raw = String(text || '').trim();
+  const at = raw.indexOf('#/prefs/');
+  if (at < 0) return null;
+  let conf = null;
+  try { conf = new URL(raw).searchParams.get('conf') || null; } catch { /* just the #/prefs/ part */ }
+  return { conf, query: raw.slice(at + '#/prefs/'.length) };
+}
+
 // The profile after confirming a link: named fields replaced, group choices added.
 export function applyPrefs(profile, parsed) {
   const p = sanitizeProfile(profile);

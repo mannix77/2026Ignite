@@ -140,7 +140,7 @@ await test('should include preferences in a backup', () => {
 });
 
 // ---- a link that sets Triage preferences (specs/features/preferences-link.feature)
-const { parsePrefsLink, applyPrefs, prefsSummary } = await import('../assets/js/profile.js');
+const { parsePrefsLink, applyPrefs, prefsSummary, prefsLinkFrom } = await import('../assets/js/profile.js');
 const igniteCfg = profileConfig('ignite2026');
 const linkCatalog = [
   session({ topics: ['AI'], type: 'Breakout', level: 200 }),
@@ -169,6 +169,16 @@ await test('should leave out a level at a conference without levels, and keep it
 await test('should read a + or an encoded space as a space, and a later want or skip of the same group wins', () => {
   const r = parseLink('role=Enterprise+architect&want=type:Lab&skip=type:Lab');
   eq([r.set.roles, r.groups], [['Enterprise architect'], { 'type:Lab': -1 }]);
+});
+await test('should accept a shortlist size from 25 to 2000 and refuse one just outside', () => {
+  eq(['24', '25', '2000', '2001'].map(n => parseLink(`size=${n}`).set.size ?? null), [null, 25, 2000, null]);
+  eq(parseLink('size=24&size=2001').ignored, ['size: 24', 'size: 2001']);
+});
+await test('should take the conference and the preferences from pasted text', () => {
+  eq(prefsLinkFrom('https://mannix77.github.io/2026Ignite/?conf=gartner2026#/prefs/goal=ai&skip=type:Roundtables'), { conf: 'gartner2026', query: 'goal=ai&skip=type:Roundtables' });
+  eq(prefsLinkFrom('  #/prefs/goal=ai '), { conf: null, query: 'goal=ai' }, 'no conference named: the one being planned');
+  eq(prefsLinkFrom('https://x.test/?data=a#/prefs/goal=ai'), { conf: null, query: 'goal=ai' });
+  eq([prefsLinkFrom('https://x.test/?conf=ignite2026#/import/K1.3'), prefsLinkFrom(''), prefsLinkFrom('goal=ai')], [null, null, null], 'not a preferences link');
 });
 await test('should read nothing from an empty or malformed link', () => {
   for (const s of ['', '&&', '=', 'role=']) eq(parseLink(s), { set: {}, groups: {}, ignored: s === 'role=' ? ['role: (empty)'] : [] });
