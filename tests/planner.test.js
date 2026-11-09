@@ -291,6 +291,28 @@ test('optimizer matches brute force on 400 random small instances', () => {
   }
 });
 
+// ---- re-planning stays fast with hundreds of picks (issue #81)
+// Each optimize() call solves a day once per distinct set of allowed runs. The count is
+// deterministic, so a lost memo (every repeat-run trial re-solving its days) fails here
+// without any timing.
+test('the optimizer solves each distinct day subset once (exhaustive and heuristic branches)', () => {
+  let seed = 4242;
+  const rnd = k => { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return (seed >> 16) % k; };   // high bits: the low ones alternate
+  const build = groups => {
+    const items = [];
+    for (let g = 0; g < groups; g++) for (let r = 0; r < 2; r++) {
+      const start = H(9) + rnd(16) * 15;
+      items.push(item(start, start + [30, 45, 75][rnd(3)], [W2, W3, S1, N][rnd(4)], { id: `R${g}`, day: rnd(2) ? '2026-11-18' : '2026-11-19', priority: 1 + rnd(3) }));
+    }
+    for (let k = 0; k < 20; k++) { const start = H(9) + rnd(16) * 15; items.push(item(start, start + 45, [W2, S1][rnd(2)], { day: rnd(2) ? '2026-11-18' : '2026-11-19', priority: 1 + rnd(3) })); }
+    return items;
+  };
+  const ex = build(7), heu = build(12);
+  eq([new Set(ex.map(x => x.day)).size, new Set(heu.map(x => x.day)).size], [2, 2], 'both instances span two days');
+  const exhaustive = optimize(ex);    // 2^7 = 128 combinations: searched exhaustively
+  const heuristic = optimize(heu);    // 4096: coordinate descent
+  eq([exhaustive.stats.daySolves, heuristic.stats.daySolves], [128, 20]);   // 256 and 41 day solves are asked for; these are the distinct ones
+});
 test('large repeat sets (heuristic branch) stay valid and near-optimal', () => {
   let seed = 777;
   const rnd = k => { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed % k; };

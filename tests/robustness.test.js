@@ -6,7 +6,7 @@ const store = await import('../assets/js/store.js');
 const { buildModel, diffKnown, cacheUrl } = await import('../assets/js/data.js');
 const { CONFERENCES } = await import('../assets/js/conferences.js');
 const { createVenue } = await import('../assets/js/venue.js');
-const { compareOptions, DEFAULT_PLANNER } = await import('../assets/js/planner.js');
+const { compareOptions, optimize, lunchConfig, DEFAULT_PLANNER } = await import('../assets/js/planner.js');
 const { checkLive, liveWindow, changeCounts, countsLine, diff: liveDiff } = await import('../assets/js/live.js');
 
 let pass = 0, fail = 0;
@@ -123,6 +123,25 @@ await test('should run at most the cap of what-if plans for a large clash', () =
   }));
   const out = compareOptions(items, items, { ...DEFAULT_PLANNER, walk: venue.walk }, null, { cap: 4 });
   eq(out.outcomes.size, 4);
+});
+
+// ---- a 300-pick plan re-plans quickly (issue #81): the real re:Invent catalog, many repeat runs
+await test('should re-plan 300 picks on the real re:Invent catalog within a generous budget', async () => {
+  const { readFileSync } = await import('node:fs');
+  const conf = CONFERENCES.reinvent2026, v = createVenue(conf.venue);
+  const m = buildModel(JSON.parse(readFileSync(new URL('../data/reinvent2026/sessions.json', import.meta.url), 'utf8')), { overrides: {} }, conf.rsvp, conf, v, null);
+  const groups = [...m.byGroup.entries()].filter(([, runs]) => runs.some(s => s.day && s.inPerson));
+  const step = groups.length / 300, items = [];
+  for (let i = 0; i < 300; i++) for (const s of groups[Math.floor(i * step)][1]) {
+    if (s.day && s.endMin > s.startMin && !s.onlineOnly) items.push({ key: s.key, id: s.group, code: s.code, type: s.type, day: s.day, startMin: s.startMin, endMin: s.endMin, loc: s.loc, recorded: s.recorded, priority: 3 - (i % 3), locked: false });
+  }
+  const repeated = new Set(items.filter(x => items.filter(y => y.id === x.id).length > 1).map(x => x.id)).size;
+  eq(repeated > 50, true);   // the slow case: coordinate descent over many repeat runs
+  const t = performance.now();
+  const res = optimize(items, { ...DEFAULT_PLANNER, walk: v.walk, keynoteBuildings: v.keynoteBuildings }, lunchConfig(conf.lunch));
+  const ms = performance.now() - t;
+  eq(Object.values(res.plan).flat().length > 0, true);
+  if (!(ms < 1500)) throw new Error(`took ${Math.round(ms)} ms; about 40 ms on a desktop, 450 ms before #81`);
 });
 
 // ---- changes are counted per session; an extra run dropped or added is not a cancellation

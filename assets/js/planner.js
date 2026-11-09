@@ -140,56 +140,88 @@ function lunchBetween(a, b, t, L) {
 // Exact max-weight chain for one day, with at most one lunch taken in a gap that fits it
 // alongside the walking. Returns { chosen (time order), total, lunch: slot | null }.
 export function optimizeDay(items, ctx = DEFAULT_PLANNER, lunch = null) {
+  return solveDay(dayTable(items, ctx, lunch), null, ctx);
+}
+
+// A day's items sorted and weighed once, with each pair's transition (and the lunch that fits
+// between them) computed on first use. optimize() re-solves a day many times with different
+// repeat runs allowed; every solve of one call shares this work.
+function dayTable(items, ctx, lunch) {
   const xs = items.slice().sort((a, b) => a.startMin - b.startMin || a.endMin - b.endMin || cmpKey(a, b));
   const n = xs.length;
-  const wt = xs.map(x => weigh(x, ctx).score);
   const L = lunch;
-  const lw = L ? L.weight : 0;
-  // best[i][s]: best chain ending at i; s = 1 once lunch has been taken.
-  const best = xs.map(() => [NEG, NEG]);
-  const prev = xs.map(() => [null, null]);
-  for (let i = 0; i < n; i++) {
-    best[i][0] = wt[i];
-    prev[i][0] = { j: -1, s: 0, lunch: null };
-    const before = L ? lunchBefore(xs[i], L) : null;
-    if (before) { best[i][1] = wt[i] + lw; prev[i][1] = { j: -1, s: 0, lunch: before }; }
-    for (let j = 0; j < i; j++) {
-      if (xs[j].startMin >= xs[i].startMin) continue;
-      const t = transition(xs[j], xs[i], ctx);
-      if (t.status === 'conflict') continue;
-      const step = wt[i] - t.miss * ctx.weights.tightPerMin;
-      for (const s of [0, 1]) {
-        if (best[j][s] === NEG) continue;
-        const v = best[j][s] + step;
-        if (v > best[i][s]) { best[i][s] = v; prev[i][s] = { j, s, lunch: null }; }
-      }
-      if (L && best[j][0] !== NEG) {
-        const between = lunchBetween(xs[j], xs[i], t, L);
-        if (between) {
-          const v = best[j][0] + step + lw;
-          if (v > best[i][1]) { best[i][1] = v; prev[i][1] = { j, s: 0, lunch: between }; }
+  const pairs = new Map();
+  return {
+    xs, L,
+    wt: xs.map(x => weigh(x, ctx).score),
+    before: xs.map(x => (L ? lunchBefore(x, L) : null)),
+    after: xs.map(x => (L ? lunchAfter(x, L) : null)),
+    // { t, between } for j before i; null when they can't both be attended (or j starts no earlier).
+    pair(j, i) {
+      const k = j * n + i;
+      let v = pairs.get(k);
+      if (v === undefined) {
+        if (xs[j].startMin >= xs[i].startMin) v = null;
+        else {
+          const t = transition(xs[j], xs[i], ctx);
+          v = t.status === 'conflict' ? null : { t, between: L ? lunchBetween(xs[j], xs[i], t, L) : null };
         }
+        pairs.set(k, v);
+      }
+      return v;
+    },
+  };
+}
+
+// The best chain over the table's items where include[i] (all when include is null).
+function solveDay(tab, include, ctx) {
+  const { xs, wt, L } = tab;
+  const idx = [];
+  for (let i = 0; i < xs.length; i++) if (!include || include[i]) idx.push(i);
+  const m = idx.length;
+  const lw = L ? L.weight : 0;
+  // best[a][s]: best chain ending at idx[a]; s = 1 once lunch has been taken.
+  const best = idx.map(() => [NEG, NEG]);
+  const prev = idx.map(() => [null, null]);
+  for (let a = 0; a < m; a++) {
+    const i = idx[a];
+    best[a][0] = wt[i];
+    prev[a][0] = { b: -1, s: 0, lunch: null };
+    const before = tab.before[i];
+    if (before) { best[a][1] = wt[i] + lw; prev[a][1] = { b: -1, s: 0, lunch: before }; }
+    for (let b = 0; b < a; b++) {
+      const pr = tab.pair(idx[b], i);
+      if (!pr) continue;
+      const step = wt[i] - pr.t.miss * ctx.weights.tightPerMin;
+      for (const s of [0, 1]) {
+        if (best[b][s] === NEG) continue;
+        const v = best[b][s] + step;
+        if (v > best[a][s]) { best[a][s] = v; prev[a][s] = { b, s, lunch: null }; }
+      }
+      if (L && best[b][0] !== NEG && pr.between) {
+        const v = best[b][0] + step + lw;
+        if (v > best[a][1]) { best[a][1] = v; prev[a][1] = { b, s: 0, lunch: pr.between }; }
       }
     }
   }
   // The empty chain (just lunch) is a candidate too: a lone low-value pick that covers
   // the whole lunch window loses to eating when lunch is worth more.
-  let end = { i: -1, s: 0 }, endTotal = L ? lw : 0, endLunch = L ? slot(L.from, L) : null;
-  for (let i = 0; i < n; i++) {
+  let end = { a: -1, s: 0 }, endTotal = L ? lw : 0, endLunch = L ? slot(L.from, L) : null;
+  for (let a = 0; a < m; a++) {
     for (const s of [0, 1]) {
-      if (best[i][s] === NEG) continue;
-      let v = best[i][s], after = null;
-      if (s === 0 && L) { after = lunchAfter(xs[i], L); if (after) v += lw; }
-      if (v > endTotal) { end = { i, s }; endTotal = v; endLunch = after; }
+      if (best[a][s] === NEG) continue;
+      let v = best[a][s], after = null;
+      if (s === 0 && L) { after = tab.after[idx[a]]; if (after) v += lw; }
+      if (v > endTotal) { end = { a, s }; endTotal = v; endLunch = after; }
     }
   }
   const chosen = [];
   let lunchSlot = endLunch;
-  for (let cur = end; cur && cur.i >= 0;) {
-    chosen.unshift(xs[cur.i]);
-    const p = prev[cur.i][cur.s];
-    if (p.lunch) lunchSlot = p.lunch;
-    cur = p.j >= 0 ? { i: p.j, s: p.s } : null;
+  for (let cur = end; cur && cur.a >= 0;) {
+    chosen.unshift(xs[idx[cur.a]]);
+    const pv = prev[cur.a][cur.s];
+    if (pv.lunch) lunchSlot = pv.lunch;
+    cur = pv.b >= 0 ? { a: pv.b, s: pv.s } : null;
   }
   return { chosen, total: endTotal, lunch: lunchSlot };
 }
@@ -221,7 +253,17 @@ export function optimize(items, ctx = DEFAULT_PLANNER, lunch = null) {
   const allowed = new Map(multi.map(g => [g.id, g.options[0].key]));
   const days = [...new Set(scheduled.map(x => x.day))].sort();
   const isIn = x => !allowed.has(x.id) || allowed.get(x.id) === x.key;
-  const solve = day => optimizeDay(scheduled.filter(x => x.day === day && isIn(x)), ctx, lunch);
+  // One table per day; a day is re-solved only for a set of allowed runs not seen before.
+  const tables = Object.fromEntries(days.map(d => [d, dayTable(scheduled.filter(x => x.day === d), ctx, lunch)]));
+  const memo = new Map();
+  let daySolves = 0;
+  const solveOnce = (day, include) => {
+    const k = `${day}:${include ? include.map(b => (b ? 1 : 0)).join('') : 'all'}`;
+    let r = memo.get(k);
+    if (!r) { r = solveDay(tables[day], include, ctx); memo.set(k, r); daySolves++; }
+    return r;
+  };
+  const solve = day => solveOnce(day, tables[day].xs.map(isIn));
   let result = Object.fromEntries(days.map(d => [d, solve(d)]));
   const sum = r => days.reduce((a, d) => a + r[d].total, 0);
   const free = multi.filter(g => g.options.length > 1);
@@ -243,7 +285,7 @@ export function optimize(items, ctx = DEFAULT_PLANNER, lunch = null) {
     // Start each repeated session on the run the unconstrained plan liked best, then
     // switch one session at a time while that improves the whole plan.
     for (const g of free) {
-      const liked = g.options.find(x => optimizeDay(scheduled.filter(y => y.day === x.day), ctx, lunch).chosen.some(c => c.key === x.key));
+      const liked = g.options.find(x => solveOnce(x.day, null).chosen.some(c => c.key === x.key));
       if (liked) allowed.set(g.id, liked.key);
     }
     result = Object.fromEntries(days.map(d => [d, solve(d)]));
@@ -282,7 +324,7 @@ export function optimize(items, ctx = DEFAULT_PLANNER, lunch = null) {
   const lockedConflicts = scheduled.filter(x => x.locked && !chosenKeys.has(x.key));
   const unscheduled = items.filter(x => !valid(x));
   const value = days.reduce((a, d) => a + chainValue(plan[d], ctx) + (lunches[d] ? (lunch?.weight || 0) : 0), 0);
-  return { plan, lunch: lunches, dropped, lockedConflicts, unscheduled, value };
+  return { plan, lunch: lunches, dropped, lockedConflicts, unscheduled, value, stats: { daySolves } };
 }
 
 export function explainDrop(x, dayPlan, ctx = DEFAULT_PLANNER, chosenIds = new Set()) {
