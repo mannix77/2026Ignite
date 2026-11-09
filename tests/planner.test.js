@@ -684,6 +684,34 @@ test('within a group planned sessions come first, then higher rating, then liken
   const r = unRun([un('c', 690, 720, { interest: 60 }), un('b', 690, 720, { prio: 3 }), un('a', 690, 720, { planned: true, prio: 1 })]);
   eq(unKeys(r), [['a', 'b', 'c']]);
 });
+// ---- a detour is judged against where I need to be next (issue 100): walk there, the session,
+// the walk on to the destination, and whether that is on time
+const yacht = { building: 'Y', onward: { S: 20, D: 12 } };          // minutes from the Yacht Club on to the Swan / Dolphin
+const candidate = (extra = {}) => un('C', 680, 710, { prio: 1, walk: 18, loc: yacht, ...extra });   // 11:20-11:50, 18 min from here
+const swanAt = startMin => ({ key: 'N', loc: { building: 'S' }, startMin });
+const detourOf = (sessions, dest) => unRun(sessions, { dest, walkBetween: (a, b) => a.onward?.[b.building] ?? null })[0].items[0].detour;
+
+test('detour: the default destination is the next planned session, reached with time to spare', () => {
+  eq(detourOf([candidate()], swanAt(750)), { onward: 20, arrive: 730, slack: 20 });   // 12:10 for a 12:30 start
+});
+test('detour: a later next session means arriving late', () => {
+  eq(detourOf([candidate()], swanAt(725)), { onward: 20, arrive: 730, slack: -5 });
+});
+test('detour: a chosen place has a walk on but no deadline', () => {
+  eq(detourOf([candidate()], { loc: { building: 'D' }, startMin: null }), { onward: 12, arrive: 722, slack: null });
+});
+test('detour: nothing planned after it, or the candidate is the next session itself, means no detour', () => {
+  eq(detourOf([candidate()], null), null);
+  eq(detourOf([candidate({ key: 'N' })], swanAt(750)), null);
+});
+test('detour: unknown onward walk or an unreachable candidate gives no detour', () => {
+  eq(detourOf([candidate({ loc: { building: 'Y' } })], swanAt(750)), null);
+  eq(detourOf([candidate({ walk: 40 })], swanAt(750)), null);
+});
+test('detour: with no position the walk there is unknown but the walk on is still shown', () => {
+  eq(detourOf([candidate({ walk: null })], swanAt(750)), { onward: 20, arrive: 730, slack: 20 });
+});
+
 test('online-only, other-day and ended sessions are not listed', () => {
   eq(unKeys(unRun([un('o', 690, 720, { prio: 1, inPerson: false }), un('d', 690, 720, { prio: 1, day: 'd2' }), un('e', 600, 660, { prio: 1 }), un('ok', 690, 720, { prio: 1 })])), [['ok']]);
 });
