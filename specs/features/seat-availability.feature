@@ -23,6 +23,18 @@ Feature: Seeing whether a seat can still be had
       Then it is marked "Walk-up"
       And he is not asked to reserve a seat for it
 
+  Rule: A reserved seat belongs to one run of a session
+
+    Example: The run that holds the seat
+      Given Minesh reserved a seat for the Tuesday run of a lab that runs four times
+      When he opens the Tuesday run
+      Then it says he holds a reserved seat
+
+    Example: The other runs of the same lab
+      Given Minesh reserved a seat for the Tuesday run of a lab that runs four times
+      When he opens the Thursday run
+      Then it says his reserved seat is in another run
+
   Rule: Seat records that don't belong to the catalog are ignored
 
     Example: The one with a seat record for an unknown session

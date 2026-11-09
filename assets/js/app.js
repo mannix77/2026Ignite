@@ -1777,6 +1777,10 @@ function renderDetail(s) {
   const sg = suggester();
   const sugg = p == null && sg.ready ? sg.score(s) : null;
   const sp = s.speakers || [];
+  // The seat file is keyed by session; the reservation belongs to one run (#115).
+  const heldHere = gp?.reserved ? gp.reserved === s.key : undefined;
+  const heldRun = heldHere === false ? app.model.byKey.get(gp.reserved) : null;
+  const seats = seatsDetail(s, heldHere);
   const runRow = o => {
     const locked = gp?.lock === o.key, reserved = gp?.reserved === o.key;
     const btns = [];
@@ -1797,8 +1801,8 @@ function renderDetail(s) {
         <dt>When</dt><dd>${esc(whenText(s))}</dd>
         <dt>Where</dt><dd>${s.onlineOnly ? 'Online' : `${bldgChip(s.loc)} ${esc(s.roomLabel)} ${mapChip(venueMapUrl(s, app.conf))} ${occupancyChip(occupancyOf(app.snapshot?.occupancy, s.room))}`}</dd>
         <dt>Recording</dt><dd>${s.recorded === true ? 'Will be recorded: you can watch it later' : s.recorded === false ? '<b>Not recorded</b>: in person only' : 'Unknown'}</dd>
-        ${s.rsvp ? `<dt>Reservation</dt><dd><b>Required</b>, seats are limited${typeof s.rsvp === 'string' ? `. Opens ${esc(rsvpOpensText(s.rsvp) || String(s.rsvp))} on ${esc(app.conf.siteName)}` : ''}${gp?.reserved ? '. <b>You reserved a seat.</b>' : ''}</dd>` : ''}
-        ${seatsDetail(s) ? `<dt>Seats</dt><dd>${esc(seatsDetail(s))}</dd>` : ''}
+        ${s.rsvp ? `<dt>Reservation</dt><dd><b>Required</b>, seats are limited${typeof s.rsvp === 'string' ? `. Opens ${esc(rsvpOpensText(s.rsvp) || String(s.rsvp))} on ${esc(app.conf.siteName)}` : ''}${heldHere === true ? '. <b>You reserved a seat.</b>' : heldHere === false ? `. Your reserved seat is in the run on ${esc(heldRun ? whenText(heldRun) : 'another day')}.` : ''}</dd>` : ''}
+        ${seats ? `<dt>Seats</dt><dd>${esc(seats)}</dd>` : ''}
         <dt>Format</dt><dd>${esc((s.delivery || []).join(', ') || '—')}${s.remote ? ' · remote viewing rooms available' : ''}</dd>
         ${s.audience?.length ? `<dt>${app.conf.id === 'gartner2026' ? 'Program' : 'Audience'}</dt><dd>${esc(s.audience.join(', '))}</dd>` : ''}
         ${s.topics?.length ? `<dt>Topics</dt><dd>${esc(s.topics.join(', '))}</dd>` : ''}
