@@ -580,12 +580,23 @@ def value_shape(v):
     return "unknown"
 
 
+def _js_numbers(v):
+    """JSON.stringify prints 1.0 as 1: integral floats become ints, recursively."""
+    if isinstance(v, float) and math.isfinite(v) and v.is_integer():
+        return int(v)
+    if isinstance(v, list):
+        return [_js_numbers(x) for x in v]
+    if isinstance(v, dict):
+        return {k: _js_numbers(x) for k, x in v.items()}
+    return v
+
+
 def shape_example(v):
     """The example value in the refusal, as the browser would print it (JSON, at most 60 chars);
     a number the browser cannot hold prints as Infinity on both sides."""
     if isinstance(v, (int, float)) and not isinstance(v, bool) and value_shape(v) == "unknown":
         return "Infinity"
-    return json.dumps(v, separators=(",", ":"), ensure_ascii=False)[:60]
+    return json.dumps(_js_numbers(v), separators=(",", ":"), ensure_ascii=False)[:60]
 
 
 def field_shapes(raw_sessions):

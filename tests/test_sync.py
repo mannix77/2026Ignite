@@ -932,7 +932,26 @@ class FeedShapeTests(SyncDir, unittest.TestCase):
         with open(path, encoding="utf-8") as f:
             raw = json.load(f)
         shapes = sync.field_shapes(raw)
-        self.assertEqual(shapes["sessionInstanceId"]["unknown"], 2)
+        # The expected result first (rule 7), then that the browser agrees with it.
+        self.assertEqual(shapes["sessionInstanceId"], {"records": 20, "unknown": 2, "example": "Infinity"})
+        self.assertEqual(sync.shape_problem(shapes),
+                         "feed format changed: `sessionInstanceId` has an unrecognised shape in 2 of 20 sessions (e.g. Infinity); keeping last good data")
+        self.assertEqual(js_run("shapes_cli.js", path), {"shapes": shapes, "problem": sync.shape_problem(shapes)})
+
+    @unittest.skipUnless(JS_RUNNER, "needs node or jsc")
+    def test_should_print_a_whole_number_example_the_way_the_browser_does(self):
+        # JSON 1.0 is a float here and prints as 1.0; JSON.stringify prints 1. Same for one inside an object.
+        recs = ['{"sessionId":"s%d","sessionInstanceId":"s%d","title":"T","location":%s,"startDateTime":%s}'
+                % (i, i, '{"x":2.0}' if i < 2 else '"R"', "1.0" if i < 2 else '"2026-11-17T17:00:00Z"') for i in range(20)]
+        path = os.path.join(self.tmp, "floats.json")
+        with open(path, "w", encoding="utf-8") as f:
+            f.write("[" + ",".join(recs) + "]")
+        with open(path, encoding="utf-8") as f:
+            raw = json.load(f)
+        shapes = sync.field_shapes(raw)
+        self.assertEqual([shapes["startDateTime"]["example"], shapes["location"]["example"]], ["1", '{"x":2}'])
+        self.assertEqual(sync.shape_problem(shapes),
+                         "feed format changed: `location` has an unrecognised shape in 2 of 20 sessions (e.g. {\"x\":2}); keeping last good data")
         self.assertEqual(js_run("shapes_cli.js", path), {"shapes": shapes, "problem": sync.shape_problem(shapes)})
 
     def test_should_keep_the_last_good_catalog_and_say_why(self):
