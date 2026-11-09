@@ -12,7 +12,7 @@ import { CONFERENCES, currentConferenceId, rememberConference, conferenceList } 
 import { buildSuggester } from './suggest.js';
 import { createRanker, partition, profileConfig, profileGroups, GOALS } from './profile.js';
 import { storageStatus, backupReminder, backupAge } from './health.js';
-import { INSTANCE_LABEL, nsKey, guideUrl } from './instance.js';
+import { INSTANCE, INSTANCE_LABEL, nsKey, guideUrl } from './instance.js';
 import { esc, attr, icon, bldgChip, recChip, rsvpChip, rsvpOpensText, seatsDetail, prioPill, scoreChip, whenText, prioControl, sessionCard, cardClass, toast, shareOrDownload, copyText, speakersLine, setHostCompany, unknownRoomsNote, venueMapUrl, mapChip, occupancyOf, occupancyChip } from './ui.js';
 
 const $ = (sel, root = document) => root.querySelector(sel);
@@ -2059,6 +2059,33 @@ importDialog.addEventListener('click', e => {
 });
 importDialog.addEventListener('cancel', () => { pendingImport = null; }); // Esc
 
+// Restore a backup of every conference (issue #19). The conference on screen is previewed in
+// detail as before; the others are summarized, since their sessions are not loaded. A file made
+// in another copy of the site (main vs a colleague's) asks first: it holds someone else's picks.
+function restoreAll(doc) {
+  const confs = conferenceList().map(cf => ({ id: cf.id, namespace: cf.namespace }));
+  const from = typeof doc.instance === 'string' ? doc.instance : '';
+  if (from !== INSTANCE) {
+    const where = c => (c ? `${c[0].toUpperCase()}${c.slice(1)}'s copy` : 'the main copy');
+    if (!confirm(`This backup was made in ${where(from)} of the planner, and you're in ${where(INSTANCE)}. Restore it here anyway?`)) return;
+  }
+  const add = store.previewImportAll(doc, confs, { replace: false });
+  const replace = store.previewImportAll(doc, confs, { replace: true });
+  const empty = { added: [], changed: [], unchanged: 0, removed: [], after: {} };
+  const name = id => CONFERENCES[id]?.short || id;
+  const others = Object.keys(add.parts).filter(id => id !== app.conf.id);
+  const otherText = others.map(id => `${name(id)}: ${add.parts[id].added.length} new, ${add.parts[id].changed.length} changed`).join('; ');
+  const otherRemoved = others.reduce((n, id) => n + (replace.parts[id]?.removed.length || 0), 0);
+  const note = [`Adding keeps the newer rating for each session, and this device's notes and reserved seats, in every conference.`,
+    others.length ? `Also in this backup: ${otherText}.` : '',
+    otherRemoved ? `Replacing also makes the other conferences match the backup (${otherRemoved} pick${otherRemoved > 1 ? 's' : ''} there would go).` : '',
+    add.missing.length ? `Left out (not a conference this planner knows): ${add.missing.join(', ')}.` : ''].filter(Boolean).join(' ');
+  const summary = applied => Object.entries(applied).map(([id, n]) => `${name(id)} ${n}`).join(', ') || 'nothing';
+  showImportPreview({ title: `Restore backup${doc.exportedAt ? ` from ${fmtStamp(doc.exportedAt)}` : ''} · ${app.conf.short} shown`, pv: add.parts[app.conf.id] || empty, note,
+    apply: () => toast(`Added from the backup: ${summary(store.importAllData(doc, confs, { replace: false }))}`),
+    replace: { pv: replace.parts[app.conf.id] || empty, apply: () => { store.importAllData(doc, confs, { replace: true }); toast('Every conference in the backup now matches it on this device'); } } });
+}
+
 function importFavorites() {
   const f = app.snapshot?.favorites;
   if (!f) return;
@@ -2175,9 +2202,13 @@ function onClick(e) {
     ack: () => { store.setKnown(app.nextKnown); app.alerts = []; render(); },
     refresh: () => refreshData(true),
     'sync-local': () => syncLocal(el),
+    // One file for every conference on this device (issue #19); the live conference comes from
+    // the store, the others from their own saved state.
     export: async () => {
-      const r = await shareOrDownload(`${app.conf.id}-picks-${new Date().toISOString().slice(0, 10)}.json`, JSON.stringify(store.exportData(), null, 1), 'application/json');
-      if (r !== 'cancelled') { store.markBackup(); toast('Backup saved. Keep it somewhere that is backed up'); }
+      const doc = store.exportAll(conferenceList().map(cf => ({ id: cf.id, namespace: cf.namespace })));
+      const names = Object.keys(doc.conferences).map(id => CONFERENCES[id]?.short || id);
+      const r = await shareOrDownload(`planner-backup-${new Date().toISOString().slice(0, 10)}.json`, JSON.stringify(doc, null, 1), 'application/json');
+      if (r !== 'cancelled') { store.markBackup(); toast(`Backup saved (${names.join(', ') || 'nothing rated yet'}). Keep it somewhere that is backed up`); }
     },
     'backup-dismiss': () => store.dismissBackupReminder(Date.now(), nowLocal(null, app.conf.tz).day),
     'install-app': async () => {
@@ -2315,6 +2346,7 @@ main.addEventListener('change', e => {
   else if (t.id === 'import-file' && t.files?.[0]) {
     t.files[0].text().then(txt => {
       const obj = JSON.parse(txt);
+      if (store.isAllBackup(obj)) { restoreAll(obj); return; }
       if (obj.conference && obj.conference !== app.conf.id && !confirm(`This backup is for ${CONFERENCES[obj.conference]?.name || obj.conference}, but you're viewing ${app.conf.name}. Import anyway?`)) return;
       // Both previews run before anything changes, so an unreadable backup stops here.
       const add = store.previewImport(obj, { replace: false });

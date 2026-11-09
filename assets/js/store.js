@@ -3,7 +3,7 @@
 // between devices.
 
 import { DEFAULT_PLANNER } from './planner.js';
-import { nsKey } from './instance.js';
+import { nsKey, INSTANCE } from './instance.js';
 import { blankProfile, sanitizeProfile } from './profile.js';
 
 const BASE_KEY = nsKey('ignite26.planner.v1');
@@ -384,15 +384,22 @@ export function exportData() {
 // so what you're shown is what happens. Adding keeps the newer rating per session, and keeps
 // this device's note and reserved seat when the backup has none.
 function planImport(obj, replace) {
+  return planImportInto(obj, replace, state.picks);
+}
+
+// The merge rule for a backup's picks against a base (the live picks, or another conference's
+// saved ones): newest `at` wins, an undated backup pick never beats a dated local one, and this
+// device's notes and reserved seats are kept when adding.
+function planImportInto(obj, replace, base) {
   if (!obj || obj.app !== 'ignite26-planner' || !obj.picks || typeof obj.picks !== 'object' || Array.isArray(obj.picks)) throw new Error('Not an Ignite planner backup file');
   const incoming = sanitizePicks(obj.picks, 0); // undated backup picks are older than anything here
   // Checked before anything changes: a backup from another format must not empty the plan.
   if (Object.keys(obj.picks).length && !Object.keys(incoming).length) throw new Error('This backup has no picks this planner can read; nothing was changed');
-  const next = replace ? {} : { ...state.picks };
+  const next = replace ? {} : { ...base };
   let applied = 0;
   const scope = replace ? null : Object.keys(incoming); // merging only touches the backup's sessions
   for (const [id, p] of Object.entries(incoming)) {
-    const cur = replace ? null : state.picks[id];
+    const cur = replace ? null : base[id];
     if (cur && !(p.at > (cur.at || 0))) continue;
     const keep = cur?.reserved && !p.reserved ? { reserved: cur.reserved, lock: cur.lock || cur.reserved } : {};
     next[id] = { ...p, note: p.note || cur?.note || '', ...keep };
@@ -432,6 +439,93 @@ export function importData(obj, { replace = false } = {}) {
   if (replace && 'profile' in obj) state.profile = obj.profile ? sanitizeProfile(obj.profile) : null;
   else if (obj.profile && !state.profile) state.profile = sanitizeProfile(obj.profile);
   emit(replace ? 'reset' : 'picks');
+  return applied;
+}
+
+// ---- one backup file for every conference on this device (specs/features/one-backup-for-all.feature)
+//
+// Each conference's state lives under its own key (keyFor). The live conference is the store's
+// current namespace and changes in place; the others are read from and written to their saved
+// state directly, without switching what the app shows. `confs` is [{ id, namespace }] from
+// conferences.js. Every key carries the instance suffix (nsKey), so a colleague's copy backs up
+// and restores only its own data; the file records which copy made it.
+
+const keyFor = ns => (ns ? `${BASE_KEY}:${ns}` : BASE_KEY);
+
+// Another conference's saved state, sanitized the same way load() does, or null when none.
+function readSaved(ns) {
+  try {
+    const raw = localStorage.getItem(keyFor(ns));
+    if (!raw) return null;
+    const saved = JSON.parse(raw);
+    if (!saved || typeof saved !== 'object') return null;
+    return { ...saved, picks: sanitizePicks(saved.picks), prefs: sanitizePrefs(saved.prefs), profile: saved.profile ? sanitizeProfile(saved.profile) : null };
+  } catch { return null; }
+}
+
+function partOf(saved) {
+  return saved ? { picks: saved.picks, settings: saved.prefs, profile: saved.profile } : null;
+}
+
+const hasContent = part => !!part && (Object.keys(part.picks || {}).length > 0 || Object.keys(part.settings || {}).length > 0 || !!part.profile);
+
+export function exportAll(confs, now = new Date()) {
+  const conferences = {};
+  for (const c of confs) {
+    const part = c.namespace === namespace() ? { picks: state.picks, settings: state.prefs, profile: state.profile } : partOf(readSaved(c.namespace));
+    if (hasContent(part)) conferences[c.id] = part;
+  }
+  return { app: 'ignite26-planner', v: 1, kind: 'all', instance: INSTANCE, exportedAt: now.toISOString(), conferences };
+}
+
+export function isAllBackup(doc) {
+  return !!doc && doc.app === 'ignite26-planner' && doc.kind === 'all' && !!doc.conferences && typeof doc.conferences === 'object' && !Array.isArray(doc.conferences);
+}
+
+function allParts(doc, confs) {
+  if (!isAllBackup(doc)) throw new Error('Not an Ignite planner backup file');
+  const known = new Map(confs.map(c => [c.id, c]));
+  const parts = [], missing = [];
+  for (const [id, part] of Object.entries(doc.conferences)) {
+    if (!part || typeof part !== 'object' || !part.picks || typeof part.picks !== 'object') continue;
+    if (!known.has(id)) { missing.push(id); continue; }
+    parts.push({ conf: known.get(id), obj: { app: 'ignite26-planner', ...part } });
+  }
+  return { parts, missing };
+}
+
+// What restoring would change, per conference: the live one against the live picks, the others
+// against their saved picks. `missing` lists conferences in the file this planner does not know.
+export function previewImportAll(doc, confs, { replace = false } = {}) {
+  const { parts, missing } = allParts(doc, confs);
+  const out = {};
+  for (const { conf, obj } of parts) {
+    const base = conf.namespace === namespace() ? state.picks : readSaved(conf.namespace)?.picks || {};
+    const { next, scope } = planImportInto(obj, replace, base);
+    out[conf.id] = diffPicks(base, next, scope);
+  }
+  return { parts: out, missing };
+}
+
+// Restore every conference the file holds; returns picks applied per conference id.
+export function importAllData(doc, confs, { replace = false } = {}) {
+  const { parts } = allParts(doc, confs);
+  const applied = {};
+  for (const { conf, obj } of parts) {
+    if (conf.namespace === namespace()) {
+      applied[conf.id] = importData(obj, { replace });
+      continue;
+    }
+    const saved = readSaved(conf.namespace) || { ...blank() };
+    const plan = planImportInto(obj, replace, saved.picks || {});
+    saved.picks = plan.next;
+    if (obj.settings && replace) saved.prefs = sanitizePrefs(obj.settings);
+    if (replace && 'profile' in obj) saved.profile = obj.profile ? sanitizeProfile(obj.profile) : null;
+    else if (obj.profile && !saved.profile) saved.profile = sanitizeProfile(obj.profile);
+    saved.v = SCHEMA_VERSION;
+    localStorage.setItem(keyFor(conf.namespace), JSON.stringify(saved));
+    applied[conf.id] = plan.applied;
+  }
   return applied;
 }
 

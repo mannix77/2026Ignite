@@ -28,7 +28,7 @@ Before the real Ignite schedule is published you can turn on **Preview** (Settin
 
 ## Use it
 
-**On your iPhone (recommended):** open the GitHub Pages address in Safari, then tap **Share → Add to Home Screen** *before* you start rating. The installed app keeps its own copy of your picks (separate from Safari's) and works offline at the venue. To move picks from another device, use **Settings → Copy link to my picks** there, then **Settings → Import picks from a link** in the installed app. **Save a backup** opens the share sheet, so you can keep a copy in Files.
+**On your iPhone (recommended):** open the GitHub Pages address in Safari, then tap **Share → Add to Home Screen** *before* you start rating. The installed app keeps its own copy of your picks (separate from Safari's) and works offline at the venue. To move picks from another device, use **Settings → Copy link to my picks** there, then **Settings → Import picks from a link** in the installed app. **Save a backup** opens the share sheet, so you can keep a copy in Files. One backup file covers every conference on the device (picks, notes, scores, locks, reserved seats, settings and quick-start answers for Ignite, Gartner and re:Invent alike); **Restore backup** puts each conference back in its own place, shows the conference on screen in detail and the others as counts, and asks first when the file came from a colleague's copy. Older one-conference files still restore as before.
 
 **Starting preferences:** `data/<conference>/profile.json` holds your quick-start answers and group choices. It is applied once, on a device that has none saved; after that, Triage → Quick start is the place to change them. Backups include them. Copies for colleagues don't get this file.
 

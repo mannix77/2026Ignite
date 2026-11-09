@@ -532,6 +532,66 @@ await test('should apply exactly the previewed changes from a picks link', async
   await sleep(SAVE);
 });
 
+// ---- one backup file for every conference on this device (specs/features/one-backup-for-all.feature)
+// Conferences are {id, namespace}: the live one is the store's current namespace; the others are
+// read from and written to their own saved state without switching what the app shows.
+const CONFS = [{ id: 'ignite2026', namespace: 'all-live' }, { id: 'gartner2026', namespace: 'all-other' }, { id: 'reinvent2026', namespace: 'all-untouched' }];
+const savedOf = ns => JSON.parse(localStorage.getItem(`ignite26.planner.v1:${ns}`) || 'null');
+
+await test('should back up every conference with picks or settings, and leave an untouched one out', async () => {
+  localStorage.removeItem('ignite26.planner.v1:all-untouched');
+  localStorage.setItem('ignite26.planner.v1:all-other', JSON.stringify({ v: 1, picks: { G1: { p: 2, lock: null, note: 'gartner note', at: 5 } }, prefs: {}, profile: null }));
+  store.load('all-live');
+  store.mutatePicks(p => { p.S1 = { p: 3, lock: 'S1', note: '', at: 7 }; });
+  store.updateSettings({ buffer: 4 });
+  const doc = store.exportAll(CONFS, new Date('2026-11-09T05:00:00Z'));
+  eq([doc.app, doc.v, doc.kind, doc.exportedAt, doc.instance, Object.keys(doc.conferences).sort()],
+    ['ignite26-planner', 1, 'all', '2026-11-09T05:00:00.000Z', '', ['gartner2026', 'ignite2026']]);
+  eq([doc.conferences.ignite2026.picks.S1.p, doc.conferences.ignite2026.settings.buffer, doc.conferences.gartner2026.picks.G1.note], [3, 4, 'gartner note']);
+  eq(store.isAllBackup(doc), true);
+  eq(store.isAllBackup({ app: BACKUP, picks: {} }), false, 'an old single-conference file is not one');
+});
+
+await test('should restore every conference into its own place on a fresh device', async () => {
+  localStorage.removeItem('ignite26.planner.v1:all-other');
+  store.load('all-live');
+  const doc = { app: BACKUP, v: 1, kind: 'all', exportedAt: 'x', conferences: {
+    ignite2026: { picks: { S1: { p: 3, at: 2 } }, settings: { buffer: 6 }, profile: null },
+    gartner2026: { picks: { G1: { p: 2, at: 2 }, G2: { p: 1, at: 2 } }, settings: {}, profile: null } } };
+  const pv = store.previewImportAll(doc, CONFS, { replace: false });
+  eq([pv.parts.ignite2026.added, pv.parts.gartner2026.added.sort(), pv.missing], [['S1'], ['G1', 'G2'], []]);
+  const applied = store.importAllData(doc, CONFS, { replace: true });
+  eq(applied, { ignite2026: 1, gartner2026: 2 });
+  eq([store.pick('S1')?.p, store.settings().buffer, store.namespace()], [3, 6, 'all-live'], 'the live conference changed in place');
+  store.load('all-other');
+  eq([store.pick('G1')?.p, store.pick('G2')?.p], [2, 1], 'the other conference was written to its own saved state');
+});
+
+await test('should keep a newer rating in another conference when adding a backup', async () => {
+  localStorage.setItem('ignite26.planner.v1:all-other', JSON.stringify({ v: 1, picks: { G1: { p: 2, lock: null, note: 'mine', at: MORNING }, G3: { p: 1, lock: null, note: '', at: MORNING } }, prefs: {}, profile: null }));
+  store.load('all-live');
+  const doc = { app: BACKUP, v: 1, kind: 'all', conferences: { gartner2026: { picks: { G1: { p: 0 }, G2: { p: 3, at: MORNING + 3600e3 }, G3: { p: 0, at: MORNING + 3600e3 } }, settings: {}, profile: null } } };
+  store.importAllData(doc, CONFS, { replace: false });
+  const saved = savedOf('all-other');
+  eq([saved.picks.G1.p, saved.picks.G1.note, saved.picks.G2.p, saved.picks.G3.p], [2, 'mine', 3, 0], 'undated loses, newer wins, local notes stay');
+  store.importAllData(doc, CONFS, { replace: true });
+  eq(Object.keys(savedOf('all-other').picks).sort(), ['G1', 'G2', 'G3'], 'replace makes that conference match the backup: all three of its picks, the undated Skip included');
+  eq(savedOf('all-other').picks.G1.p, 0, 'and the local Want gave way to it');
+});
+
+await test('should report a conference the device does not know and leave the live one untouched by it', async () => {
+  store.load('all-live');
+  const doc = { app: BACKUP, v: 1, kind: 'all', conferences: { other2027: { picks: { X: { p: 3, at: 2 } }, settings: {}, profile: null } } };
+  const pv = store.previewImportAll(doc, CONFS, { replace: false });
+  eq([Object.keys(pv.parts), pv.missing], [[], ['other2027']]);
+  eq(store.importAllData(doc, CONFS, { replace: false }), {});
+});
+
+await test('should refuse a file that calls itself a backup of everything but holds none', () => {
+  eq(throws(() => store.previewImportAll({ app: BACKUP, kind: 'all', conferences: 'junk' }, CONFS, {})), 'Not an Ignite planner backup file');
+  eq(throws(() => store.previewImportAll({ app: 'other', kind: 'all', conferences: {} }, CONFS, {})), 'Not an Ignite planner backup file');
+});
+
 await sleep(SAVE);
 console.log(`${pass} passed, ${fail} failed`);
 if (fail) process.exit(1);
