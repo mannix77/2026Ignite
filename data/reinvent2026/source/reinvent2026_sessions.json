@@ -1,7 +1,7 @@
 {
  "source": "https://catalog.awsevents.com/api/sessions",
  "event": "reinvent2026",
- "fetchedAt": "2026-11-09T06:51:32Z",
+ "fetchedAt": "2026-11-09T12:43:15Z",
  "count": 2484,
  "sessions": [
   {
@@ -7309,85 +7309,6 @@
    ]
   },
   {
-   "sessionID": "1780442268608001cY23",
-   "code": "AIM115-S",
-   "title": "Agentic AI Control Plane on AWS: govern agents at enterprise scale (sponsored by Tata Consultancy Services)",
-   "abstract": "Enterprises are moving from a handful of agents to hundreds. Without a shared layer for identity, policy, orchestration, and observability, that growth stalls. In this 20-minute launch session, we introduce the Agentic AI Control Plane on AWS: a governed foundation for building, deploying, and running agents across business and IT workflows. See how it handles agent onboarding, guardrails, cost and performance visibility, and human oversight, with a live look at the platform. Built for CIOs, data and AI leaders, and platform and risk teams who need agent fleets to scale safely, with the controls their auditors expect. This presentation is brought to you by Tata Consultancy Services, an AWS Partner.",
-   "type": "Lightning talk",
-   "length": 20,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-06T22:33:46Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Lightning talk"
-    ],
-    "Level": [
-     "100 – Foundational"
-    ],
-    "Features": [
-     "AWS Partners",
-     "Lecture-style"
-    ],
-    "Topic": [
-     "Artificial Intelligence",
-     "Business Agents"
-    ],
-    "SponsorSessionPrimaryTopic": [
-     "Artificial Intelligence"
-    ],
-    "AreaofInterest": [
-     "Generative AI",
-     "Responsible AI",
-     "Agentic AI"
-    ],
-    "Role": [
-     "Business Executive",
-     "Data Engineer",
-     "IT Executive"
-    ],
-    "Services": [
-     "Amazon Bedrock",
-     "Amazon Nova",
-     "Kiro"
-    ],
-    "Venue": [
-     "Venetian"
-    ],
-    "Walkuponlysession": [
-     "Walk up only"
-    ],
-    "SessionAppendices": [
-     "Sponsored"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [],
-   "times": [
-    {
-     "sessionTimeID": "1790033124842001q5rp",
-     "date": "2026-12-02",
-     "startTime": "14:00",
-     "endTime": "14:20",
-     "utcStartTime": "2026/12/02 22:00:00",
-     "utcEndTime": "2026/12/02 22:20:00",
-     "length": 20,
-     "room": "Venetian | Level 2 | Hall B | Expo | Partner Advantage Theater",
-     "roomId": "1789591920812001bXzB",
-     "capacity": "150",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442280796001cRdE",
    "code": "IND402-R",
    "title": "Agentic AI for manufacturing: Build a cross-domain digital thread",
@@ -9245,7 +9166,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-09T09:10:33Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -13911,7 +13832,7 @@
    "length": 240,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T22:53:13Z",
+   "modified": "2026-11-09T10:25:24Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -39832,7 +39753,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-08T13:26:45Z",
+   "modified": "2026-11-09T07:56:54Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -66212,7 +66133,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-09T10:20:46Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -67724,7 +67645,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T06:46:17Z",
+   "modified": "2026-11-09T09:01:54Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -68236,7 +68157,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T06:32:14Z",
+   "modified": "2026-11-09T09:54:42Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -72062,24 +71983,6 @@
    },
    "speakers": [
     {
-     "name": "Radhika Nayar",
-     "title": "Senior Product Manager",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Irene Garcia Lopez",
-     "title": "Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Danilo Silva",
-     "title": "Sr Delivery Consultant",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Pedro Henrique Oliveira",
      "title": "Solutions Architect",
      "company": "AWS",
@@ -72089,6 +71992,24 @@
      "name": "Henrique Santana",
      "title": "Principal Cloud Engineer",
      "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Radhika Nayar",
+     "title": "Senior Product Manager",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Danilo Silva",
+     "title": "Sr Delivery Consultant",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Irene Garcia Lopez",
+     "title": "Solutions Architect",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     }
    ],
@@ -76494,7 +76415,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-09T10:20:46Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -82484,7 +82405,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T00:46:50Z",
+   "modified": "2026-11-09T09:45:12Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -85322,24 +85243,6 @@
    },
    "speakers": [
     {
-     "name": "Keita Watanabe",
-     "title": "Pr. WW Solutions Architect – GenAI",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Toshinobu Akazawa",
-     "title": "ISV/SaaS Solutions Architect",
-     "company": "AWS Japan",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Alex Iankoulski",
-     "title": "Principal Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Bailey (Sohyeon) Cho",
      "title": "Solutions Architect, GenAI Startups",
      "company": "Amazon Web Services",
@@ -85349,6 +85252,24 @@
      "name": "Henan Wang",
      "title": "Principle Applied Scientist",
      "company": "亚马逊通技术服务（北京）有限公司",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Toshinobu Akazawa",
+     "title": "ISV/SaaS Solutions Architect",
+     "company": "AWS Japan",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Keita Watanabe",
+     "title": "Pr. WW Solutions Architect – GenAI",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Alex Iankoulski",
+     "title": "Principal Solutions Architect",
+     "company": "AWS",
      "role": "Internal Speaker"
     }
    ],
@@ -86564,7 +86485,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-08T17:06:35Z",
+   "modified": "2026-11-09T10:29:12Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -91025,94 +90946,6 @@
    ]
   },
   {
-   "sessionID": "1790358249611001iI6g",
-   "code": "IND302-R1",
-   "title": "Evaluating AI agents for production in financial services",
-   "abstract": "Financial institutions building AI agents face a core challenge: how do you prove an agent is reliable enough for production when regulators demand explainability and consistency? How do you reliably detect when a production agent's behavior drifts? In this chalk talk, we explore patterns for rigorous agent evaluation in regulated environments. We discuss defining ground truth, measuring agent quality with Amazon Bedrock AgentCore Evaluations, and automating re-evaluation as prompts, tools, and parameters evolve. Leave with practical blueprints for constructing datasets, choosing metrics, and building continuous agent evaluation workflows for production.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Artificial Intelligence",
-     "Industry Solutions"
-    ],
-    "AreaofInterest": [
-     "Generative AI",
-     "Governance, Risk & Compliance",
-     "Agentic AI"
-    ],
-    "Industry": [
-     "Financial Services"
-    ],
-    "Role": [
-     "Data Engineer",
-     "Developer / Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Bedrock",
-     "Amazon Simple Storage Service (Amazon S3)",
-     "AWS Lambda"
-    ],
-    "Venue": [
-     "Caesars Palace"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Jorge Castans Garcia",
-     "title": "Senior Solution Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Jannis Kambach",
-     "title": "Customer Engineer",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360368276001Afu6",
-     "date": "2026-12-01",
-     "startTime": "14:30",
-     "endTime": "15:30",
-     "utcStartTime": "2026/12/01 22:30:00",
-     "utcEndTime": "2026/12/01 23:30:00",
-     "length": 60,
-     "room": "Caesars Palace | Promenade Level | Trevi",
-     "roomId": "1789591919983001bGDi",
-     "capacity": "70",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442243992001cPQd",
    "code": "IND302-R",
    "title": "Evaluating AI agents for production in financial services",
@@ -91194,6 +91027,94 @@
      "room": "Wynn/Encore | Level 1 | Chopin 2",
      "roomId": "1789591921094001bT6B",
      "capacity": "88",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358249611001iI6g",
+   "code": "IND302-R1",
+   "title": "Evaluating AI agents for production in financial services",
+   "abstract": "Financial institutions building AI agents face a core challenge: how do you prove an agent is reliable enough for production when regulators demand explainability and consistency? How do you reliably detect when a production agent's behavior drifts? In this chalk talk, we explore patterns for rigorous agent evaluation in regulated environments. We discuss defining ground truth, measuring agent quality with Amazon Bedrock AgentCore Evaluations, and automating re-evaluation as prompts, tools, and parameters evolve. Leave with practical blueprints for constructing datasets, choosing metrics, and building continuous agent evaluation workflows for production.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-09T09:13:45Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Artificial Intelligence",
+     "Industry Solutions"
+    ],
+    "AreaofInterest": [
+     "Generative AI",
+     "Governance, Risk & Compliance",
+     "Agentic AI"
+    ],
+    "Industry": [
+     "Financial Services"
+    ],
+    "Role": [
+     "Data Engineer",
+     "Developer / Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Bedrock",
+     "Amazon Simple Storage Service (Amazon S3)",
+     "AWS Lambda"
+    ],
+    "Venue": [
+     "Caesars Palace"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Jorge Castans Garcia",
+     "title": "Senior Solution Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Jannis Kambach",
+     "title": "Customer Engineer",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360368276001Afu6",
+     "date": "2026-12-01",
+     "startTime": "14:30",
+     "endTime": "15:30",
+     "utcStartTime": "2026/12/01 22:30:00",
+     "utcEndTime": "2026/12/01 23:30:00",
+     "length": 60,
+     "room": "Caesars Palace | Promenade Level | Trevi",
+     "roomId": "1789591919983001bGDi",
+     "capacity": "70",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -101062,7 +100983,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T03:31:43Z",
+   "modified": "2026-11-09T10:22:52Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -107402,14 +107323,20 @@
    },
    "speakers": [
     {
+     "name": "Daisuke Miyamoto",
+     "title": "Senior Specialist Solutions Architect, HPC",
+     "company": "Amazon Web Services Japan",
+     "role": "Internal Speaker"
+    },
+    {
      "name": "Harish Rao",
      "title": "senior solutions architect",
      "company": "Amazon",
      "role": "Internal Speaker"
     },
     {
-     "name": "SooJung Lee",
-     "title": "Sr.Technical Account Manager",
+     "name": "Natarajan Chennimalai Kumar",
+     "title": "Senior Manager",
      "company": "AWS",
      "role": "Internal Speaker"
     },
@@ -107420,15 +107347,9 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Natarajan Chennimalai Kumar",
-     "title": "Senior Manager",
+     "name": "SooJung Lee",
+     "title": "Sr.Technical Account Manager",
      "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Daisuke Miyamoto",
-     "title": "Senior Specialist Solutions Architect, HPC",
-     "company": "Amazon Web Services Japan",
      "role": "Internal Speaker"
     }
    ],
@@ -113235,7 +113156,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-07T05:54:07Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -119816,7 +119737,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T03:25:05Z",
+   "modified": "2026-11-09T10:31:29Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -123060,7 +122981,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T03:56:22Z",
+   "modified": "2026-11-09T07:12:07Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -137431,7 +137352,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T06:45:01Z",
+   "modified": "2026-11-09T11:00:36Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -140086,7 +140007,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-08T19:44:02Z",
+   "modified": "2026-11-09T09:25:21Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -145173,7 +145094,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T05:58:48Z",
+   "modified": "2026-11-09T10:24:13Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -152868,7 +152789,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T03:56:12Z",
+   "modified": "2026-11-09T10:43:37Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -154164,7 +154085,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-09T10:25:24Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -158034,7 +157955,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T06:45:01Z",
+   "modified": "2026-11-09T10:27:41Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -175088,7 +175009,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T03:46:05Z",
+   "modified": "2026-11-09T09:54:42Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -180827,7 +180748,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-09T11:41:39Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -189344,7 +189265,7 @@
    "length": 180,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-08T11:29:51Z",
+   "modified": "2026-11-09T10:07:03Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -194015,6 +193936,80 @@
      "room": "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Blue Theater",
      "roomId": "1789591921314004bo2v",
      "capacity": "100",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442268608001cY23",
+   "code": "AIM115-S",
+   "title": "When the Lights Flicker: Engineer Minimum Viable Enterprises for Sovereign Resilience",
+   "abstract": "Geopolitical shocks. Compromised suppliers. Hijacked identities. AI-accelerated attacks. Disruption is now the operating environment. Sovereignty is no longer about where data lives, but what keeps running when the lights flicker.\n\nThis session introduces Active Sovereignty, which treats sovereignty as continuous, engineered control rather than a compliance checkbox. At its heart is the Minimum Viable Enterprise (MVE): the critical core a business cannot afford to lose across cloud, security, data, AI and the digital workplace. It gives provable control over data, operations and technology, exactly where it matters.\n\nAttendees will discover the three moves required for Active sovereignty: (1) designing the MVE, (2) building resilience, and (3) owning the residual risk. You'll leve this session understanding that sovereignty isn't declared, it's engineered.",
+   "type": "Lightning talk",
+   "length": 20,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-09T10:43:59Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Lightning talk"
+    ],
+    "Level": [
+     "100 – Foundational"
+    ],
+    "Features": [
+     "AWS Partners",
+     "Lecture-style"
+    ],
+    "Topic": [
+     "Artificial Intelligence",
+     "Cloud Operations"
+    ],
+    "SponsorSessionPrimaryTopic": [
+     "Cloud Operations"
+    ],
+    "AreaofInterest": [
+     "Data Protection",
+     "Digital Sovereignty",
+     "Resilience"
+    ],
+    "Role": [
+     "Business Executive",
+     "Data Engineer",
+     "IT Executive"
+    ],
+    "Venue": [
+     "Venetian"
+    ],
+    "Walkuponlysession": [
+     "Walk up only"
+    ],
+    "SessionAppendices": [
+     "Sponsored"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [],
+   "times": [
+    {
+     "sessionTimeID": "1790033124842001q5rp",
+     "date": "2026-12-02",
+     "startTime": "14:00",
+     "endTime": "14:20",
+     "utcStartTime": "2026/12/02 22:00:00",
+     "utcEndTime": "2026/12/02 22:20:00",
+     "length": 20,
+     "room": "Venetian | Level 2 | Hall B | Expo | Partner Advantage Theater",
+     "roomId": "1789591920812001bXzB",
+     "capacity": "150",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
