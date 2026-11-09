@@ -5,15 +5,16 @@ import { fetchAll, buildModel, diffKnown, snapshot, cacheUrl, exportAge, customR
 import { checkLive, diff as liveDiff, changeCounts, countsLine } from './live.js';
 import { optimize, transitions, fillers, nowNext, canBoth, overlaps, transition, compareOptions, lunchConfig, arrivalExtra, PRIORITY } from './planner.js';
 import { fmtTime, fmtDay, fmtDuration, relTime, nowLocal, addDays } from './time.js';
-import { upNext } from './upnext.js';
+import { upNext, onwardWalk, nextPlanned } from './upnext.js';
 import { slotGroups, rankOptions, rankTie } from './clash.js';
+import * as picks from './picks.js';
 import { createVenue, setVenue, walkMinutes, floorExtra, mergeWalk } from './venue.js';
 import { CONFERENCES, currentConferenceId, rememberConference, conferenceList } from './conferences.js';
 import { buildSuggester } from './suggest.js';
 import { createRanker, partition, profileConfig, profileGroups, GOALS, parsePrefsLink, applyPrefs, prefsSummary } from './profile.js';
 import { storageStatus, backupReminder, backupAge } from './health.js';
 import { INSTANCE_LABEL, nsKey, guideUrl } from './instance.js';
-import { esc, attr, icon, bldgChip, recChip, rsvpChip, rsvpOpensText, seatsDetail, prioPill, scoreChip, whenText, prioControl, sessionCard, cardClass, toast, shareOrDownload, copyText, speakersLine, setHostCompany, unknownRoomsNote, venueMapUrl, mapChip, occupancyOf, occupancyChip } from './ui.js';
+import { esc, attr, icon, bldgChip, recChip, rsvpChip, rsvpOpensText, seatsDetail, prioPill, scoreChip, whenText, prioControl, sessionCard, cardClass, toast, shareOrDownload, copyText, speakersLine, setHostCompany, unknownRoomsNote, venueMapUrl, mapChip, occupancyOf, occupancyChip, picksForAI } from './ui.js';
 
 const $ = (sel, root = document) => root.querySelector(sel);
 const main = $('#main');
@@ -102,59 +103,17 @@ function isNew(s) {
 // records or shared ids) and a run can be cancelled. Every record is resolved to its
 // repeat group; reads and writes always act on the whole group.
 
-function resolveGroup(id, pk) {
-  const s = sessionById(id);
-  if (s) return s.group;
-  if (pk.g && app.model.byGroup.has(pk.g)) return pk.g;
-  if (pk.code) {
-    const byCode = app.model.byCode.get(pk.code);
-    if (byCode) return byCode.group;
-    const base = pk.code.replace(/-R\d+$/i, '');
-    if (app.model.byGroup.has(base)) return base;
-  }
-  return null;
-}
-
+// The rules live in picks.js (pure, tested); these wrappers bind them to the app's model and store.
 function indexPicks() {
-  const byGroup = new Map();
-  const orphans = [];
-  for (const [id, pk] of Object.entries(store.get().picks)) {
-    const g = resolveGroup(id, pk);
-    if (!g) { orphans.push({ id, ...pk }); continue; }
-    if (!byGroup.has(g)) byGroup.set(g, []);
-    byGroup.get(g).push({ id, ...pk });
-  }
-  app.picks = { byGroup, orphans };
+  app.picks = picks.indexPicks(app.model, store.get().picks);
   app.suggester = null;
 }
 
-// The group's effective pick: the most recent rating wins; the lock and reservation
-// come from whichever record holds them. A reserved seat pins that run unless you lock
-// another on purpose. Locks made in preview don't count once the real schedule is out.
+// The group's effective pick (picks.js groupPick): the most recent rating wins; the lock and
+// reservation come from whichever record holds them; a preview lock is ignored once the real
+// schedule is out.
 function groupPick(g) {
-  const recs = app.picks.byGroup.get(g);
-  if (!recs?.length) return null;
-  const byAt = recs.slice().sort((a, b) => (b.at || 0) - (a.at || 0));
-  const latest = byAt[0];
-  const official = app.model.mode === 'official';
-  const keys = new Set((app.model.byGroup.get(g) || []).map(s => s.key));
-  const lockRec = byAt.find(r => r.lock && !(official && r.lockMode === 'preview'));
-  const reserved = byAt.map(r => r.reserved).find(k => k && keys.has(k)) || null;
-  // A reservation whose run has left the catalog: not a lock on anything, but the detail view
-  // must not let another run claim the seat (#115).
-  const reservedLost = reserved ? null : byAt.map(r => r.reserved).find(Boolean) || null;
-  const scored = byAt.find(r => Number.isFinite(r.score));
-  return {
-    p: latest.p ?? null,
-    lock: (lockRec && keys.has(lockRec.lock) ? lockRec.lock : null) || reserved,
-    reserved,
-    reservedLost,
-    score: scored ? scored.score : null,
-    mode: latest.mode === 'watch' ? 'watch' : null,
-    note: recs.map(r => r.note).filter(Boolean).join('\n\n'),
-    ids: recs.map(r => r.id),
-    holder: (lockRec || latest).id,
-  };
+  return picks.groupPick(app.picks, app.model, g, app.model.mode);
 }
 const prioOf = s => groupPick(s.group)?.p ?? null;
 
@@ -169,67 +128,28 @@ function groupIds(s) {
 }
 
 function setGroupPriority(s, p) {
-  const meta = groupMeta(s);
-  store.mutatePicks(picks => {
-    for (const id of groupIds(s)) {
-      const cur = picks[id] || { note: '' };
-      picks[id] = { ...cur, ...meta, p, at: Date.now() };
-      if (!(p > 0)) { picks[id].lock = null; delete picks[id].lockMode; }
-    }
-  });
+  const meta = groupMeta(s), ids = groupIds(s);
+  store.mutatePicks(saved => picks.ratePicks(saved, ids, meta, p, Date.now()));
 }
 
-// Score / watch-later live on every record of the group. Setting them on an unrated
-// session rates it too (a score means you care about it).
+// Score / watch-later live on every record of the group (picks.js setPickField).
 function setGroupField(s, patch) {
-  const meta = groupMeta(s);
-  store.mutatePicks(picks => {
-    for (const id of groupIds(s)) {
-      const cur = picks[id] || { note: '', p: null, lock: null };
-      const next = { ...cur, ...meta, at: Date.now() };
-      if ('score' in patch) { if (patch.score == null) delete next.score; else next.score = patch.score; }
-      if ('mode' in patch) { if (patch.mode) next.mode = patch.mode; else delete next.mode; }
-      if (next.p == null && (next.score != null || next.mode)) next.p = next.mode ? 1 : 2;
-      picks[id] = next;
-    }
-  });
-}
-
-function clearGroupLocks(picks, g) {
-  for (const id of groupPick(g)?.ids || []) if (picks[id]) { picks[id].lock = null; delete picks[id].lockMode; }
+  const meta = groupMeta(s), ids = groupIds(s);
+  store.mutatePicks(saved => picks.setPickField(saved, ids, meta, patch, Date.now()));
 }
 
 // Lock a run (or unlock with instKey = null). `release` lists groups whose locks this
 // choice replaces (the other options of a clash).
 function setGroupLock(s, instKey, release = [], { dropReservation = false } = {}) {
-  const gp = groupPick(s.group);
-  const meta = groupMeta(s);
-  store.mutatePicks(picks => {
-    for (const g of release) if (g !== s.group) clearGroupLocks(picks, g);
-    clearGroupLocks(picks, s.group);
-    if (dropReservation) for (const id of gp?.ids || []) if (picks[id]) delete picks[id].reserved;
-    if (!instKey) return;
-    const holder = gp?.holder || groupOf(s)[0].id;
-    const cur = picks[holder] || { note: '' };
-    picks[holder] = { ...cur, ...meta, p: cur.p > 0 ? cur.p : gp?.p > 0 ? gp.p : 3, lock: instKey, at: Date.now() };
-    if (app.model.mode === 'preview') picks[holder].lockMode = 'preview';
-    else delete picks[holder].lockMode;
-  });
+  const gp = groupPick(s.group), meta = groupMeta(s);
+  const releaseIds = release.filter(g => g !== s.group).flatMap(g => groupPick(g)?.ids || []);
+  store.mutatePicks(saved => picks.lockPicks(saved, { gp, meta, instKey, releaseIds, preview: app.model.mode === 'preview', dropReservation, fallbackId: groupOf(s)[0].id }, Date.now()));
 }
 
 // "I reserved a seat for this run": attend that run, and stop nagging about the RSVP.
 function setReserved(s, instKey) {
-  const gp = groupPick(s.group);
-  const meta = groupMeta(s);
-  store.mutatePicks(picks => {
-    for (const id of gp?.ids || []) if (picks[id]) delete picks[id].reserved;
-    clearGroupLocks(picks, s.group);
-    if (!instKey) return;
-    const holder = gp?.holder || groupOf(s)[0].id;
-    const cur = picks[holder] || { note: '' };
-    picks[holder] = { ...cur, ...meta, p: cur.p > 0 ? cur.p : gp?.p > 0 ? gp.p : 3, lock: instKey, reserved: instKey, at: Date.now() };
-    delete picks[holder].lockMode;
-  });
+  const gp = groupPick(s.group), meta = groupMeta(s);
+  store.mutatePicks(saved => picks.reservePicks(saved, { gp, meta, instKey, fallbackId: groupOf(s)[0].id }, Date.now()));
 }
 
 function pickedGroups() {
@@ -1439,10 +1359,17 @@ function renderNow() {
 // Up next: what's coming up that I care about, by start time, with where and how far.
 function upNextHtml(t, h, nn, plan, c) {
   const sg = suggester();
+  // Where I need to be after a candidate (issue 100): a building I picked for this visit, else
+  // my next planned session; the detour is the walk there, the session, and the walk on.
+  const next = nextPlanned(plan.res.plan[t.day], t.min);   // the next planned session, even when lunch or blocked time comes first
+  const picked = app.destChoice && app.venue.BUILDING[app.destChoice] ? app.destChoice : null;
+  const dest = picked ? { loc: { label: B(picked).name, building: picked, floor: null, known: true }, startMin: null, label: B(picked).name }
+    : next ? { key: next.key, loc: next.loc, startMin: next.startMin, label: next.code } : null;
   const slots = upNext({
     sessions: app.model.sessions, day: t.day, nowMin: t.min, horizon: 120, tolerance: c.tolerance,
     walkTo: x => (h ? hereWalk(x.loc, h, c) : null), // no position, no walk: the plan's origin isn't where you are
     prio: prioOf, interest: x => (sg.ready && !(prioOf(x) == null && ranker().evaluate(x).hidden) ? sg.score(x).score : 0), chosen: x => plan.chosen.has(x.key), minInterest: 25,
+    dest, walkBetween: (a, b) => onwardWalk(a, b, c.walk),   // null for a room in a building the venue does not know: no arrival built on a guess
   });
   const verdict = it => {
     const w = it.walk != null ? `${it.walk} min walk` : 'distance unknown';
@@ -1451,12 +1378,24 @@ function upNextHtml(t, h, nn, plan, c) {
     if (it.status === 'ok') return { cls: 'ok', text: `${w} · ${it.slack >= 0 ? `${it.slack} min to spare` : `${-it.slack} min late, within your tolerance`}` };
     return { cls: '', text: w };
   };
+  const detour = it => {
+    const d = it.detour;
+    if (!d) return '';
+    const stay = it.s.startMin <= t.min ? `until ${fmtTime(it.s.endMin)}` : `${it.s.endMin - it.s.startMin} min session`;   // already running: what is left matters
+    const on = `${stay} · ${d.onward} min on to ${dest.label}`;
+    if (d.slack == null) return `${on}, there by ${fmtTime(d.arrive)}`;
+    return d.slack >= 0 ? `${on}, there by ${fmtTime(d.arrive)} with ${d.slack} min to spare`
+      : `${on}: ${-d.slack} min late for ${dest.label} at ${fmtTime(dest.startMin)}`;
+  };
   const body = slots.map(sl => `<h3 class="slot">${fmtTime(sl.startMin)}${sl.startMin <= t.min ? ' · started' : ` · in ${fmtDuration(sl.startMin - t.min)}`}</h3>
     <div class="list">${sl.items.map(it => {
       const v = verdict(it);
-      return card(it.s, { compact: true, extra: `<div class="reason ${v.cls}">${icon(v.cls ? 'walk' : 'warn')}<span>${it.planned ? '<b>In your plan</b> · ' : ''}${esc(v.text)}</span></div>` });
+      const d = detour(it);
+      return card(it.s, { compact: true, extra: `<div class="reason ${v.cls}">${icon(v.cls ? 'walk' : 'warn')}<span>${it.planned ? '<b>In your plan</b> · ' : ''}${esc(v.text)}${d ? `<br>${esc(d)}` : ''}</span></div>` });
     }).join('')}</div>`).join('');
-  return `<section class="up-next"><h2>Up next</h2><p class="small muted">Sessions you've planned, rated or would likely want in the next 2 hours${h ? ', from where you are' : ''}.</p>${body || '<p class="muted">Nothing you care about starts in the next 2 hours. See "Nearby now" below.</p>'}</section>`;
+  const destOpts = app.venue.buildings.filter(b => b.id !== 'O').map(b => `<option value="${attr(b.id)}" ${picked === b.id ? 'selected' : ''}>${esc(b.name)}</option>`).join('');
+  const destBar = `<label class="small">Then I need to be at <select id="dest-select" aria-label="Where you need to be next"><option value="">${next ? `${esc(next.code)} at ${fmtTime(next.startMin)} (next in your plan)` : 'Nothing planned'}</option>${destOpts}</select></label>`;
+  return `<section class="up-next"><h2>Up next</h2><p class="small muted">Sessions you've planned, rated or would likely want in the next 2 hours${h ? ', from where you are' : ''}. Each shows the walk there, the time in the session, and the walk on to where you need to be next.</p>${destBar}${body || '<p class="muted">Nothing you care about starts in the next 2 hours. See "Nearby now" below.</p>'}</section>`;
 }
 
 // ---------------------------------------------------------------- changes
@@ -1731,7 +1670,8 @@ function renderSettings() {
       <p class="small muted">Picks live on this device${STANDALONE ? ' (in this Home Screen app)' : ''}. Use a backup file or a share link to move them between devices.</p>
       <div class="row"><button class="btn small" data-act="export">Save a backup</button>
         <label class="btn small">Restore backup<input type="file" accept="application/json,.json" id="import-file" hidden></label>
-        <button class="btn small" data-act="share">Copy link to my picks</button></div>
+        <button class="btn small" data-act="share">Copy link to my picks</button>
+        <button class="btn small" data-act="copy-ai" title="A readable list of every rated session, with notes, for an AI assistant to read back as an import link">Copy my picks for AI</button></div>
       <div class="field" style="grid-template-columns:1fr;margin-top:10px"><label for="import-code">Import picks from a link<small>Paste a link copied on another device (e.g. Safari → Home Screen app)</small></label></div>
       <div class="row"><input id="import-code" type="text" inputmode="url" autocomplete="off" placeholder="https://…#/import/… or #/prefs/…" style="flex:1;min-width:0;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--surface)">
         <button class="btn small" data-act="import-code">Import</button></div>
@@ -2009,10 +1949,17 @@ function importShare(str) {
   if (app.model.mode === 'official') for (const p of Object.values(parsed)) if (p.lockMode === 'preview') { p.lock = null; delete p.lockMode; }
   const n = Object.keys(parsed).length;
   if (!n) { toast(`That link had no picks this catalog knows${skipped ? ` (${skipped})` : ''}`); return; }
-  const pv = store.previewShared(parsed);
+  // The other saved records of each session's repeat group: the link's choice replaces their
+  // locks too (a reserved seat stays), or an old run would stay locked (#130).
+  const siblings = {};
+  for (const id of Object.keys(parsed)) {
+    const g = sessionById(id)?.group;
+    siblings[id] = g ? (app.picks.byGroup.get(g) || []).map(r => r.id).filter(x => x !== id) : [];
+  }
+  const pv = store.previewShared(parsed, siblings);
   if (!pv.added.length && !pv.changed.length) { toast(`All ${n} picks in that link are already here${skipped ? `. ${skipped}` : ''}`); return; }
   showImportPreview({ title: 'Picks from a link', pv, warn: skipped, note: 'Only the sessions in the link change. Your notes and reserved seats stay.',
-    apply: () => { store.applyShared(parsed); toast(`Applied ${pv.added.length + pv.changed.length} picks from the link`); } });
+    apply: () => { store.applyShared(parsed, siblings); toast(`Applied ${pv.added.length + pv.changed.length} picks from the link`); } });
 }
 
 // ---------------------------------------------------------------- import preview
@@ -2231,6 +2178,26 @@ function onClick(e) {
       const json = JSON.stringify({ codes: [...codes].sort() }, null, 1);
       toast((await copyText(json)) ? `Copied ${codes.size} codes. Paste into ${app.conf.dataDir}/watchlist.json` : 'Could not copy');
     },
+    // Every rated group as one readable line (with notes, which share links never carry), plus how
+    // to answer with an import link; for an AI assistant that updates your picks (issue #22).
+    'copy-ai': async () => {
+      const items = [];
+      for (const g of app.picks.byGroup.keys()) {
+        const gp = groupPick(g);
+        const runs = app.model.byGroup.get(g) || [];
+        const first = runs[0];
+        if (!gp || !first) continue;
+        const run = (gp.lock && runs.find(r => r.key === gp.lock)) || runs.find(r => r.day) || first;
+        items.push({ code: first.code, title: first.title, when: run.day || run.onlineOnly ? whenText(run) : null, p: gp.p, score: gp.score,
+          mode: gp.mode, note: gp.note, lockedRun: gp.lock ? runs.find(r => r.key === gp.lock)?.code || null : null,
+          lockPreview: !!gp.lock && gp.lock !== gp.reserved && store.pick(gp.holder)?.lockMode === 'preview' });
+      }
+      items.sort((a, b) => (b.p ?? -1) - (a.p ?? -1) || a.code.localeCompare(b.code));
+      const text = picksForAI({ conference: app.conf.name, items, guideUrl: guideUrl(location.href),
+        importBase: `${location.origin}${location.pathname}?conf=${encodeURIComponent(app.conf.id)}#/import/`, now: nowLocal(app.simNow, app.conf.tz).day });
+      const n = items.filter(x => x.p != null).length;
+      toast((await copyText(text)) ? `Copied ${n} rated session${n === 1 ? '' : 's'} with notes. Paste it to your assistant along with the guide link` : 'Could not copy');
+    },
     'block-add': () => {
       const day = $('#blk-day').value, start = fromHHMM($('#blk-start').value), end = fromHHMM($('#blk-end').value);
       if (start == null || end == null || end <= start) { toast('Pick a start and end time'); return; }
@@ -2307,6 +2274,10 @@ main.addEventListener('change', e => {
   else if (t.id === 'here-select') {
     app.hereManual = t.value || null;
     store.setUI({ here: t.value ? { building: t.value, day: nowLocal(app.simNow, app.conf.tz).day } : null });
+    render();
+  }
+  else if (t.id === 'dest-select') {   // where I need to be after a candidate (issue 100); for this visit only
+    app.destChoice = t.value || null;
     render();
   }
   else if (t.dataset.set) {

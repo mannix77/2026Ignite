@@ -41,7 +41,17 @@ def workflow_marker(workflow):
     return '<!-- production-issue workflow="%s" ' % workflow.replace('"', "'")
 
 
-def body_for(workflow, kind, message, run_url, now, key):
+DETAILS_START, DETAILS_END = "<!-- details -->", "<!-- /details -->"
+
+
+def details_block(details):
+    """The diagnosis a run gave (e.g. sync.py's refusal markdown), kept apart from the problem
+    key so a repeat with other examples updates the same issue."""
+    text = str(details or "").strip()
+    return "%s\n### Diagnosis\n%s\n%s" % (DETAILS_START, text[:6000], DETAILS_END) if text else ""
+
+
+def body_for(workflow, kind, message, run_url, now, key, details=""):
     return "\n".join([
         marker(workflow, key),
         "**Workflow:** %s · **Problem:** `%s`" % (workflow, kind),
@@ -54,13 +64,15 @@ def body_for(workflow, kind, message, run_url, now, key):
         "**Last seen:** %s ([run](%s))" % (now, run_url),
         "**Occurrences:** 1",
         "",
+    ] + ([details_block(details), ""] if details_block(details) else []) + [
         "Opened by the workflow. Repeats of this problem update the lines above; the issue "
         "closes itself when the workflow next succeeds.",
     ]) + "\n"
 
 
-def report_problem(gh, workflow, kind, title, message, run_url, now):
-    """Open an issue for a new problem, or update the open one for the same problem."""
+def report_problem(gh, workflow, kind, title, message, run_url, now, details=""):
+    """Open an issue for a new problem, or update the open one for the same problem. A repeat
+    that brings a diagnosis replaces the one on the issue; one without keeps the old one."""
     key = problem_key(kind, message)
     for issue in gh.list_open(LABEL):
         body = issue.get("body") or ""
@@ -70,9 +82,15 @@ def report_problem(gh, workflow, kind, title, message, run_url, now):
         n = int(m.group(1)) + 1 if m else 2
         body = re.sub(r"\*\*Occurrences:\*\* \d+", "**Occurrences:** %d" % n, body)
         body = re.sub(r"\*\*Last seen:\*\* .*", lambda _: "**Last seen:** %s ([run](%s))" % (now, run_url), body)
+        block = details_block(details)
+        if block:
+            if DETAILS_START in body and DETAILS_END in body:
+                body = body[:body.index(DETAILS_START)] + block + body[body.index(DETAILS_END) + len(DETAILS_END):]
+            else:
+                body = body.rstrip("\n") + "\n\n" + block + "\n"
         gh.edit_body(issue["number"], body)
         return "updated"
-    gh.create("[%s] %s" % (workflow, title), body_for(workflow, kind, message, run_url, now, key), LABEL)
+    gh.create("[%s] %s" % (workflow, title), body_for(workflow, kind, message, run_url, now, key, details), LABEL)
     return "opened"
 
 
@@ -132,6 +150,7 @@ def main(argv=None):
     ap.add_argument("--title", default="Workflow failed")
     ap.add_argument("--message", default="")
     ap.add_argument("--message-file")
+    ap.add_argument("--details-file", help="a diagnosis to show on the issue (not part of the problem key)")
     ap.add_argument("--repo", default=os.environ.get("GITHUB_REPOSITORY", "mannix77/2026Ignite"))
     args = ap.parse_args(argv)
     now = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
@@ -144,7 +163,11 @@ def main(argv=None):
     if args.message_file and os.path.exists(args.message_file):
         with open(args.message_file, encoding="utf-8") as f:
             message = f.read() or message
-    result = report_problem(gh, args.workflow, args.kind, args.title, message or "(no details)", args.run_url, now)
+    details = ""
+    if args.details_file and os.path.exists(args.details_file):
+        with open(args.details_file, encoding="utf-8") as f:
+            details = f.read()
+    result = report_problem(gh, args.workflow, args.kind, args.title, message or "(no details)", args.run_url, now, details)
     print(result)
     if os.environ.get("GITHUB_OUTPUT"):
         with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as f:
