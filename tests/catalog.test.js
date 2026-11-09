@@ -497,6 +497,8 @@ await test('should say the seat is held only on the run that holds it, and point
   eq(seatsDetail(held), 'You hold a reserved seat · 64 seats', 'with no pick to go by, the exported status stands');
   eq([seatsDetail({ availability: 'reserve_a_seat' }, false), seatsDetail({ availability: 'session_full' }, true)],
     ['Seats to reserve', 'Full: reservations are gone; a walk-up line forms before the start (arrive 15 min early)'], 'other statuses ignore the flag');
+  eq(seatsDetail(held, 'lost'), 'Your reserved seat was in a run no longer in the catalog · 64 seats', 'the reserved run left the catalog');
+  eq(seatsDetail({ availability: 'reserve_a_seat' }, 'lost'), 'Seats to reserve');
 });
 
 await test('should leave a catalog without a seat file exactly as it is', () => {

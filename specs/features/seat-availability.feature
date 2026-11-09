@@ -35,6 +35,11 @@ Feature: Seeing whether a seat can still be had
       When he opens the Thursday run
       Then it says his reserved seat is in another run
 
+    Example: The reserved run leaves the catalog
+      Given Minesh reserved a seat for a run Microsoft has since removed
+      When he opens one of the lab's remaining runs
+      Then it says his reserved seat was in a run no longer listed
+
   Rule: Seat records that don't belong to the catalog are ignored
 
     Example: The one with a seat record for an unknown session
