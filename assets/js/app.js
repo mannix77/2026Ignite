@@ -10,7 +10,7 @@ import { slotGroups, rankOptions, rankTie } from './clash.js';
 import { createVenue, setVenue, walkMinutes, floorExtra, mergeWalk } from './venue.js';
 import { CONFERENCES, currentConferenceId, rememberConference, conferenceList } from './conferences.js';
 import { buildSuggester } from './suggest.js';
-import { createRanker, partition, profileConfig, profileGroups, GOALS } from './profile.js';
+import { createRanker, partition, profileConfig, profileGroups, GOALS, parsePrefsLink, applyPrefs, prefsSummary } from './profile.js';
 import { storageStatus, backupReminder, backupAge } from './health.js';
 import { INSTANCE_LABEL, nsKey, guideUrl } from './instance.js';
 import { esc, attr, icon, bldgChip, recChip, rsvpChip, rsvpOpensText, seatsDetail, prioPill, scoreChip, whenText, prioControl, sessionCard, cardClass, toast, shareOrDownload, copyText, speakersLine, setHostCompany, unknownRoomsNote, venueMapUrl, mapChip, occupancyOf, occupancyChip } from './ui.js';
@@ -1733,7 +1733,7 @@ function renderSettings() {
         <label class="btn small">Restore backup<input type="file" accept="application/json,.json" id="import-file" hidden></label>
         <button class="btn small" data-act="share">Copy link to my picks</button></div>
       <div class="field" style="grid-template-columns:1fr;margin-top:10px"><label for="import-code">Import picks from a link<small>Paste a link copied on another device (e.g. Safari → Home Screen app)</small></label></div>
-      <div class="row"><input id="import-code" type="text" inputmode="url" autocomplete="off" placeholder="https://…#/import/…" style="flex:1;min-width:0;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--surface)">
+      <div class="row"><input id="import-code" type="text" inputmode="url" autocomplete="off" placeholder="https://…#/import/… or #/prefs/…" style="flex:1;min-width:0;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--surface)">
         <button class="btn small" data-act="import-code">Import</button></div>
       <p class="small muted" style="margin-top:10px">Using an AI assistant? Point it at <a href="${attr(guideUrl(location.href))}" target="_blank" rel="noopener">${esc(guideUrl(location.href))}</a>; it explains how to make an import link for you to open here.</p>
       ${app.conf.live ? `<h3 style="margin-top:14px">Email alerts for your picks</h3>
@@ -1973,6 +1973,14 @@ function onRoute() {
     importShare(safeDecode(r.arg));
     return;
   }
+  if (r.tab === 'prefs') {   // Triage preferences from a link (issue #23); never rates anything
+    history.replaceState(null, '', '#/triage');
+    app.tab = 'triage';
+    store.setUI({ tab: 'triage' });
+    render();
+    applyPrefsLink(r.arg);   // URLSearchParams decodes it once; a second decode would break an encoded &
+    return;
+  }
   const tab = TABS.includes(r.tab) ? r.tab : store.get().ui.tab || 'browse';
   if (dialog.open) closeDetail();
   if (tab !== app.tab || !app.rendered) {
@@ -1981,6 +1989,16 @@ function onRoute() {
     render();
     window.scrollTo(0, 0);
   }
+}
+
+// A preferences link: say what it sets (and what it leaves out), and apply only on a yes.
+function applyPrefsLink(str) {
+  const parsed = parsePrefsLink(str, { cfg: profileConfig(app.conf.id), sessions: app.model.sessions });
+  const lines = prefsSummary(parsed);
+  if (!Object.keys(parsed.set).length && !Object.keys(parsed.groups).length) { toast(`That preferences link had nothing ${app.conf.short} knows. ${lines.slice(1).join(' ')}`); return; }
+  if (!confirm(`Set these Triage preferences for ${app.conf.name}? Your ratings stay as they are.\n\n${lines.join('\n')}`)) return;
+  store.updateProfile(applyPrefs(store.profile(), parsed));
+  toast('Preferences set. Triage shows what they leave to rate');
 }
 
 function importShare(str) {
@@ -2190,6 +2208,7 @@ function onClick(e) {
     },
     'import-code': () => {
       const raw = ($('#import-code')?.value || '').trim();
+      if (raw.includes('#/prefs/')) { applyPrefsLink(raw.split('#/prefs/')[1]); return; }
       importShare(safeDecode(raw.includes('#/import/') ? raw.split('#/import/')[1] : raw));
     },
     'favorites-import': () => { if (confirm('Import your workbook favorites? Ratings, scores and watch-later marks for those sessions will be set from the spreadsheet; your notes are kept.')) importFavorites(); },
@@ -2256,7 +2275,7 @@ function switchConference(id) {
   const u = new URL(location.href);
   u.searchParams.set('conf', id);
   u.searchParams.delete('data');
-  u.hash = location.hash.startsWith('#/session/') || location.hash.startsWith('#/import/') ? '#/plan' : location.hash;
+  u.hash = location.hash.startsWith('#/session/') || location.hash.startsWith('#/import/') || location.hash.startsWith('#/prefs/') ? '#/plan' : location.hash;   // a link is for the conference it named
   location.href = u.toString();
 }
 

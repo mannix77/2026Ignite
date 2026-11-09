@@ -139,5 +139,69 @@ await test('should include preferences in a backup', () => {
   eq(store.exportData().profile.interests, ['Security']);
 });
 
+// ---- a link that sets Triage preferences (specs/features/preferences-link.feature)
+const { parsePrefsLink, applyPrefs, prefsSummary } = await import('../assets/js/profile.js');
+const igniteCfg = profileConfig('ignite2026');
+const linkCatalog = [
+  session({ topics: ['AI'], type: 'Breakout', level: 200 }),
+  session({ topics: ['Security'], type: 'Pre-recorded', level: 300 }),
+  session({ topics: ['AI'], type: 'Lab', level: 400, tags: ['Copilot'] }),
+];
+const parseLink = str => parsePrefsLink(str, { cfg: igniteCfg, sessions: linkCatalog });
+
+await test('should read every preference a link can carry', () => {
+  const r = parseLink('role=Enterprise%20architect&interest=AI&goal=ai&goal=security&level=200&level=400&hide=Pre-recorded&want=topic:AI&skip=type:Lab&size=150');
+  eq(r.set, { roles: ['Enterprise architect'], interests: ['AI'], goals: ['ai', 'security'], levels: [200, 400], offTypes: ['Pre-recorded'], size: 150 });
+  eq(r.groups, { 'topic:AI': 1, 'type:Lab': -1 });
+  eq(r.ignored, []);
+});
+await test('should leave out values the conference does not have, and name each one', () => {
+  const r = parseLink('role=Astronaut&goal=ai&goal=flying&interest=Gardening&level=250&hide=Opera&want=topic:Gardening&skip=colour:red&size=9&mood=happy');
+  eq(r.set, { goals: ['ai'] });
+  eq(r.groups, {});
+  eq(r.ignored, ['role: Astronaut', 'goal: flying', 'interest: Gardening', 'level: 250', 'hide: Opera', 'want: topic:Gardening', 'skip: colour:red', 'size: 9', 'mood: happy']);
+});
+await test('should leave out a level at a conference without levels, and keep it at one with them', () => {
+  const gartnerCfg = profileConfig('gartner2026');
+  eq(parsePrefsLink('level=200', { cfg: gartnerCfg, sessions: linkCatalog }).ignored, ['level: 200']);
+  eq(parseLink('level=200').set, { levels: [200] });
+});
+await test('should read a + or an encoded space as a space, and a later want or skip of the same group wins', () => {
+  const r = parseLink('role=Enterprise+architect&want=type:Lab&skip=type:Lab');
+  eq([r.set.roles, r.groups], [['Enterprise architect'], { 'type:Lab': -1 }]);
+});
+await test('should read nothing from an empty or malformed link', () => {
+  for (const s of ['', '&&', '=', 'role=']) eq(parseLink(s), { set: {}, groups: {}, ignored: s === 'role=' ? ['role: (empty)'] : [] });
+});
+
+await test('should replace the fields a link names and add its group choices to the ones already there', () => {
+  const before = profile({ goals: ['architecture', 'strategy'], interests: ['Security'], groups: { 'topic:AI': 1 } });
+  const after = applyPrefs(before, parseLink('goal=ai&skip=type:Pre-recorded'));
+  eq([after.goals, after.interests, after.groups], [['ai'], ['Security'], { 'topic:AI': 1, 'type:Pre-recorded': -1 }]);
+});
+await test('should hide a skipped group without rating any of its sessions', () => {
+  const after = applyPrefs(profile({}), parseLink('skip=type:Lab'));
+  const lab = linkCatalog[2];
+  eq(createRanker(after, 'ignite2026').evaluate(lab).hidden, 'group');
+  eq(createRanker(after, 'ignite2026').evaluate(linkCatalog[0]).hidden, null, 'another type is not hidden');
+  eq(Object.keys(after).includes('picks'), false, 'a profile carries no ratings');
+});
+await test('should describe what the link sets and what it leaves out, for the confirmation', () => {
+  const lines = prefsSummary(parseLink('role=Astronaut&goal=ai&level=200&hide=Pre-recorded&want=topic:AI&skip=type:Lab'));
+  eq(lines, ['Goals: AI & agents', 'Levels: 200', 'Hide formats: Pre-recorded', 'Want all: topic AI', 'Skip all: type Lab', 'Left out (not in this conference): role: Astronaut']);
+  eq(prefsSummary(parseLink('mood=happy')), ['Nothing this conference knows', 'Left out (not in this conference): mood: happy']);
+});
+
+await test("should read the guide's worked preferences example against the committed Gartner catalog with nothing left out", async () => {
+  const { readFileSync } = await import('node:fs');
+  const guide = readFileSync(new URL('../llms.txt', import.meta.url), 'utf8');
+  const link = guide.split('\n').find(l => l.includes('?conf=gartner2026#/prefs/'));
+  eq(!!link, true);
+  const catalog = JSON.parse(readFileSync(new URL('../data/gartner2026/sessions.json', import.meta.url), 'utf8')).sessions;
+  const r = parsePrefsLink(link.split('#/prefs/')[1], { cfg: profileConfig('gartner2026'), sessions: catalog });
+  eq(r.ignored, []);
+  eq([r.set, r.groups], [{ roles: ['Enterprise architect'], interests: ['Agentic AI'], goals: ['architecture'] }, { 'type:Solution Provider Sessions': -1, 'type:Roundtables': -1 }]);
+});
+
 console.log(`${pass} passed, ${fail} failed`);
 if (fail) process.exitCode = 1;
