@@ -580,15 +580,47 @@ def value_shape(v):
     return "unknown"
 
 
-def _js_numbers(v):
-    """JSON.stringify prints 1.0 as 1: integral floats become ints, recursively."""
-    if isinstance(v, float) and math.isfinite(v) and v.is_integer():
-        return int(v)
+def js_number(v):
+    """A finite number as JavaScript's Number.prototype.toString prints it (ECMAScript 6.1.6.1.20):
+    the shortest round-trip digits (which Python's repr also produces), whole numbers below 1e21
+    without a point or exponent, a point for 1e-6 and above, an exponent (1e+21, 1e-7) otherwise."""
+    x = float(v)
+    if x == 0:
+        return "0"
+    sign = "-" if x < 0 else ""
+    mant, _, exp = repr(abs(x)).partition("e")
+    whole, _, frac = mant.partition(".")
+    digits = (whole + frac).lstrip("0")
+    n = len(whole) + (int(exp) if exp else 0) - (len(whole + frac) - len(digits))  # decimal point sits after n digits
+    digits = digits.rstrip("0") or "0"
+    k = len(digits)
+    if k <= n <= 21:
+        return sign + digits + "0" * (n - k)
+    if 0 < n <= 21:
+        return sign + digits[:n] + "." + digits[n:]
+    if -6 < n <= 0:
+        return sign + "0." + "0" * (-n) + digits
+    e = n - 1
+    return sign + digits[0] + ("." + digits[1:] if k > 1 else "") + "e" + ("+" if e >= 0 else "-") + str(abs(e))
+
+
+def js_json(v):
+    """JSON.stringify's output for a parsed JSON value: numbers as JavaScript prints them, a number
+    the browser cannot hold as null (as it does), keys in their order, non-ASCII text kept."""
+    if v is None or isinstance(v, bool):
+        return "null" if v is None else ("true" if v else "false")
+    if isinstance(v, (int, float)):
+        try:
+            return js_number(v) if math.isfinite(float(v)) else "null"
+        except OverflowError:
+            return "null"
+    if isinstance(v, str):
+        return json.dumps(v, ensure_ascii=False)
     if isinstance(v, list):
-        return [_js_numbers(x) for x in v]
+        return "[" + ",".join(js_json(x) for x in v) + "]"
     if isinstance(v, dict):
-        return {k: _js_numbers(x) for k, x in v.items()}
-    return v
+        return "{" + ",".join(json.dumps(str(k), ensure_ascii=False) + ":" + js_json(x) for k, x in v.items()) + "}"
+    return json.dumps(str(v), ensure_ascii=False)
 
 
 def shape_example(v):
@@ -596,7 +628,7 @@ def shape_example(v):
     a number the browser cannot hold prints as Infinity on both sides."""
     if isinstance(v, (int, float)) and not isinstance(v, bool) and value_shape(v) == "unknown":
         return "Infinity"
-    return json.dumps(_js_numbers(v), separators=(",", ":"), ensure_ascii=False)[:60]
+    return js_json(v)[:60]
 
 
 def field_shapes(raw_sessions):

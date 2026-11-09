@@ -954,6 +954,34 @@ class FeedShapeTests(SyncDir, unittest.TestCase):
                          "feed format changed: `location` has an unrecognised shape in 2 of 20 sessions (e.g. {\"x\":2}); keeping last good data")
         self.assertEqual(js_run("shapes_cli.js", path), {"shapes": shapes, "problem": sync.shape_problem(shapes)})
 
+    def test_should_print_numbers_as_javascript_does(self):
+        # Expected strings are what Number.prototype.toString / JSON.stringify print in a browser.
+        cases = [(1.0, "1"), (100.0, "100"), (0.5, "0.5"), (1234.5, "1234.5"), (0.001, "0.001"), (0.000001, "0.000001"),
+                 (1e-7, "1e-7"), (1e21, "1e+21"), (-1e21, "-1e+21"), (1.5e300, "1.5e+300"), (123456789012345680000.0, "123456789012345680000"),
+                 (12345678901234567890, "12345678901234567000"), (10 ** 22, "1e+22"), (-0.25, "-0.25"), (0.0, "0"), (7, "7")]
+        self.assertEqual([sync.js_number(v) for v, _ in cases], [want for _, want in cases])
+        self.assertEqual(sync.js_json({"a": [1.0, -2.5, None, True, "é\"x"], "b": {"c": 1e21}}), '{"a":[1,-2.5,null,true,"é\\"x"],"b":{"c":1e+21}}')
+        self.assertEqual(sync.js_json({"x": float("inf")}), '{"x":null}', "a number the browser cannot hold is null inside a value, as JSON.stringify prints it")
+
+    @unittest.skipUnless(JS_RUNNER, "needs node or jsc")
+    def test_should_agree_with_the_browser_on_every_number_format_in_an_example(self):
+        # Each case: the JSON text of an unknown `location` value and the example the browser prints for it.
+        cases = [('{"x":1e21}', '{"x":1e+21}'), ('{"x":-1e21}', '{"x":-1e+21}'), ('{"x":1e-7}', '{"x":1e-7}'), ('{"x":0.000001}', '{"x":0.000001}'),
+                 ('{"x":123456789012345680000}', '{"x":123456789012345680000}'), ('{"x":12345678901234567890}', '{"x":12345678901234567000}'),
+                 ('{"x":-0.25}', '{"x":-0.25}'), ('{"x":1e400}', '{"x":null}'), ('[7.0,"a",{"y":2.50}]', '[7,"a",{"y":2.5}]')]
+        for text, want in cases:
+            with self.subTest(text=text):
+                recs = ['{"sessionId":"s%d","sessionInstanceId":"s%d","title":"T","location":%s}' % (i, i, text if i < 2 else '"R"') for i in range(20)]
+                path = os.path.join(self.tmp, "num.json")
+                with open(path, "w", encoding="utf-8") as f:
+                    f.write("[" + ",".join(recs) + "]")
+                with open(path, encoding="utf-8") as f:
+                    shapes = sync.field_shapes(json.load(f))
+                self.assertEqual(shapes["location"]["example"], want)
+                self.assertEqual(sync.shape_problem(shapes),
+                                 "feed format changed: `location` has an unrecognised shape in 2 of 20 sessions (e.g. %s); keeping last good data" % want)
+                self.assertEqual(js_run("shapes_cli.js", path), {"shapes": shapes, "problem": sync.shape_problem(shapes)})
+
     def test_should_keep_the_last_good_catalog_and_say_why(self):
         self.run_sync(catalog_of(60))
         before = self.data("sessions.json")
