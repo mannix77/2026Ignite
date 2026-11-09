@@ -123,5 +123,65 @@ class CommitStepTests(unittest.TestCase):
         self.assertEqual(self.remote_file("sessions.json"), "theirs\n")
 
 
+def active_lines(text):
+    """The YAML lines that are in effect: comment-only lines dropped, so a commented-out mapping can't satisfy a test."""
+    return "\n".join(l for l in text.splitlines() if not l.lstrip().startswith("#"))
+
+
+def deploy_job_text():
+    text = open(WORKFLOW, encoding="utf-8").read()
+    return text.split("\n  deploy:")[1].split("\n  # One GitHub issue per production problem")[0]
+
+
+class DeployRetryTests(unittest.TestCase):
+    """A Pages API hiccup (HTTP 500 within ~3 s) is retried once after 60 s instead of failing the run."""
+
+    def steps(self):
+        body = deploy_job_text().split("\n    steps:\n")[1]
+        body = active_lines(body)
+        return [s.strip("\n") for s in re.split(r"\n(?=      - )", body.strip("\n"))]
+
+    def test_failed_first_deploy_waits_60s_then_deploys_again(self):
+        # Whole-line comparisons: a condition with something appended must not satisfy these.
+        first, wait, retry = (s.splitlines() for s in self.steps())
+        failed = "        if: steps.deployment.outcome == 'failure'"
+        self.assertIn("      - id: deployment", first)
+        self.assertIn("        continue-on-error: true", first)  # the retry decides whether the job fails
+        # The first attempt must always run: a skipped first step is not a failure, so no retry would follow.
+        self.assertFalse([l for l in first if l.strip().startswith("if:")])
+        self.assertIn(failed, wait)
+        self.assertIn("        run: sleep 60", wait)
+        self.assertIn("      - id: deployment_retry", retry)
+        self.assertIn(failed, retry)
+        self.assertFalse([l for l in retry if l.strip().startswith("continue-on-error")])  # a second failure must fail the job
+        # Both attempts use the same pinned action, so the retry can't drift from the first try.
+        pin = re.compile(r"^        uses: actions/deploy-pages@([0-9a-f]{40}) # v[\d.]+$")
+        pins = [[m.group(1) for m in map(pin.match, lines) if m] for lines in (first, retry)]
+        self.assertEqual(len(pins[0]), 1)
+        self.assertEqual(pins[0], pins[1])
+
+    def test_the_environment_url_comes_from_whichever_attempt_deployed(self):
+        environment = active_lines(deploy_job_text()).split("\n    environment:\n")[1].split("\n    steps:\n")[0]
+        self.assertIn(
+            "      url: ${{ steps.deployment.outputs.page_url || steps.deployment_retry.outputs.page_url }}",
+            environment.splitlines())
+
+    def test_the_report_job_still_sees_the_deploy_job_result(self):
+        # A second failure fails the deploy job, which the report job turns into a production issue.
+        # Scoped to the report job and the one step that files the issue, and to active lines only
+        # (a commented-out mapping must not satisfy it).
+        with open(WORKFLOW, encoding="utf-8") as f:
+            report = active_lines(f.read().split("\n  report:\n")[1])
+        head = report.split("\n    steps:\n")[0]
+        self.assertIn("    needs: [sync, deploy]", head.splitlines())
+        # Without this condition GitHub skips the report job when deploy fails, so no issue is filed.
+        # The whole line is compared: appending e.g. "&& needs.deploy.result == 'success'" would
+        # skip exactly the failed deploys.
+        self.assertIn("    if: always() && needs.sync.result != 'cancelled'", head.splitlines())
+        step = report.split("- name: Open, update or close the production issue\n")[1].split("\n      - name:")[0]
+        env = step.split("        env:\n")[1].split("        run:")[0]
+        self.assertIn("          DEPLOY: ${{ needs.deploy.result }}", env.splitlines())
+
+
 if __name__ == "__main__":
     unittest.main()
