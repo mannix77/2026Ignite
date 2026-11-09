@@ -532,6 +532,62 @@ await test('should apply exactly the previewed changes from a picks link', async
   await sleep(SAVE);
 });
 
+// ---- two open tabs never lose each other's edits (keeping-picks-safe.feature; issue #75)
+// Another tab's save arrives as a storage event while this tab still has an unsaved change.
+const keyOf = ns => `ignite26.planner.v1:${ns}`;
+const otherTabSaves = (ns, picks) => {
+  const value = JSON.stringify({ v: 1, picks, prefs: {}, profile: null });
+  localStorage.setItem(keyOf(ns), value);
+  for (const fn of pageEvents.storage || []) fn({ key: keyOf(ns), newValue: value });
+};
+const savedPicks = ns => JSON.parse(localStorage.getItem(keyOf(ns))).picks;
+const T = 1_790_000_000_000;
+
+await test('should keep this tab\'s pending rating and the other tab\'s saved one when they touch different sessions', async () => {
+  localStorage.removeItem(keyOf('tabs-different'));
+  store.load('tabs-different');
+  store.mutatePicks(p => { p.S1 = { p: 3, lock: null, note: '', at: T + 10 }; });   // not saved yet (150 ms delay)
+  otherTabSaves('tabs-different', { S2: { p: 2, lock: null, note: '', at: T + 20 } });
+  eq([store.pick('S1')?.p, store.pick('S2')?.p], [3, 2], 'both in this tab at once');
+  await sleep(SAVE);
+  eq(Object.keys(savedPicks('tabs-different')).sort(), ['S1', 'S2'], 'and both saved');
+});
+
+await test('should keep the later rating when both tabs rated the same session, either way round', async () => {
+  for (const [mine, theirs, want] of [[T + 30, T + 20, 3], [T + 20, T + 30, 0], [T + 25, T + 25, 0]]) {   // a tie goes to the tab that saved
+    localStorage.removeItem(keyOf('tabs-same'));
+    store.load('tabs-same');
+    store.mutatePicks(p => { p.S1 = { p: 3, lock: null, note: '', at: mine }; });
+    otherTabSaves('tabs-same', { S1: { p: 0, lock: null, note: '', at: theirs } });
+    eq(store.pick('S1').p, want);
+    await sleep(SAVE);
+    eq(savedPicks('tabs-same').S1.p, want);
+  }
+});
+
+await test("should keep a rating cleared in this tab cleared when the other tab didn't touch it, and adopt it when it did", async () => {
+  for (const [theirsS1, want] of [[null, null], [{ p: 1, lock: null, note: 'theirs', at: T + 50 }, 1]]) {
+    localStorage.removeItem(keyOf('tabs-cleared'));
+    store.load('tabs-cleared');
+    store.mutatePicks(p => { p.S1 = { p: 2, lock: null, note: '', at: T + 1 }; });
+    await sleep(SAVE);                                             // S1 is saved
+    store.mutatePicks(p => { delete p.S1; });                      // cleared here, not saved yet
+    otherTabSaves('tabs-cleared', { S1: theirsS1 || { p: 2, lock: null, note: '', at: T + 1 }, S2: { p: 3, lock: null, note: '', at: T + 40 } });
+    eq([store.pick('S1')?.p ?? null, store.pick('S2')?.p], [want, 3]);
+    await sleep(SAVE);
+    eq([savedPicks('tabs-cleared').S1?.p ?? null, savedPicks('tabs-cleared').S2?.p], [want, 3]);
+  }
+});
+
+await test('should simply adopt the other tab\'s save when nothing here is pending', async () => {
+  localStorage.removeItem(keyOf('tabs-idle'));
+  store.load('tabs-idle');
+  store.mutatePicks(p => { p.S1 = { p: 3, lock: null, note: '', at: T + 1 }; });
+  await sleep(SAVE);
+  otherTabSaves('tabs-idle', { S1: { p: 0, lock: null, note: '', at: T }, S9: { p: 1, lock: null, note: '', at: T } });
+  eq([store.pick('S1').p, store.pick('S9').p], [0, 1], 'the other tab\'s save wins outright: nothing here was unsaved');
+});
+
 await sleep(SAVE);
 console.log(`${pass} passed, ${fail} failed`);
 if (fail) process.exit(1);

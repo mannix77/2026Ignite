@@ -60,6 +60,10 @@ function merge(base, extra) {
 
 let state = blank();
 let cachedSettings = null;
+// The picks as they were last read from or written to storage: what an unsaved change is measured
+// against when another tab's save arrives (#75).
+let savedPicks = {};
+const snapshotPicks = () => { savedPicks = JSON.parse(JSON.stringify(state.picks)); };
 let conferenceDefaults = {};
 const listeners = new Set();
 let saveTimer = null;
@@ -104,6 +108,7 @@ export function load(namespace = '') {
     try { raw = localStorage.getItem(KEY); if (raw) localStorage.setItem(`${KEY}#unreadable`, raw); } catch { unreadable = raw; }
   }
   cachedSettings = null;
+  snapshotPicks();
   return state;
 }
 
@@ -125,6 +130,7 @@ function writeNow() {
   try {
     if (unreadable != null) { localStorage.setItem(`${KEY}#unreadable`, unreadable); unreadable = null; } // copy first, or don't save
     localStorage.setItem(KEY, JSON.stringify(state));
+    snapshotPicks();
     if (saveFailed) { saveFailed = false; for (const fn of listeners) fn('save-ok'); }
   } catch (e) {
     console.warn('Could not save state', e);
@@ -146,13 +152,44 @@ if (typeof document !== 'undefined' && document.addEventListener) {
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') flushPending(); });
 }
 
-// Another tab saved: adopt its state instead of overwriting it on our next save.
+// The picks this tab changed since its last save: id -> { mine (null = cleared here), base }.
+function unsavedPicks() {
+  const out = {};
+  for (const id of new Set([...Object.keys(state.picks), ...Object.keys(savedPicks)])) {
+    const mine = state.picks[id] ?? null, base = savedPicks[id] ?? null;
+    if (JSON.stringify(mine) !== JSON.stringify(base)) out[id] = { mine, base };
+  }
+  return out;
+}
+
+// After adopting another tab's save, put back what this tab changed and had not saved yet: a
+// pick rated here wins when it is newer than the other tab's (the same rule a merged backup
+// uses); a pick cleared here stays cleared unless the other tab changed it too. Returns
+// whether anything was put back.
+function reapply(unsaved) {
+  let changed = false;
+  for (const [id, { mine, base }] of Object.entries(unsaved)) {
+    const theirs = state.picks[id] ?? null;
+    if (mine) {
+      if (!theirs || (mine.at || 0) > (theirs.at || 0)) { state.picks[id] = mine; changed = true; }
+    } else if (theirs && JSON.stringify(theirs) === JSON.stringify(base)) {
+      delete state.picks[id];
+      changed = true;
+    }
+  }
+  return changed;
+}
+
+// Another tab saved: adopt its state instead of overwriting it, and keep this tab's own
+// unsaved pick changes on top of it rather than dropping them.
 if (typeof window !== 'undefined') {
   window.addEventListener('storage', e => {
     if (e.key !== KEY || e.newValue == null) return;
+    const unsaved = saveTimer ? unsavedPicks() : {};
     clearTimeout(saveTimer);
     saveTimer = null;
     load(namespace());
+    if (reapply(unsaved)) persist();
     for (const fn of listeners) fn('reset');
   });
 }
