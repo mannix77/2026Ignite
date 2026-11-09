@@ -123,6 +123,11 @@ class CommitStepTests(unittest.TestCase):
         self.assertEqual(self.remote_file("sessions.json"), "theirs\n")
 
 
+def active_lines(text):
+    """The YAML lines that are in effect: comment-only lines dropped, so a commented-out mapping can't satisfy a test."""
+    return "\n".join(l for l in text.splitlines() if not l.lstrip().startswith("#"))
+
+
 def deploy_job_text():
     text = open(WORKFLOW, encoding="utf-8").read()
     return text.split("\n  deploy:")[1].split("\n  # One GitHub issue per production problem")[0]
@@ -133,7 +138,7 @@ class DeployRetryTests(unittest.TestCase):
 
     def steps(self):
         body = deploy_job_text().split("\n    steps:\n")[1]
-        body = "\n".join(l for l in body.splitlines() if not l.lstrip().startswith("#"))
+        body = active_lines(body)
         return [s.strip("\n") for s in re.split(r"\n(?=      - )", body.strip("\n"))]
 
     def test_failed_first_deploy_waits_60s_then_deploys_again(self):
@@ -151,20 +156,24 @@ class DeployRetryTests(unittest.TestCase):
         self.assertEqual(pin.search(first).group(1), pin.search(retry).group(1))
 
     def test_the_environment_url_comes_from_whichever_attempt_deployed(self):
+        environment = active_lines(deploy_job_text()).split("\n    environment:\n")[1].split("\n    steps:\n")[0]
         self.assertIn(
-            "url: ${{ steps.deployment.outputs.page_url || steps.deployment_retry.outputs.page_url }}",
-            deploy_job_text())
+            "      url: ${{ steps.deployment.outputs.page_url || steps.deployment_retry.outputs.page_url }}",
+            environment.splitlines())
 
     def test_the_report_job_still_sees_the_deploy_job_result(self):
         # A second failure fails the deploy job, which the report job turns into a production issue.
-        # Scoped to the report job and the one step that files the issue, so moving the mapping
-        # elsewhere in the file can't leave this passing.
+        # Scoped to the report job and the one step that files the issue, and to active lines only
+        # (a commented-out mapping must not satisfy it).
         with open(WORKFLOW, encoding="utf-8") as f:
-            report = f.read().split("\n  report:\n")[1]
-        self.assertIn("needs: [sync, deploy]", report.split("\n    steps:\n")[0])
+            report = active_lines(f.read().split("\n  report:\n")[1])
+        head = report.split("\n    steps:\n")[0]
+        self.assertIn("\n    needs: [sync, deploy]", "\n" + head)
+        # Without this condition GitHub skips the report job when deploy fails, so no issue is filed.
+        self.assertIn("\n    if: always() && needs.sync.result != 'cancelled'", "\n" + head)
         step = report.split("- name: Open, update or close the production issue\n")[1].split("\n      - name:")[0]
         env = step.split("        env:\n")[1].split("        run:")[0]
-        self.assertIn("DEPLOY: ${{ needs.deploy.result }}", env)
+        self.assertIn("\n          DEPLOY: ${{ needs.deploy.result }}", "\n" + env)
 
 
 if __name__ == "__main__":
