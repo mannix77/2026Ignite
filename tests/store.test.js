@@ -195,6 +195,27 @@ await test('should copy unreadable data first, then save, once storage allows it
     JSON.parse(localStorage.getItem('ignite26.planner.v1:copy-later')).picks.S1?.p], [true, 3, 3]);
 });
 
+// The "not saved" banner hides on the save-ok that follows a save-error (issue #77).
+await test('should report save-ok once a failing save succeeds again, and only then', async () => {
+  localStorage.removeItem('ignite26.planner.v1:save-recovery');
+  store.load('save-recovery');
+  const seen = [];
+  const off = store.subscribe(w => { if (w === 'save-error' || w === 'save-ok') seen.push(w); });
+  globalThis.__quota = 10;
+  store.mutatePicks(p => { p.S1 = { p: 3, lock: null, note: '', at: 1 }; });
+  await sleep(SAVE);
+  const whileFull = [store.saveFailing(), localStorage.getItem('ignite26.planner.v1:save-recovery')];
+  globalThis.__quota = null;
+  store.mutatePicks(p => { p.S2 = { p: 2, lock: null, note: '', at: 2 }; });
+  await sleep(SAVE);
+  store.mutatePicks(p => { p.S3 = { p: 1, lock: null, note: '', at: 3 }; });
+  await sleep(SAVE);
+  off();
+  eq(whileFull, [true, null]);
+  eq([seen, store.saveFailing()], [['save-error', 'save-ok'], false], 'one save-ok after recovering, none for the next ordinary save');
+  eq(Object.keys(JSON.parse(localStorage.getItem('ignite26.planner.v1:save-recovery')).picks).sort(), ['S1', 'S2', 'S3'], 'the change made while full was saved too');
+});
+
 await test('should restore "preferences never set" when replacing from such a backup', () => {
   store.load('profile-replace-null');
   store.updateProfile({ roles: ['architect'] });
