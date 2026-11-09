@@ -2223,7 +2223,7 @@ function onClick(e) {
         const first = runs[0];
         if (!gp || !first) continue;
         const run = (gp.lock && runs.find(r => r.key === gp.lock)) || runs.find(r => r.day) || first;
-        items.push({ code: first.code, title: first.title, when: run.day ? whenText(run) : null, p: gp.p, score: gp.score,
+        items.push({ code: first.code, title: first.title, when: run.day || run.onlineOnly ? whenText(run) : null, p: gp.p, score: gp.score,
           mode: gp.mode, note: gp.note, lockedRun: gp.lock ? runs.find(r => r.key === gp.lock)?.code || null : null,
           lockPreview: !!gp.lock && gp.lock !== gp.reserved && store.pick(gp.holder)?.lockMode === 'preview' });
       }

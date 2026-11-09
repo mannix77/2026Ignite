@@ -365,10 +365,12 @@ await test('should import each token the guide lists as accepted the way the gui
     'BRK201.2s100.5': [2, null, null, null],
     'BRK201.1w': [1, null, 'watch', null],
     'BRK201.3s92.5w!BRK201': [3, 92.5, 'watch', 'BRK201'],
+    'BRK201.2*BRK201': [2, null, null, 'BRK201'],   // a preview choice: lockMode preview, checked below
   };
   const documented = documentedTokens('Accepted tokens');
   const got = Object.fromEntries(documented.map(t => [t, summary(receive(t)).BRK201]));
   eq(got, expected);
+  eq([receive('BRK201.2*BRK201').BRK201.lockMode, receive('BRK201.2!BRK201').BRK201.lockMode ?? null], ['preview', null], '*RUN is a preview choice, !RUN is not');
 });
 
 await test('should ignore each token the guide lists as ignored, and still import the rest of the link', async () => {

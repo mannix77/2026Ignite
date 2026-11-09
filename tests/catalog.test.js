@@ -510,7 +510,8 @@ await test('should leave a catalog without a seat file exactly as it is', () => 
 
 // ---- "Copy my picks for AI" (specs/features/copy-picks-for-ai.feature): the readable list an
 // assistant reads back as an import link. Pure text from rows app.js builds per repeat group.
-const { picksForAI } = await import('../assets/js/ui.js');
+const ui = await import('../assets/js/ui.js');
+const { picksForAI } = ui;
 const aiRows = [
   { code: 'BRK101', title: 'Ignite 101', when: 'Tue, Nov 17 1:30 PM', p: 3 },
   { code: 'LAB654', title: 'Copilot Connectors', when: 'Wed, Nov 18 12:00 PM', p: 2, score: 87.5, mode: 'watch', note: 'ask about Graph connectors' },
@@ -537,6 +538,11 @@ await test('should leave unrated sessions out and say so when nothing is rated',
   eq([text.split('\n')[0], text.split('\n').includes('BRK101 | Must | Tue, Nov 17 1:30 PM | Ignite 101'), text.split('\n').some(l => l.startsWith('LAB654 | Want |'))],
     ['My picks for Microsoft Ignite 2026, copied from the planner on 2026-11-09: 4 rated sessions.', true, true], 'and the rated ones still are');
   eq(picksForAI({ ...aiOpts, items: [] }).split('\n')[0], 'My picks for Microsoft Ignite 2026, copied from the planner on 2026-11-09: no rated sessions yet.');
+});
+await test('should say an online-only session is online, not that its time is unpublished', () => {
+  const { whenText } = ui;
+  eq(whenText({ onlineOnly: true, day: null }), 'Online / on demand');
+  eq(picksForAI({ ...aiOpts, items: [{ code: 'OD1', title: 'On demand', when: whenText({ onlineOnly: true, day: null }), p: 2 }] }).split('\n')[3], 'OD1 | Want | Online / on demand | On demand');
 });
 await test('should write a run chosen on the preview schedule as *RUN, never as a lock on the official one', () => {
   const lines = picksForAI({ ...aiOpts, items: [{ code: 'LAB1', title: 'Lab', when: 'Wed', p: 3, lockedRun: 'LAB1-R1', lockPreview: true }, { code: 'LAB2', title: 'Lab 2', when: 'Thu', p: 3, lockedRun: 'LAB2' }] }).split('\n');
