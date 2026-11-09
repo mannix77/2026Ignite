@@ -7,6 +7,7 @@ import { optimize, transitions, fillers, nowNext, canBoth, overlaps, transition,
 import { fmtTime, fmtDay, fmtDuration, relTime, nowLocal, addDays } from './time.js';
 import { upNext } from './upnext.js';
 import { slotGroups, rankOptions, rankTie } from './clash.js';
+import * as picks from './picks.js';
 import { createVenue, setVenue, walkMinutes, floorExtra, mergeWalk } from './venue.js';
 import { CONFERENCES, currentConferenceId, rememberConference, conferenceList } from './conferences.js';
 import { buildSuggester } from './suggest.js';
@@ -102,59 +103,17 @@ function isNew(s) {
 // records or shared ids) and a run can be cancelled. Every record is resolved to its
 // repeat group; reads and writes always act on the whole group.
 
-function resolveGroup(id, pk) {
-  const s = sessionById(id);
-  if (s) return s.group;
-  if (pk.g && app.model.byGroup.has(pk.g)) return pk.g;
-  if (pk.code) {
-    const byCode = app.model.byCode.get(pk.code);
-    if (byCode) return byCode.group;
-    const base = pk.code.replace(/-R\d+$/i, '');
-    if (app.model.byGroup.has(base)) return base;
-  }
-  return null;
-}
-
+// The rules live in picks.js (pure, tested); these wrappers bind them to the app's model and store.
 function indexPicks() {
-  const byGroup = new Map();
-  const orphans = [];
-  for (const [id, pk] of Object.entries(store.get().picks)) {
-    const g = resolveGroup(id, pk);
-    if (!g) { orphans.push({ id, ...pk }); continue; }
-    if (!byGroup.has(g)) byGroup.set(g, []);
-    byGroup.get(g).push({ id, ...pk });
-  }
-  app.picks = { byGroup, orphans };
+  app.picks = picks.indexPicks(app.model, store.get().picks);
   app.suggester = null;
 }
 
-// The group's effective pick: the most recent rating wins; the lock and reservation
-// come from whichever record holds them. A reserved seat pins that run unless you lock
-// another on purpose. Locks made in preview don't count once the real schedule is out.
+// The group's effective pick (picks.js groupPick): the most recent rating wins; the lock and
+// reservation come from whichever record holds them; a preview lock is ignored once the real
+// schedule is out.
 function groupPick(g) {
-  const recs = app.picks.byGroup.get(g);
-  if (!recs?.length) return null;
-  const byAt = recs.slice().sort((a, b) => (b.at || 0) - (a.at || 0));
-  const latest = byAt[0];
-  const official = app.model.mode === 'official';
-  const keys = new Set((app.model.byGroup.get(g) || []).map(s => s.key));
-  const lockRec = byAt.find(r => r.lock && !(official && r.lockMode === 'preview'));
-  const reserved = byAt.map(r => r.reserved).find(k => k && keys.has(k)) || null;
-  // A reservation whose run has left the catalog: not a lock on anything, but the detail view
-  // must not let another run claim the seat (#115).
-  const reservedLost = reserved ? null : byAt.map(r => r.reserved).find(Boolean) || null;
-  const scored = byAt.find(r => Number.isFinite(r.score));
-  return {
-    p: latest.p ?? null,
-    lock: (lockRec && keys.has(lockRec.lock) ? lockRec.lock : null) || reserved,
-    reserved,
-    reservedLost,
-    score: scored ? scored.score : null,
-    mode: latest.mode === 'watch' ? 'watch' : null,
-    note: recs.map(r => r.note).filter(Boolean).join('\n\n'),
-    ids: recs.map(r => r.id),
-    holder: (lockRec || latest).id,
-  };
+  return picks.groupPick(app.picks, app.model, g, app.model.mode);
 }
 const prioOf = s => groupPick(s.group)?.p ?? null;
 
@@ -169,67 +128,28 @@ function groupIds(s) {
 }
 
 function setGroupPriority(s, p) {
-  const meta = groupMeta(s);
-  store.mutatePicks(picks => {
-    for (const id of groupIds(s)) {
-      const cur = picks[id] || { note: '' };
-      picks[id] = { ...cur, ...meta, p, at: Date.now() };
-      if (!(p > 0)) { picks[id].lock = null; delete picks[id].lockMode; }
-    }
-  });
+  const meta = groupMeta(s), ids = groupIds(s);
+  store.mutatePicks(saved => picks.ratePicks(saved, ids, meta, p, Date.now()));
 }
 
-// Score / watch-later live on every record of the group. Setting them on an unrated
-// session rates it too (a score means you care about it).
+// Score / watch-later live on every record of the group (picks.js setPickField).
 function setGroupField(s, patch) {
-  const meta = groupMeta(s);
-  store.mutatePicks(picks => {
-    for (const id of groupIds(s)) {
-      const cur = picks[id] || { note: '', p: null, lock: null };
-      const next = { ...cur, ...meta, at: Date.now() };
-      if ('score' in patch) { if (patch.score == null) delete next.score; else next.score = patch.score; }
-      if ('mode' in patch) { if (patch.mode) next.mode = patch.mode; else delete next.mode; }
-      if (next.p == null && (next.score != null || next.mode)) next.p = next.mode ? 1 : 2;
-      picks[id] = next;
-    }
-  });
-}
-
-function clearGroupLocks(picks, g) {
-  for (const id of groupPick(g)?.ids || []) if (picks[id]) { picks[id].lock = null; delete picks[id].lockMode; }
+  const meta = groupMeta(s), ids = groupIds(s);
+  store.mutatePicks(saved => picks.setPickField(saved, ids, meta, patch, Date.now()));
 }
 
 // Lock a run (or unlock with instKey = null). `release` lists groups whose locks this
 // choice replaces (the other options of a clash).
 function setGroupLock(s, instKey, release = [], { dropReservation = false } = {}) {
-  const gp = groupPick(s.group);
-  const meta = groupMeta(s);
-  store.mutatePicks(picks => {
-    for (const g of release) if (g !== s.group) clearGroupLocks(picks, g);
-    clearGroupLocks(picks, s.group);
-    if (dropReservation) for (const id of gp?.ids || []) if (picks[id]) delete picks[id].reserved;
-    if (!instKey) return;
-    const holder = gp?.holder || groupOf(s)[0].id;
-    const cur = picks[holder] || { note: '' };
-    picks[holder] = { ...cur, ...meta, p: cur.p > 0 ? cur.p : gp?.p > 0 ? gp.p : 3, lock: instKey, at: Date.now() };
-    if (app.model.mode === 'preview') picks[holder].lockMode = 'preview';
-    else delete picks[holder].lockMode;
-  });
+  const gp = groupPick(s.group), meta = groupMeta(s);
+  const releaseIds = release.filter(g => g !== s.group).flatMap(g => groupPick(g)?.ids || []);
+  store.mutatePicks(saved => picks.lockPicks(saved, { gp, meta, instKey, releaseIds, preview: app.model.mode === 'preview', dropReservation, fallbackId: groupOf(s)[0].id }, Date.now()));
 }
 
 // "I reserved a seat for this run": attend that run, and stop nagging about the RSVP.
 function setReserved(s, instKey) {
-  const gp = groupPick(s.group);
-  const meta = groupMeta(s);
-  store.mutatePicks(picks => {
-    for (const id of gp?.ids || []) if (picks[id]) delete picks[id].reserved;
-    clearGroupLocks(picks, s.group);
-    if (!instKey) return;
-    const holder = gp?.holder || groupOf(s)[0].id;
-    const cur = picks[holder] || { note: '' };
-    picks[holder] = { ...cur, ...meta, p: cur.p > 0 ? cur.p : gp?.p > 0 ? gp.p : 3, lock: instKey, reserved: instKey, at: Date.now() };
-    delete picks[holder].lockMode;
-  });
+  const gp = groupPick(s.group), meta = groupMeta(s);
+  store.mutatePicks(saved => picks.reservePicks(saved, { gp, meta, instKey, fallbackId: groupOf(s)[0].id }, Date.now()));
 }
 
 function pickedGroups() {
