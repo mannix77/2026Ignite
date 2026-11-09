@@ -142,18 +142,21 @@ class DeployRetryTests(unittest.TestCase):
         return [s.strip("\n") for s in re.split(r"\n(?=      - )", body.strip("\n"))]
 
     def test_failed_first_deploy_waits_60s_then_deploys_again(self):
-        first, wait, retry = self.steps()
-        self.assertIn("id: deployment\n", first)
-        self.assertIn("actions/deploy-pages@", first)
-        self.assertIn("continue-on-error: true", first)  # the retry decides whether the job fails
-        self.assertIn("if: steps.deployment.outcome == 'failure'", wait)
-        self.assertRegex(wait, r"run: sleep 60\s*$")
-        self.assertIn("id: deployment_retry\n", retry)
-        self.assertIn("if: steps.deployment.outcome == 'failure'", retry)
-        self.assertNotIn("continue-on-error", retry)  # a second failure must fail the job
+        # Whole-line comparisons: a condition with something appended must not satisfy these.
+        first, wait, retry = (s.splitlines() for s in self.steps())
+        failed = "        if: steps.deployment.outcome == 'failure'"
+        self.assertIn("      - id: deployment", first)
+        self.assertIn("        continue-on-error: true", first)  # the retry decides whether the job fails
+        self.assertIn(failed, wait)
+        self.assertIn("        run: sleep 60", wait)
+        self.assertIn("      - id: deployment_retry", retry)
+        self.assertIn(failed, retry)
+        self.assertFalse([l for l in retry if l.strip().startswith("continue-on-error")])  # a second failure must fail the job
         # Both attempts use the same pinned action, so the retry can't drift from the first try.
-        pin = re.compile(r"actions/deploy-pages@(\w{40}) # v[\d.]+")
-        self.assertEqual(pin.search(first).group(1), pin.search(retry).group(1))
+        pin = re.compile(r"^        uses: actions/deploy-pages@(\w{40}) # v[\d.]+$")
+        pins = [[m.group(1) for m in map(pin.match, lines) if m] for lines in (first, retry)]
+        self.assertEqual(len(pins[0]), 1)
+        self.assertEqual(pins[0], pins[1])
 
     def test_the_environment_url_comes_from_whichever_attempt_deployed(self):
         environment = active_lines(deploy_job_text()).split("\n    environment:\n")[1].split("\n    steps:\n")[0]
@@ -168,12 +171,14 @@ class DeployRetryTests(unittest.TestCase):
         with open(WORKFLOW, encoding="utf-8") as f:
             report = active_lines(f.read().split("\n  report:\n")[1])
         head = report.split("\n    steps:\n")[0]
-        self.assertIn("\n    needs: [sync, deploy]", "\n" + head)
+        self.assertIn("    needs: [sync, deploy]", head.splitlines())
         # Without this condition GitHub skips the report job when deploy fails, so no issue is filed.
-        self.assertIn("\n    if: always() && needs.sync.result != 'cancelled'", "\n" + head)
+        # The whole line is compared: appending e.g. "&& needs.deploy.result == 'success'" would
+        # skip exactly the failed deploys.
+        self.assertIn("    if: always() && needs.sync.result != 'cancelled'", head.splitlines())
         step = report.split("- name: Open, update or close the production issue\n")[1].split("\n      - name:")[0]
         env = step.split("        env:\n")[1].split("        run:")[0]
-        self.assertIn("\n          DEPLOY: ${{ needs.deploy.result }}", "\n" + env)
+        self.assertIn("          DEPLOY: ${{ needs.deploy.result }}", env.splitlines())
 
 
 if __name__ == "__main__":
