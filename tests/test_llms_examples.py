@@ -123,6 +123,19 @@ class CommandTests(unittest.TestCase):
         self.assertIn("BIZ333-R", proc.stdout)
         self.assertFalse(self.verified, "a stale example is not verified")
 
+    def test_should_name_an_unreadable_catalog_next_to_a_stale_code(self):
+        os.makedirs(os.path.join(self.tmp, "data", "ignite2026"))
+        with open(os.path.join(self.tmp, "data", "ignite2026", "sessions.json"), "w", encoding="utf-8") as f:
+            f.write('{"sessions": [{"code": "BRK1')
+        with open(os.path.join(self.tmp, "llms.txt"), "a", encoding="utf-8") as f:
+            f.write("https://x/?conf=ignite2026#/import/BRK101.3\n")
+        proc, outputs, problem = self.run_check()
+        self.assertEqual((proc.returncode, "stale=true" in outputs, self.verified), (0, True, False), proc.stderr)
+        self.assertIn("reinvent2026: `BIZ333-R` is no longer in the catalog", problem)
+        self.assertIn("Could not check ignite2026 (catalog missing or unreadable)", problem)
+        self.assertIn("BIZ333-R", proc.stdout)
+        self.assertIn("could not check ignite2026", proc.stdout)
+
     def test_should_exit_zero_and_write_no_problem_when_every_example_is_current(self):
         with open(os.path.join(self.tmp, "data", "reinvent2026", "sessions.json"), "w", encoding="utf-8") as f:
             json.dump({"sessions": [{"code": c} for c in ("AIM314-R", "AIM314-R1", "AIM326-R", "BIZ333-R", "CMP323-R")]}, f)
@@ -174,7 +187,10 @@ class StepRunTests(unittest.TestCase):
         os.makedirs(os.path.join(self.tmp, "scripts"))
         shutil.copy(os.path.join(ROOT, "scripts", "check_llms.py"), os.path.join(self.tmp, "scripts"))
         with open(os.path.join(self.tmp, "scripts", "prod_issue.py"), "w", encoding="utf-8") as f:
-            f.write("import sys\nopen('issue-calls.log', 'a').write(sys.argv[1] + '\\n')\n")
+            f.write("import shutil, sys\n"
+                    "open('issue-calls.log', 'a').write(sys.argv[1] + '\\n')\n"
+                    "if '--message-file' in sys.argv:\n"
+                    "    shutil.copy(sys.argv[sys.argv.index('--message-file') + 1], 'issue-message.md')\n")
         os.makedirs(os.path.join(self.tmp, "data", "reinvent2026"))
         with open(os.path.join(self.tmp, "llms.txt"), "w", encoding="utf-8") as f:
             f.write("https://x/?conf=reinvent2026#/import/AIM314-R.3\n")
@@ -197,6 +213,8 @@ class StepRunTests(unittest.TestCase):
     def test_should_report_when_an_example_is_missing(self):
         proc, calls = self.run_step('{"sessions": [{"code": "OTHER"}]}')
         self.assertEqual((proc.returncode, calls), (0, ["report"]), proc.stderr)
+        with open(os.path.join(self.tmp, "issue-message.md"), encoding="utf-8") as f:
+            self.assertIn("reinvent2026: `AIM314-R` is no longer in the catalog", f.read())
 
     def test_should_leave_the_issue_open_when_the_catalog_cannot_be_read(self):
         proc, calls = self.run_step('{"sessions": [{"code": "AIM3')

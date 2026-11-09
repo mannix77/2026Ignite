@@ -76,7 +76,13 @@ def problem_text(result):
     lines = ["The AI guide (llms.txt) uses example session codes the catalog no longer lists:"]
     lines += ["- %s: `%s` is no longer in the catalog" % (conf, code) for conf, code in result["stale"]]
     lines.append("Pick a current code for the worked example (the import still works; assistants would copy a code that imports nothing).")
+    if result["unverifiable"]:
+        lines.append(unchecked_text(result).capitalize() + ".")
     return "\n".join(lines) + "\n"
+
+
+def unchecked_text(result):
+    return "could not check %s (catalog missing or unreadable)" % ", ".join(result["unverifiable"])
 
 
 def main(argv=None):
@@ -92,13 +98,13 @@ def main(argv=None):
     catalogs = {conf: load_catalog(args.data, conf) for conf, _ in links}
     result = check(text, catalogs)
     if result["stale"]:
-        print("stale examples in %s: %s" % (args.guide, ", ".join("%s %s" % (c, code) for c, code in result["stale"])))
+        print("stale examples in %s: %s%s" % (args.guide, ", ".join("%s %s" % (c, code) for c, code in result["stale"]),
+                                              "; " + unchecked_text(result) if result["unverifiable"] else ""))
         if args.problem_out:
             with open(args.problem_out, "w", encoding="utf-8") as f:
                 f.write(problem_text(result))
     elif result["unverifiable"]:
-        print("guide examples: %d codes checked, all in their catalogs; could not check %s (catalog missing or unreadable)" % (
-            result["checked"], ", ".join(result["unverifiable"])))
+        print("guide examples: %d codes checked, all in their catalogs; %s" % (result["checked"], unchecked_text(result)))
     else:
         print("guide examples: %d codes checked, all in their catalogs" % result["checked"])
         if args.verified_out:
