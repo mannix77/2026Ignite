@@ -187,6 +187,17 @@ for (const [name, raw, verb, want] of [
   });
 }
 
+// ---- a relied-upon field in a shape never read before is a format change, refused with the sync's words
+// (specs/features/ignite-catalog-sync.feature, "The browser agrees with the sync")
+const shapedFeed = odd => Array.from({ length: 100 }, (_, i) => ({ sessionId: `s${i}`, title: `T${i}`, sessionCode: `C${i}`, location: i < odd ? { id: i } : { displayValue: `Room ${i}` } }));
+await test('should refuse a live catalog whose room field changed shape, naming the field and an example', async () => {
+  eq(await liveCheck(shapedFeed(100)), 'feed format changed: `location` has an unrecognised shape in 100 of 100 sessions (e.g. {"id":0}); keeping last good data');
+});
+await test('should accept a live catalog with odd room shapes on five entries in a hundred, and refuse at six', async () => {
+  eq(await liveCheck(shapedFeed(5)), null);
+  eq(/`location` has an unrecognised shape in 6 of 100/.test(String(await liveCheck(shapedFeed(6)))), true);
+});
+
 // ---- the event window the browser applies to the live catalog (same rule as sync.py)
 await test("should take the browser's event window from the site's dates", () => {
   eq(liveWindow({ eventStartDate: '2026-11-16T08:00:00-08:00', eventEndDate: '2026-11-19T17:00:00-08:00' }, ignite), ['2026-11-16', '2026-11-19']);

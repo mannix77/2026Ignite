@@ -865,5 +865,67 @@ class WithdrawalGuardTests(unittest.TestCase):
         self.assertEqual(proc.returncode, 0, proc.stderr)
 
 
+class FeedShapeTests(SyncDir, unittest.TestCase):
+    """A field the app relies on arriving in a shape the sync has never seen is a format change
+    (specs/features/ignite-catalog-sync.feature): the catalog is refused, never read as empty."""
+
+    def odd_rooms(self, n, odd):
+        raw = catalog_of(n)
+        for r in raw[:odd]:
+            r["location"] = {"id": 7}
+        return raw
+
+    def test_should_accept_the_committed_feed_samples(self):
+        for name in ("raw_2026_sample.json", "raw_2025_sample.json", "raw_edge_cases.json", "raw_window_bounds.json"):
+            with self.subTest(name=name):
+                self.assertIsNone(sync.shape_problem(sync.field_shapes(load(name))))
+
+    def test_should_refuse_a_field_in_a_new_shape_and_name_it_with_an_example(self):
+        why = sync.shape_problem(sync.field_shapes(self.odd_rooms(20, 20)))
+        self.assertEqual(why, 'feed format changed: `location` has an unrecognised shape in 20 of 20 sessions '
+                              '(e.g. {"id":7}); keeping last good data')
+
+    def test_should_tolerate_odd_shapes_in_up_to_one_session_in_twenty(self):
+        self.assertIsNone(sync.shape_problem(sync.field_shapes(self.odd_rooms(20, 1))))
+        self.assertIn("2 of 20", sync.shape_problem(sync.field_shapes(self.odd_rooms(20, 2))))
+
+    def test_should_treat_blank_values_as_unpublished_not_as_a_new_shape(self):
+        raw = catalog_of(20)
+        for i, r in enumerate(raw):
+            r["location"] = "" if i % 2 else None
+            r["startDateTime"] = None
+        self.assertIsNone(sync.shape_problem(sync.field_shapes(raw)))
+        self.assertEqual(sync.field_shapes(raw)["location"], {"records": 20, "unknown": 0, "example": None})
+
+    def test_should_accept_every_shape_each_field_is_read_in_and_no_other(self):
+        raw = catalog_of(4)
+        raw[0].update(sessionId=12, sessionInstanceId=34, title={"displayValue": "T"},
+                      location=[{"displayValue": "Room 1"}], startDateTime="2025-11-18T17:00:00Z")
+        raw[1].update(location=["Room 2"], title=["T2"])
+        raw[2].update(location={"displayValue": "Room 3", "logicalValue": "r3"})
+        self.assertIsNone(sync.shape_problem(sync.field_shapes(raw)))
+        odd = catalog_of(4)
+        odd[0].update(sessionId=True, sessionInstanceId=[1], title={"name": "x"}, location=[{"name": "x"}], startDateTime=1700000000)
+        shapes = sync.field_shapes(odd)
+        self.assertEqual({f: shapes[f]["unknown"] for f in sync.SHAPE_FIELDS},
+                         {"sessionId": 1, "sessionInstanceId": 1, "title": 1, "location": 1, "startDateTime": 1})
+        self.assertEqual(shapes["startDateTime"]["example"], "1700000000")
+
+    def test_should_keep_the_last_good_catalog_and_say_why(self):
+        self.run_sync(catalog_of(60))
+        before = self.data("sessions.json")
+        self.assertEqual(self.run_sync(self.odd_rooms(60, 60)), (3, False))
+        self.assertEqual(self.data("sessions.json"), before)
+        self.assertEqual(self.data("meta.json")["ok"], False)
+        self.assertIn("`location`", self.data("meta.json")["error"])
+
+    @unittest.skipUnless(JS_RUNNER, "needs node or jsc")
+    def test_should_agree_with_the_browser_on_shapes_and_the_refusal(self):
+        for raw in (load("raw_2026_sample.json"), self.odd_rooms(20, 2), self.odd_rooms(20, 1)):
+            shapes = sync.field_shapes(raw)
+            self.assertEqual(js_run("shapes_cli.js", raw), {"shapes": shapes, "problem": sync.shape_problem(shapes)})
+        self.assertIn("2 of 20", sync.shape_problem(sync.field_shapes(self.odd_rooms(20, 2))))
+
+
 if __name__ == "__main__":
     unittest.main()

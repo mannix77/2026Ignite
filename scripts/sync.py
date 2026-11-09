@@ -542,6 +542,58 @@ def withdrawal(ps, cs):
 
 MALFORMED_SHARE = 0.05  # same limit in live.js
 
+# The fields the app relies on, each with the shapes it is read in (blank always allowed: an
+# unpublished room or time is blank). Any other shape on more than SHAPE_SHARE of the records
+# means the feed format changed (a renamed or restructured field, as `location` did in Oct 2026):
+# the catalog is refused instead of being read as empty. Mirrored in live.js (fieldShapes).
+SHAPE_FIELDS = ("sessionId", "sessionInstanceId", "title", "location", "startDateTime")
+SHAPE_ACCEPTED = {
+    "sessionId": ("text", "number"),
+    "sessionInstanceId": ("text", "number"),
+    "title": ("text", "object", "list"),
+    "location": ("text", "object", "list"),
+    "startDateTime": ("text",),
+}
+SHAPE_SHARE = 0.05  # same limit in live.js
+
+
+def value_shape(v):
+    """blank | text | number | object (has a displayValue) | list (of those) | unknown."""
+    if v is None or v == "" or v == []:
+        return "blank"
+    if isinstance(v, bool):
+        return "unknown"
+    if isinstance(v, (int, float)):
+        return "number"
+    if isinstance(v, str):
+        return "text"
+    if isinstance(v, dict):
+        return "object" if isinstance(v.get("displayValue"), str) else "unknown"
+    if isinstance(v, list):
+        return "list" if all(isinstance(x, str) or (isinstance(x, dict) and isinstance(x.get("displayValue"), str)) for x in v) else "unknown"
+    return "unknown"
+
+
+def field_shapes(raw_sessions):
+    """Per relied-upon field: the records read, how many carry an unrecognised shape, one example."""
+    recs = [s for s in (raw_sessions if isinstance(raw_sessions, list) else []) if isinstance(s, dict)]
+    out = {}
+    for f in SHAPE_FIELDS:
+        unknown = [s.get(f) for s in recs if value_shape(s.get(f)) not in ("blank",) + SHAPE_ACCEPTED[f]]
+        example = json.dumps(unknown[0], separators=(",", ":"), ensure_ascii=False)[:60] if unknown else None
+        out[f] = {"records": len(recs), "unknown": len(unknown), "example": example}
+    return out
+
+
+def shape_problem(shapes, share=SHAPE_SHARE):
+    """Why the feed looks like a format change, or None (same wording in live.js)."""
+    for f in SHAPE_FIELDS:
+        sh = shapes.get(f) or {}
+        if sh.get("records") and sh.get("unknown", 0) > share * sh["records"]:
+            return ("feed format changed: `%s` has an unrecognised shape in %d of %d sessions (e.g. %s); keeping last good data"
+                    % (f, sh["unknown"], sh["records"], sh["example"]))
+    return None
+
 
 def run(args):
     now = utcnow()
@@ -581,6 +633,10 @@ def run(args):
         bad = sum(1 for s in raw if not isinstance(s, dict) or s.get("sessionId") in (None, ""))
         if raw and bad > MALFORMED_SHARE * len(raw):
             raise RuntimeError("%d of %d catalog entries are malformed; keeping last good data" % (bad, len(raw)))
+        # A field we rely on in a shape we have never read is a format change, not many blanks.
+        shape_why = shape_problem(field_shapes(raw))
+        if shape_why:
+            raise RuntimeError(shape_why)
         # If the speaker feed is down, keep companies/titles from the last snapshot.
         by_name = {p[0]: p for r in prev for p in r.get("speakers") or [] if p[1] or p[2]}
         cur, dropped, draft = normalize(raw, raw_spk, event_window(args, flags or {}), by_name)
