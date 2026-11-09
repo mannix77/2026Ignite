@@ -438,7 +438,8 @@ export function importData(obj, { replace = false } = {}) {
 // Compact share token per pick: CODE.p[sSCORE][w][!LOCKCODE | *LOCKCODE]
 //   sN  your own score     w  watch the recording instead     !  locked run     *  locked in preview
 // BRK101, BRK101-R1, Gartner's 11b / 33jES, re:Invent's DVT212-S, ANT319-R, INV002-S-R1
-const CODE = '[A-Za-z0-9_]{1,24}(?:-[A-Z]\\d*){0,3}';
+// A session added by the person has the code MY-<id>, its id being lowercase base 36 (app.js custom-add).
+const CODE = '(?:MY-[a-z0-9]{1,16}|[A-Za-z0-9_]{1,24}(?:-[A-Z]\\d*){0,3})';
 const TOKEN = new RegExp(`^(${CODE})\\.([0-3])(?:s(\\d{1,3}(?:\\.\\d)?))?(w)?(?:([!*])(${CODE}))?$`);
 
 export function shareString(codeOf, lockCodeOf) {
@@ -475,7 +476,9 @@ export function parseShare(str, idOfCode, instOfCode, report = null) {
 }
 
 // Merge shared ratings, scores and locks; never touch local notes or reserved seats.
-function planShared(picks) {
+// siblings (optional): record id -> the other saved records of the same repeat group. A link sets
+// the session's choice across all its runs, so their locks give way, except a reserved seat.
+function planShared(picks, siblings = {}) {
   const next = { ...state.picks };
   let n = 0;
   const scope = [];
@@ -484,23 +487,34 @@ function planShared(picks) {
     scope.push(id);
     const cur = state.picks[id] || { note: '' };
     const lock = cur.reserved ? (cur.lock || cur.reserved) : (p.lock || null);
+    // Beside a reserved seat the kept lock keeps its own marker (a preview choice stays one);
+    // the reserved run itself is never a preview lock.
+    const lockMode = !lock ? undefined : cur.reserved ? (lock !== cur.reserved ? cur.lockMode : undefined) : p.lockMode;
     const s = sanitizePick({
-      ...cur, p: p.p, lock, lockMode: lock && !cur.reserved ? p.lockMode : undefined,
+      ...cur, p: p.p, lock, lockMode,
       score: p.score, mode: p.mode, code: p.code || cur.code, at: p.at,
     });
     if (s) { next[id] = s; n++; }
+    for (const sib of Array.isArray(siblings[id]) ? siblings[id] : []) {
+      const other = next[sib];
+      // A run the link itself carries keeps what the link says for it, in any order.
+      if (sib === id || Object.hasOwn(picks, sib) || !other || !other.lock || other.reserved) continue;
+      next[sib] = { ...other, lock: null };
+      delete next[sib].lockMode;
+      if (!scope.includes(sib)) scope.push(sib);
+    }
   }
   return { next, n, scope };
 }
 
 // What applying a picks link would change, without changing anything.
-export function previewShared(picks) {
-  const { next, scope } = planShared(picks);
+export function previewShared(picks, siblings) {
+  const { next, scope } = planShared(picks, siblings);
   return diffPicks(state.picks, next, scope);
 }
 
-export function applyShared(picks) {
-  const { next, n } = planShared(picks);
+export function applyShared(picks, siblings) {
+  const { next, n } = planShared(picks, siblings);
   state.picks = next;
   emit('picks');
   return n;
