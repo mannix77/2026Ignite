@@ -133,6 +133,82 @@ def deploy_job_text():
     return text.split("\n  deploy:")[1].split("\n  # One GitHub issue per production problem")[0]
 
 
+def step_script(name, text=None):
+    """The `run:` script of the named step in sync.yml, dedented."""
+    text = text if text is not None else open(WORKFLOW, encoding="utf-8").read()
+    m = re.search(r"- name: %s\n(?:\s+\S[^\n]*\n)*?\s+run: \|\n((?:[ ]{10}.*\n|\n)+)" % re.escape(name), text)
+    assert m, name + " step not found"
+    return "\n".join(line[10:] for line in m.group(1).splitlines())
+
+
+class AcceptInputTests(unittest.TestCase):
+    """The owner accepts a refused catalog from the GitHub app with one input, and the refusal's
+    diagnosis travels to the production issue (specs/features/ignite-catalog-sync.feature,
+    "A refused catalog can be accepted from a phone")."""
+
+    def setUp(self):
+        self.text = open(WORKFLOW, encoding="utf-8").read()
+        self.tmp = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, self.tmp)
+
+    def test_the_workflow_offers_an_accept_choice(self):
+        m = re.search(r"workflow_dispatch:\n\s+inputs:\n(?:\s+#.*\n)*\s+accept:\n((?:\s{8}.*\n)+)", self.text)
+        self.assertIsNotNone(m, "workflow_dispatch needs an `accept` input")
+        block = m.group(1)
+        self.assertIn("type: choice", block)
+        self.assertRegex(block, r"options: \[none, partial, withdrawal\]")
+        self.assertIn("default: none", block)
+
+    def run_sync_step(self, accept):
+        """Runs the sync step's shell with a stub sync.py that records its arguments."""
+        os.makedirs(os.path.join(self.tmp, "scripts"), exist_ok=True)
+        stub = os.path.join(self.tmp, "scripts", "sync.py")
+        with open(stub, "w", encoding="utf-8") as f:
+            f.write("import sys\nopen(sys.argv[0] + '.args', 'w').write(' '.join(sys.argv[1:]))\n")
+        env = {"PATH": os.environ["PATH"], "RUNNER_TEMP": self.tmp}
+        if accept is not None:
+            env["ACCEPT"] = accept
+        subprocess.run(["bash", "-e", "-c", step_script("Sync the catalog")], cwd=self.tmp, env=env, check=True, timeout=30, capture_output=True)
+        return open(stub + ".args", encoding="utf-8").read()
+
+    def test_the_sync_step_passes_accept_only_when_one_was_chosen(self):
+        self.assertEqual(self.run_sync_step("partial"), "--summary-out %s/summary.md --refusal-out %s/refusal.md --accept partial" % (self.tmp, self.tmp))
+        self.assertEqual(self.run_sync_step("withdrawal").endswith("--accept withdrawal"), True)
+        for none in ("none", "", None):
+            with self.subTest(accept=none):
+                self.assertNotIn("--accept", self.run_sync_step(none))
+
+    def test_the_sync_step_reads_the_choice_from_the_dispatch_input(self):
+        m = re.search(r"- name: Sync the catalog\n(?:\s+\S[^\n]*\n)*?\s+env:\n\s+ACCEPT: \$\{\{ inputs.accept \}\}", self.text)
+        self.assertIsNotNone(m, "the sync step must take ACCEPT from inputs.accept")
+
+    def test_the_refusal_diagnosis_becomes_a_job_output_for_the_report(self):
+        os.makedirs(os.path.join(self.tmp, "data", "ignite2026"))
+        with open(os.path.join(self.tmp, "data", "ignite2026", "meta.json"), "w", encoding="utf-8") as f:
+            f.write('{"error": "catalog returned 90 sessions (previously 200); keeping last good data"}')
+        with open(os.path.join(self.tmp, "refusal.md"), "w", encoding="utf-8") as f:
+            f.write("### Catalog refused: partial catalog\n- Sessions: 200 → 90\n")
+        out = os.path.join(self.tmp, "out.txt")
+        env = {"PATH": os.environ["PATH"], "RUNNER_TEMP": self.tmp, "GITHUB_OUTPUT": out}
+        subprocess.run(["bash", "-e", "-c", step_script("Read why the sync failed")], cwd=self.tmp, env=env, check=True, timeout=30, capture_output=True)
+        text = open(out, encoding="utf-8").read()
+        self.assertIn("error=catalog returned 90 sessions (previously 200); keeping last good data\n", text)
+        self.assertRegex(text, r"details<<(\S+)\n### Catalog refused: partial catalog\n- Sessions: 200 → 90\n\n?\1\n")
+        self.assertIn("details: ${{ steps.why.outputs.details }}", self.text)
+        self.assertIn("DETAILS: ${{ needs.sync.outputs.details }}", self.text)
+
+    def test_the_report_without_a_refusal_file_outputs_empty_details(self):
+        os.makedirs(os.path.join(self.tmp, "data", "ignite2026"))
+        with open(os.path.join(self.tmp, "data", "ignite2026", "meta.json"), "w", encoding="utf-8") as f:
+            f.write('{"error": "boom"}')
+        out = os.path.join(self.tmp, "out.txt")
+        env = {"PATH": os.environ["PATH"], "RUNNER_TEMP": self.tmp, "GITHUB_OUTPUT": out}
+        subprocess.run(["bash", "-e", "-c", step_script("Read why the sync failed")], cwd=self.tmp, env=env, check=True, timeout=30, capture_output=True)
+        text = open(out, encoding="utf-8").read()
+        self.assertIn("error=boom\n", text)
+        self.assertRegex(text, r"details<<(\S+)\n\n?\1\n")
+
+
 class DeployRetryTests(unittest.TestCase):
     """A Pages API hiccup (HTTP 500 within ~3 s) is retried once after 60 s instead of failing the run."""
 
