@@ -8,7 +8,7 @@ import { localParts, fromISO, parseSlot, fmtTime, fmtDay, addDays, relTime, fmtD
 import { createVenue } from '../assets/js/venue.js';
 import { CONFERENCES, LAS_VEGAS_DEF, SWAN_DOLPHIN_DEF } from '../assets/js/conferences.js';
 import { parseShare } from '../assets/js/store.js';
-import { upNext } from '../assets/js/upnext.js';
+import { upNext, onwardWalk, nextPlanned } from '../assets/js/upnext.js';
 import { arrivalExtra, lunchConfig, compareOptions } from '../assets/js/planner.js';
 
 const log = typeof print === 'function' && typeof window === 'undefined' ? print : console.log;
@@ -706,6 +706,64 @@ test('within a group planned sessions come first, then higher rating, then liken
   const r = unRun([un('c', 690, 720, { interest: 60 }), un('b', 690, 720, { prio: 3 }), un('a', 690, 720, { planned: true, prio: 1 })]);
   eq(unKeys(r), [['a', 'b', 'c']]);
 });
+// ---- a detour is judged against where I need to be next (issue 100): walk there, the session,
+// the walk on to the destination, and whether that is on time
+const yacht = { building: 'Y', onward: { S: 20, D: 12 } };          // minutes from the Yacht Club on to the Swan / Dolphin
+const candidate = (extra = {}) => un('C', 680, 710, { prio: 1, walk: 18, loc: yacht, ...extra });   // 11:20-11:50, 18 min from here
+const swanAt = startMin => ({ key: 'N', loc: { building: 'S' }, startMin });
+const detourOf = (sessions, dest) => unRun(sessions, { dest, walkBetween: (a, b) => a.onward?.[b.building] ?? null })[0].items[0].detour;
+
+test('detour: the default destination is the next planned session, reached with time to spare', () => {
+  eq(detourOf([candidate()], swanAt(750)), { onward: 20, arrive: 730, slack: 20 });   // 12:10 for a 12:30 start
+});
+test('detour: a later next session means arriving late', () => {
+  eq(detourOf([candidate()], swanAt(725)), { onward: 20, arrive: 730, slack: -5 });
+});
+test('detour: a chosen place has a walk on but no deadline', () => {
+  eq(detourOf([candidate()], { loc: { building: 'D' }, startMin: null }), { onward: 12, arrive: 722, slack: null });
+});
+const itemOf = (sessions, dest, seen = []) => unRun(sessions, { dest, walkBetween: (a, b) => { seen.push([a.building, b.building]); return a.onward?.[b.building] ?? null; } })[0].items[0];
+test('detour: nothing planned after it, or the candidate is the next session itself, means no detour', () => {
+  const none = itemOf([candidate()], null);
+  eq([none.status, none.walk, none.detour], ['ok', 18, null], 'the candidate itself is fine; there is just nowhere to go on to');
+  const self = itemOf([candidate({ key: 'N' })], swanAt(750));
+  eq([self.status, self.detour], ['ok', null]);
+});
+test('detour: unknown onward walk or an unreachable candidate gives no detour', () => {
+  const seen = [];
+  const guess = itemOf([candidate({ loc: { building: 'Y' } })], swanAt(750), seen);
+  eq([guess.status, guess.walk, seen, guess.detour], ['ok', 18, [['Y', 'S']], null], 'reachable, the walk on was asked for and unknown');
+  const far = itemOf([candidate({ walk: 40 })], swanAt(750));
+  eq([far.status, far.walk, far.detour], ['unreachable', 40, null]);
+});
+test('detour: with no position the walk there is unknown but the walk on is still shown', () => {
+  const it = itemOf([candidate({ walk: null })], swanAt(750));
+  eq([it.status, it.walk, it.detour], ['unknown', null, { onward: 20, arrive: 730, slack: 20 }]);
+});
+test("onwardWalk: the venue matrix for known rooms, 0 for the same room or online, null for a room the venue doesn't know", () => {
+  const zTest = parseLocation('zTest1');
+  eq(onwardWalk(W2, S1, DEFAULT_WALK), DEFAULT_WALK.pairs['S|W']);
+  eq(onwardWalk(W2, W3, DEFAULT_WALK), DEFAULT_WALK.diffFloor);
+  eq(onwardWalk(W2, W2, DEFAULT_WALK), 0);
+  eq(onwardWalk(W2, { label: 'Online', building: 'O', floor: null, known: true }, DEFAULT_WALK), 0);
+  eq([onwardWalk(W2, zTest, DEFAULT_WALK), onwardWalk(zTest, W2, DEFAULT_WALK), onwardWalk(W2, null, DEFAULT_WALK)], [null, null, null], 'never the matrix\'s unknown guess');
+  eq(walkMinutes(W2, zTest, DEFAULT_WALK), DEFAULT_WALK.unknown, 'which the raw matrix would have given');
+  const noPair = { ...DEFAULT_WALK, pairs: { ...DEFAULT_WALK.pairs } };
+  delete noPair.pairs['S|W'];
+  eq([onwardWalk(W2, S1, noPair), walkMinutes(W2, S1, noPair), onwardWalk(W2, W3, noPair)], [null, DEFAULT_WALK.unknown, DEFAULT_WALK.diffFloor],
+    'two known buildings without a pair in the matrix: null, where the matrix would have guessed; the same building still works');
+});
+test('nextPlanned: the first planned session after now, skipping lunch and blocked time', () => {
+  const now = H(11);
+  const lunch = { key: 'lunch', pseudo: 'lunch', startMin: H(11.5), endMin: H(12) };
+  const block = { key: 'block:1', pseudo: 'block', startMin: H(12), endMin: H(12.5), locked: true };
+  const later = item(H(13), H(13.75), S1, { code: 'LATER' }), sooner = item(H(12.5), H(13), W2, { code: 'SOONER' }), running = item(H(10.5), H(11.5), W2, { code: 'NOW' });
+  eq(nextPlanned([running, lunch, block, later, sooner], now)?.code, 'SOONER');
+  eq(nextPlanned([running, lunch, block], now), null, 'only lunch and a block ahead: nothing to walk on to');
+  eq(nextPlanned([], now), null);
+  eq(nextPlanned(null, now), null);
+});
+
 test('online-only, other-day and ended sessions are not listed', () => {
   eq(unKeys(unRun([un('o', 690, 720, { prio: 1, inPerson: false }), un('d', 690, 720, { prio: 1, day: 'd2' }), un('e', 600, 660, { prio: 1 }), un('ok', 690, 720, { prio: 1 })])), [['ok']]);
 });
