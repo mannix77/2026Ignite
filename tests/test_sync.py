@@ -911,6 +911,30 @@ class FeedShapeTests(SyncDir, unittest.TestCase):
                          {"sessionId": 1, "sessionInstanceId": 1, "title": 1, "location": 1, "startDateTime": 1})
         self.assertEqual(shapes["startDateTime"]["example"], "1700000000")
 
+    def test_should_call_a_number_the_browser_cannot_hold_unknown(self):
+        # JSON's 1e400 parses to inf here and to Infinity in the browser; an integer beyond a
+        # double is finite here but Infinity there. Both sides must call them unknown.
+        self.assertEqual([sync.value_shape(float("inf")), sync.value_shape(10 ** 400), sync.value_shape(12), sync.value_shape(1.5)],
+                         ["unknown", "unknown", "number", "number"])
+        raw = catalog_of(20)
+        for r in raw[:2]:
+            r["sessionInstanceId"] = 10 ** 400
+        self.assertIn("`sessionInstanceId` has an unrecognised shape in 2 of 20", sync.shape_problem(sync.field_shapes(raw)))
+
+    @unittest.skipUnless(JS_RUNNER, "needs node or jsc")
+    def test_should_agree_with_the_browser_on_numbers_too_large_for_it(self):
+        # Written as JSON text: Python's json module would otherwise emit Infinity, which is not JSON.
+        recs = ['{"sessionId":"s%d","sessionInstanceId":%s,"title":"T","location":"R"}' % (i, "1e400" if i == 0 else "1" + "0" * 400 if i == 1 else "7" if i == 2 else "7.5")
+                for i in range(20)]
+        path = os.path.join(self.tmp, "big.json")
+        with open(path, "w", encoding="utf-8") as f:
+            f.write("[" + ",".join(recs) + "]")
+        with open(path, encoding="utf-8") as f:
+            raw = json.load(f)
+        shapes = sync.field_shapes(raw)
+        self.assertEqual(shapes["sessionInstanceId"]["unknown"], 2)
+        self.assertEqual(js_run("shapes_cli.js", path), {"shapes": shapes, "problem": sync.shape_problem(shapes)})
+
     def test_should_keep_the_last_good_catalog_and_say_why(self):
         self.run_sync(catalog_of(60))
         before = self.data("sessions.json")

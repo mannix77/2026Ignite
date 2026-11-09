@@ -19,6 +19,7 @@ import datetime as dt
 import hashlib
 import http.client
 import json
+import math
 import os
 import re
 import sys
@@ -564,7 +565,12 @@ def value_shape(v):
     if isinstance(v, bool):
         return "unknown"
     if isinstance(v, (int, float)):
-        return "number"
+        # Only a number the browser can also hold: JSON's 1e400 or an integer beyond a double
+        # is Infinity there, which live.js calls unknown; agree with it.
+        try:
+            return "number" if math.isfinite(float(v)) else "unknown"
+        except OverflowError:
+            return "unknown"
     if isinstance(v, str):
         return "text"
     if isinstance(v, dict):
@@ -574,13 +580,21 @@ def value_shape(v):
     return "unknown"
 
 
+def shape_example(v):
+    """The example value in the refusal, as the browser would print it (JSON, at most 60 chars);
+    a number the browser cannot hold prints as Infinity on both sides."""
+    if isinstance(v, (int, float)) and not isinstance(v, bool) and value_shape(v) == "unknown":
+        return "Infinity"
+    return json.dumps(v, separators=(",", ":"), ensure_ascii=False)[:60]
+
+
 def field_shapes(raw_sessions):
     """Per relied-upon field: the records read, how many carry an unrecognised shape, one example."""
     recs = [s for s in (raw_sessions if isinstance(raw_sessions, list) else []) if isinstance(s, dict)]
     out = {}
     for f in SHAPE_FIELDS:
         unknown = [s.get(f) for s in recs if value_shape(s.get(f)) not in ("blank",) + SHAPE_ACCEPTED[f]]
-        example = json.dumps(unknown[0], separators=(",", ":"), ensure_ascii=False)[:60] if unknown else None
+        example = shape_example(unknown[0]) if unknown else None
         out[f] = {"records": len(recs), "unknown": len(unknown), "example": example}
     return out
 

@@ -281,7 +281,9 @@ export function fieldShapes(rawSessions) {
   const out = {};
   for (const f of SHAPE_FIELDS) {
     const unknown = recs.map(s => s[f]).filter(v => !['blank', ...SHAPE_ACCEPTED[f]].includes(valueShape(v)));
-    out[f] = { records: recs.length, unknown: unknown.length, example: unknown.length ? JSON.stringify(unknown[0]).slice(0, 60) : null };
+    // A number too large for a double is Infinity here (JSON.stringify would say null); sync.py prints the same word.
+    const example = v => (typeof v === 'number' && !Number.isFinite(v) ? 'Infinity' : JSON.stringify(v).slice(0, 60));
+    out[f] = { records: recs.length, unknown: unknown.length, example: unknown.length ? example(unknown[0]) : null };
   }
   return out;
 }
