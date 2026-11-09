@@ -1,7 +1,20 @@
 // "Up next": the sessions coming up that I care about, grouped by start time, each with the
 // walk from here and whether I can make it. Pure: app.js supplies the walk, rating and interest.
 
+import { sameRoom, walkMinutes } from './venue.js';
+
 const IN_PROGRESS_MIN_LEFT = 15; // joining a session with less than this left isn't worth the walk
+
+// The walk on from a candidate's room to the destination, for the detour: the venue matrix,
+// except that a room in a building the venue does not know gives null rather than the matrix's
+// "unknown" guess, so an arrival time is never built on a guess. Same room and online are 0.
+export function onwardWalk(a, b, walk) {
+  if (!a || !b) return null;
+  if (a.building === 'O' || b.building === 'O') return 0;
+  if (sameRoom(a, b)) return 0;
+  if (!a.known || !b.known) return null;
+  return walkMinutes(a, b, walk);
+}
 
 // sessions: model sessions. walkTo(s) -> minutes from here or null when position is unknown.
 // prio(s): 0 = rejected, null = unrated, >0 = rated. interest(s): 0..100 likeness to my picks.

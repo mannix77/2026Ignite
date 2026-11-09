@@ -5,7 +5,7 @@ import { fetchAll, buildModel, diffKnown, snapshot, cacheUrl, exportAge, customR
 import { checkLive, diff as liveDiff, changeCounts, countsLine } from './live.js';
 import { optimize, transitions, fillers, nowNext, canBoth, overlaps, transition, compareOptions, lunchConfig, arrivalExtra, PRIORITY } from './planner.js';
 import { fmtTime, fmtDay, fmtDuration, relTime, nowLocal, addDays } from './time.js';
-import { upNext } from './upnext.js';
+import { upNext, onwardWalk } from './upnext.js';
 import { slotGroups, rankOptions, rankTie } from './clash.js';
 import { createVenue, setVenue, walkMinutes, floorExtra, mergeWalk } from './venue.js';
 import { CONFERENCES, currentConferenceId, rememberConference, conferenceList } from './conferences.js';
@@ -1449,7 +1449,7 @@ function upNextHtml(t, h, nn, plan, c) {
     sessions: app.model.sessions, day: t.day, nowMin: t.min, horizon: 120, tolerance: c.tolerance,
     walkTo: x => (h ? hereWalk(x.loc, h, c) : null), // no position, no walk: the plan's origin isn't where you are
     prio: prioOf, interest: x => (sg.ready && !(prioOf(x) == null && ranker().evaluate(x).hidden) ? sg.score(x).score : 0), chosen: x => plan.chosen.has(x.key), minInterest: 25,
-    dest, walkBetween: (a, b) => walkMinutes(a, b, c.walk),
+    dest, walkBetween: (a, b) => onwardWalk(a, b, c.walk),   // null for a room in a building the venue does not know: no arrival built on a guess
   });
   const verdict = it => {
     const w = it.walk != null ? `${it.walk} min walk` : 'distance unknown';

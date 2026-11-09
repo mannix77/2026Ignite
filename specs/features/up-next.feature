@@ -74,3 +74,8 @@ Feature: Up next shows what is coming up that I care about, and how far it is
       Given the candidate is the session Minesh planned next
       When he looks at it
       Then it shows the walk there with no detour
+
+    Scenario: The walk on would be a guess
+      Given the candidate's room is in a building the venue does not know
+      When he looks at the candidate
+      Then it shows no walk on rather than an arrival time built on a guess
