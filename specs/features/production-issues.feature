@@ -39,6 +39,17 @@ Feature: A GitHub issue for every production problem
       When the Ignite deploy succeeds on its first attempt
       Then there is no wait and no second deployment
 
+  Rule: The issue carries the diagnosis
+
+    Scenario: A refused sync explains itself in the issue
+      When the Ignite sync refuses a catalog
+      Then the production issue shows the refusal's diagnosis
+
+    Scenario: A repeat refreshes the diagnosis
+      Given a production issue is open for a refused Ignite sync
+      When the next run refuses the catalog with other examples
+      Then the same issue shows the new diagnosis
+
   Rule: The same problem again updates its issue instead of adding noise
 
     Scenario: A repeat of the same refusal updates the existing issue

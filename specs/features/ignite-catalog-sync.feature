@@ -16,6 +16,32 @@ Feature: Keeping the Ignite catalog current without false alarms
       When Microsoft's catalog lists 119 of them with 3 runs each
       Then the sync keeps the last good catalog
 
+  Rule: A refusal explains itself
+
+    Scenario: A partial catalog is diagnosed
+      Given the last good catalog has two hundred sessions
+      When Microsoft's catalog lists ninety of them
+      Then the refusal shows the session counts with up to ten of the missing sessions
+      And it says whether every missing session was a placeholder
+
+    Scenario: Only placeholders went missing
+      Given the last good catalog holds a hundred placeholder sessions that have neither a room nor a time
+      When Microsoft's catalog lists everything but those
+      Then the refusal says every missing session was a placeholder
+
+  Rule: A refused catalog can be accepted from a phone
+
+    Scenario: Accepting a partial catalog
+      Given the sync refused a catalog that lists ninety of two hundred sessions
+      When Minesh runs the workflow accepting a partial catalog
+      Then the ninety sessions become the catalog
+      And the change log records who accepted it
+
+    Scenario: Acceptance covers one run only
+      Given Minesh accepted a partial catalog
+      When the next run loses half the sessions again
+      Then the sync keeps the last good catalog
+
   Rule: A feed whose field shapes changed is refused, never read as empty
 
     Scenario: The room field arrives in a new shape
