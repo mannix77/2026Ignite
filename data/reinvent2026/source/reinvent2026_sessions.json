@@ -1,7 +1,7 @@
 {
  "source": "https://catalog.awsevents.com/api/sessions",
  "event": "reinvent2026",
- "fetchedAt": "2026-11-09T00:51:29Z",
+ "fetchedAt": "2026-11-09T06:51:32Z",
  "count": 2484,
  "sessions": [
   {
@@ -7991,74 +7991,6 @@
    ]
   },
   {
-   "sessionID": "1785256472446001d2QS",
-   "code": "GHJ207-R2",
-   "title": "Agentic AI governance tabletop experience",
-   "abstract": "Navigate AI-driven security threats as they escalate in real time. In this immersive executive tabletop, participants allocate a constrained governance budget, then respond to live crisis events scored across six dimensions. Practice navigating high-stakes scenarios including autonomous AI deployment failures, third-party security incidents, and emerging regulatory obligations. Confront real attack techniques, compliance frameworks, and enterprise liability exposure while aligning cross-functional teams under pressure. This experience sharpens governance instincts and crisis fluency—equipping leaders to govern Agentic AI risks, enforce accountability, and make decisive resource allocation calls before a real crisis demands it. Walk-ins welcome.",
-   "type": "Gamified learning",
-   "length": 120,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Gamified learning"
-    ],
-    "Level": [
-     "200 – Intermediate"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Artificial Intelligence",
-     "Security & Identity"
-    ],
-    "AreaofInterest": [
-     "Threat Detection & Incident Response",
-     "Governance, Risk & Compliance",
-     "Agentic AI"
-    ],
-    "Role": [
-     "Business Executive",
-     "Entrepreneur (Founder/Co-Founder)",
-     "IT Executive"
-    ],
-    "Venue": [
-     "Wynn/Encore"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [],
-   "times": [
-    {
-     "sessionTimeID": "1791311669506001TjM9",
-     "date": "2026-12-03",
-     "startTime": "12:30",
-     "endTime": "14:30",
-     "utcStartTime": "2026/12/03 20:30:00",
-     "utcEndTime": "2026/12/03 22:30:00",
-     "length": 120,
-     "room": "Wynn/Encore | Upper Convention Promenade | Bollinger",
-     "roomId": "1789591921282001bJ76",
-     "capacity": "70",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1785256472325001dIu1",
    "code": "GHJ207-R",
    "title": "Agentic AI governance tabletop experience",
@@ -8184,6 +8116,74 @@
      "endTime": "10:30",
      "utcStartTime": "2026/12/02 16:30:00",
      "utcEndTime": "2026/12/02 18:30:00",
+     "length": 120,
+     "room": "Wynn/Encore | Upper Convention Promenade | Bollinger",
+     "roomId": "1789591921282001bJ76",
+     "capacity": "70",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1785256472446001d2QS",
+   "code": "GHJ207-R2",
+   "title": "Agentic AI governance tabletop experience",
+   "abstract": "Navigate AI-driven security threats as they escalate in real time. In this immersive executive tabletop, participants allocate a constrained governance budget, then respond to live crisis events scored across six dimensions. Practice navigating high-stakes scenarios including autonomous AI deployment failures, third-party security incidents, and emerging regulatory obligations. Confront real attack techniques, compliance frameworks, and enterprise liability exposure while aligning cross-functional teams under pressure. This experience sharpens governance instincts and crisis fluency—equipping leaders to govern Agentic AI risks, enforce accountability, and make decisive resource allocation calls before a real crisis demands it. Walk-ins welcome.",
+   "type": "Gamified learning",
+   "length": 120,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-09T02:21:55Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Gamified learning"
+    ],
+    "Level": [
+     "200 – Intermediate"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Artificial Intelligence",
+     "Security & Identity"
+    ],
+    "AreaofInterest": [
+     "Threat Detection & Incident Response",
+     "Governance, Risk & Compliance",
+     "Agentic AI"
+    ],
+    "Role": [
+     "Business Executive",
+     "Entrepreneur (Founder/Co-Founder)",
+     "IT Executive"
+    ],
+    "Venue": [
+     "Wynn/Encore"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [],
+   "times": [
+    {
+     "sessionTimeID": "1791311669506001TjM9",
+     "date": "2026-12-03",
+     "startTime": "12:30",
+     "endTime": "14:30",
+     "utcStartTime": "2026/12/03 20:30:00",
+     "utcEndTime": "2026/12/03 22:30:00",
      "length": 120,
      "room": "Wynn/Encore | Upper Convention Promenade | Bollinger",
      "roomId": "1789591921282001bJ76",
@@ -22157,7 +22157,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T00:50:05Z",
+   "modified": "2026-11-09T01:42:24Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -27117,12 +27117,6 @@
    },
    "speakers": [
     {
-     "name": "Ganesh Sambandan",
-     "title": "Sr Technical Account Manager",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Justin Thomas",
      "title": "Sr. Cloud Support Engineer",
      "company": "Amazon Web Services",
@@ -27132,6 +27126,12 @@
      "name": "Ravindra Kori",
      "title": "Senior Solutions Architect",
      "company": "Amazon",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Ganesh Sambandan",
+     "title": "Sr Technical Account Manager",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     },
     {
@@ -27220,12 +27220,6 @@
    },
    "speakers": [
     {
-     "name": "Ganesh Sambandan",
-     "title": "Sr Technical Account Manager",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Justin Thomas",
      "title": "Sr. Cloud Support Engineer",
      "company": "Amazon Web Services",
@@ -27235,6 +27229,12 @@
      "name": "Ravindra Kori",
      "title": "Senior Solutions Architect",
      "company": "Amazon",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Ganesh Sambandan",
+     "title": "Sr Technical Account Manager",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     },
     {
@@ -40511,7 +40511,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-08T09:37:58Z",
+   "modified": "2026-11-09T03:41:23Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -67724,7 +67724,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-08T20:41:31Z",
+   "modified": "2026-11-09T06:46:17Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -68236,7 +68236,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-09T06:32:14Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -79207,15 +79207,15 @@
    },
    "speakers": [
     {
-     "name": "Angus Tong",
-     "title": "Senior Solutions Architect, Migration",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Saurabh Sharma",
      "title": "Sr. Modernization Solutions Architect",
      "company": "Amazon AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Angus Tong",
+     "title": "Senior Solutions Architect, Migration",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     }
    ],
@@ -79287,15 +79287,15 @@
    },
    "speakers": [
     {
-     "name": "Angus Tong",
-     "title": "Senior Solutions Architect, Migration",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Saurabh Sharma",
      "title": "Sr. Modernization Solutions Architect",
      "company": "Amazon AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Angus Tong",
+     "title": "Senior Solutions Architect, Migration",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     }
    ],
@@ -85653,6 +85653,86 @@
    ]
   },
   {
+   "sessionID": "1780442239695001cR5s",
+   "code": "DAT420-R",
+   "title": "Dive deep into Amazon DynamoDB using design puzzles",
+   "abstract": "In this session, dive deep into how Amazon DynamoDB works at scale by collaboratively solving a few design puzzles that may seem simple but are actually complex. Learn how to look beyond the obvious solution to find a more effective and scalable one with an understanding of how DynamoDB operates.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-06T20:31:24Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "400 – Expert"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Databases"
+    ],
+    "AreaofInterest": [
+     "Innovation & Transformation"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "IT Professional / Technical Manager",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon DynamoDB"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Jason Hunter",
+     "title": "Principal SA",
+     "company": "Amazon",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Robert McCauley",
+     "title": "DynamoDB Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025535219001CIZu",
+     "date": "2026-12-03",
+     "startTime": "10:00",
+     "endTime": "11:00",
+     "utcStartTime": "2026/12/03 18:00:00",
+     "utcEndTime": "2026/12/03 19:00:00",
+     "length": 60,
+     "room": "MGM Grand | Level 1 | Boulevard 158",
+     "roomId": "1789591920175001be2U",
+     "capacity": "78",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
    "sessionID": "1790358224492001i241",
    "code": "DAT420-R2",
    "title": "Dive deep into Amazon DynamoDB using design puzzles",
@@ -85702,15 +85782,15 @@
    },
    "speakers": [
     {
-     "name": "Robert McCauley",
-     "title": "DynamoDB Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Jason Hunter",
      "title": "Principal SA",
      "company": "Amazon",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Robert McCauley",
+     "title": "DynamoDB Solutions Architect",
+     "company": "AWS",
      "role": "Internal Speaker"
     }
    ],
@@ -85782,15 +85862,15 @@
    },
    "speakers": [
     {
-     "name": "Robert McCauley",
-     "title": "DynamoDB Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Jason Hunter",
      "title": "Principal SA",
      "company": "Amazon",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Robert McCauley",
+     "title": "DynamoDB Solutions Architect",
+     "company": "AWS",
      "role": "Internal Speaker"
     }
    ],
@@ -85806,86 +85886,6 @@
      "room": "Caesars Palace | Promenade South | Octavius 11",
      "roomId": "1789591920028001bO7T",
      "capacity": "70",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
-   "sessionID": "1780442239695001cR5s",
-   "code": "DAT420-R",
-   "title": "Dive deep into Amazon DynamoDB using design puzzles",
-   "abstract": "In this session, dive deep into how Amazon DynamoDB works at scale by collaboratively solving a few design puzzles that may seem simple but are actually complex. Learn how to look beyond the obvious solution to find a more effective and scalable one with an understanding of how DynamoDB operates.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "400 – Expert"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Databases"
-    ],
-    "AreaofInterest": [
-     "Innovation & Transformation"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "IT Professional / Technical Manager",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon DynamoDB"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Robert McCauley",
-     "title": "DynamoDB Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Jason Hunter",
-     "title": "Principal SA",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025535219001CIZu",
-     "date": "2026-12-03",
-     "startTime": "10:00",
-     "endTime": "11:00",
-     "utcStartTime": "2026/12/03 18:00:00",
-     "utcEndTime": "2026/12/03 19:00:00",
-     "length": 60,
-     "room": "MGM Grand | Level 1 | Boulevard 158",
-     "roomId": "1789591920175001be2U",
-     "capacity": "78",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -96200,7 +96200,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-08T01:27:05Z",
+   "modified": "2026-11-09T03:01:10Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -101062,7 +101062,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-09T03:31:43Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -101096,14 +101096,14 @@
    },
    "speakers": [
     {
-     "name": "Jeremy Puent",
-     "title": "Principal Solutions Architect - Amazon Connect",
+     "name": "Bernie Valderrama",
+     "title": "Solutions Architect - Connect Customer",
      "company": "AWS",
      "role": "Internal Speaker"
     },
     {
-     "name": "Bernie Valderrama",
-     "title": "Solutions Architect - Connect Customer",
+     "name": "Jeremy Puent",
+     "title": "Principal Solutions Architect - Amazon Connect",
      "company": "AWS",
      "role": "Internal Speaker"
     }
@@ -110225,7 +110225,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-09T04:35:24Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -119816,7 +119816,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-08T17:27:10Z",
+   "modified": "2026-11-09T03:25:05Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -123060,7 +123060,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-09T03:56:22Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -124433,7 +124433,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-08T17:12:47Z",
+   "modified": "2026-11-09T02:07:00Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -134040,7 +134040,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-07T08:44:39Z",
+   "modified": "2026-11-09T03:01:10Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -137431,7 +137431,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T00:26:00Z",
+   "modified": "2026-11-09T06:45:01Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -139099,7 +139099,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-08T19:23:30Z",
+   "modified": "2026-11-09T06:16:06Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -139445,7 +139445,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-08T20:36:44Z",
+   "modified": "2026-11-09T06:31:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -145082,89 +145082,6 @@
    ]
   },
   {
-   "sessionID": "1780442277389001c8wm",
-   "code": "CMP325-R",
-   "title": "Optimize your Amazon EC2 instances: Profile, diagnose, decide",
-   "abstract": "Which EC2 instance performs best? It depends on the workload. In this hands-on workshop, learn a repeatable methodology: observe with APerf, find breaking points, diagnose pipeline bottlenecks, and decide by price-performance across AWS Graviton-, Intel-, and AMD-based instances. Then fix code guided by profiling data.",
-   "type": "Workshop",
-   "length": 120,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Workshop"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Compute",
-     "Migration & Modernization"
-    ],
-    "AreaofInterest": [
-     "Cost Optimization",
-     "Innovation & Transformation"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "DevOps Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Elastic Compute Cloud (Amazon EC2)"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Toby Buckley",
-     "title": "Sr Specialist SA, EC2",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Julio Arnedo",
-     "title": "Startups Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025485108001Cv6y",
-     "date": "2026-11-30",
-     "startTime": "12:30",
-     "endTime": "14:30",
-     "utcStartTime": "2026/11/30 20:30:00",
-     "utcEndTime": "2026/11/30 22:30:00",
-     "length": 120,
-     "room": "MGM Grand | Level 3 | Premier 310",
-     "roomId": "1789591920472001bMHw",
-     "capacity": "84",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358254340001iDRX",
    "code": "CMP325-R1",
    "title": "Optimize your Amazon EC2 instances: Profile, diagnose, decide",
@@ -145241,6 +145158,89 @@
      "room": "MGM Grand | Level 3 | Premier 313",
      "roomId": "1789591920487004bQOS",
      "capacity": "140",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442277389001c8wm",
+   "code": "CMP325-R",
+   "title": "Optimize your Amazon EC2 instances: Profile, diagnose, decide",
+   "abstract": "Which EC2 instance performs best? It depends on the workload. In this hands-on workshop, learn a repeatable methodology: observe with APerf, find breaking points, diagnose pipeline bottlenecks, and decide by price-performance across AWS Graviton-, Intel-, and AMD-based instances. Then fix code guided by profiling data.",
+   "type": "Workshop",
+   "length": 120,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-09T05:58:48Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Workshop"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Compute",
+     "Migration & Modernization"
+    ],
+    "AreaofInterest": [
+     "Cost Optimization",
+     "Innovation & Transformation"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "DevOps Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Elastic Compute Cloud (Amazon EC2)"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Toby Buckley",
+     "title": "Sr Specialist SA, EC2",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Julio Arnedo",
+     "title": "Startups Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025485108001Cv6y",
+     "date": "2026-11-30",
+     "startTime": "12:30",
+     "endTime": "14:30",
+     "utcStartTime": "2026/11/30 20:30:00",
+     "utcEndTime": "2026/11/30 22:30:00",
+     "length": 120,
+     "room": "MGM Grand | Level 3 | Premier 310",
+     "roomId": "1789591920472001bMHw",
+     "capacity": "84",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -152868,7 +152868,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-08T07:39:54Z",
+   "modified": "2026-11-09T03:56:12Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -157854,7 +157854,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-08T20:44:17Z",
+   "modified": "2026-11-09T03:25:05Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -158034,7 +158034,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-08T23:47:29Z",
+   "modified": "2026-11-09T06:45:01Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -175088,7 +175088,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-08T22:41:17Z",
+   "modified": "2026-11-09T03:46:05Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -198303,7 +198303,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-08T09:36:23Z",
+   "modified": "2026-11-09T01:01:49Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
