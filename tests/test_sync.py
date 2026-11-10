@@ -781,6 +781,13 @@ class CiSignalTests(SyncDir, unittest.TestCase):
         self.cli(raw)
         self.assertEqual(self.cli(raw), "changed=false\n")
 
+    def test_should_report_a_new_feed_field_alone_to_the_workflow(self):
+        # No session changes (no batch), yet the summary must be queued: the workflow posts it only on changed=true.
+        raw = load("raw_2025_sample.json")
+        self.cli(raw)
+        self.assertEqual(self.cli([dict(r, roomCapacity=12) for r in raw]), "changed=true\n")
+        self.assertEqual((self.data("changes.json")["batches"], "roomCapacity" in self.data("sessions.json")["feedFields"]), ([], True))
+
 
 class FirstSeenTests(SyncDir, unittest.TestCase):
     """firstSeen drives the app's "new" badge; it must survive a regenerated instance id."""
@@ -1085,6 +1092,122 @@ class FeedShapeTests(SyncDir, unittest.TestCase):
             shapes = sync.field_shapes(raw)
             self.assertEqual(js_run("shapes_cli.js", raw), {"shapes": shapes, "problem": sync.shape_problem(shapes)})
         self.assertIn("2 of 20", sync.shape_problem(sync.field_shapes(self.odd_rooms(20, 2))))
+
+
+# The top-level fields of catalog_of()'s records: a 2025 sample record without its repeat links.
+CATALOG_FIELDS = ["TimeSlot", "audienceTypes", "deliveryTypes", "description", "durationInMinutes", "endDateTime",
+                  "isPopular", "lastUpdate", "location", "sessionCode", "sessionId", "sessionInstanceId", "sessionLevel",
+                  "sessionType", "speakerIds", "speakerNames", "startDateTime", "startDateTimeNullGroup", "tags", "title",
+                  "topic", "viewingOptions"]
+# CATALOG_FIELDS without TimeSlot, with roomCapacity (sorted as Python sorts: capitals first).
+MOVED_FIELDS = ["audienceTypes", "deliveryTypes", "description", "durationInMinutes", "endDateTime",
+                "isPopular", "lastUpdate", "location", "roomCapacity", "sessionCode", "sessionId", "sessionInstanceId",
+                "sessionLevel", "sessionType", "speakerIds", "speakerNames", "startDateTime", "startDateTimeNullGroup",
+                "tags", "title", "topic", "viewingOptions"]
+FIELDS_HEADING = "### ⚠️ The Ignite feed's fields changed"
+
+
+class FeedFieldsTests(SyncDir, unittest.TestCase):
+    """The feed's top-level field list is recorded on every run, and a field that appears or vanishes
+    is announced in the next change summary (ignite-catalog-sync.feature, "A field that appears in or
+    vanishes from the feed is announced")."""
+
+    def summary(self):
+        """This run's summary file, or None; removed once read so the next run's is its own."""
+        path = os.path.join(self.tmp, "summary.md")
+        if not os.path.exists(path):
+            return None
+        with open(path, encoding="utf-8") as f:
+            text = f.read()
+        os.remove(path)
+        return text
+
+    def feed(self, n, add=(), drop=()):
+        return [dict({k: v for k, v in r.items() if k not in drop}, **{k: 12 for k in add}) for r in catalog_of(n)]
+
+    def run_quietly(self, raw):
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            result = self.run_sync(raw)
+        return result, out.getvalue()
+
+    def test_should_record_the_fields_and_announce_nothing_on_the_first_run(self):
+        self.assertEqual(self.run_sync(catalog_of(60)), (0, False))
+        self.assertEqual((self.data("meta.json")["feedFields"], self.data("sessions.json")["feedFields"], self.summary()),
+                         (CATALOG_FIELDS, CATALOG_FIELDS, None))
+
+    def test_should_announce_a_new_and_a_vanished_field_when_no_session_changed(self):
+        self.run_sync(catalog_of(60))
+        self.summary()
+        result, printed = self.run_quietly(self.feed(60, add=["roomCapacity"], drop=["TimeSlot"]))
+        self.assertEqual((result, self.summary(), self.data("changes.json")["batches"]),
+                         ((0, True), FIELDS_HEADING + "\n- New: `roomCapacity`\n- Gone: `TimeSlot`\n", []))
+        self.assertEqual((self.data("sessions.json")["feedFields"], self.data("meta.json")["feedFields"]), (MOVED_FIELDS, MOVED_FIELDS))
+        self.assertTrue(printed.rstrip("\n").endswith(" | feed fields: 1 new, 1 gone"), printed)
+
+    def test_should_announce_fields_alongside_session_changes(self):
+        self.run_sync(catalog_of(60))
+        self.summary()
+        raw = self.feed(60, add=["roomCapacity"])
+        raw[3]["title"] = "A new title"
+        self.assertEqual(self.run_sync(raw), (0, True))
+        md = self.summary()
+        self.assertEqual(md.split("\n")[:3], [FIELDS_HEADING, "- New: `roomCapacity`", "Added 0 · removed 0 · changed 1"])
+        self.assertIn("- `BRK003` A new title — title:", md)
+        self.assertEqual([x["code"] for x in self.data("changes.json")["batches"][0]["changed"]], ["BRK003"])
+
+    def test_should_announce_a_field_change_once(self):
+        self.run_sync(catalog_of(60))
+        self.assertEqual(self.run_sync(self.feed(60, add=["roomCapacity"])), (0, True))
+        self.assertIsNotNone(self.summary())
+        self.assertEqual((self.run_sync(self.feed(60, add=["roomCapacity"])), self.summary(), self.data("sessions.json")["feedFields"]),
+                         ((0, False), None, sorted(CATALOG_FIELDS + ["roomCapacity"])))
+
+    def test_should_hold_a_refused_feeds_new_field_for_the_next_good_run(self):
+        self.run_sync(catalog_of(200))
+        self.assertEqual(self.run_sync(self.feed(90, add=["roomCapacity"])), (3, False))   # partial: refused
+        self.assertEqual((self.summary(), self.data("sessions.json")["feedFields"], self.data("meta.json")["feedFields"]),
+                         (None, CATALOG_FIELDS, sorted(CATALOG_FIELDS + ["roomCapacity"])))
+        self.assertEqual((self.run_sync(self.feed(200, add=["roomCapacity"])), self.summary()),
+                         ((0, True), FIELDS_HEADING + "\n- New: `roomCapacity`\n"))
+
+    def test_should_only_record_the_fields_when_the_catalog_has_no_usable_list(self):
+        # A catalog written before fields were recorded, or a hand-edited list, is no baseline:
+        # announcing every field as new would be noise. The run records the list instead.
+        for recorded in ("missing", None, "junk", [], [1, 2], {"title": 1}):
+            with self.subTest(recorded=recorded):
+                try:
+                    self.run_sync(catalog_of(60))
+                    path = os.path.join(self.tmp, "data", "sessions.json")
+                    doc = self.data("sessions.json")
+                    if recorded == "missing":
+                        doc.pop("feedFields")
+                    else:
+                        doc["feedFields"] = recorded
+                    with open(path, "w", encoding="utf-8") as f:
+                        json.dump(doc, f)
+                    self.assertEqual((self.run_sync(self.feed(60, add=["roomCapacity"])), self.summary(), self.data("sessions.json")["feedFields"]),
+                                     ((0, False), None, sorted(CATALOG_FIELDS + ["roomCapacity"])))
+                finally:   # each case starts from an empty data folder, even after a failure
+                    shutil.rmtree(os.path.join(self.tmp, "data"), ignore_errors=True)
+                    self.summary()
+
+    def test_should_take_fields_only_from_session_records(self):
+        # Two junk entries in 62 pass the malformed-entry guard (5%); their keys are not feed fields.
+        self.run_sync(catalog_of(60))
+        raw = catalog_of(60) + [{"debug": 1}, {"sessionId": "", "x_internal": 2}]
+        self.assertEqual((self.run_sync(raw), self.summary(), self.data("meta.json")["feedFields"], self.data("sessions.json")["feedFields"]),
+                         ((0, False), None, CATALOG_FIELDS, CATALOG_FIELDS))
+
+    def test_should_show_field_names_as_code_spans_and_shorten_a_long_list(self):
+        self.assertEqual(sync.fields_markdown({"new": ["a`b\nc"], "gone": []}), [FIELDS_HEADING, "- New: `a'b c`"])
+        sixty = ["f%02d" % i for i in range(60)]
+        self.assertEqual(sync.fields_markdown({"new": [], "gone": sixty})[1], "- Gone: " + ", ".join("`%s`" % f for f in sixty))
+        self.assertEqual(sync.fields_markdown({"new": sixty + ["g"], "gone": []})[1],
+                         "- New: " + ", ".join("`%s`" % f for f in sixty) + " …and 1 more")
+        # A name of up to 60 characters is shown whole; a longer one is cut to 59 and an ellipsis.
+        self.assertEqual(sync.fields_markdown({"new": ["a" * 60, "b" * 61, "c" * 70000], "gone": []})[1],
+                         "- New: `%s`, `%s…`, `%s…`" % ("a" * 60, "b" * 59, "c" * 59))
 
 
 def placeholder_runs(n, start=0):
