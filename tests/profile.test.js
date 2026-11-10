@@ -44,12 +44,14 @@ await test('should rank an Enterprise architect role match first at Gartner', ()
   const p = profile({ roles: ['Enterprise architect'] });
   const g = (code, title, type, tags, topics) => session({ id: code, code, title, type, tags, topics, level: null });
   const sessions = [
-    g('SPS57', "SAP LeanIX: Governing AI at Scale: Inside Dell's Enterprise Architecture", 'Solution Provider Sessions', [], // topic only
+    g('SPS62', 'DXC: From Scaling People to Orchestrating Agents - Transforming Managed Services', // a vendor tag starting with "D", not track D
+      'Solution Provider Sessions', ['DXC'], ['Agentic AI', 'AI Operationalization and Governance', 'Cybersecurity and Enterprise Resilience']),
+    g('SPS57', "SAP LeanIX: Governing AI at Scale: Inside Dell's Enterprise Architecture", 'Solution Provider Sessions', ['SAP LeanIX'], // topic only
       ['Agentic AI', 'AI Operationalization and Governance', 'Enterprise Architecture and Applications']),
-    g('SPS4', 'ThreatLocker: Implementing Zero Trust Controls, A Case Study', 'Solution Provider Sessions', [], // security without track D
+    g('SPS4', 'ThreatLocker: Implementing Zero Trust Controls, A Case Study', 'Solution Provider Sessions', ['ThreatLocker'], // security without track D
       ['Cybersecurity and Enterprise Resilience', 'Operating Models', 'Strategic Planning and Execution']),
     g('SPN4', 'EA Leaders Peer Speed Networking', 'Networking Session', ['Spotlight: Enterprise Architecture'], []), // spotlight only
-    g('CXB9', 'CIO Boardroom: Architecting Value in the Agentic AI Era', 'CIO Boardrooms', [], // a goal keyword, no goal chosen
+    g('CXB9', 'CIO Boardroom: Architecting Value in the Agentic AI Era', 'CIO Boardrooms', ['Nutanix'], // a goal keyword, no goal chosen
       ['Agentic AI', 'AI Operationalization and Governance', 'AI Value and Cost Management']),
     g('22e', 'Where Agentic AI Works, Will Soon Work and May Never Work', 'Track Sessions', // AI leader's tracks
       ['A: Agentic AI, Emerging Tech & Operationalization', 'Spotlight: AI Leaders'], ['Agentic AI']),
@@ -59,7 +61,7 @@ await test('should rank an Enterprise architect role match first at Gartner', ()
     g('12c', 'Top Data and Analytics Trends 2027', 'Track Sessions', // track H, whose name holds a "D"
       ['H: Data, Analytics & Digital Product Experience'], ['Data and Analytics']),
   ];
-  eq(shortlistCodes(p, sessions, 'gartner2026'), ['22b', 'SPN4', 'SPS57', '12c', '21c', '22e', 'CXB9', 'SPS4']);
+  eq(shortlistCodes(p, sessions, 'gartner2026'), ['22b', 'SPN4', 'SPS57', '12c', '21c', '22e', 'CXB9', 'SPS4', 'SPS62']);
 });
 
 await test('should rank an architect-audience session first for an Enterprise architect at re:Invent', () => {
