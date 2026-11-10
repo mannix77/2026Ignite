@@ -42,6 +42,20 @@ Feature: Suggesting sessions like the ones Minesh picked
       When the suggestions are worked out
       Then a session about Terraform fleets ranks above an unrelated session
 
+    Scenario: One shared word lost among many others
+      Given Minesh picked a session about Terraform fleet operations
+      When a session sharing only the word "Terraform" among seven other words is scored
+      Then its wording is not counted
+      But among six other words it is
+
+  Rule: A suggestion shows its three strongest reasons, strongest first
+
+    Scenario: A session that shares four things with the picks
+      Given a session shares four things with Minesh's picks
+      When the suggestions are worked out
+      Then it shows its three strongest reasons, strongest first
+      And the weakest reason is left out
+
   Rule: A pick Minesh wants more pulls harder
 
     Scenario: A Must outweighs a Maybe
@@ -49,14 +63,29 @@ Feature: Suggesting sessions like the ones Minesh picked
       When the suggestions are worked out
       Then another "Cloud" session ranks above another "Science" session
 
+    Scenario: A speaker from a Maybe pulls less than one from a Must
+      Given Minesh wants a session by Ada Lovelace less than his other pick
+      When the suggestions are worked out
+      Then another session by Ada Lovelace scores lower than when he wants both equally
+
   Rule: Only the sessions Minesh wants shape the suggestions
 
-    Scenario: A pick with no weight attracts nothing
+    # A weight-0 pick still attracts on its speaker and vendor (an open question in PR #134).
+    Scenario Outline: A pick with no weight attracts nothing on what it is about
       Given a pick carries no weight
       When the suggestions are worked out
-      Then a session that shares everything with it is not suggested
+      Then a session sharing its <feature> is not suggested
 
-    Scenario: The planner knows which sessions are already picked
+      Examples:
+        | description               | feature |
+        | the catalog track         | track   |
+        | the catalog topic         | topic   |
+        | the audience program      | program |
+        | the session type          | format  |
+        | words in title or summary | wording |
+
+    # The Suggested list leaves out rated sessions in app.js, which no test reaches yet.
+    Scenario: The suggester can tell a pick from an unrated session
       Given Minesh has picked two sessions
       When the suggestions are worked out
       Then both are known as picked

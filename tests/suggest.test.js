@@ -106,6 +106,50 @@ await test('should let the more wanted pick pull harder, whichever it is', () =>
     { score: 12, reasons: ['Track you favor: Science (75% of your picks)'] },
   ]);
 });
+// The speaker and vendor terms add half a pick's share as a bonus and stop at 1, so they only
+// show the weight when the pick that brings them is outweighed: at 1:3 its share is 25%.
+await test('should let a speaker or vendor pull less when its pick is outweighed', () => {
+  const opsLess = buildSuggester(catalog, [{ s: ops, w: 1 }, { s: quantum, w: 3 }]);
+  const even = liked();
+  eq([opsLess.score(bySpeaker), even.score(bySpeaker)], [
+    { score: 17, reasons: ['Speaker you picked elsewhere: Ada Lovelace'] },
+    { score: 23, reasons: ['Speaker you picked elsewhere: Ada Lovelace'] },
+  ]);
+  eq([opsLess.score(byVendor), even.score(byVendor)], [
+    { score: 13, reasons: ['Vendor in your picks: Contoso'] },
+    { score: 17, reasons: ['Vendor in your picks: Contoso'] },
+  ]);
+});
+
+// ---- the reasons shown are the three strongest, strongest first
+await test('should list every reason of a session that shares three things, strongest first', () => {
+  eq(liked().score(byMany), { score: 37, reasons: [
+    'Speaker you picked elsewhere: Ada Lovelace',
+    'Track you favor: Cloud (50% of your picks)',
+    'Topic you favor: Security (50% of your picks)',
+  ] });
+});
+await test('should drop the weakest of four reasons', () => {
+  // track at 75% and topic at 25% of the picks; speaker and vendor count as 100%
+  const byFour = cand('THR208', { title: 'Origami drills', tags: ['Cloud'], topics: ['Research'],
+    speakers: [['Ada Lovelace', 'Contoso']], vendors: ['Contoso'] });
+  const sg = buildSuggester([...catalog, byFour], [{ s: ops, w: 3 }, { s: quantum, w: 1 }]);
+  eq(sg.score(byFour), { score: 56, reasons: [
+    'Speaker you picked elsewhere: Ada Lovelace',
+    'Vendor in your picks: Contoso',
+    'Track you favor: Cloud (75% of your picks)',
+  ] });
+});
+
+// ---- wording counts only above a small similarity (cos > 0.08)
+// One word shared with a pick ("Terraform"), diluted by words used nowhere else: with six of
+// them the session is just above the cut-off, with seven just below it.
+const diluted = n => cand(`THR29${n}`, { title: `Terraform ${['alder', 'birch', 'cedar', 'dogwood', 'elm', 'fir', 'ginkgo'].slice(0, n).join(' ')}` });
+await test('should count wording just above the cut-off and not just below it', () => {
+  // each in its own catalog, so both see the same word counts
+  const scored = s => buildSuggester([...catalog, s], [{ s: ops, w: 3 }, { s: quantum, w: 3 }]).score(s);
+  eq([scored(diluted(6)), scored(diluted(7))], [{ score: 5, reasons: ['Wording like your picks: terraform'] }, NOTHING]);
+});
 
 // ---- only the sessions Minesh wants shape the suggestions
 // app.js drops Skip-rated picks before calling the suggester; a pick that still arrives with
@@ -130,6 +174,8 @@ await test('should not let a pick with no weight attract on its track, topic, pr
     { score: 9, reasons: ['Wording like your picks: patch, rollout, cadence'] },
   ]);
 });
+// picked() is part of buildSuggester's result. app.js does not call it: the Suggested list
+// leaves out rated sessions itself (prioOf in suggestions() and the browse filter), untested.
 await test('should know which sessions are picked and which are not', () => {
   const sg = liked();
   eq([sg.picked('BRK101/g'), sg.picked('BRK102/g'), sg.picked('THR201/g'), sg.picked('FIL1/g')], [true, true, false, false]);
