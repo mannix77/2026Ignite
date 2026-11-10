@@ -1,6 +1,171 @@
 {
  "batches": [
   {
+   "at": "2026-11-10T23:16:25Z",
+   "milestones": [],
+   "added": [
+    {
+     "id": "1787856585336001Etwq",
+     "inst": "1787856585336001Etwq-1794350733665001fh80",
+     "code": "THR920",
+     "title": "You can just do stuff: with Kyle Daigle and Scott Hanselman",
+     "repeat": false
+    }
+   ],
+   "removed": [],
+   "changed": [
+    {
+     "id": "1787856621370001E15q",
+     "inst": "1787856621370001E15q-1791588156528001CqcQ",
+     "code": "BRK318",
+     "title": "Project Perception: How Agentic Security Works",
+     "f": {
+      "start": [
+       "2026-11-19T17:00:00Z",
+       "2026-11-19T18:15:00Z"
+      ],
+      "end": [
+       "2026-11-19T17:45:00Z",
+       "2026-11-19T19:00:00Z"
+      ],
+      "room": [
+       "Moscone West | Level 2, Room 2002",
+       "Marriott Marquis | Lower B2, Yerba Buena Salon 8"
+      ]
+     }
+    },
+    {
+     "id": "1787856625088001EIdJ",
+     "inst": "1787856625088001EIdJ-1791588335605001C6lD",
+     "code": "BRK342",
+     "title": "Secure data and manage AI risk for Microsoft Copilot Chat and Cowork",
+     "f": {
+      "start": [
+       "2026-11-19T18:15:00Z",
+       "2026-11-19T17:00:00Z"
+      ],
+      "end": [
+       "2026-11-19T19:00:00Z",
+       "2026-11-19T17:45:00Z"
+      ],
+      "room": [
+       "Marriott Marquis | Lower B2, Yerba Buena Salon 8",
+       "Moscone West | Level 2, Room 2002"
+      ]
+     }
+    },
+    {
+     "id": "1787856639900001E6cl",
+     "inst": "1787856639900001E6cl-1791588218637001CGLI",
+     "code": "BRK438",
+     "title": "Building sovereign private cloud for mission-critical environments",
+     "f": {
+      "speakers": [
+       [
+        "Meena Gowdar",
+        "Sydney Bruckmann"
+       ],
+       [
+        "Matt Dacquisto",
+        "Meena Gowdar",
+        "Sydney Bruckmann"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856640517001EIKl",
+     "inst": "1787856640517001EIKl-1791588245037001C6mG",
+     "code": "BRK442",
+     "title": "Build sovereign AI with Azure Local and Foundry Local",
+     "f": {
+      "speakers": [
+       [
+        "Anders Zwartjes",
+        "Kushmeen Kambow",
+        "Matt Dacquisto"
+       ],
+       [
+        "Anders Zwartjes",
+        "Kushmeen Kambow"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856873476001hubl",
+     "inst": "1787856873476001hubl-1791588127040001CkEZ",
+     "code": "LAB673",
+     "title": "Foundry IQ: Hands-on with knowledge graphs and agentic retrieval",
+     "f": {
+      "title": [
+       "Turning data into agent-ready knowledge with Foundry IQ",
+       "Foundry IQ: Hands-on with knowledge graphs and agentic retrieval"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1787856873476001hubl",
+     "inst": "1787856873476001hubl-1791824759613001FjAj",
+     "code": "LAB673",
+     "title": "Foundry IQ: Hands-on with knowledge graphs and agentic retrieval",
+     "f": {
+      "title": [
+       "Turning data into agent-ready knowledge with Foundry IQ",
+       "Foundry IQ: Hands-on with knowledge graphs and agentic retrieval"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1787856873476001hubl",
+     "inst": "1787856873476001hubl-1791824791830001i1g9",
+     "code": "LAB673",
+     "title": "Foundry IQ: Hands-on with knowledge graphs and agentic retrieval",
+     "f": {
+      "title": [
+       "Turning data into agent-ready knowledge with Foundry IQ",
+       "Foundry IQ: Hands-on with knowledge graphs and agentic retrieval"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1787856873476001hubl",
+     "inst": "1787856873476001hubl-1791824820747001CKj6",
+     "code": "LAB673",
+     "title": "Foundry IQ: Hands-on with knowledge graphs and agentic retrieval",
+     "f": {
+      "title": [
+       "Turning data into agent-ready knowledge with Foundry IQ",
+       "Foundry IQ: Hands-on with knowledge graphs and agentic retrieval"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1787856583973001Eotd",
+     "inst": "1787856583973001Eotd-1791588205798001CdMU",
+     "code": "THR911",
+     "title": "AI in pre-production: create smarter before the camera rolls",
+     "f": {
+      "speakers": [
+       [
+        "Silvia Candiani",
+        "Vijay Subramaniam"
+       ],
+       [
+        "Rahul Regulapati",
+        "Silvia Candiani"
+       ]
+      ]
+     }
+    }
+   ],
+   "unknownRooms": []
+  },
+  {
    "at": "2026-11-10T22:46:02Z",
    "milestones": [],
    "added": [],
@@ -65603,21 +65768,6 @@
   },
   {
    "at": "2026-10-17T14:24:50Z",
-   "milestones": [],
-   "added": [
-    {
-     "id": "1787856874461001hhwp",
-     "inst": "1787856874461001hhwp-1791915692751001bjDG",
-     "code": "LAB685",
-     "title": "Deploy Copilot with confidence: Find & protect exposed sensitive data",
-     "repeat": true
-    }
-   ],
-   "removed": [],
-   "changed": []
-  },
-  {
-   "at": "2026-10-17T12:50:22Z",
    "milestones": [],
    "added": [
     {
