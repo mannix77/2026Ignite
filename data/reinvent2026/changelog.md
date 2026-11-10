@@ -3,6 +3,17 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-11-10T18:43:03Z · https://catalog.awsevents.com/api/sessions
+
+Added 0 · removed 1 · changed 2
+
+**Removed**
+- `AIM402-R1` Serverless model customization with SageMaker AI​
+
+**Changed**
+- `SEC303` Network security innovations for agentic workloads — speakers: Brandon Carroll, Sofía Aluma → Brandon Carroll, Sofia Aluma
+- `SEC365` Control what goes out: egress security for AI workloads — speakers: Akshay Choudhry, Bashuman Deb, Sofía Aluma → Akshay Choudhry, Bashuman Deb, Sofia Aluma
+
 ## 2026-11-10T00:48:56Z · https://catalog.awsevents.com/api/sessions
 
 Added 19 · removed 0 · changed 41
