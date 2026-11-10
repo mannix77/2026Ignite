@@ -125,9 +125,11 @@ class ParityTests(unittest.TestCase):
         js = self.js_normalize(raw_name, spk_name, window)
         self.assertEqual(js["dropped"], dropped)
         self.assertEqual(js["draft"], draft)
+        self.assertEqual(js["stats"], sync.stats(py, draft))   # what the app's header counts
         self.assertEqual(len(js["sessions"]), len(py))
         for a, b in zip(py, js["sessions"]):
             self.assertEqual(a, b, "mismatch for %s" % a["code"])
+        return py, js
 
     def test_parity_2026(self):
         self.check("raw_2026_sample.json", "speakers_2026_sample.json", W26)
@@ -140,6 +142,11 @@ class ParityTests(unittest.TestCase):
 
     def test_should_agree_with_the_browser_at_the_event_window_bounds(self):
         self.check("raw_window_bounds.json", None, W25)
+
+    def test_should_agree_with_the_browser_on_placeholders_and_on_what_they_are(self):
+        py, js = self.check("raw_placeholders.json", None, W26)
+        got = {r["code"]: (r["room"], r["roomTbd"], r["start"], r["end"], r["dur"]) for r in js["sessions"]}
+        self.assertEqual((got, js["stats"]), (PLACEHOLDERS_EXPECTED, PLACEHOLDERS_STATS))
 
 
 def js_run(cli, *args):
@@ -330,6 +337,56 @@ class EventWindowBoundsTests(unittest.TestCase):
 
     def test_should_treat_a_session_at_the_end_of_the_spare_day_as_a_draft(self):
         self.assertIsNone(self.start_of("WIN104"))
+
+
+# What tests/data/raw_placeholders.json must normalize to under the 2026 window (16 Nov 00:00Z
+# to 22 Nov 00:00Z), worked out by hand from the feature "A value that is not published yet is
+# never a room or a time": code -> (room, roomTbd, start, end, dur).
+ON_18TH = ("2026-11-18T17:00:00Z", "2026-11-18T17:45:00Z", 45)
+REAL_ROOM = "Moscone West, Level 2, Room 2001"
+PLACEHOLDERS_EXPECTED = {
+    "PH01": ("zTest12", True) + ON_18TH,                  # test room as text
+    "PH02": ("zTest3", True) + ON_18TH,                   # as a {displayValue} object
+    "PH03": ("ZTEST9", True) + ON_18TH,                   # as a list, in capitals
+    "PH04": ("TBD", True) + ON_18TH,
+    "PH05": ("tba", True) + ON_18TH,                      # trimmed
+    "PH06": ("Rescheduling Room", True) + ON_18TH,
+    "PH07": (None, True) + ON_18TH,                       # blank
+    "PH08": (None, True) + ON_18TH,                       # only spaces
+    "PH09": (None, True) + ON_18TH,                       # null
+    "PH10": (None, True) + ON_18TH,                       # an object with a blank displayValue
+    "PH11": (REAL_ROOM, False) + ON_18TH,                 # published room and time
+    "PH12": (REAL_ROOM, False, None, None, 45),           # the fake 14 Nov day: a draft time
+    "PH13": (REAL_ROOM, False, None, None, 45),           # blank times
+    "PH14": (REAL_ROOM, False) + ON_18TH,                 # 31 Dec end: a draft; the end comes from the length
+    "PH15": (REAL_ROOM, False, "2026-11-21T23:15:00Z", "2026-11-22T00:00:00Z", 45),  # end on the window's edge: kept
+    "PH16": (REAL_ROOM, False, "2026-11-21T23:15:00Z", None, None),  # end a minute past it: a draft, no length
+}
+# 16 runs; times on all but PH12/PH13; real rooms on PH11-PH16 only; draft times on PH12 (its
+# start), PH14 and PH16 (their ends).
+PLACEHOLDERS_STATS = {"sessions": 16, "withDates": 14, "withRooms": 6, "draftTimes": 3}
+
+
+class PlaceholderRuleTests(unittest.TestCase):
+    """One rule for "not published yet" (specs/features/ignite-catalog-sync.feature): a test or
+    holding room, a blank value, and a time outside the event window are never a room or a time."""
+
+    def setUp(self):
+        self.recs, self.dropped, self.draft = sync.normalize(load("raw_placeholders.json"), [], W26)
+
+    def test_should_read_every_placeholder_room_and_time_as_unpublished(self):
+        got = {r["code"]: (r["room"], r["roomTbd"], r["start"], r["end"], r["dur"]) for r in self.recs}
+        self.assertEqual((got, self.dropped), (PLACEHOLDERS_EXPECTED, []))   # a placeholder is unpublished, not dropped
+
+    def test_should_not_count_a_placeholder_as_a_room_or_a_time(self):
+        self.assertEqual(sync.stats(self.recs, self.draft), PLACEHOLDERS_STATS)
+        self.assertEqual(sync.session_stats(self.recs), {"withDates": 14, "withRooms": 6})
+
+    def test_should_keep_an_end_on_the_window_edge_and_count_one_a_minute_past_as_a_draft(self):
+        # Both runs start at 23:15Z on 21 Nov (inside); the window closes at 22 Nov 00:00Z.
+        got = {r["code"]: (r["start"], r["end"], r["dur"]) for r in self.recs if r["code"] in ("PH15", "PH16")}
+        self.assertEqual((got, self.draft), ({"PH15": ("2026-11-21T23:15:00Z", "2026-11-22T00:00:00Z", 45),
+                                              "PH16": ("2026-11-21T23:15:00Z", None, None)}, 3))
 
 
 class DiffTests(unittest.TestCase):

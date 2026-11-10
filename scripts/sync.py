@@ -50,9 +50,6 @@ TRACKED = ["title", "code", "type", "start", "end", "dur", "room", "speakers",
            "level", "delivery", "recorded", "desc"]
 # The catalog has spelled these differently across years ("In person" vs "In-person").
 DELIVERY_NAMES = {"inperson": "In-person", "online": "Online", "ondemand": "On-demand"}
-# Test rooms, TBD/TBA, blank, and "Rescheduling 3" / "Rescheduling Room" (a holding room while a
-# session moves). Same pattern in live.js, venue.js and venues.py.
-PLACEHOLDER_ROOM = re.compile(r"^(ztest\S*|tbd|tba|rescheduling(\s.*)?|)$", re.I)
 MAX_DUR = 1440
 # Whitespace trimmed from text fields; must match TRIM in assets/js/live.js.
 TRIM = re.compile("^[ \t\n\r\x0b\x0c\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]+|"
@@ -188,6 +185,31 @@ def window_bounds(window):
     return a, b
 
 
+# The one rule for "not published yet" (specs/features/ignite-catalog-sync.feature); live.js
+# mirrors it as placeholderRoom / inWindow / hasRoom and tests/test_sync.py keeps them equal.
+# A placeholder is kept in the record (roomTbd marks a room label, so a change notice can name
+# "Rescheduling 3"), but it is never shown or counted as a room or a time; a placeholder time is
+# dropped and counted in draftTimes.
+
+def placeholder_room(room):
+    """True for a room that isn't published: blank, a test room ("zTest12"), TBD/TBA, or a holding
+    room ("Rescheduling 3"). venues.PLACEHOLDER is the pattern the venue models share."""
+    room = text(room)
+    return not room or bool(venues.PLACEHOLDER.match(room))
+
+
+def in_window(t, bounds, end=False):
+    """True for a time inside the event window (bounds from window_bounds); a missing time or one
+    outside it (Ignite's fake 14 Nov day, a 31 Dec end) is a placeholder. An end may fall on the
+    window's closing edge (a session that started inside it ends there), not past it."""
+    return t is not None and bounds[0] <= t and (t <= bounds[1] if end else t < bounds[1])
+
+
+def has_room(rec):
+    """A normalized run with a published room (what withRooms and the guards count)."""
+    return bool(rec.get("room")) and not rec.get("roomTbd")
+
+
 def whole_minutes(dur):
     """True for a positive whole number of minutes (45 or 45.0, not True/NaN/'45'), at most a day."""
     if isinstance(dur, bool) or not isinstance(dur, (int, float)):
@@ -202,7 +224,7 @@ def is_test(s, title):
 
 def normalize(raw_sessions, raw_speakers, window=DEFAULT_WINDOW, by_name=None):
     spk = {p["speakerId"]: p for p in raw_speakers or [] if isinstance(p, dict) and p.get("speakerId")}
-    lo, hi = window_bounds(window)
+    bounds = window_bounds(window)
     out, dropped = [], []
     draft_times = 0
     for s in raw_sessions:
@@ -215,9 +237,12 @@ def normalize(raw_sessions, raw_speakers, window=DEFAULT_WINDOW, by_name=None):
             continue
         start = parse_iso(s.get("startDateTime"))
         end = parse_iso(s.get("endDateTime"))
-        if start and not (lo <= start < hi):
+        if start and not in_window(start, bounds):
             draft_times += 1  # placeholder/test schedule: don't present it as real
             start = end = None
+        if end and start and not in_window(end, bounds, end=True):
+            draft_times += 1  # a placeholder end (31 Dec): the length gives the end instead
+            end = None
         if end and (not start or end < start):
             end = None  # an end on its own, or before the start, is noise
         slot = text(s.get("TimeSlot") or s.get("timeSlot"))
@@ -267,7 +292,7 @@ def normalize(raw_sessions, raw_speakers, window=DEFAULT_WINDOW, by_name=None):
             "slot": slot or None,
             "dur": dur,
             "room": room or None,
-            "roomTbd": bool(PLACEHOLDER_ROOM.match(room)),
+            "roomTbd": placeholder_room(room),
             "popular": bool(s.get("isPopular")),
             "related": [c for c in list_of(s.get("relatedSessionCodes")) if isinstance(c, str) and c],
             "_links": [r.get("sessionCode") for r in list_of(s.get("repeatedSessions"))
@@ -379,7 +404,7 @@ def stats(lst, draft_times=0):
     return {
         "sessions": len(lst),
         "withDates": sum(1 for r in lst if r.get("start")),
-        "withRooms": sum(1 for r in lst if r.get("room") and not r.get("roomTbd")),
+        "withRooms": sum(1 for r in lst if has_room(r)),
         "draftTimes": draft_times,
     }
 
@@ -530,7 +555,7 @@ def session_stats(lst):
     """Sessions (not runs) with a time / a room: a session counts if any of its runs has one."""
     return {
         "withDates": len({r["id"] for r in lst if r.get("start")}),
-        "withRooms": len({r["id"] for r in lst if r.get("room") and not r.get("roomTbd")}),
+        "withRooms": len({r["id"] for r in lst if has_room(r)}),
     }
 
 
@@ -663,7 +688,7 @@ EXAMPLES = 10
 
 def _placeholder(r):
     """A run that was never really published: a placeholder room and no time."""
-    return bool(r.get("roomTbd")) and not r.get("start")
+    return not has_room(r) and not r.get("start")
 
 
 def refusal(guard, message, prev, cur=None):
@@ -676,7 +701,7 @@ def refusal(guard, message, prev, cur=None):
         by_id.setdefault(r["id"], []).append(r)
     cur_ids = {r["id"] for r in (cur or [])}
     missing = [sid for sid in by_id if sid not in cur_ids] if cur is not None else []
-    had = lambda runs, k: any(r.get(k) and not (k == "room" and r.get("roomTbd")) for r in runs)  # noqa: E731
+    had = lambda runs, k: any(has_room(r) if k == "room" else r.get(k) for r in runs)  # noqa: E731
     cur_by_id = {}
     for r in cur or []:
         cur_by_id.setdefault(r["id"], []).append(r)

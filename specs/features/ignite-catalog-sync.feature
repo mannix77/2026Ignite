@@ -62,6 +62,24 @@ Feature: Keeping the Ignite catalog current without false alarms
       When the live check reads a feed whose room field changed shape
       Then it refuses the feed with the same words as the sync
 
+  Rule: A value that is not published yet is never a room or a time
+
+    Scenario: A test room is not a room
+      Given a session has a time
+      When the catalog gives it a test room
+      Then the session shows "Room TBA"
+      And it is not counted among the sessions with rooms
+
+    Scenario: An end time after the event is a placeholder
+      Given a session starts on the second day of the event
+      When the catalog gives it an end time of 31 December
+      Then its end time comes from its length
+      And the end is counted among the placeholder times ignored
+
+    Scenario: The browser counts placeholders like the sync
+      When the live check reads a catalog full of placeholders
+      Then it counts the same published sessions as the sync
+
   Rule: Change notices tell runs apart from sessions
 
     Scenario: A dropped run is not reported as a cancelled session

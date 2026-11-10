@@ -4,6 +4,11 @@
 
 // ---------------------------------------------------------------- generic helpers
 
+// A room that is not a room yet: test rooms ("zTest78"), TBD/TBA, and "Rescheduling 3" /
+// "Rescheduling Room", where Microsoft parks a session while it moves it. The browser's one copy:
+// live.js normalizes with it; scripts/venues.py PLACEHOLDER is the Python one (parity-tested).
+export const PLACEHOLDER_ROOM = /^(ztest\S*|tbd|tba|rescheduling(\s.*)?)$/i;
+
 // Same physical room: identical real room names. Placeholders like "zTest78" are shared by
 // many unrelated sessions, so they never count. (A real room in a building we don't
 // recognize still counts.)
@@ -58,9 +63,7 @@ export function createVenue(def) {
   const BUILDING = Object.fromEntries(buildings.map(b => [b.id, b]));
   BUILDING.U = { id: 'U', name: 'Location TBA', short: 'TBA' };
   BUILDING.O = BUILDING.O || { id: 'O', name: 'Online only', short: 'Online' };
-  // "Rescheduling 3" / "Rescheduling Room": Microsoft parks a session there while it moves it.
-  // Same pattern in live.js, sync.py and venues.py (the parity tests keep them equal).
-  const placeholder = def.placeholder || /^(ztest\S*|tbd|tba|rescheduling(\s.*)?)$/i;
+  const placeholder = def.placeholder || PLACEHOLDER_ROOM;
 
   function parseLocation(label, overrides = {}) {
     const raw = (label || '').trim();

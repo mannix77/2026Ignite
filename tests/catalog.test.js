@@ -271,6 +271,23 @@ await test('should treat a rescheduling room as a placeholder, not an unknown bu
   eq(walkMinutes(parked, place('Moscone West | Level 3, Room 3001'), moscone.walk), moscone.walk.unknown);
 });
 
+// ---- a test room is not a room (specs/features/ignite-catalog-sync.feature, "A test room is not a room")
+// Through the live normalizer and the model the app draws from: timed sessions in a zTest room, a
+// blank room and a holding room read "Room TBA" and stay out of the room filter and the live
+// header's room count; the real room doesn't.
+await test('should show a timed zTest, blank or holding room as Room TBA and count only the real room', async () => {
+  const { normalize, catalogStats } = await import('../assets/js/live.js');
+  const run = (code, location) => ({ sessionId: code, sessionInstanceId: code, sessionCode: code, title: code, sessionType: { displayValue: 'Breakout' },
+    deliveryTypes: [{ displayValue: 'In-person' }], location, startDateTime: '2026-11-18T17:00:00Z', endDateTime: '2026-11-18T17:45:00Z' });
+  const real = 'Moscone West | Level 3, Room 3014';
+  const { sessions, draft } = normalize([run('BRK901', { displayValue: 'zTest12', logicalValue: 'zTest12' }), run('BRK902', real),
+    run('BRK903', '  '), run('BRK904', 'Rescheduling 3')], null, ['2026-11-17', '2026-11-20']);
+  const m = buildModel({ sessions }, { overrides: {}, preview: false }, null, ignite, createVenue(ignite.venue));
+  const shown = ['BRK901', 'BRK902', 'BRK903', 'BRK904'].map(code => m.sessions.find(s => s.code === code)).map(s => [s.timeSource, s.roomLabel]);
+  eq(shown, [['official', 'Room TBA'], ['official', real], ['official', 'Room TBA'], ['official', 'Room TBA']]);
+  eq([m.locations, catalogStats(sessions, draft)], [[real], { sessions: 4, withDates: 4, withRooms: 1, draftTimes: 0 }]);
+});
+
 // ---- the Map link opens the room on the official indoor map (specs/features/venue-map-link.feature)
 // The expected URL shape is the one the Ignite event guide's own "View map" button opens.
 const roomed = { code: 'BRK360', room: 'Moscone West | Level 3, Room 3014', roomTbd: false, onlineOnly: false };
