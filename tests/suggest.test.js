@@ -55,6 +55,13 @@ await test('should start suggesting at two picks', () => {
   eq(sg.ready, true);
   eq(sg.score(bySpeaker), { score: 23, reasons: ['Speaker you picked elsewhere: Ada Lovelace'] });
 });
+await test('should not count a pick with no weight toward the two picks', () => {
+  const sg = buildSuggester(catalog, [{ s: ops, w: 3 }, { s: quantum, w: 0 }]);
+  eq([sg.ready, sg.score(bySpeaker)], [false, NOT_READY]);
+  // ...while the same two picks with weight are enough
+  const both = buildSuggester(catalog, [{ s: ops, w: 3 }, { s: quantum, w: 1 }]);
+  eq([both.ready, both.score(bySpeaker)], [true, { score: 23, reasons: ['Speaker you picked elsewhere: Ada Lovelace'] }]);
+});
 await test('should suggest nothing, without throwing, with no picks', () => {
   for (const sessions of [catalog, []]) {
     const sg = buildSuggester(sessions, []);
@@ -83,6 +90,10 @@ await test('should suggest a session with a vendor of a pick', () => {
 });
 await test('should suggest a session worded like a pick', () => {
   eq(liked().score(byWords), { score: 19, reasons: ['Wording like your picks: terraform, fleet'] });
+});
+await test('should suggest a session whose description is worded like a pick', () => {
+  const inDesc = cand('THR209', { title: 'Evening social', desc: 'Terraform fleet upgrades' });
+  eq(buildSuggester([...catalog, inDesc], [{ s: ops, w: 3 }, { s: quantum, w: 3 }]).score(inDesc), { score: 12, reasons: ['Wording like your picks: terraform, fleet'] });
 });
 await test('should rank sessions by how much they share with the picks, unrelated last', () => {
   const sg = liked();
@@ -153,17 +164,20 @@ await test('should count wording just above the cut-off and not just below it', 
 
 // ---- only the sessions Minesh wants shape the suggestions
 // app.js drops Skip-rated picks before calling the suggester; a pick that still arrives with
-// no weight must not attract on its track, topic, program, format or wording.
-const patch = session('BRK103', { title: 'Patch rollout cadence', type: 'Lab', tags: ['Windows'], topics: ['Devices'], audience: ['Partner'] });
+// no weight must not attract on anything it is about.
+const patch = session('BRK103', { title: 'Patch rollout cadence', type: 'Lab', tags: ['Windows'], topics: ['Devices'], audience: ['Partner'],
+  speakers: [['Katherine Johnson', 'Litware']], vendors: ['Tailspin'] });
 const likePatch = [
   cand('THR311', { title: 'Choir practice', tags: ['Windows'] }),
   cand('THR312', { title: 'Chess openings', topics: ['Devices'] }),
   cand('THR313', { title: 'Bread baking', audience: ['Partner'] }),
   session('LAB314', { title: 'Kite flying', type: 'Lab' }),
   cand('THR315', { title: 'Patch rollout cadence review' }),
+  cand('THR316', { title: 'Rowing club', speakers: [['Katherine Johnson', 'Woodgrove']] }),
+  cand('THR317', { title: 'Tea tasting', vendors: ['Tailspin'] }),
 ];
 const withPatch = w => buildSuggester([...catalog, patch, ...likePatch], [{ s: ops, w: 3 }, { s: quantum, w: 3 }, { s: patch, w }]);
-await test('should not let a pick with no weight attract on its track, topic, program, format or wording', () => {
+await test('should not let a pick with no weight attract on its track, topic, program, format, wording, speaker or vendor', () => {
   eq(likePatch.map(s => withPatch(0).score(s)), likePatch.map(() => NOTHING));
   // ...while the same pick with a little weight attracts on each of them
   eq(likePatch.map(s => withPatch(1).score(s)), [
@@ -172,6 +186,8 @@ await test('should not let a pick with no weight attract on its track, topic, pr
     { score: 1, reasons: ['Program: Partner (14% of your picks)'] },
     { score: 1, reasons: ['Format you favor: Lab (14% of your picks)'] },
     { score: 9, reasons: ['Wording like your picks: patch, rollout, cadence'] },
+    { score: 15, reasons: ['Speaker you picked elsewhere: Katherine Johnson'] },
+    { score: 11, reasons: ['Vendor in your picks: Tailspin'] },
   ]);
 });
 // picked() is part of buildSuggester's result. app.js does not call it: the Suggested list
@@ -213,6 +229,17 @@ await test('should skip list fields missing from a session', () => {
   eq(sg.ready, true);
   eq(sg.score(bareCand), NOTHING);
   eq(sg.score(bySpeaker), { score: 23, reasons: ['Speaker you picked elsewhere: Ada Lovelace'] });
+});
+
+await test('should not suggest a session for wording when neither it nor the pick has any', () => {
+  // as a feed record without a title or description would arrive if it skipped buildModel
+  const blank = id => ({ id, key: `${id}-1`, group: `${id}/g`, code: id, tags: [], topics: [], audience: [], speakers: [], vendors: [] });
+  const blankPick = blank('BLK501'), blankCand = blank('BLK502');
+  const sg = buildSuggester([...catalog, blankPick, blankCand], [{ s: ops, w: 3 }, { s: blankPick, w: 3 }]);
+  eq(sg.ready, true);
+  eq(sg.score(blankCand), NOTHING);
+  // ...while the worded pick still suggests on its wording
+  eq(sg.score(byWords).reasons, ['Wording like your picks: terraform, fleet']);
 });
 
 console.log(`${pass} passed, ${fail} failed`);

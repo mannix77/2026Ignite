@@ -14,6 +14,11 @@ Feature: Suggesting sessions like the ones Minesh picked
       When the suggestions are worked out
       Then sessions like his picks are suggested
 
+    Scenario: A pick with no weight does not count toward the two
+      Given one of Minesh's two picks carries no weight
+      When the suggestions are worked out
+      Then no session is suggested
+
     Scenario: A device with no picks yet
       Given Minesh has picked nothing
       When the suggestions are worked out
@@ -70,7 +75,6 @@ Feature: Suggesting sessions like the ones Minesh picked
 
   Rule: Only the sessions Minesh wants shape the suggestions
 
-    # A weight-0 pick still attracts on its speaker and vendor (an open question in PR #134).
     Scenario Outline: A pick with no weight attracts nothing on what it is about
       Given a pick carries no weight
       When the suggestions are worked out
@@ -80,9 +84,9 @@ Feature: Suggesting sessions like the ones Minesh picked
         | description               | feature |
         | the catalog track         | track   |
         | the catalog topic         | topic   |
-        | the audience program      | program |
-        | the session type          | format  |
         | words in title or summary | wording |
+        | a speaker                 | speaker |
+        | a vendor                  | vendor  |
 
     # The Suggested list leaves out rated sessions in app.js, which no test reaches yet.
     Scenario: The suggester can tell a pick from an unrated session
@@ -98,3 +102,8 @@ Feature: Suggesting sessions like the ones Minesh picked
       When the suggestions are worked out
       Then every session gets a score
       And a well-formed session like Minesh's picks is still suggested
+
+    Scenario: Sessions with no words in them
+      Given Minesh picked a session with no words in it
+      When the suggestions are worked out
+      Then another session with no words is not suggested for its wording
