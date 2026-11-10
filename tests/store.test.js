@@ -204,7 +204,7 @@ await test('should report save-ok once a failing save succeeds again, and only t
   globalThis.__quota = 10;
   store.mutatePicks(p => { p.S1 = { p: 3, lock: null, note: '', at: 1 }; });
   await sleep(SAVE);
-  const whileFull = [store.saveFailing(), localStorage.getItem('ignite26.planner.v1:save-recovery')];
+  const whileFull = [[...seen], store.saveFailing(), localStorage.getItem('ignite26.planner.v1:save-recovery')];
   globalThis.__quota = null;
   store.mutatePicks(p => { p.S2 = { p: 2, lock: null, note: '', at: 2 }; });
   await sleep(SAVE);
@@ -213,7 +213,7 @@ await test('should report save-ok once a failing save succeeds again, and only t
   store.mutatePicks(p => { p.S3 = { p: 1, lock: null, note: '', at: 3 }; });
   await sleep(SAVE);
   off();
-  eq(whileFull, [true, null]);
+  eq(whileFull, [['save-error'], true, null], 'while full: only save-error, still failing, nothing stored');
   eq(afterRecovery, [['save-error', 'save-ok'], false, { S1: [3, 1], S2: [2, 2] }], 'the recovery save itself wrote the change made while full, and reported save-ok');
   eq([seen, store.saveFailing(), stored()], [['save-error', 'save-ok'], false, { S1: [3, 1], S2: [2, 2], S3: [1, 3] }], 'none for the next ordinary save, which saved too');
 });
