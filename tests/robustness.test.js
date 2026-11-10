@@ -260,6 +260,116 @@ await test("should delete only this copy's old app caches when a new version act
   eq(w.deleted.sort(), [`${mine}old`, 'shell-legacy'].sort());
 });
 
+// Installs sw.js for `scope` against a fake site: the CDN edge still holds the previous deploy's
+// files at the addresses it has already served (`edge`, ignoring the request's cache mode, as a
+// CDN does), and any other address is fetched from the new deploy (`missing` answers 404).
+// Caches behave like the browser's: open creates, put/match resolve keys against the worker;
+// `fullAt` makes saving that file fail as a full disk does.
+async function install(scope, { edge = new Map(), missing = '', fullAt = '', existing = {} } = {}) {
+  const href = r => new URL(typeof r === 'string' ? r : r.url, scope).href;
+  const fetched = [];
+  const reply = (url, status, body) => ({ url, status, ok: status === 200, body, headers: { 'content-type': 'text/plain' }, blob: async () => body });
+  const fetch = async (r, init = {}) => {
+    const u = href(r);
+    fetched.push({ url: u, cache: init.cache });
+    const plain = new URL(u); plain.search = '';
+    if (missing && plain.href === new URL(missing, scope).href) return reply(u, 404, 'not found');
+    if (edge.has(u)) return reply(u, 200, edge.get(u));
+    return reply(u, 200, `new:${plain.pathname}`);
+  };
+  // A response the worker builds itself has no address of its own, like the browser's.
+  class Response { constructor(body, init = {}) { Object.assign(this, { url: '', body, status: init.status, ok: init.status === 200, headers: init.headers }); } }
+  const store = new Map(Object.entries(existing).map(([name, entries]) => [name, new Map(Object.entries(entries))]));
+  const cacheFor = m => ({
+    put: async (k, res) => {
+      if (fullAt && href(k) === new URL(fullAt, scope).href) throw Object.assign(new Error('The quota has been exceeded.'), { name: 'QuotaExceededError' });
+      m.set(href(k), res);
+    },
+    match: async (k, { ignoreSearch = false } = {}) => {
+      const key = new URL(href(k)); if (ignoreSearch) key.search = '';
+      for (const [u, res] of m) { const c = new URL(u); if (ignoreSearch) c.search = ''; if (c.href === key.href) return res; }
+      return undefined;
+    },
+  });
+  const caches = {
+    has: async name => store.has(name),
+    open: async name => { if (!store.has(name)) store.set(name, new Map()); return cacheFor(store.get(name)); },
+    keys: async () => [...store.keys()], delete: async name => store.delete(name),
+  };
+  const handlers = {};
+  let skipped = false;
+  const self = {
+    registration: { scope }, location: new URL('sw.js', scope), clients: { claim: async () => {}, matchAll: async () => [] },
+    addEventListener: (type, fn) => { handlers[type] = fn; }, skipWaiting: async () => { skipped = true; },
+  };
+  const sandbox = { self, caches, URL, Response, setTimeout, fetch };
+  vm.runInNewContext(SW_SOURCE, sandbox);
+  const consts = vm.runInNewContext(`${SW_SOURCE}; ({ SHELL, SHELL_CACHE, SHELL_PREFIX })`, { ...sandbox, self: { ...self, addEventListener: () => {} } });
+  let done;
+  handlers.install({ waitUntil: p => { done = p; } });
+  const outcome = await done.then(() => 'installed', e => `refused: ${e.message}`);
+  const serve = async (url, mode = 'no-cors') => {
+    let response;
+    handlers.fetch({ request: { method: 'GET', url: href(url), mode }, respondWith: p => { response = p; } });
+    return (await response).body;
+  };
+  // The files fetched for the app shell, i.e. at an address with a query.
+  const shellFetches = () => fetched.filter(f => new URL(f.url).search).map(f => [f.url, f.cache]).sort();
+  return { outcome, store, shellFetches, consts, skipped: () => skipped, serve, fetch };
+}
+
+for (const [scope, dir] of [[MAIN, '/2026Ignite/'], [`${MAIN}gino/`, '/2026Ignite/gino/']]) {
+  await test(`should save the new deploy's app files when the CDN still serves the old ones (${dir})`, async () => {
+    const { consts } = await install(scope);
+    const edge = new Map(consts.SHELL.map(p => [new URL(p, scope).href, `old:${p}`]));
+    const w = await install(scope, { edge });
+    // Precondition: the edge really hands out the previous app.js at the address the app uses.
+    eq((await w.fetch('assets/js/app.js')).body, 'old:assets/js/app.js');
+    eq([w.outcome, w.skipped()], ['installed', true]);
+    const shell = w.store.get(consts.SHELL_CACHE);
+    const expected = consts.SHELL.map(p => new URL(p, scope));
+    // Saved under the plain address the page asks for; every copy is the new deploy's file,
+    // keeps its headers, and has no address of its own (so the page never sees ?v=).
+    eq([...shell.keys()].sort(), expected.map(u => u.href).sort());
+    eq([...shell.values()].map(r => [r.body, r.url, r.headers['content-type']]).sort(),
+      expected.map(u => [`new:${u.pathname}`, '', 'text/plain']).sort());
+    // Each file was asked for once, at this version's own address, past the browser's cache too.
+    eq(w.shellFetches(), expected.map(u => [`${u.href}?v=ignite26-dev`, 'reload']).sort());
+    eq(await w.serve(`${scope}?conf=ignite2026`, 'navigate'), `new:${dir}index.html`);
+    eq(await w.serve(`${scope}assets/js/app.js`), `new:${dir}assets/js/app.js`);
+  });
+}
+
+await test('should keep nothing of a new version that cannot fetch one of its app files', async () => {
+  const { consts } = await install(MAIN);
+  const old = `${consts.SHELL_PREFIX}old`;
+  const w = await install(MAIN, { missing: 'assets/js/venue.js', existing: { [old]: { [`${MAIN}index.html`]: { body: 'old page' } } } });
+  eq([...w.store.keys()].filter(k => k.startsWith(consts.SHELL_PREFIX)), [old]);
+  eq([...w.store.get(old).values()].map(r => r.body), ['old page']);
+  eq([w.outcome, w.skipped()], ['refused: assets/js/venue.js: HTTP 404', false]);
+  // Precondition: the other files were fetched; only the one 404 stopped the install.
+  eq(w.shellFetches().length, consts.SHELL.length);
+});
+
+await test('should keep nothing of a new version when the phone runs out of space saving it', async () => {
+  const { consts } = await install(MAIN);
+  const old = `${consts.SHELL_PREFIX}old`;
+  const w = await install(MAIN, { fullAt: 'assets/js/venue.js', existing: { [old]: { [`${MAIN}index.html`]: { body: 'old page' } } } });
+  eq([...w.store.keys()].filter(k => k.startsWith(consts.SHELL_PREFIX)), [old]);
+  eq([...w.store.get(old).values()].map(r => r.body), ['old page']);
+  eq([w.outcome, w.skipped()], ['refused: The quota has been exceeded.', false]);
+  eq(w.shellFetches().length, consts.SHELL.length);
+});
+
+await test('should keep the copy in use when an update with the same app files runs out of space', async () => {
+  const { consts } = await install(MAIN);
+  // This version's copy is already there (the worker in use made it); only sw.js changed.
+  const w = await install(MAIN, { fullAt: 'assets/js/venue.js', existing: { [consts.SHELL_CACHE]: { [`${MAIN}assets/js/venue.js`]: { body: 'venue in use' } } } });
+  eq([w.outcome, w.skipped()], ['refused: The quota has been exceeded.', false]);
+  eq([...w.store.keys()].filter(k => k.startsWith(consts.SHELL_PREFIX)), [consts.SHELL_CACHE]);
+  eq(await w.serve(`${MAIN}assets/js/venue.js`), 'venue in use');
+});
+
 await test("should leave a colleague's copy to its own worker", () => {
   const { handlers } = worker(MAIN);
   let answered = false;

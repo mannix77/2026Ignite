@@ -28,10 +28,37 @@ const DATA_TIMEOUT_MS = 3500;
 
 const dataKey = url => { const u = new URL(url, self.location); return u.origin + u.pathname; };
 
+// Right after a deploy the CDN can still hand out the previous files at their usual addresses
+// for a while (cache: 'reload' only skips the browser's own cache), and a copy saved from those
+// would keep the old app under this version until the next deploy. So each file is asked for
+// at an address only this version uses (?v=VERSION), which the CDN has never cached, and saved
+// under the plain address the page asks for, as a fresh response so the page never sees the
+// ?v= address either. Every file is fetched before any is saved. If one can't be fetched, or
+// the phone runs out of space while saving, the install fails and nothing of this version is
+// kept, so the current version stays until the browser tries again. The one exception is a
+// copy of this version that was already there: an update that changes only this worker keeps
+// the version name, and that copy is the one in use.
+async function installShell() {
+  const files = await Promise.all(SHELL.map(async p => {
+    const url = new URL(p, self.location);
+    url.searchParams.set('v', VERSION);
+    const res = await fetch(url.href, { cache: 'reload' });
+    if (!res.ok) throw new Error(`${p}: HTTP ${res.status}`);
+    return [p, new Response(await res.blob(), res)];
+  }));
+  const hadCopy = await caches.has(SHELL_CACHE);
+  const shell = await caches.open(SHELL_CACHE);
+  try {
+    await Promise.all(files.map(([p, res]) => shell.put(p, res)));
+  } catch (e) {
+    if (!hadCopy) await caches.delete(SHELL_CACHE).catch(() => {});
+    throw e;
+  }
+}
+
 self.addEventListener('install', e => {
   e.waitUntil((async () => {
-    const shell = await caches.open(SHELL_CACHE);
-    await shell.addAll(SHELL.map(p => new Request(p, { cache: 'reload' })));
+    await installShell();
     const data = await caches.open(DATA_CACHE);
     await Promise.all(DATA.map(async p => {
       try {
