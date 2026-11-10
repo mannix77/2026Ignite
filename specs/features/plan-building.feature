@@ -54,6 +54,21 @@ Feature: The plan is the best day the rules allow
       When the planner builds the plan
       Then only one is planned
 
+    Scenario: Blocked time at Chase Center needs the walk but no keynote entry
+      Given a Want in Moscone West ends 42 minutes before blocked time at Chase Center
+      When the planner builds the plan
+      Then the Want is planned with the blocked time
+
+    Scenario: Blocked time at Chase Center one minute short of the walk
+      Given a Want in Moscone West ends 41 minutes before blocked time at Chase Center
+      When the planner builds the plan
+      Then the Want is planned with the blocked time for 48 points
+
+    Scenario: A session at Chase Center needs the keynote entry
+      Given a Want in Moscone West ends 42 minutes before a Want at Chase Center
+      When the planner builds the plan
+      Then only one Want is planned
+
   Rule: Lunch fits only in a gap with room for the walk
 
     Scenario: A gap one minute short of lunch and the walk
@@ -67,6 +82,24 @@ Feature: The plan is the best day the rules allow
       And a Want in Moscone South starts at 12:39
       When the planner builds the plan with lunch worth 40
       Then the plan holds both Wants with lunch, for 140 points
+
+    Scenario: Walking to the next room first, then eating
+      Given a Want in Moscone West ends at 11:21
+      And a Want in Moscone South starts at noon
+      When the planner builds the plan with lunch from 11:30 worth 40
+      Then the plan holds both Wants with lunch from 11:30, for 140 points
+
+    Scenario: A minute too late to walk first, then eat
+      Given a Want in Moscone West ends at 11:22
+      And a Want in Moscone South starts at noon
+      When the planner builds the plan with lunch from 11:30 worth 40
+      Then both Wants are planned without lunch, for 100 points
+
+    Scenario: A minute too early to eat after the walk
+      Given a Want in Moscone West ends at 11:21
+      And a Want in Moscone South starts at 11:59
+      When the planner builds the plan with lunch from 11:30 worth 40
+      Then both Wants are planned without lunch, for 100 points
 
   Rule: Locked sessions and blocked time stay in the plan
 
