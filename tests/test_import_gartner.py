@@ -68,6 +68,28 @@ class ImportRobustnessTests(unittest.TestCase):
         with contextlib.redirect_stderr(io.StringIO()):
             self.assertEqual(keys([a, b]), keys([b, a]))
 
+    def test_should_key_runs_sharing_an_id_and_code_by_start_then_by_order(self):
+        # Issue #77: the "inst in used_inst" branch. Four records, one id and one code: another
+        # start gets its time in the key; a second and third record at the same start get -2.
+        recs = [dict(OK, id=9, code="R1"),
+                dict(OK, id=9, code="R1", s="10/19/2026 11:00:00", e="10/19/2026 11:45:00"),
+                dict(OK, id=9, code="R1", t="Talk again"),
+                dict(OK, id=9, code="R1", t="Talk a third time")]
+        with contextlib.redirect_stderr(io.StringIO()):
+            out = g.normalize(recs)[0]
+        self.assertEqual(sorted((r["inst"], r["title"]) for r in out), [
+            ("9-R1", "Talk"), ("9-R1-10192026100000", "Talk again"), ("9-R1-10192026100000-2", "Talk a third time"),
+            ("9-R1-10192026110000", "Talk")])
+
+    def test_should_split_a_live_room_from_its_remote_viewing_room(self):
+        got = normalize(dict(OK, id=2, code="L1", loc="Live: Lark 1, WDW Swan Hotel | Remote: Pelican 2, WDW Swan Hotel", d="About"),
+                        dict(OK, id=3, code="L2", loc="Live: Osprey 3"),
+                        dict(OK, id=4, code="L3", loc=" | Remote: Toucan 1"))
+        self.assertEqual([(got[c]["room"], got[c]["roomTbd"], got[c]["desc"]) for c in ("L1", "L2", "L3")], [
+            ("Lark 1, WDW Swan Hotel", False, "About\n\nRemote viewing: Pelican 2, WDW Swan Hotel"),
+            ("Osprey 3", False, ""),
+            (None, True, "Remote viewing: Toucan 1")])
+
     def test_should_skip_a_malformed_speaker_entry(self):
         got = normalize(dict(OK, id=8, code="T8", sp=[7, ["Ann Lee", "Analyst", "Gartner"]]))
         self.assertEqual([p[0] for p in got["T8"]["speakers"]], ["Ann Lee"])
