@@ -12,7 +12,14 @@ CONFERENCE_VENUES = {"ignite2026": "moscone", "gartner2026": "swan-dolphin", "re
 # A room that is not a room yet (sync.py's placeholder_room uses it and adds blanks; the same pattern
 # as PLACEHOLDER_ROOM in venue.js, which live.js imports): test rooms, TBD/TBA, and
 # "Rescheduling 3" / "Rescheduling Room", where Microsoft parks a session while it moves it.
-PLACEHOLDER = re.compile(r"^(ztest\S*|tbd|tba|rescheduling(\s.*)?)$", re.I)
+# Python's \s, '.', '$' and re.I read some characters differently from JavaScript's (\x1c and
+# \x85 are spaces only to Python, \ufeff only to JavaScript; ſ and ı fold to s and i; '$' also
+# matches before a final newline), so the pattern spells them out: _JS_SPACE is the body of
+# JavaScript's \s, '.' becomes JavaScript's (anything but a line break), re.ASCII keeps the case
+# folding to A-Z, and \Z ends the label. tests/test_sync.py runs every BMP character through both.
+_JS_SPACE = "\t\n\x0b\x0c\r \u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff"
+PLACEHOLDER = re.compile(r"^(ztest[^%s]*|tbd|tba|rescheduling([%s][^\n\r\u2028\u2029]*)?)\Z"
+                         % (_JS_SPACE, _JS_SPACE), re.I | re.ASCII)
 
 # Buildings per venue, in the order the browser tests them (the first match wins).
 BUILDINGS = {

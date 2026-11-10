@@ -6,7 +6,8 @@
 
 // A room that is not a room yet: test rooms ("zTest78"), TBD/TBA, and "Rescheduling 3" /
 // "Rescheduling Room", where Microsoft parks a session while it moves it. The browser's one copy:
-// live.js normalizes with it; scripts/venues.py PLACEHOLDER is the Python one (parity-tested).
+// live.js normalizes with it; scripts/venues.py PLACEHOLDER is the Python one, spelled out so that
+// it reads every character as this does (tests/test_sync.py checks every BMP character).
 export const PLACEHOLDER_ROOM = /^(ztest\S*|tbd|tba|rescheduling(\s.*)?)$/i;
 
 // Same physical room: identical real room names. Placeholders like "zTest78" are shared by

@@ -73,7 +73,8 @@ function windowBounds([first, last]) {
 // The one rule for "not published yet", mirroring sync.py's placeholder_room / in_window /
 // has_room (tests/test_sync.py keeps them equal). A placeholder stays in the record (roomTbd marks
 // a room label), but it is never shown or counted as a room or a time. A start must be inside the
-// window; an end may fall on its closing edge (a session that started inside it), not past it.
+// window; an end may fall on its closing edge (a session that started inside it), not past it or
+// before the window. An end is only tested when the start is real: alone it is noise, not counted.
 const placeholderRoom = room => { const r = text(room); return !r || PLACEHOLDER_ROOM.test(r); };
 const inWindow = (d, [lo, hi], end = false) => !!d && d.getTime() >= lo && (end ? d.getTime() <= hi : d.getTime() < hi);
 const hasRoom = r => !!r.room && !r.roomTbd;

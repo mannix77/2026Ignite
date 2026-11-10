@@ -201,7 +201,9 @@ def placeholder_room(room):
 def in_window(t, bounds, end=False):
     """True for a time inside the event window (bounds from window_bounds); a missing time or one
     outside it (Ignite's fake 14 Nov day, a 31 Dec end) is a placeholder. An end may fall on the
-    window's closing edge (a session that started inside it ends there), not past it."""
+    window's closing edge (a session that started inside it ends there), not past it; an end before
+    the window opens is a placeholder too. normalize only tests an end when the start is real: an
+    end with no start is no time at all (dropped as noise, not counted)."""
     return t is not None and bounds[0] <= t and (t <= bounds[1] if end else t < bounds[1])
 
 

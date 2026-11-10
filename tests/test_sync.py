@@ -20,11 +20,16 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 sys.path.insert(0, os.path.join(ROOT, "scripts"))
 import sync  # noqa: E402
+import venues  # noqa: E402
 
 JSC = "/System/Library/Frameworks/JavaScriptCore.framework/Versions/Current/Helpers/jsc"
 JS_RUNNER = [JSC, "-m"] if os.path.exists(JSC) else (["node"] if shutil.which("node") else None)
 W26 = ("2026-11-17", "2026-11-20")
 W25 = ("2025-11-18", "2025-11-21")
+# JavaScript's \s (ECMAScript WhiteSpace and LineTerminator): the only characters a room label's
+# placeholder pattern may treat as spaces, on both sides.
+JS_SPACE = {0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x20, 0xa0, 0x1680, *range(0x2000, 0x200b), 0x2028, 0x2029, 0x202f,
+            0x205f, 0x3000, 0xfeff}
 
 
 def load(name):
@@ -147,6 +152,28 @@ class ParityTests(unittest.TestCase):
         py, js = self.check("raw_placeholders.json", None, W26)
         got = {r["code"]: (r["room"], r["roomTbd"], r["start"], r["end"], r["dur"]) for r in js["sessions"]}
         self.assertEqual((got, js["stats"]), (PLACEHOLDERS_EXPECTED, PLACEHOLDERS_STATS))
+
+    def test_should_read_every_character_of_a_room_label_as_the_browser_does(self):
+        # Python's \s, \S, '.', '$' and re.I differ from JavaScript's (\x1c is whitespace to one and
+        # not the other, ſ folds to s, '$' matches before a final newline), so the shared placeholder
+        # pattern must be spelled out. Every BMP character is put at a point of each template that
+        # one of those reads; both sides must call exactly the literal set below a placeholder.
+        bmp = set(range(0x10000))
+        letters = lambda c: {ord(c), ord(c.upper())}   # noqa: E731
+        cases = {
+            "zTest{}4": bmp - JS_SPACE, "zTest{}": bmp - JS_SPACE, "TBD{}": set(),
+            "Rescheduling{}3": JS_SPACE, "Rescheduling 3{}B": bmp - {0x0a, 0x0d, 0x2028, 0x2029},
+            "{}test": letters("z"), "z{}est": letters("t"), "zt{}st": letters("e"), "zte{}t": letters("s"),
+            "ztes{}": letters("t"), "{}ba": letters("t"), "t{}d": letters("b"), "tb{}": letters("a") | letters("d"),
+            "{}escheduling": letters("r"), "r{}scheduling": letters("e"), "re{}cheduling": letters("s"),
+            "res{}heduling": letters("c"), "resc{}eduling": letters("h"), "resche{}uling": letters("d"),
+            "resched{}ling": letters("u"), "reschedu{}ing": letters("l"), "reschedul{}ng": letters("i"),
+            "rescheduli{}g": letters("n"), "reschedulin{}": letters("g"),
+        }
+        py = {t: {cp for cp in range(0x10000) if venues.PLACEHOLDER.match(t.replace("{}", chr(cp)))} for t in cases}
+        js = {t: set(cps) for t, cps in js_run("placeholder_cli.js", sorted(cases)).items()}
+        off = lambda got: {t: sorted(hex(cp) for cp in got[t] ^ cases[t]) for t in cases}   # noqa: E731
+        self.assertEqual((off(py), off(js)), ({t: [] for t in cases},) * 2)   # characters read differently
 
 
 def js_run(cli, *args):
@@ -361,10 +388,13 @@ PLACEHOLDERS_EXPECTED = {
     "PH14": (REAL_ROOM, False) + ON_18TH,                 # 31 Dec end: a draft; the end comes from the length
     "PH15": (REAL_ROOM, False, "2026-11-21T23:15:00Z", "2026-11-22T00:00:00Z", 45),  # end on the window's edge: kept
     "PH16": (REAL_ROOM, False, "2026-11-21T23:15:00Z", None, None),  # end a minute past it: a draft, no length
+    "PH17": (REAL_ROOM, False) + ON_18TH,                 # 14 Nov end (before the window): a draft too
+    "PH18": (REAL_ROOM, False, None, None, 45),           # no start: a 31 Dec end alone is no time, not a draft
+    "PH19": ("zTest\x1c4", True) + ON_18TH,              # \x1c is no space to JavaScript: a test room
 }
-# 16 runs; times on all but PH12/PH13; real rooms on PH11-PH16 only; draft times on PH12 (its
-# start), PH14 and PH16 (their ends).
-PLACEHOLDERS_STATS = {"sessions": 16, "withDates": 14, "withRooms": 6, "draftTimes": 3}
+# 19 runs; times on all but PH12/PH13/PH18; real rooms on PH11-PH18 only; draft times on PH12 (its
+# start), PH14, PH16 and PH17 (their ends).
+PLACEHOLDERS_STATS = {"sessions": 19, "withDates": 16, "withRooms": 8, "draftTimes": 4}
 
 
 class PlaceholderRuleTests(unittest.TestCase):
@@ -380,13 +410,14 @@ class PlaceholderRuleTests(unittest.TestCase):
 
     def test_should_not_count_a_placeholder_as_a_room_or_a_time(self):
         self.assertEqual(sync.stats(self.recs, self.draft), PLACEHOLDERS_STATS)
-        self.assertEqual(sync.session_stats(self.recs), {"withDates": 14, "withRooms": 6})
+        self.assertEqual(sync.session_stats(self.recs), {"withDates": 16, "withRooms": 8})
 
     def test_should_keep_an_end_on_the_window_edge_and_count_one_a_minute_past_as_a_draft(self):
-        # Both runs start at 23:15Z on 21 Nov (inside); the window closes at 22 Nov 00:00Z.
+        # Both runs start at 23:15Z on 21 Nov (inside); the window closes at 22 Nov 00:00Z. 4 drafts in
+        # all: PH12, PH14, PH16 and PH17.
         got = {r["code"]: (r["start"], r["end"], r["dur"]) for r in self.recs if r["code"] in ("PH15", "PH16")}
         self.assertEqual((got, self.draft), ({"PH15": ("2026-11-21T23:15:00Z", "2026-11-22T00:00:00Z", 45),
-                                              "PH16": ("2026-11-21T23:15:00Z", None, None)}, 3))
+                                              "PH16": ("2026-11-21T23:15:00Z", None, None)}, 4))
 
 
 class DiffTests(unittest.TestCase):

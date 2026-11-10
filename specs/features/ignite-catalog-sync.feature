@@ -76,6 +76,12 @@ Feature: Keeping the Ignite catalog current without false alarms
       Then its end time comes from its length
       And the end is counted among the placeholder times ignored
 
+    Scenario: An end time before the event is a placeholder too
+      Given a session starts on the second day of the event
+      When the catalog gives it an end time on the event's placeholder day
+      Then its end time comes from its length
+      And the end is counted among the placeholder times ignored
+
     Scenario: The browser counts placeholders like the sync
       When the live check reads a catalog full of placeholders
       Then it counts the same published sessions as the sync
