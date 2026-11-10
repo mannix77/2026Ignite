@@ -81,6 +81,33 @@ await test('should rank an architect-audience session first for an Enterprise ar
   eq(shortlistCodes(p, sessions, 'reinvent2026'), ['SEC359', 'SNR302', 'ANT313', 'CMP202', 'MAM220']);
 });
 
+// role-ranking.feature: sessions that rank equal are listed earliest first, then by code.
+// Every session here ranks the same for this profile (asserted), so only the tie order decides.
+const tied = (...sessions) => {
+  const p = profile({ roles: ['Enterprise architect'] });
+  eq(new Set(sessions.map(s => rank(p, s).score)).size, 1, 'precondition: the sessions rank equal');
+  return shortlistCodes(p, sessions, 'ignite2026');
+};
+await test('should list the earlier of two equal sessions first, even with the higher code', () => {
+  eq(tied(session({ code: 'BRK100', start: '2026-11-18T20:00:00Z' }), session({ code: 'BRK200', start: '2026-11-18T17:00:00Z' })),
+    ['BRK200', 'BRK100']);
+});
+await test('should list equal sessions at the same time by code', () => {
+  eq(tied(session({ code: 'BRK300', start: '2026-11-18T17:00:00Z' }), session({ code: 'BRK250', start: '2026-11-18T17:00:00Z' })),
+    ['BRK250', 'BRK300']);
+});
+await test('should list an equal session with no time after one with a time', () => {
+  eq(tied(session({ code: 'BRK050' }), session({ code: 'BRK060', start: 'not a time' }), session({ code: 'BRK400', start: '2026-11-21T01:00:00Z' })),
+    ['BRK400', 'BRK050', 'BRK060']);
+});
+await test('should place an equal session that runs twice by its first run', () => {
+  // its runs are listed 20:00, 15:00, 22:00: neither the run seen first nor the one seen last is
+  // the earliest, and both are after the other session's 18:00
+  const run = start => session({ code: 'BRK500', group: 'R', start });
+  eq(tied(run('2026-11-18T20:00:00Z'), session({ code: 'BRK450', start: '2026-11-18T18:00:00Z' }), run('2026-11-18T15:00:00Z'), run('2026-11-18T22:00:00Z')),
+    ['BRK500', 'BRK450']);
+});
+
 // ---- skipping a whole group hides sessions without rating them
 await test('should hide a session in a skipped group', () => {
   eq(rank(profile({ groups: { 'topic:Windows': -1 } }), session({ topics: ['Windows'] })).hidden, 'group');

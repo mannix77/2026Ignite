@@ -203,10 +203,18 @@ export function createRanker(profileIn, confId) {
 
 // One entry per repeat group, split into what you rated, what your choices hide, the
 // shortlist left to rate (best first) and what's parked below the cut.
-// `bonus(s)` adds to the rank (e.g. similarity to your picks).
+// `bonus(s)` adds to the rank (e.g. similarity to your picks). Equal ranks are listed by the
+// group's first run (sessions with no time last; two of those give NaN, so the code decides),
+// then by code.
 export function partition(sessions, ranker, { isRated, size = 100, bonus = () => 0 }) {
   const seen = new Set();
   const rated = [], hidden = [], open = [];
+  const firstRun = new Map(); // group -> earliest start (ms) of any of its runs
+  for (const s of sessions) {
+    const t = typeof s.start === 'string' ? Date.parse(s.start) : NaN;
+    if (Number.isFinite(t) && !(firstRun.get(s.group) <= t)) firstRun.set(s.group, t);
+  }
+  const startOf = s => firstRun.get(s.group) ?? Infinity;
   for (const s of sessions) {
     if (seen.has(s.group)) continue;
     seen.add(s.group);
@@ -216,6 +224,6 @@ export function partition(sessions, ranker, { isRated, size = 100, bonus = () =>
     else if (ev.hidden) hidden.push(entry);
     else open.push(entry);
   }
-  open.sort((a, b) => b.rank - a.rank || String(a.s.code).localeCompare(String(b.s.code)));
+  open.sort((a, b) => b.rank - a.rank || startOf(a.s) - startOf(b.s) || String(a.s.code).localeCompare(String(b.s.code)));
   return { rated, hidden, shortlist: open.slice(0, size), parked: open.slice(size) };
 }
