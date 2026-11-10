@@ -264,10 +264,18 @@ await test("should delete only this copy's old app caches when a new version act
 // files at the addresses it has already served (`edge`, ignoring the request's cache mode, as a
 // CDN does), and any other address is fetched from the new deploy (`missing` answers 404).
 // Caches behave like the browser's: open creates, put/match resolve keys against the worker;
-// `fullAt` makes saving that file fail as a full disk does.
-async function install(scope, { edge = new Map(), missing = '', fullAt = '', existing = {} } = {}) {
+// `fullAt` makes saving that file fail as a full disk does; `fullFrom` ({file: n}) lets the
+// first n saves of a file succeed and the later ones fail. `existing` maps cache names to
+// {address: body}. `version` stamps sw.js the way sync.yml's sed does.
+async function install(scope, { edge = new Map(), missing = '', fullAt = '', fullFrom = {}, existing = {}, version = '' } = {}) {
+  const full = new Map(Object.entries(fullAt ? { ...fullFrom, [fullAt]: 0 } : fullFrom).map(([p, n]) => [new URL(p, scope).href, n]));
+  const saves = new Map();
+  const stamp = "const VERSION = 'ignite26-dev';";
+  if (version && !SW_SOURCE.includes(stamp)) throw new Error("sw.js no longer has sync.yml's VERSION placeholder");
+  const source = version ? SW_SOURCE.replace(stamp, `const VERSION = '${version}';`) : SW_SOURCE;
   const href = r => new URL(typeof r === 'string' ? r : r.url, scope).href;
   const fetched = [];
+  const puts = [];
   const reply = (url, status, body) => ({ url, status, ok: status === 200, body, headers: { 'content-type': 'text/plain' }, blob: async () => body });
   const fetch = async (r, init = {}) => {
     const u = href(r);
@@ -278,13 +286,26 @@ async function install(scope, { edge = new Map(), missing = '', fullAt = '', exi
     return reply(u, 200, `new:${plain.pathname}`);
   };
   // A response the worker builds itself has no address of its own, like the browser's.
-  class Response { constructor(body, init = {}) { Object.assign(this, { url: '', body, status: init.status, ok: init.status === 200, headers: init.headers }); } }
-  const store = new Map(Object.entries(existing).map(([name, entries]) => [name, new Map(Object.entries(entries))]));
-  const cacheFor = m => ({
+  class Response {
+    constructor(body, init = {}) {
+      if (Object.prototype.toString.call(body) === '[object ArrayBuffer]') body = new TextDecoder().decode(body);
+      Object.assign(this, { url: '', body, status: init.status, ok: init.status === 200, headers: init.headers });
+    }
+    clone() { return new Response(this.body, this); }
+    async arrayBuffer() { return new TextEncoder().encode(this.body).buffer; }
+  }
+  const saved = body => new Response(body, { status: 200, headers: { 'content-type': 'text/plain' } });
+  const store = new Map(Object.entries(existing).map(([name, entries]) =>
+    [name, new Map(Object.entries(entries).map(([u, body]) => [href(u), saved(body)]))]));
+  const cacheFor = (name, m) => ({
     put: async (k, res) => {
-      if (fullAt && href(k) === new URL(fullAt, scope).href) throw Object.assign(new Error('The quota has been exceeded.'), { name: 'QuotaExceededError' });
+      const n = saves.get(href(k)) ?? 0;
+      saves.set(href(k), n + 1);
+      if (full.has(href(k)) && n >= full.get(href(k))) throw Object.assign(new Error('The quota has been exceeded.'), { name: 'QuotaExceededError' });
+      puts.push([name, href(k)]);
       m.set(href(k), res);
     },
+    delete: async k => m.delete(href(k)),
     match: async (k, { ignoreSearch = false } = {}) => {
       const key = new URL(href(k)); if (ignoreSearch) key.search = '';
       for (const [u, res] of m) { const c = new URL(u); if (ignoreSearch) c.search = ''; if (c.href === key.href) return res; }
@@ -293,7 +314,7 @@ async function install(scope, { edge = new Map(), missing = '', fullAt = '', exi
   });
   const caches = {
     has: async name => store.has(name),
-    open: async name => { if (!store.has(name)) store.set(name, new Map()); return cacheFor(store.get(name)); },
+    open: async name => { if (!store.has(name)) store.set(name, new Map()); return cacheFor(name, store.get(name)); },
     keys: async () => [...store.keys()], delete: async name => store.delete(name),
   };
   const handlers = {};
@@ -303,8 +324,8 @@ async function install(scope, { edge = new Map(), missing = '', fullAt = '', exi
     addEventListener: (type, fn) => { handlers[type] = fn; }, skipWaiting: async () => { skipped = true; },
   };
   const sandbox = { self, caches, URL, Response, setTimeout, fetch };
-  vm.runInNewContext(SW_SOURCE, sandbox);
-  const consts = vm.runInNewContext(`${SW_SOURCE}; ({ SHELL, SHELL_CACHE, SHELL_PREFIX })`, { ...sandbox, self: { ...self, addEventListener: () => {} } });
+  vm.runInNewContext(source, sandbox);
+  const consts = vm.runInNewContext(`${source}; ({ SHELL, SHELL_CACHE, SHELL_PREFIX })`, { ...sandbox, self: { ...self, addEventListener: () => {} } });
   let done;
   handlers.install({ waitUntil: p => { done = p; } });
   const outcome = await done.then(() => 'installed', e => `refused: ${e.message}`);
@@ -315,18 +336,30 @@ async function install(scope, { edge = new Map(), missing = '', fullAt = '', exi
   };
   // The files fetched for the app shell, i.e. at an address with a query.
   const shellFetches = () => fetched.filter(f => new URL(f.url).search).map(f => [f.url, f.cache]).sort();
-  return { outcome, store, shellFetches, consts, skipped: () => skipped, serve, fetch };
+  // The addresses saved into this version's shell cache, in order.
+  const shellPuts = () => puts.filter(([name]) => name === consts.SHELL_CACHE).map(([, u]) => u);
+  // What a cache holds, as {address: body}.
+  const bodies = name => Object.fromEntries([...store.get(name)].map(([u, r]) => [u, r.body]));
+  return { outcome, store, shellFetches, consts, skipped: () => skipped, serve, fetch, shellPuts, bodies };
 }
 
 for (const [scope, dir] of [[MAIN, '/2026Ignite/'], [`${MAIN}gino/`, '/2026Ignite/gino/']]) {
   await test(`should save the new deploy's app files when the CDN still serves the old ones (${dir})`, async () => {
-    const { consts } = await install(scope);
-    const edge = new Map(consts.SHELL.map(p => [new URL(p, scope).href, `old:${p}`]));
-    const w = await install(scope, { edge });
-    // Precondition: the edge really hands out the previous app.js at the address the app uses.
-    eq((await w.fetch('assets/js/app.js')).body, 'old:assets/js/app.js');
+    // The CDN still holds the previous deploy's files at their usual addresses and at every
+    // address the previous version's worker asked for when it installed.
+    const prev = await install(scope, { version: 'ignite26-old111' });
+    const { consts } = prev;
+    const edge = new Map([...consts.SHELL.map(p => new URL(p, scope).href), ...prev.shellFetches().map(([u]) => u)]
+      .map(u => [u, `old:${new URL(u).pathname}`]));
+    const w = await install(scope, { edge, version: 'ignite26-abc123' });
+    const asked = w.shellFetches(); // before the checks below fetch anything themselves
+    // Preconditions: the edge really hands out the previous app.js at the address the app uses
+    // and at the address the previous version fetched it from; each version has its own name.
+    eq((await w.fetch('assets/js/app.js')).body, `old:${dir}assets/js/app.js`);
+    eq((await w.fetch('assets/js/app.js?v=ignite26-old111')).body, `old:${dir}assets/js/app.js`);
+    eq([prev.consts.SHELL_CACHE, w.consts.SHELL_CACHE], [`shell:${dir}:ignite26-old111`, `shell:${dir}:ignite26-abc123`]);
     eq([w.outcome, w.skipped()], ['installed', true]);
-    const shell = w.store.get(consts.SHELL_CACHE);
+    const shell = w.store.get(w.consts.SHELL_CACHE);
     const expected = consts.SHELL.map(p => new URL(p, scope));
     // Saved under the plain address the page asks for; every copy is the new deploy's file,
     // keeps its headers, and has no address of its own (so the page never sees ?v=).
@@ -334,7 +367,7 @@ for (const [scope, dir] of [[MAIN, '/2026Ignite/'], [`${MAIN}gino/`, '/2026Ignit
     eq([...shell.values()].map(r => [r.body, r.url, r.headers['content-type']]).sort(),
       expected.map(u => [`new:${u.pathname}`, '', 'text/plain']).sort());
     // Each file was asked for once, at this version's own address, past the browser's cache too.
-    eq(w.shellFetches(), expected.map(u => [`${u.href}?v=ignite26-dev`, 'reload']).sort());
+    eq(asked, expected.map(u => [`${u.href}?v=ignite26-abc123`, 'reload']).sort());
     eq(await w.serve(`${scope}?conf=ignite2026`, 'navigate'), `new:${dir}index.html`);
     eq(await w.serve(`${scope}assets/js/app.js`), `new:${dir}assets/js/app.js`);
   });
@@ -343,9 +376,9 @@ for (const [scope, dir] of [[MAIN, '/2026Ignite/'], [`${MAIN}gino/`, '/2026Ignit
 await test('should keep nothing of a new version that cannot fetch one of its app files', async () => {
   const { consts } = await install(MAIN);
   const old = `${consts.SHELL_PREFIX}old`;
-  const w = await install(MAIN, { missing: 'assets/js/venue.js', existing: { [old]: { [`${MAIN}index.html`]: { body: 'old page' } } } });
+  const w = await install(MAIN, { missing: 'assets/js/venue.js', existing: { [old]: { [`${MAIN}index.html`]: 'old page' } } });
   eq([...w.store.keys()].filter(k => k.startsWith(consts.SHELL_PREFIX)), [old]);
-  eq([...w.store.get(old).values()].map(r => r.body), ['old page']);
+  eq(w.bodies(old), { [`${MAIN}index.html`]: 'old page' });
   eq([w.outcome, w.skipped()], ['refused: assets/js/venue.js: HTTP 404', false]);
   // Precondition: the other files were fetched; only the one 404 stopped the install.
   eq(w.shellFetches().length, consts.SHELL.length);
@@ -354,9 +387,9 @@ await test('should keep nothing of a new version that cannot fetch one of its ap
 await test('should keep nothing of a new version when the phone runs out of space saving it', async () => {
   const { consts } = await install(MAIN);
   const old = `${consts.SHELL_PREFIX}old`;
-  const w = await install(MAIN, { fullAt: 'assets/js/venue.js', existing: { [old]: { [`${MAIN}index.html`]: { body: 'old page' } } } });
+  const w = await install(MAIN, { fullAt: 'assets/js/venue.js', existing: { [old]: { [`${MAIN}index.html`]: 'old page' } } });
   eq([...w.store.keys()].filter(k => k.startsWith(consts.SHELL_PREFIX)), [old]);
-  eq([...w.store.get(old).values()].map(r => r.body), ['old page']);
+  eq(w.bodies(old), { [`${MAIN}index.html`]: 'old page' });
   eq([w.outcome, w.skipped()], ['refused: The quota has been exceeded.', false]);
   eq(w.shellFetches().length, consts.SHELL.length);
 });
@@ -364,10 +397,61 @@ await test('should keep nothing of a new version when the phone runs out of spac
 await test('should keep the copy in use when an update with the same app files runs out of space', async () => {
   const { consts } = await install(MAIN);
   // This version's copy is already there (the worker in use made it); only sw.js changed.
-  const w = await install(MAIN, { fullAt: 'assets/js/venue.js', existing: { [consts.SHELL_CACHE]: { [`${MAIN}assets/js/venue.js`]: { body: 'venue in use' } } } });
+  const w = await install(MAIN, { fullAt: 'assets/js/venue.js', existing: { [consts.SHELL_CACHE]: { [`${MAIN}assets/js/venue.js`]: 'venue in use' } } });
   eq([w.outcome, w.skipped()], ['refused: The quota has been exceeded.', false]);
   eq([...w.store.keys()].filter(k => k.startsWith(consts.SHELL_PREFIX)), [consts.SHELL_CACHE]);
+  // Precondition: other files were saved before the disk filled up; they are taken out again.
+  eq(w.shellPuts().includes(`${MAIN}assets/js/app.js`), true);
+  eq(w.bodies(consts.SHELL_CACHE), { [`${MAIN}assets/js/venue.js`]: 'venue in use' });
   eq(await w.serve(`${MAIN}assets/js/venue.js`), 'venue in use');
+});
+
+// A copy in use made before this fix can hold files the CDN handed out stale (#77).
+const shellOf = (consts, scope, body) => Object.fromEntries(consts.SHELL.map(p => [new URL(p, scope).href, body(new URL(p, scope))]));
+
+await test('should save no app file again when the copy in use already holds them all', async () => {
+  const { consts } = await install(MAIN);
+  const current = shellOf(consts, MAIN, u => `new:${u.pathname}`);
+  // Saving venue.js would fail, but the copy already holds it, so nothing needs saving.
+  const w = await install(MAIN, { fullAt: 'assets/js/venue.js', existing: { [consts.SHELL_CACHE]: current } });
+  eq([w.outcome, w.skipped(), w.shellPuts()], ['installed', true, []]);
+  eq(w.bodies(consts.SHELL_CACHE), current);
+});
+
+await test('should replace only the stale files in the copy in use', async () => {
+  const { consts } = await install(MAIN);
+  const app = `${MAIN}assets/js/app.js`;
+  // app.js was cut short (the start of the new file): equal bytes as far as they go isn't the same file.
+  const current = { ...shellOf(consts, MAIN, u => `new:${u.pathname}`), [app]: 'new:/2026Ignite/assets/js/app' };
+  const w = await install(MAIN, { fullAt: 'assets/js/venue.js', existing: { [consts.SHELL_CACHE]: current } });
+  eq([w.outcome, w.skipped(), w.shellPuts()], ['installed', true, [app]]);
+  eq(w.bodies(consts.SHELL_CACHE), { ...current, [app]: 'new:/2026Ignite/assets/js/app.js' });
+  eq(await w.serve(app), 'new:/2026Ignite/assets/js/app.js');
+});
+
+await test('should put back the copy in use exactly as it was when repairing it runs out of space', async () => {
+  const { consts } = await install(MAIN);
+  const stale = shellOf(consts, MAIN, u => `old:${u.pathname}`);
+  const w = await install(MAIN, { fullAt: 'assets/js/venue.js', existing: { [consts.SHELL_CACHE]: stale } });
+  eq([w.outcome, w.skipped()], ['refused: The quota has been exceeded.', false]);
+  // Precondition: app.js was replaced before the disk filled up at venue.js.
+  eq(w.shellPuts().includes(`${MAIN}assets/js/app.js`), true);
+  eq(w.bodies(consts.SHELL_CACHE), stale);
+  eq(await w.serve(`${MAIN}assets/js/app.js`), 'old:/2026Ignite/assets/js/app.js');
+});
+
+await test('should put back every other file when one cannot be put back, and finish on the next try', async () => {
+  const { consts } = await install(MAIN);
+  const app = `${MAIN}assets/js/app.js`;
+  const stale = shellOf(consts, MAIN, u => `old:${u.pathname}`);
+  // app.js is replaced, venue.js can't be saved, and then putting app.js back fails as well.
+  const w = await install(MAIN, { fullFrom: { 'assets/js/venue.js': 0, 'assets/js/app.js': 1 }, existing: { [consts.SHELL_CACHE]: stale } });
+  eq([w.outcome, w.skipped()], ['refused: The quota has been exceeded.', false]);
+  eq(w.bodies(consts.SHELL_CACHE), { ...stale, [app]: 'new:/2026Ignite/assets/js/app.js' });
+  // With room again, the next try replaces exactly the files that still differ.
+  const next = await install(MAIN, { existing: { [consts.SHELL_CACHE]: w.bodies(consts.SHELL_CACHE) } });
+  eq([next.outcome, next.skipped(), next.shellPuts()], ['installed', true, Object.keys(stale).filter(u => u !== app)]);
+  eq(next.bodies(consts.SHELL_CACHE), shellOf(consts, MAIN, u => `new:${u.pathname}`));
 });
 
 await test("should leave a colleague's copy to its own worker", () => {

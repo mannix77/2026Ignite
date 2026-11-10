@@ -37,7 +37,11 @@ const dataKey = url => { const u = new URL(url, self.location); return u.origin 
 // the phone runs out of space while saving, the install fails and nothing of this version is
 // kept, so the current version stays until the browser tries again. The one exception is a
 // copy of this version that was already there: an update that changes only this worker keeps
-// the version name, and that copy is the one in use.
+// the version name, and that copy is the one in use. In it only files that differ are replaced
+// (a copy made before this fix can hold a stale one), each after its old body is read into
+// memory, and if saving fails they are put back so the copy never mixes two deploys. Should
+// putting one back fail too (the disk is still full), the install is refused all the same and
+// the next try replaces the files that still differ.
 async function installShell() {
   const files = await Promise.all(SHELL.map(async p => {
     const url = new URL(p, self.location);
@@ -48,12 +52,28 @@ async function installShell() {
   }));
   const hadCopy = await caches.has(SHELL_CACHE);
   const shell = await caches.open(SHELL_CACHE);
+  const undo = [];
   try {
-    await Promise.all(files.map(([p, res]) => shell.put(p, res)));
+    for (const [p, res] of files) {
+      const prev = hadCopy ? await shell.match(p) : undefined;
+      let was;
+      if (prev) {
+        was = await prev.arrayBuffer();
+        if (sameBytes(was, await res.clone().arrayBuffer())) continue;
+      }
+      await shell.put(p, res);
+      undo.push(prev ? () => shell.put(p, new Response(was, prev)) : () => shell.delete(p));
+    }
   } catch (e) {
-    if (!hadCopy) await caches.delete(SHELL_CACHE).catch(() => {});
+    if (hadCopy) for (const step of undo) await step().catch(() => {});
+    else await caches.delete(SHELL_CACHE).catch(() => {});
     throw e;
   }
+}
+
+function sameBytes(a, b) {
+  const x = new Uint8Array(a), y = new Uint8Array(b);
+  return x.length === y.length && x.every((v, i) => v === y[i]);
 }
 
 self.addEventListener('install', e => {
