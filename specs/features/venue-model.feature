@@ -105,3 +105,22 @@ Feature: Walking times reach every building the catalog uses
       Given a history entry with no record of unknown rooms
       When Minesh reviews what changed in the catalog
       Then that entry has no unknown-building line
+
+  Rule: Only the venue says which buildings cost keynote entry time
+
+    Scenario: A Caesars Palace session when the planner is not told the venue
+      Given re:Invent puts a breakout in Caesars Palace
+      And the planner is not given the venue's keynote buildings
+      When the session before it is in Caesars Forum
+      Then the planner adds no keynote entry time
+
+    Scenario: Chase Center at Ignite
+      Given the Moscone venue marks Chase Center as a keynote venue
+      And the planner is given the venue's keynote buildings
+      When the next session is at Chase Center
+      Then the planner adds the keynote entry time
+
+    Scenario: A keynote anywhere
+      Given the planner is not given the venue's keynote buildings
+      When the next session is a keynote
+      Then the planner adds the keynote entry time

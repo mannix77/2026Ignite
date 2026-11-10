@@ -20,7 +20,9 @@ export const DEFAULT_PLANNER = {
   buffer: 2,          // minutes to find the room and grab a seat
   tolerance: 5,       // minutes you'll accept missing (leave early / arrive late)
   keynoteExtra: 15,   // extra time to get into a keynote (security, seating, Chase Center)
-  keynoteBuildings: ['C'],   // keynote-only venues (the venue model's keynote: true; Moscone's Chase Center)
+  // Keynote-only buildings come from the venue (createVenue's keynoteBuildings: Moscone's Chase
+  // Center). None by default: building ids are per venue, and at Las Vegas 'C' is Caesars Palace.
+  keynoteBuildings: [],
   weights: {
     3: 100, 2: 50, 1: 20,
     scoreScale: 10,        // points per point of your own score (a workbook score of 9 = 90)

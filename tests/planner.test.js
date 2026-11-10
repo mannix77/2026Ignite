@@ -5,7 +5,7 @@
 import { transition, canBoth, optimize, optimizeDay, decisionGroups, isResolved, fillers, nowNext, weigh, whatIf, chainValue, DEFAULT_PLANNER } from '../assets/js/planner.js';
 import { parseLocation, walkMinutes, sameRoom, DEFAULT_WALK } from '../assets/js/venue.js';
 import { localParts, fromISO, parseSlot, fmtTime, fmtDay, addDays, relTime, fmtDuration, fmtRange } from '../assets/js/time.js';
-import { createVenue } from '../assets/js/venue.js';
+import { createVenue, MOSCONE_DEF } from '../assets/js/venue.js';
 import { CONFERENCES, LAS_VEGAS_DEF, SWAN_DOLPHIN_DEF } from '../assets/js/conferences.js';
 import { parseShare } from '../assets/js/store.js';
 import { upNext, onwardWalk, nextPlanned } from '../assets/js/upnext.js';
@@ -611,7 +611,35 @@ test('a re:Invent keynote still gets keynote entry time', () => {
   eq(arrivalExtra(item(H(9), H(10), lv('Venetian | Level 2 | Hall D'), { type: 'Keynote' }), ctx), ctx.keynoteExtra);
 });
 test('Chase Center still gets keynote entry time at Ignite', () => {
-  eq(arrivalExtra(item(H(9), H(10), parseLocation('Chase Center')), DEFAULT_PLANNER), DEFAULT_PLANNER.keynoteExtra);
+  const ignite = createVenue(MOSCONE_DEF);
+  eq(ignite.keynoteBuildings, ['C']);   // the venue model marks Chase Center keynote: true
+  eq(arrivalExtra(item(H(9), H(10), parseLocation('Chase Center')), { ...DEFAULT_PLANNER, keynoteBuildings: ignite.keynoteBuildings }), 15);
+});
+// A caller that isn't given the venue's keynote buildings must not guess them: at Las Vegas,
+// building C is Caesars Palace, not Moscone's Chase Center (#77).
+test('without the venue keynote buildings, Caesars Forum to Caesars Palace adds no keynote entry time', () => {
+  const forum = item(H(9), H(10), lv('Caesars Forum | Level 1 | Forum 120'));
+  const palace = item(H(10) + 12, H(11), lv('Caesars Palace | Promenade Level | Roman I'));
+  eq([forum.loc.building, palace.loc.building, palace.type], ['F', 'C', 'Breakout']);   // C: the id Moscone gives Chase Center
+  const t = transition(forum, palace, { ...DEFAULT_PLANNER, walk: LVW });
+  eq([t.walk, t.need, t.slack, t.status], [10, 12, 0, 'ok']);   // Palace–Forum ~10 min (venue notes) + 2 min buffer
+  const { keynoteBuildings, ...noList } = DEFAULT_PLANNER;
+  eq([arrivalExtra(palace), arrivalExtra(palace, DEFAULT_PLANNER), arrivalExtra(palace, noList)], [0, 0, 0]);
+  eq(noList.keynoteExtra, 15);   // the list is all that's missing: the entry time itself is still set
+});
+test('without the venue keynote buildings, a keynote still gets keynote entry time', () => {
+  const palace = lv('Caesars Palace | Promenade Level | Roman I');
+  const forum = item(H(9), H(10), lv('Caesars Forum | Level 1 | Forum 120'));
+  const key = item(H(10) + 12, H(11), palace, { type: 'Keynote' });
+  eq(arrivalExtra(key), 15);
+  const t = transition(forum, key, { ...DEFAULT_PLANNER, walk: LVW });
+  eq([t.walk, t.need, t.miss, t.status], [10, 27, 15, 'conflict']);
+});
+test('keynote buildings passed by the caller still cost keynote entry time', () => {
+  const forum = item(H(9), H(10), lv('Caesars Forum | Level 1 | Forum 120'));
+  const palace = item(H(10) + 12, H(11), lv('Caesars Palace | Promenade Level | Roman I'));
+  const t = transition(forum, palace, { ...DEFAULT_PLANNER, walk: LVW, keynoteBuildings: ['C'] });
+  eq([t.walk, t.need, t.miss, t.status], [10, 27, 15, 'conflict']);
 });
 test('re:Invent session links search the catalog by code', () => {
   eq(CONFERENCES.reinvent2026.sessionUrl({ code: 'DVT212-S' }),
