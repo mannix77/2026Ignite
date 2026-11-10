@@ -65,6 +65,12 @@ Feature: Keeping picks safe on the device
       When the two tabs reconcile
       Then the rating stays cleared
 
+    Scenario: The cleared pick was saved without a time
+      Given a pick in this tab was saved without saying when it was made
+      And Minesh cleared it in this tab a moment ago
+      When the other tab saves without touching that session
+      Then the pick stays cleared
+
     Scenario: This tab released a lock the other tab left alone
       Given Minesh moved a session's lock to another run in this tab a moment ago
       And the other tab saved without touching that session

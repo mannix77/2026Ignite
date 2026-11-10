@@ -637,6 +637,30 @@ await test('should keep a rating that failed to save when another tab saves', as
   eq([savedPicks('tabs-failed').S1?.p, savedPicks('tabs-failed').S9?.p, store.saveFailing()], [3, 1, false], 'and both saved once storage allows it');
 });
 
+// A real second tab: its own copy of the store, sharing this page's storage. Its storage events
+// are delivered by hand, so it doesn't react to its own saves.
+const thisTabListeners = (pageEvents.storage || []).slice();
+const tab2 = await import('../assets/js/store.js?second-tab');
+pageEvents.storage = thisTabListeners;
+const deliverSave = ns => { for (const fn of pageEvents.storage) fn({ key: keyOf(ns), newValue: localStorage.getItem(keyOf(ns)) }); };
+
+// A mutatePicks callback may write a pick with no time; the other tab dates it when it loads it.
+await test('should keep a pick saved without a time cleared when the other tab saves something else', async () => {
+  localStorage.removeItem(keyOf('tabs-undated'));
+  store.load('tabs-undated');
+  store.mutatePicks(p => { p.S1 = { p: 2, lock: null, note: '' }; });
+  await sleep(SAVE);                                                // S1 saved, with no time given
+  tab2.load('tabs-undated');
+  tab2.mutatePicks(p => { p.S9 = { p: 1, lock: null, note: '', at: T + 70 }; });
+  await sleep(SAVE);                                                // the other tab saved S9 and its copy of S1
+  eq([savedPicks('tabs-undated').S1?.p, savedPicks('tabs-undated').S9?.p], [2, 1], 'precondition: the other tab saved S9 and left S1 rated');
+  store.mutatePicks(p => { delete p.S1; });                         // cleared here, not saved yet
+  deliverSave('tabs-undated');
+  eq([store.pick('S1') ?? null, store.pick('S9')?.p], [null, 1]);
+  await sleep(SAVE);
+  eq([savedPicks('tabs-undated').S1 ?? null, savedPicks('tabs-undated').S9?.p], [null, 1], 'and saved that way');
+});
+
 // ---- a picks link sets the session's choice across all its runs (restoring-picks.feature; issue #130)
 // siblings: the other saved records of the same repeat group, by record id (app.js passes them).
 await test('should clear a lock held by another record of the same session, in the preview and when applied', async () => {

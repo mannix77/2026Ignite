@@ -220,7 +220,12 @@ const alive = p => p.p != null || p.note || p.lock || p.reserved;
 export function mutatePicks(fn) {
   fn(state.picks);
   state.backup.changes++;
-  for (const [id, p] of Object.entries(state.picks)) if (!alive(p)) delete state.picks[id];
+  for (const [id, p] of Object.entries(state.picks)) {
+    if (!alive(p)) delete state.picks[id];
+    // Saved without a time, it would be dated by every tab that loads it (sanitizePick) and look
+    // changed to this one when that tab saves it back: date it now, as a reload would (#75).
+    else if (!Number.isFinite(p.at)) p.at = Date.now();
+  }
   if (Object.values(state.picks).some(p => p.p > 0)) askPersistent();
   emit('picks');
 }
