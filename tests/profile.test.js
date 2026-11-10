@@ -35,15 +35,48 @@ await test('should rank a session about executive presence above an otherwise eq
   const p = profile({ goals: ['leadership'] });
   eq(rank(p, session({ title: 'Executive presence for architects' })).score > rank(p, session({ title: 'Patch management basics' })).score, true);
 });
+// role-ranking.feature: the whole shortlist order, from sessions modelled on the real catalogs.
+// They are listed in reverse code order, so neither the input order nor the code tie-break
+// alone gives the expected order.
+const shortlistCodes = (p, sessions, conf) =>
+  partition(sessions, createRanker(p, conf), { isRated: () => false, size: 100 }).shortlist.map(e => e.s.code);
 await test('should rank an Enterprise architect role match first at Gartner', () => {
   const p = profile({ roles: ['Enterprise architect'] });
-  const ea = session({ tags: ['Spotlight: Enterprise Architecture'] });
-  eq(rank(p, ea, 'gartner2026').score > rank(p, session({ tags: ['E: Talent, Skills & AI Literacy'] }), 'gartner2026').score, true);
+  const g = (code, title, type, tags, topics) => session({ id: code, code, title, type, tags, topics, level: null });
+  const sessions = [
+    g('SPS57', "SAP LeanIX: Governing AI at Scale: Inside Dell's Enterprise Architecture", 'Solution Provider Sessions', [], // topic only
+      ['Agentic AI', 'AI Operationalization and Governance', 'Enterprise Architecture and Applications']),
+    g('SPS4', 'ThreatLocker: Implementing Zero Trust Controls, A Case Study', 'Solution Provider Sessions', [], // security without track D
+      ['Cybersecurity and Enterprise Resilience', 'Operating Models', 'Strategic Planning and Execution']),
+    g('SPN4', 'EA Leaders Peer Speed Networking', 'Networking Session', ['Spotlight: Enterprise Architecture'], []), // spotlight only
+    g('CXB9', 'CIO Boardroom: Architecting Value in the Agentic AI Era', 'CIO Boardrooms', [], // a goal keyword, no goal chosen
+      ['Agentic AI', 'AI Operationalization and Governance', 'AI Value and Cost Management']),
+    g('22e', 'Where Agentic AI Works, Will Soon Work and May Never Work', 'Track Sessions', // AI leader's tracks
+      ['A: Agentic AI, Emerging Tech & Operationalization', 'Spotlight: AI Leaders'], ['Agentic AI']),
+    g('22b', 'Preparing for the Postquantum Era: A Strategic Roadmap for CIOs', 'Track Sessions', // track D only
+      ['D: Cybersecurity, Architecture, and Engineering'], ['Cybersecurity and Enterprise Resilience']),
+    g('21c', "Don't Ask If AI Can Do This Job", 'Track Sessions', ['E: Talent, Skills & AI Literacy'], ['Talent and Skills']),
+    g('12c', 'Top Data and Analytics Trends 2027', 'Track Sessions', // track H, whose name holds a "D"
+      ['H: Data, Analytics & Digital Product Experience'], ['Data and Analytics']),
+  ];
+  eq(shortlistCodes(p, sessions, 'gartner2026'), ['22b', 'SPN4', 'SPS57', '12c', '21c', '22e', 'CXB9', 'SPS4']);
 });
 
 await test('should rank an architect-audience session first for an Enterprise architect at re:Invent', () => {
   const p = profile({ roles: ['Enterprise architect'] });
-  eq(rank(p, session({ audience: ['Solution / Systems Architect'] }), 'reinvent2026').score > rank(p, session({ audience: ['Data Scientist'] }), 'reinvent2026').score, true);
+  const r = (code, title, type, audience, topics) => session({ id: code, code, title, type, audience, topics, level: 300 });
+  const sessions = [
+    r('SNR302', "A leader's guide to the AI you haven't seen yet", 'Mainstage',
+      ['Business Executive', 'IT Executive'], ['Artificial Intelligence', 'Compute']),
+    r('SEC359', 'From static to dynamic - modernizing bidirectional federation', 'Breakout session',
+      ['Solution / Systems Architect'], ['Security & Identity']),
+    r('MAM220', 'A Unified AWS Data and AI Strategy for SAP Customers', 'Breakout session',
+      ['Data Engineer', 'Data Scientist'], ['Artificial Intelligence', 'Migration & Modernization']),
+    r('CMP202', 'Amazon EC2: New silicon, new instances, new possibilities', 'Breakout session', // IT / business leader's audiences
+      ['Business Executive', 'Developer / Engineer', 'IT Professional / Technical Manager'], ['Compute']),
+    r('ANT313', 'Architect your metadata hub with AWS Glue Data Catalog', 'Breakout session', [], ['Analytics']), // a goal keyword, no goal chosen
+  ];
+  eq(shortlistCodes(p, sessions, 'reinvent2026'), ['SEC359', 'SNR302', 'ANT313', 'CMP202', 'MAM220']);
 });
 
 // ---- skipping a whole group hides sessions without rating them
