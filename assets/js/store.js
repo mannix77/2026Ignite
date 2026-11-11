@@ -462,7 +462,7 @@ function planImportInto(obj, replace, base) {
   let applied = 0;
   const scope = replace ? null : Object.keys(incoming); // merging only touches the backup's sessions
   for (const [id, p] of Object.entries(incoming)) {
-    const cur = replace ? null : base[id];
+    const cur = replace ? null : own(base, id);
     if (cur && !(p.at > (cur.at || 0))) continue;
     const keep = cur?.reserved && !p.reserved ? { reserved: cur.reserved, lock: cur.lock || cur.reserved } : {};
     next[id] = { ...p, note: p.note || cur?.note || '', ...keep };
@@ -478,13 +478,13 @@ const SHOWN = ['p', 'score', 'mode', 'lock', 'reserved', 'note'];
 function diffPicks(before, after, scope = null) {
   const out = { added: [], changed: [], unchanged: 0, removed: [], after: {} }; // after: new picks' ratings
   for (const id of scope || Object.keys(after)) {
-    const a = after[id], b = before[id];
+    const a = own(after, id), b = own(before, id);
     if (!a) continue;
     if (!b) { out.added.push(id); out.after[id] = a.p ?? null; }
     else if (SHOWN.some(k => (a[k] ?? null) !== (b[k] ?? null))) out.changed.push({ id, from: b.p ?? null, to: a.p ?? null });
     else out.unchanged++;
   }
-  for (const id of Object.keys(before)) if (!(id in after)) out.removed.push(id);
+  for (const id of Object.keys(before)) if (!Object.hasOwn(after, id)) out.removed.push(id);
   return out;
 }
 

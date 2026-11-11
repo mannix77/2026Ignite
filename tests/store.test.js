@@ -532,6 +532,17 @@ await test('should keep a note and reserved seat when adding a backup that rates
   eq([a?.p, a?.note, a?.reserved], [3, 'bring laptop', 'A']);
   await sleep(SAVE);
 });
+// A pick id that names an object's inherited member (constructor, toString, …) must be read and
+// checked by its own key, not the prototype's: previewing and restoring a backup uses the same
+// `own()` helper the two-tab path already does (store.test.js, 'tabs-own-key').
+await test('should preview and restore a pick whose id an object inherits, and detect its removal', async () => {
+  seed('pv-own-key', { toString: { p: 1, lock: null, note: '', at: 10 } });
+  const pv = store.previewImport(backupOf({ constructor: { p: 3, at: 20 } }), { replace: true });
+  eq([pv.added, pv.removed, pv.changed], [['constructor'], ['toString'], []], 'preview: added and removed, not masked by the prototype');
+  store.importData(backupOf({ constructor: { p: 3, at: 20 } }), { replace: true });
+  eq([store.get().picks.constructor?.p, Object.hasOwn(store.get().picks, 'toString')], [3, false], 'applied the same way');
+  await sleep(SAVE);
+});
 await test('should preview a picks link without applying it', async () => {
   seed('pv-link', { A: { p: 1, lock: null, note: 'x', at: 10 } });
   const link = { A: { p: 3, code: 'K1', at: 20 }, B: { p: 2, code: 'K2', at: 20 }, C: { p: 0, code: 'K3', at: 20 } };
