@@ -3,7 +3,7 @@
 // or with Node:  node tests/planner.test.js
 
 import { transition, canBoth, optimize, optimizeDay, decisionGroups, isResolved, fillers, nowNext, weigh, whatIf, chainValue, DEFAULT_PLANNER } from '../assets/js/planner.js';
-import { parseLocation, walkMinutes, sameRoom, DEFAULT_WALK } from '../assets/js/venue.js';
+import { parseLocation, walkMinutes, sameRoom, DEFAULT_WALK, sideOf, SIDE_FIX_ACCURACY_M } from '../assets/js/venue.js';
 import { localParts, fromISO, parseSlot, fmtTime, fmtDay, addDays, relTime, fmtDuration, fmtRange } from '../assets/js/time.js';
 import { createVenue } from '../assets/js/venue.js';
 import { CONFERENCES, LAS_VEGAS_DEF, SWAN_DOLPHIN_DEF } from '../assets/js/conferences.js';
@@ -636,6 +636,65 @@ test('Gartner: the Dolphin then the Yacht & Beach Club 20 minutes later is fine'
 test('Gartner: a plan keeps only one of two Musts too far apart to walk between', () => {
   const a = item(H(9), H(10), dolphin, { priority: 3 }), b = item(H(10) + 10, H(11), beachClub, { priority: 3 });
   eq(optimize([a, b], at(SD)).plan['2026-11-18'].length, 1);
+});
+
+// ---- Walking from where you are, not from the building as a whole (issue 99)
+const swanRoom = SD.parseLocation('Swan Ballroom 6, WDW Swan Hotel');
+test('Gartner: the Dolphin\'s Swan end is a shorter walk to the Swan than the flat D|S pair', () => {
+  eq(walkMinutes({ ...dolphin, side: 'swan-end' }, swanRoom, SD.walk), SD.walk.sides.D['swan-end'].pairs.S);
+  eq(SD.walk.sides.D['swan-end'].pairs.S, 7);
+});
+test('Gartner: the Dolphin\'s far end is a longer walk to the Swan than the flat D|S pair', () => {
+  eq(walkMinutes({ ...dolphin, side: 'far-end' }, swanRoom, SD.walk), SD.walk.sides.D['far-end'].pairs.S);
+  eq(SD.walk.sides.D['far-end'].pairs.S, 15);
+});
+test('Gartner: no side chosen keeps today\'s building-to-building estimate, not the shortest', () => {
+  eq(walkMinutes(dolphin, swanRoom, SD.walk), SD.walk.pairs['D|S']);
+  eq(dolphin.side, undefined);
+});
+test('Gartner: a side with no override for the destination building keeps the ordinary pair', () => {
+  const beach = SD.parseLocation("Grand Harbor Salon 1, Disney's Yacht & Beach Resort");
+  eq(walkMinutes({ ...dolphin, side: 'swan-end' }, beach, SD.walk), SD.walk.pairs['D|Y']);
+});
+test('Gartner: an unrecognised side is the same as no side', () => {
+  eq(walkMinutes({ ...dolphin, side: 'lobby' }, swanRoom, SD.walk), SD.walk.pairs['D|S']);
+});
+test('a building with no side data in the venue offers no side choice (Ignite: Marriott Marquis)', () => {
+  eq(DEFAULT_WALK.sides?.M, undefined);
+  eq(walkMinutes({ ...parseLocation('Marriott Marquis, Yerba Buena Ballroom, BO2'), side: 'anything' }, S1), DEFAULT_WALK.pairs['M|S']);
+});
+test('sideOf: an accurate fix picks the nearest side', () => {
+  const nearSwan = SD.walk.sides.D['swan-end'].geo;
+  eq(sideOf(SD.walk, 'D', nearSwan, 15), 'swan-end');
+});
+test('sideOf: a vague fix does not pick a side', () => {
+  const nearSwan = SD.walk.sides.D['swan-end'].geo;
+  eq(sideOf(SD.walk, 'D', nearSwan, 200), null);
+});
+test('sideOf: a fix exactly at the accuracy threshold still picks a side', () => {
+  const nearSwan = SD.walk.sides.D['swan-end'].geo;
+  eq(sideOf(SD.walk, 'D', nearSwan, SIDE_FIX_ACCURACY_M), 'swan-end');
+});
+test('sideOf: a fix just past the accuracy threshold does not', () => {
+  const nearSwan = SD.walk.sides.D['swan-end'].geo;
+  eq(sideOf(SD.walk, 'D', nearSwan, SIDE_FIX_ACCURACY_M + 1), null);
+});
+test('sideOf: picks whichever named side is physically closer to the fix', () => {
+  const nearFar = SD.walk.sides.D['far-end'].geo;
+  eq(sideOf(SD.walk, 'D', nearFar, 15), 'far-end');
+});
+test('sideOf: no side data for the building returns null', () => {
+  eq(sideOf(DEFAULT_WALK, 'M', [37.78543, -122.40449], 10), null);
+});
+test('sideOf: no fix returns null', () => {
+  eq(sideOf(SD.walk, 'D', null, 10), null);
+});
+test('a side\'s pair still adds floorExtra, same as the ordinary (unsided) pair would', () => {
+  const walk = { sameRoom: 0, sameFloor: 3, diffFloor: 5, pairs: { 'X|Y': 20 }, floorExtra: { X: { Hub: 4 } }, sides: { X: { near: { pairs: { Y: 10 } } } }, unknown: 12 };
+  const fromHub = { building: 'X', floor: 'Hub', known: true, side: 'near' };
+  const toY = { building: 'Y', floor: null, known: true };
+  eq(walkMinutes(fromHub, toY, walk), 10 + 4);               // the side's own pair plus the Hub's floorExtra
+  eq(walkMinutes({ ...fromHub, side: undefined }, toY, walk), 20 + 4);   // the ordinary pair gets the same +4
 });
 test('Las Vegas: the MGM Grand then the Venetian 20 minutes later is a conflict', () => {
   const mgm = lv('MGM Grand | Level 1 | Grand 122'), venetian = lv('Venetian | Level 2 | Hall B');

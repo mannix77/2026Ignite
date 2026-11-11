@@ -37,6 +37,17 @@ export const SWAN_DOLPHIN_DEF = {
       'B|D': 15, 'B|S': 14, 'B|R': 16, 'B|Y': 10,
       'D|H': 25, 'H|S': 25, 'H|R': 25, 'H|Y': 25, 'B|H': 25, 'H|H': 15,
     },
+    // The Dolphin is long enough that which end you are at changes the causeway walk (issue 99:
+    // feedback from the Swan standing at the Dolphin's far end got the D|S pair above, when the
+    // Swan-facing end is a few minutes closer). Coordinates are approximate quarter-points of the
+    // Dolphin along the line to the Swan; verify on site. Used only when a position (manual or an
+    // accurate-enough GPS fix) picks a side; an unknown side keeps the D|S pair.
+    sides: {
+      D: {
+        'swan-end': { name: 'Swan end', geo: [28.36650, -81.56005], pairs: { S: 7 } },
+        'far-end': { name: 'far end', geo: [28.36800, -81.56110], pairs: { S: 15 } },
+      },
+    },
     unknown: 10,
   },
   // Dolphin levels: the IT Xpo (Atlantic/Pacific Halls) and the new Peninsula wing are on

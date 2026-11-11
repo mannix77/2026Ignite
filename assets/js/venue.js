@@ -20,6 +20,46 @@ export function floorExtra(loc, walk) {
   return Number.isFinite(v) && v > 0 ? v : 0;
 }
 
+// ------------------------------------------------------- where in a building you are (issue 99)
+
+const EARTH_M = 6371000;
+// Great-circle distance in metres between two [lat, lon] points. Also used for the walk from a
+// GPS position outside the venue (app.js), and for picking a side below.
+export function haversine([a1, o1], [a2, o2]) {
+  const r = Math.PI / 180;
+  const h = Math.sin(((a2 - a1) * r) / 2) ** 2 + Math.cos(a1 * r) * Math.cos(a2 * r) * Math.sin(((o2 - o1) * r) / 2) ** 2;
+  return 2 * EARTH_M * Math.asin(Math.sqrt(h));
+}
+
+// A GPS fix vaguer than this cannot be trusted to tell one side of a building from the other, so
+// it is left unknown rather than guessed (issue 99: a precise fix picks a side; a vague one does not).
+export const SIDE_FIX_ACCURACY_M = 50;
+
+// Which of walk.sides[building] a GPS fix is nearest to: null when the venue defines no sides
+// for that building, there is no fix, or the fix is not accurate enough to tell sides apart.
+// Not used for a manually chosen side (app.js), which needs no accuracy check.
+export function sideOf(walk, building, geo, accuracy) {
+  const sides = walk?.sides?.[building];
+  if (!sides || !geo || !(accuracy <= SIDE_FIX_ACCURACY_M)) return null;
+  let best = null;
+  for (const [id, side] of Object.entries(sides)) {
+    if (!side.geo) continue;
+    const d = haversine(geo, side.geo);
+    if (!best || d < best.distance) best = { id, distance: d };
+  }
+  return best?.id ?? null;
+}
+
+// The minutes a's own chosen/located side gives to b's building, when the venue defines one for
+// it (issue 99: the Dolphin's Swan-facing end is a shorter walk to the Swan than its far end,
+// which the flat building-to-building pair cannot say on its own). null when a has no side, the
+// venue defines none for a's building, or none covers b's building: walkMinutes then falls back
+// to the ordinary pair, exactly as before a side was known.
+function sideMinutes(a, b, walk) {
+  const v = walk.sides?.[a.building]?.[a.side]?.pairs?.[b.building];
+  return Number.isFinite(v) ? v : null;
+}
+
 // The walking matrix in force: the venue's defaults under what was saved in Settings. Settings
 // saves the whole matrix, so a saved pair that still equals the default it was saved with
 // (walk.previous.pairs, the defaults before a recalibration) was never tuned and takes the new
@@ -27,7 +67,7 @@ export function floorExtra(loc, walk) {
 // floorExtra and previous always come from the venue.
 export function mergeWalk(def, saved) {
   if (!saved || typeof saved !== 'object') return def;
-  const out = { ...def, ...saved, pairs: { ...def.pairs }, floorExtra: def.floorExtra, previous: def.previous };
+  const out = { ...def, ...saved, pairs: { ...def.pairs }, floorExtra: def.floorExtra, previous: def.previous, sides: def.sides };
   const previous = def.previous?.pairs || {};
   for (const [key, v] of Object.entries(saved.pairs && typeof saved.pairs === 'object' ? saved.pairs : {})) {
     if (!Number.isFinite(v)) continue;
@@ -48,6 +88,10 @@ export function walkMinutes(a, b, walk = current.walk) {
     if (a.floor == null || b.floor == null || a.floor === b.floor) return walk.sameFloor;
     return walk.diffFloor;
   }
+  // A side's own pair is already door to door for that side (e.g. the Dolphin's Swan end), so it
+  // gets the same floorExtra treatment as the ordinary pair below, not a free pass around it.
+  const sided = sideMinutes(a, b, walk);
+  if (sided != null) return sided + floorExtra(a, walk) + floorExtra(b, walk);
   const key = [a.building, b.building].sort().join('|');
   const pair = walk.pairs[key];
   return pair == null ? walk.unknown : pair + floorExtra(a, walk) + floorExtra(b, walk);
