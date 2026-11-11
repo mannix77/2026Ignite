@@ -61,6 +61,18 @@ Feature: One backup file for every conference on this device
       Then Gartner's saved data is unchanged
       And Minesh is told Gartner was not restored
 
+    Scenario: The conference on screen was saved by a newer version
+      Given Ignite was last saved by a newer version of the planner
+      When Minesh restores a backup holding Ignite picks while viewing Ignite
+      Then Ignite's saved data is unchanged
+      And Minesh is told Ignite was not restored
+
+    Scenario: A damaged conference in the file is left out
+      Given a backup whose Gartner part cannot be read
+      When Minesh restores it while viewing Ignite
+      Then Ignite has the backup's picks
+      And Minesh is told Gartner was not restored
+
     Scenario: A conference that cannot be written is named
       Given the device's storage is too full for Gartner's restored picks
       When Minesh restores a backup holding Gartner picks

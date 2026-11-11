@@ -18,9 +18,9 @@ let pass = 0, fail = 0;
 async function test(name, fn) {
   try { await fn(); pass++; } catch (e) { fail++; console.log(`FAIL ${name}: ${e.message}`); }
 }
-function eq(a, b) {
+function eq(a, b, msg = '') {
   const A = JSON.stringify(a), B = JSON.stringify(b);
-  if (A !== B) throw new Error(`expected ${B}, got ${A}`);
+  if (A !== B) throw new Error(`${msg ? `${msg}: ` : ''}expected ${B}, got ${A}`);
 }
 const SAVE = 200; // longer than the store's save delay
 
@@ -580,8 +580,10 @@ await test('should back up every conference with picks or settings, and leave an
 });
 
 await test('should restore every conference into its own place on a fresh device', async () => {
+  localStorage.removeItem('ignite26.planner.v1:all-live');
   localStorage.removeItem('ignite26.planner.v1:all-other');
   store.load('all-live');
+  eq([savedOf('all-live'), savedOf('all-other'), store.pick('S1'), Object.keys(store.get().picks)], [null, null, null, []], 'precondition: a fresh device');
   const doc = { app: BACKUP, v: 1, kind: 'all', exportedAt: 'x', conferences: {
     ignite2026: { picks: { S1: { p: 3, at: 2 } }, settings: { buffer: 6 }, profile: null },
     gartner2026: { picks: { G1: { p: 2, at: 2 }, G2: { p: 1, at: 2 } }, settings: {}, profile: null } } };
@@ -666,7 +668,9 @@ await test('should not restore over unreadable data it could not keep a copy of'
 
 await test('should leave a conference saved by a newer version untouched, and restore the rest', () => {
   localStorage.setItem(ALL_OTHER, NEWER_RAW);
+  localStorage.removeItem('ignite26.planner.v1:all-live');
   store.load('all-live');
+  eq([savedOf('all-live'), store.pick('S5')], [null, null], 'precondition: nothing saved here, S5 not rated');
   const doc = gartnerDoc({ G1: { p: 3, at: 9 } });
   const pv = store.previewImportAll(doc, CONFS, { replace: true });
   eq([Object.keys(pv.parts), pv.blocked], [['ignite2026'], [{ id: 'gartner2026', reason: 'newer' }]]);
@@ -685,6 +689,54 @@ await test('should name a conference whose restored picks could not be written, 
   try { applied = store.importAllData(gartnerDoc({ G1: { p: 3, at: 9 }, G2: { p: 2, at: 9 }, G3: { p: 2, at: 9 } }), CONFS, { replace: false }, report); } finally { globalThis.__quota = null; }
   eq([applied, report.failed, localStorage.getItem(ALL_OTHER)], [{ ignite2026: 1 }, [{ id: 'gartner2026', reason: 'save-failed' }], before]);
   await sleep(SAVE);
+});
+
+// The conference on screen gets the same protection as the others (#19 review).
+await test('should leave the conference on screen alone when a newer version saved it, and restore the rest', () => {
+  const ALL_LIVE = 'ignite26.planner.v1:all-live';
+  const liveRaw = JSON.stringify({ v: 99, picks: { S9: { p: 3, lock: null, note: '', at: 5 } }, prefs: {}, profile: null, future: 'kept' });
+  localStorage.setItem(ALL_LIVE, liveRaw);
+  localStorage.removeItem(ALL_OTHER);
+  try {
+    store.load('all-live');
+    eq([store.newerVersion(), store.pick('S5'), store.pick('S9')?.p], [true, null, 3], 'precondition: saved by a newer version; S5 not rated');
+    const doc = gartnerDoc({ G1: { p: 3, at: 9 } });
+    const pv = store.previewImportAll(doc, CONFS, { replace: false });
+    eq([Object.keys(pv.parts), pv.blocked], [['gartner2026'], [{ id: 'ignite2026', reason: 'newer' }]]);
+    const report = {};
+    eq(store.importAllData(doc, CONFS, { replace: false }, report), { gartner2026: 1 });
+    eq([report.failed, store.pick('S5'), store.pick('S9')?.p, localStorage.getItem(ALL_LIVE), savedOf('all-other').picks.G1.p],
+      [[{ id: 'ignite2026', reason: 'newer' }], null, 3, liveRaw, 3]);
+  } finally { localStorage.removeItem(ALL_LIVE); store.load('all-live'); }
+});
+
+// Untrusted input is skipped and counted: one damaged conference must not stop the rest, nor
+// leave some restored with no report (#19 review). It comes first in the file on purpose.
+await test('should leave out a damaged conference in the file, name it, and restore the rest', () => {
+  const before = JSON.stringify({ v: 1, picks: { G1: { p: 1, lock: null, note: '', at: 5 } }, prefs: {}, profile: null });
+  for (const [what, part] of [
+    ['picks as a list', { picks: [{ p: 3 }], settings: {}, profile: null }],
+    ['no readable picks', { picks: { G1: 'junk', G2: { p: 7 } }, settings: {}, profile: null }],
+    ['no picks at all', { settings: {}, profile: null }],
+    ['not an object', 'junk'],
+  ]) {
+    localStorage.setItem(ALL_OTHER, before);
+    localStorage.removeItem('ignite26.planner.v1:all-live');
+    store.load('all-live');
+    eq(store.pick('S5'), null, `${what}: precondition: S5 not rated`);
+    const doc = { app: BACKUP, v: 1, kind: 'all', conferences: { gartner2026: part, ignite2026: { picks: { S5: { p: 2, at: 9 } }, settings: {}, profile: null } } };
+    const pv = store.previewImportAll(doc, CONFS, { replace: false });
+    eq([Object.keys(pv.parts), pv.invalid], [['ignite2026'], ['gartner2026']], `${what}: preview`);
+    const report = {};
+    eq(store.importAllData(doc, CONFS, { replace: false }, report), { ignite2026: 1 }, `${what}: applied`);
+    eq([report.failed, store.pick('S5')?.p, localStorage.getItem(ALL_OTHER)], [[{ id: 'gartner2026', reason: 'invalid' }], 2, before], `${what}: reported, the rest restored, Gartner kept`);
+  }
+  // A part's own `app` field can't override the file's: it restores like any other part.
+  localStorage.setItem(ALL_OTHER, before);
+  const doc = { app: BACKUP, v: 1, kind: 'all', conferences: { gartner2026: { app: 'other', picks: { G1: { p: 3, at: 9 } }, settings: {}, profile: null } } };
+  const report = {};
+  eq([store.previewImportAll(doc, CONFS, { replace: false }).invalid, store.importAllData(doc, CONFS, { replace: false }, report), report.failed, savedOf('all-other').picks.G1.p],
+    [[], { gartner2026: 1 }, [], 3], 'a part with its own app field');
 });
 
 await test('should refuse a file that calls itself a backup of everything but holds none', () => {

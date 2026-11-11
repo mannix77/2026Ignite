@@ -2007,7 +2007,7 @@ importDialog.addEventListener('click', e => {
 importDialog.addEventListener('cancel', () => { pendingImport = null; }); // Esc
 
 const confShort = id => (Object.hasOwn(CONFERENCES, id) ? CONFERENCES[id].short : id);
-const RESTORE_FAILED = { newer: 'saved by a newer version; reload and restore again', 'copy-failed': "its unreadable data couldn't be kept aside first", 'save-failed': 'storage is full' };
+const RESTORE_FAILED = { invalid: "its part of the file can't be read", newer: 'saved by a newer version; reload and restore again', 'copy-failed': "its unreadable data couldn't be kept aside first", 'save-failed': 'storage is full' };
 
 // Restore a backup of every conference (issue #19). The conference on screen is previewed in
 // detail as before; the others are summarized, since their sessions are not loaded. A file made
@@ -2030,6 +2030,7 @@ function restoreAll(doc) {
     others.length ? `Also in this backup: ${otherText}.` : '',
     otherRemoved ? `Replacing also makes the other conferences match the backup (${otherRemoved} pick${otherRemoved > 1 ? 's' : ''} there would go).` : '',
     add.missing.length ? `Left out (not a conference this planner knows): ${add.missing.join(', ')}.` : '',
+    add.invalid.length ? `Left out (their part of the file can't be read): ${add.invalid.map(name).join(', ')}.` : '',
     add.blocked.length ? `Not restored: ${add.blocked.map(b => name(b.id)).join(', ')} (saved by a newer version of the planner; reload the page, then restore again).` : '',
     add.unreadable.length ? `${add.unreadable.map(name).join(', ')}: the saved data on this device can't be read; a copy of it is kept before restoring.` : ''].filter(Boolean).join(' ');
   const summary = applied => Object.entries(applied).map(([id, n]) => `${name(id)} ${n}`).join(', ') || 'nothing';

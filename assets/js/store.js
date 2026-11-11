@@ -558,16 +558,20 @@ export function isAllBackup(doc) {
   return !!doc && doc.app === 'ignite26-planner' && doc.kind === 'all' && !!doc.conferences && typeof doc.conferences === 'object' && !Array.isArray(doc.conferences);
 }
 
+// The file's conferences this planner knows, each checked by the same rule a restore applies:
+// `missing` lists the ones it doesn't know, `invalid` the ones whose part can't be read (skipped
+// and named, so one damaged conference never stops the rest).
 function allParts(doc, confs) {
   if (!isAllBackup(doc)) throw new Error('Not an Ignite planner backup file');
   const known = new Map(confs.map(c => [c.id, c]));
-  const parts = [], missing = [];
+  const parts = [], missing = [], invalid = [];
   for (const [id, part] of Object.entries(doc.conferences)) {
-    if (!part || typeof part !== 'object' || !part.picks || typeof part.picks !== 'object') continue;
     if (!known.has(id)) { missing.push(id); continue; }
-    parts.push({ conf: known.get(id), obj: { app: 'ignite26-planner', ...part } });
+    const obj = part && typeof part === 'object' && !Array.isArray(part) ? { ...part, app: 'ignite26-planner' } : null;
+    try { planImportInto(obj, false, {}); } catch { invalid.push(id); continue; }
+    parts.push({ conf: known.get(id), obj });
   }
-  return { parts, missing };
+  return { parts, missing, invalid };
 }
 
 // After saving a backup file: every conference it holds counts as backed up. The others' saved
@@ -587,11 +591,13 @@ export function markBackupFor(confs, ids, at = Date.now()) {
 // `blocked` those saved by a newer version (left alone); `unreadable` those whose saved data
 // can't be read (kept aside as a copy before restoring).
 export function previewImportAll(doc, confs, { replace = false } = {}) {
-  const { parts, missing } = allParts(doc, confs);
+  const { parts, missing, invalid } = allParts(doc, confs);
   const out = {}, blocked = [], unreadable = [];
   for (const { conf, obj } of parts) {
     let base = state.picks;
-    if (conf.namespace !== namespace()) {
+    if (conf.namespace === namespace()) {
+      if (newer) { blocked.push({ id: conf.id, reason: 'newer' }); continue; }   // this tab can't save over it
+    } else {
       const r = readSavedState(conf.namespace);
       if (r.status === 'newer') { blocked.push({ id: conf.id, reason: 'newer' }); continue; }
       if (r.status === 'unreadable') unreadable.push(conf.id);
@@ -600,18 +606,19 @@ export function previewImportAll(doc, confs, { replace = false } = {}) {
     const { next, scope } = planImportInto(obj, replace, base);
     out[conf.id] = diffPicks(base, next, scope);
   }
-  return { parts: out, missing, blocked, unreadable };
+  return { parts: out, missing, invalid, blocked, unreadable };
 }
 
 // Restore every conference the file holds; returns picks applied per conference id. report
 // (optional) gets failed: [{ id, reason }] for a conference left as it was: 'newer' (saved by a
 // newer version), 'copy-failed' (unreadable data couldn't be kept aside first) or 'save-failed'.
 export function importAllData(doc, confs, { replace = false } = {}, report = null) {
-  const { parts } = allParts(doc, confs);
-  const applied = {}, failed = [];
+  const { parts, invalid } = allParts(doc, confs);
+  const applied = {}, failed = invalid.map(id => ({ id, reason: 'invalid' }));
   if (report) report.failed = failed;
   for (const { conf, obj } of parts) {
     if (conf.namespace === namespace()) {
+      if (newer) { failed.push({ id: conf.id, reason: 'newer' }); continue; }
       applied[conf.id] = importData(obj, { replace });
       continue;
     }
