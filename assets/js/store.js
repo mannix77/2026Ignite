@@ -416,7 +416,7 @@ function sanitizePrefs(src) {
   }
   if (Array.isArray(src.blocks)) {
     out.blocks = src.blocks
-      .filter(b => b && /^\d{4}-\d{2}-\d{2}$/.test(b.day) && num(b.start, 0, 1440) !== undefined && num(b.end, 0, 1440) !== undefined && b.end > b.start)
+      .filter(b => b && typeof b.day === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(b.day) && num(b.start, 0, 1440) !== undefined && num(b.end, 0, 1440) !== undefined && b.end > b.start)
       .slice(0, 50).map((b, i) => ({
         id: typeof b.id === 'string' && ID_RE.test(b.id) ? b.id : `b${i}`, day: b.day, start: b.start, end: b.end,
         label: typeof b.label === 'string' ? b.label.slice(0, 80) : 'Busy',
@@ -425,7 +425,7 @@ function sanitizePrefs(src) {
   }
   if (Array.isArray(src.custom)) {
     out.custom = src.custom
-      .filter(c => c && typeof c.title === 'string' && c.title.trim() && /^\d{4}-\d{2}-\d{2}$/.test(c.day)
+      .filter(c => c && typeof c.title === 'string' && c.title.trim() && typeof c.day === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(c.day)
         && num(c.start, 0, 1440) !== undefined && num(c.end, 0, 1440) !== undefined && c.end > c.start)
       .slice(0, 50).map((c, i) => ({
         id: typeof c.id === 'string' && /^[\w-]{1,40}$/.test(c.id) ? c.id : `c${i}`, title: c.title.trim().slice(0, 160), day: c.day, start: c.start, end: c.end,
@@ -619,7 +619,10 @@ export function importAllData(doc, confs, { replace = false } = {}, report = nul
   for (const { conf, obj } of parts) {
     if (conf.namespace === namespace()) {
       if (newer) { failed.push({ id: conf.id, reason: 'newer' }); continue; }
-      applied[conf.id] = importData(obj, { replace });
+      const n = importData(obj, { replace });
+      flushPending();   // saved now, through the usual path, so the report says whether it was kept
+      if (saveFailed) failed.push({ id: conf.id, reason: 'save-failed' });
+      else applied[conf.id] = n;
       continue;
     }
     const r = readSavedState(conf.namespace);

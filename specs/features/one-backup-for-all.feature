@@ -78,6 +78,17 @@ Feature: One backup file for every conference on this device
       When Minesh restores a backup holding Gartner picks
       Then Minesh is told Gartner was not restored
 
+    Scenario: The conference on screen cannot be written
+      Given the device's storage is too full for Ignite's restored picks
+      When Minesh restores a backup holding Ignite picks while viewing Ignite
+      Then Minesh is told Ignite was not restored
+
+    Scenario: A damaged blocked time in the file is dropped
+      Given a backup whose Ignite settings hold a blocked time with an unreadable day
+      When Minesh replaces Ignite's data with the backup
+      Then Ignite has the backup's picks
+      And Ignite keeps the backup's other blocked times
+
   Rule: A backup belongs to the copy of the site it was made in
 
     Scenario: Restoring the main copy's backup in a colleague's copy

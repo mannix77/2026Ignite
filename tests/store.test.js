@@ -621,6 +621,8 @@ const ALL_OTHER = 'ignite26.planner.v1:all-other', ALL_UNTOUCHED = 'ignite26.pla
 const CORRUPT = '{"v":1,"picks":{"G1":{"p":2,';
 const NEWER_RAW = JSON.stringify({ v: 99, picks: { G9: { p: 3, lock: null, note: '', at: 5 } }, prefs: {}, profile: null, future: 'kept' });
 const gartnerDoc = picks => ({ app: BACKUP, v: 1, kind: 'all', conferences: { ignite2026: { picks: { S5: { p: 2, at: 9 } }, settings: {}, profile: null }, gartner2026: { picks, settings: {}, profile: null } } });
+// Gartner alone: a storage limit small enough to fail Gartner's write fails the conference on screen's too.
+const gartnerOnlyDoc = picks => ({ app: BACKUP, v: 1, kind: 'all', conferences: { gartner2026: { picks, settings: {}, profile: null } } });
 
 await test('should name a conference it cannot back up, and back up the rest', () => {
   localStorage.setItem(ALL_OTHER, CORRUPT);
@@ -661,9 +663,9 @@ await test('should not restore over unreadable data it could not keep a copy of'
   const report = {};
   globalThis.__quota = CORRUPT.length - 1;   // the copy (the unreadable text itself) doesn't fit
   let applied;
-  try { applied = store.importAllData(gartnerDoc({ G1: { p: 3, at: 9 } }), CONFS, { replace: false }, report); } finally { globalThis.__quota = null; }
+  try { applied = store.importAllData(gartnerOnlyDoc({ G1: { p: 3, at: 9 } }), CONFS, { replace: false }, report); } finally { globalThis.__quota = null; }
   eq([applied, report.failed, localStorage.getItem(ALL_OTHER), localStorage.getItem(`${ALL_OTHER}#unreadable`)],
-    [{ ignite2026: 1 }, [{ id: 'gartner2026', reason: 'copy-failed' }], CORRUPT, null]);
+    [{}, [{ id: 'gartner2026', reason: 'copy-failed' }], CORRUPT, null]);
 });
 
 await test('should leave a conference saved by a newer version untouched, and restore the rest', () => {
@@ -686,8 +688,8 @@ await test('should name a conference whose restored picks could not be written, 
   const report = {};
   globalThis.__quota = before.length + 20;   // the restored Gartner state is longer than this
   let applied;
-  try { applied = store.importAllData(gartnerDoc({ G1: { p: 3, at: 9 }, G2: { p: 2, at: 9 }, G3: { p: 2, at: 9 } }), CONFS, { replace: false }, report); } finally { globalThis.__quota = null; }
-  eq([applied, report.failed, localStorage.getItem(ALL_OTHER)], [{ ignite2026: 1 }, [{ id: 'gartner2026', reason: 'save-failed' }], before]);
+  try { applied = store.importAllData(gartnerOnlyDoc({ G1: { p: 3, at: 9 }, G2: { p: 2, at: 9 }, G3: { p: 2, at: 9 } }), CONFS, { replace: false }, report); } finally { globalThis.__quota = null; }
+  eq([applied, report.failed, localStorage.getItem(ALL_OTHER)], [{}, [{ id: 'gartner2026', reason: 'save-failed' }], before]);
   await sleep(SAVE);
 });
 
@@ -737,6 +739,40 @@ await test('should leave out a damaged conference in the file, name it, and rest
   const report = {};
   eq([store.previewImportAll(doc, CONFS, { replace: false }).invalid, store.importAllData(doc, CONFS, { replace: false }, report), report.failed, savedOf('all-other').picks.G1.p],
     [[], { gartner2026: 1 }, [], 3], 'a part with its own app field');
+});
+
+// The conference on screen saves through its usual path; a restore that couldn't be kept says so.
+await test('should name the conference on screen when its restored picks could not be written', async () => {
+  const ALL_LIVE = 'ignite26.planner.v1:all-live';
+  localStorage.removeItem(ALL_LIVE);
+  store.load('all-live');
+  const doc = { app: BACKUP, v: 1, kind: 'all', conferences: { ignite2026: { picks: { S5: { p: 2, at: 9 } }, settings: {}, profile: null } } };
+  const report = {};
+  globalThis.__quota = 10;   // the conference on screen can't be written at all
+  let applied;
+  try { applied = store.importAllData(doc, CONFS, { replace: false }, report); } finally { globalThis.__quota = null; }
+  eq([applied, report.failed, localStorage.getItem(ALL_LIVE), store.saveFailing()], [{}, [{ id: 'ignite2026', reason: 'save-failed' }], null, true]);
+  store.updateSettings({ buffer: 5 });   // the next save that fits clears the failure
+  await sleep(SAVE);
+  eq([store.saveFailing(), savedOf('all-live').picks.S5?.p], [false, 2], 'kept once storage allows it');
+});
+
+// A settings entry that can't even be read as text is dropped like any other bad entry, so the
+// conference restores (#19 review). The file's text is what JSON gives: an own toString of null.
+await test('should drop a blocked time or added session whose day cannot be read, and restore the rest', () => {
+  localStorage.removeItem('ignite26.planner.v1:all-live');
+  localStorage.removeItem(ALL_OTHER);
+  store.load('all-live');
+  const good = { id: 'b1', day: '2026-11-18', start: 600, end: 660, label: 'Booth', building: null };
+  const doc = JSON.parse(JSON.stringify({ app: BACKUP, v: 1, kind: 'all', conferences: {
+    gartner2026: { picks: { G1: { p: 3, at: 9 } }, settings: { custom: [{ id: 'c1', title: 'Bad', day: { toString: null }, start: 600, end: 660 }, { id: 'c2', title: 'Good', day: '2026-11-18', start: 700, end: 760 }] }, profile: null },
+    ignite2026: { picks: { S5: { p: 2, at: 9 } }, settings: { buffer: 7, blocks: [{ ...good, id: 'b0', day: { toString: null } }, good] }, profile: null } } }).replace(/"toString":\{\}/g, '"toString":null'));
+  eq(doc.conferences.ignite2026.settings.blocks[0].day, { toString: null }, 'precondition: the bad day is in the file');
+  const report = {};
+  eq(store.importAllData(doc, CONFS, { replace: true }, report), { gartner2026: 1, ignite2026: 1 });
+  eq([report.failed, store.pick('S5')?.p, store.settings().buffer, store.settings().blocks.map(b => b.id)], [[], 2, 7, ['b1']]);
+  const other = savedOf('all-other');
+  eq([other.picks.G1.p, other.prefs.custom.map(c => c.id)], [3, ['c2']]);
 });
 
 await test('should refuse a file that calls itself a backup of everything but holds none', () => {
