@@ -82,13 +82,32 @@ https://mannix77.github.io/2026Ignite/?conf=reinvent2026#/import/AIM314-R.3!AIM3
 
 Ask the person to tap **Settings → Your data → Copy my picks for AI** and paste the text to you. It lists every rated session as `code | rating | when | title | details` (their own score, watch-later, the run they attend, their notes), then repeats the token format. Build your import link from that list: a session you leave out of the link keeps its rating. Notes travel only in this copy, never in links.
 
+## The preferences link
+
+The biggest time saver is deciding whole groups at once. A second link sets the person's Triage preferences (the quick-start answers and "Want all" / "Skip all" group choices). It never rates a session: a skipped group is only hidden from Browse and Triage, and stays unrated.
+
+    https://mannix77.github.io/2026Ignite/?conf=<conference id>#/prefs/<name>=<value>&<name>=<value>&...
+
+Ordinary URL query syntax; encode spaces as `%20` (or `+`), `&` inside a value as `%26`. Every name may repeat.
+
+- `role`: one of the conference's roles. Ignite: `Enterprise architect`, `Developer / engineer`, `IT / business leader`, `Partner`. Gartner: `Enterprise architect`, `CIO / IT leader`, `AI leader`, `Infrastructure & cloud`, `Security`, `Data & analytics`, `Talent & change`. re:Invent: `Enterprise architect`, `Developer / engineer`, `IT / business leader`, `Security`, `Data & analytics`.
+- `interest`: a topic exactly as the catalog's `topics` spell it.
+- `goal`: `architecture`, `leadership`, `strategy`, `ai`, `security`, `hands-on`.
+- `level`: a level the catalog uses (`100` to `400`). Not at Gartner, which has none.
+- `hide`: a session `type` (format) the person won't attend.
+- `want` / `skip`: a whole group, as `<group>:<value>`. Groups at Ignite and re:Invent: `topic`, `tag`, `type`, `level`, `aud`; at Gartner: `track`, `topic`, `type`, `aud`, `vendor`. The value is spelled as in the catalog (a track is its full tag, e.g. `D: Cybersecurity, Architecture, and Engineering`).
+- `size`: how many sessions Triage offers to rate, 25 to 2000.
+
+A field the link names replaces that preference (`goal=ai` makes AI the only goal); `want` and `skip` add to the group choices already set. Values the conference doesn't have are left out, and the person is told which. The person sees what the link sets and must confirm.
+
+### Worked example
+
+"At Gartner I'm an enterprise architect interested in agentic AI; skip the vendor sessions and the roundtables":
+
+https://mannix77.github.io/2026Ignite/?conf=gartner2026#/prefs/role=Enterprise%20architect&interest=Agentic%20AI&goal=architecture&skip=type:Solution%20Provider%20Sessions&skip=type:Roundtables
+
 ## Limits
 
 - Keep each link under about 2,000 characters (roughly 100 sessions). For more, split the tokens over several links and have the person open them one after another; each one merges.
 - Use the conference's own id in `?conf=`; a code from another conference is skipped.
 - Copy codes exactly from the catalog. A code that isn't in the catalog is skipped.
-
-## Coming soon
-
-- A link that sets the person's preferences (interests, goals) as well as ratings.
-

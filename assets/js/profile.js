@@ -143,6 +143,113 @@ export function sanitizeProfile(p) {
   return out;
 }
 
+// ---- a link that sets Triage preferences (specs/features/preferences-link.feature)
+//
+//   ?conf=<id>#/prefs/role=…&interest=…&goal=…&level=…&hide=…&want=<group>:<value>&skip=<group>:<value>&size=…
+//
+// Every parameter may repeat. A field the link names replaces that preference; want / skip add
+// whole-group choices on top of the ones already set (a later one for the same group wins).
+// Values are checked against what this conference has (its roles, the goals, the catalog's
+// topics, levels and formats, and its group values); anything else is left out and named.
+// A link never rates a session.
+
+const LINK_FIELDS = { role: 'roles', interest: 'interests', goal: 'goals', level: 'levels', hide: 'offTypes' };
+
+export function parsePrefsLink(str, { cfg, sessions = [] }) {
+  const values = new Map(cfg.groups.map(g => [g.key, new Set()]));
+  const topics = new Set(), types = new Set(), levels = new Set();
+  for (const s of sessions) {
+    for (const g of cfg.groups) for (const v of g.get(s) || []) if (v != null && v !== '' && !(g.exclude || []).includes(v)) values.get(g.key).add(String(v));
+    for (const t of s.topics || []) topics.add(t);
+    if (s.type) types.add(s.type);
+    if (Number.isInteger(Number(s.level)) && s.level) levels.add(Number(s.level));
+  }
+  const valid = {
+    role: v => cfg.roles.some(r => r.id === v),
+    interest: v => topics.has(v),
+    goal: v => GOALS.some(g => g.id === v),
+    level: v => !!cfg.levels && /^\d{1,3}$/.test(v) && levels.has(Number(v)),   // Gartner has no levels
+    hide: v => types.has(v),
+  };
+  const set = {}, groups = {}, ignored = [];
+  let params;
+  try { params = [...new URLSearchParams(String(str || ''))]; } catch { params = []; }
+  for (const [rawKey, rawValue] of params) {
+    const key = rawKey.trim(), v = rawValue.trim();
+    if (!key && !v) continue;
+    const note = `${key}: ${v || '(empty)'}`;
+    if (Object.hasOwn(LINK_FIELDS, key)) {
+      if (!v || !valid[key](v)) { ignored.push(note); continue; }
+      const field = LINK_FIELDS[key];
+      const val = key === 'level' ? Number(v) : v;
+      set[field] ||= [];
+      if (!set[field].includes(val)) set[field].push(val);
+    } else if (key === 'want' || key === 'skip') {
+      const i = v.indexOf(':');
+      const g = i > 0 ? v.slice(0, i) : '', value = i > 0 ? v.slice(i + 1) : '';
+      if (!values.has(g) || !values.get(g).has(value)) { ignored.push(note); continue; }
+      delete groups[v];
+      groups[v] = key === 'want' ? 1 : -1;
+    } else if (key === 'size' && /^\d{2,4}$/.test(v) && Number(v) >= 25 && Number(v) <= 2000) {
+      set.size = Number(v);
+    } else ignored.push(note);
+  }
+  return { set, groups, ignored };
+}
+
+// Pasted text holding a preferences link: the conference its ?conf= names (null when it names
+// none: the one being planned) and the part after #/prefs/. Null when it isn't one.
+export function prefsLinkFrom(text) {
+  const raw = String(text || '').trim();
+  const at = raw.indexOf('#/prefs/');
+  if (at < 0) return null;
+  // Pasted from a message, the link may have words around it: read the address itself, from
+  // its scheme up to the first space after #/prefs/ (#126 review).
+  const head = raw.slice(0, at).match(/[a-z][\w+.-]*:\/\/\S*$/i);
+  const tail = raw.slice(at).search(/\s/), end = tail < 0 ? raw.length : at + tail;
+  let conf = null;
+  if (head) try { conf = new URL(raw.slice(at - head[0].length, end)).searchParams.get('conf') || null; } catch { /* not an address */ }
+  return { conf, query: raw.slice(at + '#/prefs/'.length, end) };
+}
+
+// Whether a pasted preferences link should be applied to the conference being planned
+// (`openConfId`), or names a different one (issue #23: "a pasted link applies only to the
+// conference it names"). Null when the text isn't a preferences link at all; otherwise
+// `{ apply: true, query }` to go ahead, or `{ apply: false, name }` naming the conference to
+// switch to first (its catalog name when `conferences` has one, else the raw id).
+export function prefsLinkTarget(text, openConfId, conferences = {}) {
+  const prefs = prefsLinkFrom(text);
+  if (!prefs) return null;
+  if (prefs.conf && prefs.conf !== openConfId) {
+    return { apply: false, name: Object.hasOwn(conferences, prefs.conf) ? conferences[prefs.conf].name : prefs.conf };
+  }
+  return { apply: true, query: prefs.query };
+}
+
+// The profile after confirming a link: named fields replaced, group choices added.
+export function applyPrefs(profile, parsed) {
+  const p = sanitizeProfile(profile);
+  return sanitizeProfile({ ...p, ...parsed.set, groups: { ...p.groups, ...parsed.groups } });
+}
+
+// The lines the confirmation shows.
+export function prefsSummary(parsed) {
+  const { set, groups, ignored } = parsed;
+  const lines = [];
+  if (set.roles) lines.push(`Roles: ${set.roles.join(', ')}`);
+  if (set.interests) lines.push(`Interests: ${set.interests.join(', ')}`);
+  if (set.goals) lines.push(`Goals: ${set.goals.map(id => GOALS.find(g => g.id === id)?.label || id).join(', ')}`);
+  if (set.levels) lines.push(`Levels: ${set.levels.join(', ')}`);
+  if (set.offTypes) lines.push(`Hide formats: ${set.offTypes.join(', ')}`);
+  if (set.size) lines.push(`Shortlist size: ${set.size}`);
+  const named = sign => Object.entries(groups).filter(([, r]) => r === sign).map(([k]) => k.replace(':', ' '));
+  if (named(1).length) lines.push(`Want all: ${named(1).join(', ')}`);
+  if (named(-1).length) lines.push(`Skip all: ${named(-1).join(', ')}`);
+  if (!lines.length) lines.push('Nothing this conference knows');
+  if (ignored.length) lines.push(`Left out (not in this conference): ${ignored.join(', ')}`);
+  return lines;
+}
+
 // The facets a conference offers for whole-group choices, with how many sessions each has.
 export function profileGroups(cfg, sessions) {
   return cfg.groups.map(g => {
