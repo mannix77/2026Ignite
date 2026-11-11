@@ -22,7 +22,7 @@ def sync_job_text():
 
 def commit_step_script():
     """The shell of the 'Commit catalog changes' step, dedented."""
-    m = re.search(r"- name: Commit catalog changes\n\s+run: \|\n((?:[ ]{10}.*\n|\n)+)", sync_job_text())
+    m = re.search(r"- name: Commit catalog changes\n(?:\s+id:[^\n]*\n)?\s+run: \|\n((?:[ ]{10}.*\n|\n)+)", sync_job_text())
     assert m, "commit step not found"
     return "\n".join(line[10:] for line in m.group(1).splitlines())
 

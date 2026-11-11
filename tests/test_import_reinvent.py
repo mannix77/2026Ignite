@@ -20,6 +20,7 @@ from unittest import mock
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 sys.path.insert(0, os.path.join(ROOT, "scripts"))
+import honeycomb  # noqa: E402
 import import_reinvent as ri  # noqa: E402
 
 
@@ -600,6 +601,45 @@ class KeynoteTests(unittest.TestCase):
             json.dump(SNAP, f)
         ri.run(types.SimpleNamespace(snapshot=snap, fetch=False, data_dir=d, summary_out=None, snapshot_out=None))
         self.assertIn("KEY001", by_code(load_path(os.path.join(d, "sessions.json"))["sessions"]))
+
+
+class TelemetryTests(ImportDir, unittest.TestCase):
+    """What a run tells Honeycomb (issue #140, specs/features/observability.feature)."""
+
+    def test_a_successful_import_reports_fetch_and_change_counts(self):
+        self.run_import()
+        moved = sample()[1:]
+        moved.append(dict(moved[-1], sessionID="new-1", code="NEW999"))
+        self.write_snapshot(moved)
+        code, changed = self.run_import()
+        self.assertEqual((code, changed), (0, True))
+        t = self.data("meta.json")["telemetry"]
+        self.assertEqual(t["conference"], "reinvent2026")
+        self.assertEqual(t["fetch_status"], "ok")
+        self.assertEqual(t["records_fetched"], len(SNAP["sessions"]))
+        self.assertEqual(t["records_accepted"], len(moved))
+        self.assertFalse(t["guard_refused"])
+        self.assertIsNone(t["guard"])
+        self.assertEqual((t["added"], t["removed"]), (1, 1))
+        self.assertGreaterEqual(t["duration_ms"], 0)
+
+    def test_a_refusal_names_the_partial_guard(self):
+        self.run_import()
+        self.write_snapshot(sample()[:15])   # under 90%: refused
+        code, _ = self.run_import()
+        self.assertEqual(code, 3)
+        t = self.data("meta.json")["telemetry"]
+        self.assertEqual(t["fetch_status"], "ok")
+        self.assertTrue(t["guard_refused"])
+        self.assertEqual(t["guard"], "partial")
+        self.assertEqual((t["added"], t["removed"], t["changed"]), (0, 0, 0))
+
+    def test_telemetry_never_carries_a_field_outside_honeycombs_allow_list(self):
+        self.run_import()
+        t = self.data("meta.json")["telemetry"]
+        self.assertTrue(set(t) <= honeycomb.SYNC_RUN_FIELDS)
+        for forbidden in ("picks", "notes", "profile", "settings"):
+            self.assertNotIn(forbidden, t)
 
 
 def load_path(path):

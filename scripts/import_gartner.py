@@ -26,12 +26,14 @@ import xml.etree.ElementTree as ET
 from zoneinfo import ZoneInfo
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import honeycomb  # noqa: E402
 import sync  # noqa: E402
 import venues  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DATA = os.path.join(ROOT, "data", "gartner2026")
-VENUE = venues.CONFERENCE_VENUES["gartner2026"]   # the building patterns rooms are checked against
+CONFERENCE = "gartner2026"   # Honeycomb's "conference" field (issue #140)
+DATA = os.path.join(ROOT, "data", CONFERENCE)
+VENUE = venues.CONFERENCE_VENUES[CONFERENCE]   # the building patterns rooms are checked against
 TZ = ZoneInfo("America/New_York")
 PRIVATE = re.compile(r"^(SM|SAM)\d")                      # strategic-account meetings: not public sessions
 RECORDED_TYPES = {"Keynote", "Signature Series", "Track Sessions"}   # replay assumed (unconfirmed); logistics: n/a
@@ -265,6 +267,7 @@ def main():
     ap.add_argument("--favorites-only", action="store_true", help="only build favorites from the workbook; leave the catalog alone")
     args = ap.parse_args()
     now = sync.utcnow()
+    t0 = time.monotonic()
     raw = sync.load(args.export_json, None)
     if not isinstance(raw, list):
         raise SystemExit("expected a JSON array of sessions")
@@ -298,8 +301,15 @@ def main():
         sync.dump(cpath, changes)
     elif not os.path.exists(cpath):
         sync.dump(cpath, changes)
+    # No workflow runs this import (it's a manual re-run after a fresh Conference Navigator
+    # export), so there's no later job to add a commit/deploy outcome: the event is sent here,
+    # right away, with those two fields simply absent (honeycomb.allowed drops the missing ones).
+    event = sync.telemetry(
+        CONFERENCE, sync.iso(now), round((time.monotonic() - t0) * 1000), "ok",
+        len(raw), len(cur), len(dropped) + len(excluded), None, len(added), len(removed), len(changed))
+    honeycomb.send_event("sync-runs", honeycomb.SYNC_RUN_FIELDS, event)
     sync.dump(mpath, {"lastChecked": sync.iso(now), "lastChanged": changed_at, "ok": True, "error": None, "stats": cs,
-                      "source": "Conference Navigator export"})
+                      "source": "Conference Navigator export", "telemetry": event})
     print("gartner: sessions=%d (dropped %d private, %d program-only) | added=%d removed=%d changed=%d%s"
           % (len(cur), len(dropped), len(excluded), len(added), len(removed), len(changed),
              " | " + venues.notice(unknown, "; ") if unknown else ""))

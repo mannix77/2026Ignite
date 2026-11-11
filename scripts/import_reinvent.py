@@ -379,6 +379,9 @@ def save_snapshot(path, sessions, now):
 
 def run(args):
     now = sync.utcnow()
+    t0 = time.monotonic()
+    raw = records_fetched = records_accepted = records_skipped = None
+    guard = None   # "partial" | "withdrawal" | None; which guard refused the feed, for telemetry
     data = os.path.abspath(args.data_dir or DATA)
     os.makedirs(data, exist_ok=True)
     spath, cpath, mpath, lpath = (os.path.join(data, n) for n in
@@ -395,18 +398,27 @@ def run(args):
             if not isinstance(doc, dict) or not isinstance(doc.get("sessions"), list):
                 raise RuntimeError("%s: not a re:Invent snapshot (no sessions list)" % args.snapshot)
             raw, source = doc["sessions"], os.path.basename(args.snapshot)
+        records_fetched = len(raw) if isinstance(raw, list) else None
         cur, dropped = normalize(raw)
         cur += keynote_records(sync.load(os.path.join(data, "keynotes.json"), None))
+        records_accepted = len(cur)
+        records_skipped = sum(dropped.values()) if isinstance(dropped, dict) else None
         if not cur or (prev and len(cur) < MIN_KEEP * len(prev)):
+            guard = "partial"
             raise RuntimeError("catalog returned %d sessions (previously %d); keeping last good data"
                                % (len(cur), len(prev)))
         # Same guard as the Ignite sync: a renamed time or room field keeps the session count
         # but empties those fields, which must not be published as hundreds of changes.
         why = sync.withdrawal(sync.stats(prev), sync.stats(cur)) if prev and not getattr(args, "allow_withdrawal", False) else None
         if why:
+            guard = "withdrawal"
             raise RuntimeError(why)
     except RuntimeError as e:
         meta.update({"ok": False, "error": str(e)})
+        meta["telemetry"] = sync.telemetry(
+            EVENT, sync.iso(now), round((time.monotonic() - t0) * 1000),
+            "ok" if guard else "failed", records_fetched, records_accepted, records_skipped,
+            guard, 0, 0, 0)
         sync.dump(mpath, meta)
         print("reinvent import failed:", e, file=sys.stderr)
         return 3, False
@@ -443,6 +455,10 @@ def run(args):
                      "Baseline import: %d sessions (%d scheduled) in %d groups.\n" % (st["sessions"], st["scheduled"], st["groups"]))
     meta.update({"ok": True, "error": None, "lastChanged": changed_at, "stats": cs, "source": source,
                  "lastLogged": changes["batches"][0]["at"] if changes["batches"] else None})
+    meta["telemetry"] = sync.telemetry(
+        EVENT, sync.iso(now), round((time.monotonic() - t0) * 1000), "ok",
+        records_fetched, records_accepted, records_skipped, None,
+        len(added), len(removed), len(changed))
     sync.dump(mpath, meta)
     if batch and args.summary_out:
         with open(args.summary_out, "w", encoding="utf-8") as f:

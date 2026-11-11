@@ -34,6 +34,10 @@ jobs:
       notify: ${{ steps.notify.outcome }}
       error: ${{ steps.why.outputs.error }}
       redeploy: ${{ steps.redeploy.outcome }}
+      commit: ${{ steps.commit.outcome }}
+      # import_reinvent.py's own fields for the Honeycomb sync-run event (issue #140); the
+      # report job below adds the commit/redeploy outcome and sends it.
+      telemetry: ${{ steps.telemetry.outputs.json }}
     steps:
       - name: Stop after the event
         id: window
@@ -82,6 +86,22 @@ jobs:
           except Exception:
               e = ""
           print("error=" + " ".join(str(e).split())[:1000])
+          PY
+
+      # What import_reinvent.py knows about this run, for the report job's Honeycomb sync-run
+      # event (meta.json isn't committed, so this is the only way that job's fresh checkout can
+      # see it). if: always() so this still runs after a failed import.
+      - name: Read sync telemetry
+        id: telemetry
+        if: always()
+        run: |
+          python3 - >> "$GITHUB_OUTPUT" <<'PY'
+          import json
+          try:
+              t = json.load(open("data/reinvent2026/meta.json", encoding="utf-8")).get("telemetry") or {}
+          except Exception:
+              t = {}
+          print("json=" + json.dumps(t))
           PY
 
       # Same order as the Ignite job (specs/features/change-notices.feature): queue the summary in
@@ -179,10 +199,15 @@ jobs:
     permissions:
       contents: read
       issues: write
+      actions: read   # send_workflow_trace.py reads this run's job/step timing
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
-          sparse-checkout: scripts/prod_issue.py
+          sparse-checkout: |
+            scripts/prod_issue.py
+            scripts/honeycomb.py
+            scripts/send_sync_event.py
+            scripts/send_workflow_trace.py
           sparse-checkout-cone-mode: false
 
       - name: Open, update or close the production issue
@@ -226,3 +251,23 @@ jobs:
       - name: Note a repeat of a known problem
         if: steps.prod.outputs.result == 'updated'
         run: echo "::warning::A known production problem happened again; its GitHub issue was updated."
+
+      # issue #140: one Honeycomb event for this run and one trace for the workflow run; both
+      # no-op without HONEYCOMB_API_KEY, and neither failure here fails the run.
+      - name: Send the sync-run event to Honeycomb
+        if: always()
+        env:
+          HONEYCOMB_API_KEY: ${{ secrets.HONEYCOMB_API_KEY }}
+        run: |
+          python3 scripts/send_sync_event.py --conference reinvent2026 \
+            --telemetry-json '${{ needs.sync.outputs.telemetry }}' \
+            --commit-outcome '${{ needs.sync.outputs.commit }}' --deploy-outcome '${{ needs.sync.outputs.redeploy }}'
+
+      - name: Send the workflow trace to Honeycomb
+        if: always()
+        env:
+          HONEYCOMB_API_KEY: ${{ secrets.HONEYCOMB_API_KEY }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 scripts/send_workflow_trace.py --repo "${{ github.repository }}" \
+            --run-id "${{ github.run_id }}" --workflow "${{ github.workflow }}"

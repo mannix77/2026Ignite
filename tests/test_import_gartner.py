@@ -18,7 +18,13 @@ from unittest import mock
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(HERE), "scripts"))
+import honeycomb  # noqa: E402
 import import_gartner as g  # noqa: E402
+
+# Hermetic tests: an ambient HONEYCOMB_API_KEY (e.g. a developer's own shell) must never make a
+# test that isn't about telemetry send a real event. A test that does exercise a configured key
+# sets it itself with mock.patch.dict(..., clear=True), which shadows this for its own duration.
+os.environ.pop("HONEYCOMB_API_KEY", None)
 
 OK = {"id": 1, "code": "T1", "t": "Talk", "s": "10/19/2026 10:00:00", "e": "10/19/2026 10:45:00",
       "loc": "Lark 1, WDW Swan Hotel", "f": {"Session Type": ["Track Sessions"]}}
@@ -181,6 +187,43 @@ class FavoritesTests(unittest.TestCase):
         note = next(iter(backup["picks"].values()))["note"]
         self.assertEqual(note.split("\n")[1:], ["Note: ask about our renewal", "Why it matters: budget cycle",
                                                 "Vendor-consolidation angle: reduce duplicate spend"])
+
+
+class TelemetryTests(unittest.TestCase):
+    """issue #140, specs/features/observability.feature: this import has no workflow of its
+    own, so it sends its event directly (and still only with a key configured)."""
+
+    def run_main(self):
+        tmp = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, tmp)
+        export = os.path.join(tmp, "export.json")
+        with open(export, "w", encoding="utf-8") as f:
+            json.dump([OK], f)
+        data_dir = os.path.join(tmp, "data")
+        argv = ["import_gartner.py", export, "--data-dir", data_dir]
+        with mock.patch.object(sys, "argv", argv), contextlib.redirect_stdout(io.StringIO()):
+            g.main()
+        with open(os.path.join(data_dir, "meta.json"), encoding="utf-8") as f:
+            return json.load(f)
+
+    def test_no_network_call_without_a_key(self):
+        with mock.patch.dict(os.environ, {}, clear=True), mock.patch("urllib.request.urlopen") as m:
+            self.run_main()
+        m.assert_not_called()
+
+    def test_sends_only_allow_listed_fields_when_a_key_is_configured(self):
+        cm = mock.MagicMock()
+        cm.__enter__.return_value.read.return_value = b"{}"
+        cm.__enter__.return_value.status = 200
+        with mock.patch.dict(os.environ, {"HONEYCOMB_API_KEY": "k"}, clear=True), \
+                mock.patch("urllib.request.urlopen", return_value=cm) as m:
+            meta = self.run_main()
+        req = m.call_args.args[0]
+        sent = json.loads(req.data.decode("utf-8"))[0]["data"]
+        self.assertEqual(sent["conference"], "gartner2026")
+        self.assertEqual(sent["records_accepted"], 1)
+        self.assertTrue(set(sent) <= honeycomb.SYNC_RUN_FIELDS)
+        self.assertEqual(meta["telemetry"]["conference"], "gartner2026")
 
 
 if __name__ == "__main__":

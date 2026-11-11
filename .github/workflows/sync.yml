@@ -45,6 +45,10 @@ jobs:
       notify: ${{ steps.notify.outcome }}
       error: ${{ steps.why.outputs.error }}
       details: ${{ steps.why.outputs.details }}
+      commit: ${{ steps.commit.outcome }}
+      # sync.py's own fields for the Honeycomb sync-run event (issue #140): the report job
+      # below adds the commit and deploy outcome, which only it knows, and sends it.
+      telemetry: ${{ steps.telemetry.outputs.json }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
@@ -109,6 +113,25 @@ jobs:
             echo "__DETAILS__"
           } >> "$GITHUB_OUTPUT"
 
+      # What sync.py knows about this run, for the Honeycomb sync-run event the report job
+      # sends once it also knows the commit and deploy outcome. meta.json isn't committed, so
+      # this is the only way that job (a fresh checkout) can see it. Runs even after a failed
+      # sync (meta.json still gets a "telemetry" field then); only missing if an earlier step
+      # (checkout, tests) failed outright, in which case send_sync_event.py sends with no
+      # per-run detail rather than skip the run's commit/deploy outcome entirely.
+      - name: Read sync telemetry
+        id: telemetry
+        if: always()
+        run: |
+          python3 - >> "$GITHUB_OUTPUT" <<'PY'
+          import json
+          try:
+              t = json.load(open("data/ignite2026/meta.json", encoding="utf-8")).get("telemetry") or {}
+          except Exception:
+              t = {}
+          print("json=" + json.dumps(t))
+          PY
+
       # The AI guide's worked example uses real session codes; when a catalog drops one, an issue
       # under its own workflow name says so and closes itself once the example is fixed. Never
       # fails the run (specs/features/ai-guide-examples.feature).
@@ -139,6 +162,7 @@ jobs:
         run: python3 scripts/post_summary.py stage --pending data/ignite2026/pending-summary.md --new "$RUNNER_TEMP/summary.md" --id "$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
 
       - name: Commit catalog changes
+        id: commit
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -197,6 +221,11 @@ jobs:
           exit 1
 
       - name: Stamp the app version for offline caching
+        env:
+          # Public, ingest-only key for opt-in app-error reports (issue #140); a repo variable,
+          # not a secret, because it is stamped into a public page. Empty until the owner sets
+          # it, so <meta name="honeycomb-browser-key"> stays blank and telemetry.js sends nothing.
+          HONEYCOMB_BROWSER_KEY: ${{ vars.HONEYCOMB_BROWSER_KEY }}
         run: |
           # Colleague copies (instances/<name>/) are stamped from these files below, so their own
           # files count too: a change only to instances/gino/conference must still update Gino's copy.
@@ -205,6 +234,12 @@ jobs:
               } | sha256sum | cut -c1-12)
           sed -i "s/const VERSION = 'ignite26-dev';/const VERSION = 'ignite26-$v';/" sw.js
           grep -q "ignite26-$v" sw.js
+          sed -i "s|<meta name=\"app-version\" content=\"\">|<meta name=\"app-version\" content=\"ignite26-$v\">|" index.html
+          grep -q "app-version\" content=\"ignite26-$v\"" index.html
+          if [ -n "$HONEYCOMB_BROWSER_KEY" ]; then
+            sed -i "s|<meta name=\"honeycomb-browser-key\" content=\"\">|<meta name=\"honeycomb-browser-key\" content=\"$HONEYCOMB_BROWSER_KEY\">|" index.html
+            grep -q "honeycomb-browser-key\" content=\"$HONEYCOMB_BROWSER_KEY\"" index.html
+          fi
 
       # App copies cached before the catalog moved to data/ignite2026/ still ask for the old
       # paths until they pick up the new version; serve them the Ignite data there too.
@@ -286,10 +321,15 @@ jobs:
     permissions:
       contents: read
       issues: write
+      actions: read   # send_workflow_trace.py reads this run's job/step timing
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
-          sparse-checkout: scripts/prod_issue.py
+          sparse-checkout: |
+            scripts/prod_issue.py
+            scripts/honeycomb.py
+            scripts/send_sync_event.py
+            scripts/send_workflow_trace.py
           sparse-checkout-cone-mode: false
 
       - name: Open, update or close the production issue
@@ -341,3 +381,25 @@ jobs:
       - name: Note a repeat of a known problem
         if: steps.prod.outputs.result == 'updated'
         run: echo "::warning::A known production problem happened again; its GitHub issue was updated."
+
+      # issue #140: one Honeycomb event for this run (sync.py's own fields plus the commit and
+      # deploy outcome, which only this job knows), and one trace for the whole workflow run.
+      # Both no-op without HONEYCOMB_API_KEY, and neither failure here fails the run: telemetry
+      # never breaks a sync.
+      - name: Send the sync-run event to Honeycomb
+        if: always()
+        env:
+          HONEYCOMB_API_KEY: ${{ secrets.HONEYCOMB_API_KEY }}
+        run: |
+          python3 scripts/send_sync_event.py --conference ignite2026 \
+            --telemetry-json '${{ needs.sync.outputs.telemetry }}' \
+            --commit-outcome '${{ needs.sync.outputs.commit }}' --deploy-outcome '${{ needs.deploy.result }}'
+
+      - name: Send the workflow trace to Honeycomb
+        if: always()
+        env:
+          HONEYCOMB_API_KEY: ${{ secrets.HONEYCOMB_API_KEY }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 scripts/send_workflow_trace.py --repo "${{ github.repository }}" \
+            --run-id "${{ github.run_id }}" --workflow "${{ github.workflow }}"
