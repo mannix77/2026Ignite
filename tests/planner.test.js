@@ -322,6 +322,9 @@ test('the optimizer solves each distinct day subset once (exhaustive and heurist
     ok(planned.length > 0, `${name}: the plan is empty`);
     eq(new Set(ids).size, ids.length, `${name}: a session attended twice`);
     ok(planned.every(x => items.includes(x)), `${name}: a planned item that isn't one of the picks`);
+    for (const [day, dayPlan] of Object.entries(res.plan)) for (const x of dayPlan) {
+      eq(x.day, day, `${name}: ${x.key} filed under ${day} but its day is ${x.day}`);
+    }
     for (const day of Object.values(res.plan)) for (const a of day) for (const b of day) {
       ok(a === b || canBoth(a, b), `${name}: ${a.key} and ${b.key} clash on ${a.day}`);
     }

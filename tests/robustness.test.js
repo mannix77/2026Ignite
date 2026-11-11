@@ -147,6 +147,9 @@ await test('should re-plan 300 picks on the real re:Invent catalog within a gene
   if (planned.length === 0) throw new Error('the plan is empty');
   eq(new Set(ids).size, ids.length, 'a session attended twice');
   if (!planned.every(x => items.includes(x))) throw new Error("a planned item that isn't one of the picks");
+  for (const [day, dayPlan] of Object.entries(res.plan)) for (const x of dayPlan) {
+    if (x.day !== day) throw new Error(`${x.key} filed under ${day} but its day is ${x.day}`);
+  }
   for (const day of Object.values(res.plan)) for (const a of day) for (const b of day) {
     if (a !== b && !canBoth(a, b, ctx)) throw new Error(`${a.key} and ${b.key} clash on ${a.day}`);
   }
