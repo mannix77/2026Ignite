@@ -4,6 +4,7 @@ import { sleep } from './shim.js';
 
 const { createRanker, partition, sanitizeProfile, blankProfile, profileGroups, profileConfig } = await import('../assets/js/profile.js');
 const store = await import('../assets/js/store.js');
+const { CONFERENCES } = await import('../assets/js/conferences.js');
 
 let pass = 0, fail = 0;
 async function test(name, fn) {
@@ -140,7 +141,7 @@ await test('should include preferences in a backup', () => {
 });
 
 // ---- a link that sets Triage preferences (specs/features/preferences-link.feature)
-const { parsePrefsLink, applyPrefs, prefsSummary, prefsLinkFrom } = await import('../assets/js/profile.js');
+const { parsePrefsLink, applyPrefs, prefsSummary, prefsLinkFrom, prefsLinkTarget } = await import('../assets/js/profile.js');
 const igniteCfg = profileConfig('ignite2026');
 const linkCatalog = [
   session({ topics: ['AI'], type: 'Breakout', level: 200 }),
@@ -190,11 +191,25 @@ await test('should replace the fields a link names and add its group choices to 
   eq([after.goals, after.interests, after.groups], [['ai'], ['Security'], { 'topic:AI': 1, 'type:Pre-recorded': -1 }]);
 });
 await test('should hide a skipped group without rating any of its sessions', () => {
+  store.load('profile-prefs-link-no-ratings');
+  store.mutatePicks(p => { p.BRK1 = { p: 3, lock: null, note: '', at: 1 }; });
+  const before = JSON.stringify(store.get().picks);
   const after = applyPrefs(profile({}), parseLink('skip=type:Lab'));
+  store.updateProfile(after);
   const lab = linkCatalog[2];
   eq(createRanker(after, 'ignite2026').evaluate(lab).hidden, 'group');
   eq(createRanker(after, 'ignite2026').evaluate(linkCatalog[0]).hidden, null, 'another type is not hidden');
-  eq(Object.keys(after).includes('picks'), false, 'a profile carries no ratings');
+  eq(JSON.stringify(store.get().picks), before, 'applying the link writes no ratings');
+});
+await test('should say which conference a pasted preferences link is for, when it names a different one', () => {
+  const gartnerLink = `https://mannix77.github.io/2026Ignite/?conf=gartner2026#/prefs/goal=ai`;
+  eq(prefsLinkTarget(gartnerLink, 'ignite2026', CONFERENCES), { apply: false, name: CONFERENCES.gartner2026.name });
+  eq(prefsLinkTarget(`https://x.test/?conf=madeupconf#/prefs/goal=ai`, 'ignite2026', CONFERENCES), { apply: false, name: 'madeupconf' }, 'falls back to the raw id when unknown');
+});
+await test('should apply a link naming no conference, or the one open; and pass through what is not a preferences link', () => {
+  eq(prefsLinkTarget('#/prefs/goal=ai', 'ignite2026', CONFERENCES), { apply: true, query: 'goal=ai' });
+  eq(prefsLinkTarget(`https://x.test/?conf=ignite2026#/prefs/goal=ai`, 'ignite2026', CONFERENCES), { apply: true, query: 'goal=ai' });
+  eq(prefsLinkTarget(`https://x.test/?conf=ignite2026#/import/K1.3`, 'ignite2026', CONFERENCES), null, 'not a preferences link');
 });
 await test('should describe what the link sets and what it leaves out, for the confirmation', () => {
   const lines = prefsSummary(parseLink('role=Astronaut&goal=ai&level=200&hide=Pre-recorded&want=topic:AI&skip=type:Lab'));

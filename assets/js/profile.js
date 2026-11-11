@@ -208,6 +208,20 @@ export function prefsLinkFrom(text) {
   return { conf, query: raw.slice(at + '#/prefs/'.length) };
 }
 
+// Whether a pasted preferences link should be applied to the conference being planned
+// (`openConfId`), or names a different one (issue #23: "a pasted link applies only to the
+// conference it names"). Null when the text isn't a preferences link at all; otherwise
+// `{ apply: true, query }` to go ahead, or `{ apply: false, name }` naming the conference to
+// switch to first (its catalog name when `conferences` has one, else the raw id).
+export function prefsLinkTarget(text, openConfId, conferences = {}) {
+  const prefs = prefsLinkFrom(text);
+  if (!prefs) return null;
+  if (prefs.conf && prefs.conf !== openConfId) {
+    return { apply: false, name: Object.hasOwn(conferences, prefs.conf) ? conferences[prefs.conf].name : prefs.conf };
+  }
+  return { apply: true, query: prefs.query };
+}
+
 // The profile after confirming a link: named fields replaced, group choices added.
 export function applyPrefs(profile, parsed) {
   const p = sanitizeProfile(profile);
