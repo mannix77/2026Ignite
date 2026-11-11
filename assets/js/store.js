@@ -60,6 +60,11 @@ function merge(base, extra) {
 
 let state = blank();
 let cachedSettings = null;
+// The picks as they were last read from or written to storage, in the shape another tab's save is
+// read back in (sanitized): what an unsaved change is measured against when that save arrives (#75).
+let savedPicks = {};
+const canonical = p => JSON.stringify(sanitizePick(p, 0));
+const snapshotPicks = () => { savedPicks = Object.fromEntries(Object.entries(state.picks).map(([id, p]) => [id, canonical(p)])); };
 let conferenceDefaults = {};
 const listeners = new Set();
 let saveTimer = null;
@@ -77,14 +82,18 @@ export function configure({ defaults = {}, buildingIds = [] } = {}) {
 // Saved text that couldn't be read and couldn't yet be copied aside: it must not be
 // overwritten until the copy succeeds (writeNow retries it before every save).
 let unreadable = null;
+// The saved text as this tab last read or wrote it: different text at save time means another tab
+// saved in between and its storage event hasn't arrived yet (#75).
+let lastText = null;
 
 export function load(namespace = '') {
   KEY = namespace ? `${BASE_KEY}:${namespace}` : BASE_KEY;
   state = blank();
   unreadable = null;
   newer = false;
+  lastText = null;
   try {
-    const raw = localStorage.getItem(KEY);
+    const raw = lastText = localStorage.getItem(KEY);
     if (raw) {
       const saved = JSON.parse(raw);
       newer = Number.isFinite(saved?.v) && saved.v > SCHEMA_VERSION;
@@ -104,6 +113,7 @@ export function load(namespace = '') {
     try { raw = localStorage.getItem(KEY); if (raw) localStorage.setItem(`${KEY}#unreadable`, raw); } catch { unreadable = raw; }
   }
   cachedSettings = null;
+  snapshotPicks();
   return state;
 }
 
@@ -117,14 +127,27 @@ export function saveFailing() { return saveFailed; }
 function writeNow() {
   clearTimeout(saveTimer);
   saveTimer = null;
+  let raw = null, stored = null;
   try {
-    // Another tab may have saved a newer version whose storage event hasn't reached us yet.
-    if (!newer) { const stored = JSON.parse(localStorage.getItem(KEY) || 'null'); newer = Number.isFinite(stored?.v) && stored.v > SCHEMA_VERSION; }
+    // Another tab may have saved since this tab last read or wrote, its storage event still queued.
+    raw = localStorage.getItem(KEY);
+    stored = JSON.parse(raw || 'null');
+    if (!newer) newer = Number.isFinite(stored?.v) && stored.v > SCHEMA_VERSION;
   } catch { /* unreadable saved text: handled by the existing copy-first path below */ }
   if (newer) { for (const fn of listeners) fn('newer-version'); return; } // reload to get the new code; don't strip what it wrote
+  // Its picks would be overwritten: take them in first and put this tab's unsaved changes on top,
+  // as its storage event will. The rest of this tab's state is saved as it is.
+  if (raw != null && raw !== lastText && stored && typeof stored === 'object') {
+    const unsaved = unsavedPicks();
+    state.picks = sanitizePicks(stored.picks);
+    reapply(unsaved);
+  }
   try {
     if (unreadable != null) { localStorage.setItem(`${KEY}#unreadable`, unreadable); unreadable = null; } // copy first, or don't save
-    localStorage.setItem(KEY, JSON.stringify(state));
+    const text = JSON.stringify(state);
+    localStorage.setItem(KEY, text);
+    lastText = text;
+    snapshotPicks();
     if (saveFailed) { saveFailed = false; for (const fn of listeners) fn('save-ok'); }
   } catch (e) {
     console.warn('Could not save state', e);
@@ -146,13 +169,48 @@ if (typeof document !== 'undefined' && document.addEventListener) {
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') flushPending(); });
 }
 
-// Another tab saved: adopt its state instead of overwriting it on our next save.
+// Pick ids may be names an object inherits ('constructor'): read the maps by own key only.
+const own = (o, id) => (Object.hasOwn(o, id) ? o[id] : null);
+
+// The picks this tab changed since its last save: id -> { mine (null = cleared here), base (canonical text) }.
+function unsavedPicks() {
+  const out = new Map();
+  for (const id of new Set([...Object.keys(state.picks), ...Object.keys(savedPicks)])) {
+    const mine = own(state.picks, id), base = own(savedPicks, id) ?? canonical(null);
+    if (canonical(mine) !== base) out.set(id, { mine, base });
+  }
+  return out;
+}
+
+// After adopting another tab's save, put back what this tab changed and had not saved yet. A
+// pick the other tab left alone takes this tab's change outright, even one with no new time
+// (lockPicks releases a group's other locks without one). A pick both tabs changed goes to the
+// newer (the same rule a merged backup uses), and a pick cleared here that the other tab changed
+// keeps their version. Returns whether anything was put back.
+function reapply(unsaved) {
+  let changed = false;
+  for (const [id, { mine, base }] of unsaved) {
+    const theirs = own(state.picks, id);
+    const untouched = canonical(theirs) === base;
+    if (mine ? untouched || !theirs || (mine.at || 0) > (theirs.at || 0) : untouched && theirs) {
+      if (mine) state.picks[id] = mine;
+      else delete state.picks[id];
+      changed = true;
+    }
+  }
+  return changed;
+}
+
+// Another tab saved: adopt its state instead of overwriting it, and keep this tab's own
+// unsaved pick changes on top of it rather than dropping them.
 if (typeof window !== 'undefined') {
   window.addEventListener('storage', e => {
     if (e.key !== KEY || e.newValue == null) return;
+    const unsaved = unsavedPicks();   // pending, or failed to save (storage full); empty when all saved
     clearTimeout(saveTimer);
     saveTimer = null;
     load(namespace());
+    if (reapply(unsaved)) persist();
     for (const fn of listeners) fn('reset');
   });
 }
@@ -181,7 +239,12 @@ const alive = p => p.p != null || p.note || p.lock || p.reserved;
 export function mutatePicks(fn) {
   fn(state.picks);
   state.backup.changes++;
-  for (const [id, p] of Object.entries(state.picks)) if (!alive(p)) delete state.picks[id];
+  for (const [id, p] of Object.entries(state.picks)) {
+    if (!alive(p)) delete state.picks[id];
+    // Saved without a time, it would be dated by every tab that loads it (sanitizePick) and look
+    // changed to this one when that tab saves it back: date it now, as a reload would (#75).
+    else if (!Number.isFinite(p.at)) p.at = Date.now();
+  }
   if (Object.values(state.picks).some(p => p.p > 0)) askPersistent();
   emit('picks');
 }

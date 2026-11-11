@@ -45,3 +45,46 @@ Feature: Keeping picks safe on the device
       When Minesh saves a backup
       Then the reminder is gone
       And his data settings say the last backup was today
+
+  Rule: Two open tabs never lose each other's edits
+
+    Scenario: Each tab rated a different session
+      Given Minesh rated a session in one tab a moment ago
+      And another tab saved a rating for a different session before this tab saved
+      When the two tabs reconcile
+      Then both ratings are kept
+
+    Scenario: Both tabs rated the same session
+      Given both tabs rated the same session
+      When the two tabs reconcile
+      Then the rating made later is kept
+
+    Scenario: This tab cleared a rating the other tab left alone
+      Given Minesh cleared a rating in this tab a moment ago
+      And the other tab saved without touching that session
+      When the two tabs reconcile
+      Then the rating stays cleared
+
+    Scenario: The cleared pick was saved without a time
+      Given a pick in this tab was saved without saying when it was made
+      And Minesh cleared it in this tab a moment ago
+      When the other tab saves without touching that session
+      Then the pick stays cleared
+
+    Scenario: Both tabs saved before either heard from the other
+      Given Minesh rated a session in one tab
+      And the other tab saved a rating for a different session before hearing of it
+      When the two tabs reconcile
+      Then both ratings are kept
+
+    Scenario: This tab released a lock the other tab left alone
+      Given Minesh moved a session's lock to another run in this tab a moment ago
+      And the other tab saved without touching that session
+      When the two tabs reconcile
+      Then only the new run is locked
+
+    Scenario: This tab's rating could not be saved yet
+      Given Minesh rated a session while the device's storage was full
+      And another tab saved a rating for a different session
+      When the two tabs reconcile
+      Then both ratings are kept
