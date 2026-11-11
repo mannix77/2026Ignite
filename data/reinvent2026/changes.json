@@ -1,6 +1,226 @@
 {
  "batches": [
   {
+   "at": "2026-11-11T18:42:45Z",
+   "milestones": [],
+   "added": [
+    {
+     "id": "1792690468822001D19p",
+     "inst": "1792690468822001D19p",
+     "code": "IND3356",
+     "title": "How Audi is Building an Adaptive Factory with Physical AI on AWS",
+     "repeat": false
+    },
+    {
+     "id": "1793305803130001B3mX",
+     "inst": "1793305803130001B3mX",
+     "code": "API312-R1",
+     "title": "Building distributed multi-agent architectures on serverless",
+     "repeat": false
+    }
+   ],
+   "removed": [
+    {
+     "id": "1780442261114001clV7",
+     "inst": "1780442261114001clV7",
+     "code": "NET344",
+     "title": "DDI Architecture Patterns: DNS, DHCP, and IPAM at AWS",
+     "repeat": false
+    },
+    {
+     "id": "1793298756641001oJW2",
+     "inst": "1793298756641001oJW2",
+     "code": "EXS025",
+     "title": "A leader's guide to modernizing systems for AI, with AI",
+     "repeat": false
+    },
+    {
+     "id": "1793298808907001rRBx",
+     "inst": "1793298808907001rRBx",
+     "code": "EXS026",
+     "title": "A leader's guide to what separates AI leaders from the rest",
+     "repeat": false
+    }
+   ],
+   "changed": [
+    {
+     "id": "1780442281085001cU1I",
+     "inst": "1780442281085001cU1I",
+     "code": "IND327-R",
+     "title": "Build a team of agents: From incident diagnosis to safe remediation",
+     "f": {
+      "title": [
+       "Build self-healing agents from diagnosis to disaster recovery",
+       "Build a team of agents: From incident diagnosis to safe remediation"
+      ]
+     }
+    },
+    {
+     "id": "1786406740126001LEGX",
+     "inst": "1786406740126001LEGX",
+     "code": "AWS203",
+     "title": "What makes a model trustworthy?",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1789000484639001Ykqx",
+     "inst": "1789000484639001Ykqx",
+     "code": "MAM346",
+     "title": "Your playbook for modernizing 988K lines of .NET in 2 days",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441489298001GfGp",
+     "inst": "1780441489298001GfGp",
+     "code": "AIM288-S",
+     "title": "How to run parallel coding agents without sitting in the loop (sponsored by SpaceXSI)",
+     "f": {
+      "title": [
+       "How to run parallel coding agents without sitting in the loop (sponsored by Cursor)",
+       "How to run parallel coding agents without sitting in the loop (sponsored by SpaceXSI)"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441487636001Gazl",
+     "inst": "1780441487636001Gazl",
+     "code": "AIM289-S",
+     "title": "How the most advanced teams manage the full SDLC on an agentic stack (sponsored by SpaceXSI)",
+     "f": {
+      "title": [
+       "How the most advanced teams manage the full SDLC on an agentic stack (sponsored by Cursor)",
+       "How the most advanced teams manage the full SDLC on an agentic stack (sponsored by SpaceXSI)"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441482222001G135",
+     "inst": "1780441482222001G135",
+     "code": "AIM234-S",
+     "title": "Machines on-call for humans: how enterprises are transforming reliability with AI SRE (sponsored by ResolveAI)",
+     "f": {
+      "title": [
+       "Machines on-call for humans: how enterprises are transforming reliability with AI SRE (sponsored by Resolve AI)",
+       "Machines on-call for humans: how enterprises are transforming reliability with AI SRE (sponsored by ResolveAI)"
+      ]
+     }
+    },
+    {
+     "id": "1790358243768001iqB3",
+     "inst": "1790358243768001iqB3",
+     "code": "IND327-R1",
+     "title": "Build a team of agents: From incident diagnosis to safe remediation",
+     "f": {
+      "title": [
+       "Build self-healing agents from diagnosis to disaster recovery",
+       "Build a team of agents: From incident diagnosis to safe remediation"
+      ]
+     }
+    },
+    {
+     "id": "1780441466315001GqmS",
+     "inst": "1780441466315001GqmS",
+     "code": "BIZ214",
+     "title": "Empowering 200,000 people without compromising trust: AWS Quick",
+     "f": {
+      "title": [
+       "Empowering 155,000 people without compromising trust: Amazon Quick",
+       "Empowering 200,000 people without compromising trust: AWS Quick"
+      ]
+     }
+    },
+    {
+     "id": "1780441471006001GVii",
+     "inst": "1780441471006001GVii",
+     "code": "AIM3308",
+     "title": "What’s new: SageMaker HyperPod & Multiverse Computing insights",
+     "f": {
+      "title": [
+       "What's new: SageMaker HyperPod, with learnings from Multiverse",
+       "What’s new: SageMaker HyperPod & Multiverse Computing insights"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442280853001cz36",
+     "inst": "1780442280853001cz36",
+     "code": "IND403",
+     "title": "Build a Video Semantic Layer for Media Agent on AWS",
+     "f": {
+      "title": [
+       "Build a Video Semantic Layer for Media Agent and Agent Harness on AWS",
+       "Build a Video Semantic Layer for Media Agent on AWS"
+      ]
+     }
+    },
+    {
+     "id": "1780442265568001cgp5",
+     "inst": "1780442265568001cgp5",
+     "code": "SEC202",
+     "title": "Track cross-domain attack vectors with AWS Security Hub extended",
+     "f": {
+      "start": [
+       "2026-12-03T20:00:00Z",
+       "2026-12-03T18:30:00Z"
+      ],
+      "end": [
+       "2026-12-03T20:20:00Z",
+       "2026-12-03T18:50:00Z"
+      ]
+     }
+    },
+    {
+     "id": "1780442265460001cyAx",
+     "inst": "1780442265460001cyAx",
+     "code": "SEC203",
+     "title": "Multi-cloud security with AWS security services",
+     "f": {
+      "start": [
+       "2026-12-03T18:30:00Z",
+       "2026-12-03T20:00:00Z"
+      ],
+      "end": [
+       "2026-12-03T18:50:00Z",
+       "2026-12-03T20:20:00Z"
+      ]
+     }
+    },
+    {
+     "id": "1780441482522001GpXn",
+     "inst": "1780441482522001GpXn",
+     "code": "AIM232-S",
+     "title": "4 primitives for an AI SRE that runs on-call and improves reliability (sponsored by ResolveAI)",
+     "f": {
+      "title": [
+       "4 primitives for an AI SRE that runs on-call and improves reliability (sponsored by Resolve AI)",
+       "4 primitives for an AI SRE that runs on-call and improves reliability (sponsored by ResolveAI)"
+      ]
+     }
+    },
+    {
+     "id": "1780442228845001cCik",
+     "inst": "1780442228845001cCik",
+     "code": "IND373",
+     "title": "Build a Research Co-Scientist Using AWS Quick",
+     "f": {
+      "title": [
+       "Build a Research Co-Scientist Using Amazon Quick",
+       "Build a Research Co-Scientist Using AWS Quick"
+      ],
+      "desc": true
+     }
+    }
+   ],
+   "unknownRooms": []
+  },
+  {
    "at": "2026-11-11T00:49:56Z",
    "milestones": [],
    "added": [
