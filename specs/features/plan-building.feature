@@ -21,6 +21,11 @@ Feature: The plan is the best day the rules allow
       When the planner builds the plan
       Then the session is worth 70 points
 
+    Scenario: A workbook score of zero is still worth a point
+      Given a Must with a workbook score of 0
+      When the planner builds the plan
+      Then the session is worth 1 point
+
   Rule: A move between rooms takes the walk plus a 2-minute buffer, and a keynote 15 minutes more
 
     Scenario: Five minutes missed between buildings is accepted at a cost

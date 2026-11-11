@@ -367,9 +367,10 @@ function refNeed(v, a, b) {
 }
 function refWorth(x) {
   if (x.pseudo === 'block') return 0;              // in every plan, so it adds nothing to compare
-  if (Number.isFinite(x.score)) return x.score * REF.perScorePoint;
-  return REF.tier[x.priority] + (x.recorded === true ? REF.recorded : x.recorded === false ? REF.notRecorded : 0)
-    + (REF.handsOnTypes.includes(x.type) ? REF.handsOn : 0);
+  // A session is worth at least 1 point, even a workbook score of 0: never nothing to the plan.
+  if (Number.isFinite(x.score)) return Math.max(1, x.score * REF.perScorePoint);
+  return Math.max(1, REF.tier[x.priority] + (x.recorded === true ? REF.recorded : x.recorded === false ? REF.notRecorded : 0)
+    + (REF.handsOnTypes.includes(x.type) ? REF.handsOn : 0));
 }
 // One day's sessions in time order: can they all be attended, and what are they worth?
 function refChain(v, chain) {
@@ -435,6 +436,7 @@ test('the reference and the planner agree with the plan rules worked by hand', (
     ['a Must that is not recorded', [s(W2a, H(9), H(10), { priority: 3, recorded: false })], null, 110],
     ['a recorded Maybe lab', [s(W2a, H(9), H(10), { priority: 1, recorded: true, type: 'Lab' })], null, 15],
     ['a workbook score replaces the tier', [s(W2a, H(9), H(10), { priority: 3, score: 7 })], null, 70],
+    ['a workbook score of 0 is still worth a point', [s(W2a, H(9), H(10), { priority: 3, score: 0 })], null, 1],
     ['five minutes missed between buildings', [s(S1a, H(9), H(10)), s(Ma, H(10) + 11, H(11) + 11)], null, 90],
     ['an easy move beats a tight one worth a little more', easy, null, 95],
     ['six minutes missed', [s(S1a, H(9), H(10)), s(Ma, H(10) + 10, H(11) + 10)], null, 50],
@@ -478,7 +480,7 @@ test('optimizer matches the independent reference with locks, blocked time and l
     eq(v.planner.keynoteBuildings, v.keynoteVenues, `${v.name}: keynote buildings`);
   }
   const seen = { Ignite: 0, 're:Invent': 0, Gartner: 0, lockDecides: 0, blockDisplaces: 0, lunchDays: 0, noLunchDays: 0, lunchCosts: 0,
-    tight: 0, keynoteEntry: 0, keynoteBlockNoEntry: 0, lockedRepeat: 0, scored: 0 };
+    tight: 0, keynoteEntry: 0, keynoteBlockNoEntry: 0, lockedRepeat: 0, scored: 0, zeroScore: 0 };
   let done = 0;
   for (let tries = 0; done < 300; tries++) {
     if (tries > 2000) throw new Error(`only ${done} usable instances in ${tries} tries`);
@@ -488,7 +490,7 @@ test('optimizer matches the independent reference with locks, blocked time and l
       const start = H(10.5) + rnd(49) * 5, room = v.rooms[rnd(v.rooms.length)];
       items.push(refSession(v, room[2], start, start + [15, 20, 30, 45, 60, 90][rnd(6)], {
         id: `g${rnd(Math.max(2, n0 - 2))}`, day: v.days[rnd(2)], priority: 1 + rnd(3), recorded: [true, false, null][rnd(3)],
-        type: v.types[rnd(v.types.length)], score: rnd(6) ? undefined : 1 + rnd(13), locked: rnd(5) === 0,
+        type: v.types[rnd(v.types.length)], score: rnd(6) ? undefined : (rnd(3) ? 1 + rnd(13) : 0), locked: rnd(5) === 0,
       }));
     }
     const sessionDays = [...new Set(items.map(x => x.day))];
@@ -537,6 +539,7 @@ test('optimizer matches the independent reference with locks, blocked time and l
     if (items.some(b => b.pseudo === 'block' && items.some(x => !x.pseudo && x.day === b.day && !refChain(v, byStart([b, x])).ok))) seen.blockDisplaces++;
     if (items.some(x => x.locked && !x.pseudo && items.some(y => y !== x && y.id === x.id))) seen.lockedRepeat++;
     if (planned.some(x => Number.isFinite(x.score))) seen.scored++;
+    if (planned.some(x => x.score === 0)) seen.zeroScore++;
     if (L && best < refBest(v, items) + L.weight * sessionDays.length) seen.lunchCosts++;   // on some day lunch cost a session, or did not fit
   }
   // The random weeks did exercise what this test is for.
