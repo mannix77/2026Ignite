@@ -291,6 +291,45 @@ test('optimizer matches brute force on 400 random small instances', () => {
   }
 });
 
+// ---- re-planning stays fast with hundreds of picks (issue #81)
+// Each optimize() call solves a day once per distinct set of allowed runs. The count is
+// deterministic, so a lost memo (every repeat-run trial re-solving its days) fails here
+// without any timing.
+test('the optimizer solves each distinct day subset once (exhaustive and heuristic branches)', () => {
+  let seed = 4242;
+  const rnd = k => { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return (seed >> 16) % k; };   // high bits: the low ones alternate
+  const build = groups => {
+    const items = [];
+    for (let g = 0; g < groups; g++) for (let r = 0; r < 2; r++) {
+      const start = H(9) + rnd(16) * 15;
+      items.push(item(start, start + [30, 45, 75][rnd(3)], [W2, W3, S1, N][rnd(4)], { id: `R${g}`, day: rnd(2) ? '2026-11-18' : '2026-11-19', priority: 1 + rnd(3) }));
+    }
+    for (let k = 0; k < 20; k++) { const start = H(9) + rnd(16) * 15; items.push(item(start, start + 45, [W2, S1][rnd(2)], { day: rnd(2) ? '2026-11-18' : '2026-11-19', priority: 1 + rnd(3) })); }
+    return items;
+  };
+  const ex = build(7), heu = build(12);
+  eq([new Set(ex.map(x => x.day)).size, new Set(heu.map(x => x.day)).size], [2, 2], 'both instances span two days');
+  const exhaustive = optimize(ex);    // 2^7 = 128 combinations: searched exhaustively
+  const heuristic = optimize(heu);    // 4096: coordinate descent
+  // 256 and 41 day solves are asked for; these are the distinct ones. A day is solved once per
+  // choice among the repeat groups with a run that day: in `ex` 6 groups have one on each day,
+  // so 2^6 + 2^6 = 128. The heuristic's 20 follows its descent path: counted by running it.
+  eq([['2026-11-18', '2026-11-19'].map(d => new Set(ex.filter(x => x.day === d && x.id.startsWith('R')).map(x => x.id)).size)], [[6, 6]], 'repeat groups with a run on each day');
+  eq([exhaustive.stats.daySolves, heuristic.stats.daySolves], [128, 20]);
+  // A memo that hands back the wrong day can leave the count as it was: the plans must hold up.
+  for (const [name, res, items] of [['exhaustive', exhaustive, ex], ['heuristic', heuristic, heu]]) {
+    const planned = Object.values(res.plan).flat(), ids = planned.map(x => x.id);
+    ok(planned.length > 0, `${name}: the plan is empty`);
+    eq(new Set(ids).size, ids.length, `${name}: a session attended twice`);
+    ok(planned.every(x => items.includes(x)), `${name}: a planned item that isn't one of the picks`);
+    for (const [day, dayPlan] of Object.entries(res.plan)) for (const x of dayPlan) {
+      eq(x.day, day, `${name}: ${x.key} filed under ${day} but its day is ${x.day}`);
+    }
+    for (const day of Object.values(res.plan)) for (const a of day) for (const b of day) {
+      ok(a === b || canBoth(a, b), `${name}: ${a.key} and ${b.key} clash on ${a.day}`);
+    }
+  }
+});
 test('large repeat sets (heuristic branch) stay valid and near-optimal', () => {
   let seed = 777;
   const rnd = k => { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed % k; };

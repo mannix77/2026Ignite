@@ -6,16 +6,16 @@ const store = await import('../assets/js/store.js');
 const { buildModel, diffKnown, cacheUrl } = await import('../assets/js/data.js');
 const { CONFERENCES } = await import('../assets/js/conferences.js');
 const { createVenue } = await import('../assets/js/venue.js');
-const { compareOptions, DEFAULT_PLANNER } = await import('../assets/js/planner.js');
+const { canBoth, compareOptions, optimize, lunchConfig, DEFAULT_PLANNER } = await import('../assets/js/planner.js');
 const { checkLive, liveWindow, changeCounts, countsLine, diff: liveDiff } = await import('../assets/js/live.js');
 
 let pass = 0, fail = 0;
 async function test(name, fn) {
   try { await fn(); pass++; } catch (e) { fail++; console.log(`FAIL ${name}: ${e.message}`); }
 }
-function eq(a, b) {
+function eq(a, b, msg = '') {
   const A = JSON.stringify(a), B = JSON.stringify(b);
-  if (A !== B) throw new Error(`expected ${B}, got ${A}`);
+  if (A !== B) throw new Error(`${msg ? `${msg}: ` : ''}expected ${B}, got ${A}`);
 }
 
 // ---- settings survive a reload
@@ -123,6 +123,37 @@ await test('should run at most the cap of what-if plans for a large clash', () =
   }));
   const out = compareOptions(items, items, { ...DEFAULT_PLANNER, walk: venue.walk }, null, { cap: 4 });
   eq(out.outcomes.size, 4);
+});
+
+// ---- a 300-pick plan re-plans quickly (issue #81): the real re:Invent catalog, many repeat runs
+await test('should re-plan 300 picks on the real re:Invent catalog within a generous budget', async () => {
+  const { readFileSync } = await import('node:fs');
+  const conf = CONFERENCES.reinvent2026, v = createVenue(conf.venue);
+  const m = buildModel(JSON.parse(readFileSync(new URL('../data/reinvent2026/sessions.json', import.meta.url), 'utf8')), { overrides: {} }, conf.rsvp, conf, v, null);
+  const groups = [...m.byGroup.entries()].filter(([, runs]) => runs.some(s => s.day && s.inPerson));
+  const step = groups.length / 300, items = [];
+  for (let i = 0; i < 300; i++) for (const s of groups[Math.floor(i * step)][1]) {
+    if (s.day && s.endMin > s.startMin && !s.onlineOnly) items.push({ key: s.key, id: s.group, code: s.code, type: s.type, day: s.day, startMin: s.startMin, endMin: s.endMin, loc: s.loc, recorded: s.recorded, priority: 3 - (i % 3), locked: false });
+  }
+  eq([new Set(items.map(x => x.id)).size, new Set(items.map(x => x.key)).size], [300, items.length], 'precondition: 300 distinct sessions, no run twice');
+  const repeated = new Set(items.filter(x => items.filter(y => y.id === x.id).length > 1).map(x => x.id)).size;
+  if (!(repeated > 50)) throw new Error(`precondition: only ${repeated} sessions have repeat runs; the slow case needs many`);
+  const ctx = { ...DEFAULT_PLANNER, walk: v.walk, keynoteBuildings: v.keynoteBuildings };
+  const t = performance.now();
+  const res = optimize(items, ctx, lunchConfig(conf.lunch));
+  const ms = performance.now() - t;
+  // Fast is only worth anything if the plan is right.
+  const planned = Object.values(res.plan).flat(), ids = planned.map(x => x.id);
+  if (planned.length === 0) throw new Error('the plan is empty');
+  eq(new Set(ids).size, ids.length, 'a session attended twice');
+  if (!planned.every(x => items.includes(x))) throw new Error("a planned item that isn't one of the picks");
+  for (const [day, dayPlan] of Object.entries(res.plan)) for (const x of dayPlan) {
+    if (x.day !== day) throw new Error(`${x.key} filed under ${day} but its day is ${x.day}`);
+  }
+  for (const day of Object.values(res.plan)) for (const a of day) for (const b of day) {
+    if (a !== b && !canBoth(a, b, ctx)) throw new Error(`${a.key} and ${b.key} clash on ${a.day}`);
+  }
+  if (!(ms < 1500)) throw new Error(`took ${Math.round(ms)} ms; about 40 ms on a desktop, 450 ms before #81`);
 });
 
 // ---- changes are counted per session; an extra run dropped or added is not a cancellation
