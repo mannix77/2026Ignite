@@ -250,10 +250,16 @@ export function mutatePicks(fn) {
 }
 
 // One note per repeat group: it lives on `holder`; the other records' notes are cleared.
+// `at` means "when the rating last changed" (groupPick.js reads it to pick the newest record,
+// and a backup merge reads it to decide which side wins, #28), so a note-only edit must not
+// bump it: that would make an untouched record look newer and flip the group's rating, or make
+// a stale local note outrank a backup made after the actual rating (issue #76). A holder with
+// no record yet is a genuinely new one, so it gets `at: Date.now()` same as any other new pick.
 export function setGroupNote(ids, holder, note, meta = {}) {
   if (!state.picks[holder] && !note) return;
   for (const id of ids) if (id !== holder && state.picks[id]) state.picks[id].note = '';
-  state.picks[holder] = { p: null, lock: null, ...meta, ...state.picks[holder], note, at: Date.now() };
+  const cur = state.picks[holder];
+  state.picks[holder] = { p: null, lock: null, at: Date.now(), ...meta, ...cur, note };
   for (const id of new Set([...ids, holder])) if (state.picks[id] && !alive(state.picks[id])) delete state.picks[id];
   emit('note');
 }

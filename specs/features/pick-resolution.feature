@@ -59,3 +59,17 @@ Feature: What a session's rating, lock and reserved seat are, read from the save
       Given a pick whose session has left the catalog under every name it had
       When the picks are indexed
       Then the pick is an orphan
+
+  Rule: Editing a note never changes which record is newest (#76)
+
+    Scenario: A group whose runs disagree keeps its rating after a note is added
+      Given a session with two runs whose records disagree on the rating
+      And the older record holds the group's note
+      When the note is edited
+      Then the newer record's rating still wins
+
+    Scenario: A note added after a rating doesn't win a later backup merge
+      Given a session rated Must this morning
+      And a note added to it just now
+      When a backup made between the rating and the note is merged
+      Then the backup's rating replaces the morning rating

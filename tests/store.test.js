@@ -12,7 +12,7 @@ globalThis.window = { addEventListener: (type, fn) => { (pageEvents[type] ||= []
 globalThis.document = { visibilityState: 'visible', querySelector: () => null, addEventListener: (type, fn) => { (pageEvents[type] ||= []).push(fn); } };
 const fire = type => { for (const fn of pageEvents[type] || []) fn({}); };
 const store = await import('../assets/js/store.js');
-const { lockPicks, ratePicks } = await import('../assets/js/picks.js');
+const { lockPicks, ratePicks, indexPicks, groupPick } = await import('../assets/js/picks.js');
 
 let pass = 0, fail = 0;
 async function test(name, fn) {
@@ -115,6 +115,35 @@ await test('should not save early when the page is only shown again', () => {
   eq(saved('leave-visible'), {});
 });
 await sleep(SAVE);
+
+// ---- a note-only edit never flips which record is newest (specs/features/pick-resolution.feature; issue #76)
+// A minimal model: two runs ("S1", "S2") of one repeat group "G", indexed the way data.js's real model is.
+const noteGroupSessions = [{ id: 'S1', key: 'S1', code: 'G', group: 'G' }, { id: 'S2', key: 'S2', code: 'G', group: 'G' }];
+const noteModel = { byId: new Map(noteGroupSessions.map(s => [s.id, [s]])), byGroup: new Map([['G', noteGroupSessions]]) };
+const readGroup = picks => groupPick(indexPicks(noteModel, picks), noteModel, 'G');
+
+await test('should keep the newer record\'s rating after a note is added to the older record', () => {
+  store.load('note-keeps-rating');
+  const T0 = 1_700_000_000_000;
+  store.mutatePicks(p => {
+    p.S1 = { p: 3, lock: null, note: '', at: T0, g: 'G', code: 'G' };              // older: Must
+    p.S2 = { p: 1, lock: null, note: '', at: T0 + 10_000, g: 'G', code: 'G' };     // newer: Want
+  });
+  eq(readGroup(store.get().picks).p, 1, 'precondition: the newer record (Want) wins before the note');
+  store.setGroupNote(['S1', 'S2'], 'S1', 'bring the laptop', { g: 'G', code: 'G' });
+  eq(store.pick('S1').at, T0, 'the older record\'s time is unchanged by the note');
+  eq(readGroup(store.get().picks).p, 1, 'the group is still a Want: the note did not make S1 the newest record');
+});
+
+await test('should let a backup made after a rating win the merge, even once a note was added to it later', () => {
+  store.load('note-then-merge');
+  const MORNING = Date.now() - 3 * 3600e3; // earlier today: older than "now", newer than any undated pick
+  store.mutatePicks(p => { p.ICE = { p: 3, lock: null, note: '', at: MORNING }; });
+  store.setGroupNote(['ICE'], 'ICE', 'bring the laptop'); // happens "now": must not re-date the rating
+  eq(store.pick('ICE').at, MORNING, 'precondition: the note left the rating\'s time alone');
+  store.importData({ app: 'ignite26-planner', picks: { ICE: { p: 0, at: MORNING + 3600e3 } } }); // made after the rating, before the note
+  eq(store.pick('ICE').p, 0, 'the backup\'s rating, made after the morning one, still wins the merge');
+});
 
 // ---- restoring a backup (specs/features/backups.feature)
 const BACKUP = 'ignite26-planner';
