@@ -3,7 +3,7 @@
 // between devices.
 
 import { DEFAULT_PLANNER } from './planner.js';
-import { nsKey } from './instance.js';
+import { nsKey, INSTANCE } from './instance.js';
 import { blankProfile, sanitizeProfile } from './profile.js';
 
 const BASE_KEY = nsKey('ignite26.planner.v1');
@@ -422,7 +422,7 @@ function sanitizePrefs(src) {
   }
   if (Array.isArray(src.blocks)) {
     out.blocks = src.blocks
-      .filter(b => b && /^\d{4}-\d{2}-\d{2}$/.test(b.day) && num(b.start, 0, 1440) !== undefined && num(b.end, 0, 1440) !== undefined && b.end > b.start)
+      .filter(b => b && typeof b.day === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(b.day) && num(b.start, 0, 1440) !== undefined && num(b.end, 0, 1440) !== undefined && b.end > b.start)
       .slice(0, 50).map((b, i) => ({
         id: typeof b.id === 'string' && ID_RE.test(b.id) ? b.id : `b${i}`, day: b.day, start: b.start, end: b.end,
         label: typeof b.label === 'string' ? b.label.slice(0, 80) : 'Busy',
@@ -431,7 +431,7 @@ function sanitizePrefs(src) {
   }
   if (Array.isArray(src.custom)) {
     out.custom = src.custom
-      .filter(c => c && typeof c.title === 'string' && c.title.trim() && /^\d{4}-\d{2}-\d{2}$/.test(c.day)
+      .filter(c => c && typeof c.title === 'string' && c.title.trim() && typeof c.day === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(c.day)
         && num(c.start, 0, 1440) !== undefined && num(c.end, 0, 1440) !== undefined && c.end > c.start)
       .slice(0, 50).map((c, i) => ({
         id: typeof c.id === 'string' && /^[\w-]{1,40}$/.test(c.id) ? c.id : `c${i}`, title: c.title.trim().slice(0, 160), day: c.day, start: c.start, end: c.end,
@@ -453,15 +453,22 @@ export function exportData() {
 // so what you're shown is what happens. Adding keeps the newer rating per session, and keeps
 // this device's note and reserved seat when the backup has none.
 function planImport(obj, replace) {
+  return planImportInto(obj, replace, state.picks);
+}
+
+// The merge rule for a backup's picks against a base (the live picks, or another conference's
+// saved ones): newest `at` wins, an undated backup pick never beats a dated local one, and this
+// device's notes and reserved seats are kept when adding.
+function planImportInto(obj, replace, base) {
   if (!obj || obj.app !== 'ignite26-planner' || !obj.picks || typeof obj.picks !== 'object' || Array.isArray(obj.picks)) throw new Error('Not an Ignite planner backup file');
   const incoming = sanitizePicks(obj.picks, 0); // undated backup picks are older than anything here
   // Checked before anything changes: a backup from another format must not empty the plan.
   if (Object.keys(obj.picks).length && !Object.keys(incoming).length) throw new Error('This backup has no picks this planner can read; nothing was changed');
-  const next = replace ? {} : { ...state.picks };
+  const next = replace ? {} : { ...base };
   let applied = 0;
   const scope = replace ? null : Object.keys(incoming); // merging only touches the backup's sessions
   for (const [id, p] of Object.entries(incoming)) {
-    const cur = replace ? null : state.picks[id];
+    const cur = replace ? null : own(base, id);
     if (cur && !(p.at > (cur.at || 0))) continue;
     const keep = cur?.reserved && !p.reserved ? { reserved: cur.reserved, lock: cur.lock || cur.reserved } : {};
     next[id] = { ...p, note: p.note || cur?.note || '', ...keep };
@@ -477,13 +484,13 @@ const SHOWN = ['p', 'score', 'mode', 'lock', 'reserved', 'note'];
 function diffPicks(before, after, scope = null) {
   const out = { added: [], changed: [], unchanged: 0, removed: [], after: {} }; // after: new picks' ratings
   for (const id of scope || Object.keys(after)) {
-    const a = after[id], b = before[id];
+    const a = own(after, id), b = own(before, id);
     if (!a) continue;
     if (!b) { out.added.push(id); out.after[id] = a.p ?? null; }
     else if (SHOWN.some(k => (a[k] ?? null) !== (b[k] ?? null))) out.changed.push({ id, from: b.p ?? null, to: a.p ?? null });
     else out.unchanged++;
   }
-  for (const id of Object.keys(before)) if (!(id in after)) out.removed.push(id);
+  for (const id of Object.keys(before)) if (!Object.hasOwn(after, id)) out.removed.push(id);
   return out;
 }
 
@@ -501,6 +508,148 @@ export function importData(obj, { replace = false } = {}) {
   if (replace && 'profile' in obj) state.profile = obj.profile ? sanitizeProfile(obj.profile) : null;
   else if (obj.profile && !state.profile) state.profile = sanitizeProfile(obj.profile);
   emit(replace ? 'reset' : 'picks');
+  return applied;
+}
+
+// ---- one backup file for every conference on this device (specs/features/one-backup-for-all.feature)
+//
+// Each conference's state lives under its own key (keyFor). The live conference is the store's
+// current namespace and changes in place; the others are read from and written to their saved
+// state directly, without switching what the app shows. `confs` is [{ id, namespace }] from
+// conferences.js. Every key carries the instance suffix (nsKey), so a colleague's copy backs up
+// and restores only its own data; the file records which copy made it.
+
+const keyFor = ns => (ns ? `${BASE_KEY}:${ns}` : BASE_KEY);
+
+// Another conference's saved state, sanitized the same way load() does: { status, saved, raw }.
+// status 'none' (nothing saved), 'ok', 'unreadable' (raw is kept so it can be copied aside first,
+// as load() does) or 'newer' (a newer version wrote it: never read through or written over here).
+function readSavedState(ns) {
+  let raw = null;
+  try { raw = localStorage.getItem(keyFor(ns)); } catch { return { status: 'unreadable', saved: null, raw: null }; }
+  if (!raw) return { status: 'none', saved: null, raw };
+  try {
+    const saved = JSON.parse(raw);
+    if (!saved || typeof saved !== 'object' || Array.isArray(saved)) return { status: 'unreadable', saved: null, raw };
+    if (Number.isFinite(saved.v) && saved.v > SCHEMA_VERSION) return { status: 'newer', saved: null, raw };
+    return { status: 'ok', raw, saved: { ...saved, picks: sanitizePicks(saved.picks), prefs: sanitizePrefs(saved.prefs), profile: saved.profile ? sanitizeProfile(saved.profile) : null } };
+  } catch { return { status: 'unreadable', saved: null, raw }; }
+}
+
+function partOf(saved) {
+  return saved ? { picks: saved.picks, settings: saved.prefs, profile: saved.profile } : null;
+}
+
+const hasContent = part => !!part && (Object.keys(part.picks || {}).length > 0 || Object.keys(part.settings || {}).length > 0 || !!part.profile);
+
+// report (optional) gets skipped: [{ id, reason: 'unreadable' | 'newer' }], conferences whose saved
+// data is there but can't go in the file.
+export function exportAll(confs, now = new Date(), report = null) {
+  const conferences = {}, skipped = [];
+  for (const c of confs) {
+    let part;
+    if (c.namespace === namespace()) part = { picks: state.picks, settings: state.prefs, profile: state.profile };
+    else {
+      const r = readSavedState(c.namespace);
+      if (r.status === 'unreadable' || r.status === 'newer') { skipped.push({ id: c.id, reason: r.status }); continue; }
+      part = partOf(r.saved);
+    }
+    if (hasContent(part)) conferences[c.id] = part;
+  }
+  if (report) report.skipped = skipped;
+  return { app: 'ignite26-planner', v: 1, kind: 'all', instance: INSTANCE, exportedAt: now.toISOString(), conferences };
+}
+
+export function isAllBackup(doc) {
+  return !!doc && doc.app === 'ignite26-planner' && doc.kind === 'all' && !!doc.conferences && typeof doc.conferences === 'object' && !Array.isArray(doc.conferences);
+}
+
+// The file's conferences this planner knows, each checked by the same rule a restore applies:
+// `missing` lists the ones it doesn't know, `invalid` the ones whose part can't be read (skipped
+// and named, so one damaged conference never stops the rest).
+function allParts(doc, confs) {
+  if (!isAllBackup(doc)) throw new Error('Not an Ignite planner backup file');
+  const known = new Map(confs.map(c => [c.id, c]));
+  const parts = [], missing = [], invalid = [];
+  for (const [id, part] of Object.entries(doc.conferences)) {
+    if (!known.has(id)) { missing.push(id); continue; }
+    const obj = part && typeof part === 'object' && !Array.isArray(part) ? { ...part, app: 'ignite26-planner' } : null;
+    try { planImportInto(obj, false, {}); } catch { invalid.push(id); continue; }
+    parts.push({ conf: known.get(id), obj });
+  }
+  return { parts, missing, invalid };
+}
+
+// After saving a backup file: every conference it holds counts as backed up. The others' saved
+// state is updated in place; one that can't be read or was written by a newer version is left alone.
+export function markBackupFor(confs, ids, at = Date.now()) {
+  for (const c of confs) {
+    if (!ids.includes(c.id)) continue;
+    if (c.namespace === namespace()) { markBackup(at); continue; }
+    const r = readSavedState(c.namespace);
+    if (r.status !== 'ok') continue;
+    try { localStorage.setItem(keyFor(c.namespace), JSON.stringify({ ...r.saved, backup: { at, changes: 0, dismissed: null } })); } catch { /* the reminder stays; nothing lost */ }
+  }
+}
+
+// What restoring would change, per conference: the live one against the live picks, the others
+// against their saved picks. `missing` lists conferences in the file this planner does not know;
+// `blocked` those saved by a newer version (left alone); `unreadable` those whose saved data
+// can't be read (kept aside as a copy before restoring).
+export function previewImportAll(doc, confs, { replace = false } = {}) {
+  const { parts, missing, invalid } = allParts(doc, confs);
+  const out = {}, blocked = [], unreadable = [];
+  for (const { conf, obj } of parts) {
+    let base = state.picks;
+    if (conf.namespace === namespace()) {
+      if (newer) { blocked.push({ id: conf.id, reason: 'newer' }); continue; }   // this tab can't save over it
+    } else {
+      const r = readSavedState(conf.namespace);
+      if (r.status === 'newer') { blocked.push({ id: conf.id, reason: 'newer' }); continue; }
+      if (r.status === 'unreadable') unreadable.push(conf.id);
+      base = r.saved?.picks || {};
+    }
+    const { next, scope } = planImportInto(obj, replace, base);
+    out[conf.id] = diffPicks(base, next, scope);
+  }
+  return { parts: out, missing, invalid, blocked, unreadable };
+}
+
+// Restore every conference the file holds; returns picks applied per conference id. report
+// (optional) gets failed: [{ id, reason }] for a conference left as it was: 'newer' (saved by a
+// newer version), 'copy-failed' (unreadable data couldn't be kept aside first) or 'save-failed'.
+export function importAllData(doc, confs, { replace = false } = {}, report = null) {
+  const { parts, invalid } = allParts(doc, confs);
+  const applied = {}, failed = invalid.map(id => ({ id, reason: 'invalid' }));
+  if (report) report.failed = failed;
+  for (const { conf, obj } of parts) {
+    if (conf.namespace === namespace()) {
+      if (newer) { failed.push({ id: conf.id, reason: 'newer' }); continue; }
+      const n = importData(obj, { replace });
+      flushPending();   // saved now, through the usual path, so the report says whether it was kept
+      if (saveFailed) failed.push({ id: conf.id, reason: 'save-failed' });
+      else applied[conf.id] = n;
+      continue;
+    }
+    const r = readSavedState(conf.namespace);
+    if (r.status === 'newer') { failed.push({ id: conf.id, reason: 'newer' }); continue; }
+    if (r.status === 'unreadable') {
+      // Keep a copy before replacing it, as load() does; no copy (or nothing we could read to copy), no restore.
+      try {
+        if (r.raw == null) throw new Error('unreadable');
+        localStorage.setItem(`${keyFor(conf.namespace)}#unreadable`, r.raw);
+      } catch { failed.push({ id: conf.id, reason: 'copy-failed' }); continue; }
+    }
+    const saved = r.saved || { ...blank() };
+    const plan = planImportInto(obj, replace, saved.picks || {});
+    saved.picks = plan.next;
+    if (obj.settings && replace) saved.prefs = sanitizePrefs(obj.settings);
+    if (replace && 'profile' in obj) saved.profile = obj.profile ? sanitizeProfile(obj.profile) : null;
+    else if (obj.profile && !saved.profile) saved.profile = sanitizeProfile(obj.profile);
+    saved.v = SCHEMA_VERSION;
+    try { localStorage.setItem(keyFor(conf.namespace), JSON.stringify(saved)); } catch { failed.push({ id: conf.id, reason: 'save-failed' }); continue; }
+    applied[conf.id] = plan.applied;
+  }
   return applied;
 }
 
