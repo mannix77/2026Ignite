@@ -622,7 +622,8 @@ test('without the venue keynote buildings, Caesars Forum to Caesars Palace adds 
   const palace = item(H(10) + 12, H(11), lv('Caesars Palace | Promenade Level | Roman I'));
   eq([forum.loc.building, palace.loc.building, palace.type], ['F', 'C', 'Breakout']);   // C: the id Moscone gives Chase Center
   const t = transition(forum, palace, { ...DEFAULT_PLANNER, walk: LVW });
-  eq([t.walk, t.need, t.slack, t.status], [10, 12, 0, 'ok']);   // Palace–Forum ~10 min (venue notes) + 2 min buffer
+  // Palace–Forum ~10 min (venue notes) + 2 min buffer; full result, not a chosen subset.
+  eq(t, { walk: 10, gap: 12, need: 12, slack: 0, miss: 0, status: 'ok', allowed: 5, stay: false });
   const { keynoteBuildings, ...noList } = DEFAULT_PLANNER;
   eq([arrivalExtra(palace), arrivalExtra(palace, DEFAULT_PLANNER), arrivalExtra(palace, noList)], [0, 0, 0]);
   eq(noList.keynoteExtra, 15);   // the list is all that's missing: the entry time itself is still set
@@ -633,13 +634,13 @@ test('without the venue keynote buildings, a keynote still gets keynote entry ti
   const key = item(H(10) + 12, H(11), palace, { type: 'Keynote' });
   eq(arrivalExtra(key), 15);
   const t = transition(forum, key, { ...DEFAULT_PLANNER, walk: LVW });
-  eq([t.walk, t.need, t.miss, t.status], [10, 27, 15, 'conflict']);
+  eq(t, { walk: 10, gap: 12, need: 27, slack: -15, miss: 15, status: 'conflict', allowed: 5, stay: false });
 });
 test('keynote buildings passed by the caller still cost keynote entry time', () => {
   const forum = item(H(9), H(10), lv('Caesars Forum | Level 1 | Forum 120'));
   const palace = item(H(10) + 12, H(11), lv('Caesars Palace | Promenade Level | Roman I'));
   const t = transition(forum, palace, { ...DEFAULT_PLANNER, walk: LVW, keynoteBuildings: ['C'] });
-  eq([t.walk, t.need, t.miss, t.status], [10, 27, 15, 'conflict']);
+  eq(t, { walk: 10, gap: 12, need: 27, slack: -15, miss: 15, status: 'conflict', allowed: 5, stay: false });
 });
 test('re:Invent session links search the catalog by code', () => {
   eq(CONFERENCES.reinvent2026.sessionUrl({ code: 'DVT212-S' }),
