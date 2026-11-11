@@ -115,6 +115,51 @@ await test('should tell subscribers when picks could not be saved', async () => 
   eq(seen.includes('save-error'), true);
 });
 
+// ---- the test shim's storage quota is shared across every key, like a real browser (issue #77)
+// A real browser gives ~5MB per origin, shared by every key saved there (the main site, /gino/,
+// and all three conferences each save under their own key), so tests/shim.js must fail a write
+// once the site's total crosses the quota, not only when the one value being written is itself
+// that large.
+await test('should fail a small write once other keys already fill the shared quota', () => {
+  localStorage.clear();
+  globalThis.__quota = 100;
+  localStorage.setItem('a', 'x'.repeat(60));
+  localStorage.setItem('b', 'x'.repeat(30));
+  let threw = null;
+  try { localStorage.setItem('c', 'x'.repeat(20)); } catch (e) { threw = e.name; }
+  globalThis.__quota = null;
+  eq([threw, localStorage.getItem('c')], ['QuotaExceededError', null], 'c alone is well under 100 bytes, but a+b+c is not');
+});
+await test('should allow a write that exactly fills the shared quota, and refuse one byte more', () => {
+  localStorage.clear();
+  globalThis.__quota = 100;
+  localStorage.setItem('a', 'x'.repeat(60));
+  localStorage.setItem('b', 'x'.repeat(40));
+  eq(localStorage.getItem('b'), 'x'.repeat(40));
+  localStorage.removeItem('b');
+  let threw = null;
+  try { localStorage.setItem('b', 'x'.repeat(41)); } catch (e) { threw = e.name; }
+  globalThis.__quota = null;
+  eq(threw, 'QuotaExceededError');
+});
+await test("should not count a key's own previous value against itself when it is overwritten", () => {
+  localStorage.clear();
+  globalThis.__quota = 100;
+  localStorage.setItem('a', 'x'.repeat(90));
+  localStorage.setItem('a', 'y'.repeat(95)); // replacing it, not adding to it: still under 100 total
+  globalThis.__quota = null;
+  eq(localStorage.getItem('a'), 'y'.repeat(95));
+});
+await test('should free room for a later write once a key is removed', () => {
+  localStorage.clear();
+  globalThis.__quota = 100;
+  localStorage.setItem('a', 'x'.repeat(90));
+  localStorage.removeItem('a');
+  localStorage.setItem('b', 'x'.repeat(95));
+  globalThis.__quota = null;
+  eq(localStorage.getItem('b'), 'x'.repeat(95));
+});
+
 // ---- comparing options in a large clash stays cheap
 await test('should run at most the cap of what-if plans for a large clash', () => {
   const items = Array.from({ length: 30 }, (_, i) => ({

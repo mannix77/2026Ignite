@@ -8,6 +8,7 @@ const { CONFERENCES } = await import('../assets/js/conferences.js');
 const { createVenue, walkMinutes, floorExtra, mergeWalk } = await import('../assets/js/venue.js');
 const { transition, DEFAULT_PLANNER } = await import('../assets/js/planner.js');
 const store = await import('../assets/js/store.js');
+const { ratePicks, indexPicks, groupPick } = await import('../assets/js/picks.js');
 const { rsvpChip, rsvpOpensText, unknownRoomsNote, venueMapUrl, mapChip, sessionCard, occupancyLevel, occupancyOf, occupancyChip } = await import('../assets/js/ui.js');
 
 let pass = 0, fail = 0;
@@ -117,6 +118,38 @@ await test("should keep a session added in a colleague's copy out of the main si
   localStorage.setItem('ignite26.planner.v1:gartner2026', plan('Minesh dinner'));
   store.load('gartner2026');
   eq(store.settings().custom.map(c => c.title), ['Minesh dinner']);
+});
+
+// catalog-gaps.feature: "his plan includes it as a Must" and "Gino is told [it] is now in the
+// catalog". Pick resolution lived in app.js until issue #72 moved it into picks.js, so these two
+// scenarios can now run end to end through the same store + picks.js calls app.js itself makes
+// (store.setSetting to add it, picks.ratePicks through store.mutatePicks to rate it), without a
+// DOM or a simulated click.
+await test('should plan an added reception as a Must once Gino rates it, through the same picks.js the app uses', async () => {
+  localStorage.clear();
+  store.load('gartner2026');
+  store.setSetting('custom', [reception]);
+  const added = model([], [reception]).sessions.find(s => s.id === 'my-r1');
+  eq(added.group, 'my-r1', 'precondition: a standalone added session is its own repeat group');
+  store.mutatePicks(picks => ratePicks(picks, [added.id], { g: added.group, code: added.code }, 3, Date.now()));
+  const idx = indexPicks(model([], [reception]), store.get().picks);
+  eq(groupPick(idx, model([], [reception]), added.group)?.p, 3);
+  await sleep(200);
+});
+
+await test('should tell Gino his added copy is now in the catalog once a fresh export lists it, and keep his own rating', async () => {
+  localStorage.clear();
+  store.load('gartner2026');
+  store.setSetting('custom', [reception]);
+  const added = model([], [reception]).sessions.find(s => s.id === 'my-r1');
+  store.mutatePicks(picks => ratePicks(picks, [added.id], { g: added.group, code: added.code }, 3, Date.now()));
+  const official = { id: '99', inst: '99', code: 'HLR1', title: 'Healthcare and Life Sciences Networking Reception', type: 'Receptions and Special Event', start: '2026-10-19T22:15:00Z', end: '2026-10-20T00:00:00Z', delivery: ['In-person'] };
+  const m = model([official], store.settings().custom);
+  const now = catalogMatch(reception, m);
+  eq(now?.code, 'HLR1', 'Gino is told: his added copy matches a session now in the catalog');
+  const idx = indexPicks(m, store.get().picks);
+  eq(groupPick(idx, m, added.group)?.p, 3, "his own copy is still rated Must; being told about the match doesn't touch it");
+  await sleep(200);
 });
 
 // ---- Preview: simulated Ignite times only while nothing official is published
