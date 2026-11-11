@@ -28,10 +28,57 @@ const DATA_TIMEOUT_MS = 3500;
 
 const dataKey = url => { const u = new URL(url, self.location); return u.origin + u.pathname; };
 
+// Right after a deploy the CDN can still hand out the previous files at their usual addresses
+// for a while (cache: 'reload' only skips the browser's own cache), and a copy saved from those
+// would keep the old app under this version until the next deploy. So each file is asked for
+// at an address only this version uses (?v=VERSION), which the CDN has never cached, and saved
+// under the plain address the page asks for, as a fresh response so the page never sees the
+// ?v= address either. Every file is fetched before any is saved. If one can't be fetched, or
+// the phone runs out of space while saving, the install fails and nothing of this version is
+// kept, so the current version stays until the browser tries again. The one exception is a
+// copy of this version that was already there: an update that changes only this worker keeps
+// the version name, and that copy is the one in use. In it only files that differ are replaced
+// (a copy made before this fix can hold a stale one), each after its old body is read into
+// memory, and if saving fails they are put back so the copy never mixes two deploys. Should
+// putting one back fail too (the disk is still full), the install is refused all the same and
+// the next try replaces the files that still differ.
+async function installShell() {
+  const files = await Promise.all(SHELL.map(async p => {
+    const url = new URL(p, self.location);
+    url.searchParams.set('v', VERSION);
+    const res = await fetch(url.href, { cache: 'reload' });
+    if (!res.ok) throw new Error(`${p}: HTTP ${res.status}`);
+    return [p, new Response(await res.blob(), res)];
+  }));
+  const hadCopy = await caches.has(SHELL_CACHE);
+  const shell = await caches.open(SHELL_CACHE);
+  const undo = [];
+  try {
+    for (const [p, res] of files) {
+      const prev = hadCopy ? await shell.match(p) : undefined;
+      let was;
+      if (prev) {
+        was = await prev.arrayBuffer();
+        if (sameBytes(was, await res.clone().arrayBuffer())) continue;
+      }
+      await shell.put(p, res);
+      if (hadCopy) undo.push(prev ? () => shell.put(p, new Response(was, prev)) : () => shell.delete(p));
+    }
+  } catch (e) {
+    if (hadCopy) for (const step of undo) await step().catch(() => {});
+    else await caches.delete(SHELL_CACHE).catch(() => {});
+    throw e;
+  }
+}
+
+function sameBytes(a, b) {
+  const x = new Uint8Array(a), y = new Uint8Array(b);
+  return x.length === y.length && x.every((v, i) => v === y[i]);
+}
+
 self.addEventListener('install', e => {
   e.waitUntil((async () => {
-    const shell = await caches.open(SHELL_CACHE);
-    await shell.addAll(SHELL.map(p => new Request(p, { cache: 'reload' })));
+    await installShell();
     const data = await caches.open(DATA_CACHE);
     await Promise.all(DATA.map(async p => {
       try {
