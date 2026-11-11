@@ -391,6 +391,8 @@ await test('should keep nothing of a new version when the phone runs out of spac
   eq([...w.store.keys()].filter(k => k.startsWith(consts.SHELL_PREFIX)), [old]);
   eq(w.bodies(old), { [`${MAIN}index.html`]: 'old page' });
   eq([w.outcome, w.skipped()], ['refused: The quota has been exceeded.', false]);
+  // Precondition: other files were saved before the disk filled up; the whole cache is then deleted.
+  eq(w.shellPuts().includes(`${MAIN}assets/js/app.js`), true);
   eq(w.shellFetches().length, consts.SHELL.length);
 });
 
