@@ -12,7 +12,7 @@ const STOP = new Set(('a an and are as at be by for from how in into is it its o
   'leader cio cios it technology technologies gartner microsoft ignite symposium xpo attend attendees').split(/\s+/));
 
 function tokens(text) {
-  return (text || '').toLowerCase().replace(/[’']/g, '').split(/[^a-z0-9+#]+/)
+  return (typeof text === 'string' ? text : '').toLowerCase().replace(/[’']/g, '').split(/[^a-z0-9+#]+/)
     .map(w => (w.length > 4 && w.endsWith('s') && !w.endsWith('ss') ? w.slice(0, -1) : w))
     .filter(w => w.length > 2 && !STOP.has(w) && !/^\d+$/.test(w));
 }
@@ -25,17 +25,19 @@ export function buildSuggester(sessions, picks) {
   const df = new Map();
   const docs = new Map();
   for (const s of sessions) {
-    const t = new Set(tokens(`${s.title} ${s.title} ${s.desc}`));
+    const t = new Set([...tokens(s.title), ...tokens(s.desc)]);
     docs.set(s.key, t);
     for (const w of t) df.set(w, (df.get(w) || 0) + 1);
   }
   const idf = w => Math.log(n / (1 + (df.get(w) || 0)));
   const profile = { track: new Map(), topic: new Map(), program: new Map(), type: new Map(), speaker: new Map(), vendor: new Map(), text: new Map() };
   const picked = new Set();
-  let totalW = 0;
+  let totalW = 0, wanted = 0;
   const add = (m, k, w) => k && m.set(k, (m.get(k) || 0) + w);
   for (const { s, w } of picks) {
     picked.add(s.group);
+    if (!(w > 0)) continue; // a pick with no weight shapes nothing and doesn't count toward ready
+    wanted++;
     totalW += w;
     for (const t of s.tags || []) add(profile.track, t, w);
     for (const t of s.topics || []) add(profile.topic, t, w);
@@ -46,7 +48,7 @@ export function buildSuggester(sessions, picks) {
     for (const t of docs.get(s.key) || []) add(profile.text, t, w * idf(t));
   }
   const textNorm = Math.sqrt([...profile.text.values()].reduce((a, v) => a + v * v, 0)) || 1;
-  const ready = picks.length >= 2;
+  const ready = wanted >= 2;
 
   function score(s) {
     if (!ready) return { score: 0, reasons: [], fit: false };
