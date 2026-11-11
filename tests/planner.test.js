@@ -353,6 +353,238 @@ test('large repeat sets (heuristic branch) stay valid and near-optimal', () => {
   ok(worst >= 0.95, `heuristic reached ${Math.round(worst * 100)}% of optimum`);
 });
 
+// --- an independent reference for the optimizer (#77, specs/features/plan-building.feature)
+// bruteForce above prices plans with the planner's own weigh/transition/chainValue, so a wrong
+// weight or walking rule agrees with itself, and its instances hold no locks, blocked time,
+// lunch or other venue. refBest is written from the rules as Settings states them, with the
+// default numbers and each venue's published walking minutes typed in; it calls nothing in
+// planner.js. Rooms are [building, floor, label] as the reference sees them.
+const REF = {
+  tier: { 3: 100, 2: 50, 1: 20 }, perScorePoint: 10, recorded: -15, notRecorded: 10,
+  handsOn: 10, handsOnTypes: ['Lab', 'Table Talk', 'Workshop', "Builders' session"],
+  buffer: 2, keynoteEntry: 15, maxMiss: 5, perMissedMin: 2, lunchLength: 30,
+};
+const REF_MS = createVenue(CONFERENCES.ignite2026.venue), REF_LV = createVenue(LAS_VEGAS_DEF), REF_SD = createVenue(SWAN_DOLPHIN_DEF);
+const REF_VENUES = [
+  { name: 'Ignite', days: ['2026-11-18', '2026-11-19'], lunch: [H(11.5), H(13.5)], keynoteVenues: ['C'],
+    sameFloor: 3, diffFloor: 5, minutes: { 'S|W': 7, 'M|W': 13, 'M|S': 14, 'C|W': 40, 'C|S': 40, 'C|M': 40 },
+    rooms: [['W', '2', 'Moscone West, Level 2, Room 2001'], ['W', '2', 'Moscone West, Level 2, Room 2005'],
+      ['W', '3', 'Moscone West, Level 3, Room 3010'], ['S', '1', 'Moscone South, Room 156'],
+      ['M', null, 'Marriott Marquis, Yerba Buena Ballroom, BO1'], ['C', null, 'Chase Center']],
+    block: ['W', null, 'Moscone West'], keynoteBlock: ['C', null, 'Chase Center'], types: ['Breakout', 'Breakout', 'Lab', 'Table Talk', 'Keynote'],
+    planner: { parse: REF_MS.parseLocation, walk: REF_MS.walk, keynoteBuildings: REF_MS.keynoteBuildings } },
+  { name: 're:Invent', days: ['2026-12-01', '2026-12-02'], lunch: [H(11), H(14)], keynoteVenues: [],
+    sameFloor: 5, diffFloor: 8, minutes: { 'C|F': 10, 'C|V': 15, 'F|V': 15, 'C|M': 35, 'F|M': 35, 'M|V': 35 },
+    rooms: [['C', 'Promenade Level', 'Caesars Palace | Promenade Level | Roman I'], ['F', '1', 'Caesars Forum | Level 1 | Forum 120'],
+      ['V', '2', 'Venetian | Level 2 | Hall B'], ['V', '3', 'Venetian | Level 3 | West Alcove'], ['M', '1', 'MGM Grand | Level 1 | Grand 122']],
+    block: ['V', null, 'Venetian / Palazzo (Venetian Expo)'], types: ['Breakout', 'Chalk talk', "Builders' session", 'Workshop', 'Keynote'],
+    planner: { parse: REF_LV.parseLocation, walk: REF_LV.walk, keynoteBuildings: REF_LV.keynoteBuildings } },
+  { name: 'Gartner', days: ['2026-10-19', '2026-10-20'], lunch: [H(11.75), H(14.75)], keynoteVenues: [],
+    sameFloor: 3, diffFloor: 5, minutes: { 'D|S': 10, 'D|Y': 15, 'S|Y': 18 },
+    rooms: [['D', 'Convention', 'Upper Peninsula 4, WDW Dolphin Hotel'], ['D', 'Ballroom', 'Southern Hemisphere III, WDW Dolphin Hotel'],
+      ['S', null, 'Swan Ballroom 6, WDW Swan Hotel'], ['Y', null, "Grand Harbor Salon 1, Disney's Yacht & Beach Resort"]],
+    block: ['D', null, 'WDW Dolphin'], types: ['Track session', 'Workshop', 'Roundtable', 'Keynote'],
+    planner: { parse: REF_SD.parseLocation, walk: REF_SD.walk, keynoteBuildings: REF_SD.keynoteBuildings } },
+];
+const refCtx = v => ({ ...DEFAULT_PLANNER, walk: v.planner.walk, keynoteBuildings: v.planner.keynoteBuildings });   // as app.js builds it
+const roomOf = (v, label) => v.rooms.find(r => r[2] === label);
+const refSession = (v, label, start, end, extra = {}) => item(start, end, v.planner.parse(label), { refRoom: roomOf(v, label), ...extra });
+const refBlock = (v, key, day, start, end, room = v.block) => ({ key, id: key, code: 'Meeting', title: 'Customer meeting', pseudo: 'block', weight: 1e7,
+  locked: true, priority: 0, day, startMin: start, endMin: end, refRoom: room,
+  loc: { label: room[2], building: room[0], floor: null, known: true } });   // as app.js builds blocked time
+
+function refWalk(v, [ba, fa, la], [bb, fb, lb]) {
+  if (la === lb) return 0;
+  if (ba === bb) return fa && fb && fa !== fb ? v.diffFloor : v.sameFloor;
+  return v.minutes[[ba, bb].sort().join('|')];
+}
+// Minutes needed to get from a to b: none to stay put, else the walk, the buffer and keynote entry.
+function refNeed(v, a, b) {
+  if (a.refRoom[2] === b.refRoom[2]) return 0;
+  const keynote = !b.pseudo && (b.type === 'Keynote' || v.keynoteVenues.includes(b.refRoom[0]));
+  return refWalk(v, a.refRoom, b.refRoom) + REF.buffer + (keynote ? REF.keynoteEntry : 0);
+}
+function refWorth(x) {
+  if (x.pseudo === 'block') return 0;              // in every plan, so it adds nothing to compare
+  // A session is worth at least 1 point, even a workbook score of 0: never nothing to the plan.
+  if (Number.isFinite(x.score)) return Math.max(1, x.score * REF.perScorePoint);
+  return Math.max(1, REF.tier[x.priority] + (x.recorded === true ? REF.recorded : x.recorded === false ? REF.notRecorded : 0)
+    + (REF.handsOnTypes.includes(x.type) ? REF.handsOn : 0));
+}
+// One day's sessions in time order: can they all be attended, and what are they worth?
+function refChain(v, chain) {
+  let value = 0, missed = 0;
+  for (let i = 0; i < chain.length; i++) {
+    value += refWorth(chain[i]);
+    if (!i) continue;
+    const a = chain[i - 1], b = chain[i];
+    if (b.startMin <= a.startMin) return { ok: false };
+    const miss = Math.max(0, refNeed(v, a, b) - (b.startMin - a.endMin));
+    // Missing is fine up to 5 minutes, and never more than a quarter of either session.
+    if (miss > REF.maxMiss || 4 * miss > a.endMin - a.startMin || 4 * miss > b.endMin - b.startMin) return { ok: false };
+    value -= miss * REF.perMissedMin;
+    missed += miss;
+  }
+  return { ok: true, value, missed };
+}
+// Can lunch start at minute t? It sits inside the window, overlaps no session, and leaves the
+// walk between the sessions around it either before or after eating.
+function refLunchAt(v, chain, L, t) {
+  const end = t + REF.lunchLength;
+  if (t < L.from || end > L.to) return false;
+  if (!chain.length || end <= chain[0].startMin || t >= Math.max(...chain.map(x => x.endMin))) return true;
+  for (let i = 1; i < chain.length; i++) {
+    const a = chain[i - 1], b = chain[i], need = refNeed(v, a, b);
+    if (t >= a.endMin && end <= b.startMin && (end + need <= b.startMin || a.endMin + need <= t)) return true;
+  }
+  return false;
+}
+const refLunchFits = (v, chain, L) => { for (let t = L.from; t <= L.to; t++) if (refLunchAt(v, chain, L, t)) return true; return false; };
+const byStart = xs => xs.slice().sort((a, b) => a.startMin - b.startMin);
+// Every combination that keeps each lock and block and attends no session twice; the best value.
+function refBest(v, items, L = null, { keepLocks = true } = {}) {
+  const days = [...new Set(items.map(x => x.day))];
+  let best = -Infinity;
+  for (let m = 0; m < 1 << items.length; m++) {
+    const sel = items.filter((_, i) => (m >> i) & 1);
+    if (items.some((x, i) => (keepLocks || x.pseudo === 'block') && x.locked && !((m >> i) & 1))) continue;
+    if (new Set(sel.map(x => x.id)).size !== sel.length) continue;
+    let total = 0, ok = true;
+    for (const d of days) {
+      const chain = byStart(sel.filter(x => x.day === d)), c = refChain(v, chain);
+      if (!c.ok) { ok = false; break; }
+      total += c.value + (L && refLunchFits(v, chain, L) ? L.weight : 0);
+    }
+    if (ok && total > best) best = total;
+  }
+  return best;
+}
+
+test('the reference and the planner agree with the plan rules worked by hand', () => {
+  const v = REF_VENUES[0], ctx = refCtx(v);
+  const [W2a, , W3a, S1a, Ma, Ca] = v.rooms.map(r => r[2]);
+  const s = (label, start, end, extra = {}) => refSession(v, label, start, end, { priority: 2, ...extra });
+  const lunch40 = { from: H(11.5), to: H(13.5), length: 30, weight: 40 };
+  const lockedMaybe = s(W3a, H(9.5), H(10.5), { priority: 1, locked: true }), must = s(W2a, H(9), H(10), { priority: 3 });
+  const block = refBlock(v, 'block:hand', '2026-11-18', H(9), H(10)), blockedMust = s(W2a, H(9.5), H(10.5), { priority: 3 });
+  const easy = [s(S1a, H(9), H(10)), s(Ma, H(10) + 11, H(11) + 11), s(S1a, H(10) + 11, H(11) + 11, { recorded: true, type: 'Lab' })];
+  // West to South is 7 minutes plus the buffer: leave at 11:21, arrive 11:30, eat until noon.
+  const walkFirst = [s(W2a, H(10.5), H(11.5) - 9), s(S1a, H(12), H(13.5))];
+  const toChase = s(W2a, H(9), H(10)), chaseBlock = refBlock(v, 'block:chase', '2026-11-18', H(10) + 42, H(11.5), v.keynoteBlock);
+  const cases = [
+    ['a Must that is not recorded', [s(W2a, H(9), H(10), { priority: 3, recorded: false })], null, 110],
+    ['a recorded Maybe lab', [s(W2a, H(9), H(10), { priority: 1, recorded: true, type: 'Lab' })], null, 15],
+    ['a workbook score replaces the tier', [s(W2a, H(9), H(10), { priority: 3, score: 7 })], null, 70],
+    ['a workbook score of 0 is still worth a point', [s(W2a, H(9), H(10), { priority: 3, score: 0 })], null, 1],
+    ['five minutes missed between buildings', [s(S1a, H(9), H(10)), s(Ma, H(10) + 11, H(11) + 11)], null, 90],
+    ['an easy move beats a tight one worth a little more', easy, null, 95],
+    ['six minutes missed', [s(S1a, H(9), H(10)), s(Ma, H(10) + 10, H(11) + 10)], null, 50],
+    ['a 20-minute session can be missed by 5 minutes', [s(S1a, H(9), H(10)), s(Ma, H(10) + 11, H(10) + 31)], null, 90],
+    ['a 19-minute session only by 4', [s(S1a, H(9), H(10)), s(Ma, H(10) + 11, H(10) + 30)], null, 50],
+    ['a keynote one floor up, 22 minutes later', [s(W2a, H(9), H(10)), s(W3a, H(10) + 22, H(11), { type: 'Keynote' })], null, 100],
+    ['a keynote one floor up, 21 minutes later', [s(W2a, H(9), H(10)), s(W3a, H(10) + 21, H(11), { type: 'Keynote' })], null, 98],
+    ['a keynote one floor up, 16 minutes later', [s(W2a, H(9), H(10)), s(W3a, H(10) + 16, H(11), { type: 'Keynote' })], null, 50],
+    ['a gap one minute short of lunch and the walk', [s(W2a, H(11), H(12)), s(S1a, H(12) + 38, H(13.5))], lunch40, 100],
+    ['a gap just long enough for lunch and the walk', [s(W2a, H(11), H(12)), s(S1a, H(12) + 39, H(13.5))], lunch40, 140],
+    ['walk to the next room first, then eat', walkFirst, lunch40, 140],
+    ['a minute too late to walk first, then eat', [s(W2a, H(10.5), H(11.5) - 8), s(S1a, H(12), H(13.5))], lunch40, 100],
+    ['a minute too early to eat after the walk', [s(W2a, H(10.5), H(11.5) - 9), s(S1a, H(12) - 1, H(13.5))], lunch40, 100],
+    ['blocked time at Chase Center needs the walk, no keynote entry', [toChase, chaseBlock], null, 50],
+    ['blocked time at Chase Center a minute short of the walk', [toChase, refBlock(v, 'block:chase41', '2026-11-18', H(10) + 41, H(11.5), v.keynoteBlock)], null, 48],
+    ['a session at Chase Center needs the keynote entry', [toChase, s(Ca, H(10) + 42, H(11.5))], null, 50],
+    ['a locked Maybe against a Must', [must, lockedMaybe], null, 20],
+    ['a Must during blocked time', [block, blockedMust], null, 0],
+  ];
+  for (const [name, items, L, want] of cases) {
+    eq(refBest(v, items, L), want, `${name} (reference)`);
+    eq(optimize(items, ctx, L && lunchConfig({ on: true, ...L })).value, want, `${name} (planner)`);
+  }
+  eq(optimize([must, lockedMaybe], ctx).plan['2026-11-18'].map(x => x.key), [lockedMaybe.key], 'the locked Maybe is planned, the Must is not');
+  eq(optimize([block, blockedMust], ctx).plan['2026-11-18'].map(x => x.key), [block.key], 'the blocked time is planned, the Must is not');
+  eq(optimize(easy, ctx).plan['2026-11-18'].map(x => x.key), [easy[0].key, easy[2].key], 'the lab in the same room, not the tight walk to the Marriott');
+  const lunchFirst = optimize(walkFirst, ctx, lunchConfig({ on: true, ...lunch40 }));
+  eq([lunchFirst.plan['2026-11-18'].map(x => x.key), lunchFirst.lunch['2026-11-18']], [walkFirst.map(x => x.key), { start: H(11.5), end: H(12) }], 'both Wants, lunch 11:30-12:00 after the walk');
+  eq(optimize([toChase, chaseBlock], ctx).plan['2026-11-18'].map(x => x.key), [toChase.key, chaseBlock.key], 'the Want and the blocked time at Chase Center');
+});
+
+test('optimizer matches the independent reference with locks, blocked time and lunch at three venues', () => {
+  // The high bits: this generator's low bits repeat with a short period.
+  const lcg = seed => k => { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return Math.floor(seed / 0x80000000 * k); };
+  const rnd = lcg(4242), rndChase = lcg(77);   // a second stream, so Chase Center blocks leave the other draws as they were
+  // The walking minutes and keynote buildings typed into REF_VENUES are the ones each venue publishes.
+  for (const v of REF_VENUES) {
+    const blocks = [v.block, v.keynoteBlock].filter(Boolean), places = [...v.rooms, ...blocks];
+    const locOf = r => (blocks.includes(r) ? refBlock(v, 'b', v.days[0], 0, 1, r).loc : v.planner.parse(r[2]));
+    for (const a of places) for (const b of places) eq(walkMinutes(locOf(a), locOf(b), v.planner.walk), refWalk(v, a, b), `${v.name}: ${a[2]} -> ${b[2]}`);
+    eq(v.planner.keynoteBuildings, v.keynoteVenues, `${v.name}: keynote buildings`);
+  }
+  const seen = { Ignite: 0, 're:Invent': 0, Gartner: 0, lockDecides: 0, blockDisplaces: 0, lunchDays: 0, noLunchDays: 0, lunchCosts: 0,
+    tight: 0, keynoteEntry: 0, keynoteBlockNoEntry: 0, lockedRepeat: 0, scored: 0, zeroScore: 0 };
+  let done = 0;
+  for (let tries = 0; done < 300; tries++) {
+    if (tries > 2000) throw new Error(`only ${done} usable instances in ${tries} tries`);
+    const v = REF_VENUES[rnd(REF_VENUES.length)];
+    const n0 = 3 + rnd(6), items = [];
+    for (let i = 0; i < n0; i++) {
+      const start = H(10.5) + rnd(49) * 5, room = v.rooms[rnd(v.rooms.length)];
+      items.push(refSession(v, room[2], start, start + [15, 20, 30, 45, 60, 90][rnd(6)], {
+        id: `g${rnd(Math.max(2, n0 - 2))}`, day: v.days[rnd(2)], priority: 1 + rnd(3), recorded: [true, false, null][rnd(3)],
+        type: v.types[rnd(v.types.length)], score: rnd(6) ? undefined : (rnd(3) ? 1 + rnd(13) : 0), locked: rnd(5) === 0,
+      }));
+    }
+    const sessionDays = [...new Set(items.map(x => x.day))];
+    for (let b = [0, 0, 1, 2][rnd(4)]; b > 0; b--) {
+      let start = H(10) + rnd(49) * 5, room = v.block;
+      const day = sessionDays[rnd(sessionDays.length)], length = [30, 60][rnd(2)];
+      // At Ignite, half the blocked time is at Chase Center, starting 40 to 55 minutes after a session
+      // ends: around the 42-minute walk, where a keynote entry would cost minutes.
+      if (v.keynoteBlock && rndChase(2)) {
+        const that = items.filter(x => !x.pseudo && x.day === day);
+        start = that[rndChase(that.length)].endMin + 40 + 5 * rndChase(4);
+        room = v.keynoteBlock;
+      }
+      items.push(refBlock(v, `block:${tries}-${b}`, day, start, start + length, room));
+    }
+    const L = rnd(4) ? { from: v.lunch[0], to: v.lunch[1], length: 30, weight: [15, 40, 120][rnd(3)] } : null;
+    const best = refBest(v, items, L);
+    if (best === -Infinity) continue;   // locks and blocked time that can't all be kept: not this test's subject
+    done++;
+
+    const res = optimize(items, refCtx(v), L && lunchConfig({ on: true, ...L }));
+    const planned = Object.values(res.plan).flat();
+    const where = `${v.name} instance ${done}`;
+    eq(items.filter(x => x.locked && !planned.includes(x)).map(x => x.key), [], `${where}: every lock and block kept`);
+    eq(new Set(planned.map(x => x.id)).size, planned.length, `${where}: no session twice`);
+    eq([res.lockedConflicts, res.unscheduled], [[], []], `${where}: nothing locked left out, nothing unscheduled`);
+    eq(res.dropped.map(d => d.item.key).sort(), items.filter(x => !planned.includes(x)).map(x => x.key).sort(), `${where}: everything not planned is listed as dropped`);
+    // The planner's own plan, priced by the reference, is feasible and as good as the best.
+    let mine = 0;
+    for (const d of sessionDays) {
+      const chain = byStart(res.plan[d] || []), c = refChain(v, chain), slot = res.lunch[d];
+      ok(c.ok, `${where}: ${d} can't be walked: ${chain.map(x => `${x.refRoom[2]} ${x.startMin}-${x.endMin}`).join(', ')}`);
+      ok(!slot || (L && slot.end - slot.start === REF.lunchLength && refLunchAt(v, chain, L, slot.start)), `${where}: ${d} lunch ${JSON.stringify(slot)} doesn't fit`);
+      mine += c.value + (slot ? L.weight : 0);
+      if (c.missed) seen.tight++;
+      if (L) seen[slot ? 'lunchDays' : 'noLunchDays']++;
+      if (chain.some((x, i) => i && x.type === 'Keynote' && refNeed(v, chain[i - 1], x) > refWalk(v, chain[i - 1].refRoom, x.refRoom) + REF.buffer)) seen.keynoteEntry++;
+      // Blocked time in a keynote building, reached so tightly that a keynote entry would have cost minutes.
+      if (chain.some((x, i) => i && x.pseudo && v.keynoteVenues.includes(x.refRoom[0]) && x.refRoom[2] !== chain[i - 1].refRoom[2]
+        && x.startMin - chain[i - 1].endMin < refNeed(v, chain[i - 1], x) + REF.keynoteEntry)) seen.keynoteBlockNoEntry++;
+    }
+    eq([mine, res.value], [best, best], `${where}: plan value (priced by the reference, by the planner) vs the best`);
+
+    seen[v.name]++;
+    if (refBest(v, items, L, { keepLocks: false }) > best) seen.lockDecides++;
+    if (items.some(b => b.pseudo === 'block' && items.some(x => !x.pseudo && x.day === b.day && !refChain(v, byStart([b, x])).ok))) seen.blockDisplaces++;
+    if (items.some(x => x.locked && !x.pseudo && items.some(y => y !== x && y.id === x.id))) seen.lockedRepeat++;
+    if (planned.some(x => Number.isFinite(x.score))) seen.scored++;
+    if (planned.some(x => x.score === 0)) seen.zeroScore++;
+    if (L && best < refBest(v, items) + L.weight * sessionDays.length) seen.lunchCosts++;   // on some day lunch cost a session, or did not fit
+  }
+  // The random weeks did exercise what this test is for.
+  for (const [k, count] of Object.entries(seen)) ok(count >= 10, `only ${count} with ${k}: ${JSON.stringify(seen)}`);
+});
+
 test('whatIf counts a same-day repeat only once (review p4)', () => {
   const lab1 = item(H(9), H(10.25), W3, { id: 'LAB', code: 'LAB512', type: 'Lab', recorded: false });
   const brk1 = item(H(10), H(10.75), W2, { id: 'B1', priority: 3 });
