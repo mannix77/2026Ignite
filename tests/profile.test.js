@@ -10,9 +10,9 @@ let pass = 0, fail = 0;
 async function test(name, fn) {
   try { await fn(); pass++; } catch (e) { fail++; console.log(`FAIL ${name}: ${e.message}`); }
 }
-function eq(a, b) {
+function eq(a, b, msg = '') {
   const A = JSON.stringify(a), B = JSON.stringify(b);
-  if (A !== B) throw new Error(`expected ${B}, got ${A}`);
+  if (A !== B) throw new Error(`${msg ? `${msg}: ` : ''}expected ${B}, got ${A}`);
 }
 
 let n = 0;
@@ -196,15 +196,28 @@ await test('should hide a skipped group without rating any of its sessions', () 
   const before = JSON.stringify(store.get().picks);
   const after = applyPrefs(profile({}), parseLink('skip=type:Lab'));
   store.updateProfile(after);
+  const saved = store.profile();   // what was kept, not the value handed in
+  eq(saved.groups, { 'type:Lab': -1 }, 'the skipped group is stored');
   const lab = linkCatalog[2];
-  eq(createRanker(after, 'ignite2026').evaluate(lab).hidden, 'group');
-  eq(createRanker(after, 'ignite2026').evaluate(linkCatalog[0]).hidden, null, 'another type is not hidden');
+  eq(createRanker(saved, 'ignite2026').evaluate(lab).hidden, 'group');
+  eq(createRanker(saved, 'ignite2026').evaluate(linkCatalog[0]).hidden, null, 'another type is not hidden');
   eq(JSON.stringify(store.get().picks), before, 'applying the link writes no ratings');
 });
 await test('should say which conference a pasted preferences link is for, when it names a different one', () => {
   const gartnerLink = `https://mannix77.github.io/2026Ignite/?conf=gartner2026#/prefs/goal=ai`;
   eq(prefsLinkTarget(gartnerLink, 'ignite2026', CONFERENCES), { apply: false, name: CONFERENCES.gartner2026.name });
   eq(prefsLinkTarget(`https://x.test/?conf=madeupconf#/prefs/goal=ai`, 'ignite2026', CONFERENCES), { apply: false, name: 'madeupconf' }, 'falls back to the raw id when unknown');
+});
+// A link copied from a chat or an email comes with words around it (#126 review).
+await test('should find the conference a link names when it is pasted inside a message', () => {
+  const link = 'https://mannix77.github.io/2026Ignite/?conf=gartner2026#/prefs/goal=ai';
+  for (const text of [`Here is your link: ${link}`, `Here is your link: ${link} — thanks`, `(${link})`, `Link:\n${link}`]) {
+    eq(prefsLinkFrom(text)?.conf, 'gartner2026', JSON.stringify(text));
+    eq(prefsLinkTarget(text, 'ignite2026', CONFERENCES), { apply: false, name: CONFERENCES.gartner2026.name }, JSON.stringify(text));
+  }
+  eq(prefsLinkTarget('Here: https://x.test/?conf=ignite2026#/prefs/goal=ai', 'ignite2026', CONFERENCES), { apply: true, query: 'goal=ai' }, 'the open conference, in a message');
+  eq(prefsLinkTarget('Here: https://x.test/?conf=ignite2026#/prefs/goal=ai — thanks', 'ignite2026', CONFERENCES), { apply: true, query: 'goal=ai' }, 'words after the link are not part of it');
+  eq(prefsLinkFrom('Here: https://x.test/?data=a#/prefs/goal=ai'), { conf: null, query: 'goal=ai' }, 'a link in a message that names no conference');
 });
 await test('should apply a link naming no conference, or the one open; and pass through what is not a preferences link', () => {
   eq(prefsLinkTarget('#/prefs/goal=ai', 'ignite2026', CONFERENCES), { apply: true, query: 'goal=ai' });

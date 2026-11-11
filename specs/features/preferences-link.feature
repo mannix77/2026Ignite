@@ -45,6 +45,11 @@ Feature: Setting Triage preferences from a link
       Then Minesh is told the link is for Gartner
       And the Ignite preferences are unchanged
 
+    Scenario: Pasting another conference's link inside a message
+      Given Minesh is planning Ignite
+      When Minesh pastes a message with a preferences link made for Gartner
+      Then Minesh is told the link is for Gartner
+
     Scenario: Pasting a link without a conference
       Given Minesh is planning Ignite
       When Minesh pastes only the preferences part of a link

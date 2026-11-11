@@ -203,9 +203,13 @@ export function prefsLinkFrom(text) {
   const raw = String(text || '').trim();
   const at = raw.indexOf('#/prefs/');
   if (at < 0) return null;
+  // Pasted from a message, the link may have words around it: read the address itself, from
+  // its scheme up to the first space after #/prefs/ (#126 review).
+  const head = raw.slice(0, at).match(/[a-z][\w+.-]*:\/\/\S*$/i);
+  const tail = raw.slice(at).search(/\s/), end = tail < 0 ? raw.length : at + tail;
   let conf = null;
-  try { conf = new URL(raw).searchParams.get('conf') || null; } catch { /* just the #/prefs/ part */ }
-  return { conf, query: raw.slice(at + '#/prefs/'.length) };
+  if (head) try { conf = new URL(raw.slice(at - head[0].length, end)).searchParams.get('conf') || null; } catch { /* not an address */ }
+  return { conf, query: raw.slice(at + '#/prefs/'.length, end) };
 }
 
 // Whether a pasted preferences link should be applied to the conference being planned
