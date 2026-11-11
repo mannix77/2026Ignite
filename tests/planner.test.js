@@ -311,7 +311,21 @@ test('the optimizer solves each distinct day subset once (exhaustive and heurist
   eq([new Set(ex.map(x => x.day)).size, new Set(heu.map(x => x.day)).size], [2, 2], 'both instances span two days');
   const exhaustive = optimize(ex);    // 2^7 = 128 combinations: searched exhaustively
   const heuristic = optimize(heu);    // 4096: coordinate descent
-  eq([exhaustive.stats.daySolves, heuristic.stats.daySolves], [128, 20]);   // 256 and 41 day solves are asked for; these are the distinct ones
+  // 256 and 41 day solves are asked for; these are the distinct ones. A day is solved once per
+  // choice among the repeat groups with a run that day: in `ex` 6 groups have one on each day,
+  // so 2^6 + 2^6 = 128. The heuristic's 20 follows its descent path: counted by running it.
+  eq([['2026-11-18', '2026-11-19'].map(d => new Set(ex.filter(x => x.day === d && x.id.startsWith('R')).map(x => x.id)).size)], [[6, 6]], 'repeat groups with a run on each day');
+  eq([exhaustive.stats.daySolves, heuristic.stats.daySolves], [128, 20]);
+  // A memo that hands back the wrong day can leave the count as it was: the plans must hold up.
+  for (const [name, res, items] of [['exhaustive', exhaustive, ex], ['heuristic', heuristic, heu]]) {
+    const planned = Object.values(res.plan).flat(), ids = planned.map(x => x.id);
+    ok(planned.length > 0, `${name}: the plan is empty`);
+    eq(new Set(ids).size, ids.length, `${name}: a session attended twice`);
+    ok(planned.every(x => items.includes(x)), `${name}: a planned item that isn't one of the picks`);
+    for (const day of Object.values(res.plan)) for (const a of day) for (const b of day) {
+      ok(a === b || canBoth(a, b), `${name}: ${a.key} and ${b.key} clash on ${a.day}`);
+    }
+  }
 });
 test('large repeat sets (heuristic branch) stay valid and near-optimal', () => {
   let seed = 777;

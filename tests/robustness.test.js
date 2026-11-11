@@ -6,16 +6,16 @@ const store = await import('../assets/js/store.js');
 const { buildModel, diffKnown, cacheUrl } = await import('../assets/js/data.js');
 const { CONFERENCES } = await import('../assets/js/conferences.js');
 const { createVenue } = await import('../assets/js/venue.js');
-const { compareOptions, optimize, lunchConfig, DEFAULT_PLANNER } = await import('../assets/js/planner.js');
+const { canBoth, compareOptions, optimize, lunchConfig, DEFAULT_PLANNER } = await import('../assets/js/planner.js');
 const { checkLive, liveWindow, changeCounts, countsLine, diff: liveDiff } = await import('../assets/js/live.js');
 
 let pass = 0, fail = 0;
 async function test(name, fn) {
   try { await fn(); pass++; } catch (e) { fail++; console.log(`FAIL ${name}: ${e.message}`); }
 }
-function eq(a, b) {
+function eq(a, b, msg = '') {
   const A = JSON.stringify(a), B = JSON.stringify(b);
-  if (A !== B) throw new Error(`expected ${B}, got ${A}`);
+  if (A !== B) throw new Error(`${msg ? `${msg}: ` : ''}expected ${B}, got ${A}`);
 }
 
 // ---- settings survive a reload
@@ -137,11 +137,19 @@ await test('should re-plan 300 picks on the real re:Invent catalog within a gene
   }
   eq([new Set(items.map(x => x.id)).size, new Set(items.map(x => x.key)).size], [300, items.length], 'precondition: 300 distinct sessions, no run twice');
   const repeated = new Set(items.filter(x => items.filter(y => y.id === x.id).length > 1).map(x => x.id)).size;
-  eq(repeated > 50, true);   // the slow case: coordinate descent over many repeat runs
+  if (!(repeated > 50)) throw new Error(`precondition: only ${repeated} sessions have repeat runs; the slow case needs many`);
+  const ctx = { ...DEFAULT_PLANNER, walk: v.walk, keynoteBuildings: v.keynoteBuildings };
   const t = performance.now();
-  const res = optimize(items, { ...DEFAULT_PLANNER, walk: v.walk, keynoteBuildings: v.keynoteBuildings }, lunchConfig(conf.lunch));
+  const res = optimize(items, ctx, lunchConfig(conf.lunch));
   const ms = performance.now() - t;
-  eq(Object.values(res.plan).flat().length > 0, true);
+  // Fast is only worth anything if the plan is right.
+  const planned = Object.values(res.plan).flat(), ids = planned.map(x => x.id);
+  if (planned.length === 0) throw new Error('the plan is empty');
+  eq(new Set(ids).size, ids.length, 'a session attended twice');
+  if (!planned.every(x => items.includes(x))) throw new Error("a planned item that isn't one of the picks");
+  for (const day of Object.values(res.plan)) for (const a of day) for (const b of day) {
+    if (a !== b && !canBoth(a, b, ctx)) throw new Error(`${a.key} and ${b.key} clash on ${a.day}`);
+  }
   if (!(ms < 1500)) throw new Error(`took ${Math.round(ms)} ms; about 40 ms on a desktop, 450 ms before #81`);
 });
 
