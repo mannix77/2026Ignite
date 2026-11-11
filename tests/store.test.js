@@ -12,6 +12,7 @@ globalThis.window = { addEventListener: (type, fn) => { (pageEvents[type] ||= []
 globalThis.document = { visibilityState: 'visible', querySelector: () => null, addEventListener: (type, fn) => { (pageEvents[type] ||= []).push(fn); } };
 const fire = type => { for (const fn of pageEvents[type] || []) fn({}); };
 const store = await import('../assets/js/store.js');
+const { lockPicks, ratePicks } = await import('../assets/js/picks.js');
 
 let pass = 0, fail = 0;
 async function test(name, fn) {
@@ -556,6 +557,165 @@ await test('should apply exactly the previewed changes from a picks link', async
   store.applyShared(link);
   eq([pv.changed.map(c => c.id), pv.added, pv.unchanged, store.pick('A')?.p, store.pick('A')?.note, store.pick('B')?.p], [['A'], [], 1, 3, 'x', 2]);
   await sleep(SAVE);
+});
+
+// ---- two open tabs never lose each other's edits (keeping-picks-safe.feature; issue #75)
+// Another tab's save arrives as a storage event while this tab still has an unsaved change.
+const keyOf = ns => `ignite26.planner.v1:${ns}`;
+const otherTabSaves = (ns, picks) => {
+  const value = JSON.stringify({ v: 1, picks, prefs: {}, profile: null });
+  localStorage.setItem(keyOf(ns), value);
+  for (const fn of pageEvents.storage || []) fn({ key: keyOf(ns), newValue: value });
+};
+const savedPicks = ns => JSON.parse(localStorage.getItem(keyOf(ns))).picks;
+const T = 1_790_000_000_000;
+
+await test('should keep this tab\'s pending rating and the other tab\'s saved one when they touch different sessions', async () => {
+  localStorage.removeItem(keyOf('tabs-different'));
+  store.load('tabs-different');
+  store.mutatePicks(p => { p.S1 = { p: 3, lock: null, note: '', at: T + 10 }; });   // not saved yet (150 ms delay)
+  otherTabSaves('tabs-different', { S2: { p: 2, lock: null, note: '', at: T + 20 } });
+  eq([store.pick('S1')?.p, store.pick('S2')?.p], [3, 2], 'both in this tab at once');
+  await sleep(SAVE);
+  eq(Object.keys(savedPicks('tabs-different')).sort(), ['S1', 'S2'], 'and both saved');
+});
+
+await test('should keep the later rating when both tabs rated the same session, either way round', async () => {
+  for (const [mine, theirs, want] of [[T + 30, T + 20, 3], [T + 20, T + 30, 0], [T + 25, T + 25, 0]]) {   // a tie goes to the tab that saved
+    localStorage.removeItem(keyOf('tabs-same'));
+    store.load('tabs-same');
+    store.mutatePicks(p => { p.S1 = { p: 3, lock: null, note: '', at: mine }; });
+    otherTabSaves('tabs-same', { S1: { p: 0, lock: null, note: '', at: theirs } });
+    eq(store.pick('S1').p, want);
+    await sleep(SAVE);
+    eq(savedPicks('tabs-same').S1.p, want);
+  }
+});
+
+await test("should keep a rating cleared in this tab cleared when the other tab didn't touch it, and adopt it when it did", async () => {
+  for (const [theirsS1, want] of [[null, null], [{ p: 1, lock: null, note: 'theirs', at: T + 50 }, 1]]) {
+    localStorage.removeItem(keyOf('tabs-cleared'));
+    store.load('tabs-cleared');
+    store.mutatePicks(p => { p.S1 = { p: 2, lock: null, note: '', at: T + 1 }; });
+    await sleep(SAVE);                                             // S1 is saved
+    store.mutatePicks(p => { delete p.S1; });                      // cleared here, not saved yet
+    otherTabSaves('tabs-cleared', { S1: theirsS1 || { p: 2, lock: null, note: '', at: T + 1 }, S2: { p: 3, lock: null, note: '', at: T + 40 } });
+    eq([store.pick('S1')?.p ?? null, store.pick('S2')?.p], [want, 3]);
+    await sleep(SAVE);
+    eq([savedPicks('tabs-cleared').S1?.p ?? null, savedPicks('tabs-cleared').S2?.p], [want, 3]);
+  }
+});
+
+await test('should simply adopt the other tab\'s save when nothing here is pending', async () => {
+  localStorage.removeItem(keyOf('tabs-idle'));
+  store.load('tabs-idle');
+  store.mutatePicks(p => { p.S1 = { p: 3, lock: null, note: '', at: T + 1 }; });
+  await sleep(SAVE);
+  otherTabSaves('tabs-idle', { S1: { p: 0, lock: null, note: '', at: T }, S9: { p: 1, lock: null, note: '', at: T } });
+  eq([store.pick('S1').p, store.pick('S9').p], [0, 1], 'the other tab\'s save wins outright: nothing here was unsaved');
+});
+
+// lockPicks clears the group's other locks without giving those records a new time.
+await test('should keep a lock released here when the other tab left that session alone', async () => {
+  localStorage.removeItem(keyOf('tabs-lock'));
+  store.load('tabs-lock');
+  const A1 = { p: 3, lock: 'RUN1', note: '', at: T + 1 }, A2 = { p: 3, lock: null, note: '', at: T + 1 };
+  store.mutatePicks(p => { p.A1 = { ...A1 }; p.A2 = { ...A2 }; });
+  await sleep(SAVE);                                               // RUN1 locked on A1, saved
+  store.mutatePicks(p => lockPicks(p, { gp: { ids: ['A1', 'A2'], holder: 'A2', p: 3 }, meta: {}, instKey: 'RUN2' }, T + 60));
+  eq([store.pick('A1').lock, store.pick('A1').at, store.pick('A2').lock], [null, T + 1, 'RUN2'], 'precondition: A1 lost its lock but kept its time');
+  otherTabSaves('tabs-lock', { A1, A2, S9: { p: 1, lock: null, note: '', at: T + 70 } });
+  eq([store.pick('A1').lock, store.pick('A2').lock, store.pick('S9')?.p], [null, 'RUN2', 1], 'only the new run is locked, and the other tab\'s pick is in');
+  await sleep(SAVE);
+  const saved = savedPicks('tabs-lock');
+  eq([saved.A1.lock, saved.A2.lock, saved.S9?.p], [null, 'RUN2', 1], 'and saved that way');
+});
+
+// The app writes picks in its own shape (ratePicks: {g, code, p, at}, no lock or note); the
+// other tab's copy comes back sanitized. "The other tab left it alone" must still hold.
+await test('should keep a cleared rating cleared when it was rated through the app\'s own write', async () => {
+  localStorage.removeItem(keyOf('tabs-shape'));
+  store.load('tabs-shape');
+  store.mutatePicks(p => ratePicks(p, ['S1'], { g: 'G1', code: 'K1' }, 2, T + 1));
+  await sleep(SAVE);
+  eq(Object.keys(savedPicks('tabs-shape').S1), ['note', 'g', 'code', 'p', 'at'], 'precondition: saved in the app\'s shape (no lock), not the sanitized one');
+  store.mutatePicks(p => { delete p.S1; });
+  otherTabSaves('tabs-shape', { ...savedPicks('tabs-shape'), S9: { p: 1, lock: null, note: '', at: T + 70 } });
+  eq([store.pick('S1') ?? null, store.pick('S9')?.p], [null, 1]);
+  await sleep(SAVE);
+  eq([savedPicks('tabs-shape').S1 ?? null, savedPicks('tabs-shape').S9?.p], [null, 1], 'and saved that way');
+});
+
+await test('should keep a rating that failed to save when another tab saves', async () => {
+  localStorage.removeItem(keyOf('tabs-failed'));
+  store.load('tabs-failed');
+  globalThis.__quota = 10;
+  store.mutatePicks(p => { p.S1 = { p: 3, lock: null, note: '', at: T + 10 }; });
+  await sleep(SAVE);
+  globalThis.__quota = null;
+  eq([store.saveFailing(), localStorage.getItem(keyOf('tabs-failed'))], [true, null], 'precondition: the save failed and nothing is pending');
+  otherTabSaves('tabs-failed', { S9: { p: 1, lock: null, note: '', at: T + 20 } });
+  eq([store.pick('S1')?.p, store.pick('S9')?.p], [3, 1]);
+  await sleep(SAVE);
+  eq([savedPicks('tabs-failed').S1?.p, savedPicks('tabs-failed').S9?.p, store.saveFailing()], [3, 1, false], 'and both saved once storage allows it');
+});
+
+// A real second tab: its own copy of the store, sharing this page's storage. Its storage events
+// are delivered by hand, so it doesn't react to its own saves.
+const thisTabListeners = (pageEvents.storage || []).slice();
+const tab2 = await import('../assets/js/store.js?second-tab');
+const tab2Listeners = pageEvents.storage.slice(thisTabListeners.length);
+pageEvents.storage = thisTabListeners;
+const deliverSave = (ns, to = thisTabListeners) => { for (const fn of to) fn({ key: keyOf(ns), newValue: localStorage.getItem(keyOf(ns)) }); };
+
+// Storage events are queued: the other tab's save timer can fire before this tab's save reaches it.
+await test('should keep both ratings when each tab saved before hearing of the other, whichever saved first', async () => {
+  for (const [first, second, name] of [[store, tab2, 'this tab first'], [tab2, store, 'the other tab first']]) {
+    localStorage.removeItem(keyOf('tabs-race'));
+    store.load('tabs-race');
+    tab2.load('tabs-race');
+    first.mutatePicks(p => { p.S1 = { p: 3, lock: null, note: '', at: T + 10 }; });
+    await sleep(SAVE);                                              // S1 saved; no event delivered yet
+    second.mutatePicks(p => { p.S2 = { p: 2, lock: null, note: '', at: T + 20 }; });
+    eq([savedPicks('tabs-race').S1?.p, second.pick('S1') ?? null], [3, null], `${name}: precondition: S1 is saved and the second tab hasn't heard of it`);
+    await sleep(SAVE);                                              // the second tab saves S2
+    eq([savedPicks('tabs-race').S1?.p, savedPicks('tabs-race').S2?.p], [3, 2], `${name}: both saved`);
+    deliverSave('tabs-race');                                       // the events arrive late
+    deliverSave('tabs-race', tab2Listeners);
+    eq([store.pick('S1')?.p, store.pick('S2')?.p, tab2.pick('S1')?.p, tab2.pick('S2')?.p], [3, 2, 3, 2], `${name}: both tabs show both`);
+  }
+});
+
+// Valid pick ids include names an object inherits; an undated pick (at: 0) must still win when
+// the other tab doesn't have it.
+await test('should keep an unsaved pick whose id an object inherits when the other tab saves something else', async () => {
+  for (const id of ['constructor', 'toString']) {
+    localStorage.removeItem(keyOf('tabs-own-key'));
+    store.load('tabs-own-key');
+    store.mutatePicks(p => { p[id] = { p: 3, lock: null, note: '', at: 0 }; });
+    eq(Object.hasOwn(store.get().picks, id), true, `${id}: precondition: an own pick`);
+    otherTabSaves('tabs-own-key', { S9: { p: 1, lock: null, note: '', at: T + 70 } });
+    eq([store.get().picks[id]?.p, store.pick('S9')?.p], [3, 1], `${id}: kept beside the other tab's pick`);
+    await sleep(SAVE);
+    eq([savedPicks('tabs-own-key')[id]?.p, savedPicks('tabs-own-key').S9?.p], [3, 1], `${id}: and saved that way`);
+  }
+});
+
+// A mutatePicks callback may write a pick with no time; the other tab dates it when it loads it.
+await test('should keep a pick saved without a time cleared when the other tab saves something else', async () => {
+  localStorage.removeItem(keyOf('tabs-undated'));
+  store.load('tabs-undated');
+  store.mutatePicks(p => { p.S1 = { p: 2, lock: null, note: '' }; });
+  await sleep(SAVE);                                                // S1 saved, with no time given
+  tab2.load('tabs-undated');
+  tab2.mutatePicks(p => { p.S9 = { p: 1, lock: null, note: '', at: T + 70 }; });
+  await sleep(SAVE);                                                // the other tab saved S9 and its copy of S1
+  eq([savedPicks('tabs-undated').S1?.p, savedPicks('tabs-undated').S9?.p], [2, 1], 'precondition: the other tab saved S9 and left S1 rated');
+  store.mutatePicks(p => { delete p.S1; });                         // cleared here, not saved yet
+  deliverSave('tabs-undated');
+  eq([store.pick('S1') ?? null, store.pick('S9')?.p], [null, 1]);
+  await sleep(SAVE);
+  eq([savedPicks('tabs-undated').S1 ?? null, savedPicks('tabs-undated').S9?.p], [null, 1], 'and saved that way');
 });
 
 // ---- a picks link sets the session's choice across all its runs (restoring-picks.feature; issue #130)
