@@ -13,6 +13,7 @@ import { CONFERENCES, currentConferenceId, rememberConference, conferenceList } 
 import { buildSuggester } from './suggest.js';
 import { createRanker, partition, profileConfig, profileGroups, GOALS, parsePrefsLink, applyPrefs, prefsSummary, prefsLinkTarget } from './profile.js';
 import { storageStatus, backupReminder, backupAge } from './health.js';
+import { reportError as reportTelemetry } from './telemetry.js';
 import { INSTANCE, INSTANCE_LABEL, nsKey, guideUrl } from './instance.js';
 import { esc, attr, icon, bldgChip, recChip, rsvpChip, rsvpOpensText, seatsDetail, prioPill, scoreChip, whenText, prioControl, sessionCard, cardClass, toast, shareOrDownload, copyText, speakersLine, setHostCompany, unknownRoomsNote, venueMapUrl, mapChip, occupancyOf, occupancyChip, picksForAI } from './ui.js';
 
@@ -63,6 +64,16 @@ const app = {
   hereManualSide: null, // which side of it, when the venue defines sides for that building (issue 99)
   leaveAlerted: null,
 };
+
+// Opt-in error telemetry (issue #140, assets/js/telemetry.js): only the event kind, app
+// version, conference and browser family ever leave the device, and only once Settings ->
+// "Send anonymous error reports" is turned on (default off). Failures here are swallowed by
+// telemetry.js itself, never surfaced to the person using the app.
+function reportAppError(eventType) {
+  try { reportTelemetry(eventType, { enabled: store.settings().telemetry, conference: app.conf?.id }); } catch { /* never block the UI over a report */ }
+}
+window.addEventListener('error', () => reportAppError('uncaught-exception'));
+window.addEventListener('unhandledrejection', () => reportAppError('uncaught-exception'));
 
 // ---------------------------------------------------------------- helpers
 
@@ -1673,6 +1684,7 @@ function renderSettings() {
       ${app.conf.live ? `<label class="toggle"><input type="checkbox" data-toggle="preview" ${s.preview ? 'checked' : ''}><span>Preview with a simulated schedule<small>Only works until the real times are published, then switches itself off. Clearly marked “Preview”.</small></span></label>` : ''}
       <label class="toggle"><input type="checkbox" data-toggle="hideOnline" ${s.hideOnline ? 'checked' : ''}><span>Hide online-only sessions</span></label>
       <label class="toggle"><input type="checkbox" data-toggle="useLocation" ${s.useLocation ? 'checked' : ''}><span>Use my location (GPS)<small>At the venue, walking times, “leave by” and the Nearby list count from where you are. Only while the app is open; nothing leaves your phone. You can also pick “I'm at…” on the Now tab.</small></span></label>
+      <label class="toggle"><input type="checkbox" data-toggle="telemetry" ${s.telemetry ? 'checked' : ''}><span>Send anonymous error reports<small>Off by default. When on, an error the app catches on its own (a crash, a failed save, storage full) sends only its kind, the app version, this conference and your browser family — never your picks, notes or anything that identifies you.</small></span></label>
       <div class="field"><label for="theme">Theme</label><select id="theme">${['auto', 'light', 'dark'].map(t => `<option ${theme === t ? 'selected' : ''}>${t}</option>`).join('')}</select></div>
     </section>
     <section class="panel"><h3>Your data</h3>
@@ -2422,7 +2434,12 @@ document.addEventListener('keydown', e => {
 store.subscribe(what => {
   if (what === 'newer-version') { $('#newer-version').hidden = false; return; }
   if (what === 'reset') $('#newer-version').hidden = !store.newerVersion(); // another tab saved: it may be newer
-  if (what === 'save-error' || what === 'save-ok') { $('#save-error').hidden = what === 'save-ok'; if (app.tab === 'settings') renderOrDefer(); return; }
+  if (what === 'save-error' || what === 'storage-full' || what === 'save-ok') {
+    if (what !== 'save-ok') reportAppError(what);
+    $('#save-error').hidden = what === 'save-ok';
+    if (app.tab === 'settings') renderOrDefer();
+    return;
+  }
   if (what === 'backup') { if (app.model) renderOrDefer(); return; }
   if (!app.model) return;
   if (what === 'profile') {
@@ -2691,6 +2708,7 @@ async function boot() {
   try {
     app.snapshot = await fetchAll(app.conf.dataDir);
   } catch (err) {
+    reportAppError('startup-failure');
     main.innerHTML = `<div class="panel empty"><h3>Couldn't load the session catalog</h3><p>${esc(err.message)}</p><button class="btn primary" data-act="reload">Try again</button></div>`;
     main.querySelector('[data-act="reload"]').onclick = () => location.reload();
     $('#sync-status').textContent = 'Offline';
@@ -2712,6 +2730,7 @@ async function boot() {
   } catch (err) {
     // A catalog the app can't read must say so instead of leaving a blank page.
     console.error(err);
+    reportAppError('startup-failure');
     main.innerHTML = `<div class="panel empty"><h3>Something in the session catalog couldn't be read</h3><p>${esc(err.message)}</p><p class="small">Your picks are safe on this device. Try again in a few minutes, or <a href="?conf=${attr(app.conf.id)}#/settings">open Settings</a> to save a backup.</p><button class="btn primary" data-act="reload">Try again</button></div>`;
     main.querySelector('[data-act="reload"]').onclick = () => location.reload();
     return;

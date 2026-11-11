@@ -27,6 +27,7 @@ import time
 import urllib.error
 import urllib.request
 
+import honeycomb
 import venues
 
 API = "https://api-v2.ignite.microsoft.com/api"
@@ -39,8 +40,9 @@ SOURCES = {
     "settings": [CDN + "/settings.json", API + "/settings"],
 }
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DATA = os.path.join(ROOT, "data", "ignite2026")
-VENUE = venues.CONFERENCE_VENUES["ignite2026"]   # the building patterns rooms are checked against
+CONFERENCE = "ignite2026"   # Honeycomb's "conference" field (issue #140)
+DATA = os.path.join(ROOT, "data", CONFERENCE)
+VENUE = venues.CONFERENCE_VENUES[CONFERENCE]   # the building patterns rooms are checked against
 MAX_BATCHES = 400
 # Used when the site settings can't be fetched. Times outside the event window are
 # treated as placeholders (the 2026 index already holds fake times on Nov 14).
@@ -431,6 +433,21 @@ def dump(path, obj, compact=False):
     os.replace(tmp, path)
 
 
+def telemetry(conference, started_at, duration_ms, fetch_status, records_fetched, records_accepted,
+              records_skipped, guard, added, removed, changed):
+    """The per-run fields Honeycomb gets (issue #140), as a plain dict so a test can compare it
+    directly; nothing here is picks, notes, profile answers, settings or an id that identifies a
+    person. `scripts/send_sync_event.py` adds commit/deploy outcome once the workflow knows them
+    and sends it through honeycomb.send_event (which no-ops without an ingest key)."""
+    return {
+        "event_type": "sync-run", "conference": conference, "started_at": started_at,
+        "duration_ms": duration_ms, "fetch_status": fetch_status,
+        "records_fetched": records_fetched, "records_accepted": records_accepted,
+        "records_skipped": records_skipped, "guard_refused": guard is not None, "guard": guard,
+        "added": added, "removed": removed, "changed": changed,
+    }
+
+
 def short(v):
     if isinstance(v, list):
         v = ", ".join(str(x) for x in v)
@@ -719,6 +736,10 @@ def refusal_markdown(r):
 
 def run(args):
     now = utcnow()
+    t0 = time.monotonic()
+    # Set as each stage completes; whatever is still None when a guard or an error cuts the run
+    # short is left out of the Honeycomb event (honeycomb.allowed drops None), not sent as 0.
+    raw = records_fetched = records_accepted = records_skipped = None
     data = os.path.abspath(args.data_dir) if args.data_dir else DATA
     os.makedirs(data, exist_ok=True)
     spath = os.path.join(data, "sessions.json")
@@ -761,9 +782,11 @@ def run(args):
                 flags = meta.get("siteFlags")
         if not isinstance(raw, list):
             raise RuntimeError("unexpected catalog payload (not a list)")
+        records_fetched = len(raw)
         # A feed with many non-session entries is broken, not a list of cancellations.
         # (Test sessions are dropped on purpose later; an entry with no session id isn't one.)
         bad = sum(1 for s in raw if not isinstance(s, dict) or s.get("sessionId") in (None, ""))
+        records_skipped = bad   # test records (normalize's own `dropped`) are added in below
         if raw and bad > MALFORMED_SHARE * len(raw):
             raise RuntimeError("%d of %d catalog entries are malformed; keeping last good data" % (bad, len(raw)))
         # A field we rely on in a shape we have never read is a format change, not many blanks.
@@ -774,6 +797,8 @@ def run(args):
         # If the speaker feed is down, keep companies/titles from the last snapshot.
         by_name = {p[0]: p for r in prev for p in r.get("speakers") or [] if p[1] or p[2]}
         cur, dropped, draft = normalize(raw, raw_spk, event_window(args, flags or {}), by_name)
+        records_accepted = len(cur)
+        records_skipped += len(dropped)
         # Guard: an outage or partial index must not look like hundreds of cancellations.
         # It counts sessions, not runs: dropping a session's extra run (Ignite deleted its
         # placeholder runs once rooms were published) loses nothing. Same rule in live.js.
@@ -807,6 +832,12 @@ def run(args):
                     f.write(refusal_markdown(refused))
         else:
             meta.pop("refusal", None)
+        # A guard refusing the feed is not a fetch failure: the feed was read fine, it was the
+        # content that was refused. Anything else (network error, unreadable payload) is.
+        meta["telemetry"] = telemetry(
+            CONFERENCE, iso(now), round((time.monotonic() - t0) * 1000),
+            "ok" if refused else "failed", records_fetched, records_accepted, records_skipped,
+            refused["guard"] if refused else None, 0, 0, 0)
         dump(mpath, meta)
         print("sync failed:", e, file=sys.stderr)
         return 3, False
@@ -865,6 +896,10 @@ def run(args):
     if flags:
         meta["siteFlags"] = flags
     meta["lastLogged"] = changes["batches"][0]["at"] if changes["batches"] else None
+    meta["telemetry"] = telemetry(
+        CONFERENCE, iso(now), round((time.monotonic() - t0) * 1000), "ok",
+        records_fetched, records_accepted, records_skipped, None,
+        len(added), len(removed), len(changed))
     dump(mpath, meta)
 
     watch = set(load(os.path.join(data, "watchlist.json"), {}).get("codes", []))

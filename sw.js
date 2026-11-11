@@ -17,7 +17,7 @@ const DATA_CACHE = 'data-v1';
 const SHELL = [
   './', 'index.html', 'manifest.webmanifest', 'assets/css/app.css',
   'assets/js/app.js', 'assets/js/clash.js', 'assets/js/conferences.js', 'assets/js/picks.js', 'assets/js/data.js', 'assets/js/instance.js', 'assets/js/live.js', 'assets/js/planner.js', 'assets/js/profile.js', 'assets/js/health.js',
-  'assets/js/store.js', 'assets/js/suggest.js', 'assets/js/time.js', 'assets/js/ui.js', 'assets/js/upnext.js', 'assets/js/venue.js',
+  'assets/js/store.js', 'assets/js/suggest.js', 'assets/js/telemetry.js', 'assets/js/time.js', 'assets/js/ui.js', 'assets/js/upnext.js', 'assets/js/venue.js',
   'assets/icons/icon.svg', 'assets/icons/icon-180.png', 'assets/icons/icon-512.png',
 ];
 const DATA = ['data/ignite2026/sessions.json', 'data/ignite2026/changes.json', 'data/ignite2026/meta.json', 'data/ignite2026/favorites.json', 'data/ignite2026/profile.json',
@@ -53,6 +53,9 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   const req = e.request;
   const url = new URL(req.url);
+  // Telemetry (assets/js/telemetry.js) always POSTs to a different origin, so it is never
+  // reached by either guard below: never cached, never served stale, never retried here
+  // (issue #140; specs/features/observability.feature).
   if (req.method !== 'GET' || url.origin !== self.location.origin || url.pathname.includes('/api/')) return;
   if (!url.pathname.startsWith(SCOPE) || !OWN.test(url.pathname.slice(SCOPE.length))) return;
 

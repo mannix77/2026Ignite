@@ -102,7 +102,10 @@ await test('should alert only for picked sessions', () => {
 });
 
 // ---- failed saves are reported, not swallowed
-await test('should tell subscribers when picks could not be saved', async () => {
+await test("should tell subscribers the device's storage is full, not just that the save failed", async () => {
+  // A full quota is reported as its own event (issue #140's "storage full" telemetry), distinct
+  // from the general 'save-error' (blocked storage, private mode); shim.js's localStorage
+  // throws a QuotaExceededError the same way a real full disk would.
   localStorage.clear();
   store.load('quota');
   const seen = [];
@@ -112,7 +115,8 @@ await test('should tell subscribers when picks could not be saved', async () => 
   await sleep(200);
   globalThis.__quota = null;
   off();
-  eq(seen.includes('save-error'), true);
+  eq(seen.includes('storage-full'), true);
+  eq(seen.includes('save-error'), false);   // one event per failure, not both
 });
 
 // ---- the test shim's storage quota is shared across every key, like a real browser (issue #77)
@@ -349,6 +353,92 @@ await test('should serve its own app page from the offline copy', async () => {
   let response;
   handlers.fetch({ request: { method: 'GET', url: `${MAIN}index.html`, mode: 'navigate' }, respondWith: p => { response = p; } });
   eq(await response, page);
+});
+
+// A telemetry call (assets/js/telemetry.js) always POSTs to a different origin than the app's
+// own: the worker's very first guard (non-GET, or cross-origin) already skips it, so it is
+// never cached, never served from cache, and never retried here (issue #140).
+await test('should never intercept a telemetry call: not cached, not served stale, not retried', () => {
+  const { handlers } = worker(MAIN);
+  let intercepted = false;
+  handlers.fetch({ request: { method: 'POST', url: 'https://api.honeycomb.io/1/batch/app-errors', mode: 'cors' }, respondWith: () => { intercepted = true; } });
+  eq(intercepted, false);
+});
+
+// ---- opt-in app-error telemetry (assets/js/telemetry.js, issue #140)
+// A tiny stand-in for the two <meta> tags telemetry.js reads; no other module under test here
+// touches `document`, so this is safe to define only for these tests.
+const metaValues = {};
+globalThis.document = { querySelector: sel => {
+  const name = /meta\[name="([^"]+)"\]/.exec(sel)?.[1];
+  return name in metaValues ? { content: metaValues[name] } : null;
+} };
+const { buildEvent, browserFamily, reportError } = await import('../assets/js/telemetry.js');
+const APP_ERROR_FIELDS = ['event_type', 'app_version', 'conference', 'browser_family', 'error_name', 'at'].sort();
+
+await test('should classify a Chrome user agent', () => {
+  eq(browserFamily('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'), 'Chrome');
+});
+await test('should classify a Safari user agent (also "Safari/" in a Chrome string, so order matters)', () => {
+  eq(browserFamily('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15'), 'Safari');
+});
+await test('should classify an unrecognised user agent as Other', () => {
+  eq(browserFamily('SomeBot/1.0'), 'Other');
+});
+
+await test('should build an app-error event with only the allow-listed fields', () => {
+  metaValues['app-version'] = 'ignite26-abc123';
+  const event = buildEvent('uncaught-exception', { conference: 'ignite2026', errorName: 'TypeError', now: Date.UTC(2026, 10, 17, 8), ua: 'Chrome/120' });
+  eq(Object.keys(event).sort(), APP_ERROR_FIELDS);
+  eq([event.event_type, event.app_version, event.conference, event.browser_family, event.error_name],
+     ['uncaught-exception', 'ignite26-abc123', 'ignite2026', 'Chrome', 'TypeError']);
+  eq(event.at, new Date(Date.UTC(2026, 10, 17, 8)).toISOString());
+  delete metaValues['app-version'];
+});
+await test('should default the app version to "dev" when no version is stamped on the page', () => {
+  eq(buildEvent('startup-failure', {}).app_version, 'dev');
+});
+await test('should never carry anything outside the app-error allow list, however it is called', () => {
+  // No helper here accepts extra fields at all (CLAUDE.md test rule 11): buildEvent's own
+  // object literal is the allow list, so this asserts the actual shape it produces.
+  const event = buildEvent('save-error', { conference: 'ignite2026', errorName: 'QuotaExceededError' });
+  eq(Object.keys(event).every(k => APP_ERROR_FIELDS.includes(k)), true);
+  eq('message' in event || 'note' in event || 'picks' in event || 'userAgent' in event, false);
+});
+
+function withFetch(fn, impl) {
+  const real = globalThis.fetch;
+  globalThis.fetch = impl;
+  try { return fn(); } finally { globalThis.fetch = real; }
+}
+
+await test('should send nothing when telemetry is off, even with a key stamped on the page', () => {
+  metaValues['honeycomb-browser-key'] = 'hcaik_test';
+  let called = false;
+  const sent = withFetch(() => reportError('uncaught-exception', { enabled: false, conference: 'ignite2026' }), () => { called = true; return Promise.resolve(); });
+  delete metaValues['honeycomb-browser-key'];
+  eq([sent, called], [false, false]);
+});
+await test('should send nothing when no key is stamped on the page, even when telemetry is on', () => {
+  let called = false;
+  const sent = withFetch(() => reportError('uncaught-exception', { enabled: true, conference: 'ignite2026' }), () => { called = true; return Promise.resolve(); });
+  eq([sent, called], [false, false]);
+});
+await test('should send exactly the allow-listed event once telemetry is on and a key is stamped', () => {
+  metaValues['honeycomb-browser-key'] = 'hcaik_test';
+  metaValues['app-version'] = 'ignite26-abc123';
+  let seen = null;
+  const sent = withFetch(
+    () => reportError('save-error', { enabled: true, conference: 'ignite2026', errorName: 'QuotaExceededError' }),
+    (url, opts) => { seen = { url, headers: opts.headers, body: JSON.parse(opts.body) }; return Promise.resolve(); });
+  delete metaValues['honeycomb-browser-key'];
+  delete metaValues['app-version'];
+  eq(sent, true);
+  eq(seen.url, 'https://api.honeycomb.io/1/batch/app-errors');
+  eq(seen.headers['X-Honeycomb-Team'], 'hcaik_test');
+  eq(Object.keys(seen.body[0].data).sort(), APP_ERROR_FIELDS);
+  eq([seen.body[0].data.event_type, seen.body[0].data.conference, seen.body[0].data.error_name],
+     ['save-error', 'ignite2026', 'QuotaExceededError']);
 });
 
 console.log(`${pass} passed, ${fail} failed`);

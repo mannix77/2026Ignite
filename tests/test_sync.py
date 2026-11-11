@@ -19,6 +19,7 @@ from unittest import mock
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 sys.path.insert(0, os.path.join(ROOT, "scripts"))
+import honeycomb  # noqa: E402
 import sync  # noqa: E402
 
 JSC = "/System/Library/Frameworks/JavaScriptCore.framework/Versions/Current/Helpers/jsc"
@@ -1121,6 +1122,83 @@ class AcceptTests(SyncDir, unittest.TestCase):
         self.run_sync(catalog_of(201), accept=["partial"], accepted_by="minesh")   # nothing refused: one session added
         self.assertNotIn("accepted", self.data("changes.json")["batches"][0])
         self.assertNotIn("accepted", self.data("meta.json"))
+
+
+class TelemetryTests(SyncDir, unittest.TestCase):
+    """What a run tells Honeycomb (issue #140, specs/features/observability.feature).
+    Every assertion here reads meta.json's "telemetry" field: the dict the workflow's
+    send_sync_event.py later allow-lists and sends, not a helper's return value."""
+
+    def test_a_successful_run_reports_fetch_counts_and_change_counts(self):
+        self.run_sync(catalog_of(60))
+        more = catalog_of(60)
+        more.append(dict(more[-1], sessionId="extra-1", sessionInstanceId="extra-1", sessionCode="BRK999"))
+        more = more[1:]   # drop one, add one, so added=1 removed=1
+        code, changed = self.run_sync(more)
+        self.assertEqual((code, changed), (0, True))
+        t = self.data("meta.json")["telemetry"]
+        self.assertEqual(t["conference"], "ignite2026")
+        self.assertEqual(t["fetch_status"], "ok")
+        self.assertEqual(t["records_fetched"], 60)
+        self.assertEqual(t["records_accepted"], 60)
+        self.assertEqual(t["records_skipped"], 0)
+        self.assertFalse(t["guard_refused"])
+        self.assertIsNone(t["guard"])
+        self.assertEqual((t["added"], t["removed"], t["changed"]), (1, 1, 0))
+        self.assertGreaterEqual(t["duration_ms"], 0)
+        self.assertRegex(t["started_at"], r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")
+
+    def test_dropped_test_records_count_as_skipped_not_accepted(self):
+        raw = catalog_of(60)
+        raw.append(dict(raw[0], sessionId="t1", sessionInstanceId="t1", sessionCode="TEST1", title="Test"))
+        self.run_sync(raw)
+        t = self.data("meta.json")["telemetry"]
+        self.assertEqual(t["records_fetched"], 61)
+        self.assertEqual(t["records_accepted"], 60)
+        self.assertEqual(t["records_skipped"], 1)
+
+    def test_a_guard_refusal_is_reported_as_ok_fetch_but_a_refused_guard(self):
+        self.run_sync(catalog_of(200))
+        code, _ = self.run_sync(catalog_of(90))   # under 60% of 200: the partial guard refuses it
+        self.assertEqual(code, 3)
+        t = self.data("meta.json")["telemetry"]
+        self.assertEqual(t["fetch_status"], "ok")   # the feed itself was read fine
+        self.assertTrue(t["guard_refused"])
+        self.assertEqual(t["guard"], "partial")
+        self.assertEqual((t["added"], t["removed"], t["changed"]), (0, 0, 0))   # nothing was applied
+
+    def test_a_withdrawal_refusal_names_the_withdrawal_guard(self):
+        self.run_sync(catalog_of(100))
+        bare = catalog_of(100)
+        for r in bare:
+            r["location"] = ""
+        self.run_sync(bare)
+        self.assertEqual(self.data("meta.json")["telemetry"]["guard"], "withdrawal")
+
+    def test_an_unreadable_feed_is_a_failed_fetch_not_a_guard(self):
+        path = self.write("raw.json", [None, 42])
+        args = types.SimpleNamespace(from_file=path, speakers_file=None, settings_file=None,
+                                     event_window="%s:%s" % W25, summary_out=None,
+                                     data_dir=os.path.join(self.tmp, "data"))
+        sync.run(args)
+        t = self.data("meta.json")["telemetry"]
+        self.assertEqual(t["fetch_status"], "failed")
+        self.assertFalse(t["guard_refused"])
+        self.assertIsNone(t["guard"])
+        self.assertIsNone(t["records_accepted"])  # normalize() never ran
+
+    def test_telemetry_never_carries_a_field_outside_honeycombs_allow_list(self):
+        # No personal information is sent: an explicit allow-list per event type (CLAUDE.md test
+        # rule 11), asserted against the actual dict every run produces, in both outcomes.
+        self.run_sync(catalog_of(60))
+        ok = self.data("meta.json")["telemetry"]
+        self.assertTrue(set(ok) <= honeycomb.SYNC_RUN_FIELDS)
+        self.run_sync(catalog_of(10))   # refused: under the 50-session floor
+        refused = self.data("meta.json")["telemetry"]
+        self.assertTrue(set(refused) <= honeycomb.SYNC_RUN_FIELDS)
+        for forbidden in ("picks", "notes", "profile", "settings", "watchlist", "github_actor", "accepted_by"):
+            self.assertNotIn(forbidden, ok)
+            self.assertNotIn(forbidden, refused)
 
 
 if __name__ == "__main__":

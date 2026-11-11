@@ -20,6 +20,7 @@ export const DEFAULT_SETTINGS = {
   preview: false,       // simulate days/rooms before the real schedule is published
   hideOnline: false,    // hide online-only sessions in Browse
   useLocation: false,   // GPS: walking times and "leave by" count from where you are
+  telemetry: false,     // send anonymous error reports to Honeycomb (issue #140); opt-in, device-only
   startFrom: null,      // where each day starts (building id); null = conference default
   lunch: { on: true, from: 690, to: 810, length: 30, weight: 40 }, // protect a lunch break
   blocks: [],           // [{ id, day, start, end, label, building }] meetings, booth duty…
@@ -152,7 +153,10 @@ function writeNow() {
   } catch (e) {
     console.warn('Could not save state', e);
     saveFailed = true;
-    for (const fn of listeners) fn('save-error');
+    // A full quota is its own telemetry event (issue #140); anything else (blocked storage,
+    // private mode) is reported as the general 'save-error'. Either way the save-error banner
+    // in app.js reacts the same way, so this distinction costs that UI nothing.
+    for (const fn of listeners) fn(e && e.name === 'QuotaExceededError' ? 'storage-full' : 'save-error');
   }
 }
 
@@ -280,7 +284,7 @@ export function setSetting(key, value) {
 
 // Restores planner tuning; keeps display choices, room overrides, blocks and lunch.
 export function resetSettings() {
-  const keep = ['preview', 'hideOnline', 'useLocation', 'repo', 'overrides', 'blocks', 'custom', 'lunch', 'startFrom'];
+  const keep = ['preview', 'hideOnline', 'useLocation', 'telemetry', 'repo', 'overrides', 'blocks', 'custom', 'lunch', 'startFrom'];
   state.prefs = Object.fromEntries(Object.entries(state.prefs).filter(([k]) => keep.includes(k)));
   cachedSettings = null;
   emit('settings');
@@ -409,7 +413,7 @@ function sanitizePrefs(src) {
     out.overrides = {};
     for (const [label, b] of Object.entries(src.overrides)) if (label.length < 300 && (b === '' || validBuilding(b))) out.overrides[label] = b;
   }
-  for (const k of ['preview', 'hideOnline', 'useLocation']) if (typeof src[k] === 'boolean') out[k] = src[k];
+  for (const k of ['preview', 'hideOnline', 'useLocation', 'telemetry']) if (typeof src[k] === 'boolean') out[k] = src[k];
   if (validBuilding(src.startFrom)) out.startFrom = src.startFrom;
   // Only the lunch fields you changed are kept; the conference's own window fills the rest.
   if (src.lunch && typeof src.lunch === 'object') {

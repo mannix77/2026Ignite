@@ -230,7 +230,7 @@ await test('should report save-ok once a failing save succeeds again, and only t
   localStorage.removeItem('ignite26.planner.v1:save-recovery');
   store.load('save-recovery');
   const seen = [];
-  const off = store.subscribe(w => { if (w === 'save-error' || w === 'save-ok') seen.push(w); });
+  const off = store.subscribe(w => { if (w === 'save-error' || w === 'storage-full' || w === 'save-ok') seen.push(w); });
   globalThis.__quota = 10;
   store.mutatePicks(p => { p.S1 = { p: 3, lock: null, note: '', at: 1 }; });
   await sleep(SAVE);
@@ -243,9 +243,11 @@ await test('should report save-ok once a failing save succeeds again, and only t
   store.mutatePicks(p => { p.S3 = { p: 1, lock: null, note: '', at: 3 }; });
   await sleep(SAVE);
   off();
-  eq(whileFull, [['save-error'], true, null], 'while full: only save-error, still failing, nothing stored');
-  eq(afterRecovery, [['save-error', 'save-ok'], false, { S1: [3, 1], S2: [2, 2] }], 'the recovery save itself wrote the change made while full, and reported save-ok');
-  eq([seen, store.saveFailing(), stored()], [['save-error', 'save-ok'], false, { S1: [3, 1], S2: [2, 2], S3: [1, 3] }], 'none for the next ordinary save, which saved too');
+  // A full quota (issue #140) reports 'storage-full', not the general 'save-error'; either way
+  // the recovery once it saves again still reports 'save-ok'.
+  eq(whileFull, [['storage-full'], true, null], 'while full: only storage-full, still failing, nothing stored');
+  eq(afterRecovery, [['storage-full', 'save-ok'], false, { S1: [3, 1], S2: [2, 2] }], 'the recovery save itself wrote the change made while full, and reported save-ok');
+  eq([seen, store.saveFailing(), stored()], [['storage-full', 'save-ok'], false, { S1: [3, 1], S2: [2, 2], S3: [1, 3] }], 'none for the next ordinary save, which saved too');
 });
 
 await test('should restore "preferences never set" when replacing from such a backup', () => {
