@@ -1,4 +1,3 @@
-@pending
 Feature: Walking time starts from where I am standing, not from the building as a whole
   A building has more than one end. From the end nearest a neighbouring building the walk is
   shorter than from the far end, so the estimate should use the side I am on (issue 99).

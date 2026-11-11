@@ -8,7 +8,7 @@ import { fmtTime, fmtDay, fmtDuration, relTime, nowLocal, addDays } from './time
 import { upNext, onwardWalk, nextPlanned } from './upnext.js';
 import { slotGroups, rankOptions, rankTie } from './clash.js';
 import * as picks from './picks.js';
-import { createVenue, setVenue, walkMinutes, floorExtra, mergeWalk } from './venue.js';
+import { createVenue, setVenue, walkMinutes, floorExtra, mergeWalk, haversine, sideOf } from './venue.js';
 import { CONFERENCES, currentConferenceId, rememberConference, conferenceList } from './conferences.js';
 import { buildSuggester } from './suggest.js';
 import { createRanker, partition, profileConfig, profileGroups, GOALS } from './profile.js';
@@ -58,8 +58,9 @@ const app = {
   announcedLive: null,
   favoritesOffer: null,
   simNow: null,     // rehearsal clock: this tab only, never saved
-  geo: null,        // last GPS fix: { lat, lon, accuracy, at, fix: { building, distance, inside, approach }, error }
+  geo: null,        // last GPS fix: { lat, lon, accuracy, at, fix: { building, distance, inside, approach, side }, error }
   hereManual: null, // building id you told us you're in (today only)
+  hereManualSide: null, // which side of it, when the venue defines sides for that building (issue 99)
   leaveAlerted: null,
 };
 
@@ -212,17 +213,13 @@ function suggestExtra(x) {
 
 // ---------------------------------------------------------------- where you are
 
-const EARTH_M = 6371000;
 const WALK_M_PER_MIN = 75; // conference pace, outdoors
-function haversine([a1, o1], [a2, o2]) {
-  const r = Math.PI / 180;
-  const h = Math.sin(((a2 - a1) * r) / 2) ** 2 + Math.cos(a1 * r) * Math.cos(a2 * r) * Math.sin(((o2 - o1) * r) / 2) ** 2;
-  return 2 * EARTH_M * Math.asin(Math.sqrt(h));
-}
 
 // Nearest building to a GPS point. Outside every building, the extra minutes to reach the
-// nearest one are added to walks from here ("approach").
-function locate(lat, lon) {
+// nearest one are added to walks from here ("approach"). Inside, an accurate enough fix also
+// picks a side of it when the venue defines one (issue 99), so the walk to a close neighbour
+// is not over-estimated from the building's far end.
+function locate(lat, lon, accuracy) {
   let best = null;
   for (const b of app.venue.buildings) {
     if (!b.geo) continue;
@@ -232,7 +229,8 @@ function locate(lat, lon) {
   }
   if (!best) return null;
   const inside = best.distance <= app.venue.geoRadius;
-  return { building: best.building, distance: Math.round(best.distance), inside, approach: inside ? 0 : Math.ceil(best.distance / WALK_M_PER_MIN), geo: [lat, lon] };
+  const side = inside ? sideOf(app.venue.walk, best.building, [lat, lon], accuracy) : null;
+  return { building: best.building, distance: Math.round(best.distance), inside, approach: inside ? 0 : Math.ceil(best.distance / WALK_M_PER_MIN), geo: [lat, lon], side };
 }
 
 function startFromId() {
@@ -244,9 +242,16 @@ function startFromId() {
 // from your plan or the building your day starts in).
 function here() {
   const m = app.hereManual;
-  if (m && app.venue.BUILDING[m]) return { source: 'manual', building: m, inside: true, approach: 0, loc: { label: '', building: m, floor: null, known: true } };
+  if (m && app.venue.BUILDING[m]) {
+    // A side only sticks when the venue still defines it for this building (issue 99); an
+    // unrecognised one (an old save, a venue switch) is the same as not choosing one. Exact-key
+    // lookup (not truthiness), since the saved value is untrusted (hand-edited storage).
+    const sidesForM = app.venue.walk.sides?.[m];
+    const side = typeof app.hereManualSide === 'string' && sidesForM && Object.hasOwn(sidesForM, app.hereManualSide) ? app.hereManualSide : null;
+    return { source: 'manual', building: m, inside: true, approach: 0, loc: { label: '', building: m, floor: null, known: true, side } };
+  }
   const g = app.geo;
-  if (g?.fix && Date.now() - g.at < 15 * 60000) return { source: 'gps', ...g.fix, accuracy: Math.round(g.accuracy || 0), loc: { label: '', building: g.fix.building, floor: null, known: true } };
+  if (g?.fix && Date.now() - g.at < 15 * 60000) return { source: 'gps', ...g.fix, accuracy: Math.round(g.accuracy || 0), loc: { label: '', building: g.fix.building, floor: null, known: true, side: g.fix.side } };
   // (g.fix.geo carries the raw position for walks measured from outside the venue)
   return null;
 }
@@ -311,10 +316,10 @@ function startGeo() {
   let lastRender = 0;
   geoWatch = navigator.geolocation.watchPosition(pos => {
     const { latitude: lat, longitude: lon, accuracy } = pos.coords;
-    const fix = locate(lat, lon);
+    const fix = locate(lat, lon, accuracy);
     const prev = app.geo?.fix;
     app.geo = { lat, lon, accuracy, at: Date.now(), fix, error: null };
-    const moved = !prev || prev.building !== fix?.building || Math.abs(prev.approach - (fix?.approach || 0)) >= 2;
+    const moved = !prev || prev.building !== fix?.building || prev.side !== fix?.side || Math.abs(prev.approach - (fix?.approach || 0)) >= 2;
     if ((moved || Date.now() - lastRender > 60000) && ['now', 'browse'].includes(app.tab) && !dialog.open && !document.activeElement?.closest?.('.sim')) {
       lastRender = Date.now();
       render();
@@ -1273,15 +1278,22 @@ function renderDecision(d, plan, c) {
 function hereBar(h) {
   const s = store.settings();
   const opts = app.venue.buildings.filter(b => b.id !== 'O').map(b => `<option value="${attr(b.id)}" ${h?.source === 'manual' && h.building === b.id ? 'selected' : ''}>${esc(b.name)}</option>`).join('');
+  // A side only when the manually-chosen building has one (issue 99): which end of it you're
+  // at changes the walk to a close neighbour, so a close one is not over-estimated.
+  const sides = h?.source === 'manual' ? app.venue.walk.sides?.[h.building] : null;
+  const sideOpts = sides ? Object.entries(sides).map(([id, side]) => `<option value="${attr(id)}" ${h.loc?.side === id ? 'selected' : ''}>${esc(side.name)}</option>`).join('') : '';
   let status;
   if (h?.source === 'gps') {
-    status = h.inside ? `You're at <b>${esc(B(h.building).name)}</b> <span class="muted">(GPS, ±${h.accuracy} m)</span>`
+    const side = h.inside && h.side ? ` <span class="muted">(${esc(app.venue.walk.sides[h.building][h.side].name)})</span>` : '';
+    status = h.inside ? `You're at <b>${esc(B(h.building).name)}</b>${side} <span class="muted">(GPS, ±${h.accuracy} m)</span>`
       : `You're <b>${h.distance >= 1000 ? `${(h.distance / 1000).toFixed(1)} km` : `${h.distance} m`}</b> from ${esc(B(h.building).name)} <span class="muted">(about ${h.approach} min on foot)</span>`;
-  } else if (h?.source === 'manual') status = `You're at <b>${esc(B(h.building).name)}</b> <span class="muted">(set by you)</span>`;
+  } else if (h?.source === 'manual') status = `You're at <b>${esc(B(h.building).name)}</b>${h.loc?.side ? ` <span class="muted">(${esc(sides[h.loc.side].name)})</span>` : ''} <span class="muted">(set by you)</span>`;
   else if (s.useLocation) status = app.geo?.error ? `<span style="color:var(--bad)">Location unavailable: ${esc(app.geo.error)}</span>` : 'Locating…';
   else status = `Walking times count from your plan (day starts at ${esc(B(startFromId()).short)}).`;
   return `<div class="panel here-bar"><div class="row">${icon('walk')}<span>${status}</span><span class="spacer"></span>
     <label class="small">I'm at <select id="here-select" aria-label="Where you are"><option value="">${h?.source === 'gps' ? 'GPS' : 'Not set'}</option>${opts}</select></label>
+    ${sides ? `<label class="small">Side <select id="here-side-select" aria-label="Which side">
+      <option value="">Not set</option>${sideOpts}</select></label>` : ''}
     ${s.useLocation ? `<button class="btn small ghost" data-act="geo-off">Stop GPS</button>` : `<button class="btn small" data-act="geo-on">Use my location</button>`}</div></div>`;
 }
 
@@ -2254,7 +2266,14 @@ main.addEventListener('change', e => {
   else if (t.id === 'conf-select') switchConference(t.value);
   else if (t.id === 'here-select') {
     app.hereManual = t.value || null;
+    app.hereManualSide = null;   // a new building has no side chosen yet
     store.setUI({ here: t.value ? { building: t.value, day: nowLocal(app.simNow, app.conf.tz).day } : null });
+    render();
+  }
+  else if (t.id === 'here-side-select') {
+    app.hereManualSide = t.value || null;
+    const hs = store.get().ui.here;
+    if (hs) store.setUI({ here: { ...hs, side: app.hereManualSide } });
     render();
   }
   else if (t.id === 'dest-select') {   // where I need to be after a candidate (issue 100); for this visit only
@@ -2598,7 +2617,9 @@ async function boot() {
   applyTheme(store.get().ui.theme);
   try { app.simNow = JSON.parse(sessionStorage.getItem(nsKey('ignite26.simNow')) || 'null'); } catch { app.simNow = null; }
   const hs = store.get().ui.here;
-  app.hereManual = hs && hs.day === nowLocal(app.simNow, app.conf.tz).day && typeof hs.building === 'string' ? hs.building : null;
+  const hsToday = hs && hs.day === nowLocal(app.simNow, app.conf.tz).day && typeof hs.building === 'string';
+  app.hereManual = hsToday ? hs.building : null;
+  app.hereManualSide = hsToday && typeof hs.side === 'string' ? hs.side : null;
   try { app.lastLiveCheck = Number(localStorage.getItem(nsKey(`ignite26.planner.liveAt:${app.conf.id}`))) || 0; } catch { app.lastLiveCheck = 0; }
   try {
     app.snapshot = await fetchAll(app.conf.dataDir);
