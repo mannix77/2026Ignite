@@ -62,7 +62,7 @@ async function installShell() {
         if (sameBytes(was, await res.clone().arrayBuffer())) continue;
       }
       await shell.put(p, res);
-      undo.push(prev ? () => shell.put(p, new Response(was, prev)) : () => shell.delete(p));
+      if (hadCopy) undo.push(prev ? () => shell.put(p, new Response(was, prev)) : () => shell.delete(p));
     }
   } catch (e) {
     if (hadCopy) for (const step of undo) await step().catch(() => {});
