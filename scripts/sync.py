@@ -7,9 +7,10 @@ Stdlib only (runs on the macOS system Python 3.9 and in GitHub Actions).
     python3 scripts/sync.py --from-file x.json  # use a saved API response instead of the network
 
 Outputs (relative to the repo root, under data/ignite2026/):
-    sessions.json  normalized catalog the app reads (committed)
+    sessions.json  normalized catalog the app reads (committed); also the feed's field list the
+                   next run compares with (feedFields)
     changes.json   newest-first log of change batches (committed)
-    meta.json      last check time and status for the app (regenerated every run, not committed)
+    meta.json      last check time, status and the feed's field list (regenerated every run, not committed)
 
 The browser app (assets/js/live.js) applies the same normalization to the public CDN
 copy of the catalog; keep the two in step (tests/test_sync.py cross-checks them).
@@ -501,8 +502,60 @@ def code_span(label):
     return "`%s`" % re.sub(r"[\r\n]+", " ", label).replace("`", "'")
 
 
-def summary_markdown(batch, watch):
-    lines = ["### 🚨 " + m for m in batch["milestones"]]
+FIELDS_SHOWN = 60   # field names listed per line of the summary; the rest are counted
+FIELD_NAME_SHOWN = 60   # characters of one field name shown in the summary
+
+
+def usable_session_id(v):
+    """True when a sessionId is of a supported shape (text or number, SHAPE_FIELDS) and not
+    blank once trimmed: the same test the malformed-entry guard and normalize() apply."""
+    if isinstance(v, str):
+        return v.strip() != ""
+    return isinstance(v, (int, float)) and not isinstance(v, bool)
+
+
+def feed_fields(raw):
+    """The feed's top-level field list: every key found on a session record (an object with a
+    usable session id, as the malformed-entry guard counts them; junk entries add nothing), sorted."""
+    return sorted({k for s in raw if isinstance(s, dict) and usable_session_id(s.get("sessionId"))
+                   for k in s if isinstance(k, str)})
+
+
+def recorded_fields(v):
+    """A field list read back from sessions.json, or None when there is none or it is not a non-empty
+    list of names (a catalog written before lists were recorded, or one edited by hand): no baseline."""
+    return sorted(set(v)) if isinstance(v, list) and v and all(isinstance(x, str) for x in v) else None
+
+
+def field_change(before, now):
+    """{"new": [...], "gone": [...]} when the field list moved since the last good catalog, else None."""
+    if before is None:
+        return None
+    new, gone = sorted(set(now) - set(before)), sorted(set(before) - set(now))
+    return {"new": new, "gone": gone} if new or gone else None
+
+
+def fields_markdown(change):
+    """The summary lines for fields that appeared in or vanished from the feed. Names come from the
+    feed, so each is a code span (Markdown in it is inert)."""
+    lines = ["### ⚠️ The Ignite feed's fields changed"]
+    for key, label in (("new", "New"), ("gone", "Gone")):
+        names = change.get(key) or []
+        if names:
+            more = " …and %d more" % (len(names) - FIELDS_SHOWN) if len(names) > FIELDS_SHOWN else ""
+            shown = (n if len(n) <= FIELD_NAME_SHOWN else n[:FIELD_NAME_SHOWN - 1] + "…" for n in names[:FIELDS_SHOWN])
+            lines.append("- %s: %s%s" % (label, ", ".join(code_span(n) for n in shown), more))
+    return lines
+
+
+def summary_markdown(batch, watch, fields=None):
+    """The change summary; `fields` (from field_change) is listed right after the milestones. With no
+    batch (no session changed) the summary is the field change alone."""
+    lines = ["### 🚨 " + m for m in (batch or {}).get("milestones", [])]
+    if fields:
+        lines.extend(fields_markdown(fields))
+    if not batch:
+        return "\n".join(lines) + "\n"
     if batch.get("accepted"):
         a = batch["accepted"]
         lines.append("### ⚠️ Catalog accepted by hand (%s): %s" % (a["by"], a["reason"]))
@@ -810,6 +863,9 @@ def run(args):
         if not isinstance(raw, list):
             raise RuntimeError("unexpected catalog payload (not a list)")
         records_fetched = len(raw)
+        # Recorded even when a guard refuses this feed below: the list is what the feed looks like now.
+        fields = feed_fields(raw)
+        meta["feedFields"] = fields
         # A feed with many non-session entries is broken, not a list of cancellations.
         # (Test sessions are dropped on purpose later; an entry with no session id isn't one.)
         bad = sum(1 for s in raw if not isinstance(s, dict) or s.get("sessionId") in (None, ""))
@@ -894,10 +950,13 @@ def run(args):
     changed_at = (prev_doc or {}).get("changedAt") or generated
     if (not prev_doc) or added or removed or changed or ms:
         changed_at = iso(now)
+    # The feed's field list is kept in sessions.json too (committed; meta.json is not), so the next
+    # run compares with the last good catalog's. A catalog without a usable list is no baseline.
+    fields_moved = field_change(recorded_fields((prev_doc or {}).get("feedFields")), fields)
     if (not prev_doc) or prev != cur or prev_doc.get("dropped") != dropped or prev_doc.get("siteFlags") != flags \
-            or prev_doc.get("changedAt") != changed_at:
+            or prev_doc.get("changedAt") != changed_at or prev_doc.get("feedFields") != fields:
         dump(spath, {"generatedAt": iso(now), "changedAt": changed_at, "source": src, "dropped": dropped,
-                     "siteFlags": flags, "stats": cs, "sessions": cur}, compact=True)
+                     "siteFlags": flags, "feedFields": fields, "stats": cs, "sessions": cur}, compact=True)
         generated = iso(now)
     # meta.json isn't committed, so derive "last change" from committed data, not from now.
     meta["lastChanged"] = changed_at
@@ -930,14 +989,15 @@ def run(args):
     dump(mpath, meta)
 
     watch = set(load(os.path.join(data, "watchlist.json"), {}).get("codes", []))
-    if batch and args.summary_out:
+    # A field change alone is announced too (no batch: the app's change log shows sessions).
+    if (batch or fields_moved) and args.summary_out:
         with open(args.summary_out, "w", encoding="utf-8") as f:
-            f.write(summary_markdown(batch, watch))
-    print(console_summary(cs, draft, added, removed, changed, ms, unknown))
-    return 0, bool(batch)
+            f.write(summary_markdown(batch, watch, fields_moved))
+    print(console_summary(cs, draft, added, removed, changed, ms, unknown, fields_moved))
+    return 0, bool(batch or fields_moved)
 
 
-def console_summary(stats, draft, added, removed, changed, milestones, unknown=()):
+def console_summary(stats, draft, added, removed, changed, milestones, unknown=(), fields=None):
     """One line for the run log. Sessions and extra runs are counted apart: a dropped extra run
     (repeat=True) of a session that stays listed is not a removed session."""
     def sessions(xs):
@@ -952,6 +1012,8 @@ def console_summary(stats, draft, added, removed, changed, milestones, unknown=(
         line += " | " + "; ".join(milestones)
     if unknown:
         line += " | " + venues.notice(unknown, "; ")
+    if fields:
+        line += " | feed fields: %d new, %d gone" % (len(fields["new"]), len(fields["gone"]))
     return line
 
 

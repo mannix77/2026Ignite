@@ -86,6 +86,33 @@ Feature: Keeping the Ignite catalog current without false alarms
       When the live check reads a catalog full of placeholders
       Then it counts the same published sessions as the sync
 
+  Rule: A field that appears in or vanishes from the feed is announced
+
+    Scenario: Microsoft adds a field to the feed
+      Given the last good catalog recorded the feed's fields
+      When the feed arrives with a field it never had
+      Then the change summary lists the new field
+
+    Scenario: A field vanishes from the feed
+      Given the last good catalog recorded the feed's fields
+      When the feed arrives without one of them
+      Then the change summary lists the vanished field
+
+    Scenario: A field change alone is announced
+      Given no session in the catalog changed
+      When the feed arrives with a new field
+      Then a change summary is written for the new field
+
+    Scenario: A refused feed's new field waits for the next good run
+      Given the sync refused a partial feed that had a new field
+      When the next run accepts the feed
+      Then its change summary lists the new field
+
+    Scenario: The first run with no recorded fields only records them
+      Given the last good catalog has no recorded fields
+      When the sync reads the feed
+      Then the fields are recorded without being announced
+
   Rule: Change notices tell runs apart from sessions
 
     Scenario: A dropped run is not reported as a cancelled session

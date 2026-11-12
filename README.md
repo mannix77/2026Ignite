@@ -136,6 +136,7 @@ Browser ── data/<conference>/*.json (snapshot + history + favorites)
 - Real times arrive as `startDateTime`/`endDateTime` (UTC). The 2026 feed already contains placeholder times, all on Nov 14, and `zTest` rooms. These are ignored: only times inside the event window count (a start outside it, or an end before or past it, is a placeholder and counts among the "placeholder times ignored"; an end with no start is simply dropped), and a blank, `zTest…`, TBD/TBA or "Rescheduling" room shows as Room TBA and is not counted as a room. One rule in `sync.py` (`placeholder_room`, `in_window`, `has_room`), mirrored in `live.js`.
 - `TimeSlot` was Pacific time in 2025 but is UTC in 2026, so it's never used for real times.
 - Repeat runs appear either as `BRK101-R1` records linked by `repeatedSessions`, or as records that share a `sessionId`. Both are grouped.
+- Microsoft changes the feed without notice (`location` turned from text into an object in Oct 2026). Every run records the feed's top-level field list (`feedFields` in `meta.json`, and in `sessions.json` as the baseline, since `meta.json` isn't committed); a field that appears or vanishes is listed in the next change summary, even when no session changed.
 
 **Gartner specifics:** times and rooms are final in the export (`America/New_York`). Keynotes, Signature Series and track sessions are assumed to be replayable; Xpo stage talks, roundtables, workshops and clinics are not. Sessions with the same title and type under different codes (clinics, repeated roundtables) are treated as repeat runs.
 
