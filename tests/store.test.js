@@ -1039,18 +1039,28 @@ await test('should read a session the person added (MY-…) in a picks link, and
 await test('should start with no exported sessions, and persist what was exported across a reload', async () => {
   store.load('ics-reload');
   eq(store.icsExported(), []);
-  const entries = [{ inst: 'i1', uid: 'i1@x', summary: '[A] One', start: '2026-11-18T18:00:00Z', end: '2026-11-18T18:45:00Z', seq: 2, cancelled: true }];
+  const entries = [{ inst: 'i1', uid: 'i1@x', summary: '[A] One', start: '2026-11-18T18:00:00Z', end: '2026-11-18T18:45:00Z', seq: 2, cancelled: true, source: 'manual' }];
   store.setIcsExported(entries);
   eq(store.icsExported(), entries);
   await sleep(SAVE);
   store.load('ics-reload');
-  eq(store.icsExported(), entries, 'must still be there after a reload, including seq and cancelled');
+  eq(store.icsExported(), entries, 'must still be there after a reload, including seq, cancelled and source');
 });
 
-await test('should default seq to 0 and cancelled to false when an entry omits them', () => {
+await test('should default seq to 0, cancelled to false and source to \'plan\' when an entry omits them', () => {
   store.load('ics-defaults');
   store.setIcsExported([{ inst: 'i1', uid: 'i1@x', summary: 'ok', start: '2026-11-18T18:00:00Z', end: '2026-11-18T18:45:00Z' }]);
-  eq(store.icsExported(), [{ inst: 'i1', uid: 'i1@x', summary: 'ok', start: '2026-11-18T18:00:00Z', end: '2026-11-18T18:45:00Z', seq: 0, cancelled: false }]);
+  eq(store.icsExported(), [{ inst: 'i1', uid: 'i1@x', summary: 'ok', start: '2026-11-18T18:00:00Z', end: '2026-11-18T18:45:00Z', seq: 0, cancelled: false, source: 'plan' }]);
+});
+
+await test('should keep a \'manual\' source but coerce any other value to \'plan\'', () => {
+  store.load('ics-source');
+  store.setIcsExported([
+    { inst: 'i1', uid: 'i1@x', summary: 'ok', start: '2026-11-18T18:00:00Z', end: '2026-11-18T18:45:00Z', source: 'manual' },
+    { inst: 'i2', uid: 'i2@x', summary: 'ok', start: '2026-11-18T18:00:00Z', end: '2026-11-18T18:45:00Z', source: 'plan' },
+    { inst: 'i3', uid: 'i3@x', summary: 'ok', start: '2026-11-18T18:00:00Z', end: '2026-11-18T18:45:00Z', source: 'bogus' },
+  ]);
+  eq(store.icsExported().map(x => [x.inst, x.source]), [['i1', 'manual'], ['i2', 'plan'], ['i3', 'plan']]);
 });
 
 await test('should drop a malformed saved entry (hand-edited backup, older schema) rather than keep it or throw', () => {
@@ -1071,7 +1081,7 @@ await test('should drop a malformed saved entry (hand-edited backup, older schem
 
 // Keep fixtures local to the calendar state tests; each case gets its own storage namespace.
 const calendarEntry = { inst: 'run-1', uid: 'run-1@ignite2026.ignite26-planner', summary: '[A] One',
-  start: '2026-11-18T18:00:00Z', end: '2026-11-18T18:45:00Z', seq: 0, cancelled: false };
+  start: '2026-11-18T18:00:00Z', end: '2026-11-18T18:45:00Z', seq: 0, cancelled: false, source: 'plan' };
 
 await test('should sanitize every required calendar field on both save and load', async () => {
   const invalid = [];
@@ -1159,8 +1169,8 @@ await test('should coerce a garbage seq or cancelled value to its safe default r
     { inst: 'i2', uid: 'i2@x', summary: 'b', start: '2026-11-18T18:00:00Z', end: '2026-11-18T18:45:00Z', seq: 1.5, cancelled: 1 },
   ]);
   eq(store.icsExported(), [
-    { inst: 'i1', uid: 'i1@x', summary: 'a', start: '2026-11-18T18:00:00Z', end: '2026-11-18T18:45:00Z', seq: 0, cancelled: false },
-    { inst: 'i2', uid: 'i2@x', summary: 'b', start: '2026-11-18T18:00:00Z', end: '2026-11-18T18:45:00Z', seq: 0, cancelled: false },
+    { inst: 'i1', uid: 'i1@x', summary: 'a', start: '2026-11-18T18:00:00Z', end: '2026-11-18T18:45:00Z', seq: 0, cancelled: false, source: 'plan' },
+    { inst: 'i2', uid: 'i2@x', summary: 'b', start: '2026-11-18T18:00:00Z', end: '2026-11-18T18:45:00Z', seq: 0, cancelled: false, source: 'plan' },
   ]);
 });
 

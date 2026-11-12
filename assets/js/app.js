@@ -1836,15 +1836,17 @@ function icsEnd(s) { return s.end || new Date(new Date(s.start).getTime() + (s.d
 
 function exportIcs() {
   const plan = computePlan();
-  // Everything actually in the resolved schedule, any time source: a session whose catalog
-  // time is only a preview or has gone missing is still here (just not in `exportable` below),
-  // so it's never mistaken for dropped-from-the-plan and wrongly published as cancelled. A
-  // session that lost a real scheduling conflict never reaches plan.res.plan at all, so it's
-  // correctly still treated as dropped.
+  // Everything still picked, any time source, including one with no usable time at all
+  // (plan.tba): a session whose catalog time is only a preview, has gone missing, or was never
+  // published is still here (just not in `exportable` below), so it's never mistaken for
+  // dropped-from-the-plan and wrongly published as cancelled. A session that lost a real
+  // scheduling conflict never reaches plan.res.plan or plan.tba at all, so it's correctly still
+  // treated as dropped.
   const all = Object.values(plan.res.plan).flat().filter(x => !x.pseudo);
+  const currentInsts = [...all, ...plan.tba].map(x => x.s.inst);
   const exportable = all.filter(x => (x.s.timeSource === 'official' || x.s.timeSource === 'custom') && x.s.start);
   const previous = store.icsExported();
-  const pendingCancel = currentlyCancellable(previous, all.map(x => x.s.inst));
+  const pendingCancel = currentlyCancellable(previous, currentInsts);
   if (!exportable.length && !pendingCancel) {
     toast(app.model.mode === 'preview' ? 'Preview times are simulated. Calendar export unlocks once the real schedule is published.' : 'Nothing with an official time in your plan yet');
     return;
@@ -1874,8 +1876,7 @@ function exportIcs() {
     };
   });
   const { text, exported, cancelledCount } = buildPlanIcs({
-    calname: `${app.conf.short} plan`, stamp: icsDate(new Date().toISOString()), items,
-    currentInsts: all.map(x => x.s.inst), previous,
+    calname: `${app.conf.short} plan`, stamp: icsDate(new Date().toISOString()), items, currentInsts, previous,
   });
   const msg = items.length
     ? `Saved ${items.length} session${items.length === 1 ? '' : 's'} to a calendar file${cancelledCount ? ` (${cancelledCount} cancelled)` : ''} — open it to update your calendar`
@@ -1885,11 +1886,13 @@ function exportIcs() {
 }
 
 // Whether a previous export still has anything worth re-opening the export for even though
-// nothing is currently exportable: a session not already marked cancelled and not in the
-// current plan at all (not merely lacking an exportable time, which `currentInsts` covers).
+// nothing is currently exportable: a session the bulk export itself published (never one a
+// single quick-add tracks, which it never auto-cancels) that's not already marked cancelled
+// and not in the current plan at all (not merely lacking an exportable time, which
+// `currentInsts` covers).
 function currentlyCancellable(previous, currentInsts) {
   const current = new Set(currentInsts);
-  return (previous || []).some(x => x && !x.cancelled && !current.has(x.inst));
+  return (previous || []).some(x => x && x.source !== 'manual' && !x.cancelled && !current.has(x.inst));
 }
 
 // A single session, added on its own from its detail view: same stable id as the bulk export

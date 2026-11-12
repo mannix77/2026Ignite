@@ -241,21 +241,21 @@ test('should publish an active session with no SEQUENCE the first time it is exp
   eq(text.includes('UID:i1@x'), true);
   eq(text.includes('BEGIN:VALARM'), true);
   eq(text.includes('STATUS:CANCELLED'), false);
-  eq(exported, [{ inst: 'i1', uid: 'i1@x', summary: '[A] One', start: item1.start, end: item1.end, seq: 0, cancelled: false }]);
+  eq(exported, [{ inst: 'i1', uid: 'i1@x', summary: '[A] One', start: item1.start, end: item1.end, seq: 0, cancelled: false, source: 'plan' }]);
   eq(cancelledCount, 0);
 });
 
 test('should republish a dropped session as cancelled and keep tracking it', () => {
-  const previous = [{ ...item1, inst: 'i1', uid: 'i1@x', seq: 0, cancelled: false }];
+  const previous = [{ ...item1, inst: 'i1', uid: 'i1@x', seq: 0, cancelled: false, source: 'plan' }];
   const { text, exported, cancelledCount } = buildPlanIcs({ calname: 'My plan', stamp: '20261112T000000Z', items: [], currentInsts: [], previous });
   eq(text.includes('STATUS:CANCELLED'), true);
   eq(text.includes('SEQUENCE:1'), true);
-  eq(exported, [{ inst: 'i1', uid: 'i1@x', summary: '[A] One', start: item1.start, end: item1.end, seq: 1, cancelled: true }]);
+  eq(exported, [{ inst: 'i1', uid: 'i1@x', summary: '[A] One', start: item1.start, end: item1.end, seq: 1, cancelled: true, source: 'plan' }]);
   eq(cancelledCount, 1);
 });
 
 test('should not re-cancel or re-publish a session already tracked as cancelled', () => {
-  const previous = [{ inst: 'i1', uid: 'i1@x', summary: '[A] One', start: item1.start, end: item1.end, seq: 1, cancelled: true }];
+  const previous = [{ inst: 'i1', uid: 'i1@x', summary: '[A] One', start: item1.start, end: item1.end, seq: 1, cancelled: true, source: 'plan' }];
   const { text, exported, cancelledCount } = buildPlanIcs({ calname: 'My plan', stamp: '20261112T000000Z', items: [], currentInsts: [], previous });
   eq(text.includes('CANCELLED'), false, 'no second cancellation for the same UID');
   eq(exported, previous, 'still tracked, unchanged, in case it returns');
@@ -263,32 +263,48 @@ test('should not re-cancel or re-publish a session already tracked as cancelled'
 });
 
 test('should revive a cancelled session above its cancellation\'s sequence', () => {
-  const previous = [{ inst: 'i1', uid: 'i1@x', summary: '[A] One', start: item1.start, end: item1.end, seq: 1, cancelled: true }];
+  const previous = [{ inst: 'i1', uid: 'i1@x', summary: '[A] One', start: item1.start, end: item1.end, seq: 1, cancelled: true, source: 'plan' }];
   const { text, exported } = buildPlanIcs({ calname: 'My plan', stamp: '20261112T000000Z', items: [item1], currentInsts: ['i1'], previous });
   eq(text.includes('SEQUENCE:2'), true);
   eq(text.includes('STATUS:CANCELLED'), false);
-  eq(exported[0].cancelled, false);
-  eq(exported[0].seq, 2);
+  eq(exported[0], { inst: 'i1', uid: 'i1@x', summary: '[A] One', start: item1.start, end: item1.end, seq: 2, cancelled: false, source: 'plan' });
 });
 
 test('should bump SEQUENCE when an exported, still-active session is rescheduled', () => {
-  const previous = [{ inst: 'i1', uid: 'i1@x', summary: '[A] One', start: item1.start, end: item1.end, seq: 0, cancelled: false }];
+  const previous = [{ inst: 'i1', uid: 'i1@x', summary: '[A] One', start: item1.start, end: item1.end, seq: 0, cancelled: false, source: 'plan' }];
   const moved = { ...item1, start: '2026-11-18T19:00:00Z', end: '2026-11-18T19:45:00Z' };
   const { text, exported } = buildPlanIcs({ calname: 'My plan', stamp: '20261112T000000Z', items: [moved], currentInsts: ['i1'], previous });
   eq(text.includes('SEQUENCE:1'), true);
   eq(text.includes('DTSTART:20261118T190000Z'), true);
-  eq(exported[0], { inst: 'i1', uid: 'i1@x', summary: '[A] One', start: moved.start, end: moved.end, seq: 1, cancelled: false });
+  eq(exported[0], { inst: 'i1', uid: 'i1@x', summary: '[A] One', start: moved.start, end: moved.end, seq: 1, cancelled: false, source: 'plan' });
 });
 
-test('should not count a session with an unexportable time as dropped (preview, or time withdrawn)', () => {
-  // currentInsts is the broader "still in the plan" set app.js passes even when a session's
-  // time isn't exportable; items (what's actually published) can be narrower without the
-  // difference being mistaken for the session leaving the plan.
-  const previous = [{ inst: 'i1', uid: 'i1@x', summary: '[A] One', start: item1.start, end: item1.end, seq: 0, cancelled: false }];
+test('should not count a session with an unexportable time as dropped (preview, withdrawn, or never had one)', () => {
+  // currentInsts is the broader "still picked" set app.js passes even when a session has no
+  // exportable time at all (preview, withdrawn, or routed to plan.tba with no day); items (what's
+  // actually published) can be narrower without the difference being mistaken for the session
+  // leaving the plan.
+  const previous = [{ inst: 'i1', uid: 'i1@x', summary: '[A] One', start: item1.start, end: item1.end, seq: 0, cancelled: false, source: 'plan' }];
   const { text, exported, cancelledCount } = buildPlanIcs({ calname: 'My plan', stamp: '20261112T000000Z', items: [], currentInsts: ['i1'], previous });
   eq(text.includes('CANCELLED'), false, 'still picked, just not exportable this round: must not be cancelled');
   eq(exported, previous, 'tracked record is untouched, ready to resume once exportable again');
   eq(cancelledCount, 0);
+});
+
+test('should never auto-cancel a manually quick-added session, even when it was never picked at all', () => {
+  // A quick-add can be for any session, picked or not, so it's never in currentInsts the way a
+  // plan-tracked one would be; classifyPrevious must still never offer it up for cancellation.
+  const manual = { inst: 'i1', uid: 'i1@x', summary: '[A] One', start: item1.start, end: item1.end, seq: 0, cancelled: false, source: 'manual' };
+  const { text, exported, cancelledCount } = buildPlanIcs({ calname: 'My plan', stamp: '20261112T000000Z', items: [], currentInsts: [], previous: [manual] });
+  eq(text.includes('CANCELLED'), false, 'a manual entry is never the bulk export\'s to cancel');
+  eq(exported, [manual], 'carried forward exactly as it was');
+  eq(cancelledCount, 0);
+});
+
+test('should take over a manually quick-added session once it\'s genuinely in the resolved plan', () => {
+  const manual = { inst: 'i1', uid: 'i1@x', summary: '[A] One', start: item1.start, end: item1.end, seq: 0, cancelled: false, source: 'manual' };
+  const { exported } = buildPlanIcs({ calname: 'My plan', stamp: '20261112T000000Z', items: [item1], currentInsts: ['i1'], previous: [manual] });
+  eq(exported[0].source, 'plan', 'now bulk-managed, including future cancellation if it later drops out');
 });
 
 test('should build a single-session file with no SEQUENCE the first time, and escape the custom alarm', () => {
@@ -296,15 +312,14 @@ test('should build a single-session file with no SEQUENCE the first time, and es
   const { text, entry } = buildSingleIcs({ calname: 'My plan', stamp: '20261112T000000Z', item, previous: [] });
   eq(text.includes('SEQUENCE:'), false);
   eq(text.includes('DESCRIPTION:A\\, session\\; starts\\nsoon'), true);
-  eq(entry, { inst: 'i1', uid: 'i1@x', summary: '[A] One', start: item1.start, end: item1.end, seq: 0, cancelled: false });
+  eq(entry, { inst: 'i1', uid: 'i1@x', summary: '[A] One', start: item1.start, end: item1.end, seq: 0, cancelled: false, source: 'manual' });
 });
 
 test('should revive a session the bulk export cancelled when quick-added on its own', () => {
-  const previous = [{ inst: 'i1', uid: 'i1@x', summary: '[A] One', start: item1.start, end: item1.end, seq: 1, cancelled: true }];
+  const previous = [{ inst: 'i1', uid: 'i1@x', summary: '[A] One', start: item1.start, end: item1.end, seq: 1, cancelled: true, source: 'plan' }];
   const { text, entry } = buildSingleIcs({ calname: 'My plan', stamp: '20261112T000000Z', item: item1, previous });
   eq(text.includes('SEQUENCE:2'), true);
-  eq(entry.seq, 2);
-  eq(entry.cancelled, false);
+  eq(entry, { inst: 'i1', uid: 'i1@x', summary: '[A] One', start: item1.start, end: item1.end, seq: 2, cancelled: false, source: 'manual' });
 });
 
 console.log(`${pass} passed, ${fail} failed`);

@@ -55,30 +55,33 @@ export function nextSeq(prev, { start, end }) {
 export function cancelSeq(prev) { return (prev?.seq || 0) + 1; }
 
 // Classifies the previously-exported entries (each { inst, uid, summary, start, end, seq,
-// cancelled }, as saved by the last bulk export) against this export's current session-
+// cancelled, source }, as saved by the last export) against this export's current session-
 // instance ids:
 //  - stillCancelled: already published as cancelled last time, still not in the plan — nothing
 //    to re-publish, just keep tracking it in case it returns.
 //  - freshlyDropped: was active last time, isn't in the plan now — publish as cancelled.
-// (A currently-active instance isn't returned here; look it up directly by inst to revive it.)
+// A `source: 'manual'` entry (a single-session quick-add) is never classified here at all: the
+// bulk export doesn't own it and must never auto-cancel a session it didn't itself publish,
+// even one that was never picked at all. (A currently-active `source: 'plan'` instance isn't
+// returned here either; look it up directly by inst to revive it.)
 export function classifyPrevious(previouslyExported, currentInsts) {
   const current = new Set(currentInsts);
-  const usable = (previouslyExported || []).filter(x => x && typeof x.inst === 'string' && !current.has(x.inst));
+  const usable = (previouslyExported || []).filter(x => x && typeof x.inst === 'string' && x.source !== 'manual' && !current.has(x.inst));
   return { stillCancelled: usable.filter(x => x.cancelled), freshlyDropped: usable.filter(x => !x.cancelled) };
+}
+
+function trackedEntry(x, { seq, cancelled, source }) {
+  return { inst: x.inst, uid: x.uid, summary: x.summary, start: x.start, end: x.end, seq, cancelled, source };
 }
 
 // Builds the bulk plan .ics text and the tracked-export state for the next export, from
 // already-gathered per-session fields:
 //   items:        sessions actually being published this round, each
 //                 { inst, uid, start, end, summary, location, description, url, alarm }
-//   currentInsts: every session instance still in the plan, even ones not in `items` because
-//                 their time isn't exportable yet (preview, missing) — broader than `items` on
+//   currentInsts: every session instance still picked, even one not in `items` because it has
+//                 no exportable time yet (preview, no day at all) — broader than `items` on
 //                 purpose, so those aren't mistaken for dropped and cancelled
 //   previous:     store.icsExported(), the last export's tracked state
-function trackedEntry(x, { seq, cancelled }) {
-  return { inst: x.inst, uid: x.uid, summary: x.summary, start: x.start, end: x.end, seq, cancelled };
-}
-
 export function buildPlanIcs({ calname, stamp, items, currentInsts, previous }) {
   const prevByInst = new Map((previous || []).map(x => [x.inst, x]));
   const { stillCancelled, freshlyDropped } = classifyPrevious(previous, currentInsts);
@@ -89,7 +92,7 @@ export function buildPlanIcs({ calname, stamp, items, currentInsts, previous }) 
   for (const it of items) {
     const seq = nextSeq(prevByInst.get(it.inst), it);
     lines.push(...eventLines({ ...it, stamp, seq }));
-    exported.push(trackedEntry(it, { seq, cancelled: false }));
+    exported.push(trackedEntry(it, { seq, cancelled: false, source: 'plan' }));
   }
   // A session the last export published that isn't in this one (unlocked, re-rated down, or
   // dropped from the catalog entirely) is republished as cancelled, so the calendar app
@@ -98,16 +101,17 @@ export function buildPlanIcs({ calname, stamp, items, currentInsts, previous }) 
   for (const d of freshlyDropped) {
     const seq = cancelSeq(d);
     lines.push(...cancelledEventLines({ ...d, stamp, seq }));
-    exported.push(trackedEntry(d, { seq, cancelled: true }));
+    exported.push(trackedEntry(d, { seq, cancelled: true, source: 'plan' }));
   }
-  for (const d of stillCancelled) exported.push(trackedEntry(d, { seq: d.seq || 0, cancelled: true }));
-  // Still in the plan (currentInsts) but not exportable this round (a preview or withdrawn
-  // time): neither published nor dropped. Carry its last tracked record forward untouched, so
-  // tracking doesn't silently lose it and its sequence stays correct whenever it becomes
-  // exportable again.
+  for (const d of stillCancelled) exported.push(trackedEntry(d, { seq: d.seq || 0, cancelled: true, source: 'plan' }));
+  // Carry forward, untouched: a manually quick-added session (classifyPrevious never offers it
+  // up for cancellation, so it just needs to survive into the next tracked state), and a
+  // picked session that's still current but not exportable this round (preview timing, no day
+  // at all yet) — neither published nor dropped.
   for (const p of (previous || [])) {
-    if (p && typeof p.inst === 'string' && current.has(p.inst) && !publishedInsts.has(p.inst) && !exported.some(e => e.inst === p.inst)) {
-      exported.push(trackedEntry(p, { seq: p.seq || 0, cancelled: !!p.cancelled }));
+    if (p && typeof p.inst === 'string' && !publishedInsts.has(p.inst) && !exported.some(e => e.inst === p.inst)
+        && (p.source === 'manual' || current.has(p.inst))) {
+      exported.push(trackedEntry(p, { seq: p.seq || 0, cancelled: !!p.cancelled, source: p.source === 'manual' ? 'manual' : 'plan' }));
     }
   }
   lines.push('END:VCALENDAR');
@@ -117,11 +121,13 @@ export function buildPlanIcs({ calname, stamp, items, currentInsts, previous }) 
 // Builds a single-session .ics text and its tracked-export entry, from one already-gathered
 // item ({ inst, uid, start, end, summary, location, description, url, alarm }) and the bulk
 // export's tracked state (read to compute a non-regressing SEQUENCE, same as buildPlanIcs).
+// Always tracked as source: 'manual' — this session may never have been picked at all, so the
+// bulk export must never later treat it as something that fell out of the plan and cancel it.
 export function buildSingleIcs({ calname, stamp, item, previous }) {
   const prev = (previous || []).find(x => x.inst === item.inst);
   const seq = nextSeq(prev, item);
   const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//ignite26-planner//EN', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', `X-WR-CALNAME:${icsEscape(calname)}`,
     ...eventLines({ ...item, stamp, seq })];
   lines.push('END:VCALENDAR');
-  return { text: lines.map(icsFold).join('\r\n') + '\r\n', entry: trackedEntry(item, { seq, cancelled: false }) };
+  return { text: lines.map(icsFold).join('\r\n') + '\r\n', entry: trackedEntry(item, { seq, cancelled: false, source: 'manual' }) };
 }

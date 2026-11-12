@@ -48,11 +48,14 @@ function blank() {
     profile: null,      // quick-start answers and group choices (profile.js); null = never set
     backup: { at: null, changes: 0, dismissed: null }, // last backup, pick edits since, reminder dismissal
     ui: { tab: 'browse', filters: {}, day: null },
-    icsExported: [],    // [{inst, uid, summary, start, end, seq, cancelled}, …] every session this
-                        // device's bulk plan .ics export has ever published, so a dropped one is
-                        // cancelled and a cancelled one that returns outranks its cancellation
-                        // (issue #147); cancelled entries are kept, never removed, in case the
-                        // session comes back
+    icsExported: [],    // [{inst, uid, summary, start, end, seq, cancelled, source}, …] every
+                        // session this device's bulk plan .ics export or single-session
+                        // quick-add has ever published, so a dropped one is cancelled and a
+                        // cancelled one that returns outranks its cancellation (issue #147);
+                        // cancelled entries are kept, never removed, in case the session comes
+                        // back. source: 'plan' (bulk export manages it, including cancelling it)
+                        // or 'manual' (a quick-add; never auto-cancelled, since it may not even
+                        // be picked)
   };
 }
 
@@ -368,6 +371,7 @@ function sanitizeIcsExported(v) {
       inst: x.inst, uid: x.uid, summary: x.summary, start: x.start, end: x.end,
       seq: Number.isInteger(x.seq) && x.seq >= 0 ? x.seq : 0,
       cancelled: x.cancelled === true,
+      source: x.source === 'manual' ? 'manual' : 'plan',
     }));
 }
 
