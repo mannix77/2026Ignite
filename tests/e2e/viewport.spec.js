@@ -25,12 +25,13 @@ test('the bottom tab bar fits six tabs without overlap, each a touch-sized targe
     expect(box, 'every tab must be laid out, not display:none').not.toBeNull();
     boxes.push(box);
   }
-  // Apple's minimum touch target is 44pt; the nav's fixed --nav-h (64px) covers height, so only
-  // width (squeezed by six-across on a narrow phone) is actually at risk here.
+  // Apple's minimum touch target is 44pt, squeezed here by six tabs across a narrow phone.
   for (const [i, box] of boxes.entries()) {
-    expect(box.width, `tab ${i} is only ${box.width}px wide`).toBeGreaterThan(0);
+    expect(box.width, `tab ${i} is only ${box.width}px wide`).toBeGreaterThanOrEqual(44);
     expect(box.x, `tab ${i} starts off-screen`).toBeGreaterThanOrEqual(0);
     expect(box.x + box.width, `tab ${i} right edge exceeds the ${viewport.width}px viewport`).toBeLessThanOrEqual(viewport.width + 1);
+    expect(box.y, `tab ${i} starts above the viewport`).toBeGreaterThanOrEqual(0);
+    expect(box.y + box.height, `tab ${i} bottom edge exceeds the ${viewport.height}px viewport`).toBeLessThanOrEqual(viewport.height + 1);
   }
   for (let i = 1; i < boxes.length; i++) {
     expect(boxes[i].x, `tab ${i} overlaps tab ${i - 1}`).toBeGreaterThanOrEqual(boxes[i - 1].x + boxes[i - 1].width - 1);
@@ -45,11 +46,15 @@ test('a session detail dialog fits the viewport and its close control is reachab
   const dialog = page.locator('dialog#detail');
   await expect(dialog).toBeVisible();
   const box = await dialog.boundingBox();
-  expect(box.width, `dialog is wider (${box.width}px) than the ${viewport.width}px viewport`).toBeLessThanOrEqual(viewport.width + 1);
-  expect(box.height, `dialog is taller (${box.height}px) than the ${viewport.height}px viewport`).toBeLessThanOrEqual(viewport.height + 1);
+  expect(box.x, 'dialog starts left of the viewport').toBeGreaterThanOrEqual(0);
+  expect(box.x + box.width, `dialog is wider (${box.width}px) than the ${viewport.width}px viewport`).toBeLessThanOrEqual(viewport.width + 1);
+  expect(box.y, 'dialog starts above the viewport').toBeGreaterThanOrEqual(0);
+  expect(box.y + box.height, `dialog is taller (${box.height}px) than the ${viewport.height}px viewport`).toBeLessThanOrEqual(viewport.height + 1);
   const close = page.locator('dialog#detail .d-close');
   await expect(close).toBeVisible();
   const closeBox = await close.boundingBox();
   expect(closeBox.x, 'close control starts off-screen').toBeGreaterThanOrEqual(0);
   expect(closeBox.x + closeBox.width, 'close control right edge exceeds the viewport').toBeLessThanOrEqual(viewport.width + 1);
+  expect(closeBox.y, 'close control starts above the viewport').toBeGreaterThanOrEqual(0);
+  expect(closeBox.y + closeBox.height, 'close control bottom edge exceeds the viewport').toBeLessThanOrEqual(viewport.height + 1);
 });
