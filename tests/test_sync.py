@@ -1107,6 +1107,99 @@ MOVED_FIELDS = ["audienceTypes", "deliveryTypes", "description", "durationInMinu
 FIELDS_HEADING = "### ⚠️ The Ignite feed's fields changed"
 
 
+class FeedFieldHelperTests(unittest.TestCase):
+    """Field discovery and comparison do not depend on normalized session values."""
+
+    def test_should_accept_supported_ids_including_numeric_zero(self):
+        for value in ("s1", "  s1\t", 0, -1, 2.5):
+            with self.subTest(value=value):
+                self.assertIs(sync.usable_session_id(value), True)
+        for value in (None, "", " \t\r\n", True, False, [], {}, ["s1"]):
+            with self.subTest(value=value):
+                self.assertIs(sync.usable_session_id(value), False)
+
+    def test_should_union_optional_top_level_fields_without_inspecting_values(self):
+        raw = [{"sessionId": "a", "title": None, "optional": {"nested": 1}},
+               {"sessionId": 0, "Title": "case matters", "title": "T", "zeroOnly": False},
+               {"sessionId": -2.5, "floatOnly": []}]
+        original = copy.deepcopy(raw)
+        self.assertEqual(sync.feed_fields(raw),
+                         ["Title", "floatOnly", "optional", "sessionId", "title", "zeroOnly"])
+        self.assertEqual(raw, original)
+
+    def test_should_ignore_junk_records_and_non_string_keys(self):
+        raw = [None, False, 3, "junk", [], {}, {"debug": 1},
+               {"sessionId": None, "nullOnly": 1}, {"sessionId": False, "boolOnly": 1},
+               {"sessionId": {}, "objectOnly": 1},
+               {"sessionId": "valid", "kept": 1, 7: "not a field name"}]
+        self.assertEqual(sync.feed_fields(raw), ["kept", "sessionId"])
+        self.assertEqual(sync.feed_fields(raw[:-1]), [])
+        self.assertEqual(sync.feed_fields([]), [])
+
+    def test_should_canonicalize_a_valid_baseline_without_mutating_it(self):
+        baseline = ["title", "Title", "sessionId", "title"]
+        self.assertEqual(sync.recorded_fields(baseline), ["Title", "sessionId", "title"])
+        self.assertEqual(baseline, ["title", "Title", "sessionId", "title"])
+
+    def test_should_reject_the_whole_baseline_if_any_name_is_not_text(self):
+        for baseline in (["title", None], ["title", True], ["title", 1],
+                         ["title", []], ["title", {}], ("title",), {"title"}):
+            with self.subTest(baseline=baseline):
+                self.assertIsNone(sync.recorded_fields(baseline))
+
+    def test_should_compare_field_sets_with_sorted_independent_results(self):
+        before = ["zGone", "kept", "aGone", "kept"]
+        now = ["zNew", "kept", "aNew", "zNew"]
+        self.assertEqual(sync.field_change(before, now),
+                         {"new": ["aNew", "zNew"], "gone": ["aGone", "zGone"]})
+        self.assertEqual(before, ["zGone", "kept", "aGone", "kept"])
+        self.assertEqual(now, ["zNew", "kept", "aNew", "zNew"])
+
+    def test_should_ignore_order_and_duplicate_names_when_nothing_changed(self):
+        self.assertIsNone(sync.field_change(["b", "a", "b"], ["a", "b"]))
+        self.assertIsNone(sync.field_change(None, ["firstField"]))
+
+    def test_should_report_additions_and_removals_independently(self):
+        self.assertEqual(sync.field_change(["kept"], ["new", "kept"]),
+                         {"new": ["new"], "gone": []})
+        self.assertEqual(sync.field_change(["gone", "kept"], ["kept"]),
+                         {"new": [], "gone": ["gone"]})
+
+    def test_should_limit_each_summary_line_independently(self):
+        new = ["n%02d" % i for i in range(62)]
+        gone = ["g%02d" % i for i in range(61)]
+        self.assertEqual(sync.fields_markdown({"new": new, "gone": gone}), [
+            FIELDS_HEADING,
+            "- New: " + ", ".join("`n%02d`" % i for i in range(60)) + " …and 2 more",
+            "- Gone: " + ", ".join("`g%02d`" % i for i in range(60)) + " …and 1 more"])
+
+    def test_should_escape_field_names_on_both_summary_lines(self):
+        self.assertEqual(sync.fields_markdown({"new": ["[link](url)\r\n`"],
+                                              "gone": ["**old**\r\n\n`"]}),
+                         [FIELDS_HEADING, "- New: `[link](url) '`", "- Gone: `**old** '`"])
+
+    def test_should_place_fields_after_milestones_before_session_counts(self):
+        batch = {"milestones": ["Dates published", "Rooms published"],
+                 "added": [], "removed": [], "changed": []}
+        self.assertEqual(sync.summary_markdown(batch, set(), {"new": ["extra"], "gone": []}),
+                         "### 🚨 Dates published\n### 🚨 Rooms published\n" + FIELDS_HEADING +
+                         "\n- New: `extra`\nAdded 0 · removed 0 · changed 0\n")
+
+    def test_should_render_a_field_only_summary_without_a_batch(self):
+        self.assertEqual(sync.summary_markdown(None, set(), {"new": [], "gone": ["old"]}),
+                         FIELDS_HEADING + "\n- Gone: `old`\n")
+
+    def test_should_log_one_sided_field_counts(self):
+        stats = {"sessions": 1, "withDates": 0, "withRooms": 0}
+        expected = "sessions=1 dates=0 rooms=0 draft=1 | added=0 removed=0 changed=0"
+        self.assertEqual(sync.console_summary(stats, 1, [], [], [], []), expected)
+        for fields, suffix in (({"new": ["a", "b"], "gone": []}, "2 new, 0 gone"),
+                               ({"new": [], "gone": ["c"]}, "0 new, 1 gone")):
+            with self.subTest(fields=fields):
+                self.assertEqual(sync.console_summary(stats, 1, [], [], [], [], fields=fields),
+                                 expected + " | feed fields: " + suffix)
+
+
 class FeedFieldsTests(SyncDir, unittest.TestCase):
     """The feed's top-level field list is recorded on every run, and a field that appears or vanishes
     is announced in the next change summary (ignite-catalog-sync.feature, "A field that appears in or
@@ -1155,6 +1248,40 @@ class FeedFieldsTests(SyncDir, unittest.TestCase):
         self.assertEqual(md.split("\n")[:3], [FIELDS_HEADING, "- New: `roomCapacity`", "Added 0 · removed 0 · changed 1"])
         self.assertIn("- `BRK003` A new title — title:", md)
         self.assertEqual([x["code"] for x in self.data("changes.json")["batches"][0]["changed"]], ["BRK003"])
+
+    def test_should_track_an_optional_field_until_its_last_record_loses_it(self):
+        raw = catalog_of(60)
+        self.assertEqual(self.run_sync(raw), (0, False))
+        raw[0]["roomCapacity"] = None
+        self.assertEqual((self.run_sync(raw), self.summary()),
+                         ((0, True), FIELDS_HEADING + "\n- New: `roomCapacity`\n"))
+        # Moving a key between records and changing its value is not a schema change.
+        del raw[0]["roomCapacity"]
+        raw[-1]["roomCapacity"] = 100
+        self.assertEqual((self.run_sync(raw), self.summary()), ((0, False), None))
+        self.assertEqual(self.data("sessions.json")["feedFields"], sorted(CATALOG_FIELDS + ["roomCapacity"]))
+        del raw[-1]["roomCapacity"]
+        self.assertEqual((self.run_sync(raw), self.summary()),
+                         ((0, True), FIELDS_HEADING + "\n- Gone: `roomCapacity`\n"))
+        self.assertEqual((self.data("sessions.json")["feedFields"], self.data("meta.json")["feedFields"],
+                          self.data("changes.json")["batches"]), (CATALOG_FIELDS, CATALOG_FIELDS, []))
+
+    def test_should_preserve_session_change_time_for_a_field_only_update(self):
+        first = dt.datetime(2026, 1, 1, tzinfo=dt.timezone.utc)
+        later = dt.datetime(2026, 1, 2, tzinfo=dt.timezone.utc)
+        with mock.patch.object(sync, "utcnow", return_value=first):
+            self.assertEqual(self.run_sync(catalog_of(60)), (0, False))
+        before = self.data("sessions.json")
+        with mock.patch.object(sync, "utcnow", return_value=later):
+            self.assertEqual(self.run_sync(self.feed(60, add=["roomCapacity"])), (0, True))
+        after = self.data("sessions.json")
+        self.assertEqual(self.summary(), FIELDS_HEADING + "\n- New: `roomCapacity`\n")
+        self.assertEqual(after["sessions"], before["sessions"])
+        self.assertEqual((before["changedAt"], after["changedAt"], self.data("meta.json")["lastChanged"]),
+                         ("2026-01-01T00:00:00Z",) * 3)
+        self.assertEqual(after["generatedAt"], "2026-01-02T00:00:00Z")
+        self.assertEqual(after["feedFields"], sorted(CATALOG_FIELDS + ["roomCapacity"]))
+        self.assertEqual(self.data("changes.json")["batches"], [])
 
     def test_should_announce_a_field_change_once(self):
         self.run_sync(catalog_of(60))
