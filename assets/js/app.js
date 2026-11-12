@@ -1818,15 +1818,35 @@ function afterDetailClosed() {
   if (app.pendingRender) render();
 }
 
+// Same idea as the main view's own focusKey (render()): a stable selector for the focused
+// element, so a dialog refresh that replaces its innerHTML (e.g. after a background sync)
+// doesn't silently drop a keyboard user's focus off a button or checkbox mid-dialog.
+function dialogFocusKey(el) {
+  if (!el || !dialog.contains(el)) return null;
+  if (el.id) return `#${CSS.escape(el.id)}`;
+  if (el.hasAttribute('data-watch-key')) return '[data-watch-key]'; // only one per dialog
+  for (const a of ['data-key', 'data-code']) {
+    if (el.hasAttribute(a)) {
+      const act = el.dataset.act ? `[data-act="${CSS.escape(el.dataset.act)}"]` : '';
+      return `${act}[${a}="${CSS.escape(el.getAttribute(a))}"]`;
+    }
+  }
+  if (el.dataset.act === 'prio' && el.hasAttribute('data-p')) return `[data-act="prio"][data-p="${CSS.escape(el.getAttribute('data-p'))}"]`;
+  if (el.dataset.act) return `[data-act="${CSS.escape(el.dataset.act)}"]`;
+  return null;
+}
+
 function refreshDetail() {
   if (!dialog.open || !app.dialogKey) return;
   const s = app.model.byKey.get(app.dialogKey);
   if (!s) { closeDetail(); return; }
   if (['note', 'score'].includes(document.activeElement?.id)) return; // don't clobber typing
   const scroll = dialog.querySelector('.d-body')?.scrollTop || 0;
+  const fk = dialogFocusKey(document.activeElement);
   dialog.innerHTML = renderDetail(s);
   const body = dialog.querySelector('.d-body');
   if (body) body.scrollTop = scroll;
+  if (fk) dialog.querySelector(fk)?.focus({ preventScroll: true });
 }
 
 // ---------------------------------------------------------------- ics
