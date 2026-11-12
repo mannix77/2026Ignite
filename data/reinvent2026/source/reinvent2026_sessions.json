@@ -1,7 +1,7 @@
 {
  "source": "https://catalog.awsevents.com/api/sessions",
  "event": "reinvent2026",
- "fetchedAt": "2026-11-12T06:45:14Z",
+ "fetchedAt": "2026-11-12T12:43:23Z",
  "count": 2520,
  "sessions": [
   {
@@ -3584,7 +3584,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-10T19:09:09Z",
+   "modified": "2026-11-11T19:14:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -3670,7 +3670,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-11T01:57:59Z",
+   "modified": "2026-11-11T19:14:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -12563,76 +12563,6 @@
    ]
   },
   {
-   "sessionID": "1780442276944001cWpg",
-   "code": "BIZ318-R",
-   "title": "AI Agent Teams at Scale",
-   "abstract": "When one event impacts hundreds, or even thousands, of customers simultaneously (a cancelled flight, a power outage, a system failure), contact centers cannot scale human agents fast enough. In this hands-on workshop, you orchestrate parallel AI agent teams using Amazon Connect Customer. You configure AI agents that fan out across dozens of affected customers at once: rebooking flights, issuing credits, and scheduling callbacks, all while a single human orchestrator monitors progress, approves exceptions, and intervenes only where needed. Walk away with a working parallel orchestration pattern and the configuration to deploy 1-to-many AI response at scale. This is not 1-to-1 AI coaching. This is 1-to-many crisis orchestration.",
-   "type": "Workshop",
-   "length": 120,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Workshop"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Business Agents"
-    ],
-    "Venue": [
-     "Caesars Palace"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Prashanth Krishnamurthy",
-     "title": "Sr Solutions Architect",
-     "company": "Amazon Web Services Inc",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Pavan Dusanapudi",
-     "title": "Sr. WW Specialist SA, Connect",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025470960001ClRW",
-     "date": "2026-11-30",
-     "startTime": "08:00",
-     "endTime": "10:00",
-     "utcStartTime": "2026/11/30 16:00:00",
-     "utcEndTime": "2026/11/30 18:00:00",
-     "length": 120,
-     "room": "Caesars Palace | Promenade Level | Pompeian IV",
-     "roomId": "1789591919964004bHlA",
-     "capacity": "85",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358235372001ihy3",
    "code": "BIZ318-R1",
    "title": "AI Agent Teams at Scale",
@@ -12696,6 +12626,76 @@
      "room": "Wynn/Encore | Convention Promenade | Margaux 2",
      "roomId": "1789591921011001bigA",
      "capacity": "84",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442276944001cWpg",
+   "code": "BIZ318-R",
+   "title": "AI Agent Teams at Scale",
+   "abstract": "When one event impacts hundreds, or even thousands, of customers simultaneously (a cancelled flight, a power outage, a system failure), contact centers cannot scale human agents fast enough. In this hands-on workshop, you orchestrate parallel AI agent teams using Amazon Connect Customer. You configure AI agents that fan out across dozens of affected customers at once: rebooking flights, issuing credits, and scheduling callbacks, all while a single human orchestrator monitors progress, approves exceptions, and intervenes only where needed. Walk away with a working parallel orchestration pattern and the configuration to deploy 1-to-many AI response at scale. This is not 1-to-1 AI coaching. This is 1-to-many crisis orchestration.",
+   "type": "Workshop",
+   "length": 120,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-12T11:08:44Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Workshop"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Business Agents"
+    ],
+    "Venue": [
+     "Caesars Palace"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Prashanth Krishnamurthy",
+     "title": "Sr Solutions Architect",
+     "company": "Amazon Web Services Inc",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Pavan Dusanapudi",
+     "title": "Sr. WW Specialist SA, Connect",
+     "company": "Amazon",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025470960001ClRW",
+     "date": "2026-11-30",
+     "startTime": "08:00",
+     "endTime": "10:00",
+     "utcStartTime": "2026/11/30 16:00:00",
+     "utcEndTime": "2026/11/30 18:00:00",
+     "length": 120,
+     "room": "Caesars Palace | Promenade Level | Pompeian IV",
+     "roomId": "1789591919964004bHlA",
+     "capacity": "85",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -22212,7 +22212,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-10T19:11:47Z",
+   "modified": "2026-11-12T10:19:00Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -33141,7 +33141,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-12T11:01:14Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -33538,7 +33538,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-12T04:38:55Z",
+   "modified": "2026-11-12T08:43:27Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -44435,15 +44435,15 @@
    },
    "speakers": [
     {
-     "name": "Ignacio Fernandez Gonzalez",
-     "title": "Principal Technologist",
-     "company": "amazon web services",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Itziar Molina Fernandez",
      "title": "AI/ML Consultant",
      "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Andrea Perez Isla",
+     "title": "Delivery Consultant - AI/ML & Data",
+     "company": "Amazon Web Services (AWS)",
      "role": "Internal Speaker"
     },
     {
@@ -44453,9 +44453,9 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Andrea Perez Isla",
-     "title": "Delivery Consultant - AI/ML & Data",
-     "company": "Amazon Web Services (AWS)",
+     "name": "Ignacio Fernandez Gonzalez",
+     "title": "Principal Technologist",
+     "company": "amazon web services",
      "role": "Internal Speaker"
     },
     {
@@ -44541,15 +44541,15 @@
    },
    "speakers": [
     {
-     "name": "Ignacio Fernandez Gonzalez",
-     "title": "Principal Technologist",
-     "company": "amazon web services",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Itziar Molina Fernandez",
      "title": "AI/ML Consultant",
      "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Andrea Perez Isla",
+     "title": "Delivery Consultant - AI/ML & Data",
+     "company": "Amazon Web Services (AWS)",
      "role": "Internal Speaker"
     },
     {
@@ -44559,9 +44559,9 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Andrea Perez Isla",
-     "title": "Delivery Consultant - AI/ML & Data",
-     "company": "Amazon Web Services (AWS)",
+     "name": "Ignacio Fernandez Gonzalez",
+     "title": "Principal Technologist",
+     "company": "amazon web services",
      "role": "Internal Speaker"
     },
     {
@@ -50789,7 +50789,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-11T19:14:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -50822,6 +50822,12 @@
    },
    "speakers": [
     {
+     "name": "Arturo Bayo",
+     "title": "Sr. Manager, Data & Agentic AI",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
      "name": "Steve Phillips",
      "title": "Principal Technical Account Manager",
      "company": "Amazon Web Services",
@@ -50830,12 +50836,6 @@
     {
      "name": "Shoukat Ghouse",
      "title": "Sr. BigData Specialist Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Arturo Bayo",
-     "title": "Sr. Manager, Data & Agentic AI",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
     },
@@ -64147,7 +64147,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-12T06:44:39Z",
+   "modified": "2026-11-12T07:09:34Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -66052,90 +66052,6 @@
    ]
   },
   {
-   "sessionID": "1780442247017001cZwD",
-   "code": "MAM204-R",
-   "title": "Build Your Agentic Transformation Roadmap with AWS Transform",
-   "abstract": "You want to adopt agentic AI, but with hundreds of applications at different maturity levels, knowing where to start is the real challenge. In this chalk talk, we'll work through a practical framework for turning AWS Transform's automated agentic readiness and modernization analyses into a phased transformation plan. You'll see how to interpret portfolio-level scores, prioritize applications by business value and technical debt, sequence work into actionable phases, and connect readiness gaps to concrete next steps. Bring your portfolio challenges — you'll leave with a prioritization approach you can apply immediately",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "200 – Intermediate"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Artificial Intelligence",
-     "Migration & Modernization"
-    ],
-    "AreaofInterest": [
-     "Cost Optimization",
-     "Automation",
-     "Agentic AI"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "DevOps Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "AWS Transform",
-     "Kiro"
-    ],
-    "Venue": [
-     "Caesars Palace"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Apoorva Kulkarni",
-     "title": "WW Principal SA, Agentic Transformation",
-     "company": "Amazon Web Services, In.c",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "kevin shin",
-     "title": "Agentic Transformation WWBD",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025500575001CgoD",
-     "date": "2026-12-01",
-     "startTime": "11:30",
-     "endTime": "12:30",
-     "utcStartTime": "2026/12/01 19:30:00",
-     "utcEndTime": "2026/12/01 20:30:00",
-     "length": 60,
-     "room": "Caesars Palace | Promenade Level | Neopolitan I",
-     "roomId": "1789591919948004bXPv",
-     "capacity": "70",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358240614001iZj1",
    "code": "MAM204-R1",
    "title": "Build Your Agentic Transformation Roadmap with AWS Transform",
@@ -66212,6 +66128,90 @@
      "length": 60,
      "room": "Caesars Palace | Promenade Level | Trevi",
      "roomId": "1789591919983001bGDi",
+     "capacity": "70",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442247017001cZwD",
+   "code": "MAM204-R",
+   "title": "Build Your Agentic Transformation Roadmap with AWS Transform",
+   "abstract": "You want to adopt agentic AI, but with hundreds of applications at different maturity levels, knowing where to start is the real challenge. In this chalk talk, we'll work through a practical framework for turning AWS Transform's automated agentic readiness and modernization analyses into a phased transformation plan. You'll see how to interpret portfolio-level scores, prioritize applications by business value and technical debt, sequence work into actionable phases, and connect readiness gaps to concrete next steps. Bring your portfolio challenges — you'll leave with a prioritization approach you can apply immediately",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-12T12:25:29Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "200 – Intermediate"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Artificial Intelligence",
+     "Migration & Modernization"
+    ],
+    "AreaofInterest": [
+     "Cost Optimization",
+     "Automation",
+     "Agentic AI"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "DevOps Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "AWS Transform",
+     "Kiro"
+    ],
+    "Venue": [
+     "Caesars Palace"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "kevin shin",
+     "title": "Agentic Transformation WWBD",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Apoorva Kulkarni",
+     "title": "WW Principal SA, Agentic Transformation",
+     "company": "Amazon Web Services, In.c",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025500575001CgoD",
+     "date": "2026-12-01",
+     "startTime": "11:30",
+     "endTime": "12:30",
+     "utcStartTime": "2026/12/01 19:30:00",
+     "utcEndTime": "2026/12/01 20:30:00",
+     "length": 60,
+     "room": "Caesars Palace | Promenade Level | Neopolitan I",
+     "roomId": "1789591919948004bXPv",
      "capacity": "70",
      "inPersonTime": true,
      "virtualTime": false,
@@ -70944,7 +70944,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-11T19:14:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -85318,7 +85318,7 @@
    "length": 180,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-10T22:34:10Z",
+   "modified": "2026-11-12T09:05:02Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -90846,7 +90846,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-11T21:06:56Z",
+   "modified": "2026-11-12T08:22:56Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -99768,7 +99768,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-12T12:15:53Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -99816,8 +99816,8 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Joe Rudd",
-     "title": "Sr. Technical Acount Manager",
+     "name": "Markus Rollwagen",
+     "title": "Senior Solution Architect",
      "company": "AWS",
      "role": "Internal Speaker"
     },
@@ -99828,14 +99828,14 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Desiree Brunner",
-     "title": "Security Specialist Solutions Architect",
+     "name": "Joe Rudd",
+     "title": "Sr. TAM",
      "company": "AWS",
      "role": "Internal Speaker"
     },
     {
-     "name": "Markus Rollwagen",
-     "title": "Senior Solution Architect",
+     "name": "Desiree Brunner",
+     "title": "Security Specialist Solutions Architect",
      "company": "AWS",
      "role": "Internal Speaker"
     }
@@ -103962,90 +103962,6 @@
    ]
   },
   {
-   "sessionID": "1780442238674001c8MS",
-   "code": "CMP324-R",
-   "title": "GenAI chip selection: From training to inference",
-   "abstract": "Every GenAI workload hits the same question: GPU, Trainium, Graviton, or Inferentia—and when do you use each? In this chalk talk, we walk through a practical decision tree covering model training, real-time inference, and agentic AI workloads. We then go deep on inference cost optimization: right-sizing GPU instances, offloading pre/post-processing to Graviton, using Spot for batch inference, prompt caching, and moving production inference to Inferentia2. Expect opinionated guidance, real customer math from teams that cut inference costs without sacrificing latency, and a whiteboard framework you can take back to your team on Monday.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Artificial Intelligence",
-     "Compute"
-    ],
-    "AreaofInterest": [
-     "Generative AI",
-     "Cost Optimization"
-    ],
-    "Role": [
-     "Data Scientist",
-     "Developer / Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Elastic Compute Cloud (Amazon EC2)",
-     "AWS Trainium",
-     "Amazon EC2 - Graviton"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Barak Nissim",
-     "title": "Sr. AI/ML Specialist",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Kumar Shubham",
-     "title": "TAM (ENT)",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025545373001CHbC",
-     "date": "2026-12-03",
-     "startTime": "13:30",
-     "endTime": "14:30",
-     "utcStartTime": "2026/12/03 21:30:00",
-     "utcEndTime": "2026/12/03 22:30:00",
-     "length": 60,
-     "room": "MGM Grand | Level 1 | Boulevard 162",
-     "roomId": "1789591920194001baD5",
-     "capacity": "98",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358223348001ikwx",
    "code": "CMP324-R1",
    "title": "GenAI chip selection: From training to inference",
@@ -104100,15 +104016,15 @@
    },
    "speakers": [
     {
-     "name": "Barak Nissim",
-     "title": "Sr. AI/ML Specialist",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Kumar Shubham",
      "title": "TAM (ENT)",
      "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Barak Nissim",
+     "title": "Sr. AI/ML Specialist",
+     "company": "AWS",
      "role": "Internal Speaker"
     }
    ],
@@ -104124,6 +104040,90 @@
      "room": "MGM Grand | Level 1 | Boulevard 163",
      "roomId": "1789591920202001b2p2",
      "capacity": "94",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442238674001c8MS",
+   "code": "CMP324-R",
+   "title": "GenAI chip selection: From training to inference",
+   "abstract": "Every GenAI workload hits the same question: GPU, Trainium, Graviton, or Inferentia—and when do you use each? In this chalk talk, we walk through a practical decision tree covering model training, real-time inference, and agentic AI workloads. We then go deep on inference cost optimization: right-sizing GPU instances, offloading pre/post-processing to Graviton, using Spot for batch inference, prompt caching, and moving production inference to Inferentia2. Expect opinionated guidance, real customer math from teams that cut inference costs without sacrificing latency, and a whiteboard framework you can take back to your team on Monday.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-06T20:31:24Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Artificial Intelligence",
+     "Compute"
+    ],
+    "AreaofInterest": [
+     "Generative AI",
+     "Cost Optimization"
+    ],
+    "Role": [
+     "Data Scientist",
+     "Developer / Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Elastic Compute Cloud (Amazon EC2)",
+     "AWS Trainium",
+     "Amazon EC2 - Graviton"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Kumar Shubham",
+     "title": "TAM (ENT)",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Barak Nissim",
+     "title": "Sr. AI/ML Specialist",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025545373001CHbC",
+     "date": "2026-12-03",
+     "startTime": "13:30",
+     "endTime": "14:30",
+     "utcStartTime": "2026/12/03 21:30:00",
+     "utcEndTime": "2026/12/03 22:30:00",
+     "length": 60,
+     "room": "MGM Grand | Level 1 | Boulevard 162",
+     "roomId": "1789591920194001baD5",
+     "capacity": "98",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -119997,7 +119997,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-11T19:14:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -120039,15 +120039,15 @@
    },
    "speakers": [
     {
-     "name": "Eran Balan",
-     "title": "Sr. Specialist Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Yaron Sananes",
      "title": "Senior Engineering Manager",
      "company": "Amazon",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Madelyn Olson",
+     "title": "Software Engineer",
+     "company": "AWS",
      "role": "Internal Speaker"
     },
     {
@@ -120063,8 +120063,8 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Madelyn Olson",
-     "title": "Software Engineer",
+     "name": "Eran Balan",
+     "title": "Sr. Specialist Solutions Architect",
      "company": "AWS",
      "role": "Internal Speaker"
     }
@@ -124362,7 +124362,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-10T19:09:09Z",
+   "modified": "2026-11-11T19:14:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -124597,7 +124597,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-11T19:14:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -124643,20 +124643,14 @@
    },
    "speakers": [
     {
-     "name": "Ingrid Alitzel Sánchez Elguea",
-     "title": "Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Camila Soares Camara",
-     "title": "Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Nilo Bustani",
      "title": "Senior Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Santiago Benavidez",
+     "title": "Principal Solutions Architect",
      "company": "AWS",
      "role": "Internal Speaker"
     },
@@ -124667,9 +124661,15 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Santiago Benavidez",
-     "title": "Principal Solutions Architect",
-     "company": "AWS",
+     "name": "Camila Soares Camara",
+     "title": "Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Ingrid Alitzel Sánchez Elguea",
+     "title": "Solutions Architect",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     }
    ],
@@ -129282,89 +129282,6 @@
    ]
   },
   {
-   "sessionID": "1780442233710001cr6r",
-   "code": "ARC409-R",
-   "title": "Load-bearing coupling: Finding the coupling you can't cut",
-   "abstract": "Teams break up monoliths to move faster, then find the pieces still fail together. Some coupling is doing real structural work: invariants spanning writes, ordering guarantees, timing assumptions baked into callers. Cut it and you get a distributed monolith, the same dependency with new failure modes. In this session, we whiteboard real systems, insert seams, and price what each dependency costs to cross a boundary: consistency, backpressure, retry semantics. Apply a simple test: if a circuit breaker can't open here without breaking correctness, that coupling is load-bearing. Bring your hardest dependency; leave knowing which coupling to cut, which to keep, and why.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "400 – Expert"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Architecture",
-     "Migration & Modernization"
-    ],
-    "AreaofInterest": [
-     "Resilience"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "DevOps Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon EventBridge",
-     "Amazon Simple Queue Service (Amazon SQS)",
-     "AWS Step Functions"
-    ],
-    "Venue": [
-     "Caesars Forum"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Matt Coles",
-     "title": "Principal Engineer",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Paul Moran",
-     "title": "Principal Technologist",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025525244001Cu3V",
-     "date": "2026-12-02",
-     "startTime": "15:00",
-     "endTime": "16:00",
-     "utcStartTime": "2026/12/02 23:00:00",
-     "utcEndTime": "2026/12/03 00:00:00",
-     "length": 60,
-     "room": "Caesars Forum | Level 1 | Alliance 305",
-     "roomId": "1789591919601004bywY",
-     "capacity": "88",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358216844001idEh",
    "code": "ARC409-R1",
    "title": "Load-bearing coupling: Finding the coupling you can't cut",
@@ -129441,6 +129358,89 @@
      "room": "Caesars Palace | Promenade South | Octavius 11",
      "roomId": "1789591920028001bO7T",
      "capacity": "70",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442233710001cr6r",
+   "code": "ARC409-R",
+   "title": "Load-bearing coupling: Finding the coupling you can't cut",
+   "abstract": "Teams break up monoliths to move faster, then find the pieces still fail together. Some coupling is doing real structural work: invariants spanning writes, ordering guarantees, timing assumptions baked into callers. Cut it and you get a distributed monolith, the same dependency with new failure modes. In this session, we whiteboard real systems, insert seams, and price what each dependency costs to cross a boundary: consistency, backpressure, retry semantics. Apply a simple test: if a circuit breaker can't open here without breaking correctness, that coupling is load-bearing. Bring your hardest dependency; leave knowing which coupling to cut, which to keep, and why.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-12T10:12:41Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "400 – Expert"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Architecture",
+     "Migration & Modernization"
+    ],
+    "AreaofInterest": [
+     "Resilience"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "DevOps Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon EventBridge",
+     "Amazon Simple Queue Service (Amazon SQS)",
+     "AWS Step Functions"
+    ],
+    "Venue": [
+     "Caesars Forum"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Matt Coles",
+     "title": "Principal Engineer",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Paul Moran",
+     "title": "Principal Technologist",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025525244001Cu3V",
+     "date": "2026-12-02",
+     "startTime": "15:00",
+     "endTime": "16:00",
+     "utcStartTime": "2026/12/02 23:00:00",
+     "utcEndTime": "2026/12/03 00:00:00",
+     "length": 60,
+     "room": "Caesars Forum | Level 1 | Alliance 305",
+     "roomId": "1789591919601004bywY",
+     "capacity": "88",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -134440,7 +134440,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-11T19:14:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -134485,21 +134485,9 @@
    },
    "speakers": [
     {
-     "name": "Ian Choi",
-     "title": "Containers Specialist",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Diego Dalmolin",
      "title": "Solutions Architect",
      "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Jayaprakash Alawala",
-     "title": "Prin. GTM SSA Containers",
-     "company": "Amazon",
      "role": "Internal Speaker"
     },
     {
@@ -134511,6 +134499,18 @@
     {
      "name": "Avinash Desireddy",
      "title": "WW Specialist Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Jayaprakash Alawala",
+     "title": "Prin. GTM SSA Containers",
+     "company": "Amazon",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Ian Choi",
+     "title": "Containers Specialist",
      "company": "AWS",
      "role": "Internal Speaker"
     }
@@ -135389,7 +135389,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-12T02:56:59Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -135474,7 +135474,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-12T02:57:12Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -145949,7 +145949,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-11T19:36:16Z",
+   "modified": "2026-11-12T11:21:51Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -152564,7 +152564,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-11T19:14:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -154353,7 +154353,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-12T04:45:07Z",
+   "modified": "2026-11-12T07:14:13Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -159339,7 +159339,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-11T21:04:13Z",
+   "modified": "2026-11-12T12:25:29Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -168405,7 +168405,7 @@
    "length": 180,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-12T05:35:48Z",
+   "modified": "2026-11-12T07:52:31Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -176444,7 +176444,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-11T19:14:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -176485,15 +176485,15 @@
    },
    "speakers": [
     {
-     "name": "Omri Shiv",
-     "title": "Senior Open Source ML Engineer",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "ENG HWA TAN",
      "title": "Principal Solutions Architect (Containers)",
      "company": "Amazon Web Services Singapore Pte Ltd",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Omri Shiv",
+     "title": "Senior Open Source ML Engineer",
+     "company": "AWS",
      "role": "Internal Speaker"
     }
    ],
@@ -176695,7 +176695,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-11T20:30:30Z",
+   "modified": "2026-11-12T12:25:29Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -186294,7 +186294,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-11T14:08:35Z",
+   "modified": "2026-11-12T07:44:37Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -192141,7 +192141,7 @@
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-12T08:36:51Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
