@@ -15,6 +15,7 @@ import { createRanker, partition, profileConfig, profileGroups, GOALS, parsePref
 import { storageStatus, backupReminder, backupAge } from './health.js';
 import { reportError as reportTelemetry } from './telemetry.js';
 import { INSTANCE, INSTANCE_LABEL, nsKey, guideUrl } from './instance.js';
+import { icsDate, buildPlanIcs, buildSingleIcs, hasPendingCancellation, pickedInsts } from './ics.js';
 import { esc, attr, icon, bldgChip, recChip, rsvpChip, rsvpOpensText, seatsDetail, prioPill, scoreChip, whenText, prioControl, sessionCard, cardClass, toast, shareOrDownload, copyText, speakersLine, setHostCompany, unknownRoomsNote, venueMapUrl, mapChip, occupancyOf, occupancyChip, picksForAI } from './ui.js';
 
 const $ = (sel, root = document) => root.querySelector(sel);
@@ -884,9 +885,14 @@ function renderPlan() {
   const plan = computePlan();
   const m = app.model;
   if (!plan.groupCount) {
+    // A session this device already published to a calendar app, now un-rated along with
+    // everything else, still needs its next export to cancel that stale entry (issue #147):
+    // keep the export control reachable even though there's no plan left to show.
+    const pendingCancel = hasPendingCancellation(store.icsExported(), pickedInsts(plan.res.plan, plan.tba));
     return `<h1>My plan</h1>${installBanner()}${favoritesBanner()}${missingPicksBanner()}
     <div class="panel empty"><h3>No picks yet</h3><p>Rate sessions as <b>Must</b>, <b>Want</b> or <b>Maybe</b> in Browse or Triage. Your plan builds itself from those ratings, using real walking times between buildings.</p>
-    <div class="row" style="justify-content:center"><a class="btn primary" href="#/triage">${icon('cards')}Start triage</a><a class="btn" href="#/browse">Browse sessions</a></div></div>`;
+    <div class="row" style="justify-content:center"><a class="btn primary" href="#/triage">${icon('cards')}Start triage</a><a class="btn" href="#/browse">Browse sessions</a></div>
+    ${pendingCancel ? `<div class="row" style="justify-content:center;margin-top:8px"><button class="btn ghost" data-act="ics">${icon('plan')}Remove your previously-added sessions from your calendar</button></div>` : ''}</div>`;
   }
   if (m.mode === 'unscheduled') return renderShortlist(plan);
   return renderSchedule(plan);
@@ -1028,7 +1034,8 @@ function renderShortlist(plan) {
     <div class="list">${g.list.map(s => card(s, { compact: true })).join('')}</div></section>` : '').join('')}
   ${watchSection(plan)}
   ${suggestedSection()}
-  ${plan.online.length ? `<section><h2>Online / on demand</h2><div class="list">${plan.online.map(x => card(x.s, { compact: true })).join('')}</div></section>` : ''}`;
+  ${plan.online.length ? `<section><h2>Online / on demand</h2><div class="list">${plan.online.map(x => card(x.s, { compact: true })).join('')}</div></section>` : ''}
+  ${hasPendingCancellation(store.icsExported(), pickedInsts(plan.res.plan, plan.tba)) ? `<div class="row" style="margin-top:18px"><button class="btn ghost" data-act="ics">${icon('plan')}Remove previously-added sessions from your calendar</button></div>` : ''}`;
 }
 
 function dayCounts(plan) {
@@ -1788,7 +1795,10 @@ function renderDetail(s) {
       <label class="toggle"><input type="checkbox" data-watch-key="${attr(s.key)}" ${gp?.mode === 'watch' ? 'checked' : ''}><span>Watch the recording instead of attending<small>${s.recorded === false ? 'Careful: this session is not recorded.' : 'Kept out of the live plan and listed under Watch later.'}</small></span></label>
       <h3 style="margin-top:14px"><label for="note">My notes</label></h3>
       <textarea id="note" data-note-key="${attr(s.key)}" placeholder="Questions to ask, why it matters…">${esc(gp?.note || '')}</textarea>
-      ${urlOf(s) ? `<div class="row" style="margin-top:12px"><a class="btn small" href="${attr(urlOf(s))}" target="_blank" rel="noopener">View on ${esc(app.conf.siteName)} ${icon('ext')}</a></div>` : ''}
+      <div class="row" style="margin-top:12px">
+        ${urlOf(s) ? `<a class="btn small" href="${attr(urlOf(s))}" target="_blank" rel="noopener">View on ${esc(app.conf.siteName)} ${icon('ext')}</a>` : ''}
+        ${s.day && Number.isFinite(s.startMin) && (s.timeSource === 'official' || s.timeSource === 'custom') && s.start ? `<button class="btn small" data-act="ics-one" data-key="${attr(s.key)}">${icon('plan')}Add to Calendar</button>` : ''}
+      </div>
     </div>`;
 }
 
@@ -1818,27 +1828,29 @@ function refreshDetail() {
 
 // ---------------------------------------------------------------- ics
 
-function icsEscape(s) { return String(s || '').replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n'); }
-function icsFold(line) {
-  const out = [];
-  let cur = '';
-  const enc = new TextEncoder();
-  for (const ch of line) {
-    if (enc.encode(cur + ch).length > 74) { out.push(cur); cur = ' ' + ch; } else cur += ch;
-  }
-  out.push(cur);
-  return out.join('\r\n');
-}
-function icsDate(iso) { return iso.replace(/[-:]/g, '').replace(/\.\d+/, '').replace(/Z?$/, 'Z'); }
+// The same stable id for a session's calendar entry everywhere it's published (the bulk plan
+// export and the single-session quick-add), so adding one the app already bulk-exported
+// updates that one entry instead of creating a duplicate.
+function icsUid(s) { return `${s.inst}@${app.conf.id}.ignite26-planner`; }
+function icsEnd(s) { return s.end || new Date(new Date(s.start).getTime() + (s.dur || 45) * 60000).toISOString(); }
 
 function exportIcs() {
   const plan = computePlan();
-  const items = Object.values(plan.res.plan).flat().filter(x => !x.pseudo && (x.s.timeSource === 'official' || x.s.timeSource === 'custom') && x.s.start);
-  if (!items.length) {
+  // Everything still picked, any time source, including one with no usable time at all
+  // (plan.tba): a session whose catalog time is only a preview, has gone missing, or was never
+  // published is still here (just not in `exportable` below), so it's never mistaken for
+  // dropped-from-the-plan and wrongly published as cancelled. A session that lost a real
+  // scheduling conflict never reaches plan.res.plan or plan.tba at all, so it's correctly still
+  // treated as dropped.
+  const all = Object.values(plan.res.plan).flat().filter(x => !x.pseudo);
+  const currentInsts = pickedInsts(plan.res.plan, plan.tba);
+  const exportable = all.filter(x => (x.s.timeSource === 'official' || x.s.timeSource === 'custom') && x.s.start);
+  const previous = store.icsExported();
+  const pendingCancel = hasPendingCancellation(previous, currentInsts);
+  if (!exportable.length && !pendingCancel) {
     toast(app.model.mode === 'preview' ? 'Preview times are simulated. Calendar export unlocks once the real schedule is published.' : 'Nothing with an official time in your plan yet');
     return;
   }
-  const stamp = icsDate(new Date().toISOString());
   const c = ctx();
   // A "leave now" alarm per session: the walk from the previous planned item (or where the
   // day starts), the buffer and any keynote entry time, plus 5 minutes' warning.
@@ -1854,21 +1866,48 @@ function exportIcs() {
       leave.set(x.key, { minutes: need + 5, walk, from: prev ? prev.code : B(startFromId()).short });
     });
   }
-  const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//ignite26-planner//EN', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', `X-WR-CALNAME:${icsEscape(app.conf.short)} plan`];
-  for (const x of items) {
-    const s = x.s;
-    const l = leave.get(x.key);
-    lines.push('BEGIN:VEVENT', `UID:${s.inst}@${app.conf.id}.ignite26-planner`, `DTSTAMP:${stamp}`, `DTSTART:${icsDate(s.start)}`,
-      `DTEND:${icsDate(s.end || new Date(new Date(s.start).getTime() + (s.dur || 45) * 60000).toISOString())}`,
-      `SUMMARY:${icsEscape(`[${s.code}] ${s.title}`)}`, `LOCATION:${icsEscape(s.room || '')}`,
-      `DESCRIPTION:${icsEscape(`${PRIORITY[x.priority]} · ${s.recorded ? 'recorded' : s.recorded === false ? 'not recorded' : ''}\n${urlOf(s)}\n\n${s.desc}`)}`);
-    if (urlOf(s)) lines.push(`URL:${urlOf(s)}`);
-    if (l) lines.push('BEGIN:VALARM', 'ACTION:DISPLAY', `DESCRIPTION:${icsEscape(`Leave for ${s.code}: ${l.walk} min walk to ${B(s.loc.building).name} from ${l.from}`)}`, `TRIGGER:-PT${l.minutes}M`, 'END:VALARM');
-    lines.push('END:VEVENT');
-  }
-  lines.push('END:VCALENDAR');
-  shareOrDownload(`${app.conf.id}-plan.ics`, lines.map(icsFold).join('\r\n') + '\r\n', 'text/calendar')
-    .then(r => { if (r !== 'cancelled') toast(`Exported ${items.length} sessions`); });
+  const items = exportable.map(x => {
+    const s = x.s, l = leave.get(x.key);
+    return {
+      inst: s.inst, uid: icsUid(s), start: s.start, end: icsEnd(s), summary: `[${s.code}] ${s.title}`,
+      location: s.room || '', url: urlOf(s) || null,
+      description: `${PRIORITY[x.priority]} · ${s.recorded ? 'recorded' : s.recorded === false ? 'not recorded' : ''}\n${urlOf(s)}\n\n${s.desc}`,
+      alarm: l ? { minutes: l.minutes, description: `Leave for ${s.code}: ${l.walk} min walk to ${B(s.loc.building).name} from ${l.from}` } : null,
+    };
+  });
+  const { text, exported, cancelledCount } = buildPlanIcs({
+    calname: `${app.conf.short} plan`, stamp: icsDate(new Date().toISOString()), items, currentInsts, previous,
+  });
+  const msg = items.length
+    ? `Saved ${items.length} session${items.length === 1 ? '' : 's'} to a calendar file${cancelledCount ? ` (${cancelledCount} cancelled)` : ''} — open it to update your calendar`
+    : `Saved a cancellation for ${cancelledCount} session${cancelledCount === 1 ? '' : 's'} — open the file to remove ${cancelledCount === 1 ? 'it' : 'them'} from your calendar`;
+  shareOrDownload(`${app.conf.id}-plan.ics`, text, 'text/calendar')
+    .then(r => { if (r !== 'cancelled') { store.setIcsExported(exported); toast(msg); } });
+}
+
+// A single session, added on its own from its detail view: same stable id as the bulk export
+// (so it updates in place if it's also in the plan), a plain reminder since there's no
+// surrounding plan to compute a walk-time "leave now" alarm from.
+function exportIcsOne(s) {
+  if (!s.start) { toast('No scheduled time yet for this session'); return; }
+  const item = {
+    inst: s.inst, uid: icsUid(s), start: s.start, end: icsEnd(s), summary: `[${s.code}] ${s.title}`,
+    location: s.room || '', url: urlOf(s) || null,
+    description: `${s.recorded ? 'recorded' : s.recorded === false ? 'not recorded' : ''}\n${urlOf(s)}\n\n${s.desc}`,
+    alarm: { minutes: 15, description: `${s.code} starts in 15 minutes` },
+  };
+  const previous = store.icsExported();
+  const { text, entry } = buildSingleIcs({ calname: `${app.conf.short} plan`, stamp: icsDate(new Date().toISOString()), item, previous });
+  shareOrDownload(`${s.code}.ics`, text, 'text/calendar')
+    .then(r => {
+      if (r === 'cancelled') return;
+      // Kept in step with the bulk export's own tracked state (issue #147): otherwise a
+      // session the bulk export last published as cancelled would stay marked cancelled here
+      // even though this just (re-)published it as active, at a sequence the next bulk export
+      // wouldn't know about.
+      store.setIcsExported([...previous.filter(x => x.inst !== s.inst), entry]);
+      toast(`Saved to a calendar file — open it to add ${s.code} to your calendar`);
+    });
 }
 
 // ---------------------------------------------------------------- routing & render
@@ -2188,6 +2227,7 @@ function onClick(e) {
     'preview-on': () => { store.updateSettings({ preview: true }); toast('Preview on: days and rooms are simulated'); },
     'preview-off': () => store.updateSettings({ preview: false }),
     ics: () => exportIcs(),
+    'ics-one': () => { if (s) exportIcsOne(s); },
     sim: () => {
       const d = $('#sim-day').value;
       const min = fromHHMM($('#sim-time').value) ?? 600;

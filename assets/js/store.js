@@ -48,6 +48,14 @@ function blank() {
     profile: null,      // quick-start answers and group choices (profile.js); null = never set
     backup: { at: null, changes: 0, dismissed: null }, // last backup, pick edits since, reminder dismissal
     ui: { tab: 'browse', filters: {}, day: null },
+    icsExported: [],    // [{inst, uid, summary, start, end, seq, cancelled, source}, …] every
+                        // session this device's bulk plan .ics export or single-session
+                        // quick-add has ever published, so a dropped one is cancelled and a
+                        // cancelled one that returns outranks its cancellation (issue #147);
+                        // cancelled entries are kept, never removed, in case the session comes
+                        // back. source: 'plan' (bulk export manages it, including cancelling it)
+                        // or 'manual' (a quick-add; never auto-cancelled, since it may not even
+                        // be picked)
   };
 }
 
@@ -106,6 +114,7 @@ export function load(namespace = '') {
       state.prefs = sanitizePrefs(state.prefs);
       state.profile = saved.profile ? sanitizeProfile(saved.profile) : null;
       state.backup = sanitizeBackup(saved.backup);
+      state.icsExported = sanitizeIcsExported(state.icsExported);
     }
   } catch (e) {
     // Unreadable (truncated or corrupt): keep a copy before the next save replaces it.
@@ -344,6 +353,33 @@ function sanitizeBackup(b) {
   }
   return out;
 }
+
+// A usable calendar identifier: the right type, trimmed, non-blank (same "usable" test as
+// other identifiers in this file, e.g. validBuilding).
+const usableIcsId = v => typeof v === 'string' && v.trim() !== '';
+// The exact shape every start/end always has (s.start/s.end are built by time.js's toISO,
+// which always returns a UTC "Z" ISO string): a date-only value or a non-UTC offset would
+// parse fine with Date.parse but produce an invalid iCalendar date-time once icsDate() strips
+// punctuation (e.g. a bare "2026-11-18" becomes "20261118Z", missing a time entirely).
+const usableIcsDate = v => typeof v === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$/.test(v) && !Number.isNaN(Date.parse(v));
+
+function sanitizeIcsExported(v) {
+  if (!Array.isArray(v)) return [];
+  return v.filter(x => x && typeof x === 'object' && usableIcsId(x.inst) && usableIcsId(x.uid)
+      && typeof x.summary === 'string' && usableIcsDate(x.start) && usableIcsDate(x.end))
+    .map(x => ({
+      inst: x.inst, uid: x.uid, summary: x.summary, start: x.start, end: x.end,
+      seq: Number.isInteger(x.seq) && x.seq >= 0 ? x.seq : 0,
+      cancelled: x.cancelled === true,
+      source: x.source === 'manual' ? 'manual' : 'plan',
+    }));
+}
+
+// ---- calendar export (issue #147): the plan .ics's own previously-published sessions, so a
+// session dropped from the plan can be republished as cancelled instead of orphaned forever.
+
+export function icsExported() { return state.icsExported; }
+export function setIcsExported(entries) { state.icsExported = sanitizeIcsExported(entries); emit('ics'); }
 
 export function setKnown(known) { state.known = known; emit('known'); }
 export function setSeenBatch(at) { state.seenBatch = at; emit('seen'); }

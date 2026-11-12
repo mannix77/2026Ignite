@@ -1033,6 +1033,147 @@ await test('should read a session the person added (MY-…) in a picks link, and
   eq(Object.keys(store.parseShare('MY-.2~MY-a b.2~my-abc.2', c => c, () => null)), [], 'only MY- followed by the id characters');
 });
 
+// ---- icsExported (issue #147): the last bulk plan .ics export, for cancelling a dropped
+// session and raising a revived one's sequence past its own cancellation's
+
+await test('should start with no exported sessions, and persist what was exported across a reload', async () => {
+  store.load('ics-reload');
+  eq(store.icsExported(), []);
+  const entries = [{ inst: 'i1', uid: 'i1@x', summary: '[A] One', start: '2026-11-18T18:00:00Z', end: '2026-11-18T18:45:00Z', seq: 2, cancelled: true, source: 'manual' }];
+  store.setIcsExported(entries);
+  eq(store.icsExported(), entries);
+  await sleep(SAVE);
+  store.load('ics-reload');
+  eq(store.icsExported(), entries, 'must still be there after a reload, including seq, cancelled and source');
+});
+
+await test('should default seq to 0, cancelled to false and source to \'plan\' when an entry omits them', () => {
+  store.load('ics-defaults');
+  store.setIcsExported([{ inst: 'i1', uid: 'i1@x', summary: 'ok', start: '2026-11-18T18:00:00Z', end: '2026-11-18T18:45:00Z' }]);
+  eq(store.icsExported(), [{ inst: 'i1', uid: 'i1@x', summary: 'ok', start: '2026-11-18T18:00:00Z', end: '2026-11-18T18:45:00Z', seq: 0, cancelled: false, source: 'plan' }]);
+});
+
+await test('should keep a \'manual\' source but coerce any other value to \'plan\'', () => {
+  store.load('ics-source');
+  store.setIcsExported([
+    { inst: 'i1', uid: 'i1@x', summary: 'ok', start: '2026-11-18T18:00:00Z', end: '2026-11-18T18:45:00Z', source: 'manual' },
+    { inst: 'i2', uid: 'i2@x', summary: 'ok', start: '2026-11-18T18:00:00Z', end: '2026-11-18T18:45:00Z', source: 'plan' },
+    { inst: 'i3', uid: 'i3@x', summary: 'ok', start: '2026-11-18T18:00:00Z', end: '2026-11-18T18:45:00Z', source: 'bogus' },
+  ]);
+  eq(store.icsExported().map(x => [x.inst, x.source]), [['i1', 'manual'], ['i2', 'plan'], ['i3', 'plan']]);
+});
+
+await test('should drop a malformed saved entry (hand-edited backup, older schema) rather than keep it or throw', () => {
+  store.load('ics-malformed');
+  store.setIcsExported([
+    { inst: 'i1', uid: 'i1@x', summary: 'ok', start: '2026-11-18T18:00:00Z', end: '2026-11-18T18:45:00Z' },
+    { inst: 'i2', uid: 'i2@x' },        // missing summary/start/end
+    { inst: ' ', uid: 'i3@x', summary: 'ok', start: '2026-11-18T18:00:00Z', end: '2026-11-18T18:45:00Z' },   // blank inst
+    { inst: 'i4', uid: '', summary: 'ok', start: '2026-11-18T18:00:00Z', end: '2026-11-18T18:45:00Z' },      // blank uid
+    { inst: 'i5', uid: 'i5@x', summary: 'ok', start: 'not a date', end: '2026-11-18T18:45:00Z' },            // unparseable start
+    { inst: 'i6', uid: 'i6@x', summary: 'ok', start: '2026-11-18T18:00:00Z', end: 'junk' },                  // unparseable end
+    { inst: 'i7', uid: 'i7@x', summary: 'ok', start: '2026-11-18', end: '2026-11-18T18:45:00Z' },            // date-only, no time
+    { inst: 'i8', uid: 'i8@x', summary: 'ok', start: '2026-11-18T18:00:00+01:00', end: '2026-11-18T18:45:00Z' }, // non-UTC offset
+    'junk', null, 42,
+  ]);
+  eq(store.icsExported().map(x => x.inst), ['i1']);
+});
+
+// Keep fixtures local to the calendar state tests; each case gets its own storage namespace.
+const calendarEntry = { inst: 'run-1', uid: 'run-1@ignite2026.ignite26-planner', summary: '[A] One',
+  start: '2026-11-18T18:00:00Z', end: '2026-11-18T18:45:00Z', seq: 0, cancelled: false, source: 'plan' };
+
+await test('should sanitize every required calendar field on both save and load', async () => {
+  const invalid = [];
+  for (const field of ['inst', 'uid', 'summary', 'start', 'end']) {
+    const missing = { ...calendarEntry };
+    delete missing[field];
+    invalid.push(missing);
+    for (const value of [null, 42, false, {}, []]) invalid.push({ ...calendarEntry, [field]: value });
+  }
+  const mixed = [null, false, 42, 'junk', [], ...invalid, calendarEntry];
+  store.load('ics-all-fields-set');
+  store.setIcsExported(mixed);
+  eq(store.icsExported(), [calendarEntry], 'setter filters each required field');
+  await sleep(SAVE);
+  eq(JSON.parse(localStorage.getItem(keyOf('ics-all-fields-set'))).icsExported, [calendarEntry]);
+  loadSaved('ics-all-fields-load', { v: 1, picks: {}, icsExported: mixed });
+  eq(store.icsExported(), [calendarEntry], 'raw saved state is sanitized too');
+});
+
+await test('should treat a non-array calendar history as empty on both save and load', async () => {
+  for (const [i, value] of [null, false, 42, 'junk', {}, { 0: calendarEntry, length: 1 }].entries()) {
+    store.load(`ics-container-set-${i}`);
+    store.setIcsExported([calendarEntry]);
+    eq(store.icsExported(), [calendarEntry], 'precondition: nonempty history');
+    store.setIcsExported(value);
+    eq(store.icsExported(), []);
+    await sleep(SAVE);
+    eq(JSON.parse(localStorage.getItem(keyOf(`ics-container-set-${i}`))).icsExported, []);
+    loadSaved(`ics-container-load-${i}`, { v: 1, picks: {}, icsExported: value });
+    eq(store.icsExported(), []);
+  }
+});
+
+await test('should load older saved plans without calendar history and keep their picks', () => {
+  loadSaved('ics-legacy', { v: 1, picks: { S1: { p: 3, lock: 'S1', note: 'keep', at: 1 } } });
+  eq(store.icsExported(), []);
+  eq([store.pick('S1').p, store.pick('S1').lock, store.pick('S1').note], [3, 'S1', 'keep']);
+});
+
+await test('should replace the previous calendar snapshot and persist an empty export', async () => {
+  store.load('ics-replace');
+  store.setIcsExported([calendarEntry]);
+  await sleep(SAVE);
+  const replacement = { ...calendarEntry, inst: 'run-2', uid: 'run-2@x' };
+  store.setIcsExported([replacement]);
+  await sleep(SAVE);
+  store.load('ics-replace');
+  eq(store.icsExported(), [replacement], 'replace rather than accumulate stale cancellations');
+  store.setIcsExported([]);
+  await sleep(SAVE);
+  store.load('ics-replace');
+  eq(store.icsExported(), [], 'clearing stays cleared after reload');
+});
+
+await test('should isolate calendar history between conference namespaces in both directions', async () => {
+  const other = { ...calendarEntry, inst: 'other', uid: 'other@x' };
+  store.load('ics-conference-a');
+  store.setIcsExported([calendarEntry]);
+  await sleep(SAVE);
+  store.load('ics-conference-b');
+  eq(store.icsExported(), []);
+  store.setIcsExported([other]);
+  await sleep(SAVE);
+  store.load('ics-conference-a');
+  eq(store.icsExported(), [calendarEntry]);
+  store.load('ics-conference-b');
+  eq(store.icsExported(), [other]);
+});
+
+await test('should notify subscribers after the calendar snapshot is updated', async () => {
+  store.load('ics-notify');
+  const updates = [];
+  const unsubscribe = store.subscribe(what => updates.push([what, store.icsExported()]));
+  try {
+    store.setIcsExported([calendarEntry]);
+    eq(updates, [['ics', [calendarEntry]]]);
+  } finally { unsubscribe(); }
+  await sleep(SAVE);
+});
+
+await test('should coerce a garbage seq or cancelled value to its safe default rather than keep it', () => {
+  store.load('ics-garbage-seq');
+  store.setIcsExported([
+    { inst: 'i1', uid: 'i1@x', summary: 'a', start: '2026-11-18T18:00:00Z', end: '2026-11-18T18:45:00Z', seq: -1, cancelled: 'yes' },
+    { inst: 'i2', uid: 'i2@x', summary: 'b', start: '2026-11-18T18:00:00Z', end: '2026-11-18T18:45:00Z', seq: 1.5, cancelled: 1 },
+  ]);
+  eq(store.icsExported(), [
+    { inst: 'i1', uid: 'i1@x', summary: 'a', start: '2026-11-18T18:00:00Z', end: '2026-11-18T18:45:00Z', seq: 0, cancelled: false, source: 'plan' },
+    { inst: 'i2', uid: 'i2@x', summary: 'b', start: '2026-11-18T18:00:00Z', end: '2026-11-18T18:45:00Z', seq: 0, cancelled: false, source: 'plan' },
+  ]);
+});
+
 await sleep(SAVE);
 console.log(`${pass} passed, ${fail} failed`);
 if (fail) process.exit(1);
