@@ -1825,13 +1825,16 @@ function dialogFocusKey(el) {
   if (!el || !dialog.contains(el)) return null;
   if (el.id) return `#${CSS.escape(el.id)}`;
   if (el.hasAttribute('data-watch-key')) return '[data-watch-key]'; // only one per dialog
+  // Checked before the data-key loop below: all four priority buttons share the same
+  // data-key (the session's group key), so that generic selector alone would always resolve
+  // to whichever one is first in the DOM, not the one actually focused.
+  if (el.dataset.act === 'prio' && el.hasAttribute('data-p')) return `[data-act="prio"][data-p="${CSS.escape(el.getAttribute('data-p'))}"]`;
   for (const a of ['data-key', 'data-code']) {
     if (el.hasAttribute(a)) {
       const act = el.dataset.act ? `[data-act="${CSS.escape(el.dataset.act)}"]` : '';
       return `${act}[${a}="${CSS.escape(el.getAttribute(a))}"]`;
     }
   }
-  if (el.dataset.act === 'prio' && el.hasAttribute('data-p')) return `[data-act="prio"][data-p="${CSS.escape(el.getAttribute('data-p'))}"]`;
   if (el.dataset.act) return `[data-act="${CSS.escape(el.dataset.act)}"]`;
   return null;
 }
