@@ -888,7 +888,7 @@ function renderPlan() {
     // A session this device already published to a calendar app, now un-rated along with
     // everything else, still needs its next export to cancel that stale entry (issue #147):
     // keep the export control reachable even though there's no plan left to show.
-    const pendingCancel = hasPendingCancellation(store.icsExported(), []);
+    const pendingCancel = hasPendingCancellation(store.icsExported(), pickedInsts(plan));
     return `<h1>My plan</h1>${installBanner()}${favoritesBanner()}${missingPicksBanner()}
     <div class="panel empty"><h3>No picks yet</h3><p>Rate sessions as <b>Must</b>, <b>Want</b> or <b>Maybe</b> in Browse or Triage. Your plan builds itself from those ratings, using real walking times between buildings.</p>
     <div class="row" style="justify-content:center"><a class="btn primary" href="#/triage">${icon('cards')}Start triage</a><a class="btn" href="#/browse">Browse sessions</a></div>
@@ -1035,7 +1035,7 @@ function renderShortlist(plan) {
   ${watchSection(plan)}
   ${suggestedSection()}
   ${plan.online.length ? `<section><h2>Online / on demand</h2><div class="list">${plan.online.map(x => card(x.s, { compact: true })).join('')}</div></section>` : ''}
-  ${hasPendingCancellation(store.icsExported(), []) ? `<div class="row" style="margin-top:18px"><button class="btn ghost" data-act="ics">${icon('plan')}Remove previously-added sessions from your calendar</button></div>` : ''}`;
+  ${hasPendingCancellation(store.icsExported(), pickedInsts(plan)) ? `<div class="row" style="margin-top:18px"><button class="btn ghost" data-act="ics">${icon('plan')}Remove previously-added sessions from your calendar</button></div>` : ''}`;
 }
 
 function dayCounts(plan) {
@@ -1834,6 +1834,14 @@ function refreshDetail() {
 function icsUid(s) { return `${s.inst}@${app.conf.id}.ignite26-planner`; }
 function icsEnd(s) { return s.end || new Date(new Date(s.start).getTime() + (s.dur || 45) * 60000).toISOString(); }
 
+// Every session instance still picked, any time source, including one with no usable time at
+// all (plan.tba): what hasPendingCancellation and exportIcs must agree on as "currently in the
+// plan", everywhere either is called, so a visible "remove from calendar" action always finds
+// something it can actually remove.
+function pickedInsts(plan) {
+  return [...Object.values(plan.res.plan).flat().filter(x => !x.pseudo), ...plan.tba].map(x => x.s.inst);
+}
+
 function exportIcs() {
   const plan = computePlan();
   // Everything still picked, any time source, including one with no usable time at all
@@ -1843,7 +1851,7 @@ function exportIcs() {
   // scheduling conflict never reaches plan.res.plan or plan.tba at all, so it's correctly still
   // treated as dropped.
   const all = Object.values(plan.res.plan).flat().filter(x => !x.pseudo);
-  const currentInsts = [...all, ...plan.tba].map(x => x.s.inst);
+  const currentInsts = pickedInsts(plan);
   const exportable = all.filter(x => (x.s.timeSource === 'official' || x.s.timeSource === 'custom') && x.s.start);
   const previous = store.icsExported();
   const pendingCancel = hasPendingCancellation(previous, currentInsts);
