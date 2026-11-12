@@ -1062,6 +1062,8 @@ await test('should drop a malformed saved entry (hand-edited backup, older schem
     { inst: 'i4', uid: '', summary: 'ok', start: '2026-11-18T18:00:00Z', end: '2026-11-18T18:45:00Z' },      // blank uid
     { inst: 'i5', uid: 'i5@x', summary: 'ok', start: 'not a date', end: '2026-11-18T18:45:00Z' },            // unparseable start
     { inst: 'i6', uid: 'i6@x', summary: 'ok', start: '2026-11-18T18:00:00Z', end: 'junk' },                  // unparseable end
+    { inst: 'i7', uid: 'i7@x', summary: 'ok', start: '2026-11-18', end: '2026-11-18T18:45:00Z' },            // date-only, no time
+    { inst: 'i8', uid: 'i8@x', summary: 'ok', start: '2026-11-18T18:00:00+01:00', end: '2026-11-18T18:45:00Z' }, // non-UTC offset
     'junk', null, 42,
   ]);
   eq(store.icsExported().map(x => x.inst), ['i1']);

@@ -354,7 +354,11 @@ function sanitizeBackup(b) {
 // A usable calendar identifier: the right type, trimmed, non-blank (same "usable" test as
 // other identifiers in this file, e.g. validBuilding).
 const usableIcsId = v => typeof v === 'string' && v.trim() !== '';
-const usableIcsDate = v => typeof v === 'string' && !Number.isNaN(Date.parse(v));
+// The exact shape every start/end always has (s.start/s.end are built by time.js's toISO,
+// which always returns a UTC "Z" ISO string): a date-only value or a non-UTC offset would
+// parse fine with Date.parse but produce an invalid iCalendar date-time once icsDate() strips
+// punctuation (e.g. a bare "2026-11-18" becomes "20261118Z", missing a time entirely).
+const usableIcsDate = v => typeof v === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$/.test(v) && !Number.isNaN(Date.parse(v));
 
 function sanitizeIcsExported(v) {
   if (!Array.isArray(v)) return [];
