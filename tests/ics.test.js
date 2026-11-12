@@ -1,6 +1,6 @@
 // Pure iCalendar building blocks shared by the bulk plan export and the single-session
 // quick-add (issue #147). Run with: node tests/ics.test.js
-import { icsEscape, icsFold, icsDate, cancelledEventLines, nextSeq, cancelSeq, classifyPrevious, hasPendingCancellation, buildPlanIcs, buildSingleIcs } from '../assets/js/ics.js';
+import { icsEscape, icsFold, icsDate, cancelledEventLines, nextSeq, cancelSeq, classifyPrevious, hasPendingCancellation, pickedInsts, buildPlanIcs, buildSingleIcs } from '../assets/js/ics.js';
 
 let pass = 0, fail = 0;
 function test(name, fn) {
@@ -152,6 +152,34 @@ test('should never report a pending cancellation for a manually quick-added entr
 test('should report nothing pending when nothing was ever exported', () => {
   eq(hasPendingCancellation([], []), false);
   eq(hasPendingCancellation(null, []), false);
+});
+
+// ---- pickedInsts (the "currently picked" set shared by exportIcs and the plan/shortlist
+// views, so a visible "remove from calendar" action always corresponds to something the bulk
+// export can actually remove)
+
+test('should include resolved-schedule instances across every day', () => {
+  const resPlan = { '2026-11-18': [{ pseudo: false, s: { inst: 'r1' } }], '2026-11-19': [{ pseudo: false, s: { inst: 'r2' } }] };
+  eq(pickedInsts(resPlan, []), ['r1', 'r2']);
+});
+test('should include an untimed pick (plan.tba) alongside the resolved schedule', () => {
+  const resPlan = { '2026-11-18': [{ pseudo: false, s: { inst: 'r1' } }] };
+  const tba = [{ s: { inst: 't1' } }];
+  eq(pickedInsts(resPlan, tba), ['r1', 't1']);
+});
+test('should exclude a pseudo entry (a blocked-time placeholder, not a real session)', () => {
+  const resPlan = { '2026-11-18': [{ pseudo: false, s: { inst: 'r1' } }, { pseudo: true, s: { inst: 'block' } }] };
+  eq(pickedInsts(resPlan, []), ['r1']);
+});
+test('should not include a session that lost a real scheduling conflict: it was never in resPlan or tba', () => {
+  // A conflict loser never reaches plan.res.plan or plan.tba in the first place (optimize()
+  // simply doesn't choose it), so pickedInsts has nothing more to filter for that case — this
+  // just documents that only what's actually passed in comes out.
+  const resPlan = { '2026-11-18': [{ pseudo: false, s: { inst: 'winner' } }] };
+  eq(pickedInsts(resPlan, []), ['winner']);
+});
+test('should default a missing tba to nothing, not throw', () => {
+  eq(pickedInsts({}, undefined), []);
 });
 
 // ---- boundary and regression cases for the extracted calendar helpers

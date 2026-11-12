@@ -78,6 +78,17 @@ export function hasPendingCancellation(previouslyExported, currentInsts) {
   return classifyPrevious(previouslyExported, currentInsts).freshlyDropped.length > 0;
 }
 
+// Every session instance still picked, any time source, including one with no usable time at
+// all (`tba`): what classifyPrevious (via hasPendingCancellation) and the bulk export's own
+// currentInsts must agree on as "currently in the plan", wherever either is computed, so a
+// visible "remove from calendar" action always corresponds to something the bulk export can
+// actually remove. A pseudo entry (a blocked-time placeholder, not a real session) is excluded;
+// a session that lost a real scheduling conflict was never in `resPlan` or `tba` to begin with,
+// so it's correctly absent here too — nothing further to filter for that case.
+export function pickedInsts(resPlan, tba) {
+  return [...Object.values(resPlan).flat().filter(x => !x.pseudo), ...(tba || [])].map(x => x.s.inst);
+}
+
 function trackedEntry(x, { seq, cancelled, source }) {
   return { inst: x.inst, uid: x.uid, summary: x.summary, start: x.start, end: x.end, seq, cancelled, source };
 }
