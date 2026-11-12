@@ -1199,6 +1199,13 @@ class FeedFieldsTests(SyncDir, unittest.TestCase):
         self.assertEqual((self.run_sync(raw), self.summary(), self.data("meta.json")["feedFields"], self.data("sessions.json")["feedFields"]),
                          ((0, False), None, CATALOG_FIELDS, CATALOG_FIELDS))
 
+    def test_should_ignore_a_session_id_of_an_unsupported_shape_or_left_blank_by_whitespace(self):
+        # Same "usable" test as the malformed-entry guard's shape (SHAPE_ACCEPTED["sessionId"]):
+        # text or number, not a bool (value_shape calls that "unknown"), and not blank once trimmed.
+        raw = [{"sessionId": "s1", "title": "T"}, {"sessionId": "   ", "whitespace": 1},
+               {"sessionId": True, "boolean": 2}, {"sessionId": ["x"], "listy": 3}, {"sessionId": 7, "n": 4}]
+        self.assertEqual(sync.feed_fields(raw), ["n", "sessionId", "title"])
+
     def test_should_show_field_names_as_code_spans_and_shorten_a_long_list(self):
         self.assertEqual(sync.fields_markdown({"new": ["a`b\nc"], "gone": []}), [FIELDS_HEADING, "- New: `a'b c`"])
         sixty = ["f%02d" % i for i in range(60)]

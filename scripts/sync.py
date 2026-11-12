@@ -506,10 +506,18 @@ FIELDS_SHOWN = 60   # field names listed per line of the summary; the rest are c
 FIELD_NAME_SHOWN = 60   # characters of one field name shown in the summary
 
 
+def usable_session_id(v):
+    """True when a sessionId is of a supported shape (text or number, SHAPE_FIELDS) and not
+    blank once trimmed: the same test the malformed-entry guard and normalize() apply."""
+    if isinstance(v, str):
+        return v.strip() != ""
+    return isinstance(v, (int, float)) and not isinstance(v, bool)
+
+
 def feed_fields(raw):
     """The feed's top-level field list: every key found on a session record (an object with a
-    session id, as the malformed-entry guard counts them; junk entries add nothing), sorted."""
-    return sorted({k for s in raw if isinstance(s, dict) and s.get("sessionId") not in (None, "")
+    usable session id, as the malformed-entry guard counts them; junk entries add nothing), sorted."""
+    return sorted({k for s in raw if isinstance(s, dict) and usable_session_id(s.get("sessionId"))
                    for k in s if isinstance(k, str)})
 
 
