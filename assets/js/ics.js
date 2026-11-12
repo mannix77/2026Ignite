@@ -70,6 +70,14 @@ export function classifyPrevious(previouslyExported, currentInsts) {
   return { stillCancelled: usable.filter(x => x.cancelled), freshlyDropped: usable.filter(x => !x.cancelled) };
 }
 
+// Whether a previous export still has anything worth re-opening the export for even though
+// nothing is currently exportable: something the bulk export itself published (never a
+// 'manual' quick-add, which it never owns — see classifyPrevious) that isn't already marked
+// cancelled and isn't in the current picked set at all (not merely lacking an exportable time).
+export function hasPendingCancellation(previouslyExported, currentInsts) {
+  return classifyPrevious(previouslyExported, currentInsts).freshlyDropped.length > 0;
+}
+
 function trackedEntry(x, { seq, cancelled, source }) {
   return { inst: x.inst, uid: x.uid, summary: x.summary, start: x.start, end: x.end, seq, cancelled, source };
 }

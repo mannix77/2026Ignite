@@ -15,7 +15,7 @@ import { createRanker, partition, profileConfig, profileGroups, GOALS, parsePref
 import { storageStatus, backupReminder, backupAge } from './health.js';
 import { reportError as reportTelemetry } from './telemetry.js';
 import { INSTANCE, INSTANCE_LABEL, nsKey, guideUrl } from './instance.js';
-import { icsDate, buildPlanIcs, buildSingleIcs } from './ics.js';
+import { icsDate, buildPlanIcs, buildSingleIcs, hasPendingCancellation } from './ics.js';
 import { esc, attr, icon, bldgChip, recChip, rsvpChip, rsvpOpensText, seatsDetail, prioPill, scoreChip, whenText, prioControl, sessionCard, cardClass, toast, shareOrDownload, copyText, speakersLine, setHostCompany, unknownRoomsNote, venueMapUrl, mapChip, occupancyOf, occupancyChip, picksForAI } from './ui.js';
 
 const $ = (sel, root = document) => root.querySelector(sel);
@@ -888,7 +888,7 @@ function renderPlan() {
     // A session this device already published to a calendar app, now un-rated along with
     // everything else, still needs its next export to cancel that stale entry (issue #147):
     // keep the export control reachable even though there's no plan left to show.
-    const pendingCancel = currentlyCancellable(store.icsExported(), []);
+    const pendingCancel = hasPendingCancellation(store.icsExported(), []);
     return `<h1>My plan</h1>${installBanner()}${favoritesBanner()}${missingPicksBanner()}
     <div class="panel empty"><h3>No picks yet</h3><p>Rate sessions as <b>Must</b>, <b>Want</b> or <b>Maybe</b> in Browse or Triage. Your plan builds itself from those ratings, using real walking times between buildings.</p>
     <div class="row" style="justify-content:center"><a class="btn primary" href="#/triage">${icon('cards')}Start triage</a><a class="btn" href="#/browse">Browse sessions</a></div>
@@ -1035,7 +1035,7 @@ function renderShortlist(plan) {
   ${watchSection(plan)}
   ${suggestedSection()}
   ${plan.online.length ? `<section><h2>Online / on demand</h2><div class="list">${plan.online.map(x => card(x.s, { compact: true })).join('')}</div></section>` : ''}
-  ${currentlyCancellable(store.icsExported(), []) ? `<div class="row" style="margin-top:18px"><button class="btn ghost" data-act="ics">${icon('plan')}Remove previously-added sessions from your calendar</button></div>` : ''}`;
+  ${hasPendingCancellation(store.icsExported(), []) ? `<div class="row" style="margin-top:18px"><button class="btn ghost" data-act="ics">${icon('plan')}Remove previously-added sessions from your calendar</button></div>` : ''}`;
 }
 
 function dayCounts(plan) {
@@ -1846,7 +1846,7 @@ function exportIcs() {
   const currentInsts = [...all, ...plan.tba].map(x => x.s.inst);
   const exportable = all.filter(x => (x.s.timeSource === 'official' || x.s.timeSource === 'custom') && x.s.start);
   const previous = store.icsExported();
-  const pendingCancel = currentlyCancellable(previous, currentInsts);
+  const pendingCancel = hasPendingCancellation(previous, currentInsts);
   if (!exportable.length && !pendingCancel) {
     toast(app.model.mode === 'preview' ? 'Preview times are simulated. Calendar export unlocks once the real schedule is published.' : 'Nothing with an official time in your plan yet');
     return;
@@ -1883,16 +1883,6 @@ function exportIcs() {
     : `Saved a cancellation for ${cancelledCount} session${cancelledCount === 1 ? '' : 's'} — open the file to remove ${cancelledCount === 1 ? 'it' : 'them'} from your calendar`;
   shareOrDownload(`${app.conf.id}-plan.ics`, text, 'text/calendar')
     .then(r => { if (r !== 'cancelled') { store.setIcsExported(exported); toast(msg); } });
-}
-
-// Whether a previous export still has anything worth re-opening the export for even though
-// nothing is currently exportable: a session the bulk export itself published (never one a
-// single quick-add tracks, which it never auto-cancels) that's not already marked cancelled
-// and not in the current plan at all (not merely lacking an exportable time, which
-// `currentInsts` covers).
-function currentlyCancellable(previous, currentInsts) {
-  const current = new Set(currentInsts);
-  return (previous || []).some(x => x && x.source !== 'manual' && !x.cancelled && !current.has(x.inst));
 }
 
 // A single session, added on its own from its detail view: same stable id as the bulk export

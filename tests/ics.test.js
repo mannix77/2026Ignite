@@ -1,6 +1,6 @@
 // Pure iCalendar building blocks shared by the bulk plan export and the single-session
 // quick-add (issue #147). Run with: node tests/ics.test.js
-import { icsEscape, icsFold, icsDate, cancelledEventLines, nextSeq, cancelSeq, classifyPrevious, buildPlanIcs, buildSingleIcs } from '../assets/js/ics.js';
+import { icsEscape, icsFold, icsDate, cancelledEventLines, nextSeq, cancelSeq, classifyPrevious, hasPendingCancellation, buildPlanIcs, buildSingleIcs } from '../assets/js/ics.js';
 
 let pass = 0, fail = 0;
 function test(name, fn) {
@@ -131,6 +131,27 @@ test('should classify nothing when nothing was exported before', () => {
 test('should ignore malformed saved entries rather than throw', () => {
   eq(classifyPrevious([null, 'junk', 42, { uid: 'no-inst' }, prior[0]], ['nothing-current']),
     { stillCancelled: [], freshlyDropped: [prior[0]] });
+});
+
+// ---- hasPendingCancellation (whether the export control should stay reachable even though
+// nothing is currently exportable, e.g. the empty-plan and unscheduled views)
+
+test('should report a pending cancellation for an active, plan-owned entry no longer picked', () => {
+  eq(hasPendingCancellation(prior, []), true);
+});
+test('should report nothing pending when every plan-owned entry is already cancelled', () => {
+  eq(hasPendingCancellation([prior[1]], []), false, 'i2 is already cancelled; nothing left to do');
+});
+test('should report nothing pending when the active entry is still in the current set', () => {
+  eq(hasPendingCancellation([prior[0]], ['i1']), false);
+});
+test('should never report a pending cancellation for a manually quick-added entry', () => {
+  const manual = { ...prior[0], source: 'manual' };
+  eq(hasPendingCancellation([manual], []), false, 'the bulk export does not own a quick-add, so there is nothing for it to cancel');
+});
+test('should report nothing pending when nothing was ever exported', () => {
+  eq(hasPendingCancellation([], []), false);
+  eq(hasPendingCancellation(null, []), false);
 });
 
 // ---- boundary and regression cases for the extracted calendar helpers
@@ -264,19 +285,21 @@ test('should not re-cancel or re-publish a session already tracked as cancelled'
 
 test('should revive a cancelled session above its cancellation\'s sequence', () => {
   const previous = [{ inst: 'i1', uid: 'i1@x', summary: '[A] One', start: item1.start, end: item1.end, seq: 1, cancelled: true, source: 'plan' }];
-  const { text, exported } = buildPlanIcs({ calname: 'My plan', stamp: '20261112T000000Z', items: [item1], currentInsts: ['i1'], previous });
+  const { text, exported, cancelledCount } = buildPlanIcs({ calname: 'My plan', stamp: '20261112T000000Z', items: [item1], currentInsts: ['i1'], previous });
   eq(text.includes('SEQUENCE:2'), true);
   eq(text.includes('STATUS:CANCELLED'), false);
-  eq(exported[0], { inst: 'i1', uid: 'i1@x', summary: '[A] One', start: item1.start, end: item1.end, seq: 2, cancelled: false, source: 'plan' });
+  eq(exported, [{ inst: 'i1', uid: 'i1@x', summary: '[A] One', start: item1.start, end: item1.end, seq: 2, cancelled: false, source: 'plan' }]);
+  eq(cancelledCount, 0);
 });
 
 test('should bump SEQUENCE when an exported, still-active session is rescheduled', () => {
   const previous = [{ inst: 'i1', uid: 'i1@x', summary: '[A] One', start: item1.start, end: item1.end, seq: 0, cancelled: false, source: 'plan' }];
   const moved = { ...item1, start: '2026-11-18T19:00:00Z', end: '2026-11-18T19:45:00Z' };
-  const { text, exported } = buildPlanIcs({ calname: 'My plan', stamp: '20261112T000000Z', items: [moved], currentInsts: ['i1'], previous });
+  const { text, exported, cancelledCount } = buildPlanIcs({ calname: 'My plan', stamp: '20261112T000000Z', items: [moved], currentInsts: ['i1'], previous });
   eq(text.includes('SEQUENCE:1'), true);
   eq(text.includes('DTSTART:20261118T190000Z'), true);
-  eq(exported[0], { inst: 'i1', uid: 'i1@x', summary: '[A] One', start: moved.start, end: moved.end, seq: 1, cancelled: false, source: 'plan' });
+  eq(exported, [{ inst: 'i1', uid: 'i1@x', summary: '[A] One', start: moved.start, end: moved.end, seq: 1, cancelled: false, source: 'plan' }]);
+  eq(cancelledCount, 0);
 });
 
 test('should not count a session with an unexportable time as dropped (preview, withdrawn, or never had one)', () => {
@@ -303,8 +326,12 @@ test('should never auto-cancel a manually quick-added session, even when it was 
 
 test('should take over a manually quick-added session once it\'s genuinely in the resolved plan', () => {
   const manual = { inst: 'i1', uid: 'i1@x', summary: '[A] One', start: item1.start, end: item1.end, seq: 0, cancelled: false, source: 'manual' };
-  const { exported } = buildPlanIcs({ calname: 'My plan', stamp: '20261112T000000Z', items: [item1], currentInsts: ['i1'], previous: [manual] });
-  eq(exported[0].source, 'plan', 'now bulk-managed, including future cancellation if it later drops out');
+  const { text, exported, cancelledCount } = buildPlanIcs({ calname: 'My plan', stamp: '20261112T000000Z', items: [item1], currentInsts: ['i1'], previous: [manual] });
+  eq(text.includes('UID:i1@x'), true);
+  eq(text.includes('CANCELLED'), false);
+  eq(exported, [{ inst: 'i1', uid: 'i1@x', summary: '[A] One', start: item1.start, end: item1.end, seq: 0, cancelled: false, source: 'plan' }],
+    'now bulk-managed, including future cancellation if it later drops out');
+  eq(cancelledCount, 0);
 });
 
 test('should build a single-session file with no SEQUENCE the first time, and escape the custom alarm', () => {
