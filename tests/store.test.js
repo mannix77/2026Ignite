@@ -1056,6 +1056,89 @@ await test('should drop a malformed saved entry (hand-edited backup, older schem
   eq(store.icsExported().map(x => x.inst), ['i1']);
 });
 
+// Keep fixtures local to the calendar state tests; each case gets its own storage namespace.
+const calendarEntry = { inst: 'run-1', uid: 'run-1@ignite2026.ignite26-planner', summary: '[A] One',
+  start: '2026-11-18T18:00:00Z', end: '2026-11-18T18:45:00Z' };
+
+await test('should sanitize every required calendar field on both save and load', async () => {
+  const invalid = [];
+  for (const field of ['inst', 'uid', 'summary', 'start', 'end']) {
+    const missing = { ...calendarEntry };
+    delete missing[field];
+    invalid.push(missing);
+    for (const value of [null, 42, false, {}, []]) invalid.push({ ...calendarEntry, [field]: value });
+  }
+  const mixed = [null, false, 42, 'junk', [], ...invalid, calendarEntry];
+  store.load('ics-all-fields-set');
+  store.setIcsExported(mixed);
+  eq(store.icsExported(), [calendarEntry], 'setter filters each required field');
+  await sleep(SAVE);
+  eq(JSON.parse(localStorage.getItem(keyOf('ics-all-fields-set'))).icsExported, [calendarEntry]);
+  loadSaved('ics-all-fields-load', { v: 1, picks: {}, icsExported: mixed });
+  eq(store.icsExported(), [calendarEntry], 'raw saved state is sanitized too');
+});
+
+await test('should treat a non-array calendar history as empty on both save and load', async () => {
+  for (const [i, value] of [null, false, 42, 'junk', {}, { 0: calendarEntry, length: 1 }].entries()) {
+    store.load(`ics-container-set-${i}`);
+    store.setIcsExported([calendarEntry]);
+    eq(store.icsExported(), [calendarEntry], 'precondition: nonempty history');
+    store.setIcsExported(value);
+    eq(store.icsExported(), []);
+    await sleep(SAVE);
+    eq(JSON.parse(localStorage.getItem(keyOf(`ics-container-set-${i}`))).icsExported, []);
+    loadSaved(`ics-container-load-${i}`, { v: 1, picks: {}, icsExported: value });
+    eq(store.icsExported(), []);
+  }
+});
+
+await test('should load older saved plans without calendar history and keep their picks', () => {
+  loadSaved('ics-legacy', { v: 1, picks: { S1: { p: 3, lock: 'S1', note: 'keep', at: 1 } } });
+  eq(store.icsExported(), []);
+  eq([store.pick('S1').p, store.pick('S1').lock, store.pick('S1').note], [3, 'S1', 'keep']);
+});
+
+await test('should replace the previous calendar snapshot and persist an empty export', async () => {
+  store.load('ics-replace');
+  store.setIcsExported([calendarEntry]);
+  await sleep(SAVE);
+  const replacement = { ...calendarEntry, inst: 'run-2', uid: 'run-2@x' };
+  store.setIcsExported([replacement]);
+  await sleep(SAVE);
+  store.load('ics-replace');
+  eq(store.icsExported(), [replacement], 'replace rather than accumulate stale cancellations');
+  store.setIcsExported([]);
+  await sleep(SAVE);
+  store.load('ics-replace');
+  eq(store.icsExported(), [], 'clearing stays cleared after reload');
+});
+
+await test('should isolate calendar history between conference namespaces in both directions', async () => {
+  const other = { ...calendarEntry, inst: 'other', uid: 'other@x' };
+  store.load('ics-conference-a');
+  store.setIcsExported([calendarEntry]);
+  await sleep(SAVE);
+  store.load('ics-conference-b');
+  eq(store.icsExported(), []);
+  store.setIcsExported([other]);
+  await sleep(SAVE);
+  store.load('ics-conference-a');
+  eq(store.icsExported(), [calendarEntry]);
+  store.load('ics-conference-b');
+  eq(store.icsExported(), [other]);
+});
+
+await test('should notify subscribers after the calendar snapshot is updated', async () => {
+  store.load('ics-notify');
+  const updates = [];
+  const unsubscribe = store.subscribe(what => updates.push([what, store.icsExported()]));
+  try {
+    store.setIcsExported([calendarEntry]);
+    eq(updates, [['ics', [calendarEntry]]]);
+  } finally { unsubscribe(); }
+  await sleep(SAVE);
+});
+
 await sleep(SAVE);
 console.log(`${pass} passed, ${fail} failed`);
 if (fail) process.exit(1);

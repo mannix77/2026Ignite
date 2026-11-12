@@ -85,5 +85,99 @@ test('should ignore malformed saved entries rather than throw', () => {
   eq(droppedExports([null, 'junk', 42, { uid: 'no-inst' }, prior[0]], ['nothing-current']).map(x => x.inst), ['i1']);
 });
 
+// ---- boundary and regression cases for the extracted calendar helpers
+
+test('should preserve empty text and ordinary spaces when escaping', () => {
+  eq(icsEscape(''), '');
+  eq(icsEscape('  A talk about AI  '), '  A talk about AI  ');
+});
+
+test('should keep literal backslash-n distinct from an actual newline', () => {
+  eq(icsEscape('literal\\n\nnext'), 'literal\\\\n\\nnext');
+});
+
+test('should preserve an empty line and a line at the RFC octet limit', () => {
+  eq(icsFold(''), '');
+  const line = 'x'.repeat(75);
+  const folded = icsFold(line);
+  eq(folded.replace(/\r\n /g, ''), line);
+  for (const part of folded.split('\r\n')) {
+    eq(new TextEncoder().encode(part).length <= 75, true, 'physical line fits RFC 5545');
+  }
+});
+
+test('should leave a line just below the RFC limit intact', () => {
+  const line = 'x'.repeat(74);
+  eq(icsFold(line), line);
+});
+
+test('should fold a line just beyond the RFC limit without losing text', () => {
+  const line = 'x'.repeat(76);
+  const folded = icsFold(line);
+  eq(folded.includes('\r\n '), true);
+  eq(folded.replace(/\r\n /g, ''), line);
+  for (const part of folded.split('\r\n')) eq(new TextEncoder().encode(part).length <= 75, true);
+});
+
+test('should preserve spaces and whole Unicode characters across repeated folds', () => {
+  const line = 'SUMMARY:  ' + 'AI 🧠 café € 漢字  '.repeat(25);
+  const parts = icsFold(line).split('\r\n');
+  eq(parts.length > 2, true, 'exercise multiple continuation lines');
+  eq(parts.join('\r\n').replace(/\r\n /g, ''), line, 'only fold whitespace is removed');
+  for (const [i, part] of parts.entries()) {
+    eq(new TextEncoder().encode(part).length <= 75, true, `line ${i} byte limit`);
+    eq(part.isWellFormed(), true, `line ${i} must not split a surrogate pair`);
+    if (i) eq(part[0], ' ', `line ${i} continuation marker`);
+  }
+});
+
+test('should move a four-byte character to a continuation when it cannot fit', () => {
+  const line = 'x'.repeat(73) + '🧠';
+  eq(icsFold(line), 'x'.repeat(73) + '\r\n 🧠');
+});
+
+test('should format midnight, leap day and fractional seconds without a local timezone', () => {
+  eq(icsDate('2028-02-29T00:00:00Z'), '20280229T000000Z');
+  eq(icsDate('2026-12-31T23:59:59.123456Z'), '20261231T235959Z');
+  eq(icsDate('2026-11-18T18:30:00.5'), '20261118T183000Z');
+});
+
+test('should cancel every previous export when the current plan is empty', () => {
+  eq(droppedExports(prior, []), prior);
+});
+
+test('should match exact instance ids rather than uid, prefix or repeat group', () => {
+  const repeats = [
+    { ...prior[0], inst: 'BRK1', uid: 'first@x' },
+    { ...prior[1], inst: 'BRK1-R1', uid: 'repeat@x' },
+  ];
+  eq(droppedExports(repeats, ['BRK1-R1', 'first@x', 'brk1']), [repeats[0]]);
+});
+
+test('should keep dropped metadata in publication order without mutating either input', () => {
+  const previous = Object.freeze(prior.map(x => Object.freeze({ ...x })));
+  const current = Object.freeze(['new-instance', 'new-instance']);
+  eq(droppedExports(previous, current), prior);
+  eq(previous, prior);
+  eq(current, ['new-instance', 'new-instance']);
+});
+
+test('should ignore non-string instance ids while retaining valid cancellations', () => {
+  eq(droppedExports([{ inst: null }, { inst: 1 }, { inst: {} }, { inst: ['i1'] }, prior[0]], []), [prior[0]]);
+  eq(droppedExports(undefined, []), []);
+});
+
+test('should serialize a dropped session with its original occurrence and escaped summary', () => {
+  const previous = [{ inst: 'gone', uid: 'gone@ignite2026.ignite26-planner',
+    start: '2026-11-18T18:00:00Z', end: '2026-11-18T18:45:00Z', summary: 'A\\B; C, D\r\nNext' }];
+  const [dropped] = droppedExports(previous, ['new']);
+  eq(cancelledEventLines({ ...dropped, stamp: '20261112T000000Z' }), [
+    'BEGIN:VEVENT', 'UID:gone@ignite2026.ignite26-planner', 'DTSTAMP:20261112T000000Z',
+    'SEQUENCE:1', 'STATUS:CANCELLED', 'DTSTART:20261118T180000Z', 'DTEND:20261118T184500Z',
+    'SUMMARY:A\\\\B\\; C\\, D\\nNext', 'END:VEVENT',
+  ]);
+  eq(previous[0].summary, 'A\\B; C, D\r\nNext', 'saved metadata stays unescaped');
+});
+
 console.log(`${pass} passed, ${fail} failed`);
 if (fail) process.exit(1);
