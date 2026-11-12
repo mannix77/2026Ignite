@@ -3,6 +3,13 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-11-12T06:45:14Z · https://catalog.awsevents.com/api/sessions
+
+Added 0 · removed 0 · changed 1
+
+**Changed**
+- `PEX216` Co-Sell to Co-Marketing: An AI-powered, end-to-end partner motion. — speakers: Oksana Bakanova → —
+
 ## 2026-11-12T00:51:11Z · https://catalog.awsevents.com/api/sessions
 
 Added 6 · removed 2 · changed 85

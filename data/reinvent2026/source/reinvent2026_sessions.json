@@ -1,7 +1,7 @@
 {
  "source": "https://catalog.awsevents.com/api/sessions",
  "event": "reinvent2026",
- "fetchedAt": "2026-11-12T00:51:11Z",
+ "fetchedAt": "2026-11-12T06:45:14Z",
  "count": 2520,
  "sessions": [
   {
@@ -4705,7 +4705,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-10T00:41:25Z",
+   "modified": "2026-11-11T19:14:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -22579,7 +22579,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-10T22:23:28Z",
+   "modified": "2026-11-12T01:46:14Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -33538,7 +33538,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-10T13:01:41Z",
+   "modified": "2026-11-12T04:38:55Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -38377,14 +38377,14 @@
    },
    "speakers": [
     {
-     "name": "Karl Baria",
-     "title": "Sr Customer Solutions Manager",
+     "name": "alkrok Krok",
+     "title": "Senior AI Engineer",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
     },
     {
-     "name": "alkrok Krok",
-     "title": "Senior AI Engineer",
+     "name": "Karl Baria",
+     "title": "Sr Customer Solutions Manager",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
     }
@@ -49334,7 +49334,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-12T04:14:41Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -49379,6 +49379,18 @@
    },
    "speakers": [
     {
+     "name": "Daniel Wirjo",
+     "title": "Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Andrew Powell",
+     "title": "Global Leader, AI Transformation Strategy",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
      "name": "Steve Drew",
      "title": "Sr Partner SA",
      "company": "AWS",
@@ -49391,20 +49403,8 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Andrew Powell",
-     "title": "Global Leader, AI Transformation Strategy",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Pranjal Gururani",
      "title": "Senior Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Daniel Wirjo",
-     "title": "Solutions Architect",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
     }
@@ -55697,7 +55697,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-11T19:14:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -55727,10 +55727,10 @@
    },
    "speakers": [
     {
-     "name": "Pankaj Sharma",
-     "title": "Sr. Manager AI Engineering",
-     "company": "Southwest Airlines",
-     "role": "External Speaker"
+     "name": "Chaitra Mathur",
+     "title": "Principal Solutions Architect GenAI",
+     "company": "AWS",
+     "role": "Internal Speaker"
     },
     {
      "name": "Madhu Pai",
@@ -55739,10 +55739,10 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Chaitra Mathur",
-     "title": "Principal Solutions Architect GenAI",
-     "company": "AWS",
-     "role": "Internal Speaker"
+     "name": "Pankaj Sharma",
+     "title": "Sr. Manager AI Engineering",
+     "company": "Southwest Airlines",
+     "role": "External Speaker"
     }
    ],
    "times": [
@@ -64043,102 +64043,6 @@
    ]
   },
   {
-   "sessionID": "1780442223405001cufq",
-   "code": "API306-R",
-   "title": "Build secure APIs faster with Amazon API Gateway and Kiro CLI",
-   "abstract": "Secure your APIs with confidence and build them faster. In this builders' session, dive into Amazon API Gateway authorization strategies including Amazon Cognito user pools, Amazon Verified Permissions, Lambda custom authorizers, IAM authorizers, and machine-to-machine scenarios. Through hands-on exercises, implement each strategy and understand their trade-offs. Once secured, ship faster—use Kiro CLI, OpenAPI, and MCP servers to go from spec to deployed API in minutes. You must bring your laptop to participate.",
-   "type": "Builders' session",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Builders' session"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Application Integration"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon API Gateway",
-     "Kiro"
-    ],
-    "Venue": [
-     "Caesars Forum"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Jacob Cravinho",
-     "title": "Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Josh Rodgers",
-     "title": "Sr. Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Archana Venkitaramanan",
-     "title": "Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Raphael Lima",
-     "title": "Senior Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "David Lamb",
-     "title": "Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025517711001CVQ5",
-     "date": "2026-12-02",
-     "startTime": "11:30",
-     "endTime": "12:30",
-     "utcStartTime": "2026/12/02 19:30:00",
-     "utcEndTime": "2026/12/02 20:30:00",
-     "length": 60,
-     "room": "Caesars Forum | Level 1 | Forum 120 | Content Hub | Builders' Session 2",
-     "roomId": "1789591919743001bno1",
-     "capacity": "50",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358234383001inZT",
    "code": "API306-R1",
    "title": "Build secure APIs faster with Amazon API Gateway and Kiro CLI",
@@ -64227,6 +64131,102 @@
      "length": 60,
      "room": "Caesars Forum | Level 1 | Alliance 311",
      "roomId": "1789591919636004boBN",
+     "capacity": "50",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442223405001cufq",
+   "code": "API306-R",
+   "title": "Build secure APIs faster with Amazon API Gateway and Kiro CLI",
+   "abstract": "Secure your APIs with confidence and build them faster. In this builders' session, dive into Amazon API Gateway authorization strategies including Amazon Cognito user pools, Amazon Verified Permissions, Lambda custom authorizers, IAM authorizers, and machine-to-machine scenarios. Through hands-on exercises, implement each strategy and understand their trade-offs. Once secured, ship faster—use Kiro CLI, OpenAPI, and MCP servers to go from spec to deployed API in minutes. You must bring your laptop to participate.",
+   "type": "Builders' session",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-12T06:44:39Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Builders' session"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Application Integration"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon API Gateway",
+     "Kiro"
+    ],
+    "Venue": [
+     "Caesars Forum"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Josh Rodgers",
+     "title": "Sr. Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Raphael Lima",
+     "title": "Senior Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Jacob Cravinho",
+     "title": "Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "David Lamb",
+     "title": "Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Archana Venkitaramanan",
+     "title": "Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025517711001CVQ5",
+     "date": "2026-12-02",
+     "startTime": "11:30",
+     "endTime": "12:30",
+     "utcStartTime": "2026/12/02 19:30:00",
+     "utcEndTime": "2026/12/02 20:30:00",
+     "length": 60,
+     "room": "Caesars Forum | Level 1 | Forum 120 | Content Hub | Builders' Session 2",
+     "roomId": "1789591919743001bno1",
      "capacity": "50",
      "inPersonTime": true,
      "virtualTime": false,
@@ -65183,7 +65183,7 @@
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:55:03Z",
+   "modified": "2026-11-11T19:14:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -74328,7 +74328,7 @@
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-10T19:09:09Z",
+   "modified": "2026-11-12T01:12:38Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -74366,14 +74366,7 @@
      "Yes"
     ]
    },
-   "speakers": [
-    {
-     "name": "Oksana Bakanova",
-     "title": "Head of Global Scale Partner Marketing",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
+   "speakers": [],
    "times": [
     {
      "sessionTimeID": "1791224279317001tFmu",
@@ -113906,7 +113899,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-10T19:09:09Z",
+   "modified": "2026-11-12T04:43:51Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -145367,7 +145360,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-11T19:14:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -145412,20 +145405,14 @@
    },
    "speakers": [
     {
-     "name": "Pranjali Rawat",
-     "title": "Cloud Support Engineer",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Chintan Agrawal",
-     "title": "Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Shubhendu Dubey",
      "title": "Technical Account Manager",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Jitesh Kumar",
+     "title": "Sr Customer Solutions Manager",
      "company": "AWS",
      "role": "Internal Speaker"
     },
@@ -145436,8 +145423,14 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Jitesh Kumar",
-     "title": "Sr Customer Solutions Manager",
+     "name": "Pranjali Rawat",
+     "title": "Cloud Support Engineer",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Chintan Agrawal",
+     "title": "Solutions Architect",
      "company": "AWS",
      "role": "Internal Speaker"
     }
@@ -146282,7 +146275,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-11T21:29:42Z",
+   "modified": "2026-11-12T03:55:25Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -150257,7 +150250,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-10T19:13:39Z",
+   "modified": "2026-11-12T01:39:45Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -150306,7 +150299,7 @@
    "speakers": [
     {
      "name": "Young Jung",
-     "title": "Sr. Manager of Telco Network SA",
+     "title": "Tech Leader - Telco (Principal SA)",
      "company": "Amazon Web Services",
      "role": "Internal Speaker"
     },
@@ -150350,7 +150343,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-10T05:46:10Z",
+   "modified": "2026-11-12T01:39:45Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -150398,9 +150391,9 @@
    },
    "speakers": [
     {
-     "name": "Umer Chaudhary",
-     "title": "Sr. Mgr Network Solutions",
-     "company": "AWS",
+     "name": "Young Jung",
+     "title": "Tech Leader - Telco (Principal SA)",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     },
     {
@@ -150410,9 +150403,9 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Young Jung",
-     "title": "Sr. Manager of Telco Network SA",
-     "company": "Amazon Web Services",
+     "name": "Umer Chaudhary",
+     "title": "Sr. Mgr Network Solutions",
+     "company": "AWS",
      "role": "Internal Speaker"
     }
    ],
@@ -154360,7 +154353,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-11T21:55:55Z",
+   "modified": "2026-11-12T04:45:07Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -156826,7 +156819,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-11T23:30:40Z",
+   "modified": "2026-11-12T04:01:08Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -156988,7 +156981,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-11T19:14:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -157022,15 +157015,15 @@
    },
    "speakers": [
     {
-     "name": "Erika Nagamine",
-     "title": "Sr. Specialist SA, Data & AI",
-     "company": "Amazon Web Services (AWS)",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Poulomi Dasgupta",
      "title": "Sr. Analytics Specialist Solutions Architect",
      "company": "Amazon",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Erika Nagamine",
+     "title": "Sr. Specialist SA, Data & AI",
+     "company": "Amazon Web Services (AWS)",
      "role": "Internal Speaker"
     }
    ],
@@ -157061,7 +157054,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-11T19:14:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -158745,7 +158738,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-11T19:14:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -158789,15 +158782,15 @@
    },
    "speakers": [
     {
-     "name": "Max Clements",
-     "title": "Sr Solutions Architect: SLG Integrated Eligibility",
-     "company": "Amazon Web Services, Inc.",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Nafi Diallo",
      "title": "Senior Automated Reasoning Applied Scientist",
      "company": "Amazon",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Max Clements",
+     "title": "Sr Solutions Architect: SLG Integrated Eligibility",
+     "company": "Amazon Web Services, Inc.",
      "role": "Internal Speaker"
     }
    ],
@@ -162564,7 +162557,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-12T02:00:22Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -162591,14 +162584,14 @@
    },
    "speakers": [
     {
-     "name": "Anthony McClure",
-     "title": "Partner Solutions Architect",
+     "name": "Erik Anderson",
+     "title": "Principal Solutions Architect",
      "company": "AWS",
      "role": "Internal Speaker"
     },
     {
-     "name": "Erik Anderson",
-     "title": "Principal Solutions Architect",
+     "name": "Anthony McClure",
+     "title": "Partner Solutions Architect",
      "company": "AWS",
      "role": "Internal Speaker"
     }
@@ -165148,85 +165141,6 @@
    ]
   },
   {
-   "sessionID": "1790358237850001iacX",
-   "code": "COM404-R1",
-   "title": "Scaling Multi-Cluster EKS Without Burning Your Infrastructure Budget",
-   "abstract": "Managing hundreds of Amazon EKS clusters breaks standard multi-tenant architectures under the weight of shared control planes, noisy neighbors, and runaway cross-AZ data transfer costs. This interactive chalk talk skips the slides to whiteboard the painful realities of multi-cluster fleet topology at scale. We will dissect the architectural trade-offs between monolithic clusters and localized micro-clusters, mapping out exact blast-radius constraints. Bring your worst infrastructure bottlenecks; we will openly debate cluster life-cycle automation, shared VPC patterns, and cost-allocation frameworks, leaving you with a battle-tested blueprint to optimize fleet operations on Monday morning.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "400 – Expert"
-    ],
-    "Features": [
-     "Customer story",
-     "Discussion"
-    ],
-    "Topic": [
-     "Cloud Operations",
-     "Serverless"
-    ],
-    "AreaofInterest": [
-     "Well-Architected Framework",
-     "Cost Optimization"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "DevOps Engineer",
-     "IT Professional / Technical Manager"
-    ],
-    "Services": [
-     "Amazon Elastic Kubernetes Service (Amazon EKS)",
-     "Amazon Virtual Private Cloud (Amazon VPC)",
-     "AWS Billing and Cost Management"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Sagar Utekar",
-     "title": "Site Reliability Engineer",
-     "company": "CrowdStrike",
-     "role": "External Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360383085001AD7p",
-     "date": "2026-12-03",
-     "startTime": "12:00",
-     "endTime": "13:00",
-     "utcStartTime": "2026/12/03 20:00:00",
-     "utcEndTime": "2026/12/03 21:00:00",
-     "length": 60,
-     "room": "MGM Grand | Level 3 | Premier 309",
-     "roomId": "1789591920464003baYW",
-     "capacity": "78",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442238161001cczO",
    "code": "COM404-R",
    "title": "Scaling Multi-Cluster EKS Without Burning Your Infrastructure Budget",
@@ -165235,7 +165149,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-12T03:32:34Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -165283,7 +165197,7 @@
     {
      "name": "Sagar Utekar",
      "title": "Site Reliability Engineer",
-     "company": "CrowdStrike",
+     "company": "CrowdStrike India PVT LTD",
      "role": "External Speaker"
     }
    ],
@@ -165298,6 +165212,85 @@
      "length": 60,
      "room": "MGM Grand | Level 1 | Boulevard 155",
      "roomId": "1789591920164001btii",
+     "capacity": "78",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358237850001iacX",
+   "code": "COM404-R1",
+   "title": "Scaling Multi-Cluster EKS Without Burning Your Infrastructure Budget",
+   "abstract": "Managing hundreds of Amazon EKS clusters breaks standard multi-tenant architectures under the weight of shared control planes, noisy neighbors, and runaway cross-AZ data transfer costs. This interactive chalk talk skips the slides to whiteboard the painful realities of multi-cluster fleet topology at scale. We will dissect the architectural trade-offs between monolithic clusters and localized micro-clusters, mapping out exact blast-radius constraints. Bring your worst infrastructure bottlenecks; we will openly debate cluster life-cycle automation, shared VPC patterns, and cost-allocation frameworks, leaving you with a battle-tested blueprint to optimize fleet operations on Monday morning.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-12T03:32:34Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "400 – Expert"
+    ],
+    "Features": [
+     "Customer story",
+     "Discussion"
+    ],
+    "Topic": [
+     "Cloud Operations",
+     "Serverless"
+    ],
+    "AreaofInterest": [
+     "Well-Architected Framework",
+     "Cost Optimization"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "DevOps Engineer",
+     "IT Professional / Technical Manager"
+    ],
+    "Services": [
+     "Amazon Elastic Kubernetes Service (Amazon EKS)",
+     "Amazon Virtual Private Cloud (Amazon VPC)",
+     "AWS Billing and Cost Management"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Sagar Utekar",
+     "title": "Site Reliability Engineer",
+     "company": "CrowdStrike India PVT LTD",
+     "role": "External Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360383085001AD7p",
+     "date": "2026-12-03",
+     "startTime": "12:00",
+     "endTime": "13:00",
+     "utcStartTime": "2026/12/03 20:00:00",
+     "utcEndTime": "2026/12/03 21:00:00",
+     "length": 60,
+     "room": "MGM Grand | Level 3 | Premier 309",
+     "roomId": "1789591920464003baYW",
      "capacity": "78",
      "inPersonTime": true,
      "virtualTime": false,
@@ -168412,7 +168405,7 @@
    "length": 180,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-11T13:42:49Z",
+   "modified": "2026-11-12T05:35:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -173370,7 +173363,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-11T18:38:50Z",
+   "modified": "2026-11-12T06:02:52Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -185288,7 +185281,7 @@
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-11T18:22:24Z",
+   "modified": "2026-11-11T19:14:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
