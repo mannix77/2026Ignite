@@ -997,8 +997,11 @@ function missingPicksBanner() {
 function watchSection(plan) {
   if (!plan.watch.length) return '';
   const list = plan.watch.slice().sort((a, b) => (b.score ?? 0) - (a.score ?? 0) || b.priority - a.priority);
+  // A session can be parked here before a later catalog sync confirms it isn't recorded after
+  // all (issue #152): the blanket "catch the recordings" lede above is then wrong for it, so
+  // each such entry gets its own note instead of silently going along with that promise.
   return `<section><h2>Watch later (${list.length})</h2><p class="lede small">Kept out of the live plan; catch the recordings. Tap <b>Attend live</b> to put one back.</p>
-    <div class="list">${list.map(x => card(x.s, { compact: true, extra: `<div class="row" style="margin-top:8px"><button class="btn small ghost" data-act="attend-live" data-key="${attr(x.s.key)}">Attend live instead</button>
+    <div class="list">${list.map(x => card(x.s, { compact: true, extra: `${x.s.recorded === false ? '<p class="small muted">Not recorded: there’s no recording to catch here.</p>' : ''}<div class="row" style="margin-top:8px"><button class="btn small ghost" data-act="attend-live" data-key="${attr(x.s.key)}">Attend live instead</button>
       ${urlOf(x.s) ? `<a class="btn small ghost" href="${attr(urlOf(x.s))}" target="_blank" rel="noopener">On ${esc(app.conf.siteName)} ${icon('ext')}</a>` : ''}</div>` })).join('')}</div></section>`;
 }
 
@@ -1792,7 +1795,7 @@ function renderDetail(s) {
       ${s.related?.length ? `<p class="small muted">Related: ${s.related.map(code => app.model.byCode.has(code) ? `<a href="#/session/${encodeURIComponent(code)}" data-act="open-code" data-code="${attr(code)}">${esc(code)}</a>` : esc(code)).join(', ')}</p>` : ''}
       <div class="field" style="margin-top:12px"><label for="score">My score<small>Your own ranking (e.g. the workbook score). Overrides Must/Want weighting in clashes</small></label>
         <input id="score" type="number" inputmode="decimal" min="0" max="100" step="0.5" data-score-key="${attr(s.key)}" value="${attr(gp?.score ?? '')}" placeholder="—"></div>
-      <label class="toggle"><input type="checkbox" data-watch-key="${attr(s.key)}" ${gp?.mode === 'watch' ? 'checked' : ''}><span>Watch the recording instead of attending<small>${s.recorded === false ? 'Careful: this session is not recorded.' : 'Kept out of the live plan and listed under Watch later.'}</small></span></label>
+      ${s.recorded === false ? '' : `<label class="toggle"><input type="checkbox" data-watch-key="${attr(s.key)}" ${gp?.mode === 'watch' ? 'checked' : ''}><span>Watch the recording instead of attending<small>Kept out of the live plan and listed under Watch later.</small></span></label>`}
       <h3 style="margin-top:14px"><label for="note">My notes</label></h3>
       <textarea id="note" data-note-key="${attr(s.key)}" placeholder="Questions to ask, why it matters…">${esc(gp?.note || '')}</textarea>
       <div class="row" style="margin-top:12px">
