@@ -15,6 +15,7 @@ import { createRanker, partition, profileConfig, profileGroups, GOALS, parsePref
 import { storageStatus, backupReminder, backupAge } from './health.js';
 import { reportError as reportTelemetry } from './telemetry.js';
 import { INSTANCE, INSTANCE_LABEL, nsKey, guideUrl } from './instance.js';
+import { icsEscape, icsFold, icsDate, cancelledEventLines, droppedExports } from './ics.js';
 import { esc, attr, icon, bldgChip, recChip, rsvpChip, rsvpOpensText, seatsDetail, prioPill, scoreChip, whenText, prioControl, sessionCard, cardClass, toast, shareOrDownload, copyText, speakersLine, setHostCompany, unknownRoomsNote, venueMapUrl, mapChip, occupancyOf, occupancyChip, picksForAI } from './ui.js';
 
 const $ = (sel, root = document) => root.querySelector(sel);
@@ -1788,7 +1789,10 @@ function renderDetail(s) {
       <label class="toggle"><input type="checkbox" data-watch-key="${attr(s.key)}" ${gp?.mode === 'watch' ? 'checked' : ''}><span>Watch the recording instead of attending<small>${s.recorded === false ? 'Careful: this session is not recorded.' : 'Kept out of the live plan and listed under Watch later.'}</small></span></label>
       <h3 style="margin-top:14px"><label for="note">My notes</label></h3>
       <textarea id="note" data-note-key="${attr(s.key)}" placeholder="Questions to ask, why it matters…">${esc(gp?.note || '')}</textarea>
-      ${urlOf(s) ? `<div class="row" style="margin-top:12px"><a class="btn small" href="${attr(urlOf(s))}" target="_blank" rel="noopener">View on ${esc(app.conf.siteName)} ${icon('ext')}</a></div>` : ''}
+      <div class="row" style="margin-top:12px">
+        ${urlOf(s) ? `<a class="btn small" href="${attr(urlOf(s))}" target="_blank" rel="noopener">View on ${esc(app.conf.siteName)} ${icon('ext')}</a>` : ''}
+        ${s.day && Number.isFinite(s.startMin) && (s.timeSource === 'official' || s.timeSource === 'custom') && s.start ? `<button class="btn small" data-act="ics-one" data-key="${attr(s.key)}">${icon('plan')}Add to Calendar</button>` : ''}
+      </div>
     </div>`;
 }
 
@@ -1818,18 +1822,11 @@ function refreshDetail() {
 
 // ---------------------------------------------------------------- ics
 
-function icsEscape(s) { return String(s || '').replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n'); }
-function icsFold(line) {
-  const out = [];
-  let cur = '';
-  const enc = new TextEncoder();
-  for (const ch of line) {
-    if (enc.encode(cur + ch).length > 74) { out.push(cur); cur = ' ' + ch; } else cur += ch;
-  }
-  out.push(cur);
-  return out.join('\r\n');
-}
-function icsDate(iso) { return iso.replace(/[-:]/g, '').replace(/\.\d+/, '').replace(/Z?$/, 'Z'); }
+// The same stable id for a session's calendar entry everywhere it's published (the bulk plan
+// export and the single-session quick-add), so adding one the app already bulk-exported
+// updates that one entry instead of creating a duplicate.
+function icsUid(s) { return `${s.inst}@${app.conf.id}.ignite26-planner`; }
+function icsEnd(s) { return s.end || new Date(new Date(s.start).getTime() + (s.dur || 45) * 60000).toISOString(); }
 
 function exportIcs() {
   const plan = computePlan();
@@ -1855,20 +1852,45 @@ function exportIcs() {
     });
   }
   const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//ignite26-planner//EN', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', `X-WR-CALNAME:${icsEscape(app.conf.short)} plan`];
+  const exported = [];
   for (const x of items) {
     const s = x.s;
     const l = leave.get(x.key);
-    lines.push('BEGIN:VEVENT', `UID:${s.inst}@${app.conf.id}.ignite26-planner`, `DTSTAMP:${stamp}`, `DTSTART:${icsDate(s.start)}`,
-      `DTEND:${icsDate(s.end || new Date(new Date(s.start).getTime() + (s.dur || 45) * 60000).toISOString())}`,
-      `SUMMARY:${icsEscape(`[${s.code}] ${s.title}`)}`, `LOCATION:${icsEscape(s.room || '')}`,
+    const uid = icsUid(s), end = icsEnd(s), summary = `[${s.code}] ${s.title}`;
+    lines.push('BEGIN:VEVENT', `UID:${uid}`, `DTSTAMP:${stamp}`, `DTSTART:${icsDate(s.start)}`, `DTEND:${icsDate(end)}`,
+      `SUMMARY:${icsEscape(summary)}`, `LOCATION:${icsEscape(s.room || '')}`,
       `DESCRIPTION:${icsEscape(`${PRIORITY[x.priority]} · ${s.recorded ? 'recorded' : s.recorded === false ? 'not recorded' : ''}\n${urlOf(s)}\n\n${s.desc}`)}`);
     if (urlOf(s)) lines.push(`URL:${urlOf(s)}`);
     if (l) lines.push('BEGIN:VALARM', 'ACTION:DISPLAY', `DESCRIPTION:${icsEscape(`Leave for ${s.code}: ${l.walk} min walk to ${B(s.loc.building).name} from ${l.from}`)}`, `TRIGGER:-PT${l.minutes}M`, 'END:VALARM');
     lines.push('END:VEVENT');
+    exported.push({ inst: s.inst, uid, summary, start: s.start, end });
   }
+  // A session the last export published that isn't in this one (unlocked, re-rated down, or
+  // dropped from the catalog entirely) is republished as cancelled, so the calendar app
+  // removes it instead of keeping a stale entry around forever (issue #147).
+  const dropped = droppedExports(store.icsExported(), items.map(x => x.s.inst));
+  for (const d of dropped) lines.push(...cancelledEventLines({ uid: d.uid, stamp, start: d.start, end: d.end, summary: d.summary }));
   lines.push('END:VCALENDAR');
   shareOrDownload(`${app.conf.id}-plan.ics`, lines.map(icsFold).join('\r\n') + '\r\n', 'text/calendar')
-    .then(r => { if (r !== 'cancelled') toast(`Exported ${items.length} sessions`); });
+    .then(r => { if (r !== 'cancelled') { store.setIcsExported(exported); toast(`Exported ${items.length} sessions${dropped.length ? ` (${dropped.length} cancelled)` : ''}`); } });
+}
+
+// A single session, added on its own from its detail view: same stable id as the bulk export
+// (so it updates in place if it's also in the plan), a plain reminder since there's no
+// surrounding plan to compute a walk-time "leave now" alarm from.
+function exportIcsOne(s) {
+  if (!s.start) { toast('No scheduled time yet for this session'); return; }
+  const stamp = icsDate(new Date().toISOString()), end = icsEnd(s);
+  const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//ignite26-planner//EN', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH',
+    `X-WR-CALNAME:${icsEscape(app.conf.short)} plan`,
+    'BEGIN:VEVENT', `UID:${icsUid(s)}`, `DTSTAMP:${stamp}`, `DTSTART:${icsDate(s.start)}`, `DTEND:${icsDate(end)}`,
+    `SUMMARY:${icsEscape(`[${s.code}] ${s.title}`)}`, `LOCATION:${icsEscape(s.room || '')}`,
+    `DESCRIPTION:${icsEscape(`${s.recorded ? 'recorded' : s.recorded === false ? 'not recorded' : ''}\n${urlOf(s)}\n\n${s.desc}`)}`];
+  if (urlOf(s)) lines.push(`URL:${urlOf(s)}`);
+  lines.push('BEGIN:VALARM', 'ACTION:DISPLAY', `DESCRIPTION:${icsEscape(`${s.code} starts in 15 minutes`)}`, 'TRIGGER:-PT15M', 'END:VALARM',
+    'END:VEVENT', 'END:VCALENDAR');
+  shareOrDownload(`${s.code}.ics`, lines.map(icsFold).join('\r\n') + '\r\n', 'text/calendar')
+    .then(r => { if (r !== 'cancelled') toast(`Added ${s.code} to your calendar file`); });
 }
 
 // ---------------------------------------------------------------- routing & render
@@ -2188,6 +2210,7 @@ function onClick(e) {
     'preview-on': () => { store.updateSettings({ preview: true }); toast('Preview on: days and rooms are simulated'); },
     'preview-off': () => store.updateSettings({ preview: false }),
     ics: () => exportIcs(),
+    'ics-one': () => { if (s) exportIcsOne(s); },
     sim: () => {
       const d = $('#sim-day').value;
       const min = fromHHMM($('#sim-time').value) ?? 600;

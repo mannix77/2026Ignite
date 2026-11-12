@@ -48,6 +48,8 @@ function blank() {
     profile: null,      // quick-start answers and group choices (profile.js); null = never set
     backup: { at: null, changes: 0, dismissed: null }, // last backup, pick edits since, reminder dismissal
     ui: { tab: 'browse', filters: {}, day: null },
+    icsExported: [],    // [{inst, uid, summary, start, end}, …] last bulk plan .ics export, for
+                        // cancelling a dropped session on the next export (issue #147)
   };
 }
 
@@ -106,6 +108,7 @@ export function load(namespace = '') {
       state.prefs = sanitizePrefs(state.prefs);
       state.profile = saved.profile ? sanitizeProfile(saved.profile) : null;
       state.backup = sanitizeBackup(saved.backup);
+      state.icsExported = sanitizeIcsExported(state.icsExported);
     }
   } catch (e) {
     // Unreadable (truncated or corrupt): keep a copy before the next save replaces it.
@@ -344,6 +347,18 @@ function sanitizeBackup(b) {
   }
   return out;
 }
+
+function sanitizeIcsExported(v) {
+  if (!Array.isArray(v)) return [];
+  return v.filter(x => x && typeof x === 'object' && typeof x.inst === 'string' && typeof x.uid === 'string'
+    && typeof x.summary === 'string' && typeof x.start === 'string' && typeof x.end === 'string');
+}
+
+// ---- calendar export (issue #147): the plan .ics's own previously-published sessions, so a
+// session dropped from the plan can be republished as cancelled instead of orphaned forever.
+
+export function icsExported() { return state.icsExported; }
+export function setIcsExported(entries) { state.icsExported = sanitizeIcsExported(entries); emit('ics'); }
 
 export function setKnown(known) { state.known = known; emit('known'); }
 export function setSeenBatch(at) { state.seenBatch = at; emit('seen'); }
