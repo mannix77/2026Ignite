@@ -1,7 +1,7 @@
-// Runs the browser normalizer on a raw catalog file (used by tests/test_sync.py).
+// Runs the browser normalizer on a raw catalog file and counts what it published (used by tests/test_sync.py).
 // Works under macOS JavaScriptCore (jsc -m ... -- ARGS) and Node (node ... ARGS):
 //   RAW.json SPEAKERS.json|- OUT.json FIRST_DAY LAST_DAY [BY_NAME.json]
-import { normalize } from '../assets/js/live.js';
+import { normalize, catalogStats } from '../assets/js/live.js';
 
 const isNode = typeof process !== 'undefined' && !!process.versions?.node;
 const fs = isNode ? await import('node:fs') : null;
@@ -14,4 +14,5 @@ const raw = JSON.parse(read(rawPath));
 const spk = spkPath && spkPath !== '-' ? JSON.parse(read(spkPath)) : null;
 // Optional: [name, company, title] entries kept from the last good catalog (live.js checkLive).
 const byName = byNamePath ? new Map(JSON.parse(read(byNamePath)).map(p => [p[0], p])) : null;
-write(outPath, JSON.stringify(normalize(raw, spk, [first, last], byName)));
+const out = normalize(raw, spk, [first, last], byName);
+write(outPath, JSON.stringify({ ...out, stats: catalogStats(out.sessions, out.draft) }));

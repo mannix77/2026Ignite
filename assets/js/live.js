@@ -4,14 +4,13 @@
 //
 // normalize() mirrors scripts/sync.py's normalize(); tests/test_sync.py cross-checks them.
 
+import { PLACEHOLDER_ROOM } from './venue.js';
+
 const cdnBase = event => `https://eventtools.event.microsoft.com/${event}/fallback`;
 const DEFAULT_EVENT = 'ignite2026-prod';
 const DEFAULT_WINDOW = ['2026-11-17', '2026-11-20'];
 const DELIVERY_NAMES = { inperson: 'In-person', online: 'Online', ondemand: 'On-demand' };
 const MAX_DUR = 1440;
-// Test rooms, TBD/TBA, blank, and "Rescheduling 3" / "Rescheduling Room" (a holding room while a
-// session moves). Must match PLACEHOLDER_ROOM in scripts/sync.py.
-const PLACEHOLDER_ROOM = /^(ztest\S*|tbd|tba|rescheduling(\s.*)?|)$/i;
 const REPEAT_SUFFIX = /-R\d+$/i;
 // Must match TRIM in scripts/sync.py.
 const TRIM = /^[ \t\n\r\x0b\x0c\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]+|[ \t\n\r\x0b\x0c\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]+$/g;
@@ -71,6 +70,15 @@ function windowBounds([first, last]) {
   return [lo, hi];
 }
 
+// The one rule for "not published yet", mirroring sync.py's placeholder_room / in_window /
+// has_room (tests/test_sync.py keeps them equal). A placeholder stays in the record (roomTbd marks
+// a room label), but it is never shown or counted as a room or a time. A start must be inside the
+// window; an end may fall on its closing edge (a session that started inside it), not past it or
+// before the window. An end is only tested when the start is real: alone it is noise, not counted.
+const placeholderRoom = room => { const r = text(room); return !r || PLACEHOLDER_ROOM.test(r); };
+const inWindow = (d, [lo, hi], end = false) => !!d && d.getTime() >= lo && (end ? d.getTime() <= hi : d.getTime() < hi);
+const hasRoom = r => !!r.room && !r.roomTbd;
+
 function isTest(s, title) {
   return ['test', 'testing', 'test session'].includes(title.toLowerCase()) || String(s.sessionTimeId || '').toLowerCase().endsWith('test');
 }
@@ -79,7 +87,7 @@ function isTest(s, title) {
 export function normalize(rawSessions, rawSpeakers, window = DEFAULT_WINDOW, speakerByName = null) {
   const spk = new Map();
   for (const p of rawSpeakers || []) if (p && p.speakerId) spk.set(p.speakerId, p);
-  const [lo, hi] = windowBounds(window);
+  const bounds = windowBounds(window);
   const out = [], dropped = [];
   let draft = 0;
   for (const s of rawSessions) {
@@ -88,7 +96,8 @@ export function normalize(rawSessions, rawSpeakers, window = DEFAULT_WINDOW, spe
     const sid = s.sessionId == null || s.sessionId === '' ? '' : String(s.sessionId);
     if (!sid || isTest(s, title)) { dropped.push(text(s.sessionCode) || sid); continue; }
     let start = parseIso(s.startDateTime), end = parseIso(s.endDateTime);
-    if (start && !(start.getTime() >= lo && start.getTime() < hi)) { draft++; start = end = null; }
+    if (start && !inWindow(start, bounds)) { draft++; start = end = null; }
+    if (end && start && !inWindow(end, bounds, true)) { draft++; end = null; } // a placeholder end (31 Dec): the length gives it
     if (end && (!start || end < start)) end = null; // an end on its own, or before the start, is noise
     const slot = text(s.TimeSlot || s.timeSlot);
     const sm = slotMinutes(slot);
@@ -132,7 +141,7 @@ export function normalize(rawSessions, rawSpeakers, window = DEFAULT_WINDOW, spe
       slot: slot || null,
       dur,
       room: room || null,
-      roomTbd: PLACEHOLDER_ROOM.test(room),
+      roomTbd: placeholderRoom(room),
       popular: !!s.isPopular,
       related: listOf(s.relatedSessionCodes).filter(c => typeof c === 'string' && c),
       _links: listOf(s.repeatedSessions).filter(r => r && typeof r === 'object' && typeof r.sessionCode === 'string' && r.sessionCode).map(r => r.sessionCode),
@@ -215,6 +224,16 @@ export function diff(prev, cur) {
   }
   for (const [sid, recs] of pg) if (!cg.has(sid)) removed.push(...recs.map((r, i) => ({ ...brief(r), repeat: i > 0 })));
   return { added, removed, changed };
+}
+
+// What a catalog has published, as the live header shows it (same counts as sync.py's stats()).
+export function catalogStats(sessions, draft = 0) {
+  return {
+    sessions: sessions.length,
+    withDates: sessions.filter(r => r.start).length,
+    withRooms: sessions.filter(hasRoom).length,
+    draftTimes: draft,
+  };
 }
 
 // Change counts per session: an extra run added to or dropped from a session that stays
@@ -343,12 +362,7 @@ export async function checkLive(snapshotDoc, conf = {}) {
     enableMySchedule: settings.enableMySchedule ?? null,
     rsvp: Object.fromEntries(listOf(settings.rsvpConfiguration).filter(r => r && typeof r === 'object' && typeof r.sessionTypeName === 'string').map(r => [r.sessionTypeName, typeof r.opensAt === 'string' ? r.opensAt : null])),
   } : null;
-  const stats = {
-    sessions: sessions.length,
-    withDates: sessions.filter(r => r.start).length,
-    withRooms: sessions.filter(r => r.room && !r.roomTbd).length,
-    draftTimes: draft,
-  };
+  const stats = catalogStats(sessions, draft);
   return {
     at: now,
     same,
