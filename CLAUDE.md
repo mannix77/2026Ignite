@@ -102,7 +102,8 @@ next one is due), so a push it can't review costs the next one too.
 
 1. **Self-review the diff first.** Run `coderabbit review` (or `coderabbit review --agent` for
    structured, agent-friendly output); add `--base origin/main` to review a whole branch rather
-   than just uncommitted changes. The CLI works in this environment: install it with
+   than just uncommitted changes, and `--include-untracked` so a brand-new file that hasn't been
+   staged yet isn't silently skipped. The CLI works in this environment: install it with
    `curl -fsSL https://cli.coderabbit.ai/install.sh | sh` (installs to `~/.local/bin`, already on
    PATH) and sign in once with `coderabbit auth login` (a one-time browser login tied to the
    owner's CodeRabbit account — ask the owner to complete it if this session isn't signed in;
