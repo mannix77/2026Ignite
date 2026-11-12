@@ -1033,17 +1033,24 @@ await test('should read a session the person added (MY-…) in a picks link, and
   eq(Object.keys(store.parseShare('MY-.2~MY-a b.2~my-abc.2', c => c, () => null)), [], 'only MY- followed by the id characters');
 });
 
-// ---- icsExported (issue #147): the last bulk plan .ics export, for cancelling a dropped session
+// ---- icsExported (issue #147): the last bulk plan .ics export, for cancelling a dropped
+// session and raising a revived one's sequence past its own cancellation's
 
 await test('should start with no exported sessions, and persist what was exported across a reload', async () => {
   store.load('ics-reload');
   eq(store.icsExported(), []);
-  const entries = [{ inst: 'i1', uid: 'i1@x', summary: '[A] One', start: '2026-11-18T18:00:00Z', end: '2026-11-18T18:45:00Z' }];
+  const entries = [{ inst: 'i1', uid: 'i1@x', summary: '[A] One', start: '2026-11-18T18:00:00Z', end: '2026-11-18T18:45:00Z', seq: 2, cancelled: true }];
   store.setIcsExported(entries);
   eq(store.icsExported(), entries);
   await sleep(SAVE);
   store.load('ics-reload');
-  eq(store.icsExported(), entries, 'must still be there after a reload');
+  eq(store.icsExported(), entries, 'must still be there after a reload, including seq and cancelled');
+});
+
+await test('should default seq to 0 and cancelled to false when an entry omits them', () => {
+  store.load('ics-defaults');
+  store.setIcsExported([{ inst: 'i1', uid: 'i1@x', summary: 'ok', start: '2026-11-18T18:00:00Z', end: '2026-11-18T18:45:00Z' }]);
+  eq(store.icsExported(), [{ inst: 'i1', uid: 'i1@x', summary: 'ok', start: '2026-11-18T18:00:00Z', end: '2026-11-18T18:45:00Z', seq: 0, cancelled: false }]);
 });
 
 await test('should drop a malformed saved entry (hand-edited backup, older schema) rather than keep it or throw', () => {
@@ -1051,9 +1058,25 @@ await test('should drop a malformed saved entry (hand-edited backup, older schem
   store.setIcsExported([
     { inst: 'i1', uid: 'i1@x', summary: 'ok', start: '2026-11-18T18:00:00Z', end: '2026-11-18T18:45:00Z' },
     { inst: 'i2', uid: 'i2@x' },        // missing summary/start/end
+    { inst: ' ', uid: 'i3@x', summary: 'ok', start: '2026-11-18T18:00:00Z', end: '2026-11-18T18:45:00Z' },   // blank inst
+    { inst: 'i4', uid: '', summary: 'ok', start: '2026-11-18T18:00:00Z', end: '2026-11-18T18:45:00Z' },      // blank uid
+    { inst: 'i5', uid: 'i5@x', summary: 'ok', start: 'not a date', end: '2026-11-18T18:45:00Z' },            // unparseable start
+    { inst: 'i6', uid: 'i6@x', summary: 'ok', start: '2026-11-18T18:00:00Z', end: 'junk' },                  // unparseable end
     'junk', null, 42,
   ]);
   eq(store.icsExported().map(x => x.inst), ['i1']);
+});
+
+await test('should coerce a garbage seq or cancelled value to its safe default rather than keep it', () => {
+  store.load('ics-garbage-seq');
+  store.setIcsExported([
+    { inst: 'i1', uid: 'i1@x', summary: 'a', start: '2026-11-18T18:00:00Z', end: '2026-11-18T18:45:00Z', seq: -1, cancelled: 'yes' },
+    { inst: 'i2', uid: 'i2@x', summary: 'b', start: '2026-11-18T18:00:00Z', end: '2026-11-18T18:45:00Z', seq: 1.5, cancelled: 1 },
+  ]);
+  eq(store.icsExported(), [
+    { inst: 'i1', uid: 'i1@x', summary: 'a', start: '2026-11-18T18:00:00Z', end: '2026-11-18T18:45:00Z', seq: 0, cancelled: false },
+    { inst: 'i2', uid: 'i2@x', summary: 'b', start: '2026-11-18T18:00:00Z', end: '2026-11-18T18:45:00Z', seq: 0, cancelled: false },
+  ]);
 });
 
 await sleep(SAVE);

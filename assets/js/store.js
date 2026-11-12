@@ -48,8 +48,11 @@ function blank() {
     profile: null,      // quick-start answers and group choices (profile.js); null = never set
     backup: { at: null, changes: 0, dismissed: null }, // last backup, pick edits since, reminder dismissal
     ui: { tab: 'browse', filters: {}, day: null },
-    icsExported: [],    // [{inst, uid, summary, start, end}, …] last bulk plan .ics export, for
-                        // cancelling a dropped session on the next export (issue #147)
+    icsExported: [],    // [{inst, uid, summary, start, end, seq, cancelled}, …] every session this
+                        // device's bulk plan .ics export has ever published, so a dropped one is
+                        // cancelled and a cancelled one that returns outranks its cancellation
+                        // (issue #147); cancelled entries are kept, never removed, in case the
+                        // session comes back
   };
 }
 
@@ -348,10 +351,20 @@ function sanitizeBackup(b) {
   return out;
 }
 
+// A usable calendar identifier: the right type, trimmed, non-blank (same "usable" test as
+// other identifiers in this file, e.g. validBuilding).
+const usableIcsId = v => typeof v === 'string' && v.trim() !== '';
+const usableIcsDate = v => typeof v === 'string' && !Number.isNaN(Date.parse(v));
+
 function sanitizeIcsExported(v) {
   if (!Array.isArray(v)) return [];
-  return v.filter(x => x && typeof x === 'object' && typeof x.inst === 'string' && typeof x.uid === 'string'
-    && typeof x.summary === 'string' && typeof x.start === 'string' && typeof x.end === 'string');
+  return v.filter(x => x && typeof x === 'object' && usableIcsId(x.inst) && usableIcsId(x.uid)
+      && typeof x.summary === 'string' && usableIcsDate(x.start) && usableIcsDate(x.end))
+    .map(x => ({
+      inst: x.inst, uid: x.uid, summary: x.summary, start: x.start, end: x.end,
+      seq: Number.isInteger(x.seq) && x.seq >= 0 ? x.seq : 0,
+      cancelled: x.cancelled === true,
+    }));
 }
 
 // ---- calendar export (issue #147): the plan .ics's own previously-published sessions, so a
