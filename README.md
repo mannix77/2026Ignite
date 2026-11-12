@@ -22,7 +22,7 @@ An unofficial personal planner for **Microsoft Ignite 2026** (Nov 17–20, Mosco
 | **Seat reservations** | Ignite labs, lightning talks and table talks need an RSVP (opens Oct 25, 5 PM PT); Gartner marks individual sessions as reservation-required. The plan lists which of your picks need one until you mark them **I reserved a seat**, which also pins that run into your plan. |
 | **Change alerts** | Every run of every session you picked is watched. If one moves, is retitled or is cancelled, you see exactly what changed and whether it's the run you're attending. You also hear when a new run is added. |
 | **Keeping picks safe** | Picks live only in the browser or installed app that shows the planner. **Settings → Your data** says how they're kept (installed app / protected from cleanup / browser tab that may clear them / not being saved) and when you last saved a backup. A banner suggests installing (iPhone: Share → Add to Home Screen; Android: Install app) and reminds you to save a backup after 20 changes, a week, or on the eve of a conference, with a tip to keep it in iCloud Drive or Google Drive. |
-| **Offline & portable** | Installable PWA that works on bad conference Wi-Fi. Export your whole plan to your calendar (`.ics`) from My plan, or just one session from its detail view; re-exporting cancels anything that's since dropped out, so your calendar stays in step. Move picks between devices with a link or a backup file. |
+| **Offline & portable** | Installable PWA that works on bad conference Wi-Fi. Export your whole plan to your calendar (`.ics`) from My plan, or just one session from its detail view. Re-exporting the whole plan cancels anything that's since dropped out of it, so your calendar stays in step — a session you exported on its own from its detail view isn't managed that way, since it may never have been part of the plan at all; exporting it from the plan later takes over keeping it in step. Move picks between devices with a link or a backup file. |
 
 Before the real Ignite schedule is published you can turn on **Preview** (Settings, or the button on My plan) to rehearse with a clearly labelled simulated schedule.
 
@@ -143,7 +143,7 @@ Browser ── data/<conference>/*.json (snapshot + history + favorites)
 ## Tests
 
 ```bash
-npm test                                                                                    # everything below
+npm test                                                                                    # the suite below, except test:viewport (a separate command)
 node tests/robustness.test.js                                                               # malformed data, storage failures, big clashes
 node tests/profile.test.js                                                                  # preferences (specs/features/rating-preferences.feature)
 node tests/catalog.test.js                                                                  # old exports, added sessions (specs/features/catalog-gaps.feature)
