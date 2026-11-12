@@ -2681,6 +2681,11 @@ async function refreshData(manual = false) {
     renderOrDefer();
     announce();
   } else if (app.tab === 'changes' || occupancyChanged) renderOrDefer(); // refresh the sync status shown there, or the room chips
+  // A sync can confirm a session's recorded status (or its room occupancy) after its detail
+  // dialog was already opened from the stale model; renderOrDefer() alone never reaches an
+  // open dialog, so an open one would otherwise keep showing a since-invalidated control
+  // (e.g. "Watch the recording instead of attending" for a session just confirmed unrecorded).
+  refreshDetail();
   if (!changed && manual) {
     toast(app.liveError ? `Couldn't check ${app.conf.siteName}: ${app.liveError}`
       : snapErr ? `Couldn't load the synced copy: ${snapErr.message}`
