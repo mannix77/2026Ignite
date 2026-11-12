@@ -1,6 +1,1092 @@
 {
  "batches": [
   {
+   "at": "2026-11-12T00:51:11Z",
+   "milestones": [],
+   "added": [
+    {
+     "id": "1789084255079001SQj3",
+     "inst": "1789084255079001SQj3",
+     "code": "COP370",
+     "title": "Use AI to Take Your Resilience to the Next Level",
+     "repeat": false
+    },
+    {
+     "id": "1789084255253001SofF",
+     "inst": "1789084255253001SofF",
+     "code": "ANT357",
+     "title": "Giving AI agents the context they need with AWS Context",
+     "repeat": false
+    },
+    {
+     "id": "1789084255541001SPGF",
+     "inst": "1789084255541001SPGF",
+     "code": "ANT358",
+     "title": "Interactive and largescale analytics with Amazon Athena and Amazon EMR",
+     "repeat": false
+    },
+    {
+     "id": "1789084255870001SmA8",
+     "inst": "1789084255870001SmA8",
+     "code": "COP376",
+     "title": "Who's Watching Your Agents? Observability for the AI Era",
+     "repeat": false
+    },
+    {
+     "id": "1793655183609001nUpp",
+     "inst": "1793655183609001nUpp",
+     "code": "SUP231",
+     "title": "Personal AI agents that learn: building with Hermes Agent on AWS",
+     "repeat": false
+    },
+    {
+     "id": "1789084255924001SvhV",
+     "inst": "1789084255924001SvhV",
+     "code": "ANT359",
+     "title": "Open, governed data and AI with the AWS Glue Data Catalog",
+     "repeat": false
+    }
+   ],
+   "removed": [
+    {
+     "id": "1793305648990001BeEm",
+     "inst": "1793305648990001BeEm",
+     "code": "IND3338-R1",
+     "title": "Accelerate Physical AI development with NVIDIA on AWS",
+     "repeat": false
+    },
+    {
+     "id": "1793305803130001B3mX",
+     "inst": "1793305803130001B3mX",
+     "code": "API312-R1",
+     "title": "Building distributed multi-agent architectures on serverless",
+     "repeat": false
+    }
+   ],
+   "changed": [
+    {
+     "id": "1780442222070001cCsu",
+     "inst": "1780442222070001cCsu",
+     "code": "SEC307",
+     "title": "How Infor strengthened security operations with AWS Security Hub",
+     "f": {
+      "room": [
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | White Theater",
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441469866001Gxey",
+     "inst": "1780441469866001Gxey",
+     "code": "DVT345",
+     "title": "Continuous integration and continuous delivery (CI/CD) on AWS",
+     "f": {
+      "room": [
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | White Theater",
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441475015001GXRk",
+     "inst": "1780441475015001GXRk",
+     "code": "HMC303",
+     "title": "Choosing the right hybrid deployment for your AI workloads",
+     "f": {
+      "room": [
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | White Theater",
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1791492158324001Uvdf",
+     "inst": "1791492158324001Uvdf",
+     "code": "SUP117",
+     "title": "Accelerating physical AI with AWS for Startups",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441465382001G9uE",
+     "inst": "1780441465382001G9uE",
+     "code": "BIZ101",
+     "title": "How Southwest Airlines put AI at the center of customer experience",
+     "f": {
+      "title": [
+       "How Southwest Airlines migrated 4,500 agents in just 2.5 weeks",
+       "How Southwest Airlines put AI at the center of customer experience"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442222121001c2uu",
+     "inst": "1780442222121001c2uu",
+     "code": "SEC302",
+     "title": "Governance foundations for AI workloads that grow into autonomous agents",
+     "f": {
+      "room": [
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | White Theater",
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441461828001GzX2",
+     "inst": "1780441461828001GzX2",
+     "code": "ANT313",
+     "title": "Architect your metadata hub with AWS Glue Data Catalog",
+     "f": {
+      "room": [
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | White Theater",
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441470557001G5s8",
+     "inst": "1780441470557001G5s8",
+     "code": "DVT338",
+     "title": "Scale agentic development with automated orchestration",
+     "f": {
+      "room": [
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | White Theater",
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441485382001GQMC",
+     "inst": "1780441485382001GQMC",
+     "code": "AIM382-S",
+     "title": "End-to-End Voice Agents with AWS and Deepgram (sponsored by Deepgram)",
+     "f": {
+      "room": [
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | White Theater",
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441475250001Gi5w",
+     "inst": "1780441475250001Gi5w",
+     "code": "IND201",
+     "title": "How Telecom leaders are putting AI to work",
+     "f": {
+      "room": [
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | White Theater",
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441485322001GtUf",
+     "inst": "1780441485322001GtUf",
+     "code": "SEC216-S",
+     "title": "Go Hack Yourself. With AI. (sponsored by Horizon3.ai)",
+     "f": {
+      "room": [
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | White Theater",
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780442235347001cZmp",
+     "inst": "1780442235347001cZmp",
+     "code": "AIM325",
+     "title": "Fine-Tune Agents That Reason: Multi-Turn RL on SageMaker AI",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441487182001G3EO",
+     "inst": "1780441487182001G3EO",
+     "code": "COP204-S",
+     "title": "From Workloads to Agents: Rethinking Cloud Resilience (sponsored by Cohesity)",
+     "f": {
+      "room": [
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | White Theater",
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441485149001GoLZ",
+     "inst": "1780441485149001GoLZ",
+     "code": "AIM2203-S",
+     "title": "Securing AI and Autonomous Agents: Protecting the Lifecycle Across Any Platform (sponsored by Fortinet)",
+     "f": {
+      "room": [
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | White Theater",
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441472515001GiTw",
+     "inst": "1780441472515001GiTw",
+     "code": "NET338",
+     "title": "Innovations in Elastic Load Balancing and application networking",
+     "f": {
+      "room": [
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | White Theater",
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441476213001GYOa",
+     "inst": "1780441476213001GYOa",
+     "code": "IND3329",
+     "title": "Allianz: Building domain AI agents that scale across the enterprise",
+     "f": {
+      "room": [
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | White Theater",
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441486507001G04c",
+     "inst": "1780441486507001G04c",
+     "code": "SEC217-S",
+     "title": "Building Trust into Agentic AI on AWS in the Age of Autonomous Agents (sponsored by Check Point)",
+     "f": {
+      "room": [
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | White Theater",
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441490911001G7aV",
+     "inst": "1780441490911001G7aV",
+     "code": "STG342",
+     "title": "Amazon S3 performance: Architecture, design, and optimization",
+     "f": {
+      "room": [
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | White Theater",
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1787852032448001j0t4",
+     "inst": "1787852032448001j0t4",
+     "code": "AWS114-R",
+     "title": "Builder Zone in Expo",
+     "f": {
+      "title": [
+       "Builder Zone in the Expo",
+       "Builder Zone in Expo"
+      ]
+     }
+    },
+    {
+     "id": "1780441477099001GHEi",
+     "inst": "1780441477099001GHEi",
+     "code": "IND3319",
+     "title": "How FINRA Explores Governed Agentic AI to Its Member Firms on AWS",
+     "f": {
+      "room": [
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | White Theater",
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441462093001G6Rs",
+     "inst": "1780441462093001G6Rs",
+     "code": "ANT349",
+     "title": "Cost-effective serverless data integrations and workflows for AI-ready data",
+     "f": {
+      "room": [
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | White Theater",
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441468177001GICO",
+     "inst": "1780441468177001GICO",
+     "code": "CON201",
+     "title": "The future of Kubernetes on AWS",
+     "f": {
+      "room": [
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | White Theater",
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1787852034046001jO69",
+     "inst": "1787852034046001jO69",
+     "code": "AWS114-R1",
+     "title": "Builder Zone in Expo",
+     "f": {
+      "title": [
+       "Builder Zone in the Expo",
+       "Builder Zone in Expo"
+      ],
+      "level": [
+       100,
+       null
+      ]
+     }
+    },
+    {
+     "id": "1780441477646001GG1s",
+     "inst": "1780441477646001GG1s",
+     "code": "IND344",
+     "title": "How Chamberlain and Daikin power smart product innovation with AWS",
+     "f": {
+      "room": [
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | White Theater",
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780442257930001cFqN",
+     "inst": "1780442257930001cFqN",
+     "code": "SEC372",
+     "title": "Governing Hundreds of Accounts in Minutes: Agentic AI Meets Landing Zone Operations",
+     "f": {
+      "title": [
+       "Governing hundreds of accounts in seconds: agentic AI meets Landing Zone operations",
+       "Governing Hundreds of Accounts in Minutes: Agentic AI Meets Landing Zone Operations"
+      ]
+     }
+    },
+    {
+     "id": "1780441489761001GYdw",
+     "inst": "1780441489761001GYdw",
+     "code": "HMC203-S",
+     "title": "Optimizing SAP RISE for Cost and Scale with Intel (sponsored by Intel)",
+     "f": {
+      "room": [
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | White Theater",
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1790358243768001iqB3",
+     "inst": "1790358243768001iqB3",
+     "code": "IND327-R1",
+     "title": "Build self-healing agents from diagnosis to disaster recovery",
+     "f": {
+      "title": [
+       "Build a team of agents: From incident diagnosis to safe remediation",
+       "Build self-healing agents from diagnosis to disaster recovery"
+      ]
+     }
+    },
+    {
+     "id": "1780441479148001GM4u",
+     "inst": "1780441479148001GM4u",
+     "code": "NET308",
+     "title": "Building an interconnectivity fabric across AWS accounts and orgs",
+     "f": {
+      "room": [
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | White Theater",
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780442222364001cL5a",
+     "inst": "1780442222364001cL5a",
+     "code": "SEC364",
+     "title": "Securing software and AI supply chains with Network Firewall at Coupang",
+     "f": {
+      "room": [
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | White Theater",
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441470484001G8a6",
+     "inst": "1780441470484001G8a6",
+     "code": "DVT320",
+     "title": "How Kiro learns: an AI coding agent that improves with every session",
+     "f": {
+      "room": [
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | White Theater",
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441490855001Geci",
+     "inst": "1780441490855001Geci",
+     "code": "STG341",
+     "title": "Amazon S3 cost optimization: when to tier, and when not to",
+     "f": {
+      "room": [
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | White Theater",
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441483183001GUuU",
+     "inst": "1780441483183001GUuU",
+     "code": "AIM244-S",
+     "title": "Solving Problems Faster with AI SRE​ (sponsored by Splunk by Cisco)",
+     "f": {
+      "room": [
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | White Theater",
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441484504001G2GG",
+     "inst": "1780441484504001G2GG",
+     "code": "AIM278-S",
+     "title": "Evaluating AI Agents with Langfuse (sponsored by ClickHouse)",
+     "f": {
+      "room": [
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | White Theater",
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441484436001GLfe",
+     "inst": "1780441484436001GLfe",
+     "code": "MAM215-S",
+     "title": "Conversational AI at Scale: S&P Global Energy's 30+ Genie Agents (sponsored by Databricks)",
+     "f": {
+      "room": [
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | White Theater",
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441462975001Gavy",
+     "inst": "1780441462975001Gavy",
+     "code": "ARC405",
+     "title": "Your regulator set your RTO. Not your architecture.",
+     "f": {
+      "room": [
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | White Theater",
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441465264001Gz2N",
+     "inst": "1780441465264001Gz2N",
+     "code": "AIM391",
+     "title": "Automate AI governance and risk management with John Deere",
+     "f": {
+      "room": [
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | White Theater",
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441490516001GdFk",
+     "inst": "1780441490516001GdFk",
+     "code": "STG305",
+     "title": "Data protection and resilience with AWS storage",
+     "f": {
+      "room": [
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | White Theater",
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441476267001G3Oy",
+     "inst": "1780441476267001G3Oy",
+     "code": "IND3328",
+     "title": "How Paytm powers millions of customer journeys with AI agents on AWS",
+     "f": {
+      "room": [
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | White Theater",
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441469642001GW8z",
+     "inst": "1780441469642001GW8z",
+     "code": "DAT447",
+     "title": "Build an agentic context layer with ontologies on Amazon Neptune",
+     "f": {
+      "room": [
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | White Theater",
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441479618001GHUZ",
+     "inst": "1780441479618001GHUZ",
+     "code": "NET331",
+     "title": "From shopping agents to shoppers: Amazon CloudFront patterns for peak retail",
+     "f": {
+      "room": [
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | White Theater",
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1787852034150001jjQs",
+     "inst": "1787852034150001jjQs",
+     "code": "AWS114-R2",
+     "title": "Builder Zone in Expo",
+     "f": {
+      "title": [
+       "Builder Zone in the Expo",
+       "Builder Zone in Expo"
+      ],
+      "level": [
+       100,
+       null
+      ]
+     }
+    },
+    {
+     "id": "1780441472222001Gi6z",
+     "inst": "1780441472222001Gi6z",
+     "code": "IND3350",
+     "title": "Visa: Building autonomous defense for payments security in the agentic AI era",
+     "f": {
+      "room": [
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | White Theater",
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1788568014278001At0w",
+     "inst": "1788568014278001At0w",
+     "code": "AIM3312",
+     "title": "Accelerate analytics with GPUs at lower cost: Spark, DuckDB, and more",
+     "f": {
+      "room": [
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | White Theater",
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441468119001GzNf",
+     "inst": "1780441468119001GzNf",
+     "code": "CMP309",
+     "title": "50k daily iOS builds with virtualization on Amazon EC2 Mac",
+     "f": {
+      "room": [
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | White Theater",
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441476657001Gmc0",
+     "inst": "1780441476657001Gmc0",
+     "code": "IND3312",
+     "title": "Danske Bank's AI City: Scaling AI agents across an enterprise",
+     "f": {
+      "room": [
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | White Theater",
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441462382001GJ4i",
+     "inst": "1780441462382001GJ4i",
+     "code": "ANT351",
+     "title": "Introducing AWS Context: Build governed intelligence for agents at scale",
+     "f": {
+      "room": [
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | White Theater",
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780442241531001cSLv",
+     "inst": "1780442241531001cSLv",
+     "code": "COP365-R",
+     "title": "Allocate shared AWS infrastructure costs to your business units",
+     "f": {
+      "code": [
+       "COP365",
+       "COP365-R"
+      ]
+     }
+    },
+    {
+     "id": "1780441469106001G8jt",
+     "inst": "1780441469106001G8jt",
+     "code": "DAT421",
+     "title": "Reduce LLM inference cost with Amazon ElastiCache for Valkey",
+     "f": {
+      "room": [
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | White Theater",
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1790358246094001i5t9",
+     "inst": "1790358246094001i5t9",
+     "code": "SEC309-R1",
+     "title": "Network firewall deployment without the guesswork: codify, deploy, done",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441476549001GRl4",
+     "inst": "1780441476549001GRl4",
+     "code": "IND3316",
+     "title": "Tackling a $30M fraud crisis with ML: California Community Colleges",
+     "f": {
+      "room": [
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | White Theater",
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1786571048523001KZHe",
+     "inst": "1786571048523001KZHe",
+     "code": "ARC328",
+     "title": "Stop fixing, start preventing with Well-Architected Agent",
+     "f": {
+      "room": [
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | White Theater",
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441469052001GUtU",
+     "inst": "1780441469052001GUtU",
+     "code": "DAT419",
+     "title": "Dive deep into Amazon DynamoDB",
+     "f": {
+      "room": [
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | White Theater",
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441466848001GetJ",
+     "inst": "1780441466848001GetJ",
+     "code": "COP336",
+     "title": "Elevate your observability with OpenTelemetry on AWS",
+     "f": {
+      "room": [
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | White Theater",
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441461354001Gc5p",
+     "inst": "1780441461354001Gc5p",
+     "code": "ANT308",
+     "title": "What's new in Amazon Redshift",
+     "f": {
+      "room": [
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | White Theater",
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441469321001G5ma",
+     "inst": "1780441469321001G5ma",
+     "code": "DAT427",
+     "title": "Better, faster, cheaper: How Valkey is revolutionizing caching",
+     "f": {
+      "room": [
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | White Theater",
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1790358255549001iX22",
+     "inst": "1790358255549001iX22",
+     "code": "AIM419-R1",
+     "title": "Build and Deploy Agents on Amazon EKS with Amazon Bedrock",
+     "f": {
+      "title": [
+       "Build and deploy agents to Lambda and EKS with Amazon Bedrock",
+       "Build and Deploy Agents on Amazon EKS with Amazon Bedrock"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441475769001GPb1",
+     "inst": "1780441475769001GPb1",
+     "code": "IND3342",
+     "title": "How Stripe built an enterprise agent platform on Amazon Bedrock AgentCore",
+     "f": {
+      "room": [
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | White Theater",
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1790794144474001JL79",
+     "inst": "1790794144474001JL79",
+     "code": "AIM139-S",
+     "title": "From AI Pilots to Enterprise Impact: NJIT's Blueprint for AI Governance and Adoption (sponsored by Kyndryl)",
+     "f": {
+      "room": [
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | White Theater",
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780442224985001cIRD",
+     "inst": "1780442224985001cIRD",
+     "code": "BIZ315-R",
+     "title": "Customize workspaces and build guided workflows using AI in Connect Customer",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441479902001G5OS",
+     "inst": "1780441479902001G5OS",
+     "code": "OPN308",
+     "title": "The Neuron Stack: Enabling open source ML solutions on AWS Trainium",
+     "f": {
+      "room": [
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | White Theater",
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780442280853001cz36",
+     "inst": "1780442280853001cz36",
+     "code": "IND403",
+     "title": "Build a Video Semantic Layer for Media Agent on AWS",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441480733001GC0U",
+     "inst": "1780441480733001GC0U",
+     "code": "SEC326",
+     "title": "What's new in Application Security: Securing applications at machine speed",
+     "f": {
+      "room": [
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | White Theater",
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441477373001GAn3",
+     "inst": "1780441477373001GAn3",
+     "code": "IND384",
+     "title": "Inside T-Mobile's Kinetic Edge: Real-Time Physical AI at Scale",
+     "f": {
+      "room": [
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | White Theater",
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441479380001G5iL",
+     "inst": "1780441479380001G5iL",
+     "code": "NET323",
+     "title": "What's new in Amazon Route 53: DNS innovations for 2026",
+     "f": {
+      "room": [
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | White Theater",
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1787852034298001jIKi",
+     "inst": "1787852034298001jIKi",
+     "code": "AWS114-R3",
+     "title": "Builder Zone in Expo",
+     "f": {
+      "title": [
+       "Builder Zone in the Expo",
+       "Builder Zone in Expo"
+      ],
+      "level": [
+       100,
+       null
+      ]
+     }
+    },
+    {
+     "id": "1780441481111001GsDj",
+     "inst": "1780441481111001GsDj",
+     "code": "SEC329",
+     "title": "Security leverage at AI velocity: the operating model shift",
+     "f": {
+      "room": [
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | White Theater",
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441473635001G7BB",
+     "inst": "1780441473635001G7BB",
+     "code": "IND3348",
+     "title": "A Context Gap, Not a Data Gap: Riot Games Rethinks Incident Learning",
+     "f": {
+      "room": [
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | White Theater",
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441490688001GCMC",
+     "inst": "1780441490688001GCMC",
+     "code": "STG306",
+     "title": "Amazon S3 Tables: A deep dive into storage built for Apache Iceberg",
+     "f": {
+      "room": [
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | White Theater",
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780442389888001NPVg",
+     "inst": "1780442389888001NPVg",
+     "code": "SEC103-S",
+     "title": "Expert Defense Within Reach: Agentic SecOps with Splunk and AWS (sponsored by Splunk by Cisco)",
+     "f": {
+      "room": [
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | White Theater",
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441469160001GTql",
+     "inst": "1780441469160001GTql",
+     "code": "DAT423",
+     "title": "Optimize AI workloads with Amazon ElastiCache Serverless",
+     "f": {
+      "room": [
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | White Theater",
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441470199001Gi3I",
+     "inst": "1780441470199001Gi3I",
+     "code": "DVT307",
+     "title": "Beyond code generation: accelerating the entire SDLC on AWS",
+     "f": {
+      "room": [
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | White Theater",
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780442276321001cZw2",
+     "inst": "1780442276321001cZw2",
+     "code": "AIM419-R",
+     "title": "Build and Deploy Agents on Amazon EKS with Amazon Bedrock",
+     "f": {
+      "title": [
+       "Build and deploy agents to Lambda and EKS with Amazon Bedrock",
+       "Build and Deploy Agents on Amazon EKS with Amazon Bedrock"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1790358242389001iFc8",
+     "inst": "1790358242389001iFc8",
+     "code": "BIZ315-R1",
+     "title": "Customize workspaces and build guided workflows using AI in Connect Customer",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441480602001Gwy6",
+     "inst": "1780441480602001Gwy6",
+     "code": "SEC206",
+     "title": "Digital sovereignty: Verifiable controls, greater choice, & innovation",
+     "f": {
+      "title": [
+       "Digital sovereignty: Verifiable controls and greater choice",
+       "Digital sovereignty: Verifiable controls, greater choice, & innovation"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441481171001G59D",
+     "inst": "1780441481171001G59D",
+     "code": "SEC501",
+     "title": "Next-gen threat detection: GuardDuty advanced security capabilities",
+     "f": {
+      "room": [
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | White Theater",
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780442221732001cY2H",
+     "inst": "1780442221732001cY2H",
+     "code": "AIM2213",
+     "title": "How leading AI builders push the frontier with AWS Trainium",
+     "f": {
+      "room": [
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | White Theater",
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441490455001GH2I",
+     "inst": "1780441490455001GH2I",
+     "code": "STG304",
+     "title": "Maximizing block storage performance for high-intensity workloads",
+     "f": {
+      "room": [
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | White Theater",
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441481404001Gz3D",
+     "inst": "1780441481404001Gz3D",
+     "code": "SEC331",
+     "title": "Managing software vulnerabilities in the agentic world",
+     "f": {
+      "room": [
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | White Theater",
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441462861001GZUn",
+     "inst": "1780441462861001GZUn",
+     "code": "ARC303",
+     "title": "One agent to thousands: Building for scale with Newforma",
+     "f": {
+      "room": [
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | White Theater",
+       "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441479778001GpML",
+     "inst": "1780441479778001GpML",
+     "code": "OPN301",
+     "title": "Governing AI assets at scale with MCP Gateway and Registry",
+     "f": {
+      "room": [
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | White Theater",
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1792716379689001MrpS",
+     "inst": "1792716379689001MrpS",
+     "code": "SEC003",
+     "title": "Your new playbook: Operationalizing security in a world of AI",
+     "f": {
+      "title": [
+       "Operationalizing security for the future with best practices today",
+       "Your new playbook: Operationalizing security in a world of AI"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441480863001GR6H",
+     "inst": "1780441480863001GR6H",
+     "code": "SEC390",
+     "title": "How Woodside handed SOC monitoring to AWS SIR to focus on threat hunting",
+     "f": {
+      "room": [
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | White Theater",
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780442222701001cCcO",
+     "inst": "1780442222701001cCcO",
+     "code": "SEC422",
+     "title": "Architect resilient, multi-region workforce access on AWS",
+     "f": {
+      "room": [
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | White Theater",
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780442222532001cvRt",
+     "inst": "1780442222532001cvRt",
+     "code": "SEC383",
+     "title": "Network policy across hundreds of accounts with AWS Network Security Manager",
+     "f": {
+      "room": [
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | White Theater",
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Light Blue Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780442222420001coic",
+     "inst": "1780442222420001coic",
+     "code": "SEC365",
+     "title": "Control what goes out: egress security for AI workloads",
+     "f": {
+      "room": [
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | White Theater",
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Light Blue Theater"
+      ]
+     }
+    }
+   ],
+   "unknownRooms": []
+  },
+  {
    "at": "2026-11-11T18:42:45Z",
    "milestones": [],
    "added": [

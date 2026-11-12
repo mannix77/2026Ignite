@@ -1,0 +1,98 @@
+<!-- summary:43130300748-1 -->
+Added 6 · removed 2 · changed 85
+
+**Added**
+- `COP370` Use AI to Take Your Resilience to the Next Level
+- `ANT357` Giving AI agents the context they need with AWS Context
+- `ANT358` Interactive and largescale analytics with Amazon Athena and Amazon EMR
+- `COP376` Who's Watching Your Agents? Observability for the AI Era
+- `SUP231` Personal AI agents that learn: building with Hermes Agent on AWS
+- `ANT359` Open, governed data and AI with the AWS Glue Data Catalog
+
+**Removed**
+- `IND3338-R1` Accelerate Physical AI development with NVIDIA on AWS
+- `API312-R1` Building distributed multi-agent architectures on serverless
+
+**Changed**
+- `AIM139-S` From AI Pilots to Enterprise Impact: NJIT's Blueprint for AI Governance and Adoption (sponsored by Kyndryl) — room: …White Theater → …Light Blue Theater
+- `AIM2203-S` Securing AI and Autonomous Agents: Protecting the Lifecycle Across Any Platform (sponsored by Fortinet) — room: …White Theater → …Light Blue Theater
+- `AIM2213` How leading AI builders push the frontier with AWS Trainium — room: …White Theater → …Light Blue Theater
+- `AIM244-S` Solving Problems Faster with AI SRE​ (sponsored by Splunk by Cisco) — room: …White Theater → …Light Blue Theater
+- `AIM278-S` Evaluating AI Agents with Langfuse (sponsored by ClickHouse) — room: …White Theater → …Light Blue Theater
+- `AIM325` Fine-Tune Agents That Reason: Multi-Turn RL on SageMaker AI — desc
+- `AIM3312` Accelerate analytics with GPUs at lower cost: Spark, DuckDB, and more — room: …White Theater → …Light Blue Theater
+- `AIM382-S` End-to-End Voice Agents with AWS and Deepgram (sponsored by Deepgram) — room: …White Theater → …Light Blue Theater
+- `AIM391` Automate AI governance and risk management with John Deere — room: …White Theater → …Light Blue Theater
+- `AIM419-R` Build and Deploy Agents on Amazon EKS with Amazon Bedrock — title: …deploy agents to Lambda and EKS with Amazon Bedrock → …Deploy Agents on Amazon EKS with Amazon Bedrock; desc
+- `AIM419-R1` Build and Deploy Agents on Amazon EKS with Amazon Bedrock — title: …deploy agents to Lambda and EKS with Amazon Bedrock → …Deploy Agents on Amazon EKS with Amazon Bedrock; desc
+- `ANT308` What's new in Amazon Redshift — room: …White Theater → …Light Blue Theater
+- `ANT313` Architect your metadata hub with AWS Glue Data Catalog — room: …White Theater → …Light Blue Theater
+- `ANT349` Cost-effective serverless data integrations and workflows for AI-ready data — room: …White Theater → …Light Blue Theater
+- `ANT351` Introducing AWS Context: Build governed intelligence for agents at scale — room: …White Theater → …Light Blue Theater
+- `ARC303` One agent to thousands: Building for scale with Newforma — room: …White Theater → …Light Blue Theater
+- `ARC328` Stop fixing, start preventing with Well-Architected Agent — room: …White Theater → …Light Blue Theater
+- `ARC405` Your regulator set your RTO. Not your architecture. — room: …White Theater → …Light Blue Theater
+- `AWS114-R` Builder Zone in Expo — title: Builder Zone in the Expo → Builder Zone in Expo
+- `AWS114-R1` Builder Zone in Expo — title: Builder Zone in the Expo → Builder Zone in Expo; level: 100 → —
+- `AWS114-R2` Builder Zone in Expo — title: Builder Zone in the Expo → Builder Zone in Expo; level: 100 → —
+- `AWS114-R3` Builder Zone in Expo — title: Builder Zone in the Expo → Builder Zone in Expo; level: 100 → —
+- `BIZ101` How Southwest Airlines put AI at the center of customer experience — title: …migrated 4,500 agents in just 2.5 weeks → …put AI at the center of customer experience; desc
+- `BIZ315-R` Customize workspaces and build guided workflows using AI in Connect Customer — desc
+- `BIZ315-R1` Customize workspaces and build guided workflows using AI in Connect Customer — desc
+- `CMP309` 50k daily iOS builds with virtualization on Amazon EC2 Mac — room: …White Theater → …Light Blue Theater
+- `CON201` The future of Kubernetes on AWS — room: …White Theater → …Light Blue Theater
+- `COP204-S` From Workloads to Agents: Rethinking Cloud Resilience (sponsored by Cohesity) — room: …White Theater → …Light Blue Theater
+- `COP336` Elevate your observability with OpenTelemetry on AWS — room: …White Theater → …Light Blue Theater
+- `COP365-R` Allocate shared AWS infrastructure costs to your business units — code: COP365 → COP365-R
+- `DAT419` Dive deep into Amazon DynamoDB — room: …White Theater → …Light Blue Theater
+- `DAT421` Reduce LLM inference cost with Amazon ElastiCache for Valkey — room: …White Theater → …Light Blue Theater
+- `DAT423` Optimize AI workloads with Amazon ElastiCache Serverless — room: …White Theater → …Light Blue Theater
+- `DAT427` Better, faster, cheaper: How Valkey is revolutionizing caching — room: …White Theater → …Light Blue Theater
+- `DAT447` Build an agentic context layer with ontologies on Amazon Neptune — room: …White Theater → …Light Blue Theater
+- `DVT307` Beyond code generation: accelerating the entire SDLC on AWS — room: …White Theater → …Light Blue Theater
+- `DVT320` How Kiro learns: an AI coding agent that improves with every session — room: …White Theater → …Light Blue Theater
+- `DVT338` Scale agentic development with automated orchestration — room: …White Theater → …Light Blue Theater
+- `DVT345` Continuous integration and continuous delivery (CI/CD) on AWS — room: …White Theater → …Light Blue Theater
+- `HMC203-S` Optimizing SAP RISE for Cost and Scale with Intel (sponsored by Intel) — room: …White Theater → …Light Blue Theater
+- `HMC303` Choosing the right hybrid deployment for your AI workloads — room: …White Theater → …Light Blue Theater
+- `IND201` How Telecom leaders are putting AI to work — room: …White Theater → …Light Blue Theater
+- `IND327-R1` Build self-healing agents from diagnosis to disaster recovery — title: …a team of agents: From incident diagnosis to safe remedi… → …self-healing agents from diagnosis to disaster recovery
+- `IND3312` Danske Bank's AI City: Scaling AI agents across an enterprise — room: …White Theater → …Light Blue Theater
+- `IND3316` Tackling a $30M fraud crisis with ML: California Community Colleges — room: …White Theater → …Light Blue Theater
+- `IND3319` How FINRA Explores Governed Agentic AI to Its Member Firms on AWS — room: …White Theater → …Light Blue Theater
+- `IND3328` How Paytm powers millions of customer journeys with AI agents on AWS — room: …White Theater → …Light Blue Theater
+- `IND3329` Allianz: Building domain AI agents that scale across the enterprise — room: …White Theater → …Light Blue Theater
+- `IND3342` How Stripe built an enterprise agent platform on Amazon Bedrock AgentCore — room: …White Theater → …Light Blue Theater
+- `IND3348` A Context Gap, Not a Data Gap: Riot Games Rethinks Incident Learning — room: …White Theater → …Light Blue Theater
+- `IND3350` Visa: Building autonomous defense for payments security in the agentic AI era — room: …White Theater → …Light Blue Theater
+- `IND344` How Chamberlain and Daikin power smart product innovation with AWS — room: …White Theater → …Light Blue Theater
+- `IND384` Inside T-Mobile's Kinetic Edge: Real-Time Physical AI at Scale — room: …White Theater → …Light Blue Theater
+- `IND403` Build a Video Semantic Layer for Media Agent on AWS — desc
+- `MAM215-S` Conversational AI at Scale: S&P Global Energy's 30+ Genie Agents (sponsored by Databricks) — room: …White Theater → …Light Blue Theater
+- `NET308` Building an interconnectivity fabric across AWS accounts and orgs — room: …White Theater → …Light Blue Theater
+- `NET323` What's new in Amazon Route 53: DNS innovations for 2026 — room: …White Theater → …Light Blue Theater
+- `NET331` From shopping agents to shoppers: Amazon CloudFront patterns for peak retail — room: …White Theater → …Light Blue Theater
+- `NET338` Innovations in Elastic Load Balancing and application networking — room: …White Theater → …Light Blue Theater
+- `OPN301` Governing AI assets at scale with MCP Gateway and Registry — room: …White Theater → …Light Blue Theater
+- `OPN308` The Neuron Stack: Enabling open source ML solutions on AWS Trainium — room: …White Theater → …Light Blue Theater
+- `SEC003` Your new playbook: Operationalizing security in a world of AI — title: Operationalizing security for the future with best practi… → Your new playbook: Operationalizing security in a world o…; desc
+- `SEC103-S` Expert Defense Within Reach: Agentic SecOps with Splunk and AWS (sponsored by Splunk by Cisco) — room: …White Theater → …Light Blue Theater
+- `SEC206` Digital sovereignty: Verifiable controls, greater choice, & innovation — title: …controls and greater choice → …controls, greater choice, & innovation; desc
+- `SEC216-S` Go Hack Yourself. With AI. (sponsored by Horizon3.ai) — room: …White Theater → …Light Blue Theater
+- `SEC217-S` Building Trust into Agentic AI on AWS in the Age of Autonomous Agents (sponsored by Check Point) — room: …White Theater → …Light Blue Theater
+- `SEC302` Governance foundations for AI workloads that grow into autonomous agents — room: …White Theater → …Light Blue Theater
+- `SEC307` How Infor strengthened security operations with AWS Security Hub — room: …White Theater → …Light Blue Theater
+- `SEC309-R1` Network firewall deployment without the guesswork: codify, deploy, done — desc
+- `SEC326` What's new in Application Security: Securing applications at machine speed — room: …White Theater → …Light Blue Theater
+- `SEC329` Security leverage at AI velocity: the operating model shift — room: …White Theater → …Light Blue Theater
+- `SEC331` Managing software vulnerabilities in the agentic world — room: …White Theater → …Light Blue Theater
+- `SEC364` Securing software and AI supply chains with Network Firewall at Coupang — room: …White Theater → …Light Blue Theater
+- `SEC365` Control what goes out: egress security for AI workloads — room: …White Theater → …Light Blue Theater
+- `SEC372` Governing Hundreds of Accounts in Minutes: Agentic AI Meets Landing Zone Operations — title: …hundreds of accounts in seconds: agentic AI meets Landin… → …Hundreds of Accounts in Minutes: Agentic AI Meets Landin…
+- `SEC383` Network policy across hundreds of accounts with AWS Network Security Manager — room: …White Theater → …Light Blue Theater
+- `SEC390` How Woodside handed SOC monitoring to AWS SIR to focus on threat hunting — room: …White Theater → …Light Blue Theater
+- `SEC422` Architect resilient, multi-region workforce access on AWS — room: …White Theater → …Light Blue Theater
+- `SEC501` Next-gen threat detection: GuardDuty advanced security capabilities — room: …White Theater → …Light Blue Theater
+- `STG304` Maximizing block storage performance for high-intensity workloads — room: …White Theater → …Light Blue Theater
+- …and 5 more
+
