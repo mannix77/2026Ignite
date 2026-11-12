@@ -149,7 +149,7 @@ class ParityTests(unittest.TestCase):
         self.check("raw_window_bounds.json", None, W25)
 
     def test_should_agree_with_the_browser_on_placeholders_and_on_what_they_are(self):
-        py, js = self.check("raw_placeholders.json", None, W26)
+        _, js = self.check("raw_placeholders.json", None, W26)
         got = {r["code"]: (r["room"], r["roomTbd"], r["start"], r["end"], r["dur"]) for r in js["sessions"]}
         self.assertEqual((got, js["stats"]), (PLACEHOLDERS_EXPECTED, PLACEHOLDERS_STATS))
 
