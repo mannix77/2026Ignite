@@ -997,8 +997,11 @@ function missingPicksBanner() {
 function watchSection(plan) {
   if (!plan.watch.length) return '';
   const list = plan.watch.slice().sort((a, b) => (b.score ?? 0) - (a.score ?? 0) || b.priority - a.priority);
+  // A session can be parked here before a later catalog sync confirms it isn't recorded after
+  // all (issue #152): the blanket "catch the recordings" lede above is then wrong for it, so
+  // each such entry gets its own note instead of silently going along with that promise.
   return `<section><h2>Watch later (${list.length})</h2><p class="lede small">Kept out of the live plan; catch the recordings. Tap <b>Attend live</b> to put one back.</p>
-    <div class="list">${list.map(x => card(x.s, { compact: true, extra: `<div class="row" style="margin-top:8px"><button class="btn small ghost" data-act="attend-live" data-key="${attr(x.s.key)}">Attend live instead</button>
+    <div class="list">${list.map(x => card(x.s, { compact: true, extra: `${x.s.recorded === false ? '<p class="small muted">Not recorded: there’s no recording to catch here.</p>' : ''}<div class="row" style="margin-top:8px"><button class="btn small ghost" data-act="attend-live" data-key="${attr(x.s.key)}">Attend live instead</button>
       ${urlOf(x.s) ? `<a class="btn small ghost" href="${attr(urlOf(x.s))}" target="_blank" rel="noopener">On ${esc(app.conf.siteName)} ${icon('ext')}</a>` : ''}</div>` })).join('')}</div></section>`;
 }
 
@@ -1792,7 +1795,7 @@ function renderDetail(s) {
       ${s.related?.length ? `<p class="small muted">Related: ${s.related.map(code => app.model.byCode.has(code) ? `<a href="#/session/${encodeURIComponent(code)}" data-act="open-code" data-code="${attr(code)}">${esc(code)}</a>` : esc(code)).join(', ')}</p>` : ''}
       <div class="field" style="margin-top:12px"><label for="score">My score<small>Your own ranking (e.g. the workbook score). Overrides Must/Want weighting in clashes</small></label>
         <input id="score" type="number" inputmode="decimal" min="0" max="100" step="0.5" data-score-key="${attr(s.key)}" value="${attr(gp?.score ?? '')}" placeholder="—"></div>
-      <label class="toggle"><input type="checkbox" data-watch-key="${attr(s.key)}" ${gp?.mode === 'watch' ? 'checked' : ''}><span>Watch the recording instead of attending<small>${s.recorded === false ? 'Careful: this session is not recorded.' : 'Kept out of the live plan and listed under Watch later.'}</small></span></label>
+      ${s.recorded === false ? '' : `<label class="toggle"><input type="checkbox" data-watch-key="${attr(s.key)}" ${gp?.mode === 'watch' ? 'checked' : ''}><span>Watch the recording instead of attending<small>Kept out of the live plan and listed under Watch later.</small></span></label>`}
       <h3 style="margin-top:14px"><label for="note">My notes</label></h3>
       <textarea id="note" data-note-key="${attr(s.key)}" placeholder="Questions to ask, why it matters…">${esc(gp?.note || '')}</textarea>
       <div class="row" style="margin-top:12px">
@@ -1815,15 +1818,38 @@ function afterDetailClosed() {
   if (app.pendingRender) render();
 }
 
+// Same idea as the main view's own focusKey (render()): a stable selector for the focused
+// element, so a dialog refresh that replaces its innerHTML (e.g. after a background sync)
+// doesn't silently drop a keyboard user's focus off a button or checkbox mid-dialog.
+function dialogFocusKey(el) {
+  if (!el || !dialog.contains(el)) return null;
+  if (el.id) return `#${CSS.escape(el.id)}`;
+  if (el.hasAttribute('data-watch-key')) return '[data-watch-key]'; // only one per dialog
+  // Checked before the data-key loop below: all four priority buttons share the same
+  // data-key (the session's group key), so that generic selector alone would always resolve
+  // to whichever one is first in the DOM, not the one actually focused.
+  if (el.dataset.act === 'prio' && el.hasAttribute('data-p')) return `[data-act="prio"][data-p="${CSS.escape(el.getAttribute('data-p'))}"]`;
+  for (const a of ['data-key', 'data-code']) {
+    if (el.hasAttribute(a)) {
+      const act = el.dataset.act ? `[data-act="${CSS.escape(el.dataset.act)}"]` : '';
+      return `${act}[${a}="${CSS.escape(el.getAttribute(a))}"]`;
+    }
+  }
+  if (el.dataset.act) return `[data-act="${CSS.escape(el.dataset.act)}"]`;
+  return null;
+}
+
 function refreshDetail() {
   if (!dialog.open || !app.dialogKey) return;
   const s = app.model.byKey.get(app.dialogKey);
   if (!s) { closeDetail(); return; }
   if (['note', 'score'].includes(document.activeElement?.id)) return; // don't clobber typing
   const scroll = dialog.querySelector('.d-body')?.scrollTop || 0;
+  const fk = dialogFocusKey(document.activeElement);
   dialog.innerHTML = renderDetail(s);
   const body = dialog.querySelector('.d-body');
   if (body) body.scrollTop = scroll;
+  if (fk) dialog.querySelector(fk)?.focus({ preventScroll: true });
 }
 
 // ---------------------------------------------------------------- ics
@@ -2678,6 +2704,11 @@ async function refreshData(manual = false) {
     renderOrDefer();
     announce();
   } else if (app.tab === 'changes' || occupancyChanged) renderOrDefer(); // refresh the sync status shown there, or the room chips
+  // A sync can confirm a session's recorded status (or its room occupancy) after its detail
+  // dialog was already opened from the stale model; renderOrDefer() alone never reaches an
+  // open dialog, so an open one would otherwise keep showing a since-invalidated control
+  // (e.g. "Watch the recording instead of attending" for a session just confirmed unrecorded).
+  refreshDetail();
   if (!changed && manual) {
     toast(app.liveError ? `Couldn't check ${app.conf.siteName}: ${app.liveError}`
       : snapErr ? `Couldn't load the synced copy: ${snapErr.message}`
