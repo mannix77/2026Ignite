@@ -100,12 +100,18 @@ Reviews keep finding the same things, and almost all of them can be found before
 CodeRabbit's included allowance is small (about one review an hour; its comment says when the
 next one is due), so a push it can't review costs the next one too.
 
-1. **Self-review the diff first.** Re-read it as a reviewer would, with "Tests that can't pass
-   for the wrong reason" and the path instructions in `.coderabbit.yaml` open, and check every new
-   test against the rules by number. When one instance of a problem turns up, list the others in
-   the same file yourself (rule 6). Then run the `/code-review` skill on the diff. The CodeRabbit
-   CLI can't be used from the cloud sandbox (its download host is blocked and it needs a login),
-   so this read-through is the local review.
+1. **Self-review the diff first.** Run `coderabbit review` (or `coderabbit review --agent` for
+   structured, agent-friendly output); add `--base origin/main` to review a whole branch rather
+   than just uncommitted changes, and `--include-untracked` so a brand-new file that hasn't been
+   staged yet isn't silently skipped. The CLI works in this environment: install it with
+   `curl -fsSL https://cli.coderabbit.ai/install.sh | sh` (installs to `~/.local/bin`, already on
+   PATH) and sign in once with `coderabbit auth login` (a one-time browser login tied to the
+   owner's CodeRabbit account — ask the owner to complete it if this session isn't signed in;
+   `coderabbit doctor` checks readiness). Also re-read the diff by hand as a reviewer would, with
+   "Tests that can't pass for the wrong reason" and the path instructions in `.coderabbit.yaml`
+   open, and check every new test against the rules by number. When one instance of a problem
+   turns up, list the others in the same file yourself (rule 6). Then run the `/code-review`
+   skill on the diff.
 2. **Run it, don't guess it.** An expected value in a test (a return tuple, a count, a message)
    comes from running the code once and judging the result, or from a published fact; never from
    memory. Copy commit SHAs, thread ids and other identifiers from tool output; never type or
