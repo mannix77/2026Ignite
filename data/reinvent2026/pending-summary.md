@@ -1,0 +1,106 @@
+<!-- summary:43380773789-1 -->
+Added 18 · removed 0 · changed 119
+
+**Added**
+- `COM365` Unattended Coding Agents: Memory, Guardrails, and Cost Control - Kiro Crew
+- `COM211` S3 Cost Clinic: Architecting for Scale Without Overspending
+- `COP370` Use AI to Take Your Resilience to the Next Level
+- `ANT357` Giving AI agents the context they need with AWS Context
+- `ANT358` Interactive and largescale analytics with Amazon Athena and Amazon EMR
+- `COP376` Who's Watching Your Agents? Observability for the AI Era
+- `MUP221` The Best Intel in the Cloud — What's New and What's Next
+- `SEC291` Secure development in the age of AI coding agents
+- `CMP361` Simplifying how you use AWS: automating common patterns on your behalf
+- `SEC289` Cloud governance from complexity to control
+- `SEC293` Data protection and the post-quantum shift
+- `CMP362` Graviton5 for data workloads
+- `SEC288` Network security for an AI-driven world
+- `SEC287` Identity for humans, workloads, and AI agents
+- `ANT359` Open, governed data and AI with the AWS Glue Data Catalog
+- `SEC294` Building a culture of security
+- `SEC292` Securing the agentic enterprise
+- `CMP102` Cutting manual accounts payable work
+
+**Changed**
+- `AIM108-S` Beyond pilots: agentic AI transforming mortgage operations and IT at scale (sponsored by Tata Consultancy Services) — speakers: — → Rajesh Kannan Ganesan, Sophie Marchal
+- `AIM115-S` When the Lights Flicker: Engineer Minimum Viable Enterprises for Sovereign Resilience (sponsored by Tata Consultancy Services) — speakers: — → Manav Sadana
+- `AIM122-S` AI Meets Production: The New Reliability Playbook for Financial Services (sponsored by Traversal) — speakers: — → Anish Agarwal
+- `AIM129-S` AI That Scales Fast for High-Growth Businesses. (sponsored by Accenture) — speakers: Dusshyant Roy → Dusshyant Roy, Serena Smorti
+- `AIM134-S` Beyond Coding Agents: Inside the Self-Improving Software Factory (sponsored by Factory) — speakers: — → Leo Tchourakov
+- `AIM211` How Trainium powers the next AI frontier, from silicon to application — speakers: Colin Brace → Alberto Taiuti, Colin Brace, Gregory Chanan
+- `AIM217` Build Voice AI experiences with Amazon Polly and Transcribe — speakers: Nikie Xiong, Veerdhawal (Veer) Pande → Nikie Xiong, Suyin Wang, Veerdhawal (Veer) Pande
+- `AIM2203-S` Securing AI and Autonomous Agents: Protecting the Lifecycle Across Any Platform (sponsored by Fortinet) — speakers: Ali Bidabadi, Chad Larter → Ali Bidabadi, Chad Larter, Jason Mordeno
+- `AIM2213` How leading AI builders push the frontier with AWS Trainium — speakers: Arjun Desai, Kamran Khan → Arjun Desai, Kamran Khan, Young Mo Kang
+- `AIM2215` World Models & Physical AI: The next frontier in intelligent systems — speakers: Eric Saleh, Jessica Inman → Andy Chen, Eric Saleh, Jessica Inman, Murtaza Chowdhury, …
+- `AIM227-S` Turning Data into Decisions: Pacific Life's Modern Insurance Operations with AWS AI (sponsored by PwC) — speakers: Dominic Smith → Dominic Smith, Jonny Skerratt
+- `AIM241-S` 4 foundations for building the agentic enterprise on AWS​ (sponsored by IBM) — speakers: Barbara Jenny Wilson, Neel Sundaresan, Preeti Somal → Barbara Jenny Wilson, Eric Burns, Neel Sundaresan, Preeti…
+- `AIM243-S` Build, run, and improve: inside a production AI inference platform (sponsored by Baseten) — speakers: — → Sai Maddali
+- `AIM260-S` The Frontier Doesn't Hold Still: Running Claude Agents at Scale on AWS (sponsored by Anthropic) — speakers: Lauren Polansky → Daniel Xu, Lauren Polansky
+- `AIM268-S` Setting up the Right AI Architecture: Bringing Together Agents, Teams, and Context (sponsored by Notion) — speakers: — → Ian McClanan
+- `AIM271-S` From Predictive Intelligence to Autonomous Operations: United + ZS (sponsored by ZS) — speakers: — → Anu Kondepudy
+- `AIM307` Turn your coding agent into an always-on dev team with AgentCore — speakers: Prajit Pabbati → Mark Benyovszky, Prajit Pabbati
+- `AIM323` Serving world models on AWS Trainium with native PyTorch — speakers: — → Lingfan Yu
+- `AIM3317` How Datadog optimizes cost per token for GenAI at scale — speakers: — → Sujatha Kuppuraju
+- `AIM350` Web grounding on Amazon Bedrock AgentCore and Amazon Bedrock — speakers: Kalyan Garimella, Priya Holikatti, Veda Raman → Hang Su, Kalyan Garimella, Priya Holikatti, Veda Raman
+- `AIM352` Build and deploy a voice agent with Amazon Nova 2.5 Sonic — speakers: Hector Lopez, Reilly Manton, Srini Veeravanallur, Veda Raman → Hector Lopez, Mark Paguay, Reilly Manton, Srini Veeravana…
+- `AIM380-S` Clinical Trials, Reimagined at the Speed of AI (sponsored by PwC) — speakers: Chuck Liu, Terry Morris → Chuck Liu, Sidd Bhattacharya, Terry Morris
+- `AIM394-S` Agents run at the edge. The blast radius lives in the cloud (sponsored by Sysdig) — speakers: Eric Carter → Conor Sherman, Eric Carter
+- `AIM403` Build and Optimize AI Pipelines with Ray on SageMaker HyperPod — speakers: Anoop Saha, Chakravarthy Nagarajan, Ioan CATANA, Tomonori… → Anoop Saha, Chakravarthy Nagarajan, Ioan CATANA, Mijanur …
+- `AIM406` End-to-end foundation model pipelines on SageMaker HyperPod with EKS — speakers: Farrukh Sohail, Harsh Asnani, Mayank Gupta → Farrukh Sohail, Harsh Asnani, Mayank Gupta, Mijanur Palash
+- `AIM439-R` Getting Started with AgentCore: ship an agent to production in 2 hours — speakers: Robert Belson → Madhu Samhitha Vangara, Robert Belson
+- `AIM439-R1` Getting Started with AgentCore: ship an agent to production in 2 hours — speakers: Robert Belson → Madhu Samhitha Vangara, Robert Belson
+- `ANT437-R` Accelerate lakehouse analytics with Apache Iceberg materialized views — speakers: Sanjoli Agarwal, Santiago Abarca, Saunak Chandra, Sherin … → Ajithesh Srinivasa Raghavan, Sanjoli Agarwal, Santiago Ab…
+- `API202-S` Bring Oracle Databases to AWS Without Starting Over (sponsored by Oracle) — speakers: Vishal Patil → Muneer Mirza, Tushar Pandit, Vishal Patil
+- `ARC324` Ambient accessibility: Architecting real-time ASL on a Wearable — speakers: Alak Eswaradass, Suresh Poopandi → Alak Eswaradass, Rob Koch, Suresh Poopandi
+- `ARC336` Optimizing Cloud Operations with AI: Architecture patterns that actually ship — speakers: Farzin Bagheri, Saurabh Saxena → Brian Dowhan, Farzin Bagheri, Saurabh Saxena
+- `AWS201` Architects of literacy: Building AI tools for the next generation — speakers: — → Chris McAvoy
+- `AWS202` Who's missing from your model? — speakers: — → Michael Running Wolf
+- `AWS203` What makes a model trustworthy? — speakers: Aysen Ilkbahar → Aysen Ilkbahar, Eric Burns
+- `AWS205` Beyond capability: Designing AI for an era of converged privacy & trust — speakers: Emily Choi-Greene → Emily Choi-Greene, Gerald Friedland, Jamie Angell, Nuala …
+- `AWS206` What AI can't automate — speakers: — → Kelsey Hightower
+- `AWS207` AI can predict your health. Can it change it? — speakers: Wilson To → Melissa Iftimie, Rowland Illing, Wilson To
+- `BIZ113` Getting Started with AWS Quick: How a Customer Went from Curious to Deployed — speakers: Leo Ohannesian → Leo Ohannesian, Tamra Butler
+- `BIZ203-S` Stop building agents that stop short of enterprise execution (sponsored by IBM) — speakers: Michael Kwok → Michael Kwok, Neel Sundaresan
+- `BIZ221-S` Your Business Is Multiplayer. Your AI Should Be Too. (sponsored by PromptQL) — speakers: — → Suku Krishnaraj
+- `BIZ404` Teaching Quick to Remember and Connect with Memory and Knowledge Graphs — speakers: Thomas Delteil → Adi Kalyanpur, Thomas Delteil
+- `CMP204-S` Agentic AI on AWS with Intel and Databricks (sponsored by Intel) — speakers: Farid Chalouhi, Mickey Iqbal → David Porter, Farid Chalouhi, Mickey Iqbal
+- `CMP310` Beyond the simulator: Quantum chemistry workflows on real hardware — speakers: Nick White, Nicola Smyth, Sebastian Stern, Tyler Takeshita → Nick White, Nicola Smyth, Sebastian Stern, Tyler Takeshit…
+- `CON314` Modernize and containerize legacy apps to Amazon ECS with AWS Transform — speakers: Asiel Bencomo Corona, Avinash Desireddy, Diego Dalmolin, … → Abhishek Nanda, Asiel Bencomo Corona, Avinash Desireddy, …
+- `COP103-S` Trust Issues: A Healthy Relationship With Your AI Agents (sponsored by MontyCloud) — speakers: — → Eric Morrissey
+- `COP201` Accelerating cost optimization on AWS — speakers: Jimmy Yang → Jimmy Yang, Lo�c Fournier
+- `DAT434-R` Fast and easy bulk operations with Amazon DynamoDB — speakers: Colin Leek, Jason Hunter → Colin Leek, Jason Hunter, Ruskin Dantra
+- `DAT434-R1` Fast and easy bulk operations with Amazon DynamoDB — speakers: Colin Leek, Ruskin Dantra → Colin Leek, Jason Hunter, Ruskin Dantra
+- `DVT101-S` Built by Agents: Rethinking Reliability for AI-Native Companies (sponsored by Traversal) — speakers: — → Anish Agarwal
+- `DVT222-S` Inside Real AI Software Factories: Lessons From the Teams Building Them (sponsored by LaunchDarkly) — speakers: Dylan Garcia, Jonathan Nolen, Shardul Vaidya → Dylan Garcia, Jaz White, Jonathan Nolen, Shardul Vaidya
+- `DVT306-R` Deploy without drama: Safe, automated releases on AWS — speakers: Anastasia Giannoulas, Michael Michael → Anastasia Giannoulas, Mark Rambow, Michael Michael
+- `DVT306-R1` Deploy without drama: Safe, automated releases on AWS — speakers: Anastasia Giannoulas, Michael Michael → Anastasia Giannoulas, Mark Rambow, Michael Michael
+- `DVT340` Build on top of large codebases without breaking your code — speakers: Anil Maktala → Anil Maktala, Kenneth S�nchez
+- `GHJ318-R` re:Architecture Rodeo: Designing Agentic AI Applications — speakers: Avichal Chum, Piyali Kamra, Viraj Padte → Avichal Chum, Mastan Shaik, Piyali Kamra, Viraj Padte
+- `GHJ318-R1` re:Architecture Rodeo: Designing Agentic AI Applications — speakers: Avichal Chum, Piyali Kamra, Viraj Padte → Avichal Chum, Mastan Shaik, Piyali Kamra, Viraj Padte
+- `GHJ320` re:Architecture Rodeo: Building an AI-Ready Data Foundation — speakers: Anurag Singh, Jigna Gandhi → Anurag Singh, Arnab Ghosh, Jigna Gandhi
+- `IND108-S` From AI that responds to AI that delivers measurable outcomes with Zendesk and AWS (sponsored by Zendesk) — speakers: Hannah Deveney → Bailey Backal, Hannah Deveney
+- `IND201` How Telecom leaders are putting AI to work — speakers: Ishwar Parulkar → Ahmed El Sayed, Ishwar Parulkar
+- `IND219` How to Use AI Agents to Run Genomics Pipelines Faster and Cheaper — speakers: — → Mark Schreiber
+- `IND3334` How Jack in the Box delivers personalized store reporting at scale — speakers: — → Deborah Matteliano Simeoni
+- `IND3340` AI-driven customer experience with Amaze, Byte by Yum! & Amorepacific — speakers: Chatnapang Wuthiwatana, Jeremiah Sheehy, Joey Ahnn → Chatnapang Wuthiwatana, Deborah Matteliano Simeoni, Jerem…
+- `IND3353` TP ICAP: Driving revenue through faster decisions with agentic AI — speakers: Animesh Kundu, Scott Harding → Animesh Kundu, Scott Harding, Shahen Bokhari
+- `IND3356` How Audi is Building an Adaptive Factory with Physical AI on AWS — speakers: Henning Loese, Verena Koutsovagelis → Henning Loese, Jan Metzner, Verena Koutsovagelis
+- `IND3357` How Wisconsin DOR cut suspended tax returns with AWS Quick — speakers: — → Bradley R Thome, Sohaib Tahir
+- `IND355-R1` Healthcare & Life Sciences AI Agents: From Spec to Demo in 120 Min — speakers: Ariella Sasson, Necibe Ahat → Ariella Sasson, Nadeem Bulsara, Necibe Ahat
+- `IND410-R1` Build mission-ready software in regulated industries faster with Kiro — speakers: Kirk Horne, Shawn Asfeld → Kaushik Elangovan, Kirk Horne, Shawn Asfeld, Tushar Jagdale
+- `IND421-R1` Grounding LLMs in Truth: Build a Live Fact-Checking Pipeline — speakers: — → Alen Zograbyan, Florian Clanet, Guillaume Marchand, Iryna…
+- `INV002-S-R` Build and Deploy an eve Agent with Vercel and AWS (sponsored by Vercel) — speakers: Ronak Shah → Ronak Shah, Welly Siauw
+- `INV002-S-R1` Build and Deploy an eve Agent with Vercel and AWS (sponsored by Vercel) — speakers: Ronak Shah → Ronak Shah, Welly Siauw
+- `INV301-S` Build Autonomous Agents and Run AI-Powered AppSec on Bedrock (sponsored by OpenAI) — speakers: Sunil Bemarkar → Marco Muttoni, Nick McCarthy, Sunil Bemarkar
+- `MAM323-R` Analyze your portfolio, prioritize what to fix, and transform it — speakers: Lucas Soriano Alves Duarte, Manmohit Pal Singh → Aritra Nag, Lucas Soriano Alves Duarte, Manmohit Pal Singh
+- `MAM344` From migration to continuous modernization: reduce tech debt at scale — speakers: Everett Dolgner, Neha Goswami → Everett Dolgner, Neha Goswami, Vidheer Gadikota
+- `OPN308` The Neuron Stack: Enabling open source ML solutions on AWS Trainium — speakers: Alex Nails, Jeff Boudier, Maen Suleiman → Alex Nails, Gregory Chanan, Jeff Boudier, Maen Suleiman
+- `OPN402` Performance tuning for streaming ingestion with Apache Iceberg — speakers: Angel Conde Manjon, Diego Garcia, Francisco Morillo, Shan… → Angel Conde Manjon, Diego Garcia, Francisco Morillo, Serg…
+- `PEX305-R` Ship Agents You Can Trust: An Agent Evaluation Framework for Partners — speakers: Neha Wadhwani, Vishal Srivastava → Gizem Gur, Neha Wadhwani, Vishal Srivastava
+- `PEX305-R1` Ship Agents You Can Trust: An Agent Evaluation Framework for Partners — speakers: Neha Wadhwani, Vishal Srivastava → Gizem Gur, Neha Wadhwani, Vishal Srivastava
+- `PEX311-R1` Agentic AI Governance for Regulated Industries — speakers: Jayanthi Rajaraman, Ranjan Banerji → Jayanthi Rajaraman, Jennifer Bergstrom, Ranjan Banerji
+- `SEC202` Track cross-domain attack vectors with AWS Security Hub extended — speakers: Frank Schwarzenau → Aliaksei Ivanou, Frank Schwarzenau
+- `SEC219-S` Agentic AI meets critical infrastructure at UGI (sponsored by IBM) — speakers: Thomas Lord, Vishal Ahuja → Robert Devine, Thomas Lord, Vishal Ahuja
+- `SEC220-S` Move AI agents from prototype to production with 1Password (sponsored by 1Password) — speakers: — → Matt Porter
+- …and 39 more
+
