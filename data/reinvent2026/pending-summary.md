@@ -1,0 +1,99 @@
+<!-- summary:43340288508-1 -->
+Added 56 · removed 6 · changed 28
+
+**Added**
+- `MUP215` How to leverage an internal buy-back process to accelerate new service adoption?
+- `MUP217` Move to AI: Modernizing for GenAI Readiness
+- `COM103` Regional Community Builders: The Global AWS Community Exchange
+- `COM354` Dealing with Terraform/IaC/Compliance in AI-era
+- `MUP216` AI for Video Workloads: From Ingest to Insight to Revenue
+- `COM207` Let Your Database Speak: AI Agents for RDS and Redshift
+- `COM210` Post-Quantum Readiness on AWS: Where Do You Start?
+- `MUP106` Agentic CX Peer Meetup for Retail: Bring Your Adoption and ROI Questions
+- `MUP320` Grievances, Gripes, and Genuine Developer Feedback
+- `COM406` GenAI-Powered Auto Compliance Check for AWS Workload
+- `MUP107` Agentic CX Peer Meetup for Financial Services: Bring Your Adoption and ROI Questions
+- `MUP317` Capturing the chaos - observability for agentic applications on Amazon EKS
+- `COM208` Move Agent Rules Out of the Prompt
+- `COM212` The 7 Rs in the Real World: Honest Migration War Stories
+- `MUP316` Tokenomics: Model Routing and Real ROI from Every Token
+- `COM353` CDK Lovers: Meetup for AWS CDK Contributors & Power Users
+- `MUP220` Agents That Use Desktop and Mainframe Apps: Governance Lessons Learned
+- `COM356` Zero-Downtime Deployments on AWS: What Actually Works
+- `MUP109` Agentic CX Peer Meetup for Insurance: Bring Your Adoption and ROI Questions
+- `MUP210` Women in AI/ML: hard questions on AI systems, careers and leadership
+- `MUP401` Let your agent break a fake AWS: emulators and agent benchmarks
+- `COM364` The FinOps Control Room
+- `MUP219` Cloud-Ready Checklist: What Providers Need to Know Before Migrating
+- `COM351` Serverless Hosting for Agents: Lambda vs. Bedrock AgentCore Runtime
+- `MUP313` Moving from reactive to proactive operations with AI Agents
+- `COM363` Scaling data and AI products in the enterprise
+- `COM358` Live Streaming: Real-time Captions & Translation with AWS
+- `MUP209` Shared Responsibility for Resilience: Build, Test, and Prove Recovery with GenAI
+- `COM105` Women Who Build, Lead & Scale
+- `COM359` Real-Time Pattern Detection with Flink CEP and Agentic Workflows
+- `COM405` Agents in the Pipeline: AI-Driven Development Across Multi-Account AWS
+- `COM355` Death of the Request-Response: Architecting Serverless for Multi-Agent Loops on AWS
+- `COM357` Hadoop to EMR & Airflow: Lessons from Migrating 90+ Data Pipelines
+- `COM203` 44,000 Photos per Hour on Amazon Bedrock: How We Built, Scaled, and Secured It
+- `COM350` AI Agents for Data Pipelines: From Alerts to Safe Recovery
+- `MUP214` Spend Smarter: Cloud Financial Management in the Age of AI
+- `COM206` How Are You Sandboxing AI Agents on Kubernetes?
+- `MUP111` Agentic CX Peer Meetup: AI Agents and Human Agents
+- `COM362` Same Query, Different Results: AI Agents for Migration Validation
+- `MUP314` Resilience strategies and insights
+- `MUP212` Building the Future: Transforming SaaS with Agentic AI
+- `MUP113` Agentic CX Peer Meetup: Bring Your Adoption and ROI Questions
+- `MUP222` Run With the Best AMD in the Cloud — What's New and What's Next
+- `MUP319` Shipping to AWS with coding agents: where does yours get stuck?
+- `COM209` Open Source Security on AWS: Cedar, Guard, Threat Composer and More
+- `IND3357` How Wisconsin DOR cut suspended tax returns with AWS Quick
+- `AWS124` Twenty Years of Building and What Comes Next, with Dr. Werner Vogels and Dr. Swami Sivasubramanian
+- `MUP105` Accelerating Agentic AI Use Cases with Experience-Based Acceleration
+- `COM213` Threat Detection and Response on AWS: Reducing Noise, Acting Faster
+- `MUP213` Model customization in production: When does fine-tuning pay off
+- `COP355-R1` Resolve Incidents and Validate Releases with AWS DevOps Agent
+- `MAM350-R1` Continuous tech debt analysis and remediation, from findings to fixes
+- `COM360` Modernizing Real-Time Market Data with Amazon Kinesis and Apache Flink
+- `IND219` How to Use AI Agents to Run Genomics Pipelines Faster and Cheaper
+- `MUP321` "You're Absolutely Right!" — And Other Things Your Agent Says Before Breaking Prod
+- `MUP112` Agentic CX Peer Meetup: What We Would Do Differently
+
+**Removed**
+- `COP370` Use AI to Take Your Resilience to the Next Level
+- `ANT357` Giving AI agents the context they need with AWS Context
+- `ANT358` Interactive and largescale analytics with Amazon Athena and Amazon EMR
+- `COP376` Who's Watching Your Agents? Observability for the AI Era
+- `ANT359` Open, governed data and AI with the AWS Glue Data Catalog
+- `NET343-R` DDI Architecture Patterns: DNS, DHCP, and IPAM at AWS
+
+**Changed**
+- `BIZ112` From Zero to 20,000 Desktops: Getting Started with AWS Quick — title: …Amazon Quick → …AWS Quick; desc
+- `BIZ113` Getting Started with AWS Quick: How a Customer Went from Curious to Deployed — title: …Amazon Quick: How a Customer Went from Curious to Deployed → …AWS Quick: How a Customer Went from Curious to Deployed; desc
+- `BIZ213` Accelerating AI adoption and realized value with AWS Quick — title: …Amazon Quick → …AWS Quick; desc
+- `BIZ214` Empowering 200,000 people without compromising trust: AWS Quick — desc
+- `BIZ215` From Pilot to Enterprise Scale with AWS Quick — title: From Pilot to Enterprise Scale with Amazon Quick → From Pilot to Enterprise Scale with AWS Quick; desc
+- `BIZ216` AI Assistant for Public Sector: Governance Without Compromise with AWS Quick — title: …Amazon Quick → …AWS Quick; desc
+- `BIZ217` One AI Assistant, Every Data Source: Unifying Access with AWS Quick — title: …Amazon Quick → …AWS Quick; desc
+- `BIZ218` From AI Tasks to Autonomous Multi-Agent Workflows with AWS Quick — title: …Amazon Quick → …AWS Quick; desc
+- `BIZ219` How a Brand Turned AI Governance Into a Strategic Advantage with AWS Quick — title: …Amazon Quick → …AWS Quick; desc
+- `BIZ301` Build and Ship an AI-Powered App with AWS Quick — title: Build and Ship an AI-Powered App with Amazon Quick → Build and Ship an AI-Powered App with AWS Quick; desc
+- `BIZ302` Embed AWS Quick Chat Agents in Enterprise Applications — title: Embed Amazon Quick Chat Agents in Enterprise Applications → Embed AWS Quick Chat Agents in Enterprise Applications; desc
+- `BIZ304` Zero-Trust Identity & Data Protection in AWS Quick — desc
+- `BIZ305` Security → Zero-Trust Identity & Data Protection in AWS Quick — title: …Amazon Quick → …AWS Quick; desc
+- `BIZ306` Bring Your Own Ontology: Ground AWS Quick in Enterprise Knowledge with AWS Context — title: …Amazon Quick in Enterprise Knowledge with AWS Context → …AWS Quick in Enterprise Knowledge with AWS Context; desc
+- `BIZ307` Architect AI-powered analytics with AWS Quick across your data platforms — title: …Amazon Quick across your data platforms → …AWS Quick across your data platforms; desc
+- `BIZ310` Secure and Scalable Multi-Tenant Deployment Patterns for AWS Quick — title: …Amazon Quick → …AWS Quick; desc
+- `BIZ311` Build production agent skills on AWS Quick: automate your own work — title: …Amazon Quick: automate your own work → …AWS Quick: automate your own work; desc
+- `BIZ312` Build AI-Powered Analytics with Conversational BI on AWS Quick — title: …Amazon Quick → …AWS Quick; desc
+- `BIZ313` Build agentic automations for business processes with AWS Quick — title: …Amazon Quick → …AWS Quick; desc
+- `BIZ314` Build Multi-Agent Workflows with AWS Quick, MCP & AgentCore — title: …Amazon Quick, MCP & AgentCore → …AWS Quick, MCP & AgentCore; desc
+- `BIZ323-R` Decision Frameworks, Evaluation, and Cost Management with AWS Quick — title: …Amazon Quick → …AWS Quick
+- `BIZ323-R1` Decision Frameworks, Evaluation, and Cost Management with AWS Quick — title: …Amazon Quick → …AWS Quick
+- `BIZ402` Configure Security & Governance Controls for AWS Quick — title: Configure Security & Governance Controls for Amazon Quick → Configure Security & Governance Controls for AWS Quick; desc
+- `BIZ404` Teaching Quick to Remember and Connect with Memory and Knowledge Graphs — desc
+- `IND376-R1` How to Deploy Purpose-Built Clinical AI Agents to Production with Speed and Scale — speakers: Ankit Maheshwari, Deepti Chugh, Janak Ramachandran → Deepti Chugh, Janak Ramachandran
+- `IND403` Build a Video Semantic Layer for AI Agents on AWS — title: Build a Video Semantic Layer for Media Agent on AWS → Build a Video Semantic Layer for AI Agents on AWS; desc
+- `IND405-R` Build low latency real-time bidding workloads with AWS RTB Fabric — speakers: Luca Passani, Sergio Serra → Amin Bandeali, Luca Passani, Sergio Serra
+- `IND405-R1` Build low latency real-time bidding workloads with AWS RTB Fabric — speakers: Luca Passani, Sergio Serra → Amin Bandeali, Luca Passani, Sergio Serra
+
