@@ -1,7 +1,7 @@
 {
  "source": "https://catalog.awsevents.com/api/sessions",
  "event": "reinvent2026",
- "fetchedAt": "2026-11-13T06:44:23Z",
+ "fetchedAt": "2026-11-13T12:43:02Z",
  "count": 2587,
  "sessions": [
   {
@@ -2171,7 +2171,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-13T06:32:32Z",
+   "modified": "2026-11-13T07:25:12Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -2822,7 +2822,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-13T06:32:32Z",
+   "modified": "2026-11-13T07:25:12Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -12839,7 +12839,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-12T10:08:29Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -32218,79 +32218,6 @@
    ]
   },
   {
-   "sessionID": "1789063627256001RA7J",
-   "code": "TNC213-R1",
-   "title": "AWS Escape Room: Exam Prep for AWS Certified AI Practitioner",
-   "abstract": "Prepare for AWS Certified AI Practitioner by playing this 3D virtual escape room game where Certification prep meets competitive gaming. Generative AI knowledge unlocks doors here. Enter a narrative-driven 3D world, choose your avatar, and tackle progressively harder puzzles tied to AWS Certified AI Practitioner exam domains. Each locked room blends exam-style questions with hands-on labs covering foundation models, responsible AI, prompt engineering, and agentic workflows. Collaborate with teammates, solve challenges under time pressure, and race to escape before your peers to top the leaderboard. ",
-   "type": "Exam prep",
-   "length": 120,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Exam prep"
-    ],
-    "Level": [
-     "200 – Intermediate"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Artificial Intelligence"
-    ],
-    "AreaofInterest": [
-     "Generative AI",
-     "Agentic AI",
-     "Training & Certification"
-    ],
-    "Services": [
-     "Amazon Bedrock",
-     "Amazon Quick"
-    ],
-    "Venue": [
-     "Caesars Palace"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Alie Ibarra",
-     "title": "Technical Program Manager",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1791232239515001CE7E",
-     "date": "2026-12-02",
-     "startTime": "12:00",
-     "endTime": "14:00",
-     "utcStartTime": "2026/12/02 20:00:00",
-     "utcEndTime": "2026/12/02 22:00:00",
-     "length": 120,
-     "room": "Caesars Palace | Emperors Level | Emperors Ballroom II",
-     "roomId": "1789591919892004bpdn",
-     "capacity": "82",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1787372698261001Ch3K",
    "code": "TNC214-R1",
    "title": "AWS Escape Room: Exam Prep for AWS Certified Cloud Practitioner",
@@ -32572,6 +32499,79 @@
      "endTime": "14:00",
      "utcStartTime": "2026/11/30 20:00:00",
      "utcEndTime": "2026/11/30 22:00:00",
+     "length": 120,
+     "room": "Caesars Palace | Emperors Level | Emperors Ballroom II",
+     "roomId": "1789591919892004bpdn",
+     "capacity": "82",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1789063627256001RA7J",
+   "code": "TNC213-R1",
+   "title": "AWS Escape Room: Exam Prep for AWS Certified AI Practitioner",
+   "abstract": "Prepare for AWS Certified AI Practitioner by playing this 3D virtual escape room game where Certification prep meets competitive gaming. Generative AI knowledge unlocks doors here. Enter a narrative-driven 3D world, choose your avatar, and tackle progressively harder puzzles tied to AWS Certified AI Practitioner exam domains. Each locked room blends exam-style questions with hands-on labs covering foundation models, responsible AI, prompt engineering, and agentic workflows. Collaborate with teammates, solve challenges under time pressure, and race to escape before your peers to top the leaderboard. ",
+   "type": "Exam prep",
+   "length": 120,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-13T12:37:32Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Exam prep"
+    ],
+    "Level": [
+     "200 – Intermediate"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Artificial Intelligence"
+    ],
+    "AreaofInterest": [
+     "Generative AI",
+     "Agentic AI",
+     "Training & Certification"
+    ],
+    "Services": [
+     "Amazon Bedrock",
+     "Amazon Quick"
+    ],
+    "Venue": [
+     "Caesars Palace"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Alie Ibarra",
+     "title": "Technical Program Manager",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1791232239515001CE7E",
+     "date": "2026-12-02",
+     "startTime": "12:00",
+     "endTime": "14:00",
+     "utcStartTime": "2026/12/02 20:00:00",
+     "utcEndTime": "2026/12/02 22:00:00",
      "length": 120,
      "room": "Caesars Palace | Emperors Level | Emperors Ballroom II",
      "roomId": "1789591919892004bpdn",
@@ -55418,7 +55418,7 @@
    "length": 90,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-11T16:42:58Z",
+   "modified": "2026-11-13T11:31:53Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -67972,7 +67972,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-13T08:12:01Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -72406,7 +72406,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-10T19:09:09Z",
+   "modified": "2026-11-11T19:14:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -75516,7 +75516,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-13T05:44:54Z",
+   "modified": "2026-11-13T12:41:14Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -76073,15 +76073,15 @@
    },
    "speakers": [
     {
-     "name": "Alex Livingstone",
-     "title": "Principal Specialist Solutions Architect, Cloud Operations",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Phani Kumar Lingamallu",
      "title": "Pr. Partner Solution Architect",
      "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Alex Livingstone",
+     "title": "Principal Specialist Solutions Architect, Cloud Operations",
+     "company": "AWS",
      "role": "Internal Speaker"
     }
    ],
@@ -85514,7 +85514,7 @@
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-11T19:14:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -125796,7 +125796,7 @@
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-11T19:14:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -130422,7 +130422,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-11T19:14:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -130465,18 +130465,6 @@
    },
    "speakers": [
     {
-     "name": "Alessandro Micco",
-     "title": "Partner Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Pasha Digori",
-     "title": "EMEA Scale PSA",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Luana Fares",
      "title": "Solutions Architect",
      "company": "Amazon Web Services",
@@ -130489,9 +130477,21 @@
      "role": "Internal Speaker"
     },
     {
+     "name": "Alessandro Micco",
+     "title": "Partner Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
      "name": "Sid Ahmed boudboub",
      "title": "Senior Partner Solutions Architect",
      "company": "Amazon Web Services EMEA France",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Pasha Digori",
+     "title": "EMEA Scale PSA",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     }
    ],
@@ -130522,7 +130522,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-11T19:14:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -130565,18 +130565,6 @@
    },
    "speakers": [
     {
-     "name": "Alessandro Micco",
-     "title": "Partner Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Pasha Digori",
-     "title": "EMEA Scale PSA",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Luana Fares",
      "title": "Solutions Architect",
      "company": "Amazon Web Services",
@@ -130589,9 +130577,21 @@
      "role": "Internal Speaker"
     },
     {
+     "name": "Alessandro Micco",
+     "title": "Partner Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
      "name": "Sid Ahmed boudboub",
      "title": "Senior Partner Solutions Architect",
      "company": "Amazon Web Services EMEA France",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Pasha Digori",
+     "title": "EMEA Scale PSA",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     }
    ],
@@ -140282,90 +140282,6 @@
    ]
   },
   {
-   "sessionID": "1790358224772001iPKJ",
-   "code": "MAM205-R1",
-   "title": "Move code modernization at scale from one-time to continuous",
-   "abstract": "Technical debt doesn't stop accumulating when a modernization project ends. Across thousands of repos, outdated dependencies, framework drift, and security gaps compound daily. So why treat code modernization at scale as a one-time campaign? In this chalk talk, we'll explore how AWS Transform is evolving into always-on, autonomous remediation at portfolio scale. We'll dig into what continuous mode looks like in practice, what early enterprise customers are seeing, and how this changes the way your teams think about maintaining code health over time. Bring your questions.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-10T07:04:51Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "200 – Intermediate"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Artificial Intelligence",
-     "Migration & Modernization"
-    ],
-    "AreaofInterest": [
-     "Cost Optimization",
-     "Automation",
-     "Agentic AI"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "DevOps Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "AWS Transform",
-     "Kiro"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Varun Kulkarni",
-     "title": "Sr. Product Manager- Technical",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Moshe Barlev",
-     "title": "Sr. Worldwide Specialist - Agentic AI",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360382708001AzJv",
-     "date": "2026-11-30",
-     "startTime": "13:30",
-     "endTime": "14:30",
-     "utcStartTime": "2026/11/30 21:30:00",
-     "utcEndTime": "2026/11/30 22:30:00",
-     "length": 60,
-     "room": "MGM Grand | Level 3 | Premier 309",
-     "roomId": "1789591920464003baYW",
-     "capacity": "78",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442247072001cBmg",
    "code": "MAM205-R",
    "title": "Move code modernization at scale from one-time to continuous",
@@ -140443,6 +140359,90 @@
      "room": "MGM Grand | Level 3 | Room 350",
      "roomId": "1789591920582001b04E",
      "capacity": "82",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358224772001iPKJ",
+   "code": "MAM205-R1",
+   "title": "Move code modernization at scale from one-time to continuous",
+   "abstract": "Technical debt doesn't stop accumulating when a modernization project ends. Across thousands of repos, outdated dependencies, framework drift, and security gaps compound daily. So why treat code modernization at scale as a one-time campaign? In this chalk talk, we'll explore how AWS Transform is evolving into always-on, autonomous remediation at portfolio scale. We'll dig into what continuous mode looks like in practice, what early enterprise customers are seeing, and how this changes the way your teams think about maintaining code health over time. Bring your questions.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-13T12:26:29Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "200 – Intermediate"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Artificial Intelligence",
+     "Migration & Modernization"
+    ],
+    "AreaofInterest": [
+     "Cost Optimization",
+     "Automation",
+     "Agentic AI"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "DevOps Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "AWS Transform",
+     "Kiro"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Moshe Barlev",
+     "title": "Sr. Worldwide Specialist - Agentic AI",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Varun Kulkarni",
+     "title": "Sr. Product Manager- Technical",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360382708001AzJv",
+     "date": "2026-11-30",
+     "startTime": "13:30",
+     "endTime": "14:30",
+     "utcStartTime": "2026/11/30 21:30:00",
+     "utcEndTime": "2026/11/30 22:30:00",
+     "length": 60,
+     "room": "MGM Grand | Level 3 | Premier 309",
+     "roomId": "1789591920464003baYW",
+     "capacity": "78",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -149506,7 +149506,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-13T10:13:54Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -149550,15 +149550,15 @@
    },
    "speakers": [
     {
-     "name": "Santhosh Arunuri",
-     "title": "Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Nasan Tsengeg",
      "title": "Sr. Product Manager - Technical",
      "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Santhosh Arunuri",
+     "title": "Solutions Architect",
+     "company": "AWS",
      "role": "Internal Speaker"
     }
    ],
@@ -153334,7 +153334,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-13T06:23:01Z",
+   "modified": "2026-11-13T08:34:39Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -163575,7 +163575,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-13T05:43:59Z",
+   "modified": "2026-11-13T11:28:56Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
