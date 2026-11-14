@@ -1,7 +1,7 @@
 {
  "source": "https://catalog.awsevents.com/api/sessions",
  "event": "reinvent2026",
- "fetchedAt": "2026-11-14T00:48:12Z",
+ "fetchedAt": "2026-11-14T06:42:51Z",
  "count": 2588,
  "sessions": [
   {
@@ -3598,7 +3598,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-14T06:30:17Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -3770,7 +3770,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-11T19:14:48Z",
+   "modified": "2026-11-14T03:48:47Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -4902,7 +4902,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-11T19:14:48Z",
+   "modified": "2026-11-14T04:22:15Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -8764,7 +8764,7 @@
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-11T19:14:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -16128,77 +16128,6 @@
    ]
   },
   {
-   "sessionID": "1784231859985001EJ3y",
-   "code": "TNC209-R",
-   "title": "AI Powered Business Intelligence with Amazon Quick",
-   "abstract": "Amazon Quick brings AI-powered analytics, automation, and research into a single workspace. In this bootcamp, build interactive dashboards and visualizations with Quick Sight, organize team knowledge resources in Spaces with appropriate permissions, create custom Chat Agents to surface insights conversationally, automate repetitive workflows with Quick Flows, and conduct multi-source research with proper validation. The three hands-on labs give you practical experience to apply these skills immediately in your organization ",
-   "type": "Bootcamp",
-   "length": 240,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Bootcamp"
-    ],
-    "Level": [
-     "200 – Intermediate"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Artificial Intelligence"
-    ],
-    "AreaofInterest": [
-     "Agentic AI",
-     "Training & Certification"
-    ],
-    "Services": [
-     "Amazon Quick"
-    ],
-    "Venue": [
-     "Caesars Palace"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Anabel Montero",
-     "title": "AWS Technical Trainer",
-     "company": "Instructor Enablement",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790019931733001gFYg",
-     "date": "2026-12-01",
-     "startTime": "13:30",
-     "endTime": "17:30",
-     "utcStartTime": "2026/12/01 21:30:00",
-     "utcEndTime": "2026/12/02 01:30:00",
-     "length": 240,
-     "room": "Caesars Palace | Emperors Level | Augustus Ballroom III",
-     "roomId": "1789591919856001bJJO",
-     "capacity": "200",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1784231860838001EsUm",
    "code": "TNC209-R1",
    "title": "AI Powered Business Intelligence with Amazon Quick",
@@ -16262,6 +16191,77 @@
      "length": 240,
      "room": "Caesars Palace | Emperors Level | Augustus Ballroom I",
      "roomId": "1789591919844001bJRZ",
+     "capacity": "200",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1784231859985001EJ3y",
+   "code": "TNC209-R",
+   "title": "AI Powered Business Intelligence with Amazon Quick",
+   "abstract": "Amazon Quick brings AI-powered analytics, automation, and research into a single workspace. In this bootcamp, build interactive dashboards and visualizations with Quick Sight, organize team knowledge resources in Spaces with appropriate permissions, create custom Chat Agents to surface insights conversationally, automate repetitive workflows with Quick Flows, and conduct multi-source research with proper validation. The three hands-on labs give you practical experience to apply these skills immediately in your organization ",
+   "type": "Bootcamp",
+   "length": 240,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-14T06:33:13Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Bootcamp"
+    ],
+    "Level": [
+     "200 – Intermediate"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Artificial Intelligence"
+    ],
+    "AreaofInterest": [
+     "Agentic AI",
+     "Training & Certification"
+    ],
+    "Services": [
+     "Amazon Quick"
+    ],
+    "Venue": [
+     "Caesars Palace"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Anabel Montero",
+     "title": "AWS Technical Trainer",
+     "company": "Instructor Enablement",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790019931733001gFYg",
+     "date": "2026-12-01",
+     "startTime": "13:30",
+     "endTime": "17:30",
+     "utcStartTime": "2026/12/01 21:30:00",
+     "utcEndTime": "2026/12/02 01:30:00",
+     "length": 240,
+     "room": "Caesars Palace | Emperors Level | Augustus Ballroom III",
+     "roomId": "1789591919856001bJJO",
      "capacity": "200",
      "inPersonTime": true,
      "virtualTime": false,
@@ -29039,7 +29039,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-14T00:24:21Z",
+   "modified": "2026-11-14T05:09:44Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -34511,88 +34511,6 @@
    ]
   },
   {
-   "sessionID": "1784231861152001EaU1",
-   "code": "TNC212-R1",
-   "title": "AWS Partner: Build the AgentCore agent your demo pretends to be",
-   "abstract": "This bootcamp is for AWS Partners only. A good prompt gets you a chatbot. Everything else on AgentCore turns it into an agent. Build a customer support agent from scratch and progressively add persistent memory so it stops forgetting, tools through Gateway to reach real data, and Cedar policies that enforce boundaries, plus production traces, quality evaluations, and AI-driven optimization with A/B testing. Leave with hands-on experience on Amazon Bedrock AgentCore and ready to show customers what separates a chatbot from an agent worth paying for. You must bring your laptop to participate. ",
-   "type": "Bootcamp",
-   "length": 240,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Bootcamp"
-    ],
-    "Level": [
-     "200 – Intermediate"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Artificial Intelligence"
-    ],
-    "AreaofInterest": [
-     "Partner Enablement",
-     "Agentic AI",
-     "Training & Certification"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Bedrock"
-    ],
-    "Venue": [
-     "Caesars Palace"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Parvesh Chopra",
-     "title": "Sr. Scale Programs Strategist",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Pratik Patil",
-     "title": "Global Partner Enablement",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790980102779001XN7P",
-     "date": "2026-12-02",
-     "startTime": "08:30",
-     "endTime": "12:30",
-     "utcStartTime": "2026/12/02 16:30:00",
-     "utcEndTime": "2026/12/02 20:30:00",
-     "length": 240,
-     "room": "Caesars Palace | Emperors Level | Emperors Ballroom I",
-     "roomId": "1789591919883001b5WM",
-     "capacity": "82",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1784231860459001EpGt",
    "code": "TNC212-R",
    "title": "AWS Partner: Build the AgentCore agent your demo pretends to be",
@@ -34664,6 +34582,88 @@
      "endTime": "12:30",
      "utcStartTime": "2026/11/30 16:30:00",
      "utcEndTime": "2026/11/30 20:30:00",
+     "length": 240,
+     "room": "Caesars Palace | Emperors Level | Emperors Ballroom I",
+     "roomId": "1789591919883001b5WM",
+     "capacity": "82",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1784231861152001EaU1",
+   "code": "TNC212-R1",
+   "title": "AWS Partner: Build the AgentCore agent your demo pretends to be",
+   "abstract": "This bootcamp is for AWS Partners only. A good prompt gets you a chatbot. Everything else on AgentCore turns it into an agent. Build a customer support agent from scratch and progressively add persistent memory so it stops forgetting, tools through Gateway to reach real data, and Cedar policies that enforce boundaries, plus production traces, quality evaluations, and AI-driven optimization with A/B testing. Leave with hands-on experience on Amazon Bedrock AgentCore and ready to show customers what separates a chatbot from an agent worth paying for. You must bring your laptop to participate. ",
+   "type": "Bootcamp",
+   "length": 240,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-14T04:38:25Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Bootcamp"
+    ],
+    "Level": [
+     "200 – Intermediate"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Artificial Intelligence"
+    ],
+    "AreaofInterest": [
+     "Partner Enablement",
+     "Agentic AI",
+     "Training & Certification"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Bedrock"
+    ],
+    "Venue": [
+     "Caesars Palace"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Parvesh Chopra",
+     "title": "Sr. Scale Programs Strategist",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Pratik Patil",
+     "title": "Global Partner Enablement",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790980102779001XN7P",
+     "date": "2026-12-02",
+     "startTime": "08:30",
+     "endTime": "12:30",
+     "utcStartTime": "2026/12/02 16:30:00",
+     "utcEndTime": "2026/12/02 20:30:00",
      "length": 240,
      "room": "Caesars Palace | Emperors Level | Emperors Ballroom I",
      "roomId": "1789591919883001b5WM",
@@ -35474,7 +35474,7 @@
    "length": 240,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-11T20:30:30Z",
+   "modified": "2026-11-14T06:18:24Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -43800,7 +43800,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-11T19:14:48Z",
+   "modified": "2026-11-14T05:31:30Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -48173,7 +48173,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-14T01:41:04Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -48226,14 +48226,14 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "vtbloise Bloise",
-     "title": "Solutions Architect Manager",
+     "name": "Vanitha Sugumaran",
+     "title": "Sr. Manager Solutions Architect",
      "company": "Amazon",
      "role": "Internal Speaker"
     },
     {
-     "name": "Vanitha Sugumaran",
-     "title": "Sr. Manager Solutions Architect",
+     "name": "vtbloise Bloise",
+     "title": "Solutions Architect Manager",
      "company": "Amazon",
      "role": "Internal Speaker"
     },
@@ -64160,7 +64160,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-13T22:05:42Z",
+   "modified": "2026-11-14T03:31:03Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -64961,7 +64961,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-11T00:26:01Z",
+   "modified": "2026-11-14T01:39:43Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -75591,7 +75591,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-14T00:20:09Z",
+   "modified": "2026-11-14T06:27:57Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -84765,7 +84765,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-13T17:17:30Z",
+   "modified": "2026-11-14T05:58:08Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -85958,7 +85958,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-14T01:50:14Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -119287,7 +119287,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-11T17:13:16Z",
+   "modified": "2026-11-11T19:14:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -120397,7 +120397,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-11T17:12:59Z",
+   "modified": "2026-11-11T19:14:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -123879,7 +123879,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-11T19:14:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -123915,10 +123915,10 @@
    },
    "speakers": [
     {
-     "name": "Amanda Lester",
-     "title": "Principal WW Gen AI GTM Specialist",
-     "company": "AWS",
-     "role": "Internal Speaker"
+     "name": "Yash Parikh",
+     "title": "Applied Science Manager",
+     "company": "Amazon.com",
+     "role": "External Speaker"
     },
     {
      "name": "Mihir Patel",
@@ -123927,10 +123927,10 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Yash Parikh",
-     "title": "Applied Science Manager",
-     "company": "Amazon.com",
-     "role": "External Speaker"
+     "name": "Amanda Lester",
+     "title": "Principal WW Gen AI GTM Specialist",
+     "company": "AWS",
+     "role": "Internal Speaker"
     }
    ],
    "times": [
@@ -124837,7 +124837,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-14T02:35:08Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -124870,15 +124870,15 @@
    },
    "speakers": [
     {
-     "name": "Dmitri Pavlichin",
-     "title": "Principal Applied Scientist",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Bryan Wilkinson",
      "title": "Principal Engineer",
      "company": "Amazon",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Dmitri Pavlichin",
+     "title": "Principal Applied Scientist",
+     "company": "AWS",
      "role": "Internal Speaker"
     }
    ],
@@ -137964,107 +137964,6 @@
    ]
   },
   {
-   "sessionID": "1790358239823001ib8I",
-   "code": "MAM309-R1",
-   "title": "Modernize legacy batch into event-driven with AWS Transform & Kiro",
-   "abstract": "Batch processing has powered critical enterprise workloads for decades, from mainframes running COBOL and PL/I to distributed systems on legacy Java. The trade-off? Overnight batch cycles that business processes can no longer afford. In this session, reimagine batch as event-driven microservices using Domain-Driven Design. AWS Transform reverse-engineers business rules from legacy code across platforms with full traceability, and Kiro translates that understanding into microservices specifications, generates production code, and creates Infrastructure as Code for AWS deployment. Leave with a repeatable pattern for reimagining batch workloads as real-time, event-driven microservices built on business rules that took decades to refine. Laptop required.",
-   "type": "Builders' session",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-11T20:10:33Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Builders' session"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Migration & Modernization"
-    ],
-    "AreaofInterest": [
-     "Innovation & Transformation",
-     "Agentic AI"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "IT Professional / Technical Manager",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "AWS Transform",
-     "Kiro"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Subramanian (Subu) Karuppiah",
-     "title": "Sr Specialist SA",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Rene Simoes",
-     "title": "Sr. Geo SSA, Mainframe Modernization",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Ramachadra Desaraj",
-     "title": "Senior Specialist Solution Architect Mainframe",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Pablo Alonso Prieto",
-     "title": "Sr. ProServe Cloud Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Sourav Sarkar",
-     "title": "Senior Worldwide Specialist Solutions Architect",
-     "company": "Amazon Web Services (AWS)",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360381396001An4z",
-     "date": "2026-12-01",
-     "startTime": "12:00",
-     "endTime": "13:00",
-     "utcStartTime": "2026/12/01 20:00:00",
-     "utcEndTime": "2026/12/01 21:00:00",
-     "length": 60,
-     "room": "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Builders' Session 1",
-     "roomId": "1789591920413001bvC3",
-     "capacity": "50",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442229480001c41d",
    "code": "MAM309-R",
    "title": "Modernize legacy batch into event-driven with AWS Transform & Kiro",
@@ -138158,6 +138057,107 @@
      "length": 60,
      "room": "Caesars Palace | Promenade South | Octavius 4 | Content Hub | Builders' Session",
      "roomId": "1789591920108001bzg8",
+     "capacity": "50",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358239823001ib8I",
+   "code": "MAM309-R1",
+   "title": "Modernize legacy batch into event-driven with AWS Transform & Kiro",
+   "abstract": "Batch processing has powered critical enterprise workloads for decades, from mainframes running COBOL and PL/I to distributed systems on legacy Java. The trade-off? Overnight batch cycles that business processes can no longer afford. In this session, reimagine batch as event-driven microservices using Domain-Driven Design. AWS Transform reverse-engineers business rules from legacy code across platforms with full traceability, and Kiro translates that understanding into microservices specifications, generates production code, and creates Infrastructure as Code for AWS deployment. Leave with a repeatable pattern for reimagining batch workloads as real-time, event-driven microservices built on business rules that took decades to refine. Laptop required.",
+   "type": "Builders' session",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-14T02:29:02Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Builders' session"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Migration & Modernization"
+    ],
+    "AreaofInterest": [
+     "Innovation & Transformation",
+     "Agentic AI"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "IT Professional / Technical Manager",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "AWS Transform",
+     "Kiro"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Subramanian (Subu) Karuppiah",
+     "title": "Sr Specialist SA",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Rene Simoes",
+     "title": "Sr. Geo SSA, Mainframe Modernization",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Ramachadra Desaraj",
+     "title": "Senior Specialist Solution Architect Mainframe",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Pablo Alonso Prieto",
+     "title": "Sr. ProServe Cloud Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Sourav Sarkar",
+     "title": "Senior Worldwide Specialist Solutions Architect",
+     "company": "Amazon Web Services (AWS)",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360381396001An4z",
+     "date": "2026-12-01",
+     "startTime": "12:00",
+     "endTime": "13:00",
+     "utcStartTime": "2026/12/01 20:00:00",
+     "utcEndTime": "2026/12/01 21:00:00",
+     "length": 60,
+     "room": "MGM Grand | Level 3 | Chairman's 363 | Content Hub | Builders' Session 1",
+     "roomId": "1789591920413001bvC3",
      "capacity": "50",
      "inPersonTime": true,
      "virtualTime": false,
@@ -147961,7 +147961,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-14T02:29:02Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -154361,7 +154361,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-14T06:31:17Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -154402,14 +154402,14 @@
    },
    "speakers": [
     {
-     "name": "Bill Tarr",
-     "title": "Principal Partner Solutions Architect",
+     "name": "Anubhav Sharma",
+     "title": "Principal Solutions Architect",
      "company": "AWS",
      "role": "Internal Speaker"
     },
     {
-     "name": "Anubhav Sharma",
-     "title": "Principal Solutions Architect",
+     "name": "Bill Tarr",
+     "title": "Principal Partner Solutions Architect",
      "company": "AWS",
      "role": "Internal Speaker"
     }
@@ -163739,87 +163739,6 @@
    ]
   },
   {
-   "sessionID": "1790358231191001iOIF",
-   "code": "NET203-R1",
-   "title": "Resolve it all: Build hybrid DNS architectures on AWS",
-   "abstract": "Your enterprise runs workloads across multiple Amazon VPCs while maintaining connectivity to on-premises data centers, and DNS is the glue holding it all together. In this workshop, build a realistic hybrid DNS architecture using the latest Amazon Route 53 capabilities. Participants will learn how to centralize DNS configurations with Route 53 Profiles, replace conditional forwarding rules with native delegation using Resolver Delegation Endpoints, and detect and block DNS-based threats with DNS Firewall. Bring your laptop and resolve hybrid DNS once and for all.",
-   "type": "Workshop",
-   "length": 120,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Workshop"
-    ],
-    "Level": [
-     "200 – Intermediate"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Networking & Content Delivery"
-    ],
-    "AreaofInterest": [
-     "Network & Infrastructure Security"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "IT Professional / Technical Manager",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Route 53"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Kunj Thacker",
-     "title": "Senior Technical Account Manager",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Mevlit Mustafa",
-     "title": "Senior Networking Specialist Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360384255001AUFs",
-     "date": "2026-11-30",
-     "startTime": "15:30",
-     "endTime": "17:30",
-     "utcStartTime": "2026/11/30 23:30:00",
-     "utcEndTime": "2026/12/01 01:30:00",
-     "length": 120,
-     "room": "MGM Grand | Level 3 | Premier 313",
-     "roomId": "1789591920487004bQOS",
-     "capacity": "140",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442282930001cclr",
    "code": "NET203-R",
    "title": "Resolve it all: Build hybrid DNS architectures on AWS",
@@ -163894,6 +163813,87 @@
      "room": "MGM Grand | Level 1 | Grand 116",
      "roomId": "1789591920281004b3ml",
      "capacity": "84",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358231191001iOIF",
+   "code": "NET203-R1",
+   "title": "Resolve it all: Build hybrid DNS architectures on AWS",
+   "abstract": "Your enterprise runs workloads across multiple Amazon VPCs while maintaining connectivity to on-premises data centers, and DNS is the glue holding it all together. In this workshop, build a realistic hybrid DNS architecture using the latest Amazon Route 53 capabilities. Participants will learn how to centralize DNS configurations with Route 53 Profiles, replace conditional forwarding rules with native delegation using Resolver Delegation Endpoints, and detect and block DNS-based threats with DNS Firewall. Bring your laptop and resolve hybrid DNS once and for all.",
+   "type": "Workshop",
+   "length": 120,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-14T06:22:35Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Workshop"
+    ],
+    "Level": [
+     "200 – Intermediate"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Networking & Content Delivery"
+    ],
+    "AreaofInterest": [
+     "Network & Infrastructure Security"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "IT Professional / Technical Manager",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Route 53"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Mevlit Mustafa",
+     "title": "Senior Networking Specialist Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Kunj Thacker",
+     "title": "Senior Technical Account Manager",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360384255001AUFs",
+     "date": "2026-11-30",
+     "startTime": "15:30",
+     "endTime": "17:30",
+     "utcStartTime": "2026/11/30 23:30:00",
+     "utcEndTime": "2026/12/01 01:30:00",
+     "length": 120,
+     "room": "MGM Grand | Level 3 | Premier 313",
+     "roomId": "1789591920487004bQOS",
+     "capacity": "140",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -184166,7 +184166,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-11T06:46:48Z",
+   "modified": "2026-11-14T02:35:08Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -193278,7 +193278,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-13T19:42:12Z",
+   "modified": "2026-11-14T03:31:03Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -202131,92 +202131,6 @@
    ]
   },
   {
-   "sessionID": "1790358250413001iZPI",
-   "code": "COP322-R1",
-   "title": "Where's the slowdown? Build observability from frontend to databases",
-   "abstract": "When an application slows down, the cause can hide anywhere from the frontend to the database, and siloed tools make teams guess. In this workshop, you will build full-stack observability across application, infrastructure, and database layers, bringing RDS and Aurora signals and database logs into one store and correlating them with audit activity. You decide what to trace and build the dashboards that connect a symptom to its root cause. Leave with skills to trace any slowdown across layers in a single pane.",
-   "type": "Workshop",
-   "length": 120,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Workshop"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Cloud Operations",
-     "Databases"
-    ],
-    "AreaofInterest": [
-     "Monitoring & Observability",
-     "Automation",
-     "DevOps"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "DevOps Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Aurora",
-     "Amazon CloudWatch",
-     "Amazon Relational Database Service (Amazon RDS)"
-    ],
-    "Venue": [
-     "Wynn/Encore"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Samir Behara",
-     "title": "Senior Delivery Consultant",
-     "company": "Amazon Web Services (AWS)",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Sasi Kiran Malladi",
-     "title": "Principal Technical Account Manager",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360403108001AqOt",
-     "date": "2026-12-02",
-     "startTime": "15:30",
-     "endTime": "17:30",
-     "utcStartTime": "2026/12/02 23:30:00",
-     "utcEndTime": "2026/12/03 01:30:00",
-     "length": 120,
-     "room": "Wynn/Encore | Upper Convention Promenade | Cristal 7",
-     "roomId": "1789591921464001bbZh",
-     "capacity": "140",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442277331001ckcW",
    "code": "COP322-R",
    "title": "Where's the slowdown? Build observability from frontend to databases",
@@ -202225,7 +202139,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-11T19:14:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -202296,6 +202210,92 @@
      "room": "MGM Grand | Level 1 | Grand 120",
      "roomId": "1789591920314001bwbi",
      "capacity": "84",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358250413001iZPI",
+   "code": "COP322-R1",
+   "title": "Where's the slowdown? Build observability from frontend to databases",
+   "abstract": "When an application slows down, the cause can hide anywhere from the frontend to the database, and siloed tools make teams guess. In this workshop, you will build full-stack observability across application, infrastructure, and database layers, bringing RDS and Aurora signals and database logs into one store and correlating them with audit activity. You decide what to trace and build the dashboards that connect a symptom to its root cause. Leave with skills to trace any slowdown across layers in a single pane.",
+   "type": "Workshop",
+   "length": 120,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-13T16:18:06Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Workshop"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Cloud Operations",
+     "Databases"
+    ],
+    "AreaofInterest": [
+     "Monitoring & Observability",
+     "Automation",
+     "DevOps"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "DevOps Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Aurora",
+     "Amazon CloudWatch",
+     "Amazon Relational Database Service (Amazon RDS)"
+    ],
+    "Venue": [
+     "Wynn/Encore"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Samir Behara",
+     "title": "Senior Delivery Consultant",
+     "company": "Amazon Web Services (AWS)",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Sasi Kiran Malladi",
+     "title": "Principal Technical Account Manager",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360403108001AqOt",
+     "date": "2026-12-02",
+     "startTime": "15:30",
+     "endTime": "17:30",
+     "utcStartTime": "2026/12/02 23:30:00",
+     "utcEndTime": "2026/12/03 01:30:00",
+     "length": 120,
+     "room": "Wynn/Encore | Upper Convention Promenade | Cristal 7",
+     "roomId": "1789591921464001bbZh",
+     "capacity": "140",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
