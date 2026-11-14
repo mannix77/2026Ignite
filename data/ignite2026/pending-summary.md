@@ -1,0 +1,101 @@
+<!-- summary:43639187907-1 -->
+Added 224 · removed 0 · changed 0 · 33 extra runs added
+
+**Added**
+- `BRK202` Automate the Follow-Through with Autopilot
+- `BRK203` Copilot Code: Build custom solutions for your unique needs
+- `BRK207` Agentic productivity with new Copilot capabilities in OneNote
+- `BRK208` From Conversation to Completion: How Teams and Copilot move work ahead
+- `BRK209` Beyond the Agent: Building Digital Teammates in Microsoft Teams
+- `BRK211` Secure and Govern Microsoft Copilot Chat and Cowork
+- `BRK212` Secure the Follow-Through: Trusting Autopilot at Scale
+- `BRK213` Defend Against External Threats in Teams
+- `BRK215` Your On-prem estate: Act now. Reduce risk.
+- `BRK217` Real-World AI Transformation with Copilot in SharePoint​‌
+- `BRK220` Copilot Connectors: Unlock your enterprise knowledge and workflows
+- `BRK221` Govern Once, Use Everywhere: Scale Copilot with Microsoft Plugin Registry
+- `BRK222` What's new in Microsoft Copilot for functional roles
+- `BRK223` Getting work done with Copilot as a small business
+- `BRK226` Built for work: What sets Copilot apart
+- `BRK230` How customers are unlocking value & growth with Copilot
+- `BRK233` Beyond the Benchmark: Evaluating Copilot and AI Tools
+- `BRK236` Agents in Copilot: help every user get more done
+- `BRK237` Plugins for Copilot: build once, govern once, use everywhere
+- `BRK239` Employee Self-Service to Enterprise Scale: Managing Intelligent Agents
+- `BRK248` Trust at scale: Governance lessons from Microsoft
+- `BRK250` Govern AI everywhere: From open frameworks to enterprise control
+- `BRK251` Agents in production: Observe, evaluate, and optimize with Foundry
+- `BRK253` Operate AI at enterprise scale with Microsoft Foundry
+- `BRK257` Inside Microsoft: How we scale expertise with Foundry agents
+- `BRK259` See how the Microsoft Copilot harness powers Copilot Studio
+- `BRK260` The next evolution of AI FinOps: From cost to value
+- `BRK261` From tool to teammate: Persistent agents for shared processes in Copilot Studio
+- `BRK262` Scale agents, not risk: Governance and FinOps for the enterprise
+- `BRK264` Pick the right harness to build your agents with using Copilot Studio
+- `BRK266` Maximize your Copilot Investment: Scale with flexibility and control
+- `BRK270` Ship more software with parallel agents in the GitHub Copilot app
+- `BRK274` Hand off the task or take the keyboard in VS Code
+- `BRK275` What should you build when you can build anything?
+- `BRK277` Hack the harness: Copilot SDK agents from prototype to production
+- `BRK280` Designing an agent harness that orchestrates models
+- `BRK281` Securing coding agents and their code
+- `BRK282` Always-on agentic security platform for code security
+- `BRK284` Production-ready Microsoft Foundry agents with Azure AI Landing Zones
+- `BRK287` Trusted code at scale, from legacy to AI
+- `BRK288` Visual Studio governance for the agentic era
+- `BRK290` Humans, agents, and a game plan: AI governance with GitHub Enterprise
+- `BRK292` Getting the most out of GitHub Copilot and Azure DevOps
+- `BRK296` Work IQ governance and trust: Control the intelligence layer
+- `BRK298` Bringing conversational analytics to where decisions happen
+- `BRK300` Building agentic retrieval: From DIY to Foundry IQ
+- `BRK302` Build personalized AI experiences with Work IQ
+- `BRK303` Secure your business presence in the AI web with Web IQ
+- `BRK305` Microsoft IQ: Build trusted AI agents that know your business
+- `BRK306` Fabric IQ: Trusted business context for enterprise AI
+- `BRK307` Foundry IQ: Knowledge graphs for better enterprise context
+- `BRK308` How Microsoft IQ shapes the cost of enterprise AI
+- `BRK309` Optimizing AI agents to meet your goals: Grounding with Web IQ
+- `BRK310` The evaluation loop for Microsoft IQ
+- `BRK313` Build with Web IQ: From API call to cited answer
+- `BRK316` Winning the Race Against Time with Autonomous Protection
+- `BRK317` What the Frontlines Reveal About Modern Security
+- `BRK318` Project Perception: How Agentic Security Works
+- `BRK319` Find and fix code vulnerabilities faster with Codename MDASH
+- `BRK320` Agentic Security Unfiltered with Allie Mellen: Hype vs. Reality
+- …and 164 more
+
+**Extra runs added**
+- `LAB654` Copilot Connectors: Connect once. Use enterprise knowledge everywhere.
+- `LAB654` Copilot Connectors: Connect once. Use enterprise knowledge everywhere.
+- `LAB654` Copilot Connectors: Connect once. Use enterprise knowledge everywhere.
+- `LAB660` Configuring, monitoring, and managing AI spend with Agent 365
+- `LAB660` Configuring, monitoring, and managing AI spend with Agent 365
+- `LAB660` Configuring, monitoring, and managing AI spend with Agent 365
+- `LAB664` Build agentic document workflows with Content Understanding
+- `LAB664` Build agentic document workflows with Content Understanding
+- `LAB664` Build agentic document workflows with Content Understanding
+- `LAB670` Build your first Microsoft IQ playbook
+- `LAB682` Can't secure what you can't see. Find every AI agent in your org
+- `LAB682` Can't secure what you can't see. Find every AI agent in your org
+- `LAB683` Secure local AI agents with end-to-end threat protection
+- `LAB683` Secure local AI agents with end-to-end threat protection
+- `LAB683` Secure local AI agents with end-to-end threat protection
+- `LAB690` Ship AI apps fast with Rayfin, a managed backend as a service
+- `LAB690` Ship AI apps fast with Rayfin, a managed backend as a service
+- `LAB690` Ship AI apps fast with Rayfin, a managed backend as a service
+- `LAB691` Build an AI-ready data foundation with Microsoft OneLake
+- `LAB691` Build an AI-ready data foundation with Microsoft OneLake
+- `LAB691` Build an AI-ready data foundation with Microsoft OneLake
+- `LAB692` Build a grounded AI agent with Azure HorizonDB
+- `LAB692` Build a grounded AI agent with Azure HorizonDB
+- `LAB692` Build a grounded AI agent with Azure HorizonDB
+- `LAB712` Strengthen endpoint protection from onboarding to offboarding
+- `LAB712` Strengthen endpoint protection from onboarding to offboarding
+- `LAB712` Strengthen endpoint protection from onboarding to offboarding
+- `LAB724` Govern your estate with Azure Arc and Azure Resource Manager MCP
+- `LAB724` Govern your estate with Azure Arc and Azure Resource Manager MCP
+- `LAB724` Govern your estate with Azure Arc and Azure Resource Manager MCP
+- `LAB725` Hands-on: Network monitoring and troubleshooting
+- `LAB725` Hands-on: Network monitoring and troubleshooting
+- `LAB725` Hands-on: Network monitoring and troubleshooting
+
