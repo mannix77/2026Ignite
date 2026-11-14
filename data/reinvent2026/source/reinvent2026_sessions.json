@@ -1,7 +1,7 @@
 {
  "source": "https://catalog.awsevents.com/api/sessions",
  "event": "reinvent2026",
- "fetchedAt": "2026-11-14T12:43:18Z",
+ "fetchedAt": "2026-11-14T18:42:49Z",
  "count": 2588,
  "sessions": [
   {
@@ -10663,7 +10663,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-13T21:45:48Z",
+   "modified": "2026-11-14T16:04:57Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -29039,7 +29039,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-14T11:44:45Z",
+   "modified": "2026-11-14T17:44:27Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -35474,7 +35474,7 @@
    "length": 240,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-14T06:18:24Z",
+   "modified": "2026-11-14T14:55:39Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -57568,12 +57568,12 @@
    ]
   },
   {
-   "sessionID": "1790358224953001iUVo",
-   "code": "SVS304-R1",
-   "title": "Building event-driven architectures",
-   "abstract": "Event-driven architectures help development teams operate more independently, release features faster, and build more scalable applications. In this workshop, learn the fundamentals of event-driven design using Amazon SNS, Amazon SQS, AWS Lambda, Amazon EventBridge, and more. Through hands-on exercises, discover how to choose the right AWS messaging and eventing service for your use case, design loosely coupled systems that scale independently, and optimize for both cost and performance. Whether you're starting your event-driven journey or refining existing patterns, you'll leave with practical skills you can apply immediately. You must bring your laptop to participate.",
-   "type": "Workshop",
-   "length": 120,
+   "sessionID": "1780441462569001G7iM",
+   "code": "API402",
+   "title": "Building event-driven architectures in the age of AI agents",
+   "abstract": "Event-driven architectures have powered Serverless applications for a decade. Now AI agents bring non-deterministic producers, multi-step reasoning chains, and agent-to-agent coordination via events. Learn how the patterns you already know, such as queues, events, and retries, evolve when your consumers are autonomous agents rather than just microservices.",
+   "type": "Breakout session",
+   "length": 60,
    "status": "Accepted",
    "published": 1,
    "modified": "2026-11-09T23:53:43Z",
@@ -57583,39 +57583,34 @@
      "No"
     ],
     "Type": [
-     "Workshop"
+     "Breakout session"
     ],
     "Level": [
-     "300 – Advanced"
+     "400 – Expert"
     ],
     "Features": [
-     "Customer story",
-     "Hands-on"
+     "Lecture-style"
     ],
     "Topic": [
-     "Serverless"
+     "Application Integration"
     ],
     "AreaofInterest": [
-     "Event-Driven Architecture",
-     "Lambda-Based Applications",
-     "Cost Optimization"
+     "Event-Driven Architecture"
     ],
     "Role": [
      "Developer / Engineer",
-     "DevOps Engineer",
+     "IT Professional / Technical Manager",
      "Solution / Systems Architect"
     ],
     "Services": [
      "Amazon EventBridge",
-     "Amazon Simple Queue Service (Amazon SQS)",
      "AWS Lambda"
     ],
     "Venue": [
-     "Caesars Forum"
+     "Caesars Palace"
     ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
+    "Walkuponlysession": [
+     "Walk up only"
     ],
     "HideSpeakers": [
      "No"
@@ -57623,29 +57618,29 @@
    },
    "speakers": [
     {
-     "name": "Katherine Vishnevskaya",
-     "title": "Senior Solutions Architect",
+     "name": "Rajesh Kumar Pandey",
+     "title": "Principal Engineer",
      "company": "Amazon",
      "role": "Internal Speaker"
     },
     {
-     "name": "Geoffroy Weyer",
-     "title": "Senior Software Engineer",
-     "company": "AWS",
+     "name": "Tarun Rai Madan",
+     "title": "Principal Product Manager",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     }
    ],
    "times": [
     {
-     "sessionTimeID": "1790360364807001AqaR",
-     "date": "2026-12-03",
-     "startTime": "08:30",
-     "endTime": "10:30",
-     "utcStartTime": "2026/12/03 16:30:00",
-     "utcEndTime": "2026/12/03 18:30:00",
-     "length": 120,
-     "room": "Caesars Forum | Level 1 | Forum 101",
-     "roomId": "1789591919654001b1Dc",
+     "sessionTimeID": "1790025480441001CCyd",
+     "date": "2026-11-30",
+     "startTime": "11:30",
+     "endTime": "12:30",
+     "utcStartTime": "2026/11/30 19:30:00",
+     "utcEndTime": "2026/11/30 20:30:00",
+     "length": 60,
+     "room": "Caesars Palace | Promenade South | Octavius 4 | Content Hub | Purple Theater",
+     "roomId": "1789591920128004bpRQ",
      "capacity": "140",
      "inPersonTime": true,
      "virtualTime": false,
@@ -57662,7 +57657,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-11T19:14:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -57739,49 +57734,54 @@
    ]
   },
   {
-   "sessionID": "1780441462569001G7iM",
-   "code": "API402",
-   "title": "Building event-driven architectures in the age of AI agents",
-   "abstract": "Event-driven architectures have powered Serverless applications for a decade. Now AI agents bring non-deterministic producers, multi-step reasoning chains, and agent-to-agent coordination via events. Learn how the patterns you already know, such as queues, events, and retries, evolve when your consumers are autonomous agents rather than just microservices.",
-   "type": "Breakout session",
-   "length": 60,
+   "sessionID": "1790358224953001iUVo",
+   "code": "SVS304-R1",
+   "title": "Building event-driven architectures",
+   "abstract": "Event-driven architectures help development teams operate more independently, release features faster, and build more scalable applications. In this workshop, learn the fundamentals of event-driven design using Amazon SNS, Amazon SQS, AWS Lambda, Amazon EventBridge, and more. Through hands-on exercises, discover how to choose the right AWS messaging and eventing service for your use case, design loosely coupled systems that scale independently, and optimize for both cost and performance. Whether you're starting your event-driven journey or refining existing patterns, you'll leave with practical skills you can apply immediately. You must bring your laptop to participate.",
+   "type": "Workshop",
+   "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-13T16:18:06Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
      "No"
     ],
     "Type": [
-     "Breakout session"
+     "Workshop"
     ],
     "Level": [
-     "400 – Expert"
+     "300 – Advanced"
     ],
     "Features": [
-     "Lecture-style"
+     "Customer story",
+     "Hands-on"
     ],
     "Topic": [
-     "Application Integration"
+     "Serverless"
     ],
     "AreaofInterest": [
-     "Event-Driven Architecture"
+     "Event-Driven Architecture",
+     "Lambda-Based Applications",
+     "Cost Optimization"
     ],
     "Role": [
      "Developer / Engineer",
-     "IT Professional / Technical Manager",
+     "DevOps Engineer",
      "Solution / Systems Architect"
     ],
     "Services": [
      "Amazon EventBridge",
+     "Amazon Simple Queue Service (Amazon SQS)",
      "AWS Lambda"
     ],
     "Venue": [
-     "Caesars Palace"
+     "Caesars Forum"
     ],
-    "Walkuponlysession": [
-     "Walk up only"
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
     ],
     "HideSpeakers": [
      "No"
@@ -57789,29 +57789,29 @@
    },
    "speakers": [
     {
-     "name": "Rajesh Kumar Pandey",
-     "title": "Principal Engineer",
+     "name": "Katherine Vishnevskaya",
+     "title": "Senior Solutions Architect",
      "company": "Amazon",
      "role": "Internal Speaker"
     },
     {
-     "name": "Tarun Rai Madan",
-     "title": "Principal Product Manager",
-     "company": "Amazon Web Services",
+     "name": "Geoffroy Weyer",
+     "title": "Senior Software Engineer",
+     "company": "AWS",
      "role": "Internal Speaker"
     }
    ],
    "times": [
     {
-     "sessionTimeID": "1790025480441001CCyd",
-     "date": "2026-11-30",
-     "startTime": "11:30",
-     "endTime": "12:30",
-     "utcStartTime": "2026/11/30 19:30:00",
-     "utcEndTime": "2026/11/30 20:30:00",
-     "length": 60,
-     "room": "Caesars Palace | Promenade South | Octavius 4 | Content Hub | Purple Theater",
-     "roomId": "1789591920128004bpRQ",
+     "sessionTimeID": "1790360364807001AqaR",
+     "date": "2026-12-03",
+     "startTime": "08:30",
+     "endTime": "10:30",
+     "utcStartTime": "2026/12/03 16:30:00",
+     "utcEndTime": "2026/12/03 18:30:00",
+     "length": 120,
+     "room": "Caesars Forum | Level 1 | Forum 101",
+     "roomId": "1789591919654001b1Dc",
      "capacity": "140",
      "inPersonTime": true,
      "virtualTime": false,
@@ -59288,7 +59288,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-13T19:22:02Z",
+   "modified": "2026-11-14T15:51:18Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -60139,7 +60139,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-13T22:30:20Z",
+   "modified": "2026-11-14T15:23:19Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -64961,7 +64961,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-14T01:39:43Z",
+   "modified": "2026-11-14T12:49:15Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -65297,7 +65297,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-13T02:13:36Z",
+   "modified": "2026-11-14T17:40:16Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -75591,7 +75591,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-14T10:28:27Z",
+   "modified": "2026-11-14T18:02:07Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -81692,7 +81692,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-14T00:04:23Z",
+   "modified": "2026-11-14T15:20:23Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -82438,7 +82438,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-14T00:41:27Z",
+   "modified": "2026-11-14T12:52:15Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -94770,7 +94770,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-13T23:47:25Z",
+   "modified": "2026-11-14T14:33:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -101333,7 +101333,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-13T21:32:17Z",
+   "modified": "2026-11-14T16:32:46Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -103336,79 +103336,6 @@
    ]
   },
   {
-   "sessionID": "1790358232292001iU51",
-   "code": "BIZ320-R1",
-   "title": "From Reactive to Proactive: Omnichannel AI Outreach with Connect Customer",
-   "abstract": "Every organization is building AI agents for inbound, but who's automating outreach? In this workshop, you become a carrier responding to a device safety recall. Instead of posting a notice and waiting for calls, you build a system that identifies affected customers, prioritizes them by risk and value, and uses an AI agent to reach them before they ever pick up the phone. Walk away with a working proactive outreach engine and the architecture to deploy anticipatory engagement at scale.",
-   "type": "Workshop",
-   "length": 120,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-09T10:22:52Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Workshop"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Business Agents"
-    ],
-    "Services": [
-     "Amazon Connect"
-    ],
-    "Venue": [
-     "Caesars Palace"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Jeremy Puent",
-     "title": "Principal Solutions Architect - Amazon Connect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Bernie Valderrama",
-     "title": "Solutions Architect - Connect Customer",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360399740001ApIK",
-     "date": "2026-12-01",
-     "startTime": "15:00",
-     "endTime": "17:00",
-     "utcStartTime": "2026/12/01 23:00:00",
-     "utcEndTime": "2026/12/02 01:00:00",
-     "length": 120,
-     "room": "Caesars Palace | Promenade Level | Milano I",
-     "roomId": "1789591919932001bVyh",
-     "capacity": "150",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442277051001cNyP",
    "code": "BIZ320-R",
    "title": "From Reactive to Proactive: Omnichannel AI Outreach with Connect Customer",
@@ -103475,6 +103402,79 @@
      "room": "Caesars Palace | Promenade Level | Pompeian IV",
      "roomId": "1789591919964004bHlA",
      "capacity": "85",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358232292001iU51",
+   "code": "BIZ320-R1",
+   "title": "From Reactive to Proactive: Omnichannel AI Outreach with Connect Customer",
+   "abstract": "Every organization is building AI agents for inbound, but who's automating outreach? In this workshop, you become a carrier responding to a device safety recall. Instead of posting a notice and waiting for calls, you build a system that identifies affected customers, prioritizes them by risk and value, and uses an AI agent to reach them before they ever pick up the phone. Walk away with a working proactive outreach engine and the architecture to deploy anticipatory engagement at scale.",
+   "type": "Workshop",
+   "length": 120,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-14T12:52:15Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Workshop"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Business Agents"
+    ],
+    "Services": [
+     "Amazon Connect"
+    ],
+    "Venue": [
+     "Caesars Palace"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Bernie Valderrama",
+     "title": "Solutions Architect - Connect Customer",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Jeremy Puent",
+     "title": "Principal Solutions Architect - Amazon Connect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360399740001ApIK",
+     "date": "2026-12-01",
+     "startTime": "15:00",
+     "endTime": "17:00",
+     "utcStartTime": "2026/12/01 23:00:00",
+     "utcEndTime": "2026/12/02 01:00:00",
+     "length": 120,
+     "room": "Caesars Palace | Promenade Level | Milano I",
+     "roomId": "1789591919932001bVyh",
+     "capacity": "150",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -112213,7 +112213,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-11T19:14:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -112256,15 +112256,15 @@
    },
    "speakers": [
     {
-     "name": "Dan Malloy",
-     "title": "Sr. Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Shyam Sunder Kulkarni",
      "title": "Sr. Technical Account Manager",
      "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Dan Malloy",
+     "title": "Sr. Solutions Architect",
+     "company": "AWS",
      "role": "Internal Speaker"
     }
    ],
@@ -119906,7 +119906,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-13T22:05:42Z",
+   "modified": "2026-11-14T15:00:21Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -119952,14 +119952,14 @@
    },
    "speakers": [
     {
-     "name": "Yogi Barot",
-     "title": "Tech Leader, Migration",
+     "name": "Anand Bilgaiyan",
+     "title": "Senior Specialist Partner solution Architect Enterprise Transformation",
      "company": "AWS",
      "role": "Internal Speaker"
     },
     {
-     "name": "Anand Bilgaiyan",
-     "title": "Senior Specialist Partner solution Architect Enterprise Transformation",
+     "name": "Yogi Barot",
+     "title": "Tech Leader, Migration",
      "company": "AWS",
      "role": "Internal Speaker"
     }
@@ -128317,7 +128317,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-13T23:51:17Z",
+   "modified": "2026-11-14T18:24:24Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -136318,7 +136318,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-14T06:58:01Z",
+   "modified": "2026-11-14T15:15:31Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -136875,7 +136875,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-13T22:05:42Z",
+   "modified": "2026-11-14T15:21:54Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -138506,7 +138506,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-13T23:07:35Z",
+   "modified": "2026-11-14T12:52:15Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -141074,7 +141074,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-11T02:21:58Z",
+   "modified": "2026-11-14T14:59:56Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -144925,7 +144925,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-14T14:57:40Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -147961,7 +147961,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-14T02:29:02Z",
+   "modified": "2026-11-14T15:17:06Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -154361,7 +154361,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-14T06:31:17Z",
+   "modified": "2026-11-14T15:53:03Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -157212,90 +157212,6 @@
    ]
   },
   {
-   "sessionID": "1790358255277001iEq1",
-   "code": "STG339-R1",
-   "title": "Protect, recover, validate: Data resiliency for AWS storage",
-   "abstract": "Data protection strategies today must span workloads and prove recovery works before an incident demands it. In this workshop, you'll implement recovery and data protection strategies for Amazon S3, Amazon EFS, and Amazon EBS with AWS Backup. Using a financial services application architecture, you'll configure protection mechanisms for ransomware and insider threats and execute step-by-step recovery procedures against simulated cyber threats. Recover across multiple services, validate restored data integrity, and walk away with patterns to strengthen your own recovery capabilities. Participants must bring a laptop for this session.",
-   "type": "Workshop",
-   "length": 120,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Workshop"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Security & Identity",
-     "Storage"
-    ],
-    "AreaofInterest": [
-     "Data Protection",
-     "Disaster Response & Recovery",
-     "Resilience"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "IT Professional / Technical Manager",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "AWS Backup"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Rucha Kiwlekar",
-     "title": "Technical Account Manager",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Allyn Henderson",
-     "title": "Storage SA",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360380037001AYgP",
-     "date": "2026-12-02",
-     "startTime": "08:30",
-     "endTime": "10:30",
-     "utcStartTime": "2026/12/02 16:30:00",
-     "utcEndTime": "2026/12/02 18:30:00",
-     "length": 120,
-     "room": "MGM Grand | Level 1 | Grand 124",
-     "roomId": "1789591920329003bjkj",
-     "capacity": "112",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442285971001cRuS",
    "code": "STG339-R",
    "title": "Protect, recover, validate: Data resiliency for AWS storage",
@@ -157369,6 +157285,90 @@
      "endTime": "14:30",
      "utcStartTime": "2026/11/30 20:30:00",
      "utcEndTime": "2026/11/30 22:30:00",
+     "length": 120,
+     "room": "MGM Grand | Level 1 | Grand 124",
+     "roomId": "1789591920329003bjkj",
+     "capacity": "112",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358255277001iEq1",
+   "code": "STG339-R1",
+   "title": "Protect, recover, validate: Data resiliency for AWS storage",
+   "abstract": "Data protection strategies today must span workloads and prove recovery works before an incident demands it. In this workshop, you'll implement recovery and data protection strategies for Amazon S3, Amazon EFS, and Amazon EBS with AWS Backup. Using a financial services application architecture, you'll configure protection mechanisms for ransomware and insider threats and execute step-by-step recovery procedures against simulated cyber threats. Recover across multiple services, validate restored data integrity, and walk away with patterns to strengthen your own recovery capabilities. Participants must bring a laptop for this session.",
+   "type": "Workshop",
+   "length": 120,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-14T14:31:12Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Workshop"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Security & Identity",
+     "Storage"
+    ],
+    "AreaofInterest": [
+     "Data Protection",
+     "Disaster Response & Recovery",
+     "Resilience"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "IT Professional / Technical Manager",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "AWS Backup"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Rucha Kiwlekar",
+     "title": "Technical Account Manager",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Allyn Henderson",
+     "title": "Storage SA",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360380037001AYgP",
+     "date": "2026-12-02",
+     "startTime": "08:30",
+     "endTime": "10:30",
+     "utcStartTime": "2026/12/02 16:30:00",
+     "utcEndTime": "2026/12/02 18:30:00",
      "length": 120,
      "room": "MGM Grand | Level 1 | Grand 124",
      "roomId": "1789591920329003bjkj",
@@ -158101,7 +158101,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-14T08:57:17Z",
+   "modified": "2026-11-14T16:32:46Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -160397,7 +160397,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-13T22:30:20Z",
+   "modified": "2026-11-14T12:49:14Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -160443,6 +160443,12 @@
    },
    "speakers": [
     {
+     "name": "Santosh Kumar",
+     "title": "Sr. Specialist SA, EC2 Graviton",
+     "company": "AWS India",
+     "role": "Internal Speaker"
+    },
+    {
      "name": "Saurabh Modh",
      "title": "Principal Product Manager",
      "company": "Amazon Web Services",
@@ -160455,21 +160461,15 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Esra Kayabali",
-     "title": "Principal Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Santosh Kumar",
-     "title": "Sr. Specialist SA, EC2 Graviton",
-     "company": "AWS India",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Christian Melendez",
      "title": "Pr. Specialist SA Compute",
      "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Esra Kayabali",
+     "title": "Principal Solutions Architect",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     }
    ],
@@ -163828,7 +163828,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-14T06:22:35Z",
+   "modified": "2026-11-14T12:50:30Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -169113,7 +169113,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:55:03Z",
+   "modified": "2026-11-14T17:40:16Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -175388,7 +175388,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-13T20:26:25Z",
+   "modified": "2026-11-14T15:12:25Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -188439,7 +188439,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-11T19:14:48Z",
+   "modified": "2026-11-14T14:04:34Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -189700,7 +189700,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-14T13:54:46Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -189738,15 +189738,15 @@
    },
    "speakers": [
     {
-     "name": "Cydney Stude",
-     "title": "Sr. Security Engineer",
-     "company": "Amazon Web Services",
-     "role": "External Speaker"
-    },
-    {
      "name": "Shannon Brazil",
      "title": "AWS Security Engineer, Manager",
      "company": "AWS",
+     "role": "External Speaker"
+    },
+    {
+     "name": "Cydney Stude",
+     "title": "Sr. Security Engineer",
+     "company": "Amazon Web Services",
      "role": "External Speaker"
     }
    ],
