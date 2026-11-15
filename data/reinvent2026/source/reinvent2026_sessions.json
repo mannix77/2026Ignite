@@ -1,7 +1,7 @@
 {
  "source": "https://catalog.awsevents.com/api/sessions",
  "event": "reinvent2026",
- "fetchedAt": "2026-11-15T12:42:52Z",
+ "fetchedAt": "2026-11-15T18:43:13Z",
  "count": 2589,
  "sessions": [
   {
@@ -28236,7 +28236,7 @@
    "length": 90,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-10T12:14:59Z",
+   "modified": "2026-11-11T19:14:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -29039,7 +29039,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-15T11:23:14Z",
+   "modified": "2026-11-15T18:27:54Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -43903,7 +43903,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-13T16:18:06Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -43937,15 +43937,15 @@
    },
    "speakers": [
     {
-     "name": "Ran Pergamin",
-     "title": "Senior Solution Architect Data and Storage",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Sumaja Kapa",
      "title": "US, Specialist SA",
      "company": "Amazon",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Ran Pergamin",
+     "title": "Senior Solution Architect Data and Storage",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     }
    ],
@@ -43976,7 +43976,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-11T19:14:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -44010,15 +44010,15 @@
    },
    "speakers": [
     {
-     "name": "Ran Pergamin",
-     "title": "Senior Solution Architect Data and Storage",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Sumaja Kapa",
      "title": "US, Specialist SA",
      "company": "Amazon",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Ran Pergamin",
+     "title": "Senior Solution Architect Data and Storage",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     }
    ],
@@ -47054,7 +47054,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-15T04:54:22Z",
+   "modified": "2026-11-15T16:29:45Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -64876,83 +64876,6 @@
    ]
   },
   {
-   "sessionID": "1784231863419001EKif",
-   "code": "TNC312-R1",
-   "title": "Build Reliable AI Agents on AWS with Amazon SageMaker AI and Amazon Bedrock ",
-   "abstract": "When your data changes frequently, RAG helps your agent access the latest information at query time. Fine-tuning an LLM with domain data brings precision in how the agent responds and executes. In this hands-on lab, build reliable AI agents by fine-tuning an LLM on Amazon SageMaker AI for valid tool-call output and consistent persona, and connect it to Amazon Bedrock RAG to ground responses in your latest policies and customer data. ",
-   "type": "Lab",
-   "length": 120,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-10T17:24:06Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Lab"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Artificial Intelligence",
-     "Business Agents"
-    ],
-    "AreaofInterest": [
-     "Agentic AI",
-     "Machine Learning",
-     "Training & Certification"
-    ],
-    "Role": [
-     "Data Scientist",
-     "Developer / Engineer"
-    ],
-    "Services": [
-     "Amazon Bedrock",
-     "Amazon SageMaker AI"
-    ],
-    "Venue": [
-     "Caesars Palace"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Marilia Brito",
-     "title": "Sr Tech Lead",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790981263925001XQwW",
-     "date": "2026-12-03",
-     "startTime": "14:30",
-     "endTime": "16:30",
-     "utcStartTime": "2026/12/03 22:30:00",
-     "utcEndTime": "2026/12/04 00:30:00",
-     "length": 120,
-     "room": "Caesars Palace | Emperors Level | Palace Ballroom II",
-     "roomId": "1789591919916001b2tt",
-     "capacity": "136",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1784231862157001EKUp",
    "code": "TNC312-R",
    "title": "Build Reliable AI Agents on AWS with Amazon SageMaker AI and Amazon Bedrock ",
@@ -65018,6 +64941,83 @@
      "endTime": "17:30",
      "utcStartTime": "2026/12/02 23:30:00",
      "utcEndTime": "2026/12/03 01:30:00",
+     "length": 120,
+     "room": "Caesars Palace | Emperors Level | Palace Ballroom II",
+     "roomId": "1789591919916001b2tt",
+     "capacity": "136",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1784231863419001EKif",
+   "code": "TNC312-R1",
+   "title": "Build Reliable AI Agents on AWS with Amazon SageMaker AI and Amazon Bedrock ",
+   "abstract": "When your data changes frequently, RAG helps your agent access the latest information at query time. Fine-tuning an LLM with domain data brings precision in how the agent responds and executes. In this hands-on lab, build reliable AI agents by fine-tuning an LLM on Amazon SageMaker AI for valid tool-call output and consistent persona, and connect it to Amazon Bedrock RAG to ground responses in your latest policies and customer data. ",
+   "type": "Lab",
+   "length": 120,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-15T17:11:14Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Lab"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Artificial Intelligence",
+     "Business Agents"
+    ],
+    "AreaofInterest": [
+     "Agentic AI",
+     "Machine Learning",
+     "Training & Certification"
+    ],
+    "Role": [
+     "Data Scientist",
+     "Developer / Engineer"
+    ],
+    "Services": [
+     "Amazon Bedrock",
+     "Amazon SageMaker AI"
+    ],
+    "Venue": [
+     "Caesars Palace"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Marilia Brito",
+     "title": "Sr Tech Lead",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790981263925001XQwW",
+     "date": "2026-12-03",
+     "startTime": "14:30",
+     "endTime": "16:30",
+     "utcStartTime": "2026/12/03 22:30:00",
+     "utcEndTime": "2026/12/04 00:30:00",
      "length": 120,
      "room": "Caesars Palace | Emperors Level | Palace Ballroom II",
      "roomId": "1789591919916001b2tt",
@@ -75591,7 +75591,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-15T08:20:50Z",
+   "modified": "2026-11-15T17:48:24Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -84031,15 +84031,9 @@
    },
    "speakers": [
     {
-     "name": "Megan McKenzie",
-     "title": "Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Bashir Mohammed, PhD",
-     "title": "Sr. GenAI Solutions Architect",
-     "company": "AWS",
+     "name": "Steven Warren",
+     "title": "Senior Technical Account Manager",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     },
     {
@@ -84049,9 +84043,15 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Steven Warren",
-     "title": "Senior Technical Account Manager",
-     "company": "Amazon Web Services",
+     "name": "Megan McKenzie",
+     "title": "Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Bashir Mohammed, PhD",
+     "title": "Sr. GenAI Solutions Architect",
+     "company": "AWS",
      "role": "Internal Speaker"
     },
     {
@@ -84134,15 +84134,9 @@
    },
    "speakers": [
     {
-     "name": "Megan McKenzie",
-     "title": "Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Bashir Mohammed, PhD",
-     "title": "Sr. GenAI Solutions Architect",
-     "company": "AWS",
+     "name": "Steven Warren",
+     "title": "Senior Technical Account Manager",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     },
     {
@@ -84152,9 +84146,15 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Steven Warren",
-     "title": "Senior Technical Account Manager",
-     "company": "Amazon Web Services",
+     "name": "Megan McKenzie",
+     "title": "Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Bashir Mohammed, PhD",
+     "title": "Sr. GenAI Solutions Architect",
+     "company": "AWS",
      "role": "Internal Speaker"
     },
     {
@@ -84765,7 +84765,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-14T11:41:38Z",
+   "modified": "2026-11-15T16:34:11Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -100660,7 +100660,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-15T09:19:13Z",
+   "modified": "2026-11-15T17:21:20Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -123409,7 +123409,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-10T19:13:39Z",
+   "modified": "2026-11-15T16:03:18Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -126794,7 +126794,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-15T15:53:00Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -144914,7 +144914,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-11T19:14:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -144952,14 +144952,14 @@
    },
    "speakers": [
     {
-     "name": "Manuel Pata",
-     "title": "Sr. TAM",
+     "name": "Eitav Arditti",
+     "title": "Senior Specialist Solutions Architect",
      "company": "AWS",
      "role": "Internal Speaker"
     },
     {
-     "name": "Eitav Arditti",
-     "title": "Senior Specialist Solutions Architect",
+     "name": "Manuel Pata",
+     "title": "Sr. TAM",
      "company": "AWS",
      "role": "Internal Speaker"
     }
@@ -148027,7 +148027,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-14T15:17:06Z",
+   "modified": "2026-11-15T16:29:45Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -150339,7 +150339,7 @@
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-13T02:17:54Z",
+   "modified": "2026-11-15T18:16:19Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -150386,12 +150386,6 @@
     {
      "name": "Brian Dowhan",
      "title": "Principal Technical Account Manager",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Saurabh Saxena",
-     "title": "Sr Principal, AWS",
      "company": "Amazon",
      "role": "Internal Speaker"
     },
@@ -163646,7 +163640,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-11T19:14:48Z",
+   "modified": "2026-11-13T16:18:06Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -168599,7 +168593,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-13T02:38:34Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -168642,14 +168636,14 @@
    },
    "speakers": [
     {
-     "name": "Max Hausner",
-     "title": "Networking Specialist Solutions Architect",
+     "name": "Eitav Arditti",
+     "title": "Senior Specialist Solutions Architect",
      "company": "AWS",
      "role": "Internal Speaker"
     },
     {
-     "name": "Eitav Arditti",
-     "title": "Senior Specialist Solutions Architect",
+     "name": "Max Hausner",
+     "title": "Networking Specialist Solutions Architect",
      "company": "AWS",
      "role": "Internal Speaker"
     }
@@ -168681,7 +168675,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-13T16:18:06Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -168725,14 +168719,14 @@
    },
    "speakers": [
     {
-     "name": "Max Hausner",
-     "title": "Networking Specialist Solutions Architect",
+     "name": "Eitav Arditti",
+     "title": "Senior Specialist Solutions Architect",
      "company": "AWS",
      "role": "Internal Speaker"
     },
     {
-     "name": "Eitav Arditti",
-     "title": "Senior Specialist Solutions Architect",
+     "name": "Max Hausner",
+     "title": "Networking Specialist Solutions Architect",
      "company": "AWS",
      "role": "Internal Speaker"
     }
@@ -178735,7 +178729,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-15T09:47:51Z",
+   "modified": "2026-11-15T16:21:23Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -184155,7 +184149,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-15T15:47:59Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -184198,15 +184192,15 @@
    },
    "speakers": [
     {
-     "name": "Nihilson Gnanadason",
-     "title": "Sr Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Daniel Wirjo",
      "title": "Solutions Architect",
      "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Nihilson Gnanadason",
+     "title": "Sr Solutions Architect",
+     "company": "AWS",
      "role": "Internal Speaker"
     }
    ],
@@ -185112,7 +185106,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-15T07:35:20Z",
+   "modified": "2026-11-15T17:03:57Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -185274,7 +185268,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-15T17:57:10Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -185354,7 +185348,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-15T17:57:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [

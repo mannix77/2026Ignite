@@ -3,6 +3,13 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-11-15T18:43:13Z · https://catalog.awsevents.com/api/sessions
+
+Added 0 · removed 0 · changed 1
+
+**Changed**
+- `ARC336` Optimizing Cloud Operations with AI: Architecture patterns that actually ship — speakers: Brian Dowhan, Farzin Bagheri, Saurabh Saxena → Brian Dowhan, Farzin Bagheri
+
 ## 2026-11-15T06:43:10Z · https://catalog.awsevents.com/api/sessions
 
 Added 1 · removed 0 · changed 1
