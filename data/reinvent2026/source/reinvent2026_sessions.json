@@ -1,7 +1,7 @@
 {
  "source": "https://catalog.awsevents.com/api/sessions",
  "event": "reinvent2026",
- "fetchedAt": "2026-11-15T06:43:10Z",
+ "fetchedAt": "2026-11-15T12:42:52Z",
  "count": 2589,
  "sessions": [
   {
@@ -29039,7 +29039,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-15T05:09:30Z",
+   "modified": "2026-11-15T11:23:14Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -62968,7 +62968,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-11T19:14:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -63210,7 +63210,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-14T08:54:32Z",
+   "modified": "2026-11-15T09:06:12Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -68047,7 +68047,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-13T22:30:20Z",
+   "modified": "2026-11-15T09:08:07Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -71859,7 +71859,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-15T05:39:43Z",
+   "modified": "2026-11-15T10:51:50Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -72481,7 +72481,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-11T19:14:48Z",
+   "modified": "2026-11-15T08:29:06Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -75591,7 +75591,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-15T03:15:30Z",
+   "modified": "2026-11-15T08:20:50Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -100566,92 +100566,6 @@
    ]
   },
   {
-   "sessionID": "1780442245724001crrE",
-   "code": "IND418-R",
-   "title": "From documents to decisions: Agentic AI for federal operations",
-   "abstract": "Accelerate mission-critical federal operations with agentic AI—from public-information analysis to sensitive document workflows. This expert chalk talk explores patterns for document review, supply chain optimization and classified medical health records backed by real-world implementations. Whiteboard multi-agent orchestration with Amazon Bedrock, including least-privilege tool access, human approval, auditability, and failure recovery. Compare Amazon Bedrock AgentCore for eligible workloads such as regulatory review, grants, and benefits processing with FEDRAMP (Class C and D). Further explore container-based agent architectures for IL4/IL5 environments using authorized AWS services and models. ",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-10T20:33:46Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "400 – Expert"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Artificial Intelligence",
-     "Business Agents"
-    ],
-    "AreaofInterest": [
-     "Innovation & Transformation",
-     "Tech for Impact",
-     "Agentic AI"
-    ],
-    "Industry": [
-     "Government"
-    ],
-    "Role": [
-     "Business Executive",
-     "Developer / Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Bedrock"
-    ],
-    "Venue": [
-     "Wynn/Encore"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Raghavarao Sodabathina",
-     "title": "Principal Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Harsha Tadiparthi",
-     "title": "Principal AI Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025511123001Cgcj",
-     "date": "2026-12-01",
-     "startTime": "16:30",
-     "endTime": "17:30",
-     "utcStartTime": "2026/12/02 00:30:00",
-     "utcEndTime": "2026/12/02 01:30:00",
-     "length": 60,
-     "room": "Wynn/Encore | Level 1 | Encore Ballroom 3",
-     "roomId": "1789591921174001bpeI",
-     "capacity": "70",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358250283001iYiG",
    "code": "IND418-R1",
    "title": "From documents to decisions: Agentic AI for federal operations",
@@ -100731,6 +100645,92 @@
      "room": "Wynn/Encore | Convention Promenade | Latour 5",
      "roomId": "1789591920978004bmWF",
      "capacity": "75",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442245724001crrE",
+   "code": "IND418-R",
+   "title": "From documents to decisions: Agentic AI for federal operations",
+   "abstract": "Accelerate mission-critical federal operations with agentic AI—from public-information analysis to sensitive document workflows. This expert chalk talk explores patterns for document review, supply chain optimization and classified medical health records backed by real-world implementations. Whiteboard multi-agent orchestration with Amazon Bedrock, including least-privilege tool access, human approval, auditability, and failure recovery. Compare Amazon Bedrock AgentCore for eligible workloads such as regulatory review, grants, and benefits processing with FEDRAMP (Class C and D). Further explore container-based agent architectures for IL4/IL5 environments using authorized AWS services and models. ",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-15T09:19:13Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "400 – Expert"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Artificial Intelligence",
+     "Business Agents"
+    ],
+    "AreaofInterest": [
+     "Innovation & Transformation",
+     "Tech for Impact",
+     "Agentic AI"
+    ],
+    "Industry": [
+     "Government"
+    ],
+    "Role": [
+     "Business Executive",
+     "Developer / Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Bedrock"
+    ],
+    "Venue": [
+     "Wynn/Encore"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Raghavarao Sodabathina",
+     "title": "Principal Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Harsha Tadiparthi",
+     "title": "Principal AI Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025511123001Cgcj",
+     "date": "2026-12-01",
+     "startTime": "16:30",
+     "endTime": "17:30",
+     "utcStartTime": "2026/12/02 00:30:00",
+     "utcEndTime": "2026/12/02 01:30:00",
+     "length": 60,
+     "room": "Wynn/Encore | Level 1 | Encore Ballroom 3",
+     "roomId": "1789591921174001bpeI",
+     "capacity": "70",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -110816,7 +110816,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-14T23:23:39Z",
+   "modified": "2026-11-15T06:57:34Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -124837,7 +124837,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-14T02:35:08Z",
+   "modified": "2026-11-15T07:01:55Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -134803,7 +134803,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-15T07:35:20Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -134844,15 +134844,15 @@
    },
    "speakers": [
     {
-     "name": "Kevin Donohue",
-     "title": "Sr Security Compliance Engineer",
-     "company": "aws",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Brian Stucker",
      "title": "Pr. Security Specialist SA",
      "company": "Amazon",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Kevin Donohue",
+     "title": "Sr Security Compliance Engineer",
+     "company": "aws",
      "role": "Internal Speaker"
     }
    ],
@@ -163815,7 +163815,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-15T06:24:56Z",
+   "modified": "2026-11-15T07:08:11Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -169652,7 +169652,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-12T03:32:34Z",
+   "modified": "2026-11-15T07:38:50Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -178735,7 +178735,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-13T22:45:47Z",
+   "modified": "2026-11-15T09:47:51Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -178799,89 +178799,6 @@
      "endTime": "17:30",
      "utcStartTime": "2026/12/01 00:30:00",
      "utcEndTime": "2026/12/01 01:30:00",
-     "length": 60,
-     "room": "MGM Grand | Level 1 | Boulevard 162",
-     "roomId": "1789591920194001baD5",
-     "capacity": "98",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
-   "sessionID": "1780442234003001c3tS",
-   "code": "AIM302-R",
-   "title": "Six Ways AI Fails Who Your Nonprofit Serves — And How to Stop Each One",
-   "abstract": "Every AI application touching real people can fail in ways that cause harm. In this chalk talk, we walk one application through six failure modes — PII exposure, phantom citations, out-of-scope advice, unreviewed judgments, hidden bias, and unaccountable decisions — and whiteboard a defense-in-depth architecture using Amazon Bedrock Guardrails, AgentCore, Automated Reasoning, and human-in-the-loop patterns. Leave with a responsible AI stack applicable to any form factor — chatbot, agent, RAG pipeline, or model call — whether you serve donors, patients, customers, or citizens.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-06T20:41:13Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Architecture",
-     "Security & Identity"
-    ],
-    "AreaofInterest": [
-     "Generative AI",
-     "Tech for Impact",
-     "Agentic AI"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "IT Executive",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Bedrock"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Sam Grace",
-     "title": "Solutions Architect,",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Annie Cimack",
-     "title": "Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025532549001Cr9O",
-     "date": "2026-12-03",
-     "startTime": "09:00",
-     "endTime": "10:00",
-     "utcStartTime": "2026/12/03 17:00:00",
-     "utcEndTime": "2026/12/03 18:00:00",
      "length": 60,
      "room": "MGM Grand | Level 1 | Boulevard 162",
      "roomId": "1789591920194001baD5",
@@ -178969,6 +178886,89 @@
      "room": "Wynn/Encore | Convention Promenade | La Tache 2",
      "roomId": "1789591920958001b8NR",
      "capacity": "78",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442234003001c3tS",
+   "code": "AIM302-R",
+   "title": "Six Ways AI Fails Who Your Nonprofit Serves — And How to Stop Each One",
+   "abstract": "Every AI application touching real people can fail in ways that cause harm. In this chalk talk, we walk one application through six failure modes — PII exposure, phantom citations, out-of-scope advice, unreviewed judgments, hidden bias, and unaccountable decisions — and whiteboard a defense-in-depth architecture using Amazon Bedrock Guardrails, AgentCore, Automated Reasoning, and human-in-the-loop patterns. Leave with a responsible AI stack applicable to any form factor — chatbot, agent, RAG pipeline, or model call — whether you serve donors, patients, customers, or citizens.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-15T07:58:02Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Architecture",
+     "Security & Identity"
+    ],
+    "AreaofInterest": [
+     "Generative AI",
+     "Tech for Impact",
+     "Agentic AI"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "IT Executive",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Bedrock"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Sam Grace",
+     "title": "Solutions Architect,",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Annie Cimack",
+     "title": "Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025532549001Cr9O",
+     "date": "2026-12-03",
+     "startTime": "09:00",
+     "endTime": "10:00",
+     "utcStartTime": "2026/12/03 17:00:00",
+     "utcEndTime": "2026/12/03 18:00:00",
+     "length": 60,
+     "room": "MGM Grand | Level 1 | Boulevard 162",
+     "roomId": "1789591920194001baD5",
+     "capacity": "98",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -180208,7 +180208,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-15T04:26:40Z",
+   "modified": "2026-11-15T07:10:21Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -185016,94 +185016,6 @@
    ]
   },
   {
-   "sessionID": "1780442244891001cgCd",
-   "code": "IND406-R",
-   "title": "The agentic restaurant: AI agents that run your kitchen",
-   "abstract": "The restaurant industry is transforming as AI agents move from pilots to production. Leading QSR and casual dining brands are deploying a \"virtual general manager,\" multiple specialized agents orchestrated together to optimize drive-thru ordering, kitchen workflows, labor scheduling, and guest experience in real time. In this chalk talk, we whiteboard a multi-agent architecture using Amazon Bedrock AgentCore and Strands Agents SDK, with Amazon Nova Sonic powering voice ordering at sub-2-second latency. We design a supervisor agent coordinating specialists across drive-thru, kitchen prep, inventory, and labor scheduling. Explore how agents share context, resolve conflicts, validate decisions against synthetic personas before deployment, and maintain human-in-the-loop oversight. Bring your architecture challenges.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-10T19:16:12Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "400 – Expert"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Architecture",
-     "Artificial Intelligence"
-    ],
-    "AreaofInterest": [
-     "Generative AI",
-     "Innovation & Transformation",
-     "Agentic AI"
-    ],
-    "Industry": [
-     "Retail & Consumer Goods"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "IT Executive",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Bedrock",
-     "Amazon Connect",
-     "Amazon Nova"
-    ],
-    "Venue": [
-     "Caesars Forum"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "David Bounds",
-     "title": "Senior Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Pranjit Biswas",
-     "title": "SOLUTION ARCHITECT",
-     "company": "AMAZON WEB SERVICES",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025537404001C5du",
-     "date": "2026-12-03",
-     "startTime": "10:30",
-     "endTime": "11:30",
-     "utcStartTime": "2026/12/03 18:30:00",
-     "utcEndTime": "2026/12/03 19:30:00",
-     "length": 60,
-     "room": "Caesars Forum | Level 1 | Forum 114",
-     "roomId": "1789591919703003bevY",
-     "capacity": "88",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358240803001iD7i",
    "code": "IND406-R1",
    "title": "The agentic restaurant: AI agents that run your kitchen",
@@ -185184,6 +185096,94 @@
      "length": 60,
      "room": "Caesars Forum | Level 1 | Academy 409",
      "roomId": "1789591919519001bKv3",
+     "capacity": "88",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442244891001cgCd",
+   "code": "IND406-R",
+   "title": "The agentic restaurant: AI agents that run your kitchen",
+   "abstract": "The restaurant industry is transforming as AI agents move from pilots to production. Leading QSR and casual dining brands are deploying a \"virtual general manager,\" multiple specialized agents orchestrated together to optimize drive-thru ordering, kitchen workflows, labor scheduling, and guest experience in real time. In this chalk talk, we whiteboard a multi-agent architecture using Amazon Bedrock AgentCore and Strands Agents SDK, with Amazon Nova Sonic powering voice ordering at sub-2-second latency. We design a supervisor agent coordinating specialists across drive-thru, kitchen prep, inventory, and labor scheduling. Explore how agents share context, resolve conflicts, validate decisions against synthetic personas before deployment, and maintain human-in-the-loop oversight. Bring your architecture challenges.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-15T07:35:20Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "400 – Expert"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Architecture",
+     "Artificial Intelligence"
+    ],
+    "AreaofInterest": [
+     "Generative AI",
+     "Innovation & Transformation",
+     "Agentic AI"
+    ],
+    "Industry": [
+     "Retail & Consumer Goods"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "IT Executive",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Bedrock",
+     "Amazon Connect",
+     "Amazon Nova"
+    ],
+    "Venue": [
+     "Caesars Forum"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "David Bounds",
+     "title": "Senior Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Pranjit Biswas",
+     "title": "SOLUTION ARCHITECT",
+     "company": "AMAZON WEB SERVICES",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025537404001C5du",
+     "date": "2026-12-03",
+     "startTime": "10:30",
+     "endTime": "11:30",
+     "utcStartTime": "2026/12/03 18:30:00",
+     "utcEndTime": "2026/12/03 19:30:00",
+     "length": 60,
+     "room": "Caesars Forum | Level 1 | Forum 114",
+     "roomId": "1789591919703003bevY",
      "capacity": "88",
      "inPersonTime": true,
      "virtualTime": false,
@@ -187610,85 +187610,6 @@
    ]
   },
   {
-   "sessionID": "1790358221665001ioq7",
-   "code": "COM302-R1",
-   "title": "The judgment gap: when Terraform scans clean but fails the audit",
-   "abstract": "Checkov, trivy, and Prowler check rules someone already wrote. SOC 2 CC6.1 is a sentence open to interpretation. Between them sits the judgment gap, where AI-generated Terraform for S3, CloudFront, API Gateway, and Lambda often lands. We map the gap on the whiteboard together: take real controls from SOC 2 and PCI DSS, set them against what scanner rules verify, and mark what is left over. Then we discuss what closes the remainder: better authoring-side skills, human review, multi-model review, or accepting the risk. Bring a control your team owns; we trace where its enforcement lives, or does not.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Customer story",
-     "Discussion"
-    ],
-    "Topic": [
-     "Cloud Operations",
-     "Security & Identity"
-    ],
-    "AreaofInterest": [
-     "Governance, Risk & Compliance",
-     "DevSecOps"
-    ],
-    "Role": [
-     "Cloud Security Specialist",
-     "DevOps Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon API Gateway",
-     "Amazon CloudFront",
-     "Amazon Simple Storage Service (Amazon S3)"
-    ],
-    "Venue": [
-     "Caesars Forum"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Anton Babenko",
-     "title": "CEO",
-     "company": "Compliance.tf",
-     "role": "External Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360364893001AbPf",
-     "date": "2026-12-03",
-     "startTime": "14:30",
-     "endTime": "15:30",
-     "utcStartTime": "2026/12/03 22:30:00",
-     "utcEndTime": "2026/12/03 23:30:00",
-     "length": 60,
-     "room": "Caesars Forum | Level 1 | Forum 103",
-     "roomId": "1789591919685001bbnT",
-     "capacity": "88",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442237700001chKu",
    "code": "COM302-R",
    "title": "The judgment gap: when Terraform scans clean but fails the audit",
@@ -187760,6 +187681,85 @@
      "length": 60,
      "room": "Caesars Forum | Level 1 | Academy 414",
      "roomId": "1789591919565003bZKk",
+     "capacity": "88",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358221665001ioq7",
+   "code": "COM302-R1",
+   "title": "The judgment gap: when Terraform scans clean but fails the audit",
+   "abstract": "Checkov, trivy, and Prowler check rules someone already wrote. SOC 2 CC6.1 is a sentence open to interpretation. Between them sits the judgment gap, where AI-generated Terraform for S3, CloudFront, API Gateway, and Lambda often lands. We map the gap on the whiteboard together: take real controls from SOC 2 and PCI DSS, set them against what scanner rules verify, and mark what is left over. Then we discuss what closes the remainder: better authoring-side skills, human review, multi-model review, or accepting the risk. Bring a control your team owns; we trace where its enforcement lives, or does not.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-15T07:35:20Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Customer story",
+     "Discussion"
+    ],
+    "Topic": [
+     "Cloud Operations",
+     "Security & Identity"
+    ],
+    "AreaofInterest": [
+     "Governance, Risk & Compliance",
+     "DevSecOps"
+    ],
+    "Role": [
+     "Cloud Security Specialist",
+     "DevOps Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon API Gateway",
+     "Amazon CloudFront",
+     "Amazon Simple Storage Service (Amazon S3)"
+    ],
+    "Venue": [
+     "Caesars Forum"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Anton Babenko",
+     "title": "CEO",
+     "company": "Compliance.tf",
+     "role": "External Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360364893001AbPf",
+     "date": "2026-12-03",
+     "startTime": "14:30",
+     "endTime": "15:30",
+     "utcStartTime": "2026/12/03 22:30:00",
+     "utcEndTime": "2026/12/03 23:30:00",
+     "length": 60,
+     "room": "Caesars Forum | Level 1 | Forum 103",
+     "roomId": "1789591919685001bbnT",
      "capacity": "88",
      "inPersonTime": true,
      "virtualTime": false,
@@ -193349,7 +193349,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-14T03:31:03Z",
+   "modified": "2026-11-15T07:19:57Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -204209,7 +204209,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-15T04:05:30Z",
+   "modified": "2026-11-15T10:51:50Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -206459,7 +206459,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-10T04:44:46Z",
+   "modified": "2026-11-15T09:08:07Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -207137,7 +207137,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-15T05:42:53Z",
+   "modified": "2026-11-15T09:47:52Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
