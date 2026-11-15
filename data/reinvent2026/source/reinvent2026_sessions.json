@@ -1,7 +1,7 @@
 {
  "source": "https://catalog.awsevents.com/api/sessions",
  "event": "reinvent2026",
- "fetchedAt": "2026-11-14T18:42:49Z",
+ "fetchedAt": "2026-11-15T00:51:38Z",
  "count": 2588,
  "sessions": [
   {
@@ -29039,7 +29039,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-14T17:44:27Z",
+   "modified": "2026-11-15T00:05:54Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -75591,7 +75591,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-14T18:02:07Z",
+   "modified": "2026-11-15T00:10:50Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -81526,7 +81526,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-13T23:13:32Z",
+   "modified": "2026-11-14T21:37:50Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -103417,7 +103417,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-14T12:52:15Z",
+   "modified": "2026-11-14T19:43:39Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -110816,7 +110816,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-13T02:38:34Z",
+   "modified": "2026-11-14T23:23:39Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -143643,7 +143643,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-14T08:44:21Z",
+   "modified": "2026-11-14T23:30:10Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -154361,7 +154361,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-14T15:53:03Z",
+   "modified": "2026-11-14T23:49:30Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -157304,7 +157304,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-14T14:31:12Z",
+   "modified": "2026-11-14T19:47:14Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -171724,7 +171724,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-13T22:26:00Z",
+   "modified": "2026-11-14T20:49:33Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -172896,7 +172896,7 @@
    "length": 180,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-13T21:32:18Z",
+   "modified": "2026-11-15T00:31:19Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -181548,7 +181548,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-13T22:05:42Z",
+   "modified": "2026-11-14T18:47:20Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -184945,94 +184945,6 @@
    ]
   },
   {
-   "sessionID": "1790358240803001iD7i",
-   "code": "IND406-R1",
-   "title": "The agentic restaurant: AI agents that run your kitchen",
-   "abstract": "The restaurant industry is transforming as AI agents move from pilots to production. Leading QSR and casual dining brands are deploying a \"virtual general manager,\" multiple specialized agents orchestrated together to optimize drive-thru ordering, kitchen workflows, labor scheduling, and guest experience in real time. In this chalk talk, we whiteboard a multi-agent architecture using Amazon Bedrock AgentCore and Strands Agents SDK, with Amazon Nova Sonic powering voice ordering at sub-2-second latency. We design a supervisor agent coordinating specialists across drive-thru, kitchen prep, inventory, and labor scheduling. Explore how agents share context, resolve conflicts, validate decisions against synthetic personas before deployment, and maintain human-in-the-loop oversight. Bring your architecture challenges.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-09T10:57:01Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "400 – Expert"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Architecture",
-     "Artificial Intelligence"
-    ],
-    "AreaofInterest": [
-     "Generative AI",
-     "Innovation & Transformation",
-     "Agentic AI"
-    ],
-    "Industry": [
-     "Retail & Consumer Goods"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "IT Executive",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Bedrock",
-     "Amazon Connect",
-     "Amazon Nova"
-    ],
-    "Venue": [
-     "Caesars Forum"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Pranjit Biswas",
-     "title": "SOLUTION ARCHITECT",
-     "company": "AMAZON WEB SERVICES",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "David Bounds",
-     "title": "Senior Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360362684001Ap2K",
-     "date": "2026-12-01",
-     "startTime": "16:00",
-     "endTime": "17:00",
-     "utcStartTime": "2026/12/02 00:00:00",
-     "utcEndTime": "2026/12/02 01:00:00",
-     "length": 60,
-     "room": "Caesars Forum | Level 1 | Academy 409",
-     "roomId": "1789591919519001bKv3",
-     "capacity": "88",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442244891001cgCd",
    "code": "IND406-R",
    "title": "The agentic restaurant: AI agents that run your kitchen",
@@ -185113,6 +185025,94 @@
      "length": 60,
      "room": "Caesars Forum | Level 1 | Forum 114",
      "roomId": "1789591919703003bevY",
+     "capacity": "88",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358240803001iD7i",
+   "code": "IND406-R1",
+   "title": "The agentic restaurant: AI agents that run your kitchen",
+   "abstract": "The restaurant industry is transforming as AI agents move from pilots to production. Leading QSR and casual dining brands are deploying a \"virtual general manager,\" multiple specialized agents orchestrated together to optimize drive-thru ordering, kitchen workflows, labor scheduling, and guest experience in real time. In this chalk talk, we whiteboard a multi-agent architecture using Amazon Bedrock AgentCore and Strands Agents SDK, with Amazon Nova Sonic powering voice ordering at sub-2-second latency. We design a supervisor agent coordinating specialists across drive-thru, kitchen prep, inventory, and labor scheduling. Explore how agents share context, resolve conflicts, validate decisions against synthetic personas before deployment, and maintain human-in-the-loop oversight. Bring your architecture challenges.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-14T23:23:39Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "400 – Expert"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Architecture",
+     "Artificial Intelligence"
+    ],
+    "AreaofInterest": [
+     "Generative AI",
+     "Innovation & Transformation",
+     "Agentic AI"
+    ],
+    "Industry": [
+     "Retail & Consumer Goods"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "IT Executive",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Bedrock",
+     "Amazon Connect",
+     "Amazon Nova"
+    ],
+    "Venue": [
+     "Caesars Forum"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "David Bounds",
+     "title": "Senior Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Pranjit Biswas",
+     "title": "SOLUTION ARCHITECT",
+     "company": "AMAZON WEB SERVICES",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360362684001Ap2K",
+     "date": "2026-12-01",
+     "startTime": "16:00",
+     "endTime": "17:00",
+     "utcStartTime": "2026/12/02 00:00:00",
+     "utcEndTime": "2026/12/02 01:00:00",
+     "length": 60,
+     "room": "Caesars Forum | Level 1 | Academy 409",
+     "roomId": "1789591919519001bKv3",
      "capacity": "88",
      "inPersonTime": true,
      "virtualTime": false,
@@ -196578,74 +196578,6 @@
    ]
   },
   {
-   "sessionID": "1784231861534001Ezau",
-   "code": "TNC307-R",
-   "title": "Validate your hands-on AWS skills & earn a Microcredential ",
-   "abstract": "In this session, you will be given time to attempt a microcredential exam of your choice on AWS Skill Builder. These timed, hands-on exams test your skills in a live, provisioned AWS environment and test on popular topics. \n\nThe product and developer team will be onsite to walk you through the UI and introduce the exam. Please note - this is an individual exam, and you will not be provided any hints or guidance outside of what is provided in the typical test environment. This exam is free to take on AWS Skill Builder. \n\nAttendees are required to bring their own device to complete the exam. Those who pass will be issued a microcredential badge on Credly.",
-   "type": "Exam prep",
-   "length": 180,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-13T18:56:56Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Exam prep"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Artificial Intelligence",
-     "Serverless"
-    ],
-    "AreaofInterest": [
-     "Training & Certification"
-    ],
-    "Venue": [
-     "Caesars Palace"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Tom Lawlor",
-     "title": "Sr. Product Manager - Tech",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790019629718001goqc",
-     "date": "2026-11-30",
-     "startTime": "14:30",
-     "endTime": "17:30",
-     "utcStartTime": "2026/11/30 22:30:00",
-     "utcEndTime": "2026/12/01 01:30:00",
-     "length": 180,
-     "room": "Caesars Palace | Emperors Level | Emperors Ballroom II",
-     "roomId": "1789591919892004bpdn",
-     "capacity": "82",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1784231861650001EiWr",
    "code": "TNC307-R2",
    "title": "Validate your hands-on AWS skills & earn a Microcredential ",
@@ -196703,6 +196635,74 @@
      "endTime": "17:30",
      "utcStartTime": "2026/12/02 22:30:00",
      "utcEndTime": "2026/12/03 01:30:00",
+     "length": 180,
+     "room": "Caesars Palace | Emperors Level | Emperors Ballroom II",
+     "roomId": "1789591919892004bpdn",
+     "capacity": "82",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1784231861534001Ezau",
+   "code": "TNC307-R",
+   "title": "Validate your hands-on AWS skills & earn a Microcredential ",
+   "abstract": "In this session, you will be given time to attempt a microcredential exam of your choice on AWS Skill Builder. These timed, hands-on exams test your skills in a live, provisioned AWS environment and test on popular topics. \n\nThe product and developer team will be onsite to walk you through the UI and introduce the exam. Please note - this is an individual exam, and you will not be provided any hints or guidance outside of what is provided in the typical test environment. This exam is free to take on AWS Skill Builder. \n\nAttendees are required to bring their own device to complete the exam. Those who pass will be issued a microcredential badge on Credly.",
+   "type": "Exam prep",
+   "length": 180,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-15T00:15:07Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Exam prep"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Artificial Intelligence",
+     "Serverless"
+    ],
+    "AreaofInterest": [
+     "Training & Certification"
+    ],
+    "Venue": [
+     "Caesars Palace"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Tom Lawlor",
+     "title": "Sr. Product Manager - Tech",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790019629718001goqc",
+     "date": "2026-11-30",
+     "startTime": "14:30",
+     "endTime": "17:30",
+     "utcStartTime": "2026/11/30 22:30:00",
+     "utcEndTime": "2026/12/01 01:30:00",
      "length": 180,
      "room": "Caesars Palace | Emperors Level | Emperors Ballroom II",
      "roomId": "1789591919892004bpdn",
