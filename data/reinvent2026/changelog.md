@@ -3,6 +3,16 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-11-15T06:43:10Z · https://catalog.awsevents.com/api/sessions
+
+Added 1 · removed 0 · changed 1
+
+**Added**
+- `IND3359` Physical AI on the Move: How Torc Robotics Trains and Scales Autonomous Trucks on AWS
+
+**Changed**
+- `MUP303` Migrate, Optimize and Operate SAP Workloads at Scale — title: SAP Migration Meetup → Migrate, Optimize and Operate SAP Workloads at Scale; desc
+
 ## 2026-11-14T00:48:12Z · https://catalog.awsevents.com/api/sessions
 
 Added 1 · removed 1 · changed 6
