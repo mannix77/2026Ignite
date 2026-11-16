@@ -3,6 +3,13 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-11-16T00:56:58Z · https://catalog.awsevents.com/api/sessions
+
+Added 0 · removed 1 · changed 0
+
+**Removed**
+- `AWS124` Twenty Years of Building and What Comes Next, with Dr. Werner Vogels and Dr. Swami Sivasubramanian
+
 ## 2026-11-15T18:43:13Z · https://catalog.awsevents.com/api/sessions
 
 Added 0 · removed 0 · changed 1

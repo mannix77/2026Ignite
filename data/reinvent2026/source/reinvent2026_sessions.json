@@ -1,8 +1,8 @@
 {
  "source": "https://catalog.awsevents.com/api/sessions",
  "event": "reinvent2026",
- "fetchedAt": "2026-11-15T18:43:13Z",
- "count": 2589,
+ "fetchedAt": "2026-11-16T00:56:58Z",
+ "count": 2588,
  "sessions": [
   {
    "sessionID": "1790358219724001iNfS",
@@ -1986,7 +1986,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-16T00:29:59Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -29039,7 +29039,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-15T18:27:54Z",
+   "modified": "2026-11-16T00:49:35Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -46179,88 +46179,6 @@
    ]
   },
   {
-   "sessionID": "1790358231906001iTNH",
-   "code": "MAM332-R1",
-   "title": "Build AI agents to operate desktop and mainframe apps on WorkSpaces",
-   "abstract": "You rely on desktop and mainframe applications for critical workflows, but these interfaces remain inaccessible to AI agents. Your Robotic Process Automation efforts have struggled to keep pace as applications and configurations constantly change. Amazon WorkSpaces lets AI agents securely operate the same desktop and mainframe applications your employees use, without any application modernization. WorkSpaces supports Model Context Protocol (MCP), so it works with any agent framework. In this workshop, connect to a pre-provisioned WorkSpace, build a custom agent, run agents that complete desktop workflows, and monitor agent sessions with CloudWatch and CloudTrail. Bring laptop to participate.",
-   "type": "Workshop",
-   "length": 120,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Workshop"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Migration & Modernization"
-    ],
-    "AreaofInterest": [
-     "Workforce Development",
-     "Agentic AI"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "DevOps Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon WorkSpaces"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Stephen Stetler",
-     "title": "Worldwide Technical Leader",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Dave Jaskie",
-     "title": "Senior Solution Architect",
-     "company": "Amazon",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360379687001Afth",
-     "date": "2026-12-01",
-     "startTime": "15:00",
-     "endTime": "17:00",
-     "utcStartTime": "2026/12/01 23:00:00",
-     "utcEndTime": "2026/12/02 01:00:00",
-     "length": 120,
-     "room": "MGM Grand | Level 1 | Grand 122",
-     "roomId": "1789591920321004bG0S",
-     "capacity": "112",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442282456001cOWz",
    "code": "MAM332-R",
    "title": "Build AI agents to operate desktop and mainframe apps on WorkSpaces",
@@ -46336,6 +46254,88 @@
      "room": "Caesars Palace | Promenade Level | Milano IV",
      "roomId": "1789591919941001bt9M",
      "capacity": "150",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358231906001iTNH",
+   "code": "MAM332-R1",
+   "title": "Build AI agents to operate desktop and mainframe apps on WorkSpaces",
+   "abstract": "You rely on desktop and mainframe applications for critical workflows, but these interfaces remain inaccessible to AI agents. Your Robotic Process Automation efforts have struggled to keep pace as applications and configurations constantly change. Amazon WorkSpaces lets AI agents securely operate the same desktop and mainframe applications your employees use, without any application modernization. WorkSpaces supports Model Context Protocol (MCP), so it works with any agent framework. In this workshop, connect to a pre-provisioned WorkSpace, build a custom agent, run agents that complete desktop workflows, and monitor agent sessions with CloudWatch and CloudTrail. Bring laptop to participate.",
+   "type": "Workshop",
+   "length": 120,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-15T23:35:53Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Workshop"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Migration & Modernization"
+    ],
+    "AreaofInterest": [
+     "Workforce Development",
+     "Agentic AI"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "DevOps Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon WorkSpaces"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Stephen Stetler",
+     "title": "Worldwide Technical Leader",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Dave Jaskie",
+     "title": "Senior Solution Architect",
+     "company": "Amazon",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360379687001Afth",
+     "date": "2026-12-01",
+     "startTime": "15:00",
+     "endTime": "17:00",
+     "utcStartTime": "2026/12/01 23:00:00",
+     "utcEndTime": "2026/12/02 01:00:00",
+     "length": 120,
+     "room": "MGM Grand | Level 1 | Grand 122",
+     "roomId": "1789591920321004bG0S",
+     "capacity": "112",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -50000,7 +50000,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-11T19:14:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -50030,15 +50030,15 @@
    },
    "speakers": [
     {
-     "name": "Nathan Arnold",
-     "title": "Sr. Specialist Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Nicolas Jourdan",
      "title": "Sr. Specialist Solution Architect AI/ML/GenAI EMEA",
      "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Nathan Arnold",
+     "title": "Sr. Specialist Solutions Architect",
+     "company": "Amazon Web Services",
      "role": "Internal Speaker"
     }
    ],
@@ -64960,7 +64960,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-15T17:11:14Z",
+   "modified": "2026-11-15T20:30:01Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -72481,7 +72481,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-15T08:29:06Z",
+   "modified": "2026-11-15T23:33:21Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -75591,7 +75591,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-15T17:48:24Z",
+   "modified": "2026-11-15T23:39:14Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -75963,7 +75963,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-11T05:47:48Z",
+   "modified": "2026-11-15T19:37:14Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -87270,7 +87270,7 @@
    "length": 180,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-13T21:32:18Z",
+   "modified": "2026-11-15T23:49:27Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -93245,86 +93245,6 @@
    ]
   },
   {
-   "sessionID": "1784231863051001EOxV",
-   "code": "TNC221-R",
-   "title": "Evaluate Enterprise AI Agents with an Eval-First Approach",
-   "abstract": "A successful agent demo does not guarantee production readiness because agents can behave inconsistently across question types and multi-turn sessions. In this spotlight lab, you build two custom evaluators for an agent: THELMA, which scores single-turn RAG quality across seven dimensions including hallucination detection via groundedness scoring, and Mind the Goal, which computes Goal Success Rate across entire conversations and attributes failures to root causes. You register both as native AgentCore evaluators, run batch evaluations, and use diagnostic outputs to pinpoint exactly what to optimize first. ",
-   "type": "Lab",
-   "length": 120,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-13T22:27:35Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Lab"
-    ],
-    "Level": [
-     "200 – Intermediate"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Artificial Intelligence"
-    ],
-    "AreaofInterest": [
-     "Agentic AI",
-     "Training & Certification"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Bedrock"
-    ],
-    "Venue": [
-     "Caesars Palace"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Jonathan Dion",
-     "title": "Principal Technical Instructor",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Rashmi Sahasrabudhe",
-     "title": "Senior Customer Success Manager",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790018975367001cAQK",
-     "date": "2026-11-30",
-     "startTime": "08:00",
-     "endTime": "10:00",
-     "utcStartTime": "2026/11/30 16:00:00",
-     "utcEndTime": "2026/11/30 18:00:00",
-     "length": 120,
-     "room": "Caesars Palace | Emperors Level | Palace Ballroom II",
-     "roomId": "1789591919916001b2tt",
-     "capacity": "136",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1784231863474001EcQI",
    "code": "TNC221-R1",
    "title": "Evaluate Enterprise AI Agents with an Eval-First Approach",
@@ -93400,6 +93320,86 @@
      "room": "Caesars Palace | Emperors Level | Augustus Ballroom V",
      "roomId": "1789591919870001bKOb",
      "capacity": "200",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1784231863051001EOxV",
+   "code": "TNC221-R",
+   "title": "Evaluate Enterprise AI Agents with an Eval-First Approach",
+   "abstract": "A successful agent demo does not guarantee production readiness because agents can behave inconsistently across question types and multi-turn sessions. In this spotlight lab, you build two custom evaluators for an agent: THELMA, which scores single-turn RAG quality across seven dimensions including hallucination detection via groundedness scoring, and Mind the Goal, which computes Goal Success Rate across entire conversations and attributes failures to root causes. You register both as native AgentCore evaluators, run batch evaluations, and use diagnostic outputs to pinpoint exactly what to optimize first. ",
+   "type": "Lab",
+   "length": 120,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-13T22:27:35Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Lab"
+    ],
+    "Level": [
+     "200 – Intermediate"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Artificial Intelligence"
+    ],
+    "AreaofInterest": [
+     "Agentic AI",
+     "Training & Certification"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Bedrock"
+    ],
+    "Venue": [
+     "Caesars Palace"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Jonathan Dion",
+     "title": "Principal Technical Instructor",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Rashmi Sahasrabudhe",
+     "title": "Senior Customer Success Manager",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790018975367001cAQK",
+     "date": "2026-11-30",
+     "startTime": "08:00",
+     "endTime": "10:00",
+     "utcStartTime": "2026/11/30 16:00:00",
+     "utcEndTime": "2026/11/30 18:00:00",
+     "length": 120,
+     "room": "Caesars Palace | Emperors Level | Palace Ballroom II",
+     "roomId": "1789591919916001b2tt",
+     "capacity": "136",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -100566,92 +100566,6 @@
    ]
   },
   {
-   "sessionID": "1790358250283001iYiG",
-   "code": "IND418-R1",
-   "title": "From documents to decisions: Agentic AI for federal operations",
-   "abstract": "Accelerate mission-critical federal operations with agentic AI—from public-information analysis to sensitive document workflows. This expert chalk talk explores patterns for document review, supply chain optimization and classified medical health records backed by real-world implementations. Whiteboard multi-agent orchestration with Amazon Bedrock, including least-privilege tool access, human approval, auditability, and failure recovery. Compare Amazon Bedrock AgentCore for eligible workloads such as regulatory review, grants, and benefits processing with FEDRAMP (Class C and D). Further explore container-based agent architectures for IL4/IL5 environments using authorized AWS services and models. ",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-15T05:39:43Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "400 – Expert"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Artificial Intelligence",
-     "Business Agents"
-    ],
-    "AreaofInterest": [
-     "Innovation & Transformation",
-     "Tech for Impact",
-     "Agentic AI"
-    ],
-    "Industry": [
-     "Government"
-    ],
-    "Role": [
-     "Business Executive",
-     "Developer / Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Bedrock"
-    ],
-    "Venue": [
-     "Wynn/Encore"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Raghavarao Sodabathina",
-     "title": "Principal Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Harsha Tadiparthi",
-     "title": "Principal AI Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360389323001AM2X",
-     "date": "2026-11-30",
-     "startTime": "08:30",
-     "endTime": "09:30",
-     "utcStartTime": "2026/11/30 16:30:00",
-     "utcEndTime": "2026/11/30 17:30:00",
-     "length": 60,
-     "room": "Wynn/Encore | Convention Promenade | Latour 5",
-     "roomId": "1789591920978004bmWF",
-     "capacity": "75",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780442245724001crrE",
    "code": "IND418-R",
    "title": "From documents to decisions: Agentic AI for federal operations",
@@ -100731,6 +100645,92 @@
      "room": "Wynn/Encore | Level 1 | Encore Ballroom 3",
      "roomId": "1789591921174001bpeI",
      "capacity": "70",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358250283001iYiG",
+   "code": "IND418-R1",
+   "title": "From documents to decisions: Agentic AI for federal operations",
+   "abstract": "Accelerate mission-critical federal operations with agentic AI—from public-information analysis to sensitive document workflows. This expert chalk talk explores patterns for document review, supply chain optimization and classified medical health records backed by real-world implementations. Whiteboard multi-agent orchestration with Amazon Bedrock, including least-privilege tool access, human approval, auditability, and failure recovery. Compare Amazon Bedrock AgentCore for eligible workloads such as regulatory review, grants, and benefits processing with FEDRAMP (Class C and D). Further explore container-based agent architectures for IL4/IL5 environments using authorized AWS services and models. ",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-15T20:54:25Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "400 – Expert"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Artificial Intelligence",
+     "Business Agents"
+    ],
+    "AreaofInterest": [
+     "Innovation & Transformation",
+     "Tech for Impact",
+     "Agentic AI"
+    ],
+    "Industry": [
+     "Government"
+    ],
+    "Role": [
+     "Business Executive",
+     "Developer / Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Bedrock"
+    ],
+    "Venue": [
+     "Wynn/Encore"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Raghavarao Sodabathina",
+     "title": "Principal Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Harsha Tadiparthi",
+     "title": "Principal AI Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360389323001AM2X",
+     "date": "2026-11-30",
+     "startTime": "08:30",
+     "endTime": "09:30",
+     "utcStartTime": "2026/11/30 16:30:00",
+     "utcEndTime": "2026/11/30 17:30:00",
+     "length": 60,
+     "room": "Wynn/Encore | Convention Promenade | Latour 5",
+     "roomId": "1789591920978004bmWF",
+     "capacity": "75",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -119983,89 +119983,6 @@
    ]
   },
   {
-   "sessionID": "1780442246145001cLor",
-   "code": "IND376-R",
-   "title": "How to Deploy Purpose-Built Clinical AI Agents to Production with Speed and Scale",
-   "abstract": "Providers lose hours daily to documentation, manual coding, and admin work. Leading health IT builders are solving this with purpose-built AI on AWS. In this chalk talk, Innovaccer joins AWS to share how they trained task-specific clinical small language models that deliver consistent outputs where general-purpose LLMs produce unacceptable variance. We use their architecture as a jumping-off point to discuss the full spectrum of paths to production: custom model training on accelerated compute, multi-step agentic workflow orchestration, and embedding fully managed clinical AI capabilities into existing applications.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-11T19:14:48Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Artificial Intelligence",
-     "Industry Solutions"
-    ],
-    "AreaofInterest": [
-     "Agentic AI"
-    ],
-    "Industry": [
-     "Healthcare & Life Sciences"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Bedrock"
-    ],
-    "Venue": [
-     "Wynn/Encore"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Ankit Maheshwari",
-     "title": "Chief Technology & Product Officer",
-     "company": "Innovaccer",
-     "role": "External Speaker"
-    },
-    {
-     "name": "Deepti Chugh",
-     "title": "Sr Solutions Architect",
-     "company": "Amazon Web Services(AWS)",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1791228970709001ZRLG",
-     "date": "2026-11-30",
-     "startTime": "13:30",
-     "endTime": "14:30",
-     "utcStartTime": "2026/11/30 21:30:00",
-     "utcEndTime": "2026/11/30 22:30:00",
-     "length": 60,
-     "room": "Wynn/Encore | Level 1 | Chopin 4",
-     "roomId": "1789591921128001bJpf",
-     "capacity": "88",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358224401001iCcd",
    "code": "IND376-R1",
    "title": "How to Deploy Purpose-Built Clinical AI Agents to Production with Speed and Scale",
@@ -120142,6 +120059,89 @@
      "length": 60,
      "room": "Wynn/Encore | Level 1 | Chopin 2",
      "roomId": "1789591921094001bT6B",
+     "capacity": "88",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442246145001cLor",
+   "code": "IND376-R",
+   "title": "How to Deploy Purpose-Built Clinical AI Agents to Production with Speed and Scale",
+   "abstract": "Providers lose hours daily to documentation, manual coding, and admin work. Leading health IT builders are solving this with purpose-built AI on AWS. In this chalk talk, Innovaccer joins AWS to share how they trained task-specific clinical small language models that deliver consistent outputs where general-purpose LLMs produce unacceptable variance. We use their architecture as a jumping-off point to discuss the full spectrum of paths to production: custom model training on accelerated compute, multi-step agentic workflow orchestration, and embedding fully managed clinical AI capabilities into existing applications.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-15T19:38:49Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Artificial Intelligence",
+     "Industry Solutions"
+    ],
+    "AreaofInterest": [
+     "Agentic AI"
+    ],
+    "Industry": [
+     "Healthcare & Life Sciences"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Bedrock"
+    ],
+    "Venue": [
+     "Wynn/Encore"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Ankit Maheshwari",
+     "title": "Chief Technology & Product Officer",
+     "company": "Innovaccer",
+     "role": "External Speaker"
+    },
+    {
+     "name": "Deepti Chugh",
+     "title": "Sr Solutions Architect",
+     "company": "Amazon Web Services(AWS)",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1791228970709001ZRLG",
+     "date": "2026-11-30",
+     "startTime": "13:30",
+     "endTime": "14:30",
+     "utcStartTime": "2026/11/30 21:30:00",
+     "utcEndTime": "2026/11/30 22:30:00",
+     "length": 60,
+     "room": "Wynn/Encore | Level 1 | Chopin 4",
+     "roomId": "1789591921128001bJpf",
      "capacity": "88",
      "inPersonTime": true,
      "virtualTime": false,
@@ -127386,7 +127386,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:55:03Z",
+   "modified": "2026-11-11T19:14:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -144734,7 +144734,7 @@
    "length": 20,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:55:03Z",
+   "modified": "2026-11-11T19:14:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -144783,15 +144783,15 @@
    },
    "speakers": [
     {
-     "name": "Brenda Remy",
-     "title": "Vice President, Enterprise AI",
-     "company": "GE HealthCare",
-     "role": "Sponsor Speaker"
-    },
-    {
      "name": "Barr Moses",
      "title": "CEO & Co-founder",
      "company": "Monte Carlo",
+     "role": "Sponsor Speaker"
+    },
+    {
+     "name": "Brenda Remy",
+     "title": "Vice President, Enterprise AI",
+     "company": "GE HealthCare",
      "role": "Sponsor Speaker"
     }
    ],
@@ -148027,7 +148027,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-15T16:29:45Z",
+   "modified": "2026-11-15T18:47:02Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -170739,7 +170739,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-11T19:14:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -172961,7 +172961,7 @@
    "length": 180,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-15T00:31:19Z",
+   "modified": "2026-11-15T23:49:27Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -184231,7 +184231,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-14T02:35:08Z",
+   "modified": "2026-11-15T22:12:58Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -187450,7 +187450,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-11T19:14:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -187491,15 +187491,15 @@
    },
    "speakers": [
     {
-     "name": "Tsahi Duek",
-     "title": "Principal Solutions Architect",
-     "company": "aws",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Dima Breydo",
      "title": "Principal Solutions Architect",
      "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Tsahi Duek",
+     "title": "Principal Solutions Architect",
+     "company": "aws",
      "role": "Internal Speaker"
     }
    ],
@@ -194068,50 +194068,6 @@
    ]
   },
   {
-   "sessionID": "1793907193466001Wsf6",
-   "code": "AWS124",
-   "title": "Twenty Years of Building and What Comes Next, with Dr. Werner Vogels and Dr. Swami Sivasubramanian",
-   "abstract": "Dr. Werner Vogels and Dr. Swami Sivasubramanian have spent two decades building at Amazon, from the earliest days of scaling Amazon.com and pioneering AWS, which fundamentally transformed how the world consumes IT services, too the agents changing how software gets made today. In this candid conversation, they talk about the choices that shaped their careers and how they see technology today. They also look ahead: where innovation is heading, and the skills you’ll need to be successful when it gets there. Expect strong opinions, stories you haven’t heard and advice you can act on straight away.",
-   "type": "Breakout session",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-12T21:13:04Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Breakout session"
-    ],
-    "Level": [
-     "100 – Foundational"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [],
-   "times": [
-    {
-     "sessionTimeID": "1794516988563001GOcE",
-     "date": "2026-12-03",
-     "startTime": "10:30",
-     "endTime": "11:30",
-     "utcStartTime": "2026/12/03 18:30:00",
-     "utcEndTime": "2026/12/03 19:30:00",
-     "length": 60,
-     "room": "Venetian | Level 2 | Venetian Theatre",
-     "roomId": "1789591920866001bOFx",
-     "capacity": "1800",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1780441463262001Gcbv",
    "code": "ARC410",
    "title": "Twenty years of cloud architecture",
@@ -198927,7 +198883,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-11T19:41:54Z",
+   "modified": "2026-11-13T02:40:24Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -204121,7 +204077,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-11T19:14:48Z",
+   "modified": "2026-11-13T16:18:06Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
