@@ -154,7 +154,7 @@ node tests/grid.test.js                                                         
 python3 -m unittest discover -s tests                                                       # sync, Gartner import + Python/JS parity
 /System/Library/Frameworks/JavaScriptCore.framework/Versions/Current/Helpers/jsc -m tests/planner.test.js   # planner (macOS)
 node tests/planner.test.js                                                                  # planner (Node)
-npm run test:viewport                                                                       # every browser (Playwright) suite, iPhone 16e & 18 Pro Max: real-rendering layout checks (tests/e2e/viewport.spec.js, specs/features/viewport-sizes.feature) and the My plan grid (tests/e2e/plan-grid.spec.js, tests/e2e/plan-grid-fit.spec.js, specs/features/plan-grid-view.feature)
+npm run test:viewport                                                                       # every browser (Playwright) suite, iPhone 16e & 18 Pro Max: real-rendering layout checks (tests/e2e/viewport.spec.js, specs/features/viewport-sizes.feature) and the My plan grid (tests/e2e/plan-grid.spec.js, tests/e2e/plan-grid-fit.spec.js, specs/features/plan-grid-view.feature), and blocked time in My plan's list on a day with no session (tests/e2e/plan-list.spec.js, specs/features/plan-day-list.feature)
 ```
 
 To try the planner on a fully published schedule, build a fixture from an archived Ignite 2025 catalog and open `http://localhost:8026/?data=tests/fixtures/ignite2025`:
