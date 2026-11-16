@@ -234,6 +234,41 @@ async function box(locator, what) {
     };
   });
 }
+// Really drawn where it can be read. toBeVisible is also true of text that has a box but lies
+// outside an ancestor that hides its overflow (a block clips what does not fit in its height), so
+// this also asks that the box is inside every ancestor up to the grid that clips, that at least
+// one does, that the element is what is found at its centre, and that none of its own lines are
+// cut off. An ancestor that hides its
+// overflow can still be scrolled by script, and scrollIntoView on the element would do exactly
+// that and bring clipped text into view: so the page is scrolled as a whole, and each clipping
+// ancestor is measured unscrolled, as a person sees it.
+async function expectPainted(locator, what) {
+  await expect(locator, what).toBeVisible();
+  const f = await locator.evaluate(el => {
+    const clippers = [], outside = [];
+    for (let a = el.parentElement; a && !a.classList.contains('daygrid'); a = a.parentElement) {
+      const cs = getComputedStyle(a);
+      if (cs.overflowX === 'visible' && cs.overflowY === 'visible') continue;
+      clippers.push(a);
+      a.scrollTop = 0;
+      a.scrollLeft = 0;
+    }
+    const at = el.getBoundingClientRect();
+    window.scrollBy(0, at.top + at.height / 2 - window.innerHeight / 2);
+    const r = el.getBoundingClientRect();
+    for (const a of clippers) {
+      const c = a.getBoundingClientRect();
+      if (r.top < c.top - 0.5 || r.bottom > c.bottom + 0.5 || r.left < c.left - 0.5 || r.right > c.right + 0.5) outside.push(a.className);
+    }
+    const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+    // uncut: none of its own lines are cut off (a row squeezes its title and room to fit, and each
+    // of them hides what no longer fits; being cut short across, with an ellipsis, is allowed).
+    // The font's own box is 1px taller than the 13px line of a time or room, so a difference of a
+    // pixel is not a cut line; the shortest line here is 13px, and 4px of one missing is.
+    return { sized: r.width > 0 && r.height > 0, clipped: clippers.length > 0, outside, onTop: !!hit && (hit === el || el.contains(hit)), uncut: el.scrollHeight - el.clientHeight < 4 };
+  });
+  expect(f, what).toEqual({ sized: true, clipped: true, outside: [], onTop: true, uncut: true });
+}
 // One unit is one pixel; anything within half a pixel is that unit.
 function expectAt(b, top, height, what) {
   expect(b.top, `${what}: units down from the top of the grid`).toBeCloseTo(top, 0);
@@ -862,17 +897,18 @@ test.describe('Rule: A session\'s block sits at its start time and is as tall as
     await expect(must).toHaveClass(/\bp-3\b/);
 
     // Its time is the whole of it: from 10:00 to 10:50 (a start alone, or another end, is not).
-    await expect(must.locator('.g-time')).toBeVisible();
+    await expectPainted(must.locator('.g-time'), 'BRK305: its time');
     await expect(must.locator('.g-time'), 'BRK305: 10:00 AM to 10:50 AM').toHaveText(timeRange('10:00', '10:50', 'AM'));
-    await expect(must.locator('.g-title')).toBeVisible();
+    await expectPainted(must.locator('.g-title'), 'BRK305: its title');
     await expect(must.locator('.g-title')).toContainText('Platform engineering keynote recap');
-    await expect(must.locator('.g-room')).toBeVisible();
+    await expectPainted(must.locator('.g-room'), 'BRK305: its room');
     await expect(must.locator('.g-room')).toContainText('Room 2035');
     // Each block shows its own: the session before it on the same grid is 9:20 to 9:50.
     const before = block(grid, 'i-brk304');
     await expect(before.locator('.g-time'), 'BRK304: 9:20 AM to 9:50 AM').toHaveText(timeRange('9:20', '9:50', 'AM'));
     await expect(before.locator('.g-title')).toContainText('Early bird Q&A');
     await expect(before.locator('.g-room')).toContainText('Room 2034');
+    for (const part of ['.g-time', '.g-title', '.g-room']) await expectPainted(before.locator(part), `BRK304, 30 minutes: ${part}`);
 
     // Full width: it spans what both halves of a side-by-side pair span (Tuesday's BRK106 on
     // the left and BRK107 on the right; every day's grid is laid out across the same width).
@@ -1014,9 +1050,9 @@ test.describe('Rule: Tapping a pill opens it into a list of its sessions; tappin
       const row = rows.nth(i);
       await expect(row, key).toBeVisible();
       await expect(row).toHaveClass(prio);
-      await expect(row.locator('.g-title')).toBeVisible();
+      await expectPainted(row.locator('.g-title'), `${key}: its title`);
       await expect(row.locator('.g-title')).toContainText(title);
-      await expect(row.locator('.g-room')).toBeVisible();
+      await expectPainted(row.locator('.g-room'), `${key}: its room`);
       await expect(row.locator('.g-room')).toContainText(room);
     }
     for (const key of expected.map(r => r[0])) await expect(grid.locator(`.g-block[data-key="${key}"]`)).toHaveCount(0);
@@ -1598,6 +1634,8 @@ test.describe('beyond the feature file: what is drawn on the grid', () => {
     await expect(block(grid, 'i-brk105').locator('.g-title')).toHaveText('Data platform roadmap');
     await expect(block(grid, 'i-brk105').locator('.g-room'), 'BRK105 on the grid').toHaveText('Room TBA');
     await expect(block(grid, 'i-brk108').locator('.g-room'), 'a session with a room shows the room').toHaveText('Moscone West, Level 2, Room 2008');
+    await expectPainted(block(grid, 'i-brk105').locator('.g-room'), 'BRK105: "Room TBA"');
+    await expectPainted(block(grid, 'i-brk108').locator('.g-room'), 'BRK108: its room');
   });
 
   // Titles and rooms come from the catalog and a blocked time's label from what was typed in

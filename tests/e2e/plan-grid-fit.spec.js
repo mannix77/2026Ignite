@@ -694,3 +694,89 @@ test.describe('a session that is not over a band\'s label keeps its full width',
     expectFullWidth(await geo(block(grid, 'i-brk105'), 'BRK105'), W, 'BRK105, below the open pill');
   });
 });
+
+// ================================================================ what a block shows at each height
+
+// A block's layout changes with its height (assets/css/app.css, the @container rules of
+// .g-block): under 30 minutes one line with no room; from 30 the title over the time and room;
+// from 44 a second line of title; from 70 the room on a line of its own; from 84 a third line of
+// title. Each change is checked on both sides, a minute apart.
+test.describe('what a session block shows depends on how tall it is', () => {
+  // Long enough for more than three lines on either phone, so the number of lines shown is the
+  // number the block allows.
+  const TITLE = 'A session whose title is long enough to need more than three whole lines on a phone, so that how many lines of it a block shows is decided by how tall the block is and never by the words running out';
+  // Each part of a block, measured from the top of the block's clipped area (.g-in): shown or
+  // not, where it starts, how tall it is, and whether its box is inside that area.
+  const parts = blockEl => blockEl.evaluate(el => {
+    el.scrollIntoView({ block: 'center' });
+    const px = v => Math.round(v * 100) / 100;
+    const clip = el.querySelector('.g-in');
+    clip.scrollTop = 0;   // measured unscrolled: a clipped area can still be scrolled by script
+    const c = clip.getBoundingClientRect();
+    const part = sel => {
+      const e = el.querySelector(sel), r = e.getBoundingClientRect();
+      const shown = getComputedStyle(e).display !== 'none' && r.width > 0 && r.height > 0;
+      if (!shown) return { shown };
+      const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+      return {
+        shown, top: px(r.top - c.top), height: px(r.height),
+        inside: r.top >= c.top - 0.5 && r.bottom <= c.bottom + 0.5 && r.left >= c.left - 0.5 && r.right <= c.right + 0.5,
+        onTop: !!hit && (hit === e || e.contains(hit)),
+      };
+    };
+    const across = sel => { const r = el.querySelector(sel).getBoundingClientRect(); return { left: px(r.left - c.left), right: px(r.right - c.left) }; };
+    return {
+      clips: getComputedStyle(clip).overflowY, height: px(el.getBoundingClientRect().height),
+      title: part('.g-title'), time: part('.g-time'), room: part('.g-room'), titleAcross: across('.g-title'), timeAcross: across('.g-time'),
+    };
+  });
+  const shownAt = (top, height) => ({ shown: true, top, height, inside: true, onTop: true });
+
+  // minutes, start, end, and what is expected: the title's lines (14px each), and the room:
+  // 'none' (not shown), 'beside' (on the time's line) or 'below' (a line of its own).
+  const CASES = [
+    [29, '00:00', '00:29', { titleLines: 1, oneLine: true, room: 'none' }],
+    [30, '00:40', '01:10', { titleLines: 1, room: 'beside' }],
+    [43, '01:20', '02:03', { titleLines: 1, room: 'beside' }],
+    [44, '02:10', '02:54', { titleLines: 2, room: 'beside' }],
+    [69, '03:00', '04:09', { titleLines: 2, room: 'beside' }],
+    [70, '04:15', '05:25', { titleLines: 2, room: 'below' }],
+    [83, '05:30', '06:53', { titleLines: 2, room: 'below' }],
+    [84, '07:00', '08:24', { titleLines: 3, room: 'below' }],
+  ];
+
+  test('on both sides of 30, 44, 70 and 84 minutes: the lines of title, and the room hidden, beside the time or on its own line, all inside the block', async ({ page, viewport }) => {
+    // Friday has no picks of its own: eight sessions before 9 AM, none overlapping another.
+    const added = CASES.map(([min, from, to]) => extra(`FIT7${String(min).padStart(2, '0')}`, TITLE, FRI, from, to, WANT));
+    await openPlan(page, { day: FRI, added });
+    const grid = await showGrid(page, FRI);
+    const W = await expectGridWidth(grid, viewport);
+    await expect(grid.locator('.g-block')).toHaveCount(8);
+    await expect(grid.locator('.g-pill')).toHaveCount(0);
+
+    for (const [i, [min, , , want]] of CASES.entries()) {
+      const what = `${min} minutes`;
+      const el = block(grid, added[i].key);
+      expectFullWidth(await geo(el, what), W, what);
+      const f = await parts(el);
+      expect([f.height, f.clips], `${what}: as tall as it is long, and it clips what does not fit`).toEqual([min, 'hidden']);
+      await expect(el.locator('.g-title'), what).toHaveText(TITLE);
+      await expect(el.locator('.g-room'), what).toHaveText('Moscone West, Level 2, Room 2001');
+
+      if (want.oneLine) {
+        // One line: the time, then the title to its right, each box the full height of the
+        // clipped area (27px less the 1px above), and no room.
+        expect(f.time, `${what}: the time`).toEqual(shownAt(1, 26));
+        expect(f.title, `${what}: the title, on the time's line`).toEqual(shownAt(1, 26));
+        expect(f.titleAcross.left, `${what}: the title starts 8px after the time ends`).toBeCloseTo(f.timeAcross.right + 8, 0);
+        expect(f.room, `${what}: the room`).toEqual({ shown: false });
+        continue;
+      }
+      const under = 1 + 14 * want.titleLines;   // 1px of padding, then the title's lines
+      expect(f.title, `${what}: ${want.titleLines} line(s) of title`).toEqual(shownAt(1, 14 * want.titleLines));
+      expect(f.time, `${what}: the time, under the title`).toEqual(shownAt(under, 13));
+      expect(f.room, `${what}: the room, ${want.room} the time`).toEqual(shownAt(want.room === 'below' ? under + 13 : under, 13));
+      expect(f.titleAcross.left, `${what}: the title starts at the left of the block, as the time does`).toBeCloseTo(f.timeAcross.left, 0);
+    }
+  });
+});
