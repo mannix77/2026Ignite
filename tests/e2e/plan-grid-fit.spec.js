@@ -468,6 +468,48 @@ test.describe('blocked time and lunch stay readable under a session or pill that
     await expect(short.locator('.g-band-label')).toHaveCSS('text-overflow', 'ellipsis');
   });
 
+  test('a label keeps to one line when a later full-width session is drawn where its second line would be, and takes two when that session starts under it', async ({ page, viewport }) => {
+    // Two hours of blocked time with the same label, each under a 15-minute session that starts
+    // with it (so the label is in a lane) and a second session that keeps its full width:
+    // 7:00 AM, where the second starts 20 minutes in (inside the second line, units 15 to 31), and
+    // 5:00 PM, where it starts 31 minutes in (just under the second line).
+    const added = [
+      extra('FIT601', 'Early one', TUE, '07:00', '07:15', MAYBE), extra('FIT602', 'Early two', TUE, '07:20', '08:00', MAYBE),
+      extra('FIT603', 'Late one', TUE, '17:00', '17:15', MAYBE), extra('FIT604', 'Late two', TUE, '17:31', '18:00', MAYBE),
+    ];
+    await openPlan(page, { added, blocks: [...BLOCKS, blocked('early', 'Team sync call', TUE, 420, 480), blocked('late', 'Team sync call', TUE, 1020, 1080)] });
+    for (const a of added) await expect(missedBecause(page, a.key)).toHaveText('During Team sync call (blocked time)');
+
+    const grid = await showGrid(page, TUE);
+    const W = await expectGridWidth(grid, viewport);
+    const bands = bandCalled(grid, 'Team sync call');
+    await expect(bands).toHaveCount(2);
+    const facts = async (band, firstKey, secondKey, what) => {
+      const b = await geo(band, `the ${what} band`), one = await geo(block(grid, firstKey), firstKey), two = await geo(block(grid, secondKey), secondKey);
+      expect([b.height, b.lane, one.top - b.top], `${what}: an hour, in a lane, the first session starts with it`).toEqual([60, true, 0]);
+      expectStopsShort(one, W, firstKey);
+      expectFullWidth(two, W, secondKey);
+      return { below: two.top - b.top, first: one, label: await labelFacts(band), lines: await labelLines(band) };
+    };
+
+    // The second session is drawn over where a second line would be: the label is one line, cut
+    // to the lane, and all of it can still be read.
+    const covered = await facts(bands.nth(0), 'i-fit601', 'i-fit602', '7:00 AM');
+    expect(covered.below, 'the second session starts 20 units down the band').toBe(20);
+    expect(covered.lines.height, 'one line').toBe(16);
+    expectLabelRead(covered.label, '⛔ Team sync call', 'the 7:00 AM label', { whole: false });
+    expectInLane(covered.label, covered.first, 'the 7:00 AM label');
+    expect(covered.label.scrollWidth, 'the line is longer than the lane').toBeGreaterThan(covered.label.clientWidth);
+
+    // The second session starts under the second line: the label takes both, with nothing over it.
+    const clear = await facts(bands.nth(1), 'i-fit603', 'i-fit604', '5:00 PM');
+    expect(clear.below, 'the second session starts 31 units down the band').toBe(31);
+    expect(clear.lines.height, 'two lines').toBe(32);
+    expect(clear.lines.scrollHeight, 'no line is cut off').toBeLessThanOrEqual(clear.lines.clientHeight);
+    expectLabelRead(clear.label, '⛔ Team sync call', 'the 5:00 PM label');
+    expectInLane(clear.label, clear.first, 'the 5:00 PM label');
+  });
+
   test('a blocked-time label too long for the lane ends in an ellipsis inside the lane, never under the session; with nothing over it, a long label is whole', async ({ page, viewport }) => {
     // Two long labels: one from 11:00 to 12:00, under the Must at 11:00, and one from 5:00 to
     // 5:30 PM, which starts where the last session of the day ends.

@@ -376,11 +376,10 @@ kbd { font-family: var(--mono); font-size: 12px; border: 1px solid var(--line); 
 /* A band whose label has a session or pill drawn over it (grid.js `lane`): that session stops a
    lane short of the right edge (below), and the label keeps to the lane, 4px clear of the
    session and 8px from the edge; a longer label ends in an ellipsis. */
-.g-band[data-lane] { container-type: size; }
 .g-band[data-lane] .g-band-label { display: inline-block; max-width: calc(var(--g-lane) - 6px); overflow: hidden; text-overflow: ellipsis; }
-/* A band with room for two lines (2 x 16px inside its 1px padding) lets the label wrap onto a
-   second before it is cut. */
-@container (min-height: 32px) { .g-band[data-lane] .g-band-label { white-space: normal; display: -webkit-inline-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; } }
+/* Where the band has room for two lines and nothing is drawn over the second (grid.js `lines`),
+   the label wraps onto a second line before it is cut. */
+.g-band[data-lane][data-lines="2"] .g-band-label { white-space: normal; display: -webkit-inline-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
 
 .g-block, .g-pill, .g-pill-head, .g-row { font: inherit; color: var(--text); text-align: left; margin: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 .g-block, .g-pill { position: absolute; left: calc(var(--g-gutter) + var(--g-inset)); right: var(--g-inset); overflow: hidden; }

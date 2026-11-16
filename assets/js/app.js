@@ -1203,7 +1203,7 @@ function renderDayGrid(g, day) {
   const room = x => esc(x.s?.roomLabel || '');
   const dots = p => `<span class="g-dots" aria-hidden="true">${p.dots.map(d => `<span class="g-dot ${prio(d)}"></span>`).join('')}</span>`;
   const hours = g.hours.map(h => `<div class="g-hour" data-min="${Number(h.min)}" style="top:${Number(h.top)}px"><span>${esc(h.label)}</span></div>`);
-  const bands = g.bands.map(b => `<div class="g-band" data-band="${attr(b.kind)}"${lane(b)} style="${at(b)}"><span class="g-band-label"><span aria-hidden="true">${b.kind === 'lunch' ? '🍽' : '⛔'}</span> ${esc(b.title)}</span></div>`);
+  const bands = g.bands.map(b => `<div class="g-band" data-band="${attr(b.kind)}"${lane(b)}${b.lines === 2 ? ' data-lines="2"' : ''} style="${at(b)}"><span class="g-band-label"><span aria-hidden="true">${b.kind === 'lunch' ? '🍽' : '⛔'}</span> ${esc(b.title)}</span></div>`);
   const blocks = g.blocks.map(b => [b.startMin, `<button type="button" class="g-block ${prio(b.item.priority)}" data-act="open" data-key="${attr(b.item.key)}" data-cols="${Number(b.cols)}" data-col="${Number(b.col)}"${lane(b)} style="${at(b)}"><span class="g-in">${said(b.item.priority)}<span class="g-time">${fmtTime(b.startMin)}–${fmtTime(b.endMin)}</span> <span class="g-title">${esc(b.item.title)}</span> <span class="g-room">${room(b.item)}</span></span></button>`]);
   const pills = g.pills.map(p => [p.startMin, p.open
     ? `<div class="g-pill open" role="group" aria-label="${attr(p.label)}" data-pill="${attr(p.id)}"${lane(p)} style="${at(p)}"><button type="button" class="g-pill-head" data-act="pill" data-pill="${attr(p.id)}" aria-expanded="true">${dots(p)}<span class="g-pill-label">${esc(p.label)}</span></button>${p.rows.map(r =>

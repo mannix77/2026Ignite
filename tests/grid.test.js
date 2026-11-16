@@ -14,7 +14,7 @@
 // empty storage; the others use a namespace of their own.
 import { sleep } from './shim.js';
 
-const { planView, gridEntries, gridLayout, PILL_HEADER, PILL_ROW, BAND_LABEL } = await import('../assets/js/grid.js');
+const { planView, gridEntries, gridLayout, PILL_HEADER, PILL_ROW, BAND_LABEL, BAND_LINE } = await import('../assets/js/grid.js');
 const store = await import('../assets/js/store.js');
 const { CONFERENCES } = await import('../assets/js/conferences.js');
 
@@ -744,6 +744,51 @@ await test('should take a band shorter than a label as all label, and mark nothi
   eq(lanes(none), { blocks: [['A', false], ['H1', false], ['H2', false]], pills: [['660', false]], bands: [] });
 });
 
+// A label in a lane may wrap onto a second line (BAND_LINE units under the first BAND_LABEL):
+// `lines` is 2 only when the band is tall enough for two lines inside its 1 unit of padding
+// (2 x 16 + 2 = 34) and nothing that still reaches the right edge is drawn over that second line.
+const labels = l => ({ blocks: blocksOf(l).map(b => [b[0], blockOf(l, b[0]).lane]), pills: l.pills.map(p => [p.id, p.lane]), bands: l.bands.map(b => [b.key, b.lane, b.lines]) });
+const first = session('FIRST', hm(9), hm(9, 15));   // starts with the 9:00 band: it leaves the lane
+
+await test('should give a label in a lane two lines only when nothing at full width is drawn over the second line', () => {
+  eq(BAND_LINE, 16);
+  const second = start => labels(gridLayout({ sessions: [first, session('SECOND', start, hm(10))], bands: [booth(hm(9), hm(10))] }));
+  eq(labels(gridLayout({ sessions: [first], bands: [booth(hm(9), hm(10))] })), { blocks: [['FIRST', true]], pills: [], bands: [['block:booth', true, 2]] }, 'nothing else over the band');
+  // A session in the lane is stopped short of the label, however far down the band it runs; one
+  // that ends before the band is nowhere near it.
+  eq(labels(gridLayout({ sessions: [session('LONG', hm(9), hm(10))], bands: [booth(hm(9), hm(10))] })), { blocks: [['LONG', true]], pills: [], bands: [['block:booth', true, 2]] }, 'the session in the lane runs the whole band');
+  eq(labels(gridLayout({ sessions: [session('BEFORE', hm(8), hm(8, 45)), first], bands: [booth(hm(9), hm(10))] })), { blocks: [['BEFORE', false], ['FIRST', true]], pills: [], bands: [['block:booth', true, 2]] }, 'a full-width session that ends before the band');
+  const covered = { blocks: [['FIRST', true], ['SECOND', false]], pills: [], bands: [['block:booth', true, 1]] };
+  const clear = { blocks: [['FIRST', true], ['SECOND', false]], pills: [], bands: [['block:booth', true, 2]] };
+  eq(second(hm(9, 15)), covered, 'a second session from the first unit of the second line');
+  eq(second(hm(9, 20)), covered, 'a second session in the middle of the second line');
+  eq(second(hm(9, 30)), covered, 'a second session in the last unit of the second line');
+  eq(second(hm(9, 31)), clear, 'a second session just under the second line');
+  eq(labels(gridLayout({ sessions: [first, session('SECOND', hm(9, 15), hm(9, 16))], bands: [booth(hm(9), hm(10))] })), covered, 'a one-minute session in the first unit of the second line');
+});
+
+await test('should give a label two lines only in a lane, and only in a band 34 units tall or more', () => {
+  const tall = end => labels(gridLayout({ sessions: [session('A', hm(9), hm(9, 15))], bands: [booth(hm(9), end)] })).bands;
+  eq(tall(hm(9, 34)), [['block:booth', true, 2]], '34 units');
+  eq(tall(hm(9, 33)), [['block:booth', true, 1]], '33 units');
+  eq(labels(gridLayout({ sessions: [session('LATER', hm(9, 20), hm(10))], bands: [booth(hm(9), hm(10))] })),
+    { blocks: [['LATER', false]], pills: [], bands: [['block:booth', false, 1]] }, 'no lane: the label is one line across the band');
+  eq(labels(gridLayout({ sessions: [], bands: [booth(hm(9), hm(10))] })).bands, [['block:booth', false, 1]], 'nothing over the band at all');
+});
+
+await test('should count a pill and the right half of a pair over the second line, not the left half of a pair', () => {
+  const bands = [booth(hm(9), hm(10))];
+  const pill = gridLayout({ sessions: [first, ...['P1', 'P2', 'P3'].map(c => session(c, hm(9, 20), hm(10)))], bands });
+  eq(labels(pill), { blocks: [['FIRST', true]], pills: [['560', false]], bands: [['block:booth', true, 1]] }, 'a pill from 9:20');
+  const pair = (early, late) => {
+    const l = gridLayout({ sessions: [first, session('EARLY', early, hm(10)), session('LATE', late, hm(10, 30))], bands });
+    eq(blocksOf(l).map(b => [b[0], b[5], b[6]]), [['FIRST', 0, 1], ['EARLY', 0, 2], ['LATE', 1, 2]], 'precondition: a pair, LATE on the right');
+    return labels(l);
+  };
+  eq(pair(hm(9, 20), hm(9, 25)), { blocks: [['FIRST', true], ['EARLY', false], ['LATE', false]], pills: [], bands: [['block:booth', true, 1]] }, 'the right half starts in the second line');
+  eq(pair(hm(9, 20), hm(9, 40)), { blocks: [['FIRST', true], ['EARLY', false], ['LATE', false]], pills: [], bands: [['block:booth', true, 2]] }, 'only the left half is beside the second line');
+});
+
 // ================================================================ gaps found by mutation checks
 // beyond the feature file: edges the scenarios do not print. Expected numbers are worked out by
 // hand: a pill of three is 32 + 3 * 44 = 164 tall open, so one that runs 60 minutes (10:00 to
@@ -821,11 +866,11 @@ await test('Blocked time and lunch are on the grid: a band is exactly kind, key,
   eq(entries.sessions, [], 'neither is a session');
 });
 
-await test('Blocked time and lunch are on the grid: a laid-out band is exactly kind, key, title, the times, top, height and lane, whatever else it was handed', () => {
+await test('Blocked time and lunch are on the grid: a laid-out band is exactly kind, key, title, the times, top, height, lane and lines, whatever else it was handed', () => {
   const handed = { kind: 'block', key: 'k', title: 't', startMin: 600, endMin: 660, item: { code: 'X' }, pseudo: 'block' };
   const l = gridLayout({ sessions: [], bands: [handed] });
-  eq(l.bands, [{ kind: 'block', key: 'k', title: 't', startMin: 600, endMin: 660, top: 0, height: 60, lane: false }]);
-  eq(Object.keys(l.bands[0]).sort(), ['endMin', 'height', 'key', 'kind', 'lane', 'startMin', 'title', 'top']);
+  eq(l.bands, [{ kind: 'block', key: 'k', title: 't', startMin: 600, endMin: 660, top: 0, height: 60, lane: false, lines: 1 }]);
+  eq(Object.keys(l.bands[0]).sort(), ['endMin', 'height', 'key', 'kind', 'lane', 'lines', 'startMin', 'title', 'top']);
 });
 
 await test('A pick without a time is not on the grid: an entry that is null, or whose end is a numeric string, is skipped and the good ones stay', () => {

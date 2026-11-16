@@ -11,6 +11,7 @@
 export const PILL_HEADER = 32; // units: the header of an open pill
 export const PILL_ROW = 44;    // units: each session row of an open pill
 export const BAND_LABEL = 15;  // units: the top of a band, where its label is written
+export const BAND_LINE = 16;   // units: a second line of that label, under the first
 
 const list = x => (Array.isArray(x) ? x : []);
 const timed = x => !!x && Number.isFinite(x.startMin) && Number.isFinite(x.endMin) && x.endMin > x.startMin;
@@ -75,7 +76,7 @@ const hourLabel = min => `${Math.floor(min / 60) % 12 || 12} ${Math.floor(min / 
 //           id is String(startMin); label is `${count} sessions at this time`; rows are the
 //           group's sessions, Must first (priority descending, then startMin, then code);
 //           dots is rows.map(r => r.priority).
-//   bands   [{ kind, key, title, startMin, endMin, top, height }]
+//   bands   [{ kind, key, title, startMin, endMin, top, height }] (and lane, lines: below)
 //   height  y(endMin): the height of the whole grid
 //   y(min)  units from the top of the grid for a minute of the day:
 //           (min - startMin) plus, for every open pill with endMin <= min, that pill's extra
@@ -91,6 +92,12 @@ const hourLabel = min => `${Math.floor(min / 60) % 12 || 12} ${Math.floor(min / 
 // lane true, and the page stops it short of the right edge to leave the label a lane. What
 // reaches the right edge is a pill, a full-width block, or the right half of a pair; both halves
 // of that pair get lane, so they stay equal. A band is still never one of a pair or a pill.
+//
+// Every band also has `lines` (1 or 2): how many lines its label may take. In its lane a label
+// may wrap onto a second line, the BAND_LINE units under the first BAND_LABEL. lines is 2 when
+// the band has lane, is tall enough for two lines inside its 1 unit of padding top and bottom
+// (2 * BAND_LINE + 2), and nothing that still reaches the right edge (so: without lane) is drawn
+// over that second line; otherwise 1.
 export function gridLayout({ sessions, bands } = {}, open = []) {
   const all = list(sessions), strips = list(bands);
   if (!all.length && !strips.length) return null;
@@ -134,6 +141,9 @@ export function gridLayout({ sessions, bands } = {}, open = []) {
   for (const row of placed) { const lane = hidesLabel(row.at(-1)); for (const b of row) b.lane = lane; }
   const atRight = [...pills, ...placed.map(row => row.at(-1))];
   for (const b of drawnBands) b.lane = atRight.some(x => overLabel(x, b));
+  // lines: a second label line only where nothing at full width would be drawn over it.
+  const overSecondLine = (x, b) => x.top < b.top + BAND_LABEL + BAND_LINE && b.top + BAND_LABEL < x.top + x.height;
+  for (const b of drawnBands) b.lines = b.lane && b.height >= 2 * BAND_LINE + 2 && !atRight.some(x => !x.lane && overSecondLine(x, b)) ? 2 : 1;
 
   return { startMin, endMin, hours, blocks: placed.flat(), pills, bands: drawnBands, y, height: y(endMin) };
 }
