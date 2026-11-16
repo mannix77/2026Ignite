@@ -143,12 +143,13 @@ const BOOTH = { id: 'booth', day: TUE, start: 540, end: 600, label: 'Booth duty'
 const MEETING = { id: 'meeting', day: THU, start: 840, end: 960, label: 'Customer meeting', building: 'W' };
 
 // The saved state of the Ignite planner. `ui` is merged into the saved ui state (where the
-// List / Grid choice lives, as ui.planView); `blocks` replaces the blocked time.
+// List / Grid choice lives, as ui.planView); `blocks` replaces the blocked time; `picks` are
+// added to the fixture's picks.
 export const BLOCKS = [BOOTH, MEETING];
-export function igniteState({ ui = {}, blocks = BLOCKS } = {}) {
+export function igniteState({ ui = {}, blocks = BLOCKS, picks = {} } = {}) {
   return {
     v: 1,
-    picks: IGNITE_PICKS,
+    picks: { ...IGNITE_PICKS, ...picks },
     prefs: { ...NO_WALK, lunch: { on: true, from: 720, to: 765, length: 45 }, blocks },
     ui: { tab: 'plan', filters: {}, day: null, ...ui },
   };

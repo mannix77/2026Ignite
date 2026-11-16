@@ -65,6 +65,12 @@ function same(actual, expected, what) {
   eq(actual.map(x => x?.key), expected.map(x => x.key), what);
   ok(actual.every((x, i) => x === expected[i]), `${what}: the keys match but these are not the items that were given`);
 }
+// Both lists gridEntries returns, so a stray band beside the right sessions (or a stray session
+// beside the right bands) cannot pass. Bands are named by key.
+function entriesAre(entries, sessions, bandKeys, what) {
+  same(entries.sessions, sessions, `${what}: sessions`);
+  eq(entries.bands.map(b => b.key), bandKeys, `${what}: bands`);
+}
 
 // ================================================================ the List / Grid choice
 
@@ -199,10 +205,10 @@ await test('A pick the plan dropped is still on the grid: for every reason excep
   };
   for (const kind of ['overlap', 'walk', 'block', 'other']) {
     const { chosen, lost, entries } = entriesFor(kind);
-    same(entries.sessions, [chosen, lost], `dropped for "${kind}"`);
+    entriesAre(entries, [chosen, lost], [], `dropped for "${kind}"`);
   }
   const { chosen, entries } = entriesFor('repeat');
-  same(entries.sessions, [chosen], 'dropped for "repeat"');
+  entriesAre(entries, [chosen], [], 'dropped for "repeat"');
 });
 
 // beyond the feature file: the same decision, with the runs of one session (they share an id).
@@ -219,9 +225,9 @@ await test('A pick the plan dropped is still on the grid: a run given up for ano
     { item: side, reason: { kind: 'overlap', other: keynote } },
     { item: labWed, reason: { kind: 'repeat', clash: false } },
   ];
-  same(gridEntries({ items, dropped, day: TUE }).sessions, [keynote, side, labLater], 'Tuesday');
-  same(gridEntries({ items, dropped, day: WED }).sessions, [wed], 'Wednesday');
-  same(gridEntries({ items, dropped: [], day: TUE }).sessions, [lab, keynote, side, labLater], 'precondition: with nothing dropped every Tuesday run is there');
+  entriesAre(gridEntries({ items, dropped, day: TUE }), [keynote, side, labLater], [], 'Tuesday');
+  entriesAre(gridEntries({ items, dropped, day: WED }), [wed], [], 'Wednesday');
+  entriesAre(gridEntries({ items, dropped: [], day: TUE }), [lab, keynote, side, labLater], [], 'precondition: with nothing dropped every Tuesday run is there');
 });
 
 await test('Blocked time and lunch are on the grid: each is a block at its own time', () => {
@@ -246,7 +252,11 @@ await test('Blocked time and lunch are on the grid: in time order, and only this
     blockedTime('backwards', 'Ends before it starts', TUE, hm(14), hm(13)),
     blockedTime('minute', 'One minute', TUE, hm(14), hm(14, 1)),
   ];
-  const bands = (lunch, day) => gridEntries({ items: [], blocks, lunch, day }).bands.map(b => [b.kind, b.key, b.startMin, b.endMin]);
+  const bands = (lunch, day) => {
+    const entries = gridEntries({ items: [], blocks, lunch, day });
+    eq(entries.sessions, [], 'blocked time and lunch are never sessions');
+    return entries.bands.map(b => [b.kind, b.key, b.startMin, b.endMin]);
+  };
   eq(bands({ start: hm(12), end: hm(12, 30) }, TUE),
     [['block', 'block:early', 480, 510], ['lunch', 'lunch', 720, 750], ['block', 'block:minute', 840, 841], ['block', 'block:late', 900, 960]]);
   eq(bands(null, WED), [['block', 'block:wed', 1080, 1200]], 'Wednesday has its own blocked time, and no lunch when none is protected');
@@ -259,7 +269,7 @@ await test('A pick without a time is not on the grid: the Want with no time yet 
   const must = session('MUST', hm(10), hm(10, 45), { priority: MUST });
   const noTime = session('NO-TIME', null, null), noDay = session('NO-DAY', null, null, { day: null });
   const entries = gridEntries({ items: [noTime, must, noDay], day: TUE });
-  same(entries.sessions, [must], 'sessions');
+  entriesAre(entries, [must], [], 'what is on the grid');
   eq(blocksOf(gridLayout(entries)), [['MUST', 600, 645, 0, 45, 0, 1]], 'and the grid is laid out without it');
 });
 
@@ -271,7 +281,7 @@ await test('A pick without a time is not on the grid: a time is two finite numbe
   };
   for (const [what, [start, end]] of Object.entries(times)) {
     const odd = session('ODD', start, end);
-    same(gridEntries({ items: [good, odd, oneMinute], day: TUE }).sessions, [good, oneMinute], what);
+    entriesAre(gridEntries({ items: [good, odd, oneMinute], day: TUE }), [good, oneMinute], [], what);
   }
 });
 
@@ -676,7 +686,7 @@ await test('Tapping a row in an open pill: each row is its session, key included
 await test('Blocked time and lunch have no details: a band carries no session, and no block or pill row stands for one', () => {
   const brk = session('BRK101', hm(10), hm(10, 45));
   const entries = gridEntries({ items: [brk], blocks: [blockedTime('b1', 'Booth duty', TUE, hm(10), hm(11))], lunch: { start: hm(12), end: hm(12, 45) }, day: TUE });
-  same(entries.sessions, [brk], 'sessions');
+  entriesAre(entries, [brk], ['block:b1', 'lunch'], 'what is on the grid');
   const l = gridLayout(entries);
   eq(bandsOf(l), [['block', 'block:b1', 'Booth duty', 600, 660, 0, 60], ['lunch', 'lunch', 'Lunch', 720, 765, 120, 45]], 'the grid shows blocked time and lunch');
   eq(l.bands.map(b => ['item' in b, 's' in b, b.kind]), [[false, false, 'block'], [false, false, 'lunch']], 'neither carries a session to open');
@@ -780,6 +790,7 @@ await test('Two sessions that overlap: the pair is ordered by start, not by end'
 await test('Blocked time and lunch are on the grid: bands are ordered by start when one is inside another', () => {
   const entries = gridEntries({ items: [], blocks: [blockedTime('long', 'All afternoon', TUE, hm(11), hm(14))], lunch: { start: hm(12), end: hm(12, 45) }, day: TUE });
   eq(entries.bands.map(b => [b.kind, b.startMin, b.endMin]), [['block', 660, 840], ['lunch', 720, 765]]);
+  eq(entries.sessions, [], 'neither is a session');
 });
 
 await test('Picks that start and end between hours: a day that runs to midnight ends on a 12 AM line', () => {
@@ -807,6 +818,7 @@ await test('Blocked time and lunch are on the grid: a band is exactly kind, key,
     { kind: 'lunch', key: 'lunch', title: 'Lunch', startMin: 720, endMin: 765 },
   ]);
   eq(entries.bands.map(x => Object.keys(x).sort()), [['endMin', 'key', 'kind', 'startMin', 'title'], ['endMin', 'key', 'kind', 'startMin', 'title']], 'no other field comes along');
+  eq(entries.sessions, [], 'neither is a session');
 });
 
 await test('Blocked time and lunch are on the grid: a laid-out band is exactly kind, key, title, the times, top, height and lane, whatever else it was handed', () => {
@@ -827,8 +839,8 @@ await test('A pick without a time is not on the grid: an entry that is null, or 
 await test('A pick without a time is not on the grid: items, dropped, blocks, sessions and bands that are not lists are ignored, and the lists beside them are used', () => {
   const a = session('A', hm(10), hm(10, 45)), booth = blockedTime('b', 'Booth', TUE, hm(11), hm(12));
   eq(gridEntries({ items: 'junk', dropped: {}, blocks: 5, lunch: null, day: TUE }), { sessions: [], bands: [] });
-  same(gridEntries({ items: [a], dropped: {}, blocks: 5, day: TUE }).sessions, [a], 'items beside junk dropped and blocks');
-  eq(gridEntries({ items: 'junk', blocks: [booth], day: TUE }).bands.map(b => b.key), ['block:b'], 'blocks beside junk items');
+  entriesAre(gridEntries({ items: [a], dropped: {}, blocks: 5, day: TUE }), [a], [], 'items beside junk dropped and blocks');
+  entriesAre(gridEntries({ items: 'junk', blocks: [booth], day: TUE }), [], ['block:b'], 'blocks beside junk items');
   ok(gridLayout({ sessions: {}, bands: 'x' }) === null, 'nothing drawable gives null');
   eq(blocksOf(gridLayout({ sessions: [a], bands: 'x' })), [['A', 600, 645, 0, 45, 0, 1]], 'sessions beside junk bands');
   eq(bandsOf(gridLayout({ sessions: {}, bands: [band('lunch', 'lunch', 'Lunch', hm(12), hm(12, 45))] })), [['lunch', 'lunch', 'Lunch', 720, 765, 0, 45]], 'bands beside junk sessions');
@@ -837,14 +849,13 @@ await test('A pick without a time is not on the grid: items, dropped, blocks, se
 await test('A pick without a time is not on the grid: asking for entries with no argument or no items still answers', () => {
   eq(gridEntries(), { sessions: [], bands: [] });
   const booth = blockedTime('b', 'Booth', TUE, hm(11), hm(12));
-  eq(gridEntries({ blocks: [booth], day: TUE }).sessions, [], 'no items');
-  eq(gridEntries({ blocks: [booth], day: TUE }).bands.map(b => b.key), ['block:b'], 'and the blocked time is still there');
+  entriesAre(gridEntries({ blocks: [booth], day: TUE }), [], ['block:b'], 'no items: the blocked time is still there');
 });
 
 await test('A pick the plan dropped is still on the grid: a dropped entry that is null, has no reason or is a repeat of nothing is skipped, the real repeat still applies', () => {
   const a = session('A', hm(10), hm(10, 45)), b = session('B', hm(11), hm(11, 45));
   const dropped = [null, { item: b }, { reason: { kind: 'repeat' } }, { item: a, reason: { kind: 'repeat' } }];
-  same(gridEntries({ items: [a, b], dropped, day: TUE }).sessions, [b], 'A is given up for another run, B and the junk change nothing');
+  entriesAre(gridEntries({ items: [a, b], dropped, day: TUE }), [b], [], 'A is given up for another run, B and the junk change nothing');
 });
 
 await test('Two sessions that overlap: codes that are numbers are ordered as text, and nothing throws', () => {

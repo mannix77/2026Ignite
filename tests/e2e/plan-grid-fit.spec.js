@@ -29,7 +29,7 @@
 // fails there), and the band labels the tests expect whole in a lane ("Stand-up", "Call",
 // "Review", "Demo", "Lunch") are short enough for it in all five.
 import { test, expect as baseExpect } from '@playwright/test';
-import { serveFixture, seedState, igniteState, CATALOGS, KEYS, BLOCKS, FIXED_NOW, TUE, WED, FRI } from './plan-grid.fixture.js';
+import { serveFixture, seedState, CATALOGS, BLOCKS, FIXED_NOW, TUE, WED, FRI } from './plan-grid.fixture.js';
 
 const expect = baseExpect.configure({ timeout: 4000 });
 const BOOT_TIMEOUT = 15_000;
@@ -99,13 +99,8 @@ const blocked = (id, label, day, start, end) => ({ id, day, start, end, label, b
 async function openPlan(page, { day = TUE, blocks = BLOCKS, added = [] } = {}) {
   expect(TEMPLATE, 'the fixture session the added ones are copied from').toMatchObject({ code: 'BRK101', start: '2026-11-17T18:00:00Z', end: '2026-11-17T18:45:00Z' });
   catalog = { ...CATALOGS.ignite2026, sessions: [...CATALOGS.ignite2026.sessions, ...added.map(a => a.rec)] };
-  const state = igniteState({ ui: { day }, blocks });
-  state.picks = { ...state.picks, ...Object.fromEntries(added.map(a => a.pick)) };
-  // Before the fixture's own seed, which only fills a key that is still empty (so does this).
-  await page.context().addInitScript(([key, text]) => {
-    try { if (localStorage.getItem(key) === null) localStorage.setItem(key, text); } catch { /* about:blank has no storage */ }
-  }, [KEYS.ignite2026, JSON.stringify(state)]);
-  await seedState(page.context());
+  // One seed script writes the whole state: the order two init scripts run in is not defined.
+  await seedState(page.context(), { ignite: { ui: { day }, blocks, picks: Object.fromEntries(added.map(a => a.pick)) } });
   await page.goto('/#/plan');
   await expect(page).toHaveTitle('Ignite Planner', { timeout: BOOT_TIMEOUT });
   await expect(page.locator('#main h1')).toHaveText('My plan', { timeout: BOOT_TIMEOUT });
