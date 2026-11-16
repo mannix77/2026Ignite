@@ -1,7 +1,7 @@
 {
  "source": "https://catalog.awsevents.com/api/sessions",
  "event": "reinvent2026",
- "fetchedAt": "2026-11-16T00:56:58Z",
+ "fetchedAt": "2026-11-16T06:59:41Z",
  "count": 2588,
  "sessions": [
   {
@@ -795,7 +795,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-10T17:32:26Z",
+   "modified": "2026-11-16T02:18:04Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -1986,7 +1986,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-16T00:29:59Z",
+   "modified": "2026-11-16T03:49:14Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -2437,108 +2437,6 @@
    ]
   },
   {
-   "sessionID": "1780441492191001GxeJ",
-   "code": "CON304-R",
-   "title": "Accelerate declarative resource management with Amazon EKS Capabilities",
-   "abstract": "Platform teams struggle to deliver self-service infrastructure that is both fast and governed. Developers want Kubernetes-native provisioning, but adopting new tools while managing existing IaC investments creates friction. In this builders session, explore the latest Amazon EKS Capabilities features including kro Collections, Graph Revisions, and reactive watches for advanced declarative resource management. Then use Kiro to build an agentic workflow that accelerates migration from legacy IaC to Kubernetes-native resource definitions. Leave with working implementations you can bring back to your platform.",
-   "type": "Builders' session",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Builders' session"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Developer Tools",
-     "Containers"
-    ],
-    "AreaofInterest": [
-     "DevSecOps",
-     "Agentic AI",
-     "Kubernetes"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "DevOps Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Elastic Kubernetes Service (Amazon EKS)"
-    ],
-    "Venue": [
-     "Caesars Forum"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Petro Kashlikov",
-     "title": "Sr. Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Tzahi Mizrahi",
-     "title": "Sr. Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Javier Garcia Garcia",
-     "title": "Technical Account Manager",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Amine Hilaly",
-     "title": "Sr. Software Engineer",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Navya Srivastava",
-     "title": "Senior Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025473879001CC9J",
-     "date": "2026-11-30",
-     "startTime": "08:30",
-     "endTime": "09:30",
-     "utcStartTime": "2026/11/30 16:30:00",
-     "utcEndTime": "2026/11/30 17:30:00",
-     "length": 60,
-     "room": "Caesars Forum | Level 1 | Alliance 311",
-     "roomId": "1789591919636004boBN",
-     "capacity": "50",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358241284001ig7D",
    "code": "CON304-R1",
    "title": "Accelerate declarative resource management with Amazon EKS Capabilities",
@@ -2547,7 +2445,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-13T16:18:06Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -2592,20 +2490,20 @@
    },
    "speakers": [
     {
-     "name": "Petro Kashlikov",
-     "title": "Sr. Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Tzahi Mizrahi",
      "title": "Sr. Solutions Architect",
      "company": "AWS",
      "role": "Internal Speaker"
     },
     {
-     "name": "Javier Garcia Garcia",
-     "title": "Technical Account Manager",
+     "name": "Navya Srivastava",
+     "title": "Senior Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Petro Kashlikov",
+     "title": "Sr. Solutions Architect",
      "company": "AWS",
      "role": "Internal Speaker"
     },
@@ -2616,8 +2514,8 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Navya Srivastava",
-     "title": "Senior Solutions Architect",
+     "name": "Javier Garcia Garcia",
+     "title": "Technical Account Manager",
      "company": "AWS",
      "role": "Internal Speaker"
     }
@@ -2633,6 +2531,108 @@
      "length": 60,
      "room": "Caesars Palace | Promenade South | Octavius 4 | Content Hub | Builders' Session",
      "roomId": "1789591920108001bzg8",
+     "capacity": "50",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780441492191001GxeJ",
+   "code": "CON304-R",
+   "title": "Accelerate declarative resource management with Amazon EKS Capabilities",
+   "abstract": "Platform teams struggle to deliver self-service infrastructure that is both fast and governed. Developers want Kubernetes-native provisioning, but adopting new tools while managing existing IaC investments creates friction. In this builders session, explore the latest Amazon EKS Capabilities features including kro Collections, Graph Revisions, and reactive watches for advanced declarative resource management. Then use Kiro to build an agentic workflow that accelerates migration from legacy IaC to Kubernetes-native resource definitions. Leave with working implementations you can bring back to your platform.",
+   "type": "Builders' session",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-11T19:14:48Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Builders' session"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Developer Tools",
+     "Containers"
+    ],
+    "AreaofInterest": [
+     "DevSecOps",
+     "Agentic AI",
+     "Kubernetes"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "DevOps Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Elastic Kubernetes Service (Amazon EKS)"
+    ],
+    "Venue": [
+     "Caesars Forum"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Tzahi Mizrahi",
+     "title": "Sr. Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Navya Srivastava",
+     "title": "Senior Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Petro Kashlikov",
+     "title": "Sr. Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Amine Hilaly",
+     "title": "Sr. Software Engineer",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Javier Garcia Garcia",
+     "title": "Technical Account Manager",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025473879001CC9J",
+     "date": "2026-11-30",
+     "startTime": "08:30",
+     "endTime": "09:30",
+     "utcStartTime": "2026/11/30 16:30:00",
+     "utcEndTime": "2026/11/30 17:30:00",
+     "length": 60,
+     "room": "Caesars Forum | Level 1 | Alliance 311",
+     "roomId": "1789591919636004boBN",
      "capacity": "50",
      "inPersonTime": true,
      "virtualTime": false,
@@ -4299,90 +4299,6 @@
    ]
   },
   {
-   "sessionID": "1780442238275001cH3a",
-   "code": "CMP326-R",
-   "title": "Accelerating AWS Graviton migrations at scale with AI",
-   "abstract": "In this session, we explore how agents accelerate AWS Graviton migrations, improving price/performance for workloads across every phase from migration planning, compatibility validation, to performance testing and optimization. We’ll examine various agentic tools where attendees will learn how to choose the right solution and practical steps to implement the tools in their environments. Participants will leave with actionable strategies to reduce manual overhead and harness AI to unlock Graviton’s benefits at scale.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Artificial Intelligence",
-     "Compute"
-    ],
-    "AreaofInterest": [
-     "Cost Optimization",
-     "Agentic AI",
-     "DevOps"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "DevOps Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Elastic Compute Cloud (Amazon EC2)",
-     "AWS Transform"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Jackson Wagstaff",
-     "title": "Principal Specialist, Compute",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Jake Wolf",
-     "title": "Specialist Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025500228001C3Ki",
-     "date": "2026-12-01",
-     "startTime": "11:30",
-     "endTime": "12:30",
-     "utcStartTime": "2026/12/01 19:30:00",
-     "utcEndTime": "2026/12/01 20:30:00",
-     "length": 60,
-     "room": "MGM Grand | Level 1 | Boulevard 163",
-     "roomId": "1789591920202001b2p2",
-     "capacity": "94",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358252182001i9iS",
    "code": "CMP326-R1",
    "title": "Accelerating AWS Graviton migrations at scale with AI",
@@ -4460,6 +4376,90 @@
      "room": "Caesars Palace | Promenade Level | Neopolitan III",
      "roomId": "1789591919957001bKQH",
      "capacity": "70",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442238275001cH3a",
+   "code": "CMP326-R",
+   "title": "Accelerating AWS Graviton migrations at scale with AI",
+   "abstract": "In this session, we explore how agents accelerate AWS Graviton migrations, improving price/performance for workloads across every phase from migration planning, compatibility validation, to performance testing and optimization. We’ll examine various agentic tools where attendees will learn how to choose the right solution and practical steps to implement the tools in their environments. Participants will leave with actionable strategies to reduce manual overhead and harness AI to unlock Graviton’s benefits at scale.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-16T06:29:45Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Artificial Intelligence",
+     "Compute"
+    ],
+    "AreaofInterest": [
+     "Cost Optimization",
+     "Agentic AI",
+     "DevOps"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "DevOps Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Elastic Compute Cloud (Amazon EC2)",
+     "AWS Transform"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Jake Wolf",
+     "title": "Specialist Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Jackson Wagstaff",
+     "title": "Principal Specialist, Compute",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025500228001C3Ki",
+     "date": "2026-12-01",
+     "startTime": "11:30",
+     "endTime": "12:30",
+     "utcStartTime": "2026/12/01 19:30:00",
+     "utcEndTime": "2026/12/01 20:30:00",
+     "length": 60,
+     "room": "MGM Grand | Level 1 | Boulevard 163",
+     "roomId": "1789591920202001b2p2",
+     "capacity": "94",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -8418,7 +8418,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-06T20:31:24Z",
+   "modified": "2026-11-16T06:04:29Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -8465,16 +8465,16 @@
    },
    "speakers": [
     {
-     "name": "Tamara Gagliardi",
-     "title": "Sr. Solutions Architect",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Mirko Buholzer",
      "title": "VP Software Engineering",
      "company": "Natera, Inc.",
      "role": "External Speaker"
+    },
+    {
+     "name": "Tamara Gagliardi",
+     "title": "Sr. Solutions Architect",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
     }
    ],
    "times": [
@@ -29039,7 +29039,7 @@
    "length": 120,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-16T00:49:35Z",
+   "modified": "2026-11-16T06:11:59Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -32076,7 +32076,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-16T02:14:33Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -63117,7 +63117,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-12T19:24:33Z",
+   "modified": "2026-11-13T02:21:52Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -75591,7 +75591,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-15T23:39:14Z",
+   "modified": "2026-11-16T06:49:16Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -78885,91 +78885,6 @@
    ]
   },
   {
-   "sessionID": "1780441501551001GBk3",
-   "code": "NET215-R",
-   "title": "Cut through the options: Choosing the right AWS connectivity solution",
-   "abstract": "AWS offers a growing range of connectivity services, including AWS Direct Connect, AWS Interconnect (multicloud and last mile), AWS Transit Gateway, and AWS Cloud WAN. But when should you use one over another? In this chalk talk, evaluate your connectivity options and avoid over-engineering your network design. Walk through real-world scenarios and a structured decision framework to understand which service aligns with your requirements. Attendees gain clear guidance and discover practical decision tools for selecting the right service for your scenario. Come prepared with your questions.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-11T19:14:48Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "200 – Intermediate"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Hybrid Cloud & Multicloud",
-     "Networking & Content Delivery"
-    ],
-    "AreaofInterest": [
-     "Global Infrastructure",
-     "Network & Infrastructure Security",
-     "Well-Architected Framework"
-    ],
-    "Role": [
-     "Advisor / Consultant",
-     "IT Administrator",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "AWS Direct Connect",
-     "AWS Transit Gateway",
-     "AWS Interconnect"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Daniel Neri",
-     "title": "Sr. WW SSA, Networking",
-     "company": "Amazon Web Services",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Jordan Rojas Garcia",
-     "title": "Sr. Networking Specialist SA",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025473240001Cxlm",
-     "date": "2026-11-30",
-     "startTime": "08:30",
-     "endTime": "09:30",
-     "utcStartTime": "2026/11/30 16:30:00",
-     "utcEndTime": "2026/11/30 17:30:00",
-     "length": 60,
-     "room": "MGM Grand | Level 1 | Boulevard 163",
-     "roomId": "1789591920202001b2p2",
-     "capacity": "94",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358243107001iVOJ",
    "code": "NET215-R1",
    "title": "Cut through the options: Choosing the right AWS connectivity solution",
@@ -79048,6 +78963,91 @@
      "room": "Caesars Palace | Promenade South | Octavius 9",
      "roomId": "1789591920153004bp8X",
      "capacity": "70",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780441501551001GBk3",
+   "code": "NET215-R",
+   "title": "Cut through the options: Choosing the right AWS connectivity solution",
+   "abstract": "AWS offers a growing range of connectivity services, including AWS Direct Connect, AWS Interconnect (multicloud and last mile), AWS Transit Gateway, and AWS Cloud WAN. But when should you use one over another? In this chalk talk, evaluate your connectivity options and avoid over-engineering your network design. Walk through real-world scenarios and a structured decision framework to understand which service aligns with your requirements. Attendees gain clear guidance and discover practical decision tools for selecting the right service for your scenario. Come prepared with your questions.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-16T06:22:15Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "200 – Intermediate"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Hybrid Cloud & Multicloud",
+     "Networking & Content Delivery"
+    ],
+    "AreaofInterest": [
+     "Global Infrastructure",
+     "Network & Infrastructure Security",
+     "Well-Architected Framework"
+    ],
+    "Role": [
+     "Advisor / Consultant",
+     "IT Administrator",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "AWS Direct Connect",
+     "AWS Transit Gateway",
+     "AWS Interconnect"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Daniel Neri",
+     "title": "Sr. WW SSA, Networking",
+     "company": "Amazon Web Services",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Jordan Rojas Garcia",
+     "title": "Sr. Networking Specialist SA",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025473240001Cxlm",
+     "date": "2026-11-30",
+     "startTime": "08:30",
+     "endTime": "09:30",
+     "utcStartTime": "2026/11/30 16:30:00",
+     "utcEndTime": "2026/11/30 17:30:00",
+     "length": 60,
+     "room": "MGM Grand | Level 1 | Boulevard 163",
+     "roomId": "1789591920202001b2p2",
+     "capacity": "94",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -87352,7 +87352,7 @@
    "length": 180,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-13T21:35:54Z",
+   "modified": "2026-11-16T05:39:10Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -98338,7 +98338,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-16T04:23:58Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -108641,7 +108641,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-11T19:14:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -108685,9 +108685,9 @@
    },
    "speakers": [
     {
-     "name": "Bhargs Srivathsan",
-     "title": "Director, Customer Success",
-     "company": "Amazon",
+     "name": "Karen Hildebrand",
+     "title": "AWS Partner Success Leader | ASP Customer Success Center of Excellence",
+     "company": "AWS",
      "role": "Internal Speaker"
     },
     {
@@ -108697,9 +108697,9 @@
      "role": "Internal Speaker"
     },
     {
-     "name": "Karen Hildebrand",
-     "title": "AWS Partner Success Leader | ASP Customer Success Center of Excellence",
-     "company": "AWS",
+     "name": "Bhargs Srivathsan",
+     "title": "Director, Customer Success",
+     "company": "Amazon",
      "role": "Internal Speaker"
     }
    ],
@@ -119906,7 +119906,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-14T15:00:21Z",
+   "modified": "2026-11-16T03:00:10Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -119976,90 +119976,6 @@
      "room": "Caesars Palace | Promenade South | Octavius 14",
      "roomId": "1789591920078001bjro",
      "capacity": "70",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
-   "sessionID": "1790358224401001iCcd",
-   "code": "IND376-R1",
-   "title": "How to Deploy Purpose-Built Clinical AI Agents to Production with Speed and Scale",
-   "abstract": "Providers lose hours daily to documentation, manual coding, and admin work. Leading health IT builders are solving this with purpose-built AI on AWS. In this chalk talk, Innovaccer joins AWS to share how they trained task-specific clinical small language models that deliver consistent outputs where general-purpose LLMs produce unacceptable variance. We use their architecture as a jumping-off point to discuss the full spectrum of paths to production: custom model training on accelerated compute, multi-step agentic workflow orchestration, and embedding fully managed clinical AI capabilities into existing applications.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-13T16:18:06Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Customer story",
-     "Discussion"
-    ],
-    "Topic": [
-     "Artificial Intelligence",
-     "Industry Solutions"
-    ],
-    "AreaofInterest": [
-     "Agentic AI"
-    ],
-    "Industry": [
-     "Healthcare & Life Sciences"
-    ],
-    "Role": [
-     "Developer / Engineer",
-     "Solution / Systems Architect"
-    ],
-    "Services": [
-     "Amazon Bedrock"
-    ],
-    "Venue": [
-     "Wynn/Encore"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Deepti Chugh",
-     "title": "Sr Solutions Architect",
-     "company": "Amazon Web Services(AWS)",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Janak Ramachandran",
-     "title": "Head of AI",
-     "company": "Innovaccer",
-     "role": "External Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790360394847001A8Vj",
-     "date": "2026-12-02",
-     "startTime": "10:00",
-     "endTime": "11:00",
-     "utcStartTime": "2026/12/02 18:00:00",
-     "utcEndTime": "2026/12/02 19:00:00",
-     "length": 60,
-     "room": "Wynn/Encore | Level 1 | Chopin 2",
-     "roomId": "1789591921094001bT6B",
-     "capacity": "88",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -120142,6 +120058,90 @@
      "length": 60,
      "room": "Wynn/Encore | Level 1 | Chopin 4",
      "roomId": "1789591921128001bJpf",
+     "capacity": "88",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1790358224401001iCcd",
+   "code": "IND376-R1",
+   "title": "How to Deploy Purpose-Built Clinical AI Agents to Production with Speed and Scale",
+   "abstract": "Providers lose hours daily to documentation, manual coding, and admin work. Leading health IT builders are solving this with purpose-built AI on AWS. In this chalk talk, Innovaccer joins AWS to share how they trained task-specific clinical small language models that deliver consistent outputs where general-purpose LLMs produce unacceptable variance. We use their architecture as a jumping-off point to discuss the full spectrum of paths to production: custom model training on accelerated compute, multi-step agentic workflow orchestration, and embedding fully managed clinical AI capabilities into existing applications.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-16T06:39:10Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Customer story",
+     "Discussion"
+    ],
+    "Topic": [
+     "Artificial Intelligence",
+     "Industry Solutions"
+    ],
+    "AreaofInterest": [
+     "Agentic AI"
+    ],
+    "Industry": [
+     "Healthcare & Life Sciences"
+    ],
+    "Role": [
+     "Developer / Engineer",
+     "Solution / Systems Architect"
+    ],
+    "Services": [
+     "Amazon Bedrock"
+    ],
+    "Venue": [
+     "Wynn/Encore"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Deepti Chugh",
+     "title": "Sr Solutions Architect",
+     "company": "Amazon Web Services(AWS)",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Janak Ramachandran",
+     "title": "Head of AI",
+     "company": "Innovaccer",
+     "role": "External Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790360394847001A8Vj",
+     "date": "2026-12-02",
+     "startTime": "10:00",
+     "endTime": "11:00",
+     "utcStartTime": "2026/12/02 18:00:00",
+     "utcEndTime": "2026/12/02 19:00:00",
+     "length": 60,
+     "room": "Wynn/Encore | Level 1 | Chopin 2",
+     "roomId": "1789591921094001bT6B",
      "capacity": "88",
      "inPersonTime": true,
      "virtualTime": false,
@@ -128317,7 +128317,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-14T18:24:24Z",
+   "modified": "2026-11-16T04:42:15Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -134803,7 +134803,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-15T07:35:20Z",
+   "modified": "2026-11-16T05:26:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -139556,7 +139556,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-13T15:13:14Z",
+   "modified": "2026-11-16T04:36:39Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -139601,7 +139601,7 @@
     },
     {
      "name": "John Jamail",
-     "title": "Head of Engineering, Transform for VMware",
+     "title": "Head of Engineering, Transform for migrations",
      "company": "AWS",
      "role": "Internal Speaker"
     }
@@ -169725,7 +169725,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-11T19:14:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -169767,15 +169767,15 @@
    },
    "speakers": [
     {
-     "name": "Babu Samayapuram Suthanthira Raju",
-     "title": "Global Solutions Architect",
-     "company": "AWS Singapore Pte. Ltd",
-     "role": "Internal Speaker"
-    },
-    {
      "name": "Jyothi Madanlal",
      "title": "Senior Solutions Architect",
      "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Babu Samayapuram Suthanthira Raju",
+     "title": "Global Solutions Architect",
+     "company": "AWS Singapore Pte. Ltd",
      "role": "Internal Speaker"
     }
    ],
@@ -169806,7 +169806,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-11T05:35:36Z",
+   "modified": "2026-11-13T16:18:06Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -170152,7 +170152,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-09T23:53:43Z",
+   "modified": "2026-11-11T19:14:48Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -180202,7 +180202,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-15T07:10:21Z",
+   "modified": "2026-11-16T04:53:40Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -181846,7 +181846,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-11T19:14:48Z",
+   "modified": "2026-11-14T12:50:29Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -187691,7 +187691,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-15T07:35:20Z",
+   "modified": "2026-11-16T05:35:58Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
@@ -194308,89 +194308,6 @@
    ]
   },
   {
-   "sessionID": "1780442247824001cCFP",
-   "code": "NET216-R",
-   "title": "Understand your network: practical network observability on AWS",
-   "abstract": "You're collecting Amazon VPC Flow Logs and Amazon CloudWatch metrics, but still can't answer \"why can't this instance reach the internet?\" In this chalk talk, explore practical approaches to network observability on AWS, no deep expertise required. Cover the key logs and metrics that actually matter, how to read them, and how to set up simple dashboards and alerts that tell you something is wrong before your users do. Bring your monitoring questions, and we'll discuss real scenarios to help you build observability that works for your team.",
-   "type": "Chalk talk",
-   "length": 60,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-11T06:47:48Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Chalk talk"
-    ],
-    "Level": [
-     "200 – Intermediate"
-    ],
-    "Features": [
-     "Discussion"
-    ],
-    "Topic": [
-     "Architecture",
-     "Cloud Operations"
-    ],
-    "AreaofInterest": [
-     "Monitoring & Observability",
-     "Network & Infrastructure Security",
-     "Well-Architected Framework"
-    ],
-    "Role": [
-     "Cloud Security Specialist",
-     "Solution / Systems Architect",
-     "Tech Explorer"
-    ],
-    "Services": [
-     "Amazon CloudWatch"
-    ],
-    "Venue": [
-     "MGM Grand"
-    ],
-    "SessionAppendices": [
-     "Repeat"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Leonardo Solano",
-     "title": "Principal Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    },
-    {
-     "name": "Claudia Izquierdo",
-     "title": "Senior Solutions Architect",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790025545662001C3Gw",
-     "date": "2026-12-03",
-     "startTime": "13:30",
-     "endTime": "14:30",
-     "utcStartTime": "2026/12/03 21:30:00",
-     "utcEndTime": "2026/12/03 22:30:00",
-     "length": 60,
-     "room": "MGM Grand | Level 1 | Boulevard 155",
-     "roomId": "1789591920164001btii",
-     "capacity": "78",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1790358222517001iUyP",
    "code": "NET216-R1",
    "title": "Understand your network: practical network observability on AWS",
@@ -194468,6 +194385,89 @@
      "room": "MGM Grand | Level 1 | Boulevard 162",
      "roomId": "1789591920194001baD5",
      "capacity": "98",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1780442247824001cCFP",
+   "code": "NET216-R",
+   "title": "Understand your network: practical network observability on AWS",
+   "abstract": "You're collecting Amazon VPC Flow Logs and Amazon CloudWatch metrics, but still can't answer \"why can't this instance reach the internet?\" In this chalk talk, explore practical approaches to network observability on AWS, no deep expertise required. Cover the key logs and metrics that actually matter, how to read them, and how to set up simple dashboards and alerts that tell you something is wrong before your users do. Bring your monitoring questions, and we'll discuss real scenarios to help you build observability that works for your team.",
+   "type": "Chalk talk",
+   "length": 60,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-16T05:59:46Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Chalk talk"
+    ],
+    "Level": [
+     "200 – Intermediate"
+    ],
+    "Features": [
+     "Discussion"
+    ],
+    "Topic": [
+     "Architecture",
+     "Cloud Operations"
+    ],
+    "AreaofInterest": [
+     "Monitoring & Observability",
+     "Network & Infrastructure Security",
+     "Well-Architected Framework"
+    ],
+    "Role": [
+     "Cloud Security Specialist",
+     "Solution / Systems Architect",
+     "Tech Explorer"
+    ],
+    "Services": [
+     "Amazon CloudWatch"
+    ],
+    "Venue": [
+     "MGM Grand"
+    ],
+    "SessionAppendices": [
+     "Repeat"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Leonardo Solano",
+     "title": "Principal Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    },
+    {
+     "name": "Claudia Izquierdo",
+     "title": "Senior Solutions Architect",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790025545662001C3Gw",
+     "date": "2026-12-03",
+     "startTime": "13:30",
+     "endTime": "14:30",
+     "utcStartTime": "2026/12/03 21:30:00",
+     "utcEndTime": "2026/12/03 22:30:00",
+     "length": 60,
+     "room": "MGM Grand | Level 1 | Boulevard 155",
+     "roomId": "1789591920164001btii",
+     "capacity": "78",
      "inPersonTime": true,
      "virtualTime": false,
      "replayable": false
@@ -196463,74 +196463,6 @@
    ]
   },
   {
-   "sessionID": "1784231861722001EVTP",
-   "code": "TNC307-R1",
-   "title": "Validate your hands-on AWS skills & earn a Microcredential ",
-   "abstract": "In this session, you will be given time to attempt a microcredential exam of your choice on AWS Skill Builder. These timed, hands-on exams test your skills in a live, provisioned AWS environment and test on popular topics. \n\nThe product and developer team will be onsite to walk you through the UI and introduce the exam. Please note - this is an individual exam, and you will not be provided any hints or guidance outside of what is provided in the typical test environment. This exam is free to take on AWS Skill Builder. \n\nAttendees are required to bring their own device to complete the exam. Those who pass will be issued a microcredential badge on Credly.",
-   "type": "Exam prep",
-   "length": 180,
-   "status": "Accepted",
-   "published": 1,
-   "modified": "2026-11-13T03:20:19Z",
-   "testRecord": false,
-   "attributes": {
-    "EmbargoSession": [
-     "No"
-    ],
-    "Type": [
-     "Exam prep"
-    ],
-    "Level": [
-     "300 – Advanced"
-    ],
-    "Features": [
-     "Hands-on"
-    ],
-    "Topic": [
-     "Artificial Intelligence",
-     "Serverless"
-    ],
-    "AreaofInterest": [
-     "Training & Certification"
-    ],
-    "Venue": [
-     "Caesars Palace"
-    ],
-    "SessionAppendices": [
-     "Repeat",
-     "Laptop required"
-    ],
-    "HideSpeakers": [
-     "No"
-    ]
-   },
-   "speakers": [
-    {
-     "name": "Tom Lawlor",
-     "title": "Sr. Product Manager - Tech",
-     "company": "AWS",
-     "role": "Internal Speaker"
-    }
-   ],
-   "times": [
-    {
-     "sessionTimeID": "1790892831342001rnTW",
-     "date": "2026-12-01",
-     "startTime": "14:00",
-     "endTime": "17:00",
-     "utcStartTime": "2026/12/01 22:00:00",
-     "utcEndTime": "2026/12/02 01:00:00",
-     "length": 180,
-     "room": "Caesars Palace | Emperors Level | Emperors Ballroom II",
-     "roomId": "1789591919892004bpdn",
-     "capacity": "82",
-     "inPersonTime": true,
-     "virtualTime": false,
-     "replayable": false
-    }
-   ]
-  },
-  {
    "sessionID": "1784231861786001E1lH",
    "code": "TNC307-R3",
    "title": "Validate your hands-on AWS skills & earn a Microcredential ",
@@ -196724,6 +196656,74 @@
      "endTime": "17:30",
      "utcStartTime": "2026/12/02 22:30:00",
      "utcEndTime": "2026/12/03 01:30:00",
+     "length": 180,
+     "room": "Caesars Palace | Emperors Level | Emperors Ballroom II",
+     "roomId": "1789591919892004bpdn",
+     "capacity": "82",
+     "inPersonTime": true,
+     "virtualTime": false,
+     "replayable": false
+    }
+   ]
+  },
+  {
+   "sessionID": "1784231861722001EVTP",
+   "code": "TNC307-R1",
+   "title": "Validate your hands-on AWS skills & earn a Microcredential ",
+   "abstract": "In this session, you will be given time to attempt a microcredential exam of your choice on AWS Skill Builder. These timed, hands-on exams test your skills in a live, provisioned AWS environment and test on popular topics. \n\nThe product and developer team will be onsite to walk you through the UI and introduce the exam. Please note - this is an individual exam, and you will not be provided any hints or guidance outside of what is provided in the typical test environment. This exam is free to take on AWS Skill Builder. \n\nAttendees are required to bring their own device to complete the exam. Those who pass will be issued a microcredential badge on Credly.",
+   "type": "Exam prep",
+   "length": 180,
+   "status": "Accepted",
+   "published": 1,
+   "modified": "2026-11-16T03:49:14Z",
+   "testRecord": false,
+   "attributes": {
+    "EmbargoSession": [
+     "No"
+    ],
+    "Type": [
+     "Exam prep"
+    ],
+    "Level": [
+     "300 – Advanced"
+    ],
+    "Features": [
+     "Hands-on"
+    ],
+    "Topic": [
+     "Artificial Intelligence",
+     "Serverless"
+    ],
+    "AreaofInterest": [
+     "Training & Certification"
+    ],
+    "Venue": [
+     "Caesars Palace"
+    ],
+    "SessionAppendices": [
+     "Repeat",
+     "Laptop required"
+    ],
+    "HideSpeakers": [
+     "No"
+    ]
+   },
+   "speakers": [
+    {
+     "name": "Tom Lawlor",
+     "title": "Sr. Product Manager - Tech",
+     "company": "AWS",
+     "role": "Internal Speaker"
+    }
+   ],
+   "times": [
+    {
+     "sessionTimeID": "1790892831342001rnTW",
+     "date": "2026-12-01",
+     "startTime": "14:00",
+     "endTime": "17:00",
+     "utcStartTime": "2026/12/01 22:00:00",
+     "utcEndTime": "2026/12/02 01:00:00",
      "length": 180,
      "room": "Caesars Palace | Emperors Level | Emperors Ballroom II",
      "roomId": "1789591919892004bpdn",
@@ -207087,7 +207087,7 @@
    "length": 60,
    "status": "Accepted",
    "published": 1,
-   "modified": "2026-11-15T09:47:52Z",
+   "modified": "2026-11-16T01:54:16Z",
    "testRecord": false,
    "attributes": {
     "EmbargoSession": [
