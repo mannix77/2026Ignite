@@ -150,10 +150,11 @@ node tests/catalog.test.js                                                      
 node tests/health.test.js                                                                   # storage status, backup reminders (specs/features/keeping-picks-safe.feature)
 node tests/suggest.test.js                                                                  # suggestions from your picks (specs/features/suggestions.feature)
 node tests/ics.test.js                                                                      # calendar export helpers (specs/features/calendar-export.feature)
+node tests/grid.test.js                                                                     # My plan calendar grid: what is on it and where (specs/features/plan-grid-view.feature)
 python3 -m unittest discover -s tests                                                       # sync, Gartner import + Python/JS parity
 /System/Library/Frameworks/JavaScriptCore.framework/Versions/Current/Helpers/jsc -m tests/planner.test.js   # planner (macOS)
 node tests/planner.test.js                                                                  # planner (Node)
-npm run test:viewport                                                                       # real-rendering layout checks, iPhone 16e & 18 Pro Max (specs/features/viewport-sizes.feature)
+npm run test:viewport                                                                       # every browser (Playwright) suite, iPhone 16e & 18 Pro Max: real-rendering layout checks (tests/e2e/viewport.spec.js, specs/features/viewport-sizes.feature) and the My plan grid (tests/e2e/plan-grid.spec.js, tests/e2e/plan-grid-fit.spec.js, specs/features/plan-grid-view.feature)
 ```
 
 To try the planner on a fully published schedule, build a fixture from an archived Ignite 2025 catalog and open `http://localhost:8026/?data=tests/fixtures/ignite2025`:

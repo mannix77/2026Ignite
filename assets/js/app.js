@@ -16,6 +16,7 @@ import { storageStatus, backupReminder, backupAge } from './health.js';
 import { reportError as reportTelemetry } from './telemetry.js';
 import { INSTANCE, INSTANCE_LABEL, nsKey, guideUrl } from './instance.js';
 import { icsDate, buildPlanIcs, buildSingleIcs, hasPendingCancellation, pickedInsts } from './ics.js';
+import { planView, gridEntries, gridLayout, PILL_HEADER, PILL_ROW } from './grid.js';
 import { esc, attr, icon, bldgChip, recChip, rsvpChip, rsvpOpensText, seatsDetail, prioPill, scoreChip, whenText, prioControl, sessionCard, cardClass, toast, shareOrDownload, copyText, speakersLine, setHostCompany, unknownRoomsNote, venueMapUrl, mapChip, occupancyOf, occupancyChip, picksForAI } from './ui.js';
 
 const $ = (sel, root = document) => root.querySelector(sel);
@@ -50,6 +51,7 @@ const app = {
   persisted: false, // the browser promised not to clear this site's storage
   installEvent: null, // Android/Chrome install prompt, offered from the install banner
   openFill: null,
+  openPills: { day: null, ids: new Set() },   // My plan grid: the pills opened on one day; this tab only, never saved
   nowTimer: null,
   dialogKey: null,
   rendered: false,
@@ -1061,6 +1063,8 @@ function renderSchedule(plan) {
   const counts = dayCounts(plan);
   let day = ui.day && m.days.includes(ui.day) ? ui.day : null;
   if (!day) day = m.days.find(d => counts[d].chosen || counts[d].open) || m.days[0];
+  const view = planView(ui.planView);   // 'list' or 'grid' (issue #155)
+  const openIds = openPills(day);       // asked for in both views, so a change of day in the list closes them too
   const c = ctx();
   const chain = plan.res.plan[day] || [];
   const lunchSlot = plan.res.lunch?.[day] || null;
@@ -1085,18 +1089,32 @@ function renderSchedule(plan) {
     <div class="stat ${tight ? 'warn' : ''}"><b>${tight}</b><span>tight transfers</span></div>
     <div class="stat"><b>${sacrificed}</b><span>picks you'll miss</span></div>
   </div>
-  <div class="daytabs" role="group" aria-label="Day">${m.days.map(d => `<button type="button" data-act="day" data-day="${attr(d)}" aria-pressed="${d === day}">${esc(fmtDay(d))}<span class="n">${counts[d].chosen}</span>${counts[d].open ? `<span class="w" aria-label="clashes to decide">●</span>` : ''}</button>`).join('')}</div>`);
+  <div class="dayrow">
+  <div class="daytabs" role="group" aria-label="Day">${m.days.map(d => `<button type="button" data-act="day" data-day="${attr(d)}" aria-pressed="${d === day}">${esc(fmtDay(d))}<span class="n">${counts[d].chosen}</span>${counts[d].open ? `<span class="w" aria-label="clashes to decide">●</span>` : ''}</button>`).join('')}</div>
+  <div class="seg viewswitch" role="group" aria-label="Day view">${[['list', 'List'], ['grid', 'Grid']].map(([v, label]) => `<button type="button" data-act="plan-view" data-view="${v}" aria-pressed="${v === view}">${label}</button>`).join('')}</div>
+  </div>`);
 
   if (decisions.length) {
     parts.push(`<h2>Clashes on ${esc(fmtDay(day, true))}</h2>`);
     for (const d of decisions) parts.push(renderDecision(d, plan, c));
   }
 
+  // The List / Grid switch changes only what is inside [data-day-view]: how the day's timed
+  // sessions are drawn. Everything around it is the same in both views.
   parts.push(`<h2>Your day</h2>`);
-  if (!chain.some(x => !x.pseudo)) {
-    parts.push(`<div class="panel empty"><h3>Nothing planned on ${esc(fmtDay(day))}</h3><p>Here's what fits best given your interests.</p></div>`);
-    if (lunchSlot) parts.push(`<div class="timeline">${lunchRow(lunchSlot)}</div>`);
-    parts.push(renderFillers(day, chain, c));
+  const nothing = !chain.some(x => !x.pseudo);
+  const nothingPanel = `<div class="panel empty"><h3>Nothing planned on ${esc(fmtDay(day))}</h3><p>Here's what fits best given your interests.</p></div>`;
+  let dayHtml;
+  if (view === 'grid') {
+    const layout = gridLayout(gridEntries({ items: plan.items, dropped: plan.res.dropped, blocks: plan.blocks, lunch: lunchSlot, day }), openIds);
+    // A pill that is no longer on the grid (the plan changed) is not kept as open.
+    for (const id of [...openIds]) if (!layout?.pills.some(p => p.id === id)) openIds.delete(id);
+    // A grid with nothing of the plan on it (only blocked time, lunch or dropped picks) still
+    // says what the sessions listed under it are.
+    dayHtml = !layout ? nothingPanel
+      : renderDayGrid(layout, day) + (nothing ? `<p class="small muted">No sessions planned on ${esc(fmtDay(day))}. Here's what fits best given your interests.</p>` : '');
+  } else if (nothing) {
+    dayHtml = nothingPanel + (lunchSlot ? `<div class="timeline">${lunchRow(lunchSlot)}</div>` : '');
   } else {
     const rows = [];
     const first = chain[0], last = chain[chain.length - 1];
@@ -1114,9 +1132,11 @@ function renderSchedule(plan) {
         ${x.pseudo ? pseudoRow(x) : card(x.s, { compact: true, extra: lockRow(x) })}</div>`);
     });
     if (lunchSlot && lunchSlot.start >= last.endMin) rows.push(lunchRow(lunchSlot));
-    parts.push(`<div class="timeline">${rows.join('')}</div>`);
-    parts.push(`<details class="panel" style="margin-top:14px" ${app.openFill === day + ':all' ? 'open' : ''} data-fill="${attr(day)}:all"><summary><b>More sessions that fit around this day</b></summary>${renderFillers(day, chain, c)}</details>`);
+    dayHtml = `<div class="timeline">${rows.join('')}</div>`;
   }
+  parts.push(`<div data-day-view="${view}">${dayHtml}</div>`);
+  parts.push(nothing ? renderFillers(day, chain, c)
+    : `<details class="panel" style="margin-top:14px" ${app.openFill === day + ':all' ? 'open' : ''} data-fill="${attr(day)}:all"><summary><b>More sessions that fit around this day</b></summary>${renderFillers(day, chain, c)}</details>`);
 
   const all = Object.values(plan.res.plan).flat();
   const moved = plan.res.dropped.filter(d => real(d) && d.item.day === day && d.reason.kind === 'repeat');
@@ -1157,6 +1177,41 @@ function renderSchedule(plan) {
     <p class="legend" style="margin-top:12px">Walking estimates use your Settings (buffer ${c.buffer} min, keynote entry ${c.keynoteExtra} min, accept missing up to ${c.tolerance} min).
     ${app.venue.buildings.filter(b => b.id !== 'O').map(b => `<span>${bldgChip({ building: b.id })} ${esc(b.name)}</span>`).join('')}</p>`);
   return parts.join('');
+}
+
+// Open pills belong to the day they were opened on. Asking for another day's starts an empty
+// set, so every way of changing day (the tabs, an "Other runs" link, a restored or reset plan,
+// a catalog that no longer has the saved day) closes them.
+function openPills(day) {
+  if (app.openPills.day !== day) app.openPills = { day, ids: new Set() };
+  return app.openPills.ids;
+}
+
+// The day as a calendar grid (issue #155). Every position and height is the layout's
+// (grid.js gridLayout): one unit is one pixel, measured from the top of .daygrid. The width of a
+// block comes from its data-cols / data-col in the stylesheet. So does the room a band's label
+// needs: the layout says which sessions and pills would be drawn over a label, and which band's
+// (`lane`); each of those is marked data-lane, and the stylesheet stops the session short of the
+// right edge and keeps the label in the lane beside it.
+function renderDayGrid(g, day) {
+  const at = x => `top:${Number(x.top)}px;height:${Number(x.height)}px`;
+  const lane = x => (x.lane === true ? ' data-lane' : '');
+  const rated = p => [1, 2, 3].includes(p);   // Maybe, Want, Must: the only ratings a plan item has
+  const prio = p => (rated(p) ? `p-${p}` : '');
+  // The rating is shown as a colour; said in words for a screen reader.
+  const said = p => (rated(p) ? `<span class="sr-only">${esc(PRIORITY[p])}:</span> ` : '');
+  const room = x => esc(x.s?.roomLabel || '');
+  const dots = p => `<span class="g-dots" aria-hidden="true">${p.dots.map(d => `<span class="g-dot ${prio(d)}"></span>`).join('')}</span>`;
+  const hours = g.hours.map(h => `<div class="g-hour" data-min="${Number(h.min)}" style="top:${Number(h.top)}px"><span>${esc(h.label)}</span></div>`);
+  const bands = g.bands.map(b => `<div class="g-band" data-band="${attr(b.kind)}"${lane(b)} style="${at(b)}"><span class="g-band-label"><span aria-hidden="true">${b.kind === 'lunch' ? '🍽' : '⛔'}</span> ${esc(b.title)}</span></div>`);
+  const blocks = g.blocks.map(b => [b.startMin, `<button type="button" class="g-block ${prio(b.item.priority)}" data-act="open" data-key="${attr(b.item.key)}" data-cols="${Number(b.cols)}" data-col="${Number(b.col)}"${lane(b)} style="${at(b)}"><span class="g-in">${said(b.item.priority)}<span class="g-time">${fmtTime(b.startMin)}–${fmtTime(b.endMin)}</span> <span class="g-title">${esc(b.item.title)}</span> <span class="g-room">${room(b.item)}</span></span></button>`]);
+  const pills = g.pills.map(p => [p.startMin, p.open
+    ? `<div class="g-pill open" role="group" aria-label="${attr(p.label)}" data-pill="${attr(p.id)}"${lane(p)} style="${at(p)}"><button type="button" class="g-pill-head" data-act="pill" data-pill="${attr(p.id)}" aria-expanded="true">${dots(p)}<span class="g-pill-label">${esc(p.label)}</span></button>${p.rows.map(r =>
+      `<button type="button" class="g-row ${prio(r.priority)}" data-act="open" data-key="${attr(r.key)}">${said(r.priority)}<span class="g-title">${esc(r.title)}</span> <span class="g-room">${room(r)}</span></button>`).join('')}</div>`
+    : `<button type="button" class="g-pill" data-act="pill" data-pill="${attr(p.id)}" aria-expanded="false"${lane(p)} style="${at(p)}">${dots(p)}<span class="g-pill-label">${esc(p.label)}</span></button>`]);
+  // Blocks and pills in time order, so the keyboard walks the day from top to bottom.
+  const sessions = [...blocks, ...pills].sort((a, b) => a[0] - b[0]).map(x => x[1]);
+  return `<div class="daygrid" data-grid-day="${attr(day)}" style="height:${Number(g.height)}px;--g-head:${PILL_HEADER}px;--g-row:${PILL_ROW}px">${hours.join('')}${bands.join('')}${sessions.join('')}</div>`;
 }
 
 function pseudoRow(x) {
@@ -1950,6 +2005,10 @@ function focusKey(el) {
   if (el.id) return `#${CSS.escape(el.id)}`;
   for (const a of ['data-set', 'data-lunch', 'data-override']) if (el.hasAttribute(a)) return `[${a}="${CSS.escape(el.getAttribute(a))}"]`;
   if (el.dataset.facet) return `[data-facet="${CSS.escape(el.dataset.facet)}"][value="${CSS.escape(el.value)}"]`;
+  // My plan's List / Grid switch and the grid's pills: a closed pill and an open pill's header
+  // are different elements with the same data-act and data-pill, so focus follows the toggle.
+  if (el.dataset.act === 'plan-view') return `[data-act="plan-view"][data-view="${CSS.escape(el.dataset.view)}"]`;
+  if (el.dataset.act === 'pill') return `[data-act="pill"][data-pill="${CSS.escape(el.dataset.pill)}"]`;
   return null;
 }
 
@@ -2236,6 +2295,8 @@ function onClick(e) {
     'pf-level': () => editProfile(act, el.dataset.v),
     'pf-type': () => editProfile(act, el.dataset.v),
     day: () => { e.preventDefault(); store.setUI({ day: el.dataset.day }); app.openFill = null; render(); },
+    'plan-view': () => { store.setUI({ planView: planView(el.dataset.view) }); render(); },
+    pill: () => { const ids = app.openPills.ids, id = el.dataset.pill; if (!ids.delete(id)) ids.add(id); render(); },
     lock: () => { if (s) lockRun(s, el); },
     unlock: () => {
       if (!s) return;
