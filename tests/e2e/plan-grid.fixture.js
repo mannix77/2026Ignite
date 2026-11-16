@@ -20,6 +20,12 @@ export const RIV_WED = '2026-12-02';
 
 // "Now" for the page: a week before Ignite, so nothing depends on the day the suite runs.
 export const FIXED_NOW = '2026-11-10T20:00:00Z';
+
+// The whole text of a block's .g-time: the session's start and its end, in the app's 12-hour
+// form. Accepted: "10:00 AM–10:50 AM" (as a session card writes it), "10:00 AM – 10:50 AM"
+// (time.js fmtRange), the list's stacked "10:00 AM10:50 AM", and "10:00–10:50 AM". A start
+// alone, a wrong end, or anything before or after the range is not.
+export const timeRange = (from, to, ap) => new RegExp(`^\\s*${from}(?:\\s*${ap})?\\s*(?:[–—-]|to)?\\s*${to}\\s*${ap}\\s*$`);
 const PICKED_AT = Date.UTC(2026, 10, 1);
 
 // store.js: BASE_KEY is nsKey('ignite26.planner.v1') (no instance suffix on the root site) and a

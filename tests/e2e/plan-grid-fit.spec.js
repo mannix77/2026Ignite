@@ -29,7 +29,7 @@
 // fails there), and the band labels the tests expect whole in a lane ("Stand-up", "Call",
 // "Review", "Demo", "Lunch") are short enough for it in all five.
 import { test, expect as baseExpect } from '@playwright/test';
-import { serveFixture, seedState, CATALOGS, BLOCKS, FIXED_NOW, TUE, WED, FRI } from './plan-grid.fixture.js';
+import { serveFixture, seedState, CATALOGS, BLOCKS, FIXED_NOW, TUE, WED, FRI, timeRange } from './plan-grid.fixture.js';
 
 const expect = baseExpect.configure({ timeout: 4000 });
 const BOOT_TIMEOUT = 15_000;
@@ -482,21 +482,23 @@ test.describe('blocked time and lunch stay readable under a session or pill that
   });
 
   test('a label keeps to one line when a later full-width session is drawn where its second line would be, and takes two when that session starts under it', async ({ page, viewport }) => {
-    // Two hours of blocked time with the same label, each under a 15-minute session that starts
+    // Three hours of blocked time with the same label, each under a 15-minute session that starts
     // with it (so the label is in a lane) and a second session that keeps its full width:
-    // 7:00 AM, where the second starts 20 minutes in (inside the second line, units 15 to 31), and
+    // 7:00 AM, where the second starts 20 minutes in (inside the second line, units 15 to 31),
+    // 7:00 PM, where it starts 30 minutes in (the last unit of the second line), and
     // 5:00 PM, where it starts 31 minutes in (just under the second line).
     const added = [
       extra('FIT601', 'Early one', TUE, '07:00', '07:15', MAYBE), extra('FIT602', 'Early two', TUE, '07:20', '08:00', MAYBE),
       extra('FIT603', 'Late one', TUE, '17:00', '17:15', MAYBE), extra('FIT604', 'Late two', TUE, '17:31', '18:00', MAYBE),
+      extra('FIT605', 'Evening one', TUE, '19:00', '19:15', MAYBE), extra('FIT606', 'Evening two', TUE, '19:30', '20:00', MAYBE),
     ];
-    await openPlan(page, { added, blocks: [...BLOCKS, blocked('early', 'Team sync call', TUE, 420, 480), blocked('late', 'Team sync call', TUE, 1020, 1080)] });
+    await openPlan(page, { added, blocks: [...BLOCKS, blocked('early', 'Team sync call', TUE, 420, 480), blocked('late', 'Team sync call', TUE, 1020, 1080), blocked('evening', 'Team sync call', TUE, 1140, 1200)] });
     for (const a of added) await expect(missedBecause(page, a.key)).toHaveText('During Team sync call (blocked time)');
 
     const grid = await showGrid(page, TUE);
     const W = await expectGridWidth(grid, viewport);
     const bands = bandCalled(grid, 'Team sync call');
-    await expect(bands).toHaveCount(2);
+    await expect(bands).toHaveCount(3);
     const facts = async (band, firstKey, secondKey, what) => {
       const b = await geo(band, `the ${what} band`), one = await geo(block(grid, firstKey), firstKey), two = await geo(block(grid, secondKey), secondKey);
       expect([b.height, b.lane, one.top - b.top], `${what}: an hour, in a lane, the first session starts with it`).toEqual([60, true, 0]);
@@ -521,6 +523,15 @@ test.describe('blocked time and lunch stay readable under a session or pill that
     expect(clear.lines.scrollHeight, 'no line is cut off').toBeLessThanOrEqual(clear.lines.clientHeight);
     expectLabelRead(clear.label, '⛔ Team sync call', 'the 5:00 PM label');
     expectInLane(clear.label, clear.first, 'the 5:00 PM label');
+
+    // One minute earlier than that, the second session is over the last unit of the second line:
+    // the label is back to one line, cut to the lane.
+    const edge = await facts(bands.nth(2), 'i-fit605', 'i-fit606', '7:00 PM');
+    expect(edge.below, 'the second session starts 30 units down the band').toBe(30);
+    expect(edge.lines.height, 'one line').toBe(16);
+    expectLabelRead(edge.label, '⛔ Team sync call', 'the 7:00 PM label', { whole: false });
+    expectInLane(edge.label, edge.first, 'the 7:00 PM label');
+    expect(edge.label.scrollWidth, 'the line is longer than the lane').toBeGreaterThan(edge.label.clientWidth);
   });
 
   test('a blocked-time label too long for the lane ends in an ellipsis inside the lane, never under the session; with nothing over it, a long label is whole', async ({ page, viewport }) => {
@@ -675,6 +686,29 @@ test.describe('a session that is not over a band\'s label keeps its full width',
     await expect(grid.locator('.g-band')).toHaveCount(2);
   });
 
+  test('a session that starts 14 minutes after blocked time is over its label: it stops short of the right edge and the label is read in the lane', async ({ page, viewport }) => {
+    // The other side of the 15 units above: blocked time from 3:41, BRK207 still from 3:55.
+    await openPlan(page, { day: WED, blocks: [...BLOCKS, blocked('sync', 'Sync', WED, 941, 985)] });
+    await expect(missedBecause(page, 'i-brk207')).toHaveText('During Sync (blocked time)');
+
+    const grid = await showGrid(page, WED);
+    const W = await expectGridWidth(grid, viewport);
+    const band = await geo(bandCalled(grid, 'Sync'), 'the Sync band');
+    const later = await geo(block(grid, 'i-brk207'), 'BRK207');
+    expect([band.top, band.height, later.top, later.height], 'the session starts 14 units below the top of the band').toEqual([401, 44, 415, 45]);
+
+    expectStopsShort(later, W, 'BRK207');
+    expect(band.lane, 'the band is marked data-lane').toBe(true);
+    const label = await labelFacts(bandCalled(grid, 'Sync'));
+    expectLabelRead(label, '⛔ Sync', 'the Sync band');
+    expectInLane(label, later, 'the Sync band');
+    // The band and that one session are all that is marked on the day.
+    await expect(grid.locator('[data-lane]')).toHaveCount(2);
+    await expect(grid.locator('.g-block')).toHaveCount(5);
+    await expect(grid.locator('.g-pill')).toHaveCount(2);
+    await expect(grid.locator('.g-band')).toHaveCount(2);
+  });
+
   test('a day where nothing covers a label has no data-lane anywhere and every session keeps its width', async ({ page, viewport }) => {
     await openPlan(page);
     expect(await timelineCards(page)).toEqual(['i-brk102', 'i-brk105', 'i-brk106', 'i-brk109', 'i-brk108']);
@@ -745,17 +779,18 @@ test.describe('what a session block shows depends on how tall it is', () => {
   });
   const shownAt = (top, height) => ({ shown: true, top, height, inside: true, onTop: true });
 
-  // minutes, start, end, and what is expected: the title's lines (14px each), and the room:
-  // 'none' (not shown), 'beside' (on the time's line) or 'below' (a line of its own).
+  // minutes, start, end, and what is expected: the time as written (start and end, both AM), the
+  // title's lines (14px each), and the room: 'none' (not shown), 'beside' (on the time's line) or
+  // 'below' (a line of its own).
   const CASES = [
-    [29, '00:00', '00:29', { titleLines: 1, oneLine: true, room: 'none' }],
-    [30, '00:40', '01:10', { titleLines: 1, room: 'beside' }],
-    [43, '01:20', '02:03', { titleLines: 1, room: 'beside' }],
-    [44, '02:10', '02:54', { titleLines: 2, room: 'beside' }],
-    [69, '03:00', '04:09', { titleLines: 2, room: 'beside' }],
-    [70, '04:15', '05:25', { titleLines: 2, room: 'below' }],
-    [83, '05:30', '06:53', { titleLines: 2, room: 'below' }],
-    [84, '07:00', '08:24', { titleLines: 3, room: 'below' }],
+    [29, '00:00', '00:29', { time: ['12:00', '12:29'], titleLines: 1, oneLine: true, room: 'none' }],
+    [30, '00:40', '01:10', { time: ['12:40', '1:10'], titleLines: 1, room: 'beside' }],
+    [43, '01:20', '02:03', { time: ['1:20', '2:03'], titleLines: 1, room: 'beside' }],
+    [44, '02:10', '02:54', { time: ['2:10', '2:54'], titleLines: 2, room: 'beside' }],
+    [69, '03:00', '04:09', { time: ['3:00', '4:09'], titleLines: 2, room: 'beside' }],
+    [70, '04:15', '05:25', { time: ['4:15', '5:25'], titleLines: 2, room: 'below' }],
+    [83, '05:30', '06:53', { time: ['5:30', '6:53'], titleLines: 2, room: 'below' }],
+    [84, '07:00', '08:24', { time: ['7:00', '8:24'], titleLines: 3, room: 'below' }],
   ];
 
   test('on both sides of 30, 44, 70 and 84 minutes: the lines of title, and the room hidden, beside the time or on its own line, all inside the block', async ({ page, viewport }) => {
@@ -775,6 +810,7 @@ test.describe('what a session block shows depends on how tall it is', () => {
       expect([f.height, f.clips], `${what}: as tall as it is long, and it clips what does not fit`).toEqual([min, 'hidden']);
       await expect(el.locator('.g-title'), what).toHaveText(TITLE);
       await expect(el.locator('.g-room'), what).toHaveText('Moscone West, Level 2, Room 2001');
+      await expect(el.locator('.g-time'), `${what}: ${want.time.join(' AM to ')} AM`).toHaveText(timeRange(...want.time, 'AM'));
 
       if (want.oneLine) {
         // One line: the time, then the title to its right, each box the full height of the

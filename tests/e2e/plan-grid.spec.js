@@ -15,7 +15,7 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { test, expect as baseExpect } from '@playwright/test';
-import { serveFixture, seedState, CATALOGS, FIXED_NOW, KEYS, BLOCKS, TUE, WED, THU, FRI, RIV_MON, RIV_TUE, RIV_WED } from './plan-grid.fixture.js';
+import { serveFixture, seedState, CATALOGS, FIXED_NOW, KEYS, BLOCKS, TUE, WED, THU, FRI, RIV_MON, RIV_TUE, RIV_WED, timeRange } from './plan-grid.fixture.js';
 
 const expect = baseExpect.configure({ timeout: 4000 });
 const BOOT_TIMEOUT = 15_000;
@@ -288,12 +288,6 @@ const half = (key, prio) => ({ key, tag: 'BUTTON', act: 'open', cols: '2', prio 
 const TUESDAY_BLOCKS = [full('i-brk105', 'p-3'), half('i-brk106', 'p-3'), half('i-brk107', 'p-2'), full('i-brk108', 'p-2'), full('i-brk109', 'p-3')];
 const WEDNESDAY_BLOCKS = [full('i-brk201', 'p-2'), full('i-brk206', 'p-3'), full('i-brk207', 'p-1'), full('i-brk214', 'p-2'), full('i-brk310-r1', 'p-2')];
 const THURSDAY_BLOCKS = [half('i-brk301', 'p-3'), half('i-brk302', 'p-2'), full('i-brk303', 'p-1'), full('i-brk304', 'p-1'), full('i-brk305', 'p-3')];
-
-// The whole text of a block's .g-time: the session's start and its end, in the app's 12-hour
-// form. Accepted: "10:00 AM–10:50 AM" (as a session card writes it), "10:00 AM – 10:50 AM"
-// (time.js fmtRange), the list's stacked "10:00 AM10:50 AM", and "10:00–10:50 AM". A start
-// alone, a wrong end, or anything before or after the range is not.
-const timeRange = (from, to, ap) => new RegExp(`^\\s*${from}(?:\\s*${ap})?\\s*(?:[–—-]|to)?\\s*${to}\\s*${ap}\\s*$`);
 
 const band = (grid, kind) => grid.locator(`.g-band[data-band="${kind}"]`);
 
