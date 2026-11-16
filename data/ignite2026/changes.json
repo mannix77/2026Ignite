@@ -1,6 +1,116 @@
 {
  "batches": [
   {
+   "at": "2026-11-16T18:20:43Z",
+   "milestones": [],
+   "added": [],
+   "removed": [],
+   "changed": [
+    {
+     "id": "1787856607657001ESZB",
+     "inst": "1787856607657001ESZB-1791588172728001CvQY",
+     "code": "BRK228",
+     "title": "What Microsoft Benefit Is Right for Your Use Case?",
+     "f": {
+      "speakers": [
+       [
+        "Gaelle Thurau",
+        "Kriti Jangid"
+       ],
+       [
+        "Gaelle Thurau",
+        "Kriti Jangid",
+        "Raid El Badarin-Deriy"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856616775001Ekzd",
+     "inst": "1787856616775001Ekzd-1791814921741001CZK4",
+     "code": "BRK288",
+     "title": "Visual Studio governance for the agentic era",
+     "f": {
+      "speakers": [
+       [
+        "Praveen Sethuraman",
+        "Raid El Badarin-Deriy",
+        "Tina Schrepfer (LI)"
+       ],
+       [
+        "Praveen Sethuraman",
+        "Tina Schrepfer (LI)"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856648110001EKhM",
+     "inst": "1787856648110001EKhM-1791588119285001Cmnn",
+     "code": "BRK492",
+     "title": "How partners lead secure AI transformation with Microsoft Security",
+     "f": {
+      "speakers": [
+       [
+        "Aarti Borkar",
+        "Angela Evans",
+        "Kevin Hanes",
+        "Rich Watson",
+        "anne Sheehan"
+       ],
+       [
+        "Aarti Borkar",
+        "Angela Evans",
+        "Anne Sheehan",
+        "Kevin Hanes",
+        "Rich Watson"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856652205001EWmk",
+     "inst": "1787856652205001EWmk-1791588321970001CfFy",
+     "code": "BRK519",
+     "title": "Accelerating Partner Impact in EMEA for Enterprise Customers​​",
+     "f": {
+      "speakers": [
+       [
+        "Ahmed Mabrouk",
+        "Angela Evans",
+        "Roxane Nadji Auld",
+        "anne Sheehan"
+       ],
+       [
+        "Ahmed Mabrouk",
+        "Angela Evans",
+        "Anne Sheehan",
+        "Roxane Nadji Auld"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1787856654734001EUBe",
+     "inst": "1787856654734001EUBe-1791588308496001Cm7M",
+     "code": "BRK535",
+     "title": "How to Transform with AI While Keeping Your Business Running",
+     "f": {
+      "speakers": [
+       [
+        "Bonnie Brandes",
+        "Tal Saraf"
+       ],
+       [
+        "Tal Saraf"
+       ]
+      ]
+     }
+    }
+   ],
+   "unknownRooms": []
+  },
+  {
    "at": "2026-11-16T16:46:30Z",
    "milestones": [],
    "added": [],
@@ -72218,154 +72328,6 @@
       "room": [
        "Moscone South | Level 2, Room 209",
        "Moscone South | Level 2, Room 211"
-      ]
-     }
-    }
-   ]
-  },
-  {
-   "at": "2026-10-22T07:31:29Z",
-   "milestones": [],
-   "added": [],
-   "removed": [],
-   "changed": [
-    {
-     "id": "1787856610944001ErzW",
-     "inst": "1787856610944001ErzW-1791588218863001CWHQ",
-     "code": "BRK249",
-     "title": "From traces to better agents: The Foundry improvement loop",
-     "f": {
-      "speakers": [
-       [
-        "Avinav Jami",
-        "Charles Kim",
-        "Takashi Okamoto"
-       ],
-       [
-        "Avinav Jami",
-        "Charles Kim",
-        "Takashi Okamoto",
-        "Yuji Shono"
-       ]
-      ]
-     }
-    },
-    {
-     "id": "1787856620252001EUUi",
-     "inst": "1787856620252001EUUi-1791814916888001CTVu",
-     "code": "BRK311",
-     "title": "Web IQ in action: How enterprises build grounded, governed AI agents",
-     "f": {
-      "speakers": [
-       [
-        "Brian King",
-        "Deena Minwalla",
-        "Olga Lykova"
-       ],
-       [
-        "Brian King",
-        "Deena Minwalla",
-        "Louis Barone",
-        "Olga Lykova"
-       ]
-      ]
-     }
-    },
-    {
-     "id": "1787856628953001E5nm",
-     "inst": "1787856628953001E5nm-1791814920587001CYwd",
-     "code": "BRK367",
-     "title": "Designing the data layer for AI apps and agents with Azure Cosmos DB",
-     "f": {
-      "speakers": [
-       [
-        "Gahl Levy",
-        "Madeline Egan"
-       ],
-       [
-        "Gahl Levy",
-        "Loveleen Rekhi",
-        "Madeline Egan",
-        "Nick Blake"
-       ]
-      ]
-     }
-    },
-    {
-     "id": "1787856629108001E3Up",
-     "inst": "1787856629108001E3Up-1791588323549001CZ65",
-     "code": "BRK368",
-     "title": "Postgres in production on Azure: Lessons in fleet modernization",
-     "f": {
-      "speakers": [
-       [
-        "Danyal Bukhari",
-        "Guy Bowerman"
-       ],
-       [
-        "Danyal Bukhari",
-        "Guy Bowerman",
-        "Sven Hubert"
-       ]
-      ]
-     }
-    },
-    {
-     "id": "1787856630208001ERlU",
-     "inst": "1787856630208001ERlU-1791588285982001CQ6O",
-     "code": "BRK375",
-     "title": "Migrate and modernize MongoDB applications with Azure DocumentDB",
-     "f": {
-      "speakers": [
-       [
-        "Abinav Rameesh",
-        "Hunter Bernhardt"
-       ],
-       [
-        "Abinav Rameesh",
-        "Felipe Vega",
-        "Hunter Bernhardt"
-       ]
-      ]
-     }
-    },
-    {
-     "id": "1787856631006001Ed7w",
-     "inst": "1787856631006001Ed7w-1791588243464001CBSB",
-     "code": "BRK380",
-     "title": "Agentify your customer interactions with Dynamics 365 Contact Center",
-     "f": {
-      "speakers": [
-       [
-        "Darya Mazandarany",
-        "Tom Neary"
-       ],
-       [
-        "Darya Mazandarany",
-        "Dennis Janssen",
-        "Tom Neary"
-       ]
-      ]
-     }
-    },
-    {
-     "id": "1787856639139001E7vh",
-     "inst": "1787856639139001E7vh-1791588117221001Cuk3",
-     "code": "BRK433",
-     "title": "How Azure Networking is ready for the next generation of AI solutions",
-     "f": {
-      "speakers": [
-       [
-        "Igor Sakhnov",
-        "Jon Ormond",
-        "Narayan Annamalai"
-       ],
-       [
-        "Abhisek Chatterjee",
-        "Igor Sakhnov",
-        "Jon Ormond",
-        "Narayan Annamalai"
-       ]
       ]
      }
     }
