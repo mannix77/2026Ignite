@@ -342,6 +342,114 @@ kbd { font-family: var(--mono); font-size: 12px; border: 1px solid var(--line); 
 .daytabs button .n { font-weight: 600; opacity: .7; margin-left: 4px; }
 .daytabs button .w { color: var(--bad); margin-left: 4px; }
 
+/* My plan: the List / Grid switch beside the day tabs, and the day as a calendar grid (issue
+   #155). Inside .daygrid every top and height is set inline from assets/js/grid.js (one unit =
+   1px from the top of .daygrid), so nothing here may add to a positioned element's height: no
+   margins, and borders only inside the box. Widths and columns are this stylesheet's. */
+.dayrow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin: 4px 0 14px; }
+.dayrow .daytabs { flex: 1 1 auto; min-width: 0; margin: 0; }
+.viewswitch { flex: none; margin-left: auto; }
+.viewswitch button { font-weight: 700; color: var(--text-2); padding: 6px 14px; }
+.viewswitch button[aria-pressed="true"] { background: var(--text); color: var(--bg); }
+.viewswitch button:focus-visible { outline-offset: -3px; }
+
+.daygrid {
+  --g-gutter: 46px;   /* hour labels */
+  --g-inset: 6px;     /* a band stays visible on both sides of a session drawn over it */
+  --g-gap: 4px;       /* between the two halves of a side-by-side pair */
+  --g-lane: 87px;     /* left free at the right by a session or pill drawn over a band's label
+                         ([data-lane]). As wide as still lets that pill show its whole
+                         "99 sessions at this time" on a 390px phone, in the widest font measured. */
+  position: relative; margin: 14px 0 20px; font-variant-numeric: tabular-nums;
+}
+.g-hour { position: absolute; left: 0; right: 0; height: 0; }
+.g-hour::after { content: ""; position: absolute; left: var(--g-gutter); right: 0; top: 0; border-top: 1px solid var(--line); }
+.g-hour span { position: absolute; left: 0; top: -8px; width: calc(var(--g-gutter) - 8px); text-align: right; font-size: 11px; line-height: 16px; font-weight: 600; color: var(--text-3); white-space: nowrap; }
+
+.g-band {
+  position: absolute; left: var(--g-gutter); right: 0; overflow: hidden; border-radius: 6px;
+  border-left: 3px solid var(--text-3); padding: 1px 8px; text-align: right;
+  background: repeating-linear-gradient(-45deg, var(--surface-2) 0 6px, var(--surface-3) 6px 12px);
+  color: var(--text-2); font-size: 11.5px; line-height: 16px; font-weight: 700; white-space: nowrap; text-overflow: ellipsis;
+}
+.g-band[data-band="lunch"] { border-left-style: dotted; background: var(--surface-2); }
+/* A band whose label has a session or pill drawn over it (grid.js `lane`): that session stops a
+   lane short of the right edge (below), and the label keeps to the lane, 4px clear of the
+   session and 8px from the edge; a longer label ends in an ellipsis. */
+.g-band[data-lane] .g-band-label { display: inline-block; max-width: calc(var(--g-lane) - 6px); overflow: hidden; text-overflow: ellipsis; }
+/* Where the band has room for two lines and nothing is drawn over the second (grid.js `lines`),
+   the label wraps onto a second line before it is cut. */
+.g-band[data-lane][data-lines="2"] .g-band-label { white-space: normal; display: -webkit-inline-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+
+.g-block, .g-pill, .g-pill-head, .g-row { font: inherit; color: var(--text); text-align: left; margin: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.g-block, .g-pill { position: absolute; left: calc(var(--g-gutter) + var(--g-inset)); right: var(--g-inset); overflow: hidden; }
+.g-block[data-lane], .g-pill[data-lane] { right: calc(var(--g-inset) + var(--g-lane)); }
+.g-block:focus-visible, .g-pill:focus-visible { z-index: 2; }
+
+/* A session. The 1px transparent border leaves a hairline between blocks that touch. */
+.g-block {
+  container-type: size; display: flex; align-items: stretch; padding: 0; border: 1px solid transparent; border-radius: 7px;
+  background: var(--pcs, var(--surface-2)) padding-box; box-shadow: inset 4px 0 0 var(--pc, var(--text-3));
+}
+.g-block[data-cols="2"] { width: calc((100% - var(--g-gutter) - 2 * var(--g-inset) - var(--g-gap)) / 2); }
+.g-block[data-cols="2"][data-lane] { width: calc((100% - var(--g-gutter) - 2 * var(--g-inset) - var(--g-lane) - var(--g-gap)) / 2); }
+.g-block[data-cols="2"][data-col="0"] { right: auto; }
+.g-block[data-cols="2"][data-col="1"] { left: auto; }
+/* Title first, then the time, then the room (beside the time when both fit on a line). How much
+   is shown depends on how tall the block is; what does not fit is clipped by the block, never
+   spilled. Line heights: title 14px, time and room 13px, 1px above; a block's own height is its
+   minutes less the 2px of border. */
+.g-in { flex: 1 1 auto; min-width: 0; display: flex; flex-wrap: wrap; align-content: flex-start; column-gap: 8px; padding: 1px 6px 0 10px; overflow: hidden; }
+.g-block .g-title { order: -1; flex: 0 0 100%; min-width: 0; font-size: 12.5px; line-height: 14px; font-weight: 700; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.g-block .g-time, .g-block .g-room { font-size: 11px; line-height: 13px; color: var(--text-2); white-space: nowrap; }
+.g-block .g-time { flex: none; font-weight: 600; }
+.g-block .g-room { flex: 1 1 72px; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+/* Under half an hour: one line, the time and as much of the title as fits. */
+@container (max-height: 27px) {
+  .g-in { flex-wrap: nowrap; }
+  .g-block .g-title { order: 0; flex: 1 1 0; }
+  .g-block .g-room { display: none; }
+}
+/* From 44 minutes: the title may take two lines (2 x 14 + 13 + 1 = 42). */
+@container (min-height: 42px) { .g-block .g-title { white-space: normal; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; } }
+/* From 70 minutes: the room has a line of its own and may take two (28 + 13 + 26 + 1 = 68). */
+@container (min-height: 68px) { .g-block .g-room { flex-basis: 100%; white-space: normal; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; } }
+/* From 84 minutes: a third line of title (42 + 13 + 26 + 1 = 82). */
+@container (min-height: 82px) { .g-block .g-title { -webkit-line-clamp: 3; } }
+
+/* Three or more sessions at one time: a pill, and the list it opens into. */
+.g-pill { border-radius: 10px; background: var(--surface); }
+button.g-pill, .g-pill-head { display: flex; align-items: center; padding: 0 10px; font-size: 12.5px; font-weight: 700; white-space: nowrap; }
+button.g-pill { border: 1px dashed var(--text-3); }
+.g-pill.open { box-shadow: 0 0 0 1px var(--text-3); }
+.g-pill-head { width: 100%; height: var(--g-head, 32px); border: 0; background: var(--surface-2); }
+/* The words are never cut: the label keeps its full width, however many dots there are, and
+   takes any room to spare. The dots get what is left: a wrapping row one dot high, so a dot that
+   does not fit drops to a second row that is clipped away, and only whole dots show, the first
+   ones (Must first). Every dot carries the 8px that separates the dots from the words and the
+   next dot is pulled back over 5px of it, so dots are 3px apart, the last one shown is 8px clear
+   of the words, and a pill with no room for a dot loses that 8px too. The empty ::before holds
+   the first row, so that the first dot also wraps when there is no room for it. */
+.g-pill-label { flex: 1 0 auto; }
+.g-dots { display: flex; flex-wrap: wrap; flex: 0 1 auto; height: 9px; overflow: hidden; }
+.g-dots::before { content: ""; height: 9px; }
+.g-dot { width: 9px; height: 9px; margin-right: 8px; border-radius: 50%; background: var(--pc, var(--text-3)); }
+.g-dot + .g-dot { margin-left: -5px; }
+button.g-pill::after, .g-pill-head::after { content: ""; flex: none; width: 7px; height: 7px; margin: -4px 3px 0 11px; border: solid var(--text-2); border-width: 0 2px 2px 0; transform: rotate(45deg); }
+.g-pill-head::after { margin-top: 4px; transform: rotate(-135deg); }
+.g-row {
+  display: flex; flex-direction: column; justify-content: center; width: 100%; height: var(--g-row, 44px); overflow: hidden;
+  padding: 0 10px 0 12px; border: 0; border-top: 1px solid var(--line); background: var(--pcs, var(--surface)); box-shadow: inset 4px 0 0 var(--pc, var(--text-3));
+}
+.g-row .g-title { font-size: 13px; line-height: 17px; font-weight: 700; }
+.g-row .g-room { font-size: 11.5px; line-height: 15px; color: var(--text-2); }
+.g-row .g-title, .g-row .g-room { max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.g-pill-head:focus-visible, .g-row:focus-visible { outline-offset: -2px; }
+@media (hover: hover) {
+  .g-block:hover, .g-row:hover { filter: brightness(.97); }
+  button.g-pill:hover, .g-pill-head:hover { background: var(--surface-3); }
+}
+
 .decision { border: 1px solid color-mix(in srgb, var(--tight) 45%, var(--line)); background: var(--surface); border-radius: var(--radius); margin-bottom: 14px; overflow: hidden; }
 .decision > header { display: flex; gap: 8px; align-items: center; padding: 10px 14px; background: var(--tight-soft); font-weight: 700; flex-wrap: wrap; }
 .decision > header svg { color: var(--tight); width: 18px; height: 18px; }
@@ -491,6 +599,7 @@ dialog#import-dialog {
   .btn.small { min-height: 40px; padding: 6px 12px; }
   .chip.btn-chip { padding: 8px 12px; }
   .daytabs button { padding: 10px 16px; }
+  .viewswitch button { min-height: 44px; padding: 8px 16px; }
   .filter-grid label { padding: 8px 0; }
 }
 dialog#detail { max-height: min(88dvh, 900px); overscroll-behavior: contain; }
