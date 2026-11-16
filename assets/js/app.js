@@ -1113,9 +1113,12 @@ function renderSchedule(plan) {
     // says what the sessions listed under it are.
     dayHtml = !layout ? nothingPanel
       : renderDayGrid(layout, day) + (nothing ? `<p class="small muted">No sessions planned on ${esc(fmtDay(day))}. Here's what fits best given your interests.</p>` : '');
-  } else if (nothing) {
+  } else if (!chain.length) {
     dayHtml = nothingPanel + (lunchSlot ? `<div class="timeline">${lunchRow(lunchSlot)}</div>` : '');
   } else {
+    // The chain is the day's sessions and blocked time. Blocked time is listed at its own time
+    // even when no session is planned around it (issue #156, specs/features/plan-day-list.feature):
+    // the day then still says "Nothing planned", above the list.
     const rows = [];
     const first = chain[0], last = chain[chain.length - 1];
     if (lunchSlot && lunchSlot.end <= first.startMin) rows.push(lunchRow(lunchSlot));
@@ -1132,7 +1135,7 @@ function renderSchedule(plan) {
         ${x.pseudo ? pseudoRow(x) : card(x.s, { compact: true, extra: lockRow(x) })}</div>`);
     });
     if (lunchSlot && lunchSlot.start >= last.endMin) rows.push(lunchRow(lunchSlot));
-    dayHtml = `<div class="timeline">${rows.join('')}</div>`;
+    dayHtml = (nothing ? nothingPanel : '') + `<div class="timeline">${rows.join('')}</div>`;
   }
   parts.push(`<div data-day-view="${view}">${dayHtml}</div>`);
   parts.push(nothing ? renderFillers(day, chain, c)
