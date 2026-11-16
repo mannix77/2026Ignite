@@ -3,6 +3,13 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-11-16T12:55:52Z · https://catalog.awsevents.com/api/sessions
+
+Added 0 · removed 0 · changed 1
+
+**Changed**
+- `API312-R` Building distributed multi-agent architectures on serverless — speakers: Alexander Günsche, Ben Freiberg → Alexander Guensche, Ben Freiberg
+
 ## 2026-11-16T00:56:58Z · https://catalog.awsevents.com/api/sessions
 
 Added 0 · removed 1 · changed 0
