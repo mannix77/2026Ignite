@@ -14,7 +14,7 @@
 // empty storage; the others use a namespace of their own.
 import { sleep } from './shim.js';
 
-const { planView, gridEntries, gridLayout, PILL_HEADER, PILL_ROW, BAND_LABEL, BAND_LINE } = await import('../assets/js/grid.js');
+const { planView, dayOffScreen, gridEntries, gridLayout, PILL_HEADER, PILL_ROW, BAND_LABEL, BAND_LINE } = await import('../assets/js/grid.js');
 const store = await import('../assets/js/store.js');
 const { CONFERENCES } = await import('../assets/js/conferences.js');
 
@@ -1538,6 +1538,31 @@ await test('Opening a pill: an id that is the end minute of a pill, not its id, 
     pills: [['600', 600, 645, 0, 164, true, 3, '3 sessions at this time', [2, 2, 2], ['A', 'B', 'C']]],
     bands: [],
   }, 'with the pill id: the whole grid, open');
+});
+
+// ---- Rule: Using the switch brings the day into view. The screen between the header and the
+// tab bar here is 60..780; the heading is 30 tall.
+
+await test('The day is off screen when the switch is used: below the screen, above it, or cut by either edge', () => {
+  const visible = { top: 60, bottom: 780 };
+  eq(dayOffScreen({ top: 5744, bottom: 5774 }, visible), true, 'screens below');
+  eq(dayOffScreen({ top: -400, bottom: -370 }, visible), true, 'scrolled past, above');
+  eq(dayOffScreen({ top: 751, bottom: 781 }, visible), true, 'one unit under the tab bar');
+  eq(dayOffScreen({ top: 59, bottom: 89 }, visible), true, 'one unit under the header');
+});
+
+await test('The day is already on screen: the whole heading between the header and the tab bar, edges included', () => {
+  const visible = { top: 60, bottom: 780 };
+  eq(dayOffScreen({ top: 400, bottom: 430 }, visible), false, 'mid screen');
+  eq(dayOffScreen({ top: 750, bottom: 780 }, visible), false, 'resting on the tab bar');
+  eq(dayOffScreen({ top: 60, bottom: 90 }, visible), false, 'right under the header');
+});
+
+await test('beyond the feature file: without a measurement the page stays where it is', () => {
+  eq([dayOffScreen(), dayOffScreen(null, { top: 0, bottom: 800 }), dayOffScreen({ top: 900, bottom: 930 }),
+    dayOffScreen({ top: NaN, bottom: 930 }, { top: 0, bottom: 800 }), dayOffScreen({ top: 900, bottom: 930 }, { top: 0, bottom: '800' })],
+  [false, false, false, false, false]);
+  eq(dayOffScreen({ top: 900, bottom: 930 }, { top: 0, bottom: 800 }), true, 'and the same heading, measured, is off screen');
 });
 
 console.log(`${pass} passed, ${fail} failed`);

@@ -16,7 +16,7 @@ import { storageStatus, backupReminder, backupAge } from './health.js';
 import { reportError as reportTelemetry } from './telemetry.js';
 import { INSTANCE, INSTANCE_LABEL, nsKey, guideUrl } from './instance.js';
 import { icsDate, buildPlanIcs, buildSingleIcs, hasPendingCancellation, pickedInsts } from './ics.js';
-import { planView, gridEntries, gridLayout, PILL_HEADER, PILL_ROW } from './grid.js';
+import { planView, dayOffScreen, gridEntries, gridLayout, PILL_HEADER, PILL_ROW } from './grid.js';
 import { esc, attr, icon, bldgChip, recChip, rsvpChip, rsvpOpensText, seatsDetail, prioPill, scoreChip, whenText, prioControl, sessionCard, cardClass, toast, shareOrDownload, copyText, speakersLine, setHostCompany, unknownRoomsNote, venueMapUrl, mapChip, occupancyOf, occupancyChip, picksForAI } from './ui.js';
 
 const $ = (sel, root = document) => root.querySelector(sel);
@@ -1101,7 +1101,7 @@ function renderSchedule(plan) {
 
   // The List / Grid switch changes only what is inside [data-day-view]: how the day's timed
   // sessions are drawn. Everything around it is the same in both views.
-  parts.push(`<h2>Your day</h2>`);
+  parts.push(`<h2 data-day-heading>Your day</h2>`);
   const nothing = !chain.some(x => !x.pseudo);
   const nothingPanel = `<div class="panel empty"><h3>Nothing planned on ${esc(fmtDay(day))}</h3><p>Here's what fits best given your interests.</p></div>`;
   let dayHtml;
@@ -1215,6 +1215,21 @@ function renderDayGrid(g, day) {
   // Blocks and pills in time order, so the keyboard walks the day from top to bottom.
   const sessions = [...blocks, ...pills].sort((a, b) => a[0] - b[0]).map(x => x[1]);
   return `<div class="daygrid" data-grid-day="${attr(day)}" style="height:${Number(g.height)}px;--g-head:${PILL_HEADER}px;--g-row:${PILL_ROW}px">${hours.join('')}${bands.join('')}${sessions.join('')}</div>`;
+}
+
+// After the List / Grid switch is used: the day it redrew can be screens below the switch (the
+// day's clashes are in between), so bring "Your day" to just under the header unless it is
+// already on screen (grid.js dayOffScreen). The header is sticky and the tab bar is fixed to the
+// bottom on a phone; on a wide screen the tabs are in the header and nothing covers the bottom.
+const REVEAL_GAP = 8;   // px between the header and the heading
+function revealDay() {
+  const h = main.querySelector('[data-day-heading]');
+  if (!h) return;
+  const r = h.getBoundingClientRect();
+  const top = document.querySelector('.topbar')?.getBoundingClientRect().bottom || 0;
+  const nav = document.querySelector('#tabs')?.getBoundingClientRect();
+  const bottom = nav && nav.top > top ? Math.min(window.innerHeight, nav.top) : window.innerHeight;
+  if (dayOffScreen(r, { top, bottom })) window.scrollBy(0, r.top - top - REVEAL_GAP);
 }
 
 function pseudoRow(x) {
@@ -2298,7 +2313,7 @@ function onClick(e) {
     'pf-level': () => editProfile(act, el.dataset.v),
     'pf-type': () => editProfile(act, el.dataset.v),
     day: () => { e.preventDefault(); store.setUI({ day: el.dataset.day }); app.openFill = null; render(); },
-    'plan-view': () => { store.setUI({ planView: planView(el.dataset.view) }); render(); },
+    'plan-view': () => { store.setUI({ planView: planView(el.dataset.view) }); render(); revealDay(); },
     pill: () => { const ids = app.openPills.ids, id = el.dataset.pill; if (!ids.delete(id)) ids.add(id); render(); },
     lock: () => { if (s) lockRun(s, el); },
     unlock: () => {
