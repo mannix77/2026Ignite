@@ -513,8 +513,15 @@ await test('Opening a pill: the open pills can be given as a list or a set, and 
   eq(pillsOf(gridLayout(background(), new Set([PILL_10]))), opened, 'a set');
   eq(pillsOf(gridLayout(background(), ['660', PILL_10, 'nonsense'])), opened, 'beside ids that are not pills');
   // 660 is the start of the single Must, 540 of the opening session: neither is a pill.
-  eq(everything(gridLayout(background(), ['660', '540', 'nonsense'])), everything(collapsed), 'only ids that are not pills');
-  eq(collapsed.height, 180, 'and that unchanged layout is the collapsed one');
+  const stray = everything(gridLayout(background(), ['660', '540', 'nonsense']));
+  eq(stray, {
+    startMin: 540, endMin: 720, height: 180,
+    hours: [[540, '9 AM', 0], [600, '10 AM', 60], [660, '11 AM', 120], [720, '12 PM', 180]],
+    blocks: [['OPENING', 540, 570, 0, 30, 0, 1], ['MUST', 660, 705, 120, 45, 0, 1]],
+    pills: [[PILL_10, 600, 645, 60, 45, false, 3, '3 sessions at this time', [3, 2, 1], ROWS]],
+    bands: [],
+  }, 'only ids that are not pills: everything is where it is with the pill collapsed');
+  eq(stray, everything(collapsed), 'the same layout as with no ids at all');
 });
 
 await test('Closing a pill: it is one pill that says "3 sessions at this time" again', () => {
