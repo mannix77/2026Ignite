@@ -182,6 +182,10 @@ const pillFacts = pill => pill.evaluate(el => {
     inside: boxes.every(b => lr.left >= b.left - 0.5 && lr.right <= b.right + 0.5 && lr.top >= b.top - 0.5 && lr.bottom <= b.bottom + 0.5),
     hits: [lr.left + 1, (lr.left + lr.right) / 2, lr.right - 1].map(x => name(document.elementFromPoint(x, y))),
     left: px(lr.left - x0), right: px(lr.right - x0), edge: px(pad(head).right - x0),
+    // Where the dots' box starts, where the header's padding starts (inside its border, if it has
+    // one), and how wide the words alone are (the label's box may be wider).
+    dotsLeft: px(dotsBox.getBoundingClientRect().left - x0), innerLeft: px(pad(head).left - x0),
+    textWidth: (() => { const range = document.createRange(); range.selectNodeContents(label); return px(range.getBoundingClientRect().width); })(),
     dots: [...head.querySelectorAll('.g-dot')].map(d => {
       const r = d.getBoundingClientRect();
       const w = Math.min(r.right, clip.right) - Math.max(r.left, clip.left), h = Math.min(r.bottom, clip.bottom) - Math.max(r.top, clip.top);
@@ -224,6 +228,15 @@ function expectWholeDots(f, ratings, what) {
   for (let i = 1; i < count; i++) expect(whole[i].left - whole[i - 1].right, `${what}: between dot ${i} and dot ${i + 1}`).toBeCloseTo(3, 1);
   if (count) expect(f.left - whole[count - 1].right, `${what}: between the last dot shown and the label`).toBeGreaterThanOrEqual(8 - 0.05);
   if (count === ratings.length) expect(f.left - whole[count - 1].right, `${what}: every dot is shown, so the label follows 8px after them`).toBeCloseTo(8, 1);
+  // And no dot is hidden that had room. The dots have everything from the header's 10px of padding
+  // to the words; n dots need 9n + 3(n - 1) + 8 = 12n + 5px of it.
+  const room = f.left - f.dotsLeft;
+  expect(f.dotsLeft - f.innerLeft, `${what}: the dots start after the header's 10px of padding`).toBeCloseTo(10, 1);
+  expect(room, `${what}: room for the ${count} dot(s) shown`).toBeGreaterThanOrEqual(count ? 12 * count + 5 - 0.05 : 0);
+  if (count < ratings.length) {
+    expect(room, `${what}: one more dot would not fit in the ${room}px before the words`).toBeLessThan(12 * (count + 1) + 5);
+    expect(f.right - f.left - f.textWidth, `${what}: the label is no wider than its words, so it keeps no room from the dots`).toBeLessThan(1);
+  }
   return count;
 }
 
