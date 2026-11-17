@@ -1,6 +1,2612 @@
 {
  "batches": [
   {
+   "at": "2026-11-17T18:43:14Z",
+   "milestones": [],
+   "added": [
+    {
+     "id": "1780442280446001cXES",
+     "inst": "1780442280446001cXES",
+     "code": "BIZ333-R1",
+     "title": "Design, Simulate, Ship: End-to-End AI Agents on Connect Customer",
+     "repeat": false
+    },
+    {
+     "id": "1786406739881001LLat",
+     "inst": "1786406739881001LLat",
+     "code": "AWS208",
+     "title": "How AI agents are changing the way engineering teams work",
+     "repeat": false
+    },
+    {
+     "id": "1780442227616001cEqa",
+     "inst": "1780442227616001cEqa",
+     "code": "BIZ334-R1",
+     "title": "Building Smarter Self-Service Experiences with AI",
+     "repeat": false
+    },
+    {
+     "id": "1780442256373001cBfG",
+     "inst": "1780442256373001cBfG",
+     "code": "CON348-R1",
+     "title": "Defense-in-Depth for Containers on Amazon EKS: A Layering Story",
+     "repeat": false
+    },
+    {
+     "id": "1793292932552001fogJ",
+     "inst": "1793292932552001fogJ",
+     "code": "COP357-R1",
+     "title": "Observe AI agents and workloads end to end",
+     "repeat": false
+    },
+    {
+     "id": "1780442243043001cKM8",
+     "inst": "1780442243043001cKM8",
+     "code": "CMP359-R1",
+     "title": "Simplifying how you use AWS: automating common patterns on your behalf",
+     "repeat": false
+    },
+    {
+     "id": "1780442243461001c7Po",
+     "inst": "1780442243461001c7Po",
+     "code": "NET342-R1",
+     "title": "Innovations in DNS and Amazon Route 53",
+     "repeat": false
+    },
+    {
+     "id": "1780442243401001cWq2",
+     "inst": "1780442243401001cWq2",
+     "code": "SVS349-R1",
+     "title": "Managing Lambda Runtimes at Scale for Platform Teams",
+     "repeat": false
+    },
+    {
+     "id": "1780442227782001coB6",
+     "inst": "1780442227782001coB6",
+     "code": "BIZ335-R1",
+     "title": "Build an AI agent that understands customer intent",
+     "repeat": false
+    },
+    {
+     "id": "1793305648990001BeEm",
+     "inst": "1793305648990001BeEm",
+     "code": "IND3338-R1",
+     "title": "Accelerate Physical AI development with NVIDIA on AWS",
+     "repeat": false
+    },
+    {
+     "id": "1780442256205001cPKk",
+     "inst": "1780442256205001cPKk",
+     "code": "COP354-R1",
+     "title": "Diagnose Complex Workloads with AWS DevOps Agent",
+     "repeat": false
+    },
+    {
+     "id": "1780442242936001cMVb",
+     "inst": "1780442242936001cMVb",
+     "code": "STG369-R1",
+     "title": "AWS Backup: Architecture deep dive",
+     "repeat": false
+    },
+    {
+     "id": "1780442243524001cVfw",
+     "inst": "1780442243524001cVfw",
+     "code": "COP363-R1",
+     "title": "Investigate Incidents Across Teams with AWS DevOps Agent",
+     "repeat": false
+    },
+    {
+     "id": "1780442280382001cGPM",
+     "inst": "1780442280382001cGPM",
+     "code": "COP364-R1",
+     "title": "Build better, review faster: AI-Powered Well-Architected reviews",
+     "repeat": false
+    },
+    {
+     "id": "1780442227718001c1jV",
+     "inst": "1780442227718001c1jV",
+     "code": "PEX320-R1",
+     "title": "AI-Powered Migrations: AWS Transform Across the Lifecycle",
+     "repeat": false
+    },
+    {
+     "id": "1786406739750001LHlI",
+     "inst": "1786406739750001LHlI",
+     "code": "AWS127",
+     "title": "Game on: AI’s past, present, and future in video games, a chat with Shawn Layden",
+     "repeat": false
+    },
+    {
+     "id": "1780442243104001cEHV",
+     "inst": "1780442243104001cEHV",
+     "code": "DVT343-R1",
+     "title": "From code to production in seconds — building web apps that last",
+     "repeat": false
+    },
+    {
+     "id": "1780442227669001cbd9",
+     "inst": "1780442227669001cbd9",
+     "code": "MAM348-R1",
+     "title": "Provision Desktops for Builders Faster with WorkSpaces",
+     "repeat": false
+    },
+    {
+     "id": "1780442227561001cemM",
+     "inst": "1780442227561001cemM",
+     "code": "SEC395-R1",
+     "title": "Find, prove, and fix code vulnerabilities with AWS Continuum",
+     "repeat": false
+    }
+   ],
+   "removed": [],
+   "changed": [
+    {
+     "id": "1793080305350001hme2",
+     "inst": "1793080305350001hme2",
+     "code": "ACT064-R",
+     "title": "AWS BuilderCards: Learn to play! NEW: Digital game & Frugal Architect",
+     "f": {
+      "title": [
+       "AWS BuilderCards: Learn about AWS security while you play!",
+       "AWS BuilderCards: Learn to play! NEW: Digital game & Frugal Architect"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1790358256016001iRei",
+     "inst": "1790358256016001iRei",
+     "code": "IND329-R",
+     "title": "Build a multi-agent system for hyper-personalized customer journeys",
+     "f": {
+      "code": [
+       "IND329-R1",
+       "IND329-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358250283001iYiG",
+     "inst": "1790358250283001iYiG",
+     "code": "IND418-R",
+     "title": "From documents to decisions: Agentic AI for federal operations",
+     "f": {
+      "code": [
+       "IND418-R1",
+       "IND418-R"
+      ]
+     }
+    },
+    {
+     "id": "1780441495845001GI7e",
+     "inst": "1780441495845001GI7e",
+     "code": "INV504-R",
+     "title": "Building fast with automated reasoning at Amazon S3 scale",
+     "f": {
+      "code": [
+       "INV504-R1",
+       "INV504-R"
+      ]
+     }
+    },
+    {
+     "id": "1780442279528001cKTV",
+     "inst": "1780442279528001cKTV",
+     "code": "BIZ334-R",
+     "title": "Building Smarter Self-Service Experiences with AI",
+     "f": {
+      "speakers": [
+       [
+        "Saurabh Dey"
+       ],
+       []
+      ]
+     }
+    },
+    {
+     "id": "1790358248019001iip8",
+     "inst": "1790358248019001iip8",
+     "code": "DAT434-R",
+     "title": "Fast and easy bulk operations with Amazon DynamoDB",
+     "f": {
+      "code": [
+       "DAT434-R1",
+       "DAT434-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358252831001ibVP",
+     "inst": "1790358252831001ibVP",
+     "code": "HMC310-R",
+     "title": "Gemini gets closer to traders with AWS Outposts and AWS Local Zones",
+     "f": {
+      "code": [
+       "HMC310-R1",
+       "HMC310-R"
+      ]
+     }
+    },
+    {
+     "id": "1780441496270001GI4R",
+     "inst": "1780441496270001GI4R",
+     "code": "INV506-R",
+     "title": "Deterministic control for probabilistic agents: proving safety holds",
+     "f": {
+      "code": [
+       "INV506-R1",
+       "INV506-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358234985001iB7S",
+     "inst": "1790358234985001iB7S",
+     "code": "IND331-R",
+     "title": "Don't rewrite your APIs: Make them agent-ready for agentic AI",
+     "f": {
+      "code": [
+       "IND331-R1",
+       "IND331-R"
+      ]
+     }
+    },
+    {
+     "id": "1780441496021001GvRU",
+     "inst": "1780441496021001GvRU",
+     "code": "INV512-R",
+     "title": "Knowledge Representations for Autonomous Software Lifecycle Management",
+     "f": {
+      "code": [
+       "INV512-R1",
+       "INV512-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358236250001i4Pz",
+     "inst": "1790358236250001i4Pz",
+     "code": "AIM305-R",
+     "title": "Hands-on training world models and deploying agents for Physical AI",
+     "f": {
+      "code": [
+       "AIM305-R1",
+       "AIM305-R"
+      ]
+     }
+    },
+    {
+     "id": "1780442242419001cHwV",
+     "inst": "1780442242419001cHwV",
+     "code": "SEC3301",
+     "title": "Protect workloads with AWS Certificate Manager",
+     "f": {
+      "speakers": [
+       [
+        "Michael Slaughter"
+       ],
+       []
+      ]
+     }
+    },
+    {
+     "id": "1790358224678001ieMn",
+     "inst": "1790358224678001ieMn",
+     "code": "DVT337-R",
+     "title": "Build a SaaS control plane with Kiro specs and Strands multi-tenant constructs",
+     "f": {
+      "code": [
+       "DVT337-R1",
+       "DVT337-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358244153001idl1",
+     "inst": "1790358244153001idl1",
+     "code": "HMC401-R",
+     "title": "GPU orchestration using NVIDIA Run:ai across the edge",
+     "f": {
+      "code": [
+       "HMC401-R1",
+       "HMC401-R"
+      ]
+     }
+    },
+    {
+     "id": "1780441471747001Ga93",
+     "inst": "1780441471747001Ga93",
+     "code": "IND3349",
+     "title": "From Generic to Industry Expert: The Next Era of AI",
+     "f": {
+      "speakers": [
+       [
+        "Gregory Mead"
+       ],
+       []
+      ]
+     }
+    },
+    {
+     "id": "1780442223051001c3uu",
+     "inst": "1780442223051001c3uu",
+     "code": "ANT446",
+     "title": "Build event-driven applications with AWS Streaming and Messaging",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1790358225045001iCCC",
+     "inst": "1790358225045001iCCC",
+     "code": "COP405-R",
+     "title": "When agents run code: sandboxes for reliable DevOps",
+     "f": {
+      "code": [
+       "COP405-R1",
+       "COP405-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358256289001iXke",
+     "inst": "1790358256289001iXke",
+     "code": "DAT410-R",
+     "title": "Build agentic hybrid retrieval with Amazon Aurora PostgreSQL",
+     "f": {
+      "code": [
+       "DAT410-R1",
+       "DAT410-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358239613001itc4",
+     "inst": "1790358239613001itc4",
+     "code": "IND314-R",
+     "title": "Modernizing Legacy Telecommunications OSS/BSS Systems",
+     "f": {
+      "code": [
+       "IND314-R1",
+       "IND314-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358252462001iyni",
+     "inst": "1790358252462001iyni",
+     "code": "IND356-R",
+     "title": "From static to self-improving agents with Amazon Bedrock AgentCore",
+     "f": {
+      "code": [
+       "IND356-R1",
+       "IND356-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358219635001i6Gp",
+     "inst": "1790358219635001i6Gp",
+     "code": "CMP336-R",
+     "title": "Maximize EKS efficiency: Auto Mode, Graviton, and Spot best practices",
+     "f": {
+      "code": [
+       "CMP336-R1",
+       "CMP336-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358240707001iew8",
+     "inst": "1790358240707001iew8",
+     "code": "DAT433-R",
+     "title": "Build a knowledge graph-based agent guardrail with Amazon Neptune",
+     "f": {
+      "code": [
+       "DAT433-R1",
+       "DAT433-R"
+      ]
+     }
+    },
+    {
+     "id": "1793080554566001Hr1Z",
+     "inst": "1793080554566001Hr1Z",
+     "code": "ACT064-R1",
+     "title": "AWS BuilderCards: Learn to play! NEW: Digital game & Frugal Architect",
+     "f": {
+      "title": [
+       "AWS BuilderCards: Learn about AWS security while you play!",
+       "AWS BuilderCards: Learn to play! NEW: Digital game & Frugal Architect"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1790358246376001iIug",
+     "inst": "1790358246376001iIug",
+     "code": "AIM304-R",
+     "title": "Deploy and optimize world models with agentic AI workflows",
+     "f": {
+      "code": [
+       "AIM304-R1",
+       "AIM304-R"
+      ]
+     }
+    },
+    {
+     "id": "1780441493521001GwU4",
+     "inst": "1780441493521001GwU4",
+     "code": "INV504-R1",
+     "title": "Building fast with automated reasoning at Amazon S3 scale",
+     "f": {
+      "code": [
+       "INV504-R",
+       "INV504-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442261524001cGsq",
+     "inst": "1780442261524001cGsq",
+     "code": "SVS209",
+     "title": "Everything your web app needs in one place",
+     "f": {
+      "speakers": [
+       [
+        "David Castro"
+       ],
+       []
+      ]
+     }
+    },
+    {
+     "id": "1790358233030001icug",
+     "inst": "1790358233030001icug",
+     "code": "HMC315-R",
+     "title": "Applying the Well-Architected Framework to AWS Outposts and AWS Local Zones",
+     "f": {
+      "code": [
+       "HMC315-R1",
+       "HMC315-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358257202001iv2N",
+     "inst": "1790358257202001iv2N",
+     "code": "IND315-R",
+     "title": "Multi-Agent Operations for Broadcast & Streaming",
+     "f": {
+      "code": [
+       "IND315-R1",
+       "IND315-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358218054001iHcn",
+     "inst": "1790358218054001iHcn",
+     "code": "HMC403-R",
+     "title": "Self-managed agentic AI at the hybrid edge",
+     "f": {
+      "code": [
+       "HMC403-R1",
+       "HMC403-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358248849001iHZj",
+     "inst": "1790358248849001iHZj",
+     "code": "IND357-R",
+     "title": "Agentic AI for software-defined vehicles: Compress the V-Cycle with Kiro",
+     "f": {
+      "code": [
+       "IND357-R1",
+       "IND357-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358248201001iW4P",
+     "inst": "1790358248201001iW4P",
+     "code": "IND364-R",
+     "title": "Build agentic fraud detection with a transaction foundation model",
+     "f": {
+      "code": [
+       "IND364-R1",
+       "IND364-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358242926001iJ6M",
+     "inst": "1790358242926001iJ6M",
+     "code": "AIM332-R",
+     "title": "Agentic fairness: Practical methods to detect bias in AI-driven decisions",
+     "f": {
+      "code": [
+       "AIM332-R1",
+       "AIM332-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358242296001ilAr",
+     "inst": "1790358242296001ilAr",
+     "code": "COM317-R",
+     "title": "Ship Reliable AI Agents with Strands Evaluation and AgentCore Evaluations",
+     "f": {
+      "code": [
+       "COM317-R1",
+       "COM317-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358217872001iSXw",
+     "inst": "1790358217872001iSXw",
+     "code": "COP410-R",
+     "title": "Build a fully managed open source observability stack on AWS",
+     "f": {
+      "code": [
+       "COP410-R1",
+       "COP410-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358244526001iAKV",
+     "inst": "1790358244526001iAKV",
+     "code": "DVT415-R",
+     "title": "Mastering agentic development: skills, custom agents, and steering",
+     "f": {
+      "code": [
+       "DVT415-R1",
+       "DVT415-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358242024001i4Kq",
+     "inst": "1790358242024001i4Kq",
+     "code": "IND316-R",
+     "title": "Best Practices for Successful Multiplayer Game Launches",
+     "f": {
+      "code": [
+       "IND316-R1",
+       "IND316-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358248474001ibYK",
+     "inst": "1790358248474001ibYK",
+     "code": "IND377-R",
+     "title": "Agentic AI in Production: Natera Saves Lives, Cuts Costs, Grows Revenue",
+     "f": {
+      "code": [
+       "IND377-R1",
+       "IND377-R"
+      ]
+     }
+    },
+    {
+     "id": "1780442222874001crPm",
+     "inst": "1780442222874001crPm",
+     "code": "ANT448-R",
+     "title": "Unified observability with Amazon OpenSearch Service",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441470484001G8a6",
+     "inst": "1780441470484001G8a6",
+     "code": "DVT320",
+     "title": "How Kiro learns: an AI coding agent that improves with every session",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1790358229654001iYL9",
+     "inst": "1790358229654001iYL9",
+     "code": "DVT336-R",
+     "title": "The AWS CLI in an Agentic World: Less Tokens, More Done",
+     "f": {
+      "code": [
+       "DVT336-R1",
+       "DVT336-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358247569001idr0",
+     "inst": "1790358247569001idr0",
+     "code": "DVT413-R",
+     "title": "Apply Amazon's frontier team playbook to your organization",
+     "f": {
+      "code": [
+       "DVT413-R1",
+       "DVT413-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358232385001i6gk",
+     "inst": "1790358232385001i6gk",
+     "code": "IND308-R",
+     "title": "Automate dispute resolution with Amazon Connect and Amazon Bedrock",
+     "f": {
+      "code": [
+       "IND308-R1",
+       "IND308-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358217033001i9ji",
+     "inst": "1790358217033001i9ji",
+     "code": "IND322-R",
+     "title": "Physical AI in Telecom: A Framework for Workload Placement",
+     "f": {
+      "code": [
+       "IND322-R1",
+       "IND322-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358234675001ispU",
+     "inst": "1790358234675001ispU",
+     "code": "IND362-R",
+     "title": "Agentic commerce: shopping assistants to agent-ready infrastructure",
+     "f": {
+      "code": [
+       "IND362-R1",
+       "IND362-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358231491001iiYG",
+     "inst": "1790358231491001iiYG",
+     "code": "MAM329-R1",
+     "title": "Observability patterns for Microsoft workloads migrating to AWS",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1790358223348001ikwx",
+     "inst": "1790358223348001ikwx",
+     "code": "CMP324-R",
+     "title": "GenAI chip selection: From training to inference",
+     "f": {
+      "code": [
+       "CMP324-R1",
+       "CMP324-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358219357001i1Nh",
+     "inst": "1790358219357001i1Nh",
+     "code": "CON337-R",
+     "title": "Decouple and scale Amazon ECS workloads with event-driven patterns",
+     "f": {
+      "code": [
+       "CON337-R1",
+       "CON337-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358216386001iFjg",
+     "inst": "1790358216386001iFjg",
+     "code": "DAT417-R",
+     "title": "Demystifying Aurora DSQL transactions and concurrency control",
+     "f": {
+      "code": [
+       "DAT417-R1",
+       "DAT417-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358249611001iI6g",
+     "inst": "1790358249611001iI6g",
+     "code": "IND302-R",
+     "title": "Evaluating AI agents for production in financial services",
+     "f": {
+      "code": [
+       "IND302-R1",
+       "IND302-R"
+      ]
+     }
+    },
+    {
+     "id": "1780442241372001c7Ky",
+     "inst": "1780442241372001c7Ky",
+     "code": "ANT343",
+     "title": "What's new with the Amazon SageMaker Data Agent",
+     "f": {
+      "speakers": [
+       [
+        "Ramesh Harisaran Singh"
+       ],
+       []
+      ]
+     }
+    },
+    {
+     "id": "1790358232292001iU51",
+     "inst": "1790358232292001iU51",
+     "code": "BIZ320-R",
+     "title": "From Reactive to Proactive: Omnichannel AI Outreach with Connect Customer",
+     "f": {
+      "code": [
+       "BIZ320-R1",
+       "BIZ320-R"
+      ]
+     }
+    },
+    {
+     "id": "1780441500801001G20m",
+     "inst": "1780441500801001G20m",
+     "code": "IND314-R1",
+     "title": "Modernizing Legacy Telecommunications OSS/BSS Systems",
+     "f": {
+      "code": [
+       "IND314-R",
+       "IND314-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442244219001cHBq",
+     "inst": "1780442244219001cHBq",
+     "code": "IND322-R1",
+     "title": "Physical AI in Telecom: A Framework for Workload Placement",
+     "f": {
+      "code": [
+       "IND322-R",
+       "IND322-R1"
+      ]
+     }
+    },
+    {
+     "id": "1790358239044001ikLC",
+     "inst": "1790358239044001ikLC",
+     "code": "IND347-R",
+     "title": "Build a governed semantic layer with Amazon Bedrock AgentCore and MCP",
+     "f": {
+      "code": [
+       "IND347-R1",
+       "IND347-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358220467001iLiB",
+     "inst": "1790358220467001iLiB",
+     "code": "IND348-R",
+     "title": "Accelerate service onboarding with composable AI plugins",
+     "f": {
+      "code": [
+       "IND348-R1",
+       "IND348-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358223207001iA4U",
+     "inst": "1790358223207001iA4U",
+     "code": "IND405-R",
+     "title": "Build low latency real-time bidding workloads with AWS RTB Fabric",
+     "f": {
+      "code": [
+       "IND405-R1",
+       "IND405-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358228908001ivwY",
+     "inst": "1790358228908001ivwY",
+     "code": "CMP343-R",
+     "title": "Bringing better Amazon EC2 price performance to your pipeline with AWS Graviton",
+     "f": {
+      "code": [
+       "CMP343-R1",
+       "CMP343-R"
+      ]
+     }
+    },
+    {
+     "id": "1780442241818001cusZ",
+     "inst": "1780442241818001cusZ",
+     "code": "CMP359-R",
+     "title": "Simplifying how you use AWS: automating common patterns on your behalf",
+     "f": {
+      "speakers": [
+       [
+        "Steve Rice"
+       ],
+       []
+      ]
+     }
+    },
+    {
+     "id": "1790358225820001irHu",
+     "inst": "1790358225820001irHu",
+     "code": "DAT301-R",
+     "title": "Autonomous DBOps: Agentic AI for maintaining databases",
+     "f": {
+      "code": [
+       "DAT301-R1",
+       "DAT301-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358247471001iqyi",
+     "inst": "1790358247471001iqyi",
+     "code": "DVT332-R",
+     "title": "Under the hood of Kiro Crew: orchestration, memory, and safe autonomy",
+     "f": {
+      "code": [
+       "DVT332-R1",
+       "DVT332-R"
+      ]
+     }
+    },
+    {
+     "id": "1780442246204001cVyF",
+     "inst": "1780442246204001cVyF",
+     "code": "IND377-R1",
+     "title": "Agentic AI in Production: Natera Saves Lives, Cuts Costs, Grows Revenue",
+     "f": {
+      "code": [
+       "IND377-R",
+       "IND377-R1"
+      ]
+     }
+    },
+    {
+     "id": "1790358240803001iD7i",
+     "inst": "1790358240803001iD7i",
+     "code": "IND406-R",
+     "title": "The agentic restaurant: AI agents that run your kitchen",
+     "f": {
+      "code": [
+       "IND406-R1",
+       "IND406-R"
+      ]
+     }
+    },
+    {
+     "id": "1780442245724001crrE",
+     "inst": "1780442245724001crrE",
+     "code": "IND418-R1",
+     "title": "From documents to decisions: Agentic AI for federal operations",
+     "f": {
+      "code": [
+       "IND418-R",
+       "IND418-R1"
+      ]
+     }
+    },
+    {
+     "id": "1793304782520001DMvB",
+     "inst": "1793304782520001DMvB",
+     "code": "IND421-R",
+     "title": "Grounding LLMs in Truth: Build a Live Fact-Checking Pipeline",
+     "f": {
+      "code": [
+       "IND421-R1",
+       "IND421-R"
+      ]
+     }
+    },
+    {
+     "id": "1780441490516001GdFk",
+     "inst": "1780441490516001GdFk",
+     "code": "STG305",
+     "title": "Data protection, resilience and recovery with AWS storage",
+     "f": {
+      "title": [
+       "Data protection and resilience with AWS storage",
+       "Data protection, resilience and recovery with AWS storage"
+      ]
+     }
+    },
+    {
+     "id": "1793080484863001IrG4",
+     "inst": "1793080484863001IrG4",
+     "code": "ACT064-R2",
+     "title": "AWS BuilderCards: Learn to play! NEW: Digital game & Frugal Architect",
+     "f": {
+      "title": [
+       "AWS BuilderCards: Learn about AWS security while you play!",
+       "AWS BuilderCards: Learn to play! NEW: Digital game & Frugal Architect"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1790358231690001iIyL",
+     "inst": "1790358231690001iIyL",
+     "code": "DAT420-R",
+     "title": "Dive deep into Amazon DynamoDB using design puzzles",
+     "f": {
+      "code": [
+       "DAT420-R1",
+       "DAT420-R"
+      ]
+     }
+    },
+    {
+     "id": "1780441493639001GsJr",
+     "inst": "1780441493639001GsJr",
+     "code": "INV506-R1",
+     "title": "Deterministic control for probabilistic agents: proving safety holds",
+     "f": {
+      "code": [
+       "INV506-R",
+       "INV506-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442244775001cbB1",
+     "inst": "1780442244775001cbB1",
+     "code": "IND405-R1",
+     "title": "Build low latency real-time bidding workloads with AWS RTB Fabric",
+     "f": {
+      "code": [
+       "IND405-R",
+       "IND405-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442225340001cQIF",
+     "inst": "1780442225340001cQIF",
+     "code": "COP306-R1",
+     "title": "Cut through Kubernetes signal overload with unified observability",
+     "f": {
+      "code": [
+       "COP306-R",
+       "COP306-R1"
+      ]
+     }
+    },
+    {
+     "id": "1790358229837001ixoY",
+     "inst": "1790358229837001ixoY",
+     "code": "DAT306-R",
+     "title": "Cost optimization for Amazon DynamoDB",
+     "f": {
+      "code": [
+       "DAT306-R1",
+       "DAT306-R"
+      ]
+     }
+    },
+    {
+     "id": "1780442240909001czLs",
+     "inst": "1780442240909001czLs",
+     "code": "DVT332-R1",
+     "title": "Under the hood of Kiro Crew: orchestration, memory, and safe autonomy",
+     "f": {
+      "code": [
+       "DVT332-R2",
+       "DVT332-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442241069001cFGR",
+     "inst": "1780442241069001cFGR",
+     "code": "DVT413-R1",
+     "title": "Apply Amazon's frontier team playbook to your organization",
+     "f": {
+      "code": [
+       "DVT413-R2",
+       "DVT413-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442280014001cmTr",
+     "inst": "1780442280014001cmTr",
+     "code": "SEC395-R",
+     "title": "Find, prove, and fix code vulnerabilities with AWS Continuum",
+     "f": {
+      "speakers": [
+       [
+        "Pat Gaw"
+       ],
+       []
+      ]
+     }
+    },
+    {
+     "id": "1780442255177001cgVo",
+     "inst": "1780442255177001cgVo",
+     "code": "CMP343-R1",
+     "title": "Bringing better Amazon EC2 price performance to your pipeline with AWS Graviton",
+     "f": {
+      "code": [
+       "CMP343-R",
+       "CMP343-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442241015001cUmF",
+     "inst": "1780442241015001cUmF",
+     "code": "DVT415-R1",
+     "title": "Mastering agentic development: skills, custom agents, and steering",
+     "f": {
+      "code": [
+       "DVT415-R2",
+       "DVT415-R1"
+      ]
+     }
+    },
+    {
+     "id": "1790358243674001ilV9",
+     "inst": "1790358243674001ilV9",
+     "code": "AIM333-R",
+     "title": "The Agent Harness: Unifying Fragmented Tools for Mission AI Advisors",
+     "f": {
+      "code": [
+       "AIM333-R1",
+       "AIM333-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358225908001insj",
+     "inst": "1790358225908001insj",
+     "code": "ANT438-R",
+     "title": "Give your AI agents business context with AWS Glue Data Catalog",
+     "f": {
+      "code": [
+       "ANT438-R1",
+       "ANT438-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358249514001ibSN",
+     "inst": "1790358249514001ibSN",
+     "code": "COM325-R",
+     "title": "The agent orchestration spectrum: Agents, Step Functions, or Lambda?",
+     "f": {
+      "code": [
+       "COM325-R1",
+       "COM325-R"
+      ]
+     }
+    },
+    {
+     "id": "1780442226483001cDkG",
+     "inst": "1780442226483001cDkG",
+     "code": "DAT301-R1",
+     "title": "Autonomous DBOps: Agentic AI for maintaining databases",
+     "f": {
+      "code": [
+       "DAT301-R",
+       "DAT301-R1"
+      ]
+     }
+    },
+    {
+     "id": "1790358225718001iKoH",
+     "inst": "1790358225718001iKoH",
+     "code": "AIM302-R",
+     "title": "Six Ways AI Fails Who Your Nonprofit Serves — And How to Stop Each One",
+     "f": {
+      "code": [
+       "AIM302-R1",
+       "AIM302-R"
+      ]
+     }
+    },
+    {
+     "id": "1780442224094001ccQE",
+     "inst": "1780442224094001ccQE",
+     "code": "AIM305-R1",
+     "title": "Hands-on training world models and deploying agents for Physical AI",
+     "f": {
+      "code": [
+       "AIM305-R",
+       "AIM305-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442234456001cCxU",
+     "inst": "1780442234456001cCxU",
+     "code": "AIM332-R1",
+     "title": "Agentic fairness: Practical methods to detect bias in AI-driven decisions",
+     "f": {
+      "code": [
+       "AIM332-R",
+       "AIM332-R1"
+      ]
+     }
+    },
+    {
+     "id": "1790358255735001i3yj",
+     "inst": "1790358255735001i3yj",
+     "code": "ANT322-R",
+     "title": "Build better agent retrieval with OpenSearch Service",
+     "f": {
+      "code": [
+       "ANT322-R1",
+       "ANT322-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358255641001iKCA",
+     "inst": "1790358255641001iKCA",
+     "code": "ANT429-R",
+     "title": "Govern your context layer for AI agents with AWS Context",
+     "f": {
+      "code": [
+       "ANT429-R1",
+       "ANT429-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358215164001ij4P",
+     "inst": "1790358215164001ij4P",
+     "code": "ANT437-R",
+     "title": "Accelerate lakehouse analytics with Apache Iceberg materialized views",
+     "f": {
+      "code": [
+       "ANT437-R1",
+       "ANT437-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358241371001iMXd",
+     "inst": "1790358241371001iMXd",
+     "code": "API311-R",
+     "title": "How event driven architectures go wrong and how to fix them",
+     "f": {
+      "code": [
+       "API311-R1",
+       "API311-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358245724001iJKQ",
+     "inst": "1790358245724001iJKQ",
+     "code": "API314-R",
+     "title": "A closer look at AWS Lambda durable functions",
+     "f": {
+      "code": [
+       "API314-R1",
+       "API314-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358234280001iCkw",
+     "inst": "1790358234280001iCkw",
+     "code": "ARC404-R",
+     "title": "Event storming: Find your service boundaries before production does",
+     "f": {
+      "code": [
+       "ARC404-R1",
+       "ARC404-R"
+      ]
+     }
+    },
+    {
+     "id": "1780442276829001csCG",
+     "inst": "1780442276829001csCG",
+     "code": "BIZ313",
+     "title": "Build agentic automations for business processes with AWS Quick",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441498426001Gzxq",
+     "inst": "1780441498426001Gzxq",
+     "code": "CMP336-R1",
+     "title": "Maximize EKS efficiency: Auto Mode, Graviton, and Spot best practices",
+     "f": {
+      "code": [
+       "CMP336-R",
+       "CMP336-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442241531001cSLv",
+     "inst": "1780442241531001cSLv",
+     "code": "COP365-R",
+     "title": "Allocate shared AWS infrastructure costs to your business units",
+     "f": {
+      "speakers": [
+       [
+        "Erik Nestorovic"
+       ],
+       []
+      ]
+     }
+    },
+    {
+     "id": "1780442255962001cInh",
+     "inst": "1780442255962001cInh",
+     "code": "COP411",
+     "title": "Close the gap between code and production",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441493997001GIWs",
+     "inst": "1780441493997001GIWs",
+     "code": "INV512-R1",
+     "title": "Knowledge Representations for Autonomous Software Lifecycle Management",
+     "f": {
+      "code": [
+       "INV512-R",
+       "INV512-R1"
+      ]
+     }
+    },
+    {
+     "id": "1790358239238001inZz",
+     "inst": "1790358239238001inZz",
+     "code": "ANT419-R",
+     "title": "Power streaming analytics on AWS with AI-driven insights",
+     "f": {
+      "code": [
+       "ANT419-R1",
+       "ANT419-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358218512001iIHb",
+     "inst": "1790358218512001iIHb",
+     "code": "API304-R",
+     "title": "API Gateway unleashed",
+     "f": {
+      "code": [
+       "API304-R1",
+       "API304-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358222081001ic5C",
+     "inst": "1790358222081001ic5C",
+     "code": "AIM351-R",
+     "title": "Build an automated evaluation pipeline for AI agents",
+     "f": {
+      "code": [
+       "AIM351-R1",
+       "AIM351-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358256107001ip9e",
+     "inst": "1790358256107001ip9e",
+     "code": "ANT411-R",
+     "title": "Simplify identity and security management in an open data architecture on AWS",
+     "f": {
+      "code": [
+       "ANT411-R1",
+       "ANT411-R"
+      ]
+     }
+    },
+    {
+     "id": "1780442239637001c2N3",
+     "inst": "1780442239637001c2N3",
+     "code": "DAT434-R1",
+     "title": "Fast and easy bulk operations with Amazon DynamoDB",
+     "f": {
+      "code": [
+       "DAT434-R",
+       "DAT434-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442243717001cLEC",
+     "inst": "1780442243717001cLEC",
+     "code": "HMC310-R1",
+     "title": "Gemini gets closer to traders with AWS Outposts and AWS Local Zones",
+     "f": {
+      "code": [
+       "HMC310-R",
+       "HMC310-R1"
+      ]
+     }
+    },
+    {
+     "id": "1790358225422001ivJh",
+     "inst": "1790358225422001ivJh",
+     "code": "ARC317-R",
+     "title": "Fault-tolerant AI agents: Choosing the right recovery pattern",
+     "f": {
+      "code": [
+       "ARC317-R1",
+       "ARC317-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358221114001ieXt",
+     "inst": "1790358221114001ieXt",
+     "code": "ARC327-R",
+     "title": "Your system made a decision. you cannot explain it.",
+     "f": {
+      "code": [
+       "ARC327-R1",
+       "ARC327-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358241461001iJ2U",
+     "inst": "1790358241461001iJ2U",
+     "code": "ARC335-R",
+     "title": "Route or escalate: Confidence boundaries in multi-domain AI agents",
+     "f": {
+      "code": [
+       "ARC335-R1",
+       "ARC335-R"
+      ]
+     }
+    },
+    {
+     "id": "1780442226592001cpE3",
+     "inst": "1780442226592001cpE3",
+     "code": "DAT410-R1",
+     "title": "Build agentic hybrid retrieval with Amazon Aurora PostgreSQL",
+     "f": {
+      "code": [
+       "DAT410-R",
+       "DAT410-R1"
+      ]
+     }
+    },
+    {
+     "id": "1790358234091001iSUr",
+     "inst": "1790358234091001iSUr",
+     "code": "AIM338-R",
+     "title": "Open-weights at work: Scaling AI without scaling the bill",
+     "f": {
+      "code": [
+       "AIM338-R1",
+       "AIM338-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358216476001i0dv",
+     "inst": "1790358216476001i0dv",
+     "code": "AIM446-R",
+     "title": "Beyond Prompt Engineering: Optimize the Agent Harness",
+     "f": {
+      "code": [
+       "AIM446-R1",
+       "AIM446-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358245821001iv42",
+     "inst": "1790358245821001iv42",
+     "code": "ANT320-R",
+     "title": "Data mesh on AWS: governance, identity, and end‑user attribution",
+     "f": {
+      "code": [
+       "ANT320-R1",
+       "ANT320-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358257112001iNjk",
+     "inst": "1790358257112001iNjk",
+     "code": "AIM316-R",
+     "title": "Evaluating AI Agents for your Nonprofit: From Vibes to Metrics on AWS",
+     "f": {
+      "code": [
+       "AIM316-R1",
+       "AIM316-R"
+      ]
+     }
+    },
+    {
+     "id": "1780442227343001cTot",
+     "inst": "1780442227343001cTot",
+     "code": "AIM3305",
+     "title": "Building end-to-end agentic IDP Pipelines",
+     "f": {
+      "speakers": [
+       [
+        "Babu KP"
+       ],
+       []
+      ]
+     }
+    },
+    {
+     "id": "1780441471006001GVii",
+     "inst": "1780441471006001GVii",
+     "code": "AIM3308",
+     "title": "What’s new: SageMaker HyperPod & Multiverse Computing insights",
+     "f": {
+      "start": [
+       "2026-12-04T18:00:00Z",
+       "2026-12-02T23:00:00Z"
+      ],
+      "end": [
+       "2026-12-04T19:00:00Z",
+       "2026-12-03T00:00:00Z"
+      ],
+      "room": [
+       "Venetian | Level 2 | Ballroom F | Content Hub | Purple Theater",
+       "Caesars Palace | Promenade Level | Roman I"
+      ]
+     }
+    },
+    {
+     "id": "1790358246195001if7N",
+     "inst": "1790358246195001if7N",
+     "code": "ARC313-R",
+     "title": "Red, green, re-architect: Test-driven infrastructure",
+     "f": {
+      "code": [
+       "ARC313-R1",
+       "ARC313-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358215816001ihz0",
+     "inst": "1790358215816001ihz0",
+     "code": "DAT304-R",
+     "title": "Safer, simpler, faster upgrades with managed blue/green deployments",
+     "f": {
+      "code": [
+       "DAT304-R1",
+       "DAT304-R"
+      ]
+     }
+    },
+    {
+     "id": "1780442242294001cPyH",
+     "inst": "1780442242294001cPyH",
+     "code": "SEC3300",
+     "title": "Authenticating workloads to the outside world",
+     "f": {
+      "speakers": [
+       [
+        "Fei Yuan"
+       ],
+       []
+      ]
+     }
+    },
+    {
+     "id": "1790358252556001itKR",
+     "inst": "1790358252556001itKR",
+     "code": "AIM416-R",
+     "title": "Scale your coding agents beyond the laptop with AgentCore",
+     "f": {
+      "code": [
+       "AIM416-R1",
+       "AIM416-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358255549001iX22",
+     "inst": "1790358255549001iX22",
+     "code": "AIM419-R",
+     "title": "Build and Deploy Agents on Amazon EKS with Amazon Bedrock",
+     "f": {
+      "code": [
+       "AIM419-R1",
+       "AIM419-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358238542001ipd6",
+     "inst": "1790358238542001ipd6",
+     "code": "AIM434-R",
+     "title": "From raw data to custom model: Dataset prep with Amazon SageMaker AI",
+     "f": {
+      "code": [
+       "AIM434-R1",
+       "AIM434-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358244713001i0VG",
+     "inst": "1790358244713001i0VG",
+     "code": "HMC402-R",
+     "title": "Implementing agentic AI solutions on-premises and at the edge",
+     "f": {
+      "code": [
+       "HMC402-R1",
+       "HMC402-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358246828001iTAb",
+     "inst": "1790358246828001iTAb",
+     "code": "CON335-R",
+     "title": "Architect production MCP servers on Amazon ECS",
+     "f": {
+      "code": [
+       "CON335-R1",
+       "CON335-R"
+      ]
+     }
+    },
+    {
+     "id": "1780442256614001c2jD",
+     "inst": "1780442256614001c2jD",
+     "code": "HMC401-R1",
+     "title": "GPU orchestration using NVIDIA Run:ai across the edge",
+     "f": {
+      "code": [
+       "HMC401-R",
+       "HMC401-R1"
+      ]
+     }
+    },
+    {
+     "id": "1790358236977001i1xK",
+     "inst": "1790358236977001i1xK",
+     "code": "CMP319-R",
+     "title": "Reduce EKS cluster compute costs with EC2 Flex instances",
+     "f": {
+      "code": [
+       "CMP319-R1",
+       "CMP319-R"
+      ]
+     }
+    },
+    {
+     "id": "1780442239285001cZIY",
+     "inst": "1780442239285001cZIY",
+     "code": "CON337-R1",
+     "title": "Decouple and scale Amazon ECS workloads with event-driven patterns",
+     "f": {
+      "code": [
+       "CON337-R",
+       "CON337-R1"
+      ]
+     }
+    },
+    {
+     "id": "1790358249719001icpQ",
+     "inst": "1790358249719001icpQ",
+     "code": "COP311-R",
+     "title": "FinOps for AI: Cost allocation strategies for Amazon Bedrock",
+     "f": {
+      "code": [
+       "COP311-R1",
+       "COP311-R"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1790358235937001iNvC",
+     "inst": "1790358235937001iNvC",
+     "code": "COP328-R",
+     "title": "Building a Cost Governance framework for AI that scales",
+     "f": {
+      "code": [
+       "COP328-R1",
+       "COP328-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358243863001iXbk",
+     "inst": "1790358243863001iXbk",
+     "code": "COP329-R",
+     "title": "Automate savings with AWS Billing and Cost Management services",
+     "f": {
+      "code": [
+       "COP329-R1",
+       "COP329-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358248110001iOcI",
+     "inst": "1790358248110001iOcI",
+     "code": "COP331-R",
+     "title": "AIOps strategy: foundations before capabilities",
+     "f": {
+      "code": [
+       "COP331-R1",
+       "COP331-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358232477001i0Ud",
+     "inst": "1790358232477001i0Ud",
+     "code": "COP340-R",
+     "title": "Best practices for building an observability strategy in the age of AI",
+     "f": {
+      "code": [
+       "COP340-R1",
+       "COP340-R"
+      ]
+     }
+    },
+    {
+     "id": "1780442275740001cZAa",
+     "inst": "1780442275740001cZAa",
+     "code": "AIM434-R1",
+     "title": "From raw data to custom model: Dataset prep with Amazon SageMaker AI",
+     "f": {
+      "code": [
+       "AIM434-R",
+       "AIM434-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442274464001cWjo",
+     "inst": "1780442274464001cWjo",
+     "code": "ANT415-R1",
+     "title": "Build a grounded AI support assistant on Amazon OpenSearch Service",
+     "f": {
+      "code": [
+       "ANT415-R",
+       "ANT415-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442274757001c2Wd",
+     "inst": "1780442274757001c2Wd",
+     "code": "API304-R1",
+     "title": "API Gateway unleashed",
+     "f": {
+      "code": [
+       "API304-R",
+       "API304-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442280970001cII1",
+     "inst": "1780442280970001cII1",
+     "code": "IND357-R1",
+     "title": "Agentic AI for software-defined vehicles: Compress the V-Cycle with Kiro",
+     "f": {
+      "code": [
+       "IND357-R",
+       "IND357-R1"
+      ]
+     }
+    },
+    {
+     "id": "1793080517831001iJWn",
+     "inst": "1793080517831001iJWn",
+     "code": "ACT064-R3",
+     "title": "AWS BuilderCards: Learn to play! NEW: Digital game & Frugal Architect",
+     "f": {
+      "title": [
+       "AWS BuilderCards: Learn about AWS security while you play!",
+       "AWS BuilderCards: Learn to play! NEW: Digital game & Frugal Architect"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442235296001cus1",
+     "inst": "1780442235296001cus1",
+     "code": "AIM338-R1",
+     "title": "Open-weights at work: Scaling AI without scaling the bill",
+     "f": {
+      "code": [
+       "AIM338-R",
+       "AIM338-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442237645001c1mh",
+     "inst": "1780442237645001c1mh",
+     "code": "COP340-R1",
+     "title": "Best practices for building an observability strategy in the age of AI",
+     "f": {
+      "code": [
+       "COP340-R",
+       "COP340-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442239878001cpqK",
+     "inst": "1780442239878001cpqK",
+     "code": "DAT306-R1",
+     "title": "Cost optimization for Amazon DynamoDB",
+     "f": {
+      "code": [
+       "DAT306-R",
+       "DAT306-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442280624001cKwQ",
+     "inst": "1780442280624001cKwQ",
+     "code": "HMC403-R1",
+     "title": "Self-managed agentic AI at the hybrid edge",
+     "f": {
+      "code": [
+       "HMC403-R",
+       "HMC403-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442281157001c18P",
+     "inst": "1780442281157001c18P",
+     "code": "IND329-R1",
+     "title": "Build a multi-agent system for hyper-personalized customer journeys",
+     "f": {
+      "code": [
+       "IND329-R",
+       "IND329-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442244582001ctiG",
+     "inst": "1780442244582001ctiG",
+     "code": "IND356-R1",
+     "title": "From static to self-improving agents with Amazon Bedrock AgentCore",
+     "f": {
+      "code": [
+       "IND356-R",
+       "IND356-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780441480733001GC0U",
+     "inst": "1780441480733001GC0U",
+     "code": "SEC326",
+     "title": "What's New In Application Security: Securing Applications At Machine Speed",
+     "f": {
+      "title": [
+       "What's new in Application Security: Securing applications at machine speed",
+       "What's New In Application Security: Securing Applications At Machine Speed"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442234003001c3tS",
+     "inst": "1780442234003001c3tS",
+     "code": "AIM302-R1",
+     "title": "Six Ways AI Fails Who Your Nonprofit Serves — And How to Stop Each One",
+     "f": {
+      "code": [
+       "AIM302-R",
+       "AIM302-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442253517001cLD0",
+     "inst": "1780442253517001cLD0",
+     "code": "AIM333-R1",
+     "title": "The Agent Harness: Unifying Fragmented Tools for Mission AI Advisors",
+     "f": {
+      "code": [
+       "AIM333-R",
+       "AIM333-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442233006001ctvH",
+     "inst": "1780442233006001ctvH",
+     "code": "ANT429-R1",
+     "title": "Govern your context layer for AI agents with AWS Context",
+     "f": {
+      "code": [
+       "ANT429-R",
+       "ANT429-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442255831001cjkw",
+     "inst": "1780442255831001cjkw",
+     "code": "DVT336-R1",
+     "title": "The AWS CLI in an Agentic World: Less Tokens, More Done",
+     "f": {
+      "code": [
+       "DVT336-R",
+       "DVT336-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442240850001cCJK",
+     "inst": "1780442240850001cCJK",
+     "code": "DVT413-R2",
+     "title": "Apply Amazon's frontier team playbook to your organization",
+     "f": {
+      "code": [
+       "DVT413-R",
+       "DVT413-R2"
+      ]
+     }
+    },
+    {
+     "id": "1780442240789001c1o3",
+     "inst": "1780442240789001c1o3",
+     "code": "DVT415-R2",
+     "title": "Mastering agentic development: skills, custom agents, and steering",
+     "f": {
+      "code": [
+       "DVT415-R",
+       "DVT415-R2"
+      ]
+     }
+    },
+    {
+     "id": "1780442244829001cm9z",
+     "inst": "1780442244829001cm9z",
+     "code": "IND362-R1",
+     "title": "Agentic commerce: shopping assistants to agent-ready infrastructure",
+     "f": {
+      "code": [
+       "IND362-R",
+       "IND362-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442253743001cPcf",
+     "inst": "1780442253743001cPcf",
+     "code": "AIM446-R1",
+     "title": "Beyond Prompt Engineering: Optimize the Agent Harness",
+     "f": {
+      "code": [
+       "AIM446-R",
+       "AIM446-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442232461001cI4x",
+     "inst": "1780442232461001cI4x",
+     "code": "ANT322-R1",
+     "title": "Build better agent retrieval with OpenSearch Service",
+     "f": {
+      "code": [
+       "ANT322-R",
+       "ANT322-R1"
+      ]
+     }
+    },
+    {
+     "id": "1782172385910001iEJA",
+     "inst": "1782172385910001iEJA",
+     "code": "CMP319-R1",
+     "title": "Reduce EKS cluster compute costs with EC2 Flex instances",
+     "f": {
+      "code": [
+       "CMP319-R",
+       "CMP319-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442239561001cfP4",
+     "inst": "1780442239561001cfP4",
+     "code": "DAT417-R1",
+     "title": "Demystifying Aurora DSQL transactions and concurrency control",
+     "f": {
+      "code": [
+       "DAT417-R",
+       "DAT417-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442239695001cR5s",
+     "inst": "1780442239695001cR5s",
+     "code": "DAT420-R1",
+     "title": "Dive deep into Amazon DynamoDB using design puzzles",
+     "f": {
+      "code": [
+       "DAT420-R",
+       "DAT420-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780441500913001GZmK",
+     "inst": "1780441500913001GZmK",
+     "code": "IND316-R1",
+     "title": "Best Practices for Successful Multiplayer Game Launches",
+     "f": {
+      "code": [
+       "IND316-R",
+       "IND316-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442244407001c1XS",
+     "inst": "1780442244407001c1XS",
+     "code": "IND331-R1",
+     "title": "Don't rewrite your APIs: Make them agent-ready for agentic AI",
+     "f": {
+      "code": [
+       "IND331-R",
+       "IND331-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442229187001cllG",
+     "inst": "1780442229187001cllG",
+     "code": "IND421-R1",
+     "title": "Grounding LLMs in Truth: Build a Live Fact-Checking Pipeline",
+     "f": {
+      "code": [
+       "IND421-R",
+       "IND421-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442234059001cB58",
+     "inst": "1780442234059001cB58",
+     "code": "AIM316-R1",
+     "title": "Evaluating AI Agents for your Nonprofit: From Vibes to Metrics on AWS",
+     "f": {
+      "code": [
+       "AIM316-R",
+       "AIM316-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442222927001cDcT",
+     "inst": "1780442222927001cDcT",
+     "code": "ANT437-R1",
+     "title": "Accelerate lakehouse analytics with Apache Iceberg materialized views",
+     "f": {
+      "code": [
+       "ANT437-R",
+       "ANT437-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442225044001c10y",
+     "inst": "1780442225044001c10y",
+     "code": "COP311-R1",
+     "title": "FinOps for AI: Cost allocation strategies for Amazon Bedrock",
+     "f": {
+      "code": [
+       "COP311-R",
+       "COP311-R1"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442240601001cWcy",
+     "inst": "1780442240601001cWcy",
+     "code": "DVT332-R2",
+     "title": "Under the hood of Kiro Crew: orchestration, memory, and safe autonomy",
+     "f": {
+      "code": [
+       "DVT332-R",
+       "DVT332-R2"
+      ]
+     }
+    },
+    {
+     "id": "1780442244700001c17i",
+     "inst": "1780442244700001c17i",
+     "code": "IND348-R1",
+     "title": "Accelerate service onboarding with composable AI plugins",
+     "f": {
+      "code": [
+       "IND348-R",
+       "IND348-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442244891001cgCd",
+     "inst": "1780442244891001cgCd",
+     "code": "IND406-R1",
+     "title": "The agentic restaurant: AI agents that run your kitchen",
+     "f": {
+      "code": [
+       "IND406-R",
+       "IND406-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442242708001cI8H",
+     "inst": "1780442242708001cI8H",
+     "code": "AIM3323",
+     "title": "Run agents safely within defined boundaries with Strands and AgentCore",
+     "f": {
+      "title": [
+       "Build ambient agents with latest innovations from Amazon and AWS",
+       "Run agents safely within defined boundaries with Strands and AgentCore"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442224723001c2Wj",
+     "inst": "1780442224723001c2Wj",
+     "code": "AIM351-R1",
+     "title": "Build an automated evaluation pipeline for AI agents",
+     "f": {
+      "code": [
+       "AIM351-R",
+       "AIM351-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442232284001c7A8",
+     "inst": "1780442232284001c7A8",
+     "code": "ANT320-R1",
+     "title": "Data mesh on AWS: governance, identity, and end‑user attribution",
+     "f": {
+      "code": [
+       "ANT320-R",
+       "ANT320-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442239504001cvZk",
+     "inst": "1780442239504001cvZk",
+     "code": "DAT304-R1",
+     "title": "Safer, simpler, faster upgrades with managed blue/green deployments",
+     "f": {
+      "code": [
+       "DAT304-R",
+       "DAT304-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442256149001ccAT",
+     "inst": "1780442256149001ccAT",
+     "code": "DVT227",
+     "title": "Build a team shared agent workflow from issue to tested PR",
+     "f": {
+      "speakers": [
+       [
+        "Sujay Narsale",
+        "Zezhen Xu"
+       ],
+       []
+      ]
+     }
+    },
+    {
+     "id": "1786342064464001PNWj",
+     "inst": "1786342064464001PNWj",
+     "code": "DVT337-R1",
+     "title": "Build a SaaS control plane with Kiro specs and Strands multi-tenant constructs",
+     "f": {
+      "code": [
+       "DVT337-R",
+       "DVT337-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442243992001cPQd",
+     "inst": "1780442243992001cPQd",
+     "code": "IND302-R1",
+     "title": "Evaluating AI agents for production in financial services",
+     "f": {
+      "code": [
+       "IND302-R",
+       "IND302-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442223249001cXHo",
+     "inst": "1780442223249001cXHo",
+     "code": "ANT438-R1",
+     "title": "Give your AI agents business context with AWS Glue Data Catalog",
+     "f": {
+      "code": [
+       "ANT438-R",
+       "ANT438-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442233606001cQJ6",
+     "inst": "1780442233606001cQJ6",
+     "code": "ARC327-R1",
+     "title": "Your system made a decision. you cannot explain it.",
+     "f": {
+      "code": [
+       "ARC327-R",
+       "ARC327-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442254613001cSNh",
+     "inst": "1780442254613001cSNh",
+     "code": "COM317-R1",
+     "title": "Ship Reliable AI Agents with Strands Evaluation and AgentCore Evaluations",
+     "f": {
+      "code": [
+       "COM317-R",
+       "COM317-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442239118001c2q3",
+     "inst": "1780442239118001c2q3",
+     "code": "CON335-R1",
+     "title": "Architect production MCP servers on Amazon ECS",
+     "f": {
+      "code": [
+       "CON335-R",
+       "CON335-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442237304001ccyS",
+     "inst": "1780442237304001ccyS",
+     "code": "COP329-R1",
+     "title": "Automate savings with AWS Billing and Cost Management services",
+     "f": {
+      "code": [
+       "COP329-R",
+       "COP329-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442226950001c2XZ",
+     "inst": "1780442226950001c2XZ",
+     "code": "DAT433-R1",
+     "title": "Build a knowledge graph-based agent guardrail with Amazon Neptune",
+     "f": {
+      "code": [
+       "DAT433-R",
+       "DAT433-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442227509001c83e",
+     "inst": "1780442227509001c83e",
+     "code": "PEX320-R",
+     "title": "AI-Powered Migrations: AWS Transform Across the Lifecycle",
+     "f": {
+      "speakers": [
+       [
+        "Luca Gorgoglione Certini"
+       ],
+       []
+      ]
+     }
+    },
+    {
+     "id": "1780442276149001cTFC",
+     "inst": "1780442276149001cTFC",
+     "code": "AIM416-R1",
+     "title": "Scale your coding agents beyond the laptop with AgentCore",
+     "f": {
+      "code": [
+       "AIM416-R",
+       "AIM416-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442276321001cZw2",
+     "inst": "1780442276321001cZw2",
+     "code": "AIM419-R1",
+     "title": "Build and Deploy Agents on Amazon EKS with Amazon Bedrock",
+     "f": {
+      "code": [
+       "AIM419-R",
+       "AIM419-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442233659001cABB",
+     "inst": "1780442233659001cABB",
+     "code": "ARC317-R1",
+     "title": "Fault-tolerant AI agents: Choosing the right recovery pattern",
+     "f": {
+      "code": [
+       "ARC317-R",
+       "ARC317-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442237240001cGFB",
+     "inst": "1780442237240001cGFB",
+     "code": "COP328-R1",
+     "title": "Building a Cost Governance framework for AI that scales",
+     "f": {
+      "code": [
+       "COP328-R",
+       "COP328-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442227450001cFhR",
+     "inst": "1780442227450001cFhR",
+     "code": "COP356",
+     "title": "Catch bad agent behavior before your users do",
+     "f": {
+      "speakers": [
+       [
+        "Manish Dhawaria"
+       ],
+       []
+      ]
+     }
+    },
+    {
+     "id": "1780442243651001cqOn",
+     "inst": "1780442243651001cqOn",
+     "code": "HMC315-R1",
+     "title": "Applying the Well-Architected Framework to AWS Outposts and AWS Local Zones",
+     "f": {
+      "code": [
+       "HMC315-R",
+       "HMC315-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780441500857001GOI5",
+     "inst": "1780441500857001GOI5",
+     "code": "IND315-R1",
+     "title": "Multi-Agent Operations for Broadcast & Streaming",
+     "f": {
+      "code": [
+       "IND315-R",
+       "IND315-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442224029001cAJH",
+     "inst": "1780442224029001cAJH",
+     "code": "AIM304-R1",
+     "title": "Deploy and optimize world models with agentic AI workflows",
+     "f": {
+      "code": [
+       "AIM304-R",
+       "AIM304-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442232227001c5pU",
+     "inst": "1780442232227001c5pU",
+     "code": "ANT411-R1",
+     "title": "Simplify identity and security management in an open data architecture on AWS",
+     "f": {
+      "code": [
+       "ANT411-R",
+       "ANT411-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442233338001cJVo",
+     "inst": "1780442233338001cJVo",
+     "code": "ARC323-R1",
+     "title": "Deterministic meets probabilistic: Patterns for reliable AI integration",
+     "f": {
+      "code": [
+       "ARC323-R",
+       "ARC323-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442238674001c8MS",
+     "inst": "1780442238674001c8MS",
+     "code": "CMP324-R1",
+     "title": "GenAI chip selection: From training to inference",
+     "f": {
+      "code": [
+       "CMP324-R",
+       "CMP324-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442237415001cCre",
+     "inst": "1780442237415001cCre",
+     "code": "COP331-R1",
+     "title": "AIOps strategy: foundations before capabilities",
+     "f": {
+      "code": [
+       "COP331-R",
+       "COP331-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442233172001c2Yk",
+     "inst": "1780442233172001c2Yk",
+     "code": "API311-R1",
+     "title": "How event driven architectures go wrong and how to fix them",
+     "f": {
+      "code": [
+       "API311-R",
+       "API311-R1"
+      ]
+     }
+    },
+    {
+     "id": "1786043769328001qLKG",
+     "inst": "1786043769328001qLKG",
+     "code": "ARC335-R1",
+     "title": "Route or escalate: Confidence boundaries in multi-domain AI agents",
+     "f": {
+      "code": [
+       "ARC335-R",
+       "ARC335-R1"
+      ]
+     }
+    },
+    {
+     "id": "1790358236035001iQd9",
+     "inst": "1790358236035001iQd9",
+     "code": "CON340-R",
+     "title": "Troubleshooting and recovering failed Amazon ECS deployments",
+     "f": {
+      "code": [
+       "CON340-R1",
+       "CON340-R"
+      ]
+     }
+    },
+    {
+     "id": "1780442274698001cKUL",
+     "inst": "1780442274698001cKUL",
+     "code": "ANT419-R1",
+     "title": "Power streaming analytics on AWS with AI-driven insights",
+     "f": {
+      "code": [
+       "ANT419-R",
+       "ANT419-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442233282001cgXT",
+     "inst": "1780442233282001cgXT",
+     "code": "API314-R1",
+     "title": "A closer look at AWS Lambda durable functions",
+     "f": {
+      "code": [
+       "API314-R",
+       "API314-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442223763001cG3t",
+     "inst": "1780442223763001cG3t",
+     "code": "ARC404-R1",
+     "title": "Event storming: Find your service boundaries before production does",
+     "f": {
+      "code": [
+       "ARC404-R",
+       "ARC404-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442277051001cNyP",
+     "inst": "1780442277051001cNyP",
+     "code": "BIZ320-R1",
+     "title": "From Reactive to Proactive: Omnichannel AI Outreach with Connect Customer",
+     "f": {
+      "code": [
+       "BIZ320-R",
+       "BIZ320-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442254794001c8Tp",
+     "inst": "1780442254794001c8Tp",
+     "code": "COM325-R1",
+     "title": "The agent orchestration spectrum: Agents, Step Functions, or Lambda?",
+     "f": {
+      "code": [
+       "COM325-R",
+       "COM325-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442254259001cWLi",
+     "inst": "1780442254259001cWLi",
+     "code": "COP405-R1",
+     "title": "When agents run code: sandboxes for reliable DevOps",
+     "f": {
+      "code": [
+       "COP405-R",
+       "COP405-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442280684001chaC",
+     "inst": "1780442280684001chaC",
+     "code": "HMC402-R1",
+     "title": "Implementing agentic AI solutions on-premises and at the edge",
+     "f": {
+      "code": [
+       "HMC402-R",
+       "HMC402-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442281589001cTlH",
+     "inst": "1780442281589001cTlH",
+     "code": "IND364-R1",
+     "title": "Build agentic fraud detection with a transaction foundation model",
+     "f": {
+      "code": [
+       "IND364-R",
+       "IND364-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442275158001c3mA",
+     "inst": "1780442275158001c3mA",
+     "code": "ARC313-R1",
+     "title": "Red, green, re-architect: Test-driven infrastructure",
+     "f": {
+      "code": [
+       "ARC313-R",
+       "ARC313-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442254552001clrj",
+     "inst": "1780442254552001clrj",
+     "code": "COP410-R1",
+     "title": "Build a fully managed open source observability stack on AWS",
+     "f": {
+      "code": [
+       "COP410-R",
+       "COP410-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442254434001c7dn",
+     "inst": "1780442254434001c7dn",
+     "code": "COP408-R1",
+     "title": "Correlate database query latency to user impact",
+     "f": {
+      "code": [
+       "COP408-R",
+       "COP408-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442242598001cOr5",
+     "inst": "1780442242598001cOr5",
+     "code": "STG422-R",
+     "title": "Dive deep into resilience architectures for Amazon EBS",
+     "f": {
+      "speakers": [
+       [
+        "Barak Pinhas"
+       ],
+       []
+      ]
+     }
+    },
+    {
+     "id": "1780442228368001ckLQ",
+     "inst": "1780442228368001ckLQ",
+     "code": "IND347-R1",
+     "title": "Build a governed semantic layer with Amazon Bedrock AgentCore and MCP",
+     "f": {
+      "code": [
+       "IND347-R",
+       "IND347-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442228427001cw61",
+     "inst": "1780442228427001cw61",
+     "code": "IND308-R1",
+     "title": "Automate dispute resolution with Amazon Connect and Amazon Bedrock",
+     "f": {
+      "code": [
+       "IND308-R",
+       "IND308-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442255494001cnoE",
+     "inst": "1780442255494001cnoE",
+     "code": "CON340-R1",
+     "title": "Troubleshooting and recovering failed Amazon ECS deployments",
+     "f": {
+      "code": [
+       "CON340-R",
+       "CON340-R1"
+      ]
+     }
+    }
+   ],
+   "unknownRooms": []
+  },
+  {
    "at": "2026-11-17T06:45:16Z",
    "milestones": [],
    "added": [
