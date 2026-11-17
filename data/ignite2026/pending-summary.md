@@ -1,0 +1,66 @@
+<!-- summary:44189467437-1 -->
+Added 0 · removed 0 · changed 0 · 1555 extra runs added
+
+**Extra runs added**
+- `BRK101` Microsoft Ignite 101: Navigate, Connect & Maximize Your Experience
+- `BRK101` Microsoft Ignite 101: Navigate, Connect & Maximize Your Experience
+- `BRK201` Home: Your starting point for work in the Copilot app
+- `BRK202` Automate the Follow-Through with Autopilot
+- `BRK202O` Automate the Follow-Through with Autopilot (Overflow Viewing)
+- `BRK203` Copilot Code: Build custom solutions for your unique needs
+- `BRK205` Beyond Chat: Delegate Complex Work with Copilot Cowork
+- `BRK205O` Beyond Chat: Delegate Complex Work with Copilot Cowork (Overflow Viewing)
+- `BRK206` Agentic productivity in Microsoft 365 apps
+- `BRK206O` Agentic productivity in Microsoft 365 apps (Overflow Viewing)
+- `BRK207` Agentic productivity with new Copilot capabilities in OneNote
+- `BRK207O` Agentic productivity with new Copilot capabilities in OneNote (Overflow Viewing)
+- `BRK208` From Conversation to Completion: How Teams and Copilot move work ahead
+- `BRK209` Beyond the Agent: Building Digital Teammates in Microsoft Teams
+- `BRK210` Work IQ: Powering Copilot for the Frontier Firm
+- `BRK210O` Work IQ: Powering Copilot for the Frontier Firm (Overflow Viewing)
+- `BRK211` Secure and Govern Microsoft Copilot Chat and Cowork
+- `BRK212` Secure the Follow-Through: Trusting Autopilot at Scale
+- `BRK213` Defend Against External Threats in Teams
+- `BRK214` Manage and Secure your AI Agents at Enterprise Scale with Agent 365
+- `BRK214O` Manage and Secure your AI Agents at Enterprise Scale with Agent 365 (Overflow Viewing)
+- `BRK215` Your On-prem estate: Act now. Reduce risk.
+- `BRK216` Multi-model AI in Copilot: Performance and value with built-in trust
+- `BRK217` Real-World AI Transformation with Copilot in SharePoint​‌
+- `BRK218` SharePoint: Modernize your knowledge foundation for the AI era
+- `BRK219` AI in the Flow of Work: OneDrive for the AI Era
+- `BRK220` Copilot Connectors: Unlock your enterprise knowledge and workflows
+- `BRK221` Govern Once, Use Everywhere: Scale Copilot with Microsoft Plugin Registry
+- `BRK222` What's new in Microsoft Copilot for functional roles
+- `BRK223` Getting work done with Copilot as a small business
+- `BRK225` The AI Reality Check: What We’re Learning from Customers​
+- `BRK226` Built for work: What sets Copilot apart
+- `BRK227` Building an AI Operating System: The Layers of Frontier Transformation
+- `BRK228` What Microsoft Benefit Is Right for Your Use Case?
+- `BRK229` Frontier Accelerate: Microsoft benefits that help you move forward
+- `BRK230` How customers are unlocking value & growth with Copilot
+- `BRK231` How Microsoft Connects Employees, Leaders, and Knowledge at Scale
+- `BRK232` Customer stories: Transform business functions with Microsoft Copilot
+- `BRK233` Beyond the Benchmark: Evaluating Copilot and AI Tools
+- `BRK234` Agentify your business processes-the next era of business applications
+- `BRK234O` Agentify your business processes-the next era of business applications (Overflow Viewing)
+- `BRK236` Agents in Copilot: help every user get more done
+- `BRK237` Plugins for Copilot: build once, govern once, use everywhere
+- `BRK237O` Plugins for Copilot: build once, govern once, use everywhere (Overflow Viewing)
+- `BRK238` Frontier tuning: Optimize AI agents for real-world business outcomes
+- `BRK239` Employee Self-Service to Enterprise Scale: Managing Intelligent Agents
+- `BRK240` Build and scale the next generation of AI agents in Microsoft Foundry
+- `BRK240O` Build and scale the next generation of AI agents in Microsoft Foundry (Overflow Viewing)
+- `BRK241` How SThree is reimagining recruitment with human-led AI
+- `BRK242` Build your self-improving AI Platform with Microsoft Foundry
+- `BRK243` How much should you own? Choosing the right agent architecture
+- `BRK244` Voice agents in Microsoft Foundry: Prototype to production in 45 mins
+- `BRK245` Trusted agents need Document Intelligence & Content Understanding
+- `BRK246` From open weights to workload: Operationalizing at enterprise scale
+- `BRK247` Token economics: Get more from your production AI budget
+- `BRK248` Trust at scale: Governance lessons from Microsoft
+- `BRK249` From traces to better agents: The Foundry improvement loop
+- `BRK250` Govern AI everywhere: From open frameworks to enterprise control
+- `BRK251` Agents in production: Observe, evaluate, and optimize with Foundry
+- `BRK251O` Agents in production: Observe, evaluate, and optimize with Foundry (Overflow Viewing)
+- …and 1495 more
+
