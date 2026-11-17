@@ -1,6 +1,232 @@
 {
  "batches": [
   {
+   "at": "2026-11-17T00:51:19Z",
+   "milestones": [],
+   "added": [
+    {
+     "id": "1793907144909001iG7f",
+     "inst": "1793907144909001iG7f",
+     "code": "AWS123",
+     "title": "New to re:Invent: Maximizing your time",
+     "repeat": false
+    },
+    {
+     "id": "1792713232260001lIUY",
+     "inst": "1792713232260001lIUY",
+     "code": "ACT067-R",
+     "title": "Startup Plaza",
+     "repeat": false
+    },
+    {
+     "id": "1780441495169001GbUR",
+     "inst": "1780441495169001GbUR",
+     "code": "INV532",
+     "title": "Beating RL with Reflection: GEPA and Optimize Anything (featuring rising stars in AI)",
+     "repeat": false
+    },
+    {
+     "id": "1792713993338001of3Y",
+     "inst": "1792713993338001of3Y",
+     "code": "ACT067-R1",
+     "title": "Startup Plaza",
+     "repeat": false
+    },
+    {
+     "id": "1792713993169001o1Zo",
+     "inst": "1792713993169001o1Zo",
+     "code": "ACT067-R2",
+     "title": "Startup Plaza",
+     "repeat": false
+    },
+    {
+     "id": "1792713993253001oGTk",
+     "inst": "1792713993253001oGTk",
+     "code": "ACT067-R3",
+     "title": "Startup Plaza",
+     "repeat": false
+    },
+    {
+     "id": "1794508479288001jNbz",
+     "inst": "1794508479288001jNbz",
+     "code": "MAM347-R1",
+     "title": "Meet Your AI-powered Advisor for WorkSpaces Administration",
+     "repeat": false
+    },
+    {
+     "id": "1794524062911001bMKj",
+     "inst": "1794524062911001bMKj",
+     "code": "COP355-R2",
+     "title": "Resolve Incidents and Validate Releases with AWS DevOps Agent",
+     "repeat": false
+    },
+    {
+     "id": "1794504212301001PoPb",
+     "inst": "1794504212301001PoPb",
+     "code": "STG422-R1",
+     "title": "Dive deep into resilience architectures for Amazon EBS",
+     "repeat": false
+    }
+   ],
+   "removed": [],
+   "changed": [
+    {
+     "id": "1780442236172001cIVj",
+     "inst": "1780442236172001cIVj",
+     "code": "BIZ304",
+     "title": "Zero-Trust Identity & Data Protection in AWS Quick",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441471802001GuEb",
+     "inst": "1780441471802001GuEb",
+     "code": "CON346",
+     "title": "Beyond the registry: Discover, trust, & consume containers on AWS",
+     "f": {
+      "title": [
+       "Enhanced container image access & distribution with Amazon ECR",
+       "Beyond the registry: Discover, trust, & consume containers on AWS"
+      ]
+     }
+    },
+    {
+     "id": "1791492159262001Uwh1",
+     "inst": "1791492159262001Uwh1",
+     "code": "SUP205",
+     "title": "How Clay turns CRM and first-party data into a context graph for GTM AI",
+     "f": {
+      "start": [
+       "2026-12-02T16:40:00Z",
+       "2026-12-01T21:40:00Z"
+      ],
+      "end": [
+       "2026-12-02T17:00:00Z",
+       "2026-12-01T22:00:00Z"
+      ]
+     }
+    },
+    {
+     "id": "1791492159918001UIY8",
+     "inst": "1791492159918001UIY8",
+     "code": "SUP106",
+     "title": "Inside Systalyze: Building the Fastest, Most Efficient AI",
+     "f": {
+      "title": [
+       "From MIT Lab to Market: Building Efficient AI for Every Enterprise",
+       "Inside Systalyze: Building the Fastest, Most Efficient AI"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441490155001GgFv",
+     "inst": "1780441490155001GgFv",
+     "code": "AIM108-S",
+     "title": "Beyond DC Exit: AXA’s Value-Led Cloud Transformation Journey (sponsored by Tata Consultancy Services)",
+     "f": {
+      "title": [
+       "Beyond pilots: agentic AI transforming mortgage operations and IT at scale (sponsored by Tata Consultancy Services)",
+       "Beyond DC Exit: AXA’s Value-Led Cloud Transformation Journey (sponsored by Tata Consultancy Services)"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1791492159823001U0GI",
+     "inst": "1791492159823001U0GI",
+     "code": "SUP406",
+     "title": "Voice AI on AWS silicon: Cartesia’s AWS Trainium stack",
+     "f": {
+      "start": [
+       "2026-12-01T21:40:00Z",
+       "2026-12-02T16:40:00Z"
+      ],
+      "end": [
+       "2026-12-01T22:00:00Z",
+       "2026-12-02T17:00:00Z"
+      ]
+     }
+    },
+    {
+     "id": "1792450370692001snVp",
+     "inst": "1792450370692001snVp",
+     "code": "ACT017",
+     "title": "Building Together Reception",
+     "f": {
+      "start": [
+       "2026-12-04T02:00:00Z",
+       "2026-12-03T02:00:00Z"
+      ],
+      "end": [
+       "2026-12-04T04:00:00Z",
+       "2026-12-03T04:00:00Z"
+      ]
+     }
+    },
+    {
+     "id": "1780442284238001cFLw",
+     "inst": "1780442284238001cFLw",
+     "code": "SEC362",
+     "title": "Authentication, authorization, and audit for agentic AI on AWS",
+     "f": {
+      "speakers": [
+       [
+        "Meric Degirmenci",
+        "Rickard Löfström"
+       ],
+       [
+        "Recep Meric Degirmenci",
+        "Rickard Löfström"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442260722001cbn8",
+     "inst": "1780442260722001cbn8",
+     "code": "COP362",
+     "title": "Troubleshoot Workloads End to End with AWS DevOps Agent",
+     "f": {
+      "start": [
+       "2026-12-02T00:30:00Z",
+       "2026-12-03T22:30:00Z"
+      ],
+      "end": [
+       "2026-12-02T00:50:00Z",
+       "2026-12-03T22:50:00Z"
+      ],
+      "room": [
+       "Venetian | Level 2 | Hall B | Expo | Builder Theater",
+       "Venetian | Level 2 | Hall B | Expo | Partner Advantage Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441471006001GVii",
+     "inst": "1780441471006001GVii",
+     "code": "AIM3308",
+     "title": "What’s new: SageMaker HyperPod & Multiverse Computing insights",
+     "f": {
+      "start": [
+       "2026-12-02T23:00:00Z",
+       "2026-12-04T18:00:00Z"
+      ],
+      "end": [
+       "2026-12-03T00:00:00Z",
+       "2026-12-04T19:00:00Z"
+      ],
+      "room": [
+       "Caesars Palace | Promenade Level | Roman I",
+       "Venetian | Level 2 | Ballroom F | Content Hub | Purple Theater"
+      ]
+     }
+    }
+   ],
+   "unknownRooms": []
+  },
+  {
    "at": "2026-11-16T12:55:52Z",
    "milestones": [],
    "added": [],
