@@ -72,6 +72,12 @@ Feature: What a session's rating, lock and reserved seat are, read from the save
       When the catalog is read
       Then the run's group is its own code
 
+    Scenario: New runs are announced when the saved snapshot wrote the group untidily
+      Given a picked session whose acknowledged snapshot remembers its group with stray spaces
+      And the catalog now lists that session under new runs only
+      When the planner tracks picks and checks for changes
+      Then the new runs are announced as added
+
   Rule: Editing a note never changes which record is newest (#76)
 
     Scenario: A group whose runs disagree keeps its rating after a note is added

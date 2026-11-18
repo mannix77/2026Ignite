@@ -244,6 +244,23 @@ export function snapshot(s) {
   return { inst: s.key, g: s.group, code: s.code, title: s.title, start: s.start, end: s.end, room: s.roomTbd ? null : s.room };
 }
 
+// Snapshot every run of newly picked sessions, so later moves can be flagged. A group already
+// tracked (by the group a snapshot remembers, read through the same cleaner as the model's, or
+// by any of its runs) isn't touched: a new run
+// of it shows up as an alert. Returns the snapshots to save and whether any were added; the
+// saved ones are not rewritten.
+export function trackPicks(model, groups, knownIn) {
+  const known = { ...(knownIn && typeof knownIn === 'object' ? knownIn : {}) };
+  const tracked = new Set(Object.values(known).filter(k => k && typeof k === 'object').map(k => usableGroup(k.g) ?? k.g));
+  let added = false;
+  for (const g of groups) {
+    const runs = model.byGroup.get(g) || [];
+    if (tracked.has(g) || runs.some(s => known[s.key])) continue;
+    for (const s of runs) { known[s.key] = snapshot(s); added = true; }
+  }
+  return { known, added };
+}
+
 // groups: repeat-group codes you've picked. Returns alerts for runs that moved, were
 // retitled or disappeared since you last acknowledged, plus the new snapshot.
 export function diffKnown(model, groups, knownIn) {

@@ -3,7 +3,7 @@
 import { sleep } from './shim.js';
 
 const store = await import('../assets/js/store.js');
-const { buildModel, diffKnown, cacheUrl } = await import('../assets/js/data.js');
+const { buildModel, diffKnown, trackPicks, cacheUrl } = await import('../assets/js/data.js');
 const { CONFERENCES } = await import('../assets/js/conferences.js');
 const { createVenue } = await import('../assets/js/venue.js');
 const { canBoth, compareOptions, optimize, lunchConfig, DEFAULT_PLANNER } = await import('../assets/js/planner.js');
@@ -154,6 +154,29 @@ await test('should still alert on a removed run when the acknowledged snapshot r
   eq(diff([run('ANT319-R9')]),
     [[['run-added', 'ANT319-R9', 'ANT319', null], ['run-removed', 'ANT319-R', 'ANT319', ['ANT319-R9']], ['run-removed', 'ANT319-R1', 'ANT319', ['ANT319-R9']]], [['ANT319-R9', 'ANT319']]]);
   eq(Object.values(known).map(k => k.g), [' ANT319 ', ' ANT319 '], 'the saved snapshot itself is not rewritten');
+});
+await test('should not take new runs as acknowledged when the saved snapshot remembers the group with stray spaces', () => {
+  const picked = new Set(['ANT319']);
+  const saved = pad => { const k = acknowledged([run('ANT319-R'), run('ANT319-R1')]); for (const v of Object.values(k)) v.g = pad; return k; };
+  // The session now runs under new instance keys only: nothing but the remembered group ties them to the pick.
+  const now = catalog([run('ANT319-R8'), run('ANT319-R9')]);
+  for (const g of [' ANT319 ', 'ANT319']) {
+    const known = saved(g), before = JSON.stringify(known);
+    const t = trackPicks(now, picked, known);
+    eq([t.added, Object.keys(t.known), JSON.stringify(known) === before], [false, ['ANT319-R', 'ANT319-R1'], true], `tracked already (saved as "${g}")`);
+    eq(diffKnown(now, picked, t.known).alerts.map(a => [a.kind, a.inst]),
+      [['run-added', 'ANT319-R8'], ['run-added', 'ANT319-R9'], ['run-removed', 'ANT319-R'], ['run-removed', 'ANT319-R1']], `announced (saved as "${g}")`);
+  }
+  // A pick that is not tracked at all is snapshotted, run by run, and then has nothing to announce.
+  const other = saved('OTHER');
+  const fresh = trackPicks(now, picked, other);
+  eq([fresh.added, Object.entries(fresh.known).map(([k, v]) => [k, v.g]), Object.keys(other)],
+    [true, [['ANT319-R', 'OTHER'], ['ANT319-R1', 'OTHER'], ['ANT319-R8', 'ANT319'], ['ANT319-R9', 'ANT319']], ['ANT319-R', 'ANT319-R1']]);
+  eq(diffKnown(now, picked, fresh.known).alerts, []);
+  // A group tracked by one of its runs gets no new snapshot for another run (that run is announced).
+  const one = trackPicks(catalog([run('ANT319-R'), run('ANT319-R9')]), picked, saved('ELSE'));
+  eq([one.added, Object.keys(one.known)], [false, ['ANT319-R', 'ANT319-R1']]);
+  eq(trackPicks(now, picked, null).added, true, 'no saved snapshot at all');
 });
 await test('should keep runs apart when their groups differ by more than spaces', () => {
   eq(groupsOf([run('C1', { id: 'C1', group: 'ANT 319' }), run('C2', { id: 'C2', group: 'ANT319' }), run('C3', { id: 'C3', group: 'ant319' })]),
