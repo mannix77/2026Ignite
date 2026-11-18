@@ -66,6 +66,10 @@ test('should put two picks on one card when the walk between them is too long fo
   eq(slotGroups([a, b], ctx).map(s => [s.start, codes(s.items)]), [[H(14), ['A', 'B']]], 'a 5 min gap for a 13 min walk is a clash');
   const later = item(H(15.25), H(16), { code: 'B2', loc: M });
   eq(slotGroups([a, later], ctx), [], 'a 30 min gap is not');
+  // The cutoff: a 13 min walk plus the 2 min buffer may run 5 min late, so 9 min clashes and 10 does not.
+  const at = gap => item(H(14.75) + gap, H(15.5) + gap, { code: 'B3', loc: M });
+  eq(slotGroups([a, at(9)], ctx).map(s => [s.start, codes(s.items)]), [[H(14), ['A', 'B3']]], 'a 9 min gap is a clash');
+  eq(slotGroups([a, at(10)], ctx), [], 'a 10 min gap is not');
 });
 test('should call a slot decided when a lock settles it', () => {
   const a = item(H(14), H(14.75), { code: 'A', locked: true }), b = item(H(14), H(14.75), { code: 'B' });

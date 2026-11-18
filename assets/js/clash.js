@@ -128,8 +128,12 @@ export function missHeadline(missed) {
 export function optionCost(x, card, chosen, current) {
   const list = v => (Array.isArray(v) ? v.filter(Boolean) : []);
   const kept = new Set(list(chosen).map(y => y.id));
-  const lost = new Set();
-  const onCard = list(card).filter(y => y.key !== x.key && !kept.has(y.id) && !lost.has(y.id) && !!lost.add(y.id));
+  const lost = new Set(), onCard = [];
+  for (const y of list(card)) {
+    if (y.key === x.key || kept.has(y.id) || lost.has(y.id)) continue;
+    lost.add(y.id);
+    onCard.push(y);
+  }
   const seen = new Set([x.id, ...list(card).map(y => y.id)]);
   const outside = [];
   for (const y of list(current)) {
