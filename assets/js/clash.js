@@ -12,7 +12,7 @@
 //   4. not recorded beats recorded (a recording can be watched later);
 //   5. the building of the session before or after it breaks a tie.
 
-import { canBoth, overlaps, isResolved, DEFAULT_PLANNER, PRIORITY } from './planner.js';
+import { canBoth, overlaps, transition, isResolved, DEFAULT_PLANNER, PRIORITY } from './planner.js';
 import { fmtDay, fmtTime } from './time.js';
 
 const timed = x => !!x && !x.pseudo && typeof x.day === 'string' && x.day !== '' && Number.isFinite(x.startMin) && Number.isFinite(x.endMin) && x.endMin > x.startMin;
@@ -116,4 +116,54 @@ export function missHeadline(missed) {
   if (!codes.length) return '';
   if (codes.length <= 2) return `You'd miss ${codes.join(' and ')}`;
   return `You'd miss ${codes.length} picks`;
+}
+
+// What choosing option `x` of a card costs. `chosen` is the whole plan if x is chosen (the
+// what-if outcome), `current` the plan as it stands. `onCard`: the other options of the card
+// whose session is then nowhere in the plan. `outside`: sessions the plan attends now that the
+// what-if drops and that are not on this card (a pick on a later card that x runs into, or one
+// pushed out by a session that moved to its other run). A session that only moves to another
+// run is not a cost, and blocked time and lunch are not picks. A session is listed once, in
+// both lists: on the card, by the first of its runs there.
+export function optionCost(x, card, chosen, current) {
+  const list = v => (Array.isArray(v) ? v.filter(Boolean) : []);
+  const kept = new Set(list(chosen).map(y => y.id));
+  const lost = new Set(), onCard = [];
+  for (const y of list(card)) {
+    if (y.key === x.key || kept.has(y.id) || lost.has(y.id)) continue;
+    lost.add(y.id);
+    onCard.push(y);
+  }
+  const seen = new Set([x.id, ...list(card).map(y => y.id)]);
+  const outside = [];
+  for (const y of list(current)) {
+    if (y.pseudo || kept.has(y.id) || seen.has(y.id)) continue;
+    seen.add(y.id);
+    outside.push(y);
+  }
+  return { onCard, outside };
+}
+
+// Why each missed run can't fit around the chain of the what-if plan, in words: grouped by the
+// session that blocks it (same time, or too long a walk for the gap). A run no session blocks
+// gives way to lunch when that day's lunch slot of the what-if (`lunch`: day -> { start, end })
+// sits in its time; otherwise it lost on value. `short(building)` names a building.
+export function missReasons(missed, chain, ctx = DEFAULT_PLANNER, { lunch = null, short = b => String(b) } = {}) {
+  const sessions = Array.isArray(chain) ? chain : [];
+  const overlapBy = new Map(), walks = [], eaten = [], other = [];
+  for (const y of Array.isArray(missed) ? missed : []) {
+    const z = sessions.find(z => z.day === y.day && !canBoth(z, y, ctx));
+    const slot = lunch && Object.hasOwn(lunch, y.day) ? lunch[y.day] : null;
+    if (!z) (slot && y.startMin < slot.end && slot.start < y.endMin ? eaten : other).push(y.code);
+    else if (overlaps(z, y)) { if (!overlapBy.has(z.code)) overlapBy.set(z.code, []); overlapBy.get(z.code).push(y.code); }
+    else {
+      const [a, b] = z.startMin <= y.startMin ? [z, y] : [y, z];
+      const t = transition(a, b, ctx);
+      walks.push(`${y.code} (${t.walk} min walk ${short(a.loc.building)} → ${short(b.loc.building)}, ${Math.max(0, t.gap)} min gap)`);
+    }
+  }
+  const parts = [...[...overlapBy].map(([by, codes]) => `${codes.join(', ')} (same time as ${by})`), ...walks];
+  if (eaten.length) parts.push(`${eaten.join(', ')} (gives way to lunch)`);
+  if (other.length) parts.push(`${other.join(', ')} (lower value)`);
+  return parts.join(' · ');
 }

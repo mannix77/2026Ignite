@@ -6,7 +6,7 @@ import { checkLive, diff as liveDiff, changeCounts, countsLine } from './live.js
 import { optimize, transitions, fillers, nowNext, canBoth, overlaps, transition, compareOptions, lunchConfig, arrivalExtra, PRIORITY } from './planner.js';
 import { fmtTime, fmtDay, fmtDuration, relTime, nowLocal, addDays } from './time.js';
 import { upNext, onwardWalk, nextPlanned } from './upnext.js';
-import { slotGroups, rankOptions, rankTie, missHeadline } from './clash.js';
+import { slotGroups, rankOptions, rankTie, missHeadline, optionCost, missReasons } from './clash.js';
 import * as picks from './picks.js';
 import { createVenue, setVenue, walkMinutes, floorExtra, mergeWalk, haversine, sideOf } from './venue.js';
 import { CONFERENCES, currentConferenceId, rememberConference, conferenceList } from './conferences.js';
@@ -85,7 +85,7 @@ window.addEventListener('unhandledrejection', () => reportAppError('uncaught-exc
 const num = (v, d = 0) => (Number.isFinite(Number(v)) ? Number(v) : d);
 const hhmm = min => `${String(Math.floor(min / 60)).padStart(2, '0')}:${String(min % 60).padStart(2, '0')}`;
 const fromHHMM = v => { const [h, m] = String(v || '').split(':').map(Number); return Number.isFinite(h) && Number.isFinite(m) ? h * 60 + m : null; };
-const B = id => app.venue.BUILDING[id] || app.venue.BUILDING.U;
+const B = id => (Object.hasOwn(app.venue.BUILDING, id) ? app.venue.BUILDING[id] : app.venue.BUILDING.U);
 
 // Your walking-time edits sit on top of the conference's matrix (a backup may hold only some keys);
 // a saved pair that still equals the default it was saved with follows a recalibration (mergeWalk).
@@ -1285,24 +1285,6 @@ function renderFillers(day, around, c, between = false) {
     ${fit.length > top.length ? `<p class="small muted">${fit.length - top.length} more fit. Filter Browse by this day to see them.</p>` : ''}`;
 }
 
-// Why y can't fit around the chosen chain: grouped by the session that blocks it.
-function missSummary(missed, chain, c) {
-  const overlapBy = new Map(), walks = [], other = [];
-  for (const y of missed) {
-    const z = chain.find(z => z.day === y.day && !canBoth(z, y, c));
-    if (!z) other.push(y.code);
-    else if (overlaps(z, y)) { if (!overlapBy.has(z.code)) overlapBy.set(z.code, []); overlapBy.get(z.code).push(y.code); }
-    else {
-      const [a, b] = z.startMin <= y.startMin ? [z, y] : [y, z];
-      const t = transition(a, b, c);
-      walks.push(`${y.code} (${t.walk} min walk ${B(a.loc.building).short} → ${B(b.loc.building).short}, ${Math.max(0, t.gap)} min gap)`);
-    }
-  }
-  const parts = [...[...overlapBy].map(([by, codes]) => `${codes.join(', ')} (same time as ${by})`), ...walks];
-  if (other.length) parts.push(`${other.join(', ')} (lower value)`);
-  return parts.join(' · ');
-}
-
 // A clash-card line that stays as the user left it when the plan is rebuilt under them (a
 // catalog or occupancy refresh): the toggle handler and render() record it in app.folds by this
 // id. Until the user has touched it, it is closed, or open when `openByDefault`.
@@ -1340,13 +1322,17 @@ function renderDecision(d, plan, c) {
   const decided = d.resolved ? d.items.find(x => x.locked) : null;
   const lockedOthers = x => d.items.filter(o => o.locked && o.id !== x.id && !canBoth(o, x, c)).map(o => o.id);
   const preview = app.model.mode === 'preview';
+  const current = Object.values(plan.res.plan).flat();
   const row = x => {
     const o = outcome.get(x.key) || { feasible: true, unrated: true, chosen: [], value: 0 };
     const keysX = new Set(o.chosen.map(y => y.key));
     const groupsX = new Set(o.chosen.map(y => y.id));
     const also = d.items.filter(y => y !== x && keysX.has(y.key));
     const moved = d.items.filter(y => y !== x && !keysX.has(y.key) && groupsX.has(y.id)).map(y => ({ y, to: o.chosen.find(z => z.id === y.id) }));
-    const miss = d.items.filter(y => y !== x && !groupsX.has(y.id));
+    // The cost is the whole plan's: the picks lost on this card and the planned ones pushed out elsewhere.
+    const { onCard: miss, outside } = optionCost(x, d.items, o.chosen, current);
+    const lost = [...miss, ...outside];
+    const why = list => missReasons(list, o.chosen, c, { lunch: o.lunch, short: b => B(b).short });
     const r = rowOf.get(x.key);
     const top = x.key === topKey;
     const can = possible(x);
@@ -1365,8 +1351,9 @@ function renderDecision(d, plan, c) {
         ${!can ? `<div class="lose">Not possible with the sessions or blocked time you've locked</div>` : o.unrated ? `<details class="cost" ${keepOpen(`cost:${x.key}`)}><summary class="why">Not compared with the whole plan</summary><div class="why">Only the top options are. <b>Go to this</b> shows what it would change.</div></details>` : `
         ${also.length ? `<div class="why">${icon('check')} Then you also make ${esc(also.map(y => y.code).join(', '))}</div>` : ''}
         ${moved.length ? `<div class="why">${icon('check')} ${moved.map(m => `${esc(m.y.code)} moves to ${esc(m.to.code)} ${esc(fmtDay(m.to.day))} ${fmtTime(m.to.startMin)}`).join(' · ')}</div>` : ''}
-        ${miss.length ? `<details class="cost" ${keepOpen(`cost:${x.key}`)}><summary class="lose">${esc(missHeadline(miss))}</summary>
-          <div class="lose">${esc(missSummary(miss, o.chosen, c))}</div>
+        ${lost.length ? `<details class="cost" ${keepOpen(`cost:${x.key}`)}><summary class="lose">${esc(missHeadline(lost))}</summary>
+          ${miss.length ? `<div class="lose">${esc(why(miss))}</div>` : ''}
+          ${outside.length ? `<div class="lose">Outside this clash: ${esc(why(outside))}</div>` : ''}
           ${planValue}</details>` : diff > 0 ? planValue : ''}`}
       </div>
       <div class="btns">
