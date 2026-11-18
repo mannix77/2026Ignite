@@ -1353,7 +1353,7 @@ function renderDecision(d, plan, c) {
         ${!can ? `<div class="lose">Not possible with the sessions or blocked time you've locked</div>` : o.unrated ? `<details class="cost"><summary class="why">Not compared with the whole plan</summary><div class="why">Only the top options are. <b>Go to this</b> shows what it would change.</div></details>` : `
         ${also.length ? `<div class="why">${icon('check')} Then you also make ${esc(also.map(y => y.code).join(', '))}</div>` : ''}
         ${moved.length ? `<div class="why">${icon('check')} ${moved.map(m => `${esc(m.y.code)} moves to ${esc(m.to.code)} ${esc(fmtDay(m.to.day))} ${fmtTime(m.to.startMin)}`).join(' · ')}</div>` : ''}
-        ${miss.length ? `<details class="cost"><summary class="lose">${esc(missHeadline(miss.map(y => y.code)))}</summary>
+        ${miss.length ? `<details class="cost"><summary class="lose">${esc(missHeadline(miss))}</summary>
           <div class="lose">${esc(missSummary(miss, o.chosen, c))}</div>
           ${planValue}</details>` : diff > 0 ? planValue : ''}`}
       </div>

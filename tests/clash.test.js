@@ -190,13 +190,23 @@ test('should call the top two a toss-up only when every ranking rule ties', () =
 
 // ---- what an option costs, in one line
 
+// A missed run: `id` is its session (repeat group), `code` the run's own code.
+const missed = (code, id = code) => ({ id, code });
+
 test('should name the picks an option costs when there are one or two', () => {
-  eq(missHeadline(['BRK234']), "You'd miss BRK234");
-  eq(missHeadline(['BRK234', 'TT1650']), "You'd miss BRK234 and TT1650");
+  eq(missHeadline([missed('BRK234')]), "You'd miss BRK234");
+  eq(missHeadline([missed('BRK234'), missed('TT1650')]), "You'd miss BRK234 and TT1650");
 });
 test('should give the count once an option costs three picks or more', () => {
-  eq(missHeadline(['BRK234', 'TT1650', 'LAB654']), "You'd miss 3 picks");
-  eq(missHeadline(Array.from({ length: 15 }, (_, i) => `BRK${i}`)), "You'd miss 15 picks");
+  eq(missHeadline([missed('BRK234'), missed('TT1650'), missed('LAB654')]), "You'd miss 3 picks");
+  eq(missHeadline(Array.from({ length: 15 }, (_, i) => missed(`BRK${i}`))), "You'd miss 15 picks");
+});
+test('should count a session once when several of its runs are missed', () => {
+  // Three runs, two sessions: named, by the first run of each, not counted as three.
+  eq(missHeadline([missed('BRK234', 'g1'), missed('BRK234-R1', 'g1'), missed('TT1650', 'g2')]), "You'd miss BRK234 and TT1650");
+  eq(missHeadline([missed('BRK234', 'g1'), missed('BRK234-R1', 'g1')]), "You'd miss BRK234");
+  // Four runs, three sessions: the count is of sessions.
+  eq(missHeadline([missed('A', 'g1'), missed('A-R1', 'g1'), missed('B', 'g2'), missed('C', 'g3')]), "You'd miss 3 picks");
 });
 test('should say nothing about missing when an option costs no pick', () => {
   eq(missHeadline([]), '');
