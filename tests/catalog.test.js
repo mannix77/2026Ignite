@@ -611,5 +611,62 @@ await test('should escape nothing and keep a note on one line', () => {
   eq(text.split('\n')[3], 'A1 | Maybe | Mon | T <b> | note: line one / line two');
 });
 
+// ---- the top of My plan (specs/features/plan-summary.feature): the totals in one line and the
+// seat-reservation notice folded to one.
+const { planSummary, seatNotice } = ui;
+await test('should give the plan totals in order and leave out a zero', () => {
+  eq(planSummary({ sessions: 21, clashes: 16, tight: 0, missed: 57 }), [
+    { n: 21, label: 'sessions', warn: false },
+    { n: 16, label: 'clashes', warn: true },
+    { n: 57, label: 'missed', warn: false },
+  ]);
+  eq(planSummary({ sessions: 5, clashes: 0, tight: 2, missed: 0 }), [
+    { n: 5, label: 'sessions', warn: false },
+    { n: 2, label: 'tight walks', warn: true },
+  ]);
+});
+await test('should give only the session count when there is nothing to sort out, even a count of zero', () => {
+  eq(planSummary({ sessions: 12, clashes: 0, tight: 0, missed: 0 }), [{ n: 12, label: 'sessions', warn: false }]);
+  eq(planSummary({ sessions: 0, clashes: 0, tight: 0, missed: 0 }), [{ n: 0, label: 'sessions', warn: false }]);
+});
+await test('should word a single session, clash and tight walk in the singular and still mark them', () => {
+  eq(planSummary({ sessions: 1, clashes: 1, tight: 1, missed: 1 }), [
+    { n: 1, label: 'session', warn: false },
+    { n: 1, label: 'clash', warn: true },
+    { n: 1, label: 'tight walk', warn: true },
+    { n: 1, label: 'missed', warn: false },
+  ]);
+});
+// The notice's whole markup, compared with a literal: an attribute anywhere in it (a `hidden`
+// wrapper, paragraph or link, an `open` fold) changes what the user sees and so fails the test.
+// The white space between tags is taken out, and the decorative icon is reduced to its name so
+// that how the SVG is written is not pinned.
+const markup = html => html.replace(/\s+/g, ' ').replace(/> </g, '><').trim()
+  .replace(/<svg\b[^>]*aria-hidden="true"[^>]*><use href="#i-([a-z]+)"\/><\/svg>/g, '[icon $1]');
+const LINKS = '<a href="https://example.test/LAB1">LAB1</a>, <a href="https://example.test/LAB2">LAB2</a>';
+await test('should fold how to reserve and which sessions under a one-line seat notice', () => {
+  // Reservations opened a while ago: the app still passes when, and it is not shown. The fold
+  // has no `open`: closed until it is opened.
+  eq(markup(seatNotice({ count: 6, open: true, opensText: 'Mon 9:00 AM PT', site: 'the Ignite site', links: LINKS })),
+    '<div class="banner slim warn">[icon warn]<div><details ><summary><b>6 picks need a seat reservation</b></summary>'
+    + '<p>Seats are limited for these Must/Want picks: reserve on the Ignite site, then tap <b>I reserved a seat</b> on the session.</p>'
+    + '<p class="small"><a href="https://example.test/LAB1">LAB1</a>, <a href="https://example.test/LAB2">LAB2</a></p></details></div></div>');
+  eq(markup(seatNotice({ count: 1, open: true, opensText: 'Mon 9:00 AM PT', site: 'S', links: '' })),
+    '<div class="banner slim warn">[icon warn]<div><details ><summary><b>1 pick needs a seat reservation</b></summary>'
+    + '<p>Seats are limited for these Must/Want picks: reserve on S, then tap <b>I reserved a seat</b> on the session.</p><p class="small"></p></details></div></div>');
+});
+await test('should say when reservations open without the seat notice being opened', () => {
+  // The opening time is after the fold, not in it.
+  eq(markup(seatNotice({ count: 2, open: false, opensText: 'Tue 9:00 AM PT', site: 'the Ignite site', links: LINKS })),
+    '<div class="banner slim ">[icon bell]<div><details ><summary><b>2 picks need a seat reservation</b></summary>'
+    + '<p>Seats are limited for these Must/Want picks.</p><p class="small"><a href="https://example.test/LAB1">LAB1</a>, <a href="https://example.test/LAB2">LAB2</a></p></details>'
+    + '<p>Reservations open Tue 9:00 AM PT.</p></div></div>');
+});
+await test('should escape the site name and carry the fold attributes it is given', () => {
+  eq(markup(seatNotice({ count: 3, open: true, opensText: 'Mon 9:00 AM PT', site: 'A <b>&</b> B', links: '', foldAttrs: 'data-keep="seats" open' })),
+    '<div class="banner slim warn">[icon warn]<div><details data-keep="seats" open><summary><b>3 picks need a seat reservation</b></summary>'
+    + '<p>Seats are limited for these Must/Want picks: reserve on A &lt;b&gt;&amp;&lt;/b&gt; B, then tap <b>I reserved a seat</b> on the session.</p><p class="small"></p></details></div></div>');
+});
+
 console.log(`${pass} passed, ${fail} failed`);
 if (fail) process.exitCode = 1;

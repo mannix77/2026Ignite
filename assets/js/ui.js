@@ -298,3 +298,27 @@ export function seatsDetail(s, held) {
   const extra = [cap, left].filter(Boolean).join(', ');
   return extra ? `${base} · ${extra}` : base;
 }
+
+// The top of My plan (specs/features/plan-summary.feature). The plan's totals as one line: the
+// session count always (a zero too), then only the clash, tight-walk and missed totals that are
+// not zero; `warn` marks the ones that need the user. The labels are short so that all four fit
+// one line on a 375px-wide phone (.plan-sum).
+export function planSummary({ sessions = 0, clashes = 0, tight = 0, missed = 0 } = {}) {
+  const one = (n, single, many) => (n === 1 ? single : many);
+  const parts = [{ n: sessions, label: one(sessions, 'session', 'sessions'), warn: false }];
+  if (clashes > 0) parts.push({ n: clashes, label: one(clashes, 'clash', 'clashes'), warn: true });
+  if (tight > 0) parts.push({ n: tight, label: one(tight, 'tight walk', 'tight walks'), warn: true });
+  if (missed > 0) parts.push({ n: missed, label: 'missed', warn: false });
+  return parts;
+}
+
+// The seat-reservation notice: one line (short enough to stay one on a 375px-wide phone), with
+// how to reserve and which sessions folded under it. When reservations have not opened, the opening time stays in view. `links` is HTML the
+// caller built (escaped session links); `foldAttrs` goes on the fold as given.
+export function seatNotice({ count, open, opensText = '', site = '', links = '', foldAttrs = '' }) {
+  const how = open ? `Seats are limited for these Must/Want picks: reserve on ${esc(site)}, then tap <b>I reserved a seat</b> on the session.` : 'Seats are limited for these Must/Want picks.';
+  return `<div class="banner slim ${open ? 'warn' : ''}">${icon(open ? 'warn' : 'bell')}<div>
+    <details ${foldAttrs}><summary><b>${count} ${count === 1 ? 'pick needs' : 'picks need'} a seat reservation</b></summary>
+      <p>${how}</p><p class="small">${links}</p></details>
+    ${!open && opensText ? `<p>Reservations open ${esc(opensText)}.</p>` : ''}</div></div>`;
+}
