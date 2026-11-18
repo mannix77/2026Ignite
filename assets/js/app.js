@@ -1,7 +1,7 @@
 // Conference Planner — views, routing and event handling.
 
 import * as store from './store.js';
-import { fetchAll, buildModel, diffKnown, snapshot, cacheUrl, exportAge, customRecords, catalogMatch, seatsSig, CUSTOM_DATA, DATA_OVERRIDE } from './data.js';
+import { fetchAll, buildModel, diffKnown, trackPicks, cacheUrl, exportAge, customRecords, catalogMatch, seatsSig, CUSTOM_DATA, DATA_OVERRIDE } from './data.js';
 import { checkLive, diff as liveDiff, changeCounts, countsLine } from './live.js';
 import { optimize, transitions, fillers, nowNext, canBoth, overlaps, transition, compareOptions, lunchConfig, arrivalExtra, PRIORITY } from './planner.js';
 import { fmtTime, fmtDay, fmtDuration, relTime, nowLocal, addDays } from './time.js';
@@ -2646,17 +2646,9 @@ store.subscribe(what => {
 
 // ---------------------------------------------------------------- change alerts
 
-// Snapshot every run of newly picked sessions, so later moves can be flagged. A group
-// already tracked by any of its runs isn't touched (a new run shows up as an alert).
+// Snapshot every run of newly picked sessions, so later moves can be flagged (data.js trackPicks).
 function trackNewPicks() {
-  const known = { ...store.get().known };
-  const tracked = new Set(Object.values(known).map(k => k.g));
-  let added = false;
-  for (const g of pickedGroups()) {
-    const runs = app.model.byGroup.get(g) || [];
-    if (tracked.has(g) || runs.some(s => known[s.key])) continue;
-    for (const s of runs) { known[s.key] = snapshot(s); added = true; }
-  }
+  const { known, added } = trackPicks(app.model, pickedGroups(), store.get().known);
   if (added) store.setKnown(known);
 }
 

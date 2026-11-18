@@ -3,7 +3,7 @@
 import { sleep } from './shim.js';
 
 const store = await import('../assets/js/store.js');
-const { buildModel, diffKnown, cacheUrl } = await import('../assets/js/data.js');
+const { buildModel, diffKnown, trackPicks, cacheUrl } = await import('../assets/js/data.js');
 const { CONFERENCES } = await import('../assets/js/conferences.js');
 const { createVenue } = await import('../assets/js/venue.js');
 const { canBoth, compareOptions, optimize, lunchConfig, DEFAULT_PLANNER } = await import('../assets/js/planner.js');
@@ -50,7 +50,8 @@ for (const [name, patch, read, want] of [
   });
 }
 await test('should skip records that are not objects', () => {
-  eq(buildModel({ sessions: [null, 7, { ...rec }] }, { overrides: {} }, null, ignite, venue).sessions.length, 1);
+  const m = buildModel({ sessions: [null, 7, { ...rec }, { ...rec, id: '' }] }, { overrides: {} }, null, ignite, venue);
+  eq([m.sessions.map(s => [s.id, s.key, s.code]), m.skipped], [[['X', 'X', 'BRK1']], 3], 'the one real record is the one kept');
 });
 await test('should schedule a session whose end comes before its start by its duration', () => {
   const s = build({ start: '2026-11-18T18:00:00Z', end: '2026-11-18T17:00:00Z' }).sessions[0];
@@ -76,6 +77,111 @@ const acknowledged = runs => diffKnown(catalog(runs), new Set(['ANT319']), {}).n
 const alertsAfter = (before, after, picked = ['ANT319']) =>
   diffKnown(catalog(after), new Set(picked), acknowledged(before)).alerts.map(a => [a.kind, a.code, Object.keys(a.fields || {})]);
 
+// ---- a run's repeat group is a usable identifier (specs/features/pick-resolution.feature)
+const groupsOf = runs => { const m = catalog(runs); return [m.sessions.map(s => s.group), [...m.byGroup].map(([g, list]) => [g, list.map(s => s.code)])]; };
+await test('should put two runs in one group when the group differs only by stray spaces', () => {
+  eq(groupsOf([run('ANT319', { id: 'A1', group: 'ANT319 ' }), run('ANT319-R', { id: 'A2', group: ' ANT319' }), run('ANT319-R2', { id: 'A3' })]),
+    [['ANT319', 'ANT319', 'ANT319'], [['ANT319', ['ANT319', 'ANT319-R', 'ANT319-R2']]]]);
+});
+await test('should group a run by its own code when its group is blank, missing or not text', () => {
+  eq(groupsOf([run('B1', { id: 'B1', group: '   ' }), run('B2', { id: 'B2', group: undefined }), run('B3', { id: 'B3', group: 7 }), run('B4', { id: 'B4', group: ['B1'] })]),
+    [['B1', 'B2', 'B3', 'B4'], [['B1', ['B1']], ['B2', ['B2']], ['B3', ['B3']], ['B4', ['B4']]]]);
+});
+await test('should clean the code the same way when it stands in for a missing group', () => {
+  // One run has no group and an untidy code; the other names that code, tidily, as its group.
+  const m = catalog([run('D1', { id: 'D1', code: ' ABC ', group: undefined }), run('D2', { id: 'D2', code: 'ABC-R', group: ' ABC ' })]);
+  eq([m.sessions.map(s => s.group), [...m.byGroup].map(([g, list]) => [g, list.map(s => s.key)])], [['ABC', 'ABC'], [['ABC', ['D1', 'D2']]]]);
+  eq(m.sessions.map(s => s.code), [' ABC ', 'ABC-R'], 'the session code itself is left as the catalog wrote it');
+});
+// What the model holds for each run, and where it can be found: every index is checked, so a
+// run cannot be grouped one way and looked up another.
+const indexed = m => ({
+  runs: m.sessions.map(s => [s.key, s.id, s.code, s.group]),
+  byKey: [...m.byKey].map(([k, s]) => [k, s.key]),
+  byId: [...m.byId].map(([k, list]) => [k, list.map(s => s.key)]),
+  byCode: [...m.byCode].map(([k, s]) => [k, s.key]),
+  byGroup: [...m.byGroup].map(([k, list]) => [k, list.map(s => s.key)]),
+});
+await test('should group a run by its id when it has no usable group and its code is blank', () => {
+  const e1 = run('E1', { id: ' Z9 ', code: '   ', group: '' }), e2 = run('E2', { id: 77, code: '   ', group: null });
+  eq([[e1.id, e1.code, e1.group], [e2.id, e2.code, e2.group]], [[' Z9 ', '   ', ''], [77, '   ', null]], 'what the catalog gives');
+  // The id, the code and the key are kept as written; only the group is the cleaned id.
+  eq(indexed(catalog([e1])), { runs: [['E1', ' Z9 ', '   ', 'Z9']], byKey: [['E1', 'E1']], byId: [[' Z9 ', ['E1']]], byCode: [['   ', 'E1']], byGroup: [['Z9', ['E1']]] });
+  eq(indexed(catalog([e2])), { runs: [['E2', 77, '   ', '77']], byKey: [['E2', 'E2']], byId: [[77, ['E2']]], byCode: [['   ', 'E2']], byGroup: [['77', ['E2']]] });
+});
+await test('should group a run by its own key when its group, code and id are all blank', () => {
+  const f1 = run('F1', { id: '  ', code: '   ', group: undefined });
+  eq([f1.inst, f1.id, f1.code, f1.group], ['F1', '  ', '   ', undefined], 'what the catalog gives');
+  eq(indexed(catalog([f1])), { runs: [['F1', '  ', '   ', 'F1']], byKey: [['F1', 'F1']], byId: [['  ', ['F1']]], byCode: [['   ', 'F1']], byGroup: [['F1', ['F1']]] });
+});
+await test('should skip a record with an id of the wrong type or nothing usable to group it by, and keep the rest', () => {
+  const junk = [
+    run('G1', { id: { toString: null }, code: '   ', group: undefined }),    // an id that cannot be turned into text
+    run('G2', { id: { toString: null }, code: undefined, group: undefined }), // the same, with no code either
+    run('   ', { id: '  ', code: '   ', group: '  ' }),                       // every identifier blank
+    run('G4', { id: ['x'], code: 7, group: null }),                           // an id that is not text or a number
+    run('G6', { id: NaN, code: 'G6' }), run('G7', { id: Infinity, code: 'G7' }), run('G8', { id: true, code: 'G8' }),   // ids of the wrong type, though the rest is fine
+  ];
+  const m = catalog([...junk, run('GOOD', { id: 'GOOD' })]);
+  eq([junk.length, m.skipped], [7, 7], 'every skipped record is counted');
+  eq(catalog([run('GOOD', { id: 'GOOD' })]).skipped, 0);
+  eq(indexed(m), { runs: [['GOOD', 'GOOD', 'GOOD', 'ANT319']], byKey: [['GOOD', 'GOOD']], byId: [['GOOD', ['GOOD']]], byCode: [['GOOD', 'GOOD']], byGroup: [['ANT319', ['GOOD']]] });
+});
+await test('should not let a skipped record with a time end the preview schedule', () => {
+  // Nothing real is scheduled: the only timed records are ones the model refuses.
+  const untimed = run('P1', { id: 'P1', start: undefined, end: undefined });
+  const timedJunk = [run('P2', { id: true }), run('   ', { id: '  ', code: '   ', group: '  ' }), { start: '2026-11-18T17:00:00Z', dur: 45 }];
+  const build = (runs, preview) => buildModel({ sessions: runs }, { overrides: {}, preview }, null, ignite, venue);
+  const m = build([untimed, ...timedJunk], true);
+  eq([m.mode, m.hasOfficial, m.skipped, m.sessions.map(s => s.key)], ['preview', false, 3, ['P1']]);
+  // A real timed run still ends it, and without the preview setting nothing is simulated.
+  eq(build([untimed, ...timedJunk, run('P3', { id: 'P3' })], true).mode, 'official');
+  eq(build([untimed, ...timedJunk], false).mode, 'unscheduled');
+});
+await test('should still alert on a removed run when the acknowledged snapshot remembers the group with stray spaces', () => {
+  // A snapshot taken before groups were cleaned: same runs, the group as the catalog then wrote it.
+  const known = acknowledged([run('ANT319-R'), run('ANT319-R1')]);
+  eq(Object.keys(known), ['ANT319-R', 'ANT319-R1']);
+  for (const k of Object.values(known)) k.g = ' ANT319 ';
+  // Both outputs: the alerts, and the new snapshot to acknowledge (each current run, under the cleaned group).
+  const diff = after => { const d = diffKnown(catalog(after), new Set(['ANT319']), known); return [d.alerts.map(a => [a.kind, a.inst, a.g, a.remaining || null]), Object.values(d.next).map(k => [k.inst, k.g])]; };
+  eq(diff([run('ANT319-R')]), [[['run-removed', 'ANT319-R1', 'ANT319', ['ANT319-R']]], [['ANT319-R', 'ANT319']]]);
+  eq(diff([run('ANT319-R'), run('ANT319-R1')]), [[], [['ANT319-R', 'ANT319'], ['ANT319-R1', 'ANT319']]], 'nothing when nothing changed');
+  // Control: a run still in the catalog makes the group known by itself, whatever the snapshot remembers.
+  eq(diff([run('ANT319-R'), run('ANT319-R1'), run('ANT319-R2')]),
+    [[['run-added', 'ANT319-R2', 'ANT319', null]], [['ANT319-R', 'ANT319'], ['ANT319-R1', 'ANT319'], ['ANT319-R2', 'ANT319']]]);
+  // No run in common: only the remembered group ties the new run to the old ones.
+  eq(diff([run('ANT319-R9')]),
+    [[['run-added', 'ANT319-R9', 'ANT319', null], ['run-removed', 'ANT319-R', 'ANT319', ['ANT319-R9']], ['run-removed', 'ANT319-R1', 'ANT319', ['ANT319-R9']]], [['ANT319-R9', 'ANT319']]]);
+  eq(Object.values(known).map(k => k.g), [' ANT319 ', ' ANT319 '], 'the saved snapshot itself is not rewritten');
+});
+await test('should not take new runs as acknowledged when the saved snapshot remembers the group with stray spaces', () => {
+  const picked = new Set(['ANT319']);
+  const saved = pad => { const k = acknowledged([run('ANT319-R'), run('ANT319-R1')]); for (const v of Object.values(k)) v.g = pad; return k; };
+  // The session now runs under new instance keys only: nothing but the remembered group ties them to the pick.
+  const now = catalog([run('ANT319-R8'), run('ANT319-R9')]);
+  for (const g of [' ANT319 ', 'ANT319']) {
+    const known = saved(g), before = JSON.stringify(known);
+    const t = trackPicks(now, picked, known);
+    eq([t.added, Object.keys(t.known), JSON.stringify(known) === before], [false, ['ANT319-R', 'ANT319-R1'], true], `tracked already (saved as "${g}")`);
+    eq(diffKnown(now, picked, t.known).alerts.map(a => [a.kind, a.inst]),
+      [['run-added', 'ANT319-R8'], ['run-added', 'ANT319-R9'], ['run-removed', 'ANT319-R'], ['run-removed', 'ANT319-R1']], `announced (saved as "${g}")`);
+  }
+  // A pick that is not tracked at all is snapshotted, run by run, and then has nothing to announce.
+  const other = saved('OTHER');
+  const fresh = trackPicks(now, picked, other);
+  eq([fresh.added, Object.entries(fresh.known).map(([k, v]) => [k, v.g]), Object.keys(other)],
+    [true, [['ANT319-R', 'OTHER'], ['ANT319-R1', 'OTHER'], ['ANT319-R8', 'ANT319'], ['ANT319-R9', 'ANT319']], ['ANT319-R', 'ANT319-R1']]);
+  eq(diffKnown(now, picked, fresh.known).alerts, []);
+  // A group tracked by one of its runs gets no new snapshot for another run (that run is announced).
+  const one = trackPicks(catalog([run('ANT319-R'), run('ANT319-R9')]), picked, saved('ELSE'));
+  eq([one.added, Object.keys(one.known)], [false, ['ANT319-R', 'ANT319-R1']]);
+  eq(trackPicks(now, picked, null).added, true, 'no saved snapshot at all');
+});
+await test('should keep runs apart when their groups differ by more than spaces', () => {
+  eq(groupsOf([run('C1', { id: 'C1', group: 'ANT 319' }), run('C2', { id: 'C2', group: 'ANT319' }), run('C3', { id: 'C3', group: 'ant319' })]),
+    [['ANT 319', 'ANT319', 'ant319'], [['ANT 319', ['C1']], ['ANT319', ['C2']], ['ant319', ['C3']]]]);
+});
 await test('should alert when a picked session moves room', () => {
   eq(alertsAfter([run('ANT319-R')], [run('ANT319-R', { room: 'Moscone South, Room 156' })]), [['changed', 'ANT319-R', ['room']]]);
 });

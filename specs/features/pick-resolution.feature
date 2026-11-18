@@ -60,6 +60,24 @@ Feature: What a session's rating, lock and reserved seat are, read from the save
       When the picks are indexed
       Then the pick is an orphan
 
+  Rule: Runs of one session are one pick however the catalog writes the group
+
+    Scenario: The group has stray spaces on one run
+      Given two runs of a session whose group differs only by a trailing space
+      When the catalog is read
+      Then both runs are in one group
+
+    Scenario: The group is blank or not text
+      Given a run whose group is blank
+      When the catalog is read
+      Then the run's group is its own code
+
+    Scenario: New runs are announced when the saved snapshot wrote the group untidily
+      Given a picked session whose acknowledged snapshot remembers its group with stray spaces
+      And the catalog now lists that session under new runs only
+      When the planner tracks picks and checks for changes
+      Then the new runs are announced as added
+
   Rule: Editing a note never changes which record is newest (#76)
 
     Scenario: A group whose runs disagree keeps its rating after a note is added
