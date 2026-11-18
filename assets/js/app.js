@@ -1079,7 +1079,7 @@ function renderSchedule(plan) {
   const sacrificed = new Set(plan.res.dropped.filter(d => real(d) && !plan.chosenGroups.has(d.item.id)).map(d => d.item.id)).size;
 
   const parts = [];
-  parts.push(`<h1>My plan</h1>${installBanner()}${backupBanner()}${staleBanner()}${favoritesBanner()}${previewBanner()}${missingPicksBanner()}${rsvpBanner(plan)}`);
+  parts.push(`<h1>My plan</h1>${installBanner()}${backupBanner()}${staleBanner()}${favoritesBanner()}${previewBanner()}${missingPicksBanner()}${rsvpBanner(plan, true)}`);
   const lockedConflicts = plan.res.lockedConflicts.filter(x => !x.pseudo);
   if (lockedConflicts.length) {
     parts.push(`<div class="banner bad">${icon('warn')}<div><b>Some sessions you locked can't all happen.</b><p>${lockedConflicts.map(x => esc(x.code)).join(', ')} clash with other locked sessions or blocked time. Unlock one of them.</p></div></div>`);
@@ -1516,7 +1516,9 @@ function fmtStamp(iso) {
   return Number.isNaN(d.getTime()) ? String(iso) : new Intl.DateTimeFormat('en-US', { timeZone: app.conf.tz, weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }).format(d);
 }
 
-function rsvpBanner(plan) {
+// `compact`: the scheduled My plan, where the notice is one line until opened (and remembers
+// that). The pre-schedule shortlist has no day to make room for and shows it opened.
+function rsvpBanner(plan, compact = false) {
   const all = Object.values(plan.res.plan).flat();
   const firstOf = new Map();
   for (const x of [...plan.items, ...plan.tba]) if (x.priority >= 2 && x.s.rsvp && !firstOf.has(x.id)) firstOf.set(x.id, x);
@@ -1539,7 +1541,7 @@ function rsvpBanner(plan) {
     const opens = need.map(x => x.s.rsvp).find(v => typeof v === 'string');
     const open = !opens || new Date(opens).getTime() <= Date.now();
     const list = need.map(x => `<a href="${attr(app.conf.sessionUrl(x.s))}" target="_blank" rel="noopener">${esc(x.code)}</a>`).join(', ');
-    parts.push(seatNotice({ count: need.length, open, opensText: opens ? rsvpOpensText(opens) || String(opens) : '', site: app.conf.siteName, links: list, foldAttrs: keepOpen('seats') }));
+    parts.push(seatNotice({ count: need.length, open, opensText: opens ? rsvpOpensText(opens) || String(opens) : '', site: app.conf.siteName, links: list, foldAttrs: compact ? keepOpen('seats') : 'open' }));
   }
   return parts.join('');
 }
@@ -2036,7 +2038,9 @@ function focusKey(el) {
   return null;
 }
 
-function render() {
+// `newDay`: My plan is moving to another day, so the clash-card folds opened on this one are
+// forgotten (the seat notice is not a day's, and stays as it was).
+function render({ newDay = false } = {}) {
   if (!app.model) return;
   clearInterval(app.nowTimer);
   const fk = focusKey(document.activeElement);
@@ -2044,6 +2048,8 @@ function render() {
   // A fold opened or closed a moment ago may not have had its toggle event yet, and a fold that
   // is replaced never gets one: take each kept fold's state from the page itself.
   for (const d of main.querySelectorAll('details[data-keep]')) app.openClash[d.open ? 'add' : 'delete'](d.dataset.keep);
+  // After the page is read, or the day being left would put its open folds straight back.
+  if (newDay) for (const id of [...app.openClash]) if (id !== 'seats') app.openClash.delete(id);
   const view = { browse: renderBrowse, triage: renderTriage, plan: renderPlan, now: renderNow, changes: renderChanges, settings: renderSettings }[app.tab];
   main.innerHTML = view();
   app.rendered = true;
@@ -2321,7 +2327,7 @@ function onClick(e) {
     'pf-goal': () => editProfile(act, el.dataset.v),
     'pf-level': () => editProfile(act, el.dataset.v),
     'pf-type': () => editProfile(act, el.dataset.v),
-    day: () => { e.preventDefault(); store.setUI({ day: el.dataset.day }); app.openFill = null; for (const id of [...app.openClash]) if (id !== 'seats') app.openClash.delete(id); render(); },
+    day: () => { e.preventDefault(); store.setUI({ day: el.dataset.day }); app.openFill = null; render({ newDay: true }); },
     'plan-view': () => { store.setUI({ planView: planView(el.dataset.view) }); render(); revealDay(); },
     pill: () => { const ids = app.openPills.ids, id = el.dataset.pill; if (!ids.delete(id)) ids.add(id); render(); },
     lock: () => { if (s) lockRun(s, el); },

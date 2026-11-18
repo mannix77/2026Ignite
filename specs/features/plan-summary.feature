@@ -22,9 +22,9 @@ Feature: The top of My plan stays out of the way
       Then the line still reads 0 sessions
 
     Scenario: All four totals on a phone
-      Given a plan with clashes, tight walks and missed picks, each in two digits
+      Given a plan of 88 sessions with 88 clashes, 88 tight walks and 88 picks missed
       When Minesh opens My plan on a 375-point-wide phone
-      Then the totals fit one line
+      Then 88 sessions, 88 clashes, 88 tight walks and 88 missed all show on one line
 
     Scenario: A single one of each
       Given a plan of 1 session with 1 clash, 1 tight walk and 1 pick missed
@@ -38,6 +38,11 @@ Feature: The top of My plan stays out of the way
       When Minesh opens My plan
       Then the notice says so in one line
       And how to reserve and which sessions show when he opens it
+
+    Scenario: Before the schedule is published
+      Given picks that need a seat and no published dates yet
+      When Minesh opens My plan
+      Then the notice shows how to reserve and which sessions without being opened
 
     Scenario: Reservations have not opened yet
       Given picks that need a seat whose reservations open later
