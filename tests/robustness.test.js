@@ -51,7 +51,7 @@ for (const [name, patch, read, want] of [
 }
 await test('should skip records that are not objects', () => {
   const m = buildModel({ sessions: [null, 7, { ...rec }, { ...rec, id: '' }] }, { overrides: {} }, null, ignite, venue);
-  eq([m.sessions.length, m.skipped], [1, 3]);
+  eq([m.sessions.map(s => [s.id, s.key, s.code]), m.skipped], [[['X', 'X', 'BRK1']], 3], 'the one real record is the one kept');
 });
 await test('should schedule a session whose end comes before its start by its duration', () => {
   const s = build({ start: '2026-11-18T18:00:00Z', end: '2026-11-18T17:00:00Z' }).sessions[0];
@@ -143,10 +143,17 @@ await test('should still alert on a removed run when the acknowledged snapshot r
   const known = acknowledged([run('ANT319-R'), run('ANT319-R1')]);
   eq(Object.keys(known), ['ANT319-R', 'ANT319-R1']);
   for (const k of Object.values(known)) k.g = ' ANT319 ';
-  const alerts = (after, snap) => diffKnown(catalog(after), new Set(['ANT319']), snap).alerts.map(a => [a.kind, a.inst, a.g, a.remaining || null]);
-  eq(alerts([run('ANT319-R')], known), [['run-removed', 'ANT319-R1', 'ANT319', ['ANT319-R']]]);
-  eq(alerts([run('ANT319-R'), run('ANT319-R1'), run('ANT319-R2')], known), [['run-added', 'ANT319-R2', 'ANT319', null]]);
-  eq(alerts([run('ANT319-R'), run('ANT319-R1')], known), [], 'and nothing when nothing changed');
+  // Both outputs: the alerts, and the new snapshot to acknowledge (each current run, under the cleaned group).
+  const diff = after => { const d = diffKnown(catalog(after), new Set(['ANT319']), known); return [d.alerts.map(a => [a.kind, a.inst, a.g, a.remaining || null]), Object.values(d.next).map(k => [k.inst, k.g])]; };
+  eq(diff([run('ANT319-R')]), [[['run-removed', 'ANT319-R1', 'ANT319', ['ANT319-R']]], [['ANT319-R', 'ANT319']]]);
+  eq(diff([run('ANT319-R'), run('ANT319-R1')]), [[], [['ANT319-R', 'ANT319'], ['ANT319-R1', 'ANT319']]], 'nothing when nothing changed');
+  // Control: a run still in the catalog makes the group known by itself, whatever the snapshot remembers.
+  eq(diff([run('ANT319-R'), run('ANT319-R1'), run('ANT319-R2')]),
+    [[['run-added', 'ANT319-R2', 'ANT319', null]], [['ANT319-R', 'ANT319'], ['ANT319-R1', 'ANT319'], ['ANT319-R2', 'ANT319']]]);
+  // No run in common: only the remembered group ties the new run to the old ones.
+  eq(diff([run('ANT319-R9')]),
+    [[['run-added', 'ANT319-R9', 'ANT319', null], ['run-removed', 'ANT319-R', 'ANT319', ['ANT319-R9']], ['run-removed', 'ANT319-R1', 'ANT319', ['ANT319-R9']]], [['ANT319-R9', 'ANT319']]]);
+  eq(Object.values(known).map(k => k.g), [' ANT319 ', ' ANT319 '], 'the saved snapshot itself is not rewritten');
 });
 await test('should keep runs apart when their groups differ by more than spaces', () => {
   eq(groupsOf([run('C1', { id: 'C1', group: 'ANT 319' }), run('C2', { id: 'C2', group: 'ANT319' }), run('C3', { id: 'C3', group: 'ant319' })]),
