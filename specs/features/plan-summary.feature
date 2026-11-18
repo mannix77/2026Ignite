@@ -34,7 +34,7 @@ Feature: The top of My plan stays out of the way
   Rule: The seat-reservation notice is one line until it is opened
 
     Scenario: Picks that need a seat
-      Given 6 of Minesh's Must and Want picks need a seat reservation
+      Given 6 of Minesh's Must and Want picks need a seat reservation, reservations are open, and the schedule is published
       When Minesh opens My plan
       Then the notice says 6 picks need a seat reservation, on one line on a 375-point-wide phone
       And how to reserve and which sessions show when he opens it
