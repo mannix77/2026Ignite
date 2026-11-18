@@ -312,13 +312,13 @@ export function planSummary({ sessions = 0, clashes = 0, tight = 0, missed = 0 }
   return parts;
 }
 
-// The seat-reservation notice: one line, with how to reserve and which sessions folded under
-// it. When reservations have not opened, the opening time stays in view. `links` is HTML the
+// The seat-reservation notice: one line (short enough to stay one on a 375px-wide phone), with
+// how to reserve and which sessions folded under it. When reservations have not opened, the opening time stays in view. `links` is HTML the
 // caller built (escaped session links); `foldAttrs` goes on the fold as given.
 export function seatNotice({ count, open, opensText = '', site = '', links = '', foldAttrs = '' }) {
-  const how = open ? `Seats are limited: reserve on ${esc(site)}, then tap <b>I reserved a seat</b> on the session.` : 'Seats are limited.';
+  const how = open ? `Seats are limited for these Must/Want picks: reserve on ${esc(site)}, then tap <b>I reserved a seat</b> on the session.` : 'Seats are limited for these Must/Want picks.';
   return `<div class="banner slim ${open ? 'warn' : ''}">${icon(open ? 'warn' : 'bell')}<div>
-    <details ${foldAttrs}><summary><b>${count} of your Must/Want picks ${count === 1 ? 'needs' : 'need'} a seat reservation</b></summary>
+    <details ${foldAttrs}><summary><b>${count} ${count === 1 ? 'pick needs' : 'picks need'} a seat reservation</b></summary>
       <p>${how}</p><p class="small">${links}</p></details>
     ${!open && opensText ? `<p>Reservations open ${esc(opensText)}.</p>` : ''}</div></div>`;
 }

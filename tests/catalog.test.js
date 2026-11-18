@@ -639,31 +639,33 @@ await test('should word a single session, clash and tight walk in the singular a
 });
 // The notice's whole markup, compared with a literal: an attribute anywhere in it (a `hidden`
 // wrapper, paragraph or link, an `open` fold) changes what the user sees and so fails the test.
-// Only the white space between tags is taken out.
-const markup = html => html.replace(/\s+/g, ' ').replace(/> </g, '><').trim();
+// The white space between tags is taken out, and the decorative icon is reduced to its name so
+// that how the SVG is written is not pinned.
+const markup = html => html.replace(/\s+/g, ' ').replace(/> </g, '><').trim()
+  .replace(/<svg\b[^>]*aria-hidden="true"[^>]*><use href="#i-([a-z]+)"\/><\/svg>/g, '[icon $1]');
 const LINKS = '<a href="https://example.test/LAB1">LAB1</a>, <a href="https://example.test/LAB2">LAB2</a>';
 await test('should fold how to reserve and which sessions under a one-line seat notice', () => {
   // Reservations opened a while ago: the app still passes when, and it is not shown. The fold
   // has no `open`: closed until it is opened.
   eq(markup(seatNotice({ count: 6, open: true, opensText: 'Mon 9:00 AM PT', site: 'the Ignite site', links: LINKS })),
-    '<div class="banner slim warn"><svg class="" aria-hidden="true"><use href="#i-warn"/></svg><div><details ><summary><b>6 of your Must/Want picks need a seat reservation</b></summary>'
-    + '<p>Seats are limited: reserve on the Ignite site, then tap <b>I reserved a seat</b> on the session.</p>'
+    '<div class="banner slim warn">[icon warn]<div><details ><summary><b>6 picks need a seat reservation</b></summary>'
+    + '<p>Seats are limited for these Must/Want picks: reserve on the Ignite site, then tap <b>I reserved a seat</b> on the session.</p>'
     + '<p class="small"><a href="https://example.test/LAB1">LAB1</a>, <a href="https://example.test/LAB2">LAB2</a></p></details></div></div>');
   eq(markup(seatNotice({ count: 1, open: true, opensText: 'Mon 9:00 AM PT', site: 'S', links: '' })),
-    '<div class="banner slim warn"><svg class="" aria-hidden="true"><use href="#i-warn"/></svg><div><details ><summary><b>1 of your Must/Want picks needs a seat reservation</b></summary>'
-    + '<p>Seats are limited: reserve on S, then tap <b>I reserved a seat</b> on the session.</p><p class="small"></p></details></div></div>');
+    '<div class="banner slim warn">[icon warn]<div><details ><summary><b>1 pick needs a seat reservation</b></summary>'
+    + '<p>Seats are limited for these Must/Want picks: reserve on S, then tap <b>I reserved a seat</b> on the session.</p><p class="small"></p></details></div></div>');
 });
 await test('should say when reservations open without the seat notice being opened', () => {
   // The opening time is after the fold, not in it.
   eq(markup(seatNotice({ count: 2, open: false, opensText: 'Tue 9:00 AM PT', site: 'the Ignite site', links: LINKS })),
-    '<div class="banner slim "><svg class="" aria-hidden="true"><use href="#i-bell"/></svg><div><details ><summary><b>2 of your Must/Want picks need a seat reservation</b></summary>'
-    + '<p>Seats are limited.</p><p class="small"><a href="https://example.test/LAB1">LAB1</a>, <a href="https://example.test/LAB2">LAB2</a></p></details>'
+    '<div class="banner slim ">[icon bell]<div><details ><summary><b>2 picks need a seat reservation</b></summary>'
+    + '<p>Seats are limited for these Must/Want picks.</p><p class="small"><a href="https://example.test/LAB1">LAB1</a>, <a href="https://example.test/LAB2">LAB2</a></p></details>'
     + '<p>Reservations open Tue 9:00 AM PT.</p></div></div>');
 });
 await test('should escape the site name and carry the fold attributes it is given', () => {
   eq(markup(seatNotice({ count: 3, open: true, opensText: 'Mon 9:00 AM PT', site: 'A <b>&</b> B', links: '', foldAttrs: 'data-keep="seats" open' })),
-    '<div class="banner slim warn"><svg class="" aria-hidden="true"><use href="#i-warn"/></svg><div><details data-keep="seats" open><summary><b>3 of your Must/Want picks need a seat reservation</b></summary>'
-    + '<p>Seats are limited: reserve on A &lt;b&gt;&amp;&lt;/b&gt; B, then tap <b>I reserved a seat</b> on the session.</p><p class="small"></p></details></div></div>');
+    '<div class="banner slim warn">[icon warn]<div><details data-keep="seats" open><summary><b>3 picks need a seat reservation</b></summary>'
+    + '<p>Seats are limited for these Must/Want picks: reserve on A &lt;b&gt;&amp;&lt;/b&gt; B, then tap <b>I reserved a seat</b> on the session.</p><p class="small"></p></details></div></div>');
 });
 
 console.log(`${pass} passed, ${fail} failed`);

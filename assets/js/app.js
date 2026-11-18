@@ -51,6 +51,7 @@ const app = {
   persisted: false, // the browser promised not to clear this site's storage
   installEvent: null, // Android/Chrome install prompt, offered from the install banner
   openFill: null,
+  planDay: null,   // the day My plan last showed (renderSchedule)
   folds: new Map(),   // My plan folds the user has opened or closed (clash cost lines, "more options", the seat notice): id -> open, kept when My plan is rebuilt
   openPills: { day: null, ids: new Set() },   // My plan grid: the pills opened on one day; this tab only, never saved
   nowTimer: null,
@@ -1064,6 +1065,14 @@ function renderSchedule(plan) {
   const counts = dayCounts(plan);
   let day = ui.day && m.days.includes(ui.day) ? ui.day : null;
   if (!day) day = m.days.find(d => counts[d].chosen || counts[d].open) || m.days[0];
+  // The clash-card folds opened on one day are forgotten when another day is shown, however that
+  // came about (a day tab, a link to another run, a change made in another tab). This runs after
+  // render() has read the page's folds, so the day being left can't put them back. The seat
+  // notice is not a day's, and stays as it was.
+  if (app.planDay !== day) {
+    for (const id of [...app.folds.keys()]) if (!SEAT_FOLDS.includes(id)) app.folds.delete(id);
+    app.planDay = day;
+  }
   const view = planView(ui.planView);   // 'list' or 'grid' (issue #155)
   const openIds = openPills(day);       // asked for in both views, so a change of day in the list closes them too
   const c = ctx();
@@ -2042,9 +2051,7 @@ function focusKey(el) {
   return null;
 }
 
-// `newDay`: My plan is moving to another day, so the clash-card folds opened on this one are
-// forgotten (the seat notice is not a day's, and stays as it was).
-function render({ newDay = false } = {}) {
+function render() {
   if (!app.model) return;
   clearInterval(app.nowTimer);
   const fk = focusKey(document.activeElement);
@@ -2052,8 +2059,6 @@ function render({ newDay = false } = {}) {
   // A fold opened or closed a moment ago may not have had its toggle event yet, and a fold that
   // is replaced never gets one: take each kept fold's state from the page itself.
   for (const d of main.querySelectorAll('details[data-keep]')) app.folds.set(d.dataset.keep, d.open);
-  // After the page is read, or the day being left would put its open folds straight back.
-  if (newDay) for (const id of [...app.folds.keys()]) if (!SEAT_FOLDS.includes(id)) app.folds.delete(id);
   const view = { browse: renderBrowse, triage: renderTriage, plan: renderPlan, now: renderNow, changes: renderChanges, settings: renderSettings }[app.tab];
   main.innerHTML = view();
   app.rendered = true;
@@ -2331,12 +2336,7 @@ function onClick(e) {
     'pf-goal': () => editProfile(act, el.dataset.v),
     'pf-level': () => editProfile(act, el.dataset.v),
     'pf-type': () => editProfile(act, el.dataset.v),
-    day: () => {
-      e.preventDefault();
-      // Tapping the day already shown is not a change of day: its open folds stay.
-      const shown = main.querySelector('.daytabs [data-act="day"][aria-pressed="true"]')?.dataset.day;
-      store.setUI({ day: el.dataset.day }); app.openFill = null; render({ newDay: el.dataset.day !== shown });
-    },
+    day: () => { e.preventDefault(); store.setUI({ day: el.dataset.day }); app.openFill = null; render(); },
     'plan-view': () => { store.setUI({ planView: planView(el.dataset.view) }); render(); revealDay(); },
     pill: () => { const ids = app.openPills.ids, id = el.dataset.pill; if (!ids.delete(id)) ids.add(id); render(); },
     lock: () => { if (s) lockRun(s, el); },
