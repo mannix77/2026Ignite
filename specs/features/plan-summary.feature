@@ -40,9 +40,10 @@ Feature: The top of My plan stays out of the way
       And how to reserve and which sessions show when he opens it
 
     Scenario: Before the schedule is published
-      Given picks that need a seat and no published dates yet
+      Given picks that need a seat, whose reservations are already open, and no published dates yet
       When Minesh opens My plan
       Then the notice shows how to reserve and which sessions without being opened
+      And it stays closed once Minesh closes it
 
     Scenario: Reservations have not opened yet
       Given picks that need a seat whose reservations open later

@@ -637,43 +637,33 @@ await test('should word a single session, clash and tight walk in the singular a
     { n: 1, label: 'missed', warn: false },
   ]);
 });
-// Everything the notice holds, so a test compares the whole of it with a literal: the fold's
-// attributes, its one line, the folded text and links (label -> href), any text outside the
-// fold, and every paragraph's opening tag as written (a `hidden` or styled-away paragraph shows
-// up there: tags are otherwise stripped from the text).
-const noticeParts = html => {
-  const m = html.match(/^([\s\S]*?)<details([^>]*)><summary>([\s\S]*?)<\/summary>([\s\S]*?)<\/details>([\s\S]*)$/);
-  const text = h => h.replace(/<\/p>/g, ' ').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();   // a paragraph ends a line; inline tags vanish
-  const paras = h => [...h.matchAll(/<p\b[^>]*>/g)].map(p => p[0]);
-  return m && { attrs: m[2].trim(), line: text(m[3]), folded: text(m[4]), outside: text(m[1] + m[5]),
-    links: [...m[4].matchAll(/<a href="([^"]*)"[^>]*>([^<]*)<\/a>/g)].map(a => `${a[2]} -> ${a[1]}`),
-    foldedParas: paras(m[4]), outsideParas: paras(m[1] + m[5]) };
-};
+// The notice's whole markup, compared with a literal: an attribute anywhere in it (a `hidden`
+// wrapper, paragraph or link, an `open` fold) changes what the user sees and so fails the test.
+// Only the white space between tags is taken out.
+const markup = html => html.replace(/\s+/g, ' ').replace(/> </g, '><').trim();
 const LINKS = '<a href="https://example.test/LAB1">LAB1</a>, <a href="https://example.test/LAB2">LAB2</a>';
-const LINKED = ['LAB1 -> https://example.test/LAB1', 'LAB2 -> https://example.test/LAB2'];
-const HOW = site => `Seats are limited: reserve on ${site}, then tap I reserved a seat on the session.`;
 await test('should fold how to reserve and which sessions under a one-line seat notice', () => {
-  // Reservations opened a while ago: the app still passes when, and it is not shown. No fold
-  // attributes: closed until it is opened.
-  eq(noticeParts(seatNotice({ count: 6, open: true, opensText: 'Mon 9:00 AM PT', site: 'the Ignite site', links: LINKS })), {
-    attrs: '', line: '6 of your Must/Want picks need a seat reservation', folded: `${HOW('the Ignite site')} LAB1, LAB2`, outside: '',
-    links: LINKED, foldedParas: ['<p>', '<p class="small">'], outsideParas: [] });
-  eq(noticeParts(seatNotice({ count: 1, open: true, opensText: 'Mon 9:00 AM PT', site: 'S', links: '' })), {
-    attrs: '', line: '1 of your Must/Want picks needs a seat reservation', folded: HOW('S'), outside: '',
-    links: [], foldedParas: ['<p>', '<p class="small">'], outsideParas: [] });
+  // Reservations opened a while ago: the app still passes when, and it is not shown. The fold
+  // has no `open`: closed until it is opened.
+  eq(markup(seatNotice({ count: 6, open: true, opensText: 'Mon 9:00 AM PT', site: 'the Ignite site', links: LINKS })),
+    '<div class="banner slim warn"><svg class="" aria-hidden="true"><use href="#i-warn"/></svg><div><details ><summary><b>6 of your Must/Want picks need a seat reservation</b></summary>'
+    + '<p>Seats are limited: reserve on the Ignite site, then tap <b>I reserved a seat</b> on the session.</p>'
+    + '<p class="small"><a href="https://example.test/LAB1">LAB1</a>, <a href="https://example.test/LAB2">LAB2</a></p></details></div></div>');
+  eq(markup(seatNotice({ count: 1, open: true, opensText: 'Mon 9:00 AM PT', site: 'S', links: '' })),
+    '<div class="banner slim warn"><svg class="" aria-hidden="true"><use href="#i-warn"/></svg><div><details ><summary><b>1 of your Must/Want picks needs a seat reservation</b></summary>'
+    + '<p>Seats are limited: reserve on S, then tap <b>I reserved a seat</b> on the session.</p><p class="small"></p></details></div></div>');
 });
 await test('should say when reservations open without the seat notice being opened', () => {
-  eq(noticeParts(seatNotice({ count: 2, open: false, opensText: 'Tue 9:00 AM PT', site: 'the Ignite site', links: LINKS })), {
-    attrs: '', line: '2 of your Must/Want picks need a seat reservation', folded: 'Seats are limited. LAB1, LAB2', outside: 'Reservations open Tue 9:00 AM PT.',
-    links: LINKED, foldedParas: ['<p>', '<p class="small">'], outsideParas: ['<p>'] });
+  // The opening time is after the fold, not in it.
+  eq(markup(seatNotice({ count: 2, open: false, opensText: 'Tue 9:00 AM PT', site: 'the Ignite site', links: LINKS })),
+    '<div class="banner slim "><svg class="" aria-hidden="true"><use href="#i-bell"/></svg><div><details ><summary><b>2 of your Must/Want picks need a seat reservation</b></summary>'
+    + '<p>Seats are limited.</p><p class="small"><a href="https://example.test/LAB1">LAB1</a>, <a href="https://example.test/LAB2">LAB2</a></p></details>'
+    + '<p>Reservations open Tue 9:00 AM PT.</p></div></div>');
 });
 await test('should escape the site name and carry the fold attributes it is given', () => {
-  const html = seatNotice({ count: 3, open: true, opensText: 'Mon 9:00 AM PT', site: 'A <b>&</b> B', links: '', foldAttrs: 'data-keep="seats" open' });
-  eq(html.includes('reserve on A &lt;b&gt;&amp;&lt;/b&gt; B, then'), true);
-  eq(html.includes('<b>&</b>'), false);
-  eq(noticeParts(html), {
-    attrs: 'data-keep="seats" open', line: '3 of your Must/Want picks need a seat reservation', folded: HOW('A &lt;b&gt;&amp;&lt;/b&gt; B'), outside: '',
-    links: [], foldedParas: ['<p>', '<p class="small">'], outsideParas: [] });
+  eq(markup(seatNotice({ count: 3, open: true, opensText: 'Mon 9:00 AM PT', site: 'A <b>&</b> B', links: '', foldAttrs: 'data-keep="seats" open' })),
+    '<div class="banner slim warn"><svg class="" aria-hidden="true"><use href="#i-warn"/></svg><div><details data-keep="seats" open><summary><b>3 of your Must/Want picks need a seat reservation</b></summary>'
+    + '<p>Seats are limited: reserve on A &lt;b&gt;&amp;&lt;/b&gt; B, then tap <b>I reserved a seat</b> on the session.</p><p class="small"></p></details></div></div>');
 });
 
 console.log(`${pass} passed, ${fail} failed`);

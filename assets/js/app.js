@@ -51,7 +51,7 @@ const app = {
   persisted: false, // the browser promised not to clear this site's storage
   installEvent: null, // Android/Chrome install prompt, offered from the install banner
   openFill: null,
-  openClash: new Set(),   // My plan folds the user opened (clash cost lines, "more options", the seat notice): kept open when My plan is rebuilt
+  folds: new Map(),   // My plan folds the user has opened or closed (clash cost lines, "more options", the seat notice): id -> open, kept when My plan is rebuilt
   openPills: { day: null, ids: new Set() },   // My plan grid: the pills opened on one day; this tab only, never saved
   nowTimer: null,
   dialogKey: null,
@@ -1295,8 +1295,11 @@ function missSummary(missed, chain, c) {
 }
 
 // A clash-card line that stays as the user left it when the plan is rebuilt under them (a
-// catalog or occupancy refresh): the toggle handler records it in app.openClash by this id.
-const keepOpen = id => `data-keep="${attr(id)}"${app.openClash.has(id) ? ' open' : ''}`;
+// catalog or occupancy refresh): the toggle handler and render() record it in app.folds by this
+// id. Until the user has touched it, it is closed, or open when `openByDefault`.
+const keepOpen = (id, openByDefault = false) => `data-keep="${attr(id)}"${(app.folds.has(id) ? app.folds.get(id) : openByDefault) ? ' open' : ''}`;
+// The seat notice is not one day's: it keeps its state when the day changes.
+const SEAT_FOLDS = ['seats', 'seats-shortlist'];
 
 // Options compared with a whole-plan what-if per clash; the rest are listed by their weight.
 const OPTION_CAP = 6;
@@ -1517,7 +1520,8 @@ function fmtStamp(iso) {
 }
 
 // `compact`: the scheduled My plan, where the notice is one line until opened (and remembers
-// that). The pre-schedule shortlist has no day to make room for and shows it opened.
+// that). The pre-schedule shortlist has no day to make room for and shows it opened, until the
+// user closes it.
 function rsvpBanner(plan, compact = false) {
   const all = Object.values(plan.res.plan).flat();
   const firstOf = new Map();
@@ -1541,7 +1545,7 @@ function rsvpBanner(plan, compact = false) {
     const opens = need.map(x => x.s.rsvp).find(v => typeof v === 'string');
     const open = !opens || new Date(opens).getTime() <= Date.now();
     const list = need.map(x => `<a href="${attr(app.conf.sessionUrl(x.s))}" target="_blank" rel="noopener">${esc(x.code)}</a>`).join(', ');
-    parts.push(seatNotice({ count: need.length, open, opensText: opens ? rsvpOpensText(opens) || String(opens) : '', site: app.conf.siteName, links: list, foldAttrs: compact ? keepOpen('seats') : 'open' }));
+    parts.push(seatNotice({ count: need.length, open, opensText: opens ? rsvpOpensText(opens) || String(opens) : '', site: app.conf.siteName, links: list, foldAttrs: compact ? keepOpen('seats') : keepOpen('seats-shortlist', true) }));
   }
   return parts.join('');
 }
@@ -2047,9 +2051,9 @@ function render({ newDay = false } = {}) {
   const scrolls = [...main.querySelectorAll('[data-scroll]')].map(e => [e.dataset.scroll, e.scrollTop]);
   // A fold opened or closed a moment ago may not have had its toggle event yet, and a fold that
   // is replaced never gets one: take each kept fold's state from the page itself.
-  for (const d of main.querySelectorAll('details[data-keep]')) app.openClash[d.open ? 'add' : 'delete'](d.dataset.keep);
+  for (const d of main.querySelectorAll('details[data-keep]')) app.folds.set(d.dataset.keep, d.open);
   // After the page is read, or the day being left would put its open folds straight back.
-  if (newDay) for (const id of [...app.openClash]) if (id !== 'seats') app.openClash.delete(id);
+  if (newDay) for (const id of [...app.folds.keys()]) if (!SEAT_FOLDS.includes(id)) app.folds.delete(id);
   const view = { browse: renderBrowse, triage: renderTriage, plan: renderPlan, now: renderNow, changes: renderChanges, settings: renderSettings }[app.tab];
   main.innerHTML = view();
   app.rendered = true;
@@ -2327,7 +2331,12 @@ function onClick(e) {
     'pf-goal': () => editProfile(act, el.dataset.v),
     'pf-level': () => editProfile(act, el.dataset.v),
     'pf-type': () => editProfile(act, el.dataset.v),
-    day: () => { e.preventDefault(); store.setUI({ day: el.dataset.day }); app.openFill = null; render({ newDay: true }); },
+    day: () => {
+      e.preventDefault();
+      // Tapping the day already shown is not a change of day: its open folds stay.
+      const shown = main.querySelector('.daytabs [data-act="day"][aria-pressed="true"]')?.dataset.day;
+      store.setUI({ day: el.dataset.day }); app.openFill = null; render({ newDay: el.dataset.day !== shown });
+    },
     'plan-view': () => { store.setUI({ planView: planView(el.dataset.view) }); render(); revealDay(); },
     pill: () => { const ids = app.openPills.ids, id = el.dataset.pill; if (!ids.delete(id)) ids.add(id); render(); },
     lock: () => { if (s) lockRun(s, el); },
@@ -2558,7 +2567,7 @@ main.addEventListener('change', e => {
 main.addEventListener('toggle', e => {
   if (e.target.id === 'filters') store.setUI({ filtersOpen: e.target.open });
   if (e.target.dataset?.fill) app.openFill = e.target.open ? e.target.dataset.fill : null;
-  if (e.target.dataset?.keep) app.openClash[e.target.open ? 'add' : 'delete'](e.target.dataset.keep);
+  if (e.target.dataset?.keep) app.folds.set(e.target.dataset.keep, e.target.open);
 }, true);
 dialog.addEventListener('input', e => {
   const key = e.target.dataset.noteKey;
