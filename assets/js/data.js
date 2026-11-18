@@ -115,6 +115,22 @@ export const AVAILABILITY = new Set(['reserved', 'reserve_a_seat', 'session_full
 const NO_RESERVATION = new Set(['session_full', 'walk_up_only', 'waitlist']);
 const count = v => (Number.isInteger(v) && v >= 0 ? v : null);
 
+// A run's repeat group as the catalog gives it, cleaned, or null when it is not usable (not
+// text, or blank): the planner, the picks and the clash cards all compare this one value, so
+// two runs whose group differs only by stray spaces are one session.
+const usableGroup = v => (typeof v === 'string' && v.trim() !== '' ? v.trim() : null);
+
+// The repeat group of a catalog record, or null when the model refuses the record: not a
+// record, no id, an id that is neither text nor a number (String() of it may throw), or
+// nothing usable to group it by. Without a usable group a run is its own session: by its code,
+// cleaned the same way, then by its id, then by its own key. The one acceptance rule, for the
+// model's loop and for anything decided before it (whether an official schedule exists).
+function recordGroup(rec) {
+  if (!rec || typeof rec !== 'object' || !rec.id || (typeof rec.id !== 'string' && !Number.isFinite(rec.id))) return null;
+  const code = typeof rec.code === 'string' && rec.code ? rec.code : String(rec.id);
+  return usableGroup(rec.group) ?? usableGroup(code) ?? usableGroup(String(rec.id)) ?? usableGroup(rec.inst || rec.id);
+}
+
 // The usable seat record for a session, or null: an untrusted file is read, never trusted.
 export function seatInfo(seats, id) {
   const table = seats && typeof seats === 'object' ? seats.seats : null;
@@ -148,18 +164,20 @@ export function buildModel(doc, settings, rsvp, conf, venue, seats = null) {
   const byGroup = new Map();
   const facets = { topics: new Map(), types: new Map(), levels: new Map(), audience: new Map(), tags: new Map() };
   const bump = (m, k) => k != null && k !== '' && m.set(k, (m.get(k) || 0) + 1);
-  let official = 0;
+  let official = 0, skipped = 0;
   // Preview only runs while nothing official exists, so simulated times can never mix
   // with a real (even partially published) schedule.
-  const anyOfficial = (Array.isArray(doc.sessions) ? doc.sessions : []).some(r => r?.start && r.dur !== 0 && !r.custom);
+  const anyOfficial = (Array.isArray(doc.sessions) ? doc.sessions : []).some(r => recordGroup(r) !== null && r.start && r.dur !== 0 && !r.custom);
   const preview = settings.preview && !anyOfficial;
 
   for (const rec of Array.isArray(doc.sessions) ? doc.sessions : []) {
-    if (!rec || typeof rec !== 'object' || !rec.id) continue;
+    const group = recordGroup(rec);
+    if (group === null) { skipped++; continue; }   // junk is skipped and counted, never fatal
     const s = { ...rec, key: rec.inst || rec.id };
     for (const k of ['topics', 'tags', 'audience', 'delivery', 'vendors']) s[k] = list(rec[k]);
     s.speakers = Array.isArray(rec.speakers) ? rec.speakers.filter(Array.isArray) : [];
     s.code = typeof rec.code === 'string' && rec.code ? rec.code : String(rec.id);
+    s.group = group;
     s.title = typeof rec.title === 'string' ? rec.title : '';
     s.desc = typeof rec.desc === 'string' ? rec.desc : '';
     s.inPerson = s.delivery.some(d => /^in[- ]?person$/i.test(d));
@@ -202,7 +220,6 @@ export function buildModel(doc, settings, rsvp, conf, venue, seats = null) {
     if (!byId.has(s.id)) byId.set(s.id, []);
     byId.get(s.id).push(s);
     if (!byCode.has(s.code)) byCode.set(s.code, s);
-    s.group = rec.group || s.code;
     if (!byGroup.has(s.group)) byGroup.set(s.group, []);
     byGroup.get(s.group).push(s);
     s.topics.forEach(t => bump(facets.topics, t));
@@ -216,6 +233,7 @@ export function buildModel(doc, settings, rsvp, conf, venue, seats = null) {
   return {
     sessions, byId, byKey, byCode, byGroup, facets, days, locations,
     officialCount: official,
+    skipped,
     hasOfficial: official > 0,
     mode: official > 0 ? 'official' : preview ? 'preview' : 'unscheduled',
   };
@@ -226,10 +244,29 @@ export function snapshot(s) {
   return { inst: s.key, g: s.group, code: s.code, title: s.title, start: s.start, end: s.end, room: s.roomTbd ? null : s.room };
 }
 
+// Snapshot every run of newly picked sessions, so later moves can be flagged. A group already
+// tracked (by the group a snapshot remembers, read through the same cleaner as the model's, or
+// by any of its runs) isn't touched: a new run
+// of it shows up as an alert. Returns the snapshots to save and whether any were added; the
+// saved ones are not rewritten.
+export function trackPicks(model, groups, knownIn) {
+  const known = { ...(knownIn && typeof knownIn === 'object' ? knownIn : {}) };
+  const tracked = new Set(Object.values(known).filter(k => k && typeof k === 'object').map(k => usableGroup(k.g) ?? k.g));
+  let added = false;
+  for (const g of groups) {
+    const runs = model.byGroup.get(g) || [];
+    if (tracked.has(g) || runs.some(s => known[s.key])) continue;
+    for (const s of runs) { known[s.key] = snapshot(s); added = true; }
+  }
+  return { known, added };
+}
+
 // groups: repeat-group codes you've picked. Returns alerts for runs that moved, were
 // retitled or disappeared since you last acknowledged, plus the new snapshot.
 export function diffKnown(model, groups, knownIn) {
-  const known = Object.fromEntries(Object.entries(knownIn || {}).filter(([, k]) => k && typeof k === 'object'));
+  // A snapshot may remember a group as an older catalog wrote it: it is read through the same cleaner.
+  const known = Object.fromEntries(Object.entries(knownIn || {}).filter(([, k]) => k && typeof k === 'object')
+    .map(([inst, k]) => [inst, { ...k, g: usableGroup(k.g) ?? k.g }]));
   const alerts = [];
   const next = {};
   for (const g of groups) for (const s of model.byGroup.get(g) || []) next[s.key] = snapshot(s);

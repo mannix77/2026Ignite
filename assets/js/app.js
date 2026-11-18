@@ -1,7 +1,7 @@
 // Conference Planner — views, routing and event handling.
 
 import * as store from './store.js';
-import { fetchAll, buildModel, diffKnown, snapshot, cacheUrl, exportAge, customRecords, catalogMatch, seatsSig, CUSTOM_DATA, DATA_OVERRIDE } from './data.js';
+import { fetchAll, buildModel, diffKnown, trackPicks, cacheUrl, exportAge, customRecords, catalogMatch, seatsSig, CUSTOM_DATA, DATA_OVERRIDE } from './data.js';
 import { checkLive, diff as liveDiff, changeCounts, countsLine } from './live.js';
 import { optimize, transitions, fillers, nowNext, canBoth, overlaps, transition, compareOptions, lunchConfig, arrivalExtra, PRIORITY } from './planner.js';
 import { fmtTime, fmtDay, fmtDuration, relTime, nowLocal, addDays } from './time.js';
@@ -17,7 +17,7 @@ import { reportError as reportTelemetry } from './telemetry.js';
 import { INSTANCE, INSTANCE_LABEL, nsKey, guideUrl } from './instance.js';
 import { icsDate, buildPlanIcs, buildSingleIcs, hasPendingCancellation, pickedInsts } from './ics.js';
 import { planView, dayOffScreen, gridEntries, gridLayout, PILL_HEADER, PILL_ROW } from './grid.js';
-import { esc, attr, icon, bldgChip, recChip, rsvpChip, rsvpOpensText, seatsDetail, prioPill, scoreChip, whenText, prioControl, sessionCard, cardClass, toast, shareOrDownload, copyText, speakersLine, setHostCompany, unknownRoomsNote, venueMapUrl, mapChip, occupancyOf, occupancyChip, picksForAI } from './ui.js';
+import { esc, attr, icon, bldgChip, recChip, rsvpChip, rsvpOpensText, seatsDetail, prioPill, scoreChip, whenText, prioControl, sessionCard, cardClass, toast, shareOrDownload, copyText, speakersLine, setHostCompany, unknownRoomsNote, venueMapUrl, mapChip, occupancyOf, occupancyChip, picksForAI, planSummary, seatNotice } from './ui.js';
 
 const $ = (sel, root = document) => root.querySelector(sel);
 const main = $('#main');
@@ -51,7 +51,8 @@ const app = {
   persisted: false, // the browser promised not to clear this site's storage
   installEvent: null, // Android/Chrome install prompt, offered from the install banner
   openFill: null,
-  openClash: new Set(),   // clash-card lines the user opened (cost lines, "more options"): kept open when My plan is rebuilt
+  planDay: null,   // the day My plan last showed (renderSchedule)
+  folds: new Map(),   // My plan folds the user has opened or closed (clash cost lines, "more options", the seat notice): id -> open, kept when My plan is rebuilt
   openPills: { day: null, ids: new Set() },   // My plan grid: the pills opened on one day; this tab only, never saved
   nowTimer: null,
   dialogKey: null,
@@ -1064,6 +1065,14 @@ function renderSchedule(plan) {
   const counts = dayCounts(plan);
   let day = ui.day && m.days.includes(ui.day) ? ui.day : null;
   if (!day) day = m.days.find(d => counts[d].chosen || counts[d].open) || m.days[0];
+  // The clash-card folds opened on one day are forgotten when another day is shown, however that
+  // came about (a day tab, a link to another run, a change made in another tab). This runs after
+  // render() has read the page's folds, so the day being left can't put them back. The seat
+  // notice is not a day's, and stays as it was.
+  if (app.planDay !== day) {
+    for (const id of [...app.folds.keys()]) if (!SEAT_FOLDS.includes(id)) app.folds.delete(id);
+    app.planDay = day;
+  }
   const view = planView(ui.planView);   // 'list' or 'grid' (issue #155)
   const openIds = openPills(day);       // asked for in both views, so a change of day in the list closes them too
   const c = ctx();
@@ -1079,17 +1088,12 @@ function renderSchedule(plan) {
   const sacrificed = new Set(plan.res.dropped.filter(d => real(d) && !plan.chosenGroups.has(d.item.id)).map(d => d.item.id)).size;
 
   const parts = [];
-  parts.push(`<h1>My plan</h1>${installBanner()}${backupBanner()}${staleBanner()}${favoritesBanner()}${previewBanner()}${missingPicksBanner()}${rsvpBanner(plan)}`);
+  parts.push(`<h1>My plan</h1>${installBanner()}${backupBanner()}${staleBanner()}${favoritesBanner()}${previewBanner()}${missingPicksBanner()}${rsvpBanner(plan, true)}`);
   const lockedConflicts = plan.res.lockedConflicts.filter(x => !x.pseudo);
   if (lockedConflicts.length) {
     parts.push(`<div class="banner bad">${icon('warn')}<div><b>Some sessions you locked can't all happen.</b><p>${lockedConflicts.map(x => esc(x.code)).join(', ')} clash with other locked sessions or blocked time. Unlock one of them.</p></div></div>`);
   }
-  parts.push(`<div class="stats">
-    <div class="stat"><b>${totalChosen}</b><span>sessions in your plan</span></div>
-    <div class="stat ${openDecisions ? 'warn' : ''}"><b>${openDecisions}</b><span>clashes to decide</span></div>
-    <div class="stat ${tight ? 'warn' : ''}"><b>${tight}</b><span>tight transfers</span></div>
-    <div class="stat"><b>${sacrificed}</b><span>picks you'll miss</span></div>
-  </div>
+  parts.push(`<p class="plan-sum">${planSummary({ sessions: totalChosen, clashes: openDecisions, tight, missed: sacrificed }).map(x => `<span class="${x.warn ? 'warn' : ''}"><b>${x.n}</b> ${esc(x.label)}</span>`).join(' · ')}</p>
   <div class="dayrow">
   <div class="daytabs" role="group" aria-label="Day">${m.days.map(d => `<button type="button" data-act="day" data-day="${attr(d)}" aria-pressed="${d === day}">${esc(fmtDay(d))}<span class="n">${counts[d].chosen}</span>${counts[d].open ? `<span class="w" aria-label="clashes to decide">●</span>` : ''}</button>`).join('')}</div>
   <div class="seg viewswitch" role="group" aria-label="Day view">${[['list', 'List'], ['grid', 'Grid']].map(([v, label]) => `<button type="button" data-act="plan-view" data-view="${v}" aria-pressed="${v === view}">${label}</button>`).join('')}</div>
@@ -1282,8 +1286,11 @@ function renderFillers(day, around, c, between = false) {
 }
 
 // A clash-card line that stays as the user left it when the plan is rebuilt under them (a
-// catalog or occupancy refresh): the toggle handler records it in app.openClash by this id.
-const keepOpen = id => `data-keep="${attr(id)}"${app.openClash.has(id) ? ' open' : ''}`;
+// catalog or occupancy refresh): the toggle handler and render() record it in app.folds by this
+// id. Until the user has touched it, it is closed, or open when `openByDefault`.
+const keepOpen = (id, openByDefault = false) => `data-keep="${attr(id)}"${(app.folds.has(id) ? app.folds.get(id) : openByDefault) ? ' open' : ''}`;
+// The seat notice is not one day's: it keeps its state when the day changes.
+const SEAT_FOLDS = ['seats', 'seats-shortlist'];
 
 // Options compared with a whole-plan what-if per clash; the rest are listed by their weight.
 const OPTION_CAP = 6;
@@ -1508,7 +1515,10 @@ function fmtStamp(iso) {
   return Number.isNaN(d.getTime()) ? String(iso) : new Intl.DateTimeFormat('en-US', { timeZone: app.conf.tz, weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }).format(d);
 }
 
-function rsvpBanner(plan) {
+// `compact`: the scheduled My plan, where the notice is one line until opened (and remembers
+// that). The pre-schedule shortlist has no day to make room for and shows it opened, until the
+// user closes it.
+function rsvpBanner(plan, compact = false) {
   const all = Object.values(plan.res.plan).flat();
   const firstOf = new Map();
   for (const x of [...plan.items, ...plan.tba]) if (x.priority >= 2 && x.s.rsvp && !firstOf.has(x.id)) firstOf.set(x.id, x);
@@ -1531,9 +1541,7 @@ function rsvpBanner(plan) {
     const opens = need.map(x => x.s.rsvp).find(v => typeof v === 'string');
     const open = !opens || new Date(opens).getTime() <= Date.now();
     const list = need.map(x => `<a href="${attr(app.conf.sessionUrl(x.s))}" target="_blank" rel="noopener">${esc(x.code)}</a>`).join(', ');
-    parts.push(`<div class="banner ${open ? 'warn' : ''}">${icon(open ? 'warn' : 'bell')}<div><b>${need.length} of your Must/Want picks need a seat reservation</b>
-      <p>${open ? `Seats are limited: reserve on ${esc(app.conf.siteName)}, then tap <b>I reserved a seat</b> on the session.` : opens ? `Reservations open ${esc(rsvpOpensText(opens) || String(opens))}. Seats are limited.` : 'Seats are limited.'}</p>
-      <details><summary class="small">Show which</summary><p class="small">${list}</p></details></div></div>`);
+    parts.push(seatNotice({ count: need.length, open, opensText: opens ? rsvpOpensText(opens) || String(opens) : '', site: app.conf.siteName, links: list, foldAttrs: compact ? keepOpen('seats') : keepOpen('seats-shortlist', true) }));
   }
   return parts.join('');
 }
@@ -2035,6 +2043,9 @@ function render() {
   clearInterval(app.nowTimer);
   const fk = focusKey(document.activeElement);
   const scrolls = [...main.querySelectorAll('[data-scroll]')].map(e => [e.dataset.scroll, e.scrollTop]);
+  // A fold opened or closed a moment ago may not have had its toggle event yet, and a fold that
+  // is replaced never gets one: take each kept fold's state from the page itself.
+  for (const d of main.querySelectorAll('details[data-keep]')) app.folds.set(d.dataset.keep, d.open);
   const view = { browse: renderBrowse, triage: renderTriage, plan: renderPlan, now: renderNow, changes: renderChanges, settings: renderSettings }[app.tab];
   main.innerHTML = view();
   app.rendered = true;
@@ -2312,7 +2323,7 @@ function onClick(e) {
     'pf-goal': () => editProfile(act, el.dataset.v),
     'pf-level': () => editProfile(act, el.dataset.v),
     'pf-type': () => editProfile(act, el.dataset.v),
-    day: () => { e.preventDefault(); store.setUI({ day: el.dataset.day }); app.openFill = null; app.openClash.clear(); render(); },
+    day: () => { e.preventDefault(); store.setUI({ day: el.dataset.day }); app.openFill = null; render(); },
     'plan-view': () => { store.setUI({ planView: planView(el.dataset.view) }); render(); revealDay(); },
     pill: () => { const ids = app.openPills.ids, id = el.dataset.pill; if (!ids.delete(id)) ids.add(id); render(); },
     lock: () => { if (s) lockRun(s, el); },
@@ -2543,7 +2554,7 @@ main.addEventListener('change', e => {
 main.addEventListener('toggle', e => {
   if (e.target.id === 'filters') store.setUI({ filtersOpen: e.target.open });
   if (e.target.dataset?.fill) app.openFill = e.target.open ? e.target.dataset.fill : null;
-  if (e.target.dataset?.keep) app.openClash[e.target.open ? 'add' : 'delete'](e.target.dataset.keep);
+  if (e.target.dataset?.keep) app.folds.set(e.target.dataset.keep, e.target.open);
 }, true);
 dialog.addEventListener('input', e => {
   const key = e.target.dataset.noteKey;
@@ -2622,17 +2633,9 @@ store.subscribe(what => {
 
 // ---------------------------------------------------------------- change alerts
 
-// Snapshot every run of newly picked sessions, so later moves can be flagged. A group
-// already tracked by any of its runs isn't touched (a new run shows up as an alert).
+// Snapshot every run of newly picked sessions, so later moves can be flagged (data.js trackPicks).
 function trackNewPicks() {
-  const known = { ...store.get().known };
-  const tracked = new Set(Object.values(known).map(k => k.g));
-  let added = false;
-  for (const g of pickedGroups()) {
-    const runs = app.model.byGroup.get(g) || [];
-    if (tracked.has(g) || runs.some(s => known[s.key])) continue;
-    for (const s of runs) { known[s.key] = snapshot(s); added = true; }
-  }
+  const { known, added } = trackPicks(app.model, pickedGroups(), store.get().known);
   if (added) store.setKnown(known);
 }
 
