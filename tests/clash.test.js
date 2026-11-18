@@ -260,12 +260,15 @@ test('should count a session once when a run on the card and its planned run els
   const own = optionCost(x, [x, y1], [x], [x2]);
   eq([codes(own.onCard), codes(own.outside)], [['Y1'], []]);
 });
-test('should keep every missed run of a session on the card, counted once in the headline', () => {
-  const x = item(H(14), H(15), { code: 'X' }), y1 = item(H(14), H(15), { code: 'Y1', id: 'y' }), y2 = item(H(14.5), H(15.5), { code: 'Y2', id: 'y' });
-  const cost = optionCost(x, [x, y1, y2], [x], []);
-  eq([codes(cost.onCard), codes(cost.outside)], [['Y1', 'Y2'], []]);
-  eq(missHeadline(cost.onCard), "You'd miss Y1");
-  eq(missReasons(cost.onCard, [x], ctx), 'Y1, Y2 (same time as X)');
+test('should list a session once on the card when several of its runs there are missed', () => {
+  const x = item(H(14), H(15), { code: 'X' }), z = item(H(14), H(15), { code: 'Z' });
+  const y1 = item(H(14), H(15), { code: 'Y1', id: 'y' }), y2 = item(H(14.5), H(15.5), { code: 'Y2', id: 'y' });
+  // By its first run on the card, and in the card's order among the other missed sessions.
+  const cost = optionCost(x, [x, y1, z, y2], [x], []);
+  eq([codes(cost.onCard), codes(cost.outside)], [['Y1', 'Z'], []]);
+  eq(missReasons(cost.onCard, [x], ctx), 'Y1, Z (same time as X)');
+  const late = optionCost(x, [x, z, y2, y1], [x], []);
+  eq([codes(late.onCard), codes(late.outside)], [['Z', 'Y2'], []]);
 });
 test('should cost nothing when the inputs are not lists', () => {
   const x = item(H(14), H(15), { code: 'X' });

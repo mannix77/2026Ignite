@@ -123,13 +123,13 @@ export function missHeadline(missed) {
 // whose session is then nowhere in the plan. `outside`: sessions the plan attends now that the
 // what-if drops and that are not on this card (a pick on a later card that x runs into, or one
 // pushed out by a session that moved to its other run). A session that only moves to another
-// run is not a cost, and blocked time and lunch are not picks. `onCard` keeps every missed run
-// of a session (the detail says why each one does not fit; missHeadline counts the session
-// once); `outside` lists a session once.
+// run is not a cost, and blocked time and lunch are not picks. A session is listed once, in
+// both lists: on the card, by the first of its runs there.
 export function optionCost(x, card, chosen, current) {
   const list = v => (Array.isArray(v) ? v.filter(Boolean) : []);
   const kept = new Set(list(chosen).map(y => y.id));
-  const onCard = list(card).filter(y => y.key !== x.key && !kept.has(y.id));
+  const lost = new Set();
+  const onCard = list(card).filter(y => y.key !== x.key && !kept.has(y.id) && !lost.has(y.id) && !!lost.add(y.id));
   const seen = new Set([x.id, ...list(card).map(y => y.id)]);
   const outside = [];
   for (const y of list(current)) {
