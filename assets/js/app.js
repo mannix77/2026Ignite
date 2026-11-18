@@ -84,7 +84,7 @@ window.addEventListener('unhandledrejection', () => reportAppError('uncaught-exc
 const num = (v, d = 0) => (Number.isFinite(Number(v)) ? Number(v) : d);
 const hhmm = min => `${String(Math.floor(min / 60)).padStart(2, '0')}:${String(min % 60).padStart(2, '0')}`;
 const fromHHMM = v => { const [h, m] = String(v || '').split(':').map(Number); return Number.isFinite(h) && Number.isFinite(m) ? h * 60 + m : null; };
-const B = id => app.venue.BUILDING[id] || app.venue.BUILDING.U;
+const B = id => (Object.hasOwn(app.venue.BUILDING, id) ? app.venue.BUILDING[id] : app.venue.BUILDING.U);
 
 // Your walking-time edits sit on top of the conference's matrix (a backup may hold only some keys);
 // a saved pair that still equals the default it was saved with follows a recalibration (mergeWalk).

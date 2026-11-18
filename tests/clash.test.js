@@ -300,15 +300,27 @@ test('should say lower value only when neither a session nor lunch is in the way
   eq(missReasons([d], [x], ctx, { lunch: { [TUE]: { start: H(14), end: H(14.5) } } }), 'D (lower value)');
   eq(missReasons([d], [x], ctx, { lunch: { [TUE]: { start: H(14) - 1, end: H(14.5) } } }), 'D (gives way to lunch)');
   // Lunch on another day (E is at Tuesday's lunch time, on Thursday), or no lunch planned at all.
+  eq(missReasons([d, e], [x], ctx, { lunch: { [TUE]: null, [THU]: { start: H(13), end: H(13.5) } } }), 'E (gives way to lunch) · D (lower value)', 'and the other way round');
   eq(missReasons([d, e], [x], ctx, { lunch: { [TUE]: { start: H(13), end: H(13.5) }, [THU]: null } }), 'D (gives way to lunch) · E (lower value)');
   eq(missReasons([d], [x], ctx), 'D (lower value)');
   eq(missReasons(undefined, undefined, ctx), '');
+});
+test('should name the session, not lunch, when both are in the time of a missed pick', () => {
+  const x = item(H(12), H(13), { code: 'X' }), y = item(H(12.5), H(13.5), { code: 'Y' });
+  const slot = { start: H(13), end: H(13.5) };
+  eq([y.startMin < x.endMin && x.startMin < y.endMin, y.startMin < slot.end && slot.start < y.endMin], [true, true], 'Y overlaps X and the lunch slot');
+  eq(missReasons([y], [x], ctx, { lunch: { [TUE]: slot } }), 'Y (same time as X)');
+  eq(missReasons([y], [], ctx, { lunch: { [TUE]: slot } }), 'Y (gives way to lunch)', 'without X in the plan, lunch is the reason');
 });
 test('should give the walk and the gap when a missed pick is too far to reach', () => {
   const M = parseLocation('Marriott Marquis, Yerba Buena Ballroom, Salon 8');
   const x = item(H(14), H(14.75), { code: 'X', loc: W }), far = item(H(14.75) + 5, H(15.5), { code: 'FAR', loc: M });
   const names = { [W.building]: 'West', [M.building]: 'Marriott' };
   eq(missReasons([far], [x], ctx, { short: b => names[b] }), 'FAR (13 min walk West → Marriott, 5 min gap)');
+  // The cutoff: a 13 min walk plus the 2 min buffer may run 5 min late, so 9 min is too short and 10 is enough.
+  const at = gap => item(H(14.75) + gap, H(15.5), { code: 'FAR', loc: M });
+  eq(missReasons([at(9)], [x], ctx, { short: b => names[b] }), 'FAR (13 min walk West → Marriott, 9 min gap)');
+  eq(missReasons([at(10)], [x], ctx, { short: b => names[b] }), 'FAR (lower value)', 'reachable, so the walk is not the reason');
 });
 
 console.log(`${pass} passed, ${fail} failed`);
