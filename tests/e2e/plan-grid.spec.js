@@ -1499,6 +1499,7 @@ test.describe('beyond the feature file: the switch and the part of the page it o
     await expect(page.locator('#main h2[data-day-heading]')).toHaveText('Your day');
     expect(after.view.top, 'the grid starts under the heading').toBeGreaterThanOrEqual(after.heading.bottom);
     expect(after.view.top, 'and on screen, above the tab bar').toBeLessThan(after.free.bottom);
+    expect(after.view.bottom - after.view.top, 'the day view is as tall as the grid in it').toBe(await gridHeight(dayGrid(page, TUE)));
   });
 
   test('The day is already on screen: the switch redraws the day and the page does not scroll, to Grid and back to List', async ({ page }) => {
@@ -1509,13 +1510,22 @@ test.describe('beyond the feature file: the switch and the part of the page it o
     expect(before.heading.top, 'the whole heading is under the header').toBeGreaterThanOrEqual(before.free.top);
     expect(before.heading.bottom, 'and above the tab bar').toBeLessThanOrEqual(before.free.bottom);
     expect(before.switch.bottom, 'so is the switch: using it scrolls nothing by itself').toBeLessThanOrEqual(before.free.bottom);
+    expect(before.view.top, 'the day view starts under the heading').toBeGreaterThanOrEqual(before.heading.bottom);
+    expect(before.view.bottom, 'and holds the list: it has a height').toBeGreaterThan(before.view.top);
+    // Everything but the day view is where it was. The day view is checked for each view: the
+    // grid's has its own margin and height, and the list's is the box it was before.
+    const still = view => ({ ...before, view });
 
     await choose(page, 'grid');
     await expect(dayGrid(page, THU), 'the day was redrawn as the grid').toBeVisible();
-    expect(await screen(page), 'nothing moved').toEqual({ ...before, view: expect.anything() });
+    const asGrid = await screen(page);
+    expect(asGrid, 'nothing moved').toEqual(still(asGrid.view));
+    expect(asGrid.view.top, 'the grid starts under the heading').toBeGreaterThanOrEqual(asGrid.heading.bottom);
+    expect(asGrid.view.top, 'and on screen, above the tab bar').toBeLessThan(asGrid.free.bottom);
+    expect(asGrid.view.bottom - asGrid.view.top, 'the day view is as tall as the grid in it').toBe(await gridHeight(dayGrid(page, THU)));
     await choose(page, 'list');
     await expect(page.locator('#main .daygrid'), 'and back as the list').toHaveCount(0);
-    expect(await screen(page), 'nothing moved').toEqual({ ...before, view: expect.anything() });
+    expect(await screen(page), 'nothing moved, and the list is as tall as it was').toEqual(still(before.view));
   });
 
   // The switch changes only what is inside [data-day-view], so that wrapper holds the day's
