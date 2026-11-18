@@ -2037,6 +2037,9 @@ function focusKey(el) {
   // are different elements with the same data-act and data-pill, so focus follows the toggle.
   if (el.dataset.act === 'plan-view') return `[data-act="plan-view"][data-view="${CSS.escape(el.dataset.view)}"]`;
   if (el.dataset.act === 'pill') return `[data-act="pill"][data-pill="${CSS.escape(el.dataset.pill)}"]`;
+  // A clash card's cost line or "more options": the summary of a fold that keeps its state (keepOpen).
+  const keep = el.matches('summary') && el.parentElement?.dataset.keep;
+  if (keep) return `details[data-keep="${CSS.escape(keep)}"] > summary`;
   return null;
 }
 
