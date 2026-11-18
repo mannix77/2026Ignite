@@ -611,5 +611,53 @@ await test('should escape nothing and keep a note on one line', () => {
   eq(text.split('\n')[3], 'A1 | Maybe | Mon | T <b> | note: line one / line two');
 });
 
+// ---- the top of My plan (specs/features/plan-summary.feature): the totals in one line and the
+// seat-reservation notice folded to one.
+const { planSummary, seatNotice } = ui;
+await test('should give the plan totals in order and leave out a zero', () => {
+  eq(planSummary({ sessions: 21, clashes: 16, tight: 0, missed: 57 }), [
+    { n: 21, label: 'sessions in your plan', warn: false },
+    { n: 16, label: 'clashes to decide', warn: true },
+    { n: 57, label: "picks you'll miss", warn: false },
+  ]);
+  eq(planSummary({ sessions: 5, clashes: 0, tight: 2, missed: 0 }), [
+    { n: 5, label: 'sessions in your plan', warn: false },
+    { n: 2, label: 'tight transfers', warn: true },
+  ]);
+});
+await test('should give only the session count when there is nothing to sort out', () => {
+  eq(planSummary({ sessions: 12, clashes: 0, tight: 0, missed: 0 }), [{ n: 12, label: 'sessions in your plan', warn: false }]);
+  eq(planSummary({ sessions: 0, clashes: 0, tight: 0, missed: 0 }), [{ n: 0, label: 'sessions in your plan', warn: false }]);
+});
+await test('should word a single session, clash, transfer and missed pick in the singular', () => {
+  eq(planSummary({ sessions: 1, clashes: 1, tight: 1, missed: 1 }).map(x => `${x.n} ${x.label}`),
+    ['1 session in your plan', '1 clash to decide', '1 tight transfer', "1 pick you'll miss"]);
+});
+// What the notice shows before it is opened (outside the fold's body) and what is inside it.
+const noticeParts = html => {
+  const m = html.match(/^([\s\S]*?)<details([^>]*)><summary>([\s\S]*?)<\/summary>([\s\S]*?)<\/details>([\s\S]*)$/);
+  const text = h => h.replace(/<\/p>/g, ' ').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();   // a paragraph ends a line; inline tags vanish
+  return m && { attrs: m[2].trim(), line: text(m[3]), folded: text(m[4]), outside: text(m[1] + m[5]) };
+};
+await test('should fold how to reserve and which sessions under a one-line seat notice', () => {
+  const p = noticeParts(seatNotice({ count: 6, open: true, site: 'the Ignite site', links: '<a href="u">LAB1</a>, <a href="v">LAB2</a>' }));
+  eq(p.line, '6 of your Must/Want picks need a seat reservation');
+  eq(p.folded, 'Seats are limited: reserve on the Ignite site, then tap I reserved a seat on the session. LAB1, LAB2');
+  eq(p.outside, '');
+  eq(noticeParts(seatNotice({ count: 1, open: true, site: 'S', links: '' })).line, '1 of your Must/Want picks needs a seat reservation');
+});
+await test('should say when reservations open without the seat notice being opened', () => {
+  const p = noticeParts(seatNotice({ count: 2, open: false, opensText: 'Tue 9:00 AM PT', site: 'the Ignite site', links: '<a href="u">LAB1</a>' }));
+  eq(p.line, '2 of your Must/Want picks need a seat reservation');
+  eq(p.outside, 'Reservations open Tue 9:00 AM PT.');
+  eq(p.folded, 'Seats are limited. LAB1');
+});
+await test('should escape the site name and carry the fold attributes it is given', () => {
+  const html = seatNotice({ count: 3, open: true, site: 'A <b>&</b> B', links: '', foldAttrs: 'data-keep="seats" open' });
+  eq(html.includes('A &lt;b&gt;&amp;&lt;/b&gt; B'), true);
+  eq(html.includes('<b>&</b>'), false);
+  eq(noticeParts(html).attrs, 'data-keep="seats" open');
+});
+
 console.log(`${pass} passed, ${fail} failed`);
 if (fail) process.exitCode = 1;

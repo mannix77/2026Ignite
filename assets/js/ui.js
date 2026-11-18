@@ -298,3 +298,26 @@ export function seatsDetail(s, held) {
   const extra = [cap, left].filter(Boolean).join(', ');
   return extra ? `${base} · ${extra}` : base;
 }
+
+// The top of My plan (specs/features/plan-summary.feature). The plan's totals as one line: the
+// session count always, then only the totals that are not zero; `warn` marks the ones that
+// need the user.
+export function planSummary({ sessions = 0, clashes = 0, tight = 0, missed = 0 } = {}) {
+  const one = (n, single, many) => (n === 1 ? single : many);
+  const parts = [{ n: sessions, label: one(sessions, 'session in your plan', 'sessions in your plan'), warn: false }];
+  if (clashes > 0) parts.push({ n: clashes, label: one(clashes, 'clash to decide', 'clashes to decide'), warn: true });
+  if (tight > 0) parts.push({ n: tight, label: one(tight, 'tight transfer', 'tight transfers'), warn: true });
+  if (missed > 0) parts.push({ n: missed, label: one(missed, "pick you'll miss", "picks you'll miss"), warn: false });
+  return parts;
+}
+
+// The seat-reservation notice: one line, with how to reserve and which sessions folded under
+// it. When reservations have not opened, the opening time stays in view. `links` is HTML the
+// caller built (escaped session links); `foldAttrs` goes on the fold as given.
+export function seatNotice({ count, open, opensText = '', site = '', links = '', foldAttrs = '' }) {
+  const how = open ? `Seats are limited: reserve on ${esc(site)}, then tap <b>I reserved a seat</b> on the session.` : 'Seats are limited.';
+  return `<div class="banner slim ${open ? 'warn' : ''}">${icon(open ? 'warn' : 'bell')}<div>
+    <details ${foldAttrs}><summary><b>${count} of your Must/Want picks ${count === 1 ? 'needs' : 'need'} a seat reservation</b></summary>
+      <p>${how}</p><p class="small">${links}</p></details>
+    ${!open && opensText ? `<p>Reservations open ${esc(opensText)}.</p>` : ''}</div></div>`;
+}

@@ -17,7 +17,7 @@ import { reportError as reportTelemetry } from './telemetry.js';
 import { INSTANCE, INSTANCE_LABEL, nsKey, guideUrl } from './instance.js';
 import { icsDate, buildPlanIcs, buildSingleIcs, hasPendingCancellation, pickedInsts } from './ics.js';
 import { planView, dayOffScreen, gridEntries, gridLayout, PILL_HEADER, PILL_ROW } from './grid.js';
-import { esc, attr, icon, bldgChip, recChip, rsvpChip, rsvpOpensText, seatsDetail, prioPill, scoreChip, whenText, prioControl, sessionCard, cardClass, toast, shareOrDownload, copyText, speakersLine, setHostCompany, unknownRoomsNote, venueMapUrl, mapChip, occupancyOf, occupancyChip, picksForAI } from './ui.js';
+import { esc, attr, icon, bldgChip, recChip, rsvpChip, rsvpOpensText, seatsDetail, prioPill, scoreChip, whenText, prioControl, sessionCard, cardClass, toast, shareOrDownload, copyText, speakersLine, setHostCompany, unknownRoomsNote, venueMapUrl, mapChip, occupancyOf, occupancyChip, picksForAI, planSummary, seatNotice } from './ui.js';
 
 const $ = (sel, root = document) => root.querySelector(sel);
 const main = $('#main');
@@ -51,7 +51,7 @@ const app = {
   persisted: false, // the browser promised not to clear this site's storage
   installEvent: null, // Android/Chrome install prompt, offered from the install banner
   openFill: null,
-  openClash: new Set(),   // clash-card lines the user opened (cost lines, "more options"): kept open when My plan is rebuilt
+  openClash: new Set(),   // My plan folds the user opened (clash cost lines, "more options", the seat notice): kept open when My plan is rebuilt
   openPills: { day: null, ids: new Set() },   // My plan grid: the pills opened on one day; this tab only, never saved
   nowTimer: null,
   dialogKey: null,
@@ -1084,12 +1084,7 @@ function renderSchedule(plan) {
   if (lockedConflicts.length) {
     parts.push(`<div class="banner bad">${icon('warn')}<div><b>Some sessions you locked can't all happen.</b><p>${lockedConflicts.map(x => esc(x.code)).join(', ')} clash with other locked sessions or blocked time. Unlock one of them.</p></div></div>`);
   }
-  parts.push(`<div class="stats">
-    <div class="stat"><b>${totalChosen}</b><span>sessions in your plan</span></div>
-    <div class="stat ${openDecisions ? 'warn' : ''}"><b>${openDecisions}</b><span>clashes to decide</span></div>
-    <div class="stat ${tight ? 'warn' : ''}"><b>${tight}</b><span>tight transfers</span></div>
-    <div class="stat"><b>${sacrificed}</b><span>picks you'll miss</span></div>
-  </div>
+  parts.push(`<p class="plan-sum">${planSummary({ sessions: totalChosen, clashes: openDecisions, tight, missed: sacrificed }).map(x => `<span class="${x.warn ? 'warn' : ''}"><b>${x.n}</b> ${esc(x.label)}</span>`).join(' · ')}</p>
   <div class="dayrow">
   <div class="daytabs" role="group" aria-label="Day">${m.days.map(d => `<button type="button" data-act="day" data-day="${attr(d)}" aria-pressed="${d === day}">${esc(fmtDay(d))}<span class="n">${counts[d].chosen}</span>${counts[d].open ? `<span class="w" aria-label="clashes to decide">●</span>` : ''}</button>`).join('')}</div>
   <div class="seg viewswitch" role="group" aria-label="Day view">${[['list', 'List'], ['grid', 'Grid']].map(([v, label]) => `<button type="button" data-act="plan-view" data-view="${v}" aria-pressed="${v === view}">${label}</button>`).join('')}</div>
@@ -1544,9 +1539,7 @@ function rsvpBanner(plan) {
     const opens = need.map(x => x.s.rsvp).find(v => typeof v === 'string');
     const open = !opens || new Date(opens).getTime() <= Date.now();
     const list = need.map(x => `<a href="${attr(app.conf.sessionUrl(x.s))}" target="_blank" rel="noopener">${esc(x.code)}</a>`).join(', ');
-    parts.push(`<div class="banner ${open ? 'warn' : ''}">${icon(open ? 'warn' : 'bell')}<div><b>${need.length} of your Must/Want picks need a seat reservation</b>
-      <p>${open ? `Seats are limited: reserve on ${esc(app.conf.siteName)}, then tap <b>I reserved a seat</b> on the session.` : opens ? `Reservations open ${esc(rsvpOpensText(opens) || String(opens))}. Seats are limited.` : 'Seats are limited.'}</p>
-      <details><summary class="small">Show which</summary><p class="small">${list}</p></details></div></div>`);
+    parts.push(seatNotice({ count: need.length, open, opensText: opens ? rsvpOpensText(opens) || String(opens) : '', site: app.conf.siteName, links: list, foldAttrs: keepOpen('seats') }));
   }
   return parts.join('');
 }
@@ -2325,7 +2318,7 @@ function onClick(e) {
     'pf-goal': () => editProfile(act, el.dataset.v),
     'pf-level': () => editProfile(act, el.dataset.v),
     'pf-type': () => editProfile(act, el.dataset.v),
-    day: () => { e.preventDefault(); store.setUI({ day: el.dataset.day }); app.openFill = null; app.openClash.clear(); render(); },
+    day: () => { e.preventDefault(); store.setUI({ day: el.dataset.day }); app.openFill = null; for (const id of [...app.openClash]) if (id !== 'seats') app.openClash.delete(id); render(); },
     'plan-view': () => { store.setUI({ planView: planView(el.dataset.view) }); render(); revealDay(); },
     pill: () => { const ids = app.openPills.ids, id = el.dataset.pill; if (!ids.delete(id)) ids.add(id); render(); },
     lock: () => { if (s) lockRun(s, el); },
