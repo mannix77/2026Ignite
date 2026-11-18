@@ -1,7 +1,7 @@
 // Clash cards per time slot and the ranking of their options (specs/features/clash-ranking.feature).
 // Run with: node tests/clash.test.js
 
-import { slotGroups, rankOptions, rankTie, missHeadline, optionCost } from '../assets/js/clash.js';
+import { slotGroups, rankOptions, rankTie, missHeadline, optionCost, missReasons } from '../assets/js/clash.js';
 import { DEFAULT_PLANNER, compareOptions, optimize } from '../assets/js/planner.js';
 import { parseLocation } from '../assets/js/venue.js';
 
@@ -236,6 +236,7 @@ test('should count a planned pick on another card that the option pushes out of 
   eq([codes(cost.onCard), codes(cost.outside)], [['A'], ['D']]);
   eq(missHeadline([...cost.onCard, ...cost.outside]), "You'd miss A and D");
   // The option the plan already takes costs nothing outside its card (B, on the card, is still missed).
+  eq(codes(outcomes.get(a.key).chosen), ['A', 'D'], 'the plan if A is chosen');
   const keep = optionCost(a, cards[0].items, outcomes.get(a.key).chosen, current);
   eq([codes(keep.onCard), codes(keep.outside)], [['B'], []]);
 });
@@ -247,7 +248,8 @@ test('should not count outside the card a pick that was never in the plan, that 
   const current = [y, gone, run1, block, stays];
   const cost = optionCost(x, [x, y], [x, run2, stays], current);
   eq([codes(cost.onCard), codes(cost.outside)], [['Y'], ['GONE']], 'NEVER was not planned, RUN1 moved to RUN2, DINNER is blocked time');
-  eq(codes(optionCost(x, [x, y], [x, run2, stays, gone], current).outside), [], 'nothing is pushed out when GONE stays');
+  const stay = optionCost(x, [x, y], [x, run2, stays, gone], current);
+  eq([codes(stay.onCard), codes(stay.outside)], [['Y'], []], 'nothing is pushed out when GONE stays, and Y is still missed');
 });
 test('should count a session once when a run on the card and its planned run elsewhere are both lost', () => {
   const x = item(H(14), H(15), { code: 'X' }), y1 = item(H(14), H(15), { code: 'Y1', id: 'y' }), y2 = item(H(14), H(15), { code: 'Y2', id: 'y', day: THU });
@@ -255,11 +257,58 @@ test('should count a session once when a run on the card and its planned run els
   eq([codes(cost.onCard), codes(cost.outside)], [['Y1'], []]);
   // Another run of the chosen session itself is not a cost either.
   const x2 = item(H(9), H(10), { code: 'X2', id: x.id, day: THU });
-  eq(codes(optionCost(x, [x, y1], [x], [x2]).outside), []);
+  const own = optionCost(x, [x, y1], [x], [x2]);
+  eq([codes(own.onCard), codes(own.outside)], [['Y1'], []]);
+});
+test('should keep every missed run of a session on the card, counted once in the headline', () => {
+  const x = item(H(14), H(15), { code: 'X' }), y1 = item(H(14), H(15), { code: 'Y1', id: 'y' }), y2 = item(H(14.5), H(15.5), { code: 'Y2', id: 'y' });
+  const cost = optionCost(x, [x, y1, y2], [x], []);
+  eq([codes(cost.onCard), codes(cost.outside)], [['Y1', 'Y2'], []]);
+  eq(missHeadline(cost.onCard), "You'd miss Y1");
+  eq(missReasons(cost.onCard, [x], ctx), 'Y1, Y2 (same time as X)');
 });
 test('should cost nothing when the inputs are not lists', () => {
   const x = item(H(14), H(15), { code: 'X' });
   eq(optionCost(x, undefined, null, undefined), { onCard: [], outside: [] });
+});
+
+// ---- why each missed pick does not fit
+
+test('should say a pick gives way to lunch when the option pushes lunch into its time', () => {
+  // Lunch is 30 minutes between 11:30 and 1:30. Y ends 11:45, so lunch fits before D (12:45);
+  // X runs to 12:30, and lunch then only fits in D's time.
+  const lunch = { from: H(11.5), to: H(13.5), length: 30, weight: 100 };
+  const x = item(H(11), H(12.5), { code: 'X' }), y = item(H(11), H(11.75), { code: 'Y', priority: 3 }), d = item(H(12.75), H(13.5), { code: 'D' });
+  const items = [x, y, d];
+  const cards = slotGroups(items, ctx);
+  eq(cards.map(c => codes(c.items)), [['Y', 'X']], 'D clashes with no session');
+  const now = optimize(items, ctx, lunch);
+  const current = Object.values(now.plan).flat();
+  eq([codes(current), now.lunch[TUE]], [['Y', 'D'], { start: H(11.75), end: H(12.25) }], 'the plan as it stands');
+  const o = compareOptions(items, cards[0].items, ctx, lunch).outcomes.get(x.key);
+  eq([codes(o.chosen), o.lunch[TUE]], [['X'], { start: H(12.5), end: H(13) }], 'the plan if X is chosen');
+  const cost = optionCost(x, cards[0].items, o.chosen, current);
+  eq([codes(cost.onCard), codes(cost.outside)], [['Y'], ['D']]);
+  eq(missReasons(cost.outside, o.chosen, ctx, { lunch: o.lunch }), 'D (gives way to lunch)');
+  eq(missReasons(cost.onCard, o.chosen, ctx, { lunch: o.lunch }), 'Y (same time as X)', 'a session that blocks it is still the reason');
+});
+test('should say lower value only when neither a session nor lunch is in the way', () => {
+  const x = item(H(11), H(12), { code: 'X' }), d = item(H(13), H(14), { code: 'D' }), e = item(H(13), H(14), { code: 'E', day: THU });
+  // Both sides of the lunch slot: touching it is not in it, one minute inside is.
+  eq(missReasons([d], [x], ctx, { lunch: { [TUE]: { start: H(12.5), end: H(13) } } }), 'D (lower value)');
+  eq(missReasons([d], [x], ctx, { lunch: { [TUE]: { start: H(12.5), end: H(13) + 1 } } }), 'D (gives way to lunch)');
+  eq(missReasons([d], [x], ctx, { lunch: { [TUE]: { start: H(14), end: H(14.5) } } }), 'D (lower value)');
+  eq(missReasons([d], [x], ctx, { lunch: { [TUE]: { start: H(14) - 1, end: H(14.5) } } }), 'D (gives way to lunch)');
+  // Lunch on another day (E is at Tuesday's lunch time, on Thursday), or no lunch planned at all.
+  eq(missReasons([d, e], [x], ctx, { lunch: { [TUE]: { start: H(13), end: H(13.5) }, [THU]: null } }), 'D (gives way to lunch) · E (lower value)');
+  eq(missReasons([d], [x], ctx), 'D (lower value)');
+  eq(missReasons(undefined, undefined, ctx), '');
+});
+test('should give the walk and the gap when a missed pick is too far to reach', () => {
+  const M = parseLocation('Marriott Marquis, Yerba Buena Ballroom, Salon 8');
+  const x = item(H(14), H(14.75), { code: 'X', loc: W }), far = item(H(14.75) + 5, H(15.5), { code: 'FAR', loc: M });
+  const names = { [W.building]: 'West', [M.building]: 'Marriott' };
+  eq(missReasons([far], [x], ctx, { short: b => names[b] }), 'FAR (13 min walk West → Marriott, 5 min gap)');
 });
 
 console.log(`${pass} passed, ${fail} failed`);

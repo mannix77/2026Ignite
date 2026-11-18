@@ -115,6 +115,11 @@ Feature: Deciding a clash quickly
       Then that option says he'd miss both, by code
       And the opened line lists the later pick as outside this clash
 
+    Scenario: A pick pushed out by lunch says so
+      Given going to one session leaves room for lunch only during a later planned pick
+      When Minesh opens the line saying what that option costs
+      Then the later pick is listed as giving way to lunch
+
     Scenario: An option that costs nothing says nothing about missing
       Given a clash where going to one session means missing no other pick
       When Minesh reads the clash
