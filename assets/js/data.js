@@ -120,6 +120,17 @@ const count = v => (Number.isInteger(v) && v >= 0 ? v : null);
 // two runs whose group differs only by stray spaces are one session.
 const usableGroup = v => (typeof v === 'string' && v.trim() !== '' ? v.trim() : null);
 
+// The repeat group of a catalog record, or null when the model refuses the record: not a
+// record, no id, an id that is neither text nor a number (String() of it may throw), or
+// nothing usable to group it by. Without a usable group a run is its own session: by its code,
+// cleaned the same way, then by its id, then by its own key. The one acceptance rule, for the
+// model's loop and for anything decided before it (whether an official schedule exists).
+function recordGroup(rec) {
+  if (!rec || typeof rec !== 'object' || !rec.id || (typeof rec.id !== 'string' && !Number.isFinite(rec.id))) return null;
+  const code = typeof rec.code === 'string' && rec.code ? rec.code : String(rec.id);
+  return usableGroup(rec.group) ?? usableGroup(code) ?? usableGroup(String(rec.id)) ?? usableGroup(rec.inst || rec.id);
+}
+
 // The usable seat record for a session, or null: an untrusted file is read, never trusted.
 export function seatInfo(seats, id) {
   const table = seats && typeof seats === 'object' ? seats.seats : null;
@@ -156,21 +167,17 @@ export function buildModel(doc, settings, rsvp, conf, venue, seats = null) {
   let official = 0, skipped = 0;
   // Preview only runs while nothing official exists, so simulated times can never mix
   // with a real (even partially published) schedule.
-  const anyOfficial = (Array.isArray(doc.sessions) ? doc.sessions : []).some(r => r?.start && r.dur !== 0 && !r.custom);
+  const anyOfficial = (Array.isArray(doc.sessions) ? doc.sessions : []).some(r => recordGroup(r) !== null && r.start && r.dur !== 0 && !r.custom);
   const preview = settings.preview && !anyOfficial;
 
   for (const rec of Array.isArray(doc.sessions) ? doc.sessions : []) {
-    // Junk is skipped and counted, never fatal: not a record, no id, or an id that is neither
-    // text nor a number (String() of it may throw).
-    if (!rec || typeof rec !== 'object' || !rec.id || (typeof rec.id !== 'string' && !Number.isFinite(rec.id))) { skipped++; continue; }
+    const group = recordGroup(rec);
+    if (group === null) { skipped++; continue; }   // junk is skipped and counted, never fatal
     const s = { ...rec, key: rec.inst || rec.id };
     for (const k of ['topics', 'tags', 'audience', 'delivery', 'vendors']) s[k] = list(rec[k]);
     s.speakers = Array.isArray(rec.speakers) ? rec.speakers.filter(Array.isArray) : [];
     s.code = typeof rec.code === 'string' && rec.code ? rec.code : String(rec.id);
-    // Without a usable group a run is its own session: by its code, cleaned the same way, then
-    // by its id, then by its own key. A record with none of these has nothing to be found by.
-    s.group = usableGroup(rec.group) ?? usableGroup(s.code) ?? usableGroup(String(rec.id)) ?? usableGroup(s.key);
-    if (s.group === null) { skipped++; continue; }
+    s.group = group;
     s.title = typeof rec.title === 'string' ? rec.title : '';
     s.desc = typeof rec.desc === 'string' ? rec.desc : '';
     s.inPerson = s.delivery.some(d => /^in[- ]?person$/i.test(d));

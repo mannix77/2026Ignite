@@ -93,14 +93,26 @@ await test('should clean the code the same way when it stands in for a missing g
   eq([m.sessions.map(s => s.group), [...m.byGroup].map(([g, list]) => [g, list.map(s => s.key)])], [['ABC', 'ABC'], [['ABC', ['D1', 'D2']]]]);
   eq(m.sessions.map(s => s.code), [' ABC ', 'ABC-R'], 'the session code itself is left as the catalog wrote it');
 });
+// What the model holds for each run, and where it can be found: every index is checked, so a
+// run cannot be grouped one way and looked up another.
+const indexed = m => ({
+  runs: m.sessions.map(s => [s.key, s.id, s.code, s.group]),
+  byKey: [...m.byKey].map(([k, s]) => [k, s.key]),
+  byId: [...m.byId].map(([k, list]) => [k, list.map(s => s.key)]),
+  byCode: [...m.byCode].map(([k, s]) => [k, s.key]),
+  byGroup: [...m.byGroup].map(([k, list]) => [k, list.map(s => s.key)]),
+});
 await test('should group a run by its id when it has no usable group and its code is blank', () => {
-  const m = catalog([run('E1', { id: ' Z9 ', code: '   ', group: '' }), run('E2', { id: 77, code: '   ', group: null })]);
-  eq(m.sessions.map(s => s.code), ['   ', '   '], 'both codes are blank, so neither can stand in for the group');
-  eq([m.sessions.map(s => s.group), [...m.byGroup].map(([g, list]) => [g, list.map(s => s.key)])], [['Z9', '77'], [['Z9', ['E1']], ['77', ['E2']]]]);
+  const e1 = run('E1', { id: ' Z9 ', code: '   ', group: '' }), e2 = run('E2', { id: 77, code: '   ', group: null });
+  eq([[e1.id, e1.code, e1.group], [e2.id, e2.code, e2.group]], [[' Z9 ', '   ', ''], [77, '   ', null]], 'what the catalog gives');
+  // The id, the code and the key are kept as written; only the group is the cleaned id.
+  eq(indexed(catalog([e1])), { runs: [['E1', ' Z9 ', '   ', 'Z9']], byKey: [['E1', 'E1']], byId: [[' Z9 ', ['E1']]], byCode: [['   ', 'E1']], byGroup: [['Z9', ['E1']]] });
+  eq(indexed(catalog([e2])), { runs: [['E2', 77, '   ', '77']], byKey: [['E2', 'E2']], byId: [[77, ['E2']]], byCode: [['   ', 'E2']], byGroup: [['77', ['E2']]] });
 });
 await test('should group a run by its own key when its group, code and id are all blank', () => {
-  const m = catalog([run('F1', { id: '  ', code: '   ', group: undefined })]);
-  eq([m.sessions.map(s => [s.key, s.code, s.group]), [...m.byGroup.keys()]], [[['F1', '   ', 'F1']], ['F1']]);
+  const f1 = run('F1', { id: '  ', code: '   ', group: undefined });
+  eq([f1.inst, f1.id, f1.code, f1.group], ['F1', '  ', '   ', undefined], 'what the catalog gives');
+  eq(indexed(catalog([f1])), { runs: [['F1', '  ', '   ', 'F1']], byKey: [['F1', 'F1']], byId: [['  ', ['F1']]], byCode: [['   ', 'F1']], byGroup: [['F1', ['F1']]] });
 });
 await test('should skip a record with an id of the wrong type or nothing usable to group it by, and keep the rest', () => {
   const junk = [
@@ -113,8 +125,18 @@ await test('should skip a record with an id of the wrong type or nothing usable 
   const m = catalog([...junk, run('GOOD', { id: 'GOOD' })]);
   eq([junk.length, m.skipped], [7, 7], 'every skipped record is counted');
   eq(catalog([run('GOOD', { id: 'GOOD' })]).skipped, 0);
-  eq([m.sessions.map(s => [s.key, s.code, s.group]), [...m.byGroup].map(([g, list]) => [g, list.map(s => s.key)]), [...m.byKey.keys()]],
-    [[['GOOD', 'GOOD', 'ANT319']], [['ANT319', ['GOOD']]], ['GOOD']]);
+  eq(indexed(m), { runs: [['GOOD', 'GOOD', 'GOOD', 'ANT319']], byKey: [['GOOD', 'GOOD']], byId: [['GOOD', ['GOOD']]], byCode: [['GOOD', 'GOOD']], byGroup: [['ANT319', ['GOOD']]] });
+});
+await test('should not let a skipped record with a time end the preview schedule', () => {
+  // Nothing real is scheduled: the only timed records are ones the model refuses.
+  const untimed = run('P1', { id: 'P1', start: undefined, end: undefined });
+  const timedJunk = [run('P2', { id: true }), run('   ', { id: '  ', code: '   ', group: '  ' }), { start: '2026-11-18T17:00:00Z', dur: 45 }];
+  const build = (runs, preview) => buildModel({ sessions: runs }, { overrides: {}, preview }, null, ignite, venue);
+  const m = build([untimed, ...timedJunk], true);
+  eq([m.mode, m.hasOfficial, m.skipped, m.sessions.map(s => s.key)], ['preview', false, 3, ['P1']]);
+  // A real timed run still ends it, and without the preview setting nothing is simulated.
+  eq(build([untimed, ...timedJunk, run('P3', { id: 'P3' })], true).mode, 'official');
+  eq(build([untimed, ...timedJunk], false).mode, 'unscheduled');
 });
 await test('should still alert on a removed run when the acknowledged snapshot remembers the group with stray spaces', () => {
   // A snapshot taken before groups were cleaned: same runs, the group as the catalog then wrote it.
