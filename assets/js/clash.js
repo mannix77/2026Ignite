@@ -117,3 +117,23 @@ export function missHeadline(missed) {
   if (codes.length <= 2) return `You'd miss ${codes.join(' and ')}`;
   return `You'd miss ${codes.length} picks`;
 }
+
+// What choosing option `x` of a card costs. `chosen` is the whole plan if x is chosen (the
+// what-if outcome), `current` the plan as it stands. `onCard`: the other options of the card
+// whose session is then nowhere in the plan. `outside`: sessions the plan attends now that the
+// what-if drops and that are not on this card (a pick on a later card that x runs into, or one
+// pushed out by a session that moved to its other run). A session that only moves to another
+// run is not a cost, blocked time and lunch are not picks, and a session is listed once.
+export function optionCost(x, card, chosen, current) {
+  const list = v => (Array.isArray(v) ? v.filter(Boolean) : []);
+  const kept = new Set(list(chosen).map(y => y.id));
+  const onCard = list(card).filter(y => y.key !== x.key && !kept.has(y.id));
+  const seen = new Set([x.id, ...list(card).map(y => y.id)]);
+  const outside = [];
+  for (const y of list(current)) {
+    if (y.pseudo || kept.has(y.id) || seen.has(y.id)) continue;
+    seen.add(y.id);
+    outside.push(y);
+  }
+  return { onCard, outside };
+}

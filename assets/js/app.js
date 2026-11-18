@@ -6,7 +6,7 @@ import { checkLive, diff as liveDiff, changeCounts, countsLine } from './live.js
 import { optimize, transitions, fillers, nowNext, canBoth, overlaps, transition, compareOptions, lunchConfig, arrivalExtra, PRIORITY } from './planner.js';
 import { fmtTime, fmtDay, fmtDuration, relTime, nowLocal, addDays } from './time.js';
 import { upNext, onwardWalk, nextPlanned } from './upnext.js';
-import { slotGroups, rankOptions, rankTie, missHeadline } from './clash.js';
+import { slotGroups, rankOptions, rankTie, missHeadline, optionCost } from './clash.js';
 import * as picks from './picks.js';
 import { createVenue, setVenue, walkMinutes, floorExtra, mergeWalk, haversine, sideOf } from './venue.js';
 import { CONFERENCES, currentConferenceId, rememberConference, conferenceList } from './conferences.js';
@@ -1333,13 +1333,16 @@ function renderDecision(d, plan, c) {
   const decided = d.resolved ? d.items.find(x => x.locked) : null;
   const lockedOthers = x => d.items.filter(o => o.locked && o.id !== x.id && !canBoth(o, x, c)).map(o => o.id);
   const preview = app.model.mode === 'preview';
+  const current = Object.values(plan.res.plan).flat();
   const row = x => {
     const o = outcome.get(x.key) || { feasible: true, unrated: true, chosen: [], value: 0 };
     const keysX = new Set(o.chosen.map(y => y.key));
     const groupsX = new Set(o.chosen.map(y => y.id));
     const also = d.items.filter(y => y !== x && keysX.has(y.key));
     const moved = d.items.filter(y => y !== x && !keysX.has(y.key) && groupsX.has(y.id)).map(y => ({ y, to: o.chosen.find(z => z.id === y.id) }));
-    const miss = d.items.filter(y => y !== x && !groupsX.has(y.id));
+    // The cost is the whole plan's: the picks lost on this card and the planned ones pushed out elsewhere.
+    const { onCard: miss, outside } = optionCost(x, d.items, o.chosen, current);
+    const lost = [...miss, ...outside];
     const r = rowOf.get(x.key);
     const top = x.key === topKey;
     const can = possible(x);
@@ -1358,8 +1361,9 @@ function renderDecision(d, plan, c) {
         ${!can ? `<div class="lose">Not possible with the sessions or blocked time you've locked</div>` : o.unrated ? `<details class="cost" ${keepOpen(`cost:${x.key}`)}><summary class="why">Not compared with the whole plan</summary><div class="why">Only the top options are. <b>Go to this</b> shows what it would change.</div></details>` : `
         ${also.length ? `<div class="why">${icon('check')} Then you also make ${esc(also.map(y => y.code).join(', '))}</div>` : ''}
         ${moved.length ? `<div class="why">${icon('check')} ${moved.map(m => `${esc(m.y.code)} moves to ${esc(m.to.code)} ${esc(fmtDay(m.to.day))} ${fmtTime(m.to.startMin)}`).join(' · ')}</div>` : ''}
-        ${miss.length ? `<details class="cost" ${keepOpen(`cost:${x.key}`)}><summary class="lose">${esc(missHeadline(miss))}</summary>
-          <div class="lose">${esc(missSummary(miss, o.chosen, c))}</div>
+        ${lost.length ? `<details class="cost" ${keepOpen(`cost:${x.key}`)}><summary class="lose">${esc(missHeadline(lost))}</summary>
+          ${miss.length ? `<div class="lose">${esc(missSummary(miss, o.chosen, c))}</div>` : ''}
+          ${outside.length ? `<div class="lose">Outside this clash: ${esc(missSummary(outside, o.chosen, c))}</div>` : ''}
           ${planValue}</details>` : diff > 0 ? planValue : ''}`}
       </div>
       <div class="btns">

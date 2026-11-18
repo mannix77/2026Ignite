@@ -1,8 +1,8 @@
 // Clash cards per time slot and the ranking of their options (specs/features/clash-ranking.feature).
 // Run with: node tests/clash.test.js
 
-import { slotGroups, rankOptions, rankTie, missHeadline } from '../assets/js/clash.js';
-import { DEFAULT_PLANNER } from '../assets/js/planner.js';
+import { slotGroups, rankOptions, rankTie, missHeadline, optionCost } from '../assets/js/clash.js';
+import { DEFAULT_PLANNER, compareOptions, optimize } from '../assets/js/planner.js';
 import { parseLocation } from '../assets/js/venue.js';
 
 let pass = 0, fail = 0;
@@ -211,6 +211,55 @@ test('should count a session once when several of its runs are missed', () => {
 test('should say nothing about missing when an option costs no pick', () => {
   eq(missHeadline([]), '');
   eq(missHeadline(undefined), '');
+});
+
+// ---- what an option costs, on its card and outside it
+
+// A and B clash at 2:00; D and E clash at 3:05 on their own card. B runs long, into D.
+function twoCards() {
+  const a = item(H(14), H(14.75), { code: 'A', priority: 3 }), b = item(H(14), H(15.25), { code: 'B' });
+  const d = item(H(15.08), H(15.83), { code: 'D', priority: 3 }), e = item(H(15.17), H(15.67), { code: 'E' });
+  const items = [a, b, d, e];
+  const cards = slotGroups(items, ctx);
+  const current = Object.values(optimize(items, ctx, null).plan).flat();
+  const { outcomes } = compareOptions(items, cards[0].items, ctx, null);
+  return { a, b, d, e, cards, current, outcomes };
+}
+
+test('should count a planned pick on another card that the option pushes out of the plan', () => {
+  const { a, b, cards, current, outcomes } = twoCards();
+  // The case is real only if D is planned now, sits on the other card, and B's what-if drops it.
+  eq(cards.map(c => codes(c.items)), [['A', 'B'], ['D', 'E']]);
+  eq(codes(current), ['A', 'D'], 'the plan as it stands');
+  eq(codes(outcomes.get(b.key).chosen), ['B', 'E'], 'the plan if B is chosen');
+  const cost = optionCost(b, cards[0].items, outcomes.get(b.key).chosen, current);
+  eq([codes(cost.onCard), codes(cost.outside)], [['A'], ['D']]);
+  eq(missHeadline([...cost.onCard, ...cost.outside]), "You'd miss A and D");
+  // The option the plan already takes costs nothing outside its card (B, on the card, is still missed).
+  const keep = optionCost(a, cards[0].items, outcomes.get(a.key).chosen, current);
+  eq([codes(keep.onCard), codes(keep.outside)], [['B'], []]);
+});
+test('should not count outside the card a pick that was never in the plan, that moved, or that is not a session', () => {
+  const x = item(H(14), H(15), { code: 'X' }), y = item(H(14), H(15), { code: 'Y' });
+  const gone = item(H(15), H(16), { code: 'GONE' }), never = item(H(15), H(16), { code: 'NEVER' });
+  const run1 = item(H(16), H(17), { code: 'RUN1', id: 'rep' }), run2 = item(H(16), H(17), { code: 'RUN2', id: 'rep', day: THU });
+  const block = item(H(17), H(18), { code: 'DINNER', pseudo: 'block' }), stays = item(H(18), H(19), { code: 'STAYS' });
+  const current = [y, gone, run1, block, stays];
+  const cost = optionCost(x, [x, y], [x, run2, stays], current);
+  eq([codes(cost.onCard), codes(cost.outside)], [['Y'], ['GONE']], 'NEVER was not planned, RUN1 moved to RUN2, DINNER is blocked time');
+  eq(codes(optionCost(x, [x, y], [x, run2, stays, gone], current).outside), [], 'nothing is pushed out when GONE stays');
+});
+test('should count a session once when a run on the card and its planned run elsewhere are both lost', () => {
+  const x = item(H(14), H(15), { code: 'X' }), y1 = item(H(14), H(15), { code: 'Y1', id: 'y' }), y2 = item(H(14), H(15), { code: 'Y2', id: 'y', day: THU });
+  const cost = optionCost(x, [x, y1], [x], [y2]);
+  eq([codes(cost.onCard), codes(cost.outside)], [['Y1'], []]);
+  // Another run of the chosen session itself is not a cost either.
+  const x2 = item(H(9), H(10), { code: 'X2', id: x.id, day: THU });
+  eq(codes(optionCost(x, [x, y1], [x], [x2]).outside), []);
+});
+test('should cost nothing when the inputs are not lists', () => {
+  const x = item(H(14), H(15), { code: 'X' });
+  eq(optionCost(x, undefined, null, undefined), { onCard: [], outside: [] });
 });
 
 console.log(`${pass} passed, ${fail} failed`);

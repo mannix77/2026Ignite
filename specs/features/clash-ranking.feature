@@ -108,6 +108,13 @@ Feature: Deciding a clash quickly
       Then that option says he'd miss 3 picks
       And the codes, why each is missed and the plan value show when he opens that line
 
+    Scenario: An option also costs the picks it pushes out of the plan on another clash
+      Given going to one session means missing the other pick on its clash
+      And it also pushes out a planned pick that is on a later clash
+      When Minesh reads the clash
+      Then that option says he'd miss both, by code
+      And the opened line lists the later pick as outside this clash
+
     Scenario: An option that costs nothing says nothing about missing
       Given a clash where going to one session means missing no other pick
       When Minesh reads the clash
