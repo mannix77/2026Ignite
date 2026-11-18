@@ -21,6 +21,18 @@ const priorityThenCode = (a, b) => (b.priority - a.priority) || String(a.code).l
 // The saved List / Grid choice: 'grid' only for exactly 'grid'; anything else is 'list'.
 export function planView(saved) { return saved === 'grid' ? 'grid' : 'list'; }
 
+// Whether the page has to scroll after the switch is used. The switch sits by the day tabs and
+// the day it redraws is under the day's clashes, which can be several screens long: off screen,
+// the switch would seem to do nothing. `heading` is the "Your day" heading and `visible` the
+// part of the screen nothing covers (under the header, above the tab bar), each { top, bottom }
+// in the same units. True unless the whole heading is inside `visible`; touching an edge is
+// inside. Without a usable measurement the page stays where it is.
+export function dayOffScreen(heading, visible) {
+  const nums = [heading?.top, heading?.bottom, visible?.top, visible?.bottom];
+  if (!nums.every(Number.isFinite)) return false;
+  return heading.top < visible.top || heading.bottom > visible.bottom;
+}
+
 // What goes on `day`'s grid.
 //   items    every timed run of every live pick, chosen or dropped (computePlan().items):
 //            { key, id, code, title, priority, day, startMin, endMin, ... }

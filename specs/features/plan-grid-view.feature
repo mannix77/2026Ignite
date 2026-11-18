@@ -39,6 +39,20 @@ Feature: My plan can show the day as a calendar grid
       When Minesh opens My plan
       Then the day is shown as the list
 
+  # The switch sits by the day tabs; the day's clashes are listed between it and the day.
+  Rule: Using the switch brings the day into view
+
+    Scenario: The day is off screen when the switch is used
+      Given the heading "Your day" is below the bottom of the screen
+      When Minesh chooses "Grid"
+      Then the grid is shown
+      And "Your day" is just under the header, with the grid below it
+
+    Scenario: The day is already on screen
+      Given the whole heading "Your day" is on screen, between the header and the tab bar
+      When Minesh uses the switch
+      Then the page does not scroll
+
   Rule: The grid shows every timed pick of the day, chosen or not
 
     Scenario: A pick the plan dropped is still on the grid
