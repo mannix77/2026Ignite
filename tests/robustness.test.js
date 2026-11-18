@@ -86,6 +86,16 @@ await test('should group a run by its own code when its group is blank, missing 
   eq(groupsOf([run('B1', { id: 'B1', group: '   ' }), run('B2', { id: 'B2', group: undefined }), run('B3', { id: 'B3', group: 7 }), run('B4', { id: 'B4', group: ['B1'] })]),
     [['B1', 'B2', 'B3', 'B4'], [['B1', ['B1']], ['B2', ['B2']], ['B3', ['B3']], ['B4', ['B4']]]]);
 });
+await test('should clean the code the same way when it stands in for a missing group', () => {
+  // One run has no group and an untidy code; the other names that code, tidily, as its group.
+  const m = catalog([run('D1', { id: 'D1', code: ' ABC ', group: undefined }), run('D2', { id: 'D2', code: 'ABC-R', group: ' ABC ' })]);
+  eq([m.sessions.map(s => s.group), [...m.byGroup].map(([g, list]) => [g, list.map(s => s.key)])], [['ABC', 'ABC'], [['ABC', ['D1', 'D2']]]]);
+  eq(m.sessions.map(s => s.code), [' ABC ', 'ABC-R'], 'the session code itself is left as the catalog wrote it');
+});
+await test('should group a run by its id when it has no usable group and its code is blank', () => {
+  const m = catalog([run('E1', { id: ' Z9 ', code: '   ', group: '' }), run('E2', { id: 77, code: '', group: null })]);
+  eq([m.sessions.map(s => s.group), [...m.byGroup].map(([g, list]) => [g, list.map(s => s.key)])], [['Z9', '77'], [['Z9', ['E1']], ['77', ['E2']]]]);
+});
 await test('should keep runs apart when their groups differ by more than spaces', () => {
   eq(groupsOf([run('C1', { id: 'C1', group: 'ANT 319' }), run('C2', { id: 'C2', group: 'ANT319' }), run('C3', { id: 'C3', group: 'ant319' })]),
     [['ANT 319', 'ANT319', 'ant319'], [['ANT 319', ['C1']], ['ANT319', ['C2']], ['ant319', ['C3']]]]);

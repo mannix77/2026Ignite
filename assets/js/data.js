@@ -207,7 +207,8 @@ export function buildModel(doc, settings, rsvp, conf, venue, seats = null) {
     if (!byId.has(s.id)) byId.set(s.id, []);
     byId.get(s.id).push(s);
     if (!byCode.has(s.code)) byCode.set(s.code, s);
-    s.group = usableGroup(rec.group) ?? s.code;
+    // Without a usable group a run is its own session: by its code, cleaned the same way, then by its id.
+    s.group = usableGroup(rec.group) ?? usableGroup(s.code) ?? usableGroup(String(rec.id)) ?? s.key;
     if (!byGroup.has(s.group)) byGroup.set(s.group, []);
     byGroup.get(s.group).push(s);
     s.topics.forEach(t => bump(facets.topics, t));
