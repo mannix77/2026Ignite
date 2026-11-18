@@ -112,3 +112,8 @@ Feature: Deciding a clash quickly
       Given a clash where going to one session means missing no other pick
       When Minesh reads the clash
       Then that option has no line about missing picks
+
+    Scenario: A line Minesh opened stays open when the plan refreshes
+      Given Minesh has opened the line saying what an option costs
+      When the catalog refreshes and the plan is rebuilt
+      Then that line is still open

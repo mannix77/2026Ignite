@@ -51,6 +51,7 @@ const app = {
   persisted: false, // the browser promised not to clear this site's storage
   installEvent: null, // Android/Chrome install prompt, offered from the install banner
   openFill: null,
+  openClash: new Set(),   // clash-card lines the user opened (cost lines, "more options"): kept open when My plan is rebuilt
   openPills: { day: null, ids: new Set() },   // My plan grid: the pills opened on one day; this tab only, never saved
   nowTimer: null,
   dialogKey: null,
@@ -1298,6 +1299,10 @@ function missSummary(missed, chain, c) {
   return parts.join(' · ');
 }
 
+// A clash-card line that stays as the user left it when the plan is rebuilt under them (a
+// catalog or occupancy refresh): the toggle handler records it in app.openClash by this id.
+const keepOpen = id => `data-keep="${attr(id)}"${app.openClash.has(id) ? ' open' : ''}`;
+
 // Options compared with a whole-plan what-if per clash; the rest are listed by their weight.
 const OPTION_CAP = 6;
 
@@ -1350,10 +1355,10 @@ function renderDecision(d, plan, c) {
         <div class="row small"><b>${fmtTime(x.startMin)}–${fmtTime(x.endMin)}</b>${prioPill(x.priority)}${scoreChip(x.score)}${bldgChip(x.loc)}${recChip(x)}</div>
         <a class="title" href="#/session/${encodeURIComponent(x.code)}" data-act="open" data-key="${attr(x.key)}" style="font-weight:700;display:block;margin:4px 0;color:var(--text);text-decoration:none">${esc(x.code)} · ${esc(x.title)}</a>
         <div class="why">${r.reasons.map(esc).join(' · ')}</div>
-        ${!can ? `<div class="lose">Not possible with the sessions or blocked time you've locked</div>` : o.unrated ? `<details class="cost"><summary class="why">Not compared with the whole plan</summary><div class="why">Only the top options are. <b>Go to this</b> shows what it would change.</div></details>` : `
+        ${!can ? `<div class="lose">Not possible with the sessions or blocked time you've locked</div>` : o.unrated ? `<details class="cost" ${keepOpen(`cost:${x.key}`)}><summary class="why">Not compared with the whole plan</summary><div class="why">Only the top options are. <b>Go to this</b> shows what it would change.</div></details>` : `
         ${also.length ? `<div class="why">${icon('check')} Then you also make ${esc(also.map(y => y.code).join(', '))}</div>` : ''}
         ${moved.length ? `<div class="why">${icon('check')} ${moved.map(m => `${esc(m.y.code)} moves to ${esc(m.to.code)} ${esc(fmtDay(m.to.day))} ${fmtTime(m.to.startMin)}`).join(' · ')}</div>` : ''}
-        ${miss.length ? `<details class="cost"><summary class="lose">${esc(missHeadline(miss))}</summary>
+        ${miss.length ? `<details class="cost" ${keepOpen(`cost:${x.key}`)}><summary class="lose">${esc(missHeadline(miss))}</summary>
           <div class="lose">${esc(missSummary(miss, o.chosen, c))}</div>
           ${planValue}</details>` : diff > 0 ? planValue : ''}`}
       </div>
@@ -1369,7 +1374,7 @@ function renderDecision(d, plan, c) {
   return `<section class="decision" aria-label="Clash">
     <header>${icon('warn')}${fmtTime(d.start)} · ${opts.length} picks clash <span class="muted">${decided ? `· decided: ${esc(decided.code)}` : tie ? '· toss-up between the top two' : '· ranked for you'}</span></header>
     <div class="options">${opts.slice(0, SHOW).map(row).join('')}
-      ${opts.length > SHOW ? `<details class="more-opts"><summary>${opts.length - SHOW} more option${opts.length - SHOW > 1 ? 's' : ''}</summary>${opts.slice(SHOW).map(row).join('')}</details>` : ''}</div></section>`;
+      ${opts.length > SHOW ? `<details class="more-opts" ${keepOpen(`more:${d.items[0].day}:${d.start}`)}><summary>${opts.length - SHOW} more option${opts.length - SHOW > 1 ? 's' : ''}</summary>${opts.slice(SHOW).map(row).join('')}</details>` : ''}</div></section>`;
 }
 
 // ---------------------------------------------------------------- now
@@ -2317,7 +2322,7 @@ function onClick(e) {
     'pf-goal': () => editProfile(act, el.dataset.v),
     'pf-level': () => editProfile(act, el.dataset.v),
     'pf-type': () => editProfile(act, el.dataset.v),
-    day: () => { e.preventDefault(); store.setUI({ day: el.dataset.day }); app.openFill = null; render(); },
+    day: () => { e.preventDefault(); store.setUI({ day: el.dataset.day }); app.openFill = null; app.openClash.clear(); render(); },
     'plan-view': () => { store.setUI({ planView: planView(el.dataset.view) }); render(); revealDay(); },
     pill: () => { const ids = app.openPills.ids, id = el.dataset.pill; if (!ids.delete(id)) ids.add(id); render(); },
     lock: () => { if (s) lockRun(s, el); },
@@ -2548,6 +2553,7 @@ main.addEventListener('change', e => {
 main.addEventListener('toggle', e => {
   if (e.target.id === 'filters') store.setUI({ filtersOpen: e.target.open });
   if (e.target.dataset?.fill) app.openFill = e.target.open ? e.target.dataset.fill : null;
+  if (e.target.dataset?.keep) app.openClash[e.target.open ? 'add' : 'delete'](e.target.dataset.keep);
 }, true);
 dialog.addEventListener('input', e => {
   const key = e.target.dataset.noteKey;
