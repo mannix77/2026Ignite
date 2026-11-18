@@ -6,7 +6,7 @@ import { checkLive, diff as liveDiff, changeCounts, countsLine } from './live.js
 import { optimize, transitions, fillers, nowNext, canBoth, overlaps, transition, compareOptions, lunchConfig, arrivalExtra, PRIORITY } from './planner.js';
 import { fmtTime, fmtDay, fmtDuration, relTime, nowLocal, addDays } from './time.js';
 import { upNext, onwardWalk, nextPlanned } from './upnext.js';
-import { slotGroups, rankOptions, rankTie } from './clash.js';
+import { slotGroups, rankOptions, rankTie, missHeadline } from './clash.js';
 import * as picks from './picks.js';
 import { createVenue, setVenue, walkMinutes, floorExtra, mergeWalk, haversine, sideOf } from './venue.js';
 import { CONFERENCES, currentConferenceId, rememberConference, conferenceList } from './conferences.js';
@@ -51,6 +51,7 @@ const app = {
   persisted: false, // the browser promised not to clear this site's storage
   installEvent: null, // Android/Chrome install prompt, offered from the install banner
   openFill: null,
+  openClash: new Set(),   // clash-card lines the user opened (cost lines, "more options"): kept open when My plan is rebuilt
   openPills: { day: null, ids: new Set() },   // My plan grid: the pills opened on one day; this tab only, never saved
   nowTimer: null,
   dialogKey: null,
@@ -1298,6 +1299,10 @@ function missSummary(missed, chain, c) {
   return parts.join(' · ');
 }
 
+// A clash-card line that stays as the user left it when the plan is rebuilt under them (a
+// catalog or occupancy refresh): the toggle handler records it in app.openClash by this id.
+const keepOpen = id => `data-keep="${attr(id)}"${app.openClash.has(id) ? ' open' : ''}`;
+
 // Options compared with a whole-plan what-if per clash; the rest are listed by their weight.
 const OPTION_CAP = 6;
 
@@ -1340,17 +1345,22 @@ function renderDecision(d, plan, c) {
     const can = possible(x);
     const label = x.locked ? (x.reserved ? 'Reserved seat' : 'Your choice') : decided ? '' : top ? (tie ? 'Toss-up: your call' : 'Go here') : r.elsewhere.length ? 'Catch it at the other run' : `#${r.rank}`;
     const diff = Math.round(best - o.value);
+    // What the option costs is one line; the codes, the reason for each and the plan value
+    // open under it (specs/features/clash-ranking.feature). An option that costs nothing and
+    // is as good as the best shows no value line at all.
+    const planValue = `<div class="why">Plan value ${Math.round(o.value)}${diff > 0 ? ` (${diff} less than the best option)` : ''}</div>`;
     return `<div class="option ${(x.locked || (!decided && top)) ? 'rec' : ''}">
       <div>
         ${label ? `<div class="tag-rec">${esc(label)}</div>` : ''}
         <div class="row small"><b>${fmtTime(x.startMin)}–${fmtTime(x.endMin)}</b>${prioPill(x.priority)}${scoreChip(x.score)}${bldgChip(x.loc)}${recChip(x)}</div>
         <a class="title" href="#/session/${encodeURIComponent(x.code)}" data-act="open" data-key="${attr(x.key)}" style="font-weight:700;display:block;margin:4px 0;color:var(--text);text-decoration:none">${esc(x.code)} · ${esc(x.title)}</a>
         <div class="why">${r.reasons.map(esc).join(' · ')}</div>
-        ${!can ? `<div class="lose">Not possible with the sessions or blocked time you've locked</div>` : o.unrated ? `<div class="why">Not compared with the whole plan (only the top options are). <b>Go to this</b> shows what it would change.</div>` : `
+        ${!can ? `<div class="lose">Not possible with the sessions or blocked time you've locked</div>` : o.unrated ? `<details class="cost" ${keepOpen(`cost:${x.key}`)}><summary class="why">Not compared with the whole plan</summary><div class="why">Only the top options are. <b>Go to this</b> shows what it would change.</div></details>` : `
         ${also.length ? `<div class="why">${icon('check')} Then you also make ${esc(also.map(y => y.code).join(', '))}</div>` : ''}
         ${moved.length ? `<div class="why">${icon('check')} ${moved.map(m => `${esc(m.y.code)} moves to ${esc(m.to.code)} ${esc(fmtDay(m.to.day))} ${fmtTime(m.to.startMin)}`).join(' · ')}</div>` : ''}
-        ${miss.length ? `<div class="lose">You'd miss ${esc(missSummary(miss, o.chosen, c))}</div>` : ''}
-        <div class="why">Plan value ${Math.round(o.value)}${diff > 0 ? ` (${diff} less than the best option)` : ''}</div>`}
+        ${miss.length ? `<details class="cost" ${keepOpen(`cost:${x.key}`)}><summary class="lose">${esc(missHeadline(miss))}</summary>
+          <div class="lose">${esc(missSummary(miss, o.chosen, c))}</div>
+          ${planValue}</details>` : diff > 0 ? planValue : ''}`}
       </div>
       <div class="btns">
         ${x.locked ? `<button class="btn small" data-act="unlock" data-key="${attr(x.key)}">Undo choice</button>`
@@ -1364,7 +1374,7 @@ function renderDecision(d, plan, c) {
   return `<section class="decision" aria-label="Clash">
     <header>${icon('warn')}${fmtTime(d.start)} · ${opts.length} picks clash <span class="muted">${decided ? `· decided: ${esc(decided.code)}` : tie ? '· toss-up between the top two' : '· ranked for you'}</span></header>
     <div class="options">${opts.slice(0, SHOW).map(row).join('')}
-      ${opts.length > SHOW ? `<details class="more-opts"><summary>${opts.length - SHOW} more option${opts.length - SHOW > 1 ? 's' : ''}</summary>${opts.slice(SHOW).map(row).join('')}</details>` : ''}</div></section>`;
+      ${opts.length > SHOW ? `<details class="more-opts" ${keepOpen(`more:${d.items[0].day}:${d.start}`)}><summary>${opts.length - SHOW} more option${opts.length - SHOW > 1 ? 's' : ''}</summary>${opts.slice(SHOW).map(row).join('')}</details>` : ''}</div></section>`;
 }
 
 // ---------------------------------------------------------------- now
@@ -2027,6 +2037,9 @@ function focusKey(el) {
   // are different elements with the same data-act and data-pill, so focus follows the toggle.
   if (el.dataset.act === 'plan-view') return `[data-act="plan-view"][data-view="${CSS.escape(el.dataset.view)}"]`;
   if (el.dataset.act === 'pill') return `[data-act="pill"][data-pill="${CSS.escape(el.dataset.pill)}"]`;
+  // A clash card's cost line or "more options": the summary of a fold that keeps its state (keepOpen).
+  const keep = el.matches('summary') && el.parentElement?.dataset.keep;
+  if (keep) return `details[data-keep="${CSS.escape(keep)}"] > summary`;
   return null;
 }
 
@@ -2312,7 +2325,7 @@ function onClick(e) {
     'pf-goal': () => editProfile(act, el.dataset.v),
     'pf-level': () => editProfile(act, el.dataset.v),
     'pf-type': () => editProfile(act, el.dataset.v),
-    day: () => { e.preventDefault(); store.setUI({ day: el.dataset.day }); app.openFill = null; render(); },
+    day: () => { e.preventDefault(); store.setUI({ day: el.dataset.day }); app.openFill = null; app.openClash.clear(); render(); },
     'plan-view': () => { store.setUI({ planView: planView(el.dataset.view) }); render(); revealDay(); },
     pill: () => { const ids = app.openPills.ids, id = el.dataset.pill; if (!ids.delete(id)) ids.add(id); render(); },
     lock: () => { if (s) lockRun(s, el); },
@@ -2543,6 +2556,7 @@ main.addEventListener('change', e => {
 main.addEventListener('toggle', e => {
   if (e.target.id === 'filters') store.setUI({ filtersOpen: e.target.open });
   if (e.target.dataset?.fill) app.openFill = e.target.open ? e.target.dataset.fill : null;
+  if (e.target.dataset?.keep) app.openClash[e.target.open ? 'add' : 'delete'](e.target.dataset.keep);
 }, true);
 dialog.addEventListener('input', e => {
   const key = e.target.dataset.noteKey;

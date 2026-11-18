@@ -102,3 +102,18 @@ export function rankOptions(opts, { plan = {}, ctx = DEFAULT_PLANNER, runsOf = (
 export function rankTie(rows) {
   return Array.isArray(rows) && rows.length > 1 && cmpKey(rows[0].key, rows[1].key) === 0;
 }
+
+// What choosing an option costs, in one line: one or two missed sessions are named, more are
+// counted (the card folds the codes and the reason for each under this line). `missed` holds
+// the missed runs ({ id: the session they are a run of, code }); a session missed at several
+// of its runs counts once, under the code of its first run.
+export function missHeadline(missed) {
+  const bySession = new Map();
+  for (const run of Array.isArray(missed) ? missed : []) {
+    if (!bySession.has(run.id)) bySession.set(run.id, run.code);
+  }
+  const codes = [...bySession.values()];
+  if (!codes.length) return '';
+  if (codes.length <= 2) return `You'd miss ${codes.join(' and ')}`;
+  return `You'd miss ${codes.length} picks`;
+}
