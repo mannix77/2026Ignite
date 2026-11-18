@@ -102,3 +102,12 @@ export function rankOptions(opts, { plan = {}, ctx = DEFAULT_PLANNER, runsOf = (
 export function rankTie(rows) {
   return Array.isArray(rows) && rows.length > 1 && cmpKey(rows[0].key, rows[1].key) === 0;
 }
+
+// What choosing an option costs, in one line: one or two missed picks are named, more are
+// counted (the card folds the codes and the reason for each under this line).
+export function missHeadline(codes) {
+  const list = Array.isArray(codes) ? codes : [];
+  if (!list.length) return '';
+  if (list.length <= 2) return `You'd miss ${list.join(' and ')}`;
+  return `You'd miss ${list.length} picks`;
+}

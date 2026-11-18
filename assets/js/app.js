@@ -6,7 +6,7 @@ import { checkLive, diff as liveDiff, changeCounts, countsLine } from './live.js
 import { optimize, transitions, fillers, nowNext, canBoth, overlaps, transition, compareOptions, lunchConfig, arrivalExtra, PRIORITY } from './planner.js';
 import { fmtTime, fmtDay, fmtDuration, relTime, nowLocal, addDays } from './time.js';
 import { upNext, onwardWalk, nextPlanned } from './upnext.js';
-import { slotGroups, rankOptions, rankTie } from './clash.js';
+import { slotGroups, rankOptions, rankTie, missHeadline } from './clash.js';
 import * as picks from './picks.js';
 import { createVenue, setVenue, walkMinutes, floorExtra, mergeWalk, haversine, sideOf } from './venue.js';
 import { CONFERENCES, currentConferenceId, rememberConference, conferenceList } from './conferences.js';
@@ -1340,17 +1340,22 @@ function renderDecision(d, plan, c) {
     const can = possible(x);
     const label = x.locked ? (x.reserved ? 'Reserved seat' : 'Your choice') : decided ? '' : top ? (tie ? 'Toss-up: your call' : 'Go here') : r.elsewhere.length ? 'Catch it at the other run' : `#${r.rank}`;
     const diff = Math.round(best - o.value);
+    // What the option costs is one line; the codes, the reason for each and the plan value
+    // open under it (specs/features/clash-ranking.feature). An option that costs nothing and
+    // is as good as the best shows no value line at all.
+    const planValue = `<div class="why">Plan value ${Math.round(o.value)}${diff > 0 ? ` (${diff} less than the best option)` : ''}</div>`;
     return `<div class="option ${(x.locked || (!decided && top)) ? 'rec' : ''}">
       <div>
         ${label ? `<div class="tag-rec">${esc(label)}</div>` : ''}
         <div class="row small"><b>${fmtTime(x.startMin)}–${fmtTime(x.endMin)}</b>${prioPill(x.priority)}${scoreChip(x.score)}${bldgChip(x.loc)}${recChip(x)}</div>
         <a class="title" href="#/session/${encodeURIComponent(x.code)}" data-act="open" data-key="${attr(x.key)}" style="font-weight:700;display:block;margin:4px 0;color:var(--text);text-decoration:none">${esc(x.code)} · ${esc(x.title)}</a>
         <div class="why">${r.reasons.map(esc).join(' · ')}</div>
-        ${!can ? `<div class="lose">Not possible with the sessions or blocked time you've locked</div>` : o.unrated ? `<div class="why">Not compared with the whole plan (only the top options are). <b>Go to this</b> shows what it would change.</div>` : `
+        ${!can ? `<div class="lose">Not possible with the sessions or blocked time you've locked</div>` : o.unrated ? `<details class="cost"><summary class="why">Not compared with the whole plan</summary><div class="why">Only the top options are. <b>Go to this</b> shows what it would change.</div></details>` : `
         ${also.length ? `<div class="why">${icon('check')} Then you also make ${esc(also.map(y => y.code).join(', '))}</div>` : ''}
         ${moved.length ? `<div class="why">${icon('check')} ${moved.map(m => `${esc(m.y.code)} moves to ${esc(m.to.code)} ${esc(fmtDay(m.to.day))} ${fmtTime(m.to.startMin)}`).join(' · ')}</div>` : ''}
-        ${miss.length ? `<div class="lose">You'd miss ${esc(missSummary(miss, o.chosen, c))}</div>` : ''}
-        <div class="why">Plan value ${Math.round(o.value)}${diff > 0 ? ` (${diff} less than the best option)` : ''}</div>`}
+        ${miss.length ? `<details class="cost"><summary class="lose">${esc(missHeadline(miss.map(y => y.code)))}</summary>
+          <div class="lose">${esc(missSummary(miss, o.chosen, c))}</div>
+          ${planValue}</details>` : diff > 0 ? planValue : ''}`}
       </div>
       <div class="btns">
         ${x.locked ? `<button class="btn small" data-act="unlock" data-key="${attr(x.key)}">Undo choice</button>`

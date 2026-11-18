@@ -1,7 +1,7 @@
 // Clash cards per time slot and the ranking of their options (specs/features/clash-ranking.feature).
 // Run with: node tests/clash.test.js
 
-import { slotGroups, rankOptions, rankTie } from '../assets/js/clash.js';
+import { slotGroups, rankOptions, rankTie, missHeadline } from '../assets/js/clash.js';
 import { DEFAULT_PLANNER } from '../assets/js/planner.js';
 import { parseLocation } from '../assets/js/venue.js';
 
@@ -186,6 +186,21 @@ test('should call the top two a toss-up only when every ranking rule ties', () =
   const c = item(H(14), H(14.75), { code: 'C', score: 9 });
   eq(rankTie(rank([a, c])), false);
   eq(rankTie(rank([a])), false);
+});
+
+// ---- what an option costs, in one line
+
+test('should name the picks an option costs when there are one or two', () => {
+  eq(missHeadline(['BRK234']), "You'd miss BRK234");
+  eq(missHeadline(['BRK234', 'TT1650']), "You'd miss BRK234 and TT1650");
+});
+test('should give the count once an option costs three picks or more', () => {
+  eq(missHeadline(['BRK234', 'TT1650', 'LAB654']), "You'd miss 3 picks");
+  eq(missHeadline(Array.from({ length: 15 }, (_, i) => `BRK${i}`)), "You'd miss 15 picks");
+});
+test('should say nothing about missing when an option costs no pick', () => {
+  eq(missHeadline([]), '');
+  eq(missHeadline(undefined), '');
 });
 
 console.log(`${pass} passed, ${fail} failed`);

@@ -94,3 +94,21 @@ Feature: Deciding a clash quickly
       Given a reserved lab that also runs Thursday with nothing against it
       When Minesh reads the clash
       Then the reserved lab is still ranked first
+
+  Rule: An option says what it costs in one line, with the detail a tap away
+
+    Scenario: An option that costs one or two picks names them
+      Given a clash where going to one session means missing two other picks
+      When Minesh reads the clash
+      Then that option says he'd miss those two, by code
+
+    Scenario: An option that costs more picks gives the count
+      Given a clash where going to one session means missing three other picks
+      When Minesh reads the clash
+      Then that option says he'd miss 3 picks
+      And the codes, why each is missed and the plan value show when he opens that line
+
+    Scenario: An option that costs nothing says nothing about missing
+      Given a clash where going to one session means missing no other pick
+      When Minesh reads the clash
+      Then that option has no line about missing picks
