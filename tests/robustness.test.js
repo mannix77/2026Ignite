@@ -50,7 +50,8 @@ for (const [name, patch, read, want] of [
   });
 }
 await test('should skip records that are not objects', () => {
-  eq(buildModel({ sessions: [null, 7, { ...rec }] }, { overrides: {} }, null, ignite, venue).sessions.length, 1);
+  const m = buildModel({ sessions: [null, 7, { ...rec }, { ...rec, id: '' }] }, { overrides: {} }, null, ignite, venue);
+  eq([m.sessions.length, m.skipped], [1, 3]);
 });
 await test('should schedule a session whose end comes before its start by its duration', () => {
   const s = build({ start: '2026-11-18T18:00:00Z', end: '2026-11-18T17:00:00Z' }).sessions[0];
@@ -110,8 +111,20 @@ await test('should skip a record with an id of the wrong type or nothing usable 
     run('G6', { id: NaN, code: 'G6' }), run('G7', { id: Infinity, code: 'G7' }), run('G8', { id: true, code: 'G8' }),   // ids of the wrong type, though the rest is fine
   ];
   const m = catalog([...junk, run('GOOD', { id: 'GOOD' })]);
+  eq([junk.length, m.skipped], [7, 7], 'every skipped record is counted');
+  eq(catalog([run('GOOD', { id: 'GOOD' })]).skipped, 0);
   eq([m.sessions.map(s => [s.key, s.code, s.group]), [...m.byGroup].map(([g, list]) => [g, list.map(s => s.key)]), [...m.byKey.keys()]],
     [[['GOOD', 'GOOD', 'ANT319']], [['ANT319', ['GOOD']]], ['GOOD']]);
+});
+await test('should still alert on a removed run when the acknowledged snapshot remembers the group with stray spaces', () => {
+  // A snapshot taken before groups were cleaned: same runs, the group as the catalog then wrote it.
+  const known = acknowledged([run('ANT319-R'), run('ANT319-R1')]);
+  eq(Object.keys(known), ['ANT319-R', 'ANT319-R1']);
+  for (const k of Object.values(known)) k.g = ' ANT319 ';
+  const alerts = (after, snap) => diffKnown(catalog(after), new Set(['ANT319']), snap).alerts.map(a => [a.kind, a.inst, a.g, a.remaining || null]);
+  eq(alerts([run('ANT319-R')], known), [['run-removed', 'ANT319-R1', 'ANT319', ['ANT319-R']]]);
+  eq(alerts([run('ANT319-R'), run('ANT319-R1'), run('ANT319-R2')], known), [['run-added', 'ANT319-R2', 'ANT319', null]]);
+  eq(alerts([run('ANT319-R'), run('ANT319-R1')], known), [], 'and nothing when nothing changed');
 });
 await test('should keep runs apart when their groups differ by more than spaces', () => {
   eq(groupsOf([run('C1', { id: 'C1', group: 'ANT 319' }), run('C2', { id: 'C2', group: 'ANT319' }), run('C3', { id: 'C3', group: 'ant319' })]),
