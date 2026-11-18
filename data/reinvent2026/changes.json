@@ -1,6 +1,2181 @@
 {
  "batches": [
   {
+   "at": "2026-11-18T00:52:11Z",
+   "milestones": [],
+   "added": [
+    {
+     "id": "1787870259450001fjuU",
+     "inst": "1787870259450001fjuU",
+     "code": "COM349",
+     "title": "A new area of AWS Cloud Observability",
+     "repeat": false
+    },
+    {
+     "id": "1791492162978001U1KI",
+     "inst": "1791492162978001U1KI",
+     "code": "COM365-R1",
+     "title": "Unattended Coding Agents: Memory, Guardrails, and Cost Control - Kiro Crew",
+     "repeat": false
+    },
+    {
+     "id": "1794527858649001aCZZ",
+     "inst": "1794527858649001aCZZ",
+     "code": "MAM412-R1",
+     "title": "Secure and modernize code simultaneously with agentic AI",
+     "repeat": false
+    },
+    {
+     "id": "1791492161933001UQn7",
+     "inst": "1791492161933001UQn7",
+     "code": "COM207-R1",
+     "title": "Let Your Database Speak: AI Agents for RDS and Redshift",
+     "repeat": false
+    },
+    {
+     "id": "1791492163440001UecK",
+     "inst": "1791492163440001UecK",
+     "code": "COM353-R1",
+     "title": "CDK Lovers: Meetup for AWS CDK Contributors & Power Users",
+     "repeat": false
+    },
+    {
+     "id": "1787870261809001fS0W",
+     "inst": "1787870261809001fS0W",
+     "code": "COM212-R1",
+     "title": "The 7 Rs in the Real World: Honest Migration War Stories",
+     "repeat": false
+    },
+    {
+     "id": "1793305496524001GMPd",
+     "inst": "1793305496524001GMPd",
+     "code": "AIM450-R1",
+     "title": "Context engineering for production agents on AgentCore",
+     "repeat": false
+    },
+    {
+     "id": "1787870261666001fc8W",
+     "inst": "1787870261666001fc8W",
+     "code": "COM351-R1",
+     "title": "Serverless Hosting for Agents: Lambda vs. Bedrock AgentCore Runtime",
+     "repeat": false
+    },
+    {
+     "id": "1791492162691001UoD9",
+     "inst": "1791492162691001UoD9",
+     "code": "COM354-R1",
+     "title": "Dealing with Terraform/IaC/Compliance in AI-era",
+     "repeat": false
+    },
+    {
+     "id": "1787870261730001f33Q",
+     "inst": "1787870261730001f33Q",
+     "code": "COM357-R1",
+     "title": "Hadoop to EMR & Airflow: Lessons from Migrating 90+ Data Pipelines",
+     "repeat": false
+    },
+    {
+     "id": "1791492162789001U8B3",
+     "inst": "1791492162789001U8B3",
+     "code": "COM364-R1",
+     "title": "The FinOps Control Room",
+     "repeat": false
+    },
+    {
+     "id": "1791492163164001U0IY",
+     "inst": "1791492163164001U0IY",
+     "code": "COM363-R1",
+     "title": "Scaling data and AI products in the enterprise",
+     "repeat": false
+    }
+   ],
+   "removed": [
+    {
+     "id": "1793251097680001LTXt",
+     "inst": "1793251097680001LTXt",
+     "code": "IND3360",
+     "title": "How Jabil AI agents power a 1M-part weekly manufacturing supply chain",
+     "repeat": false
+    },
+    {
+     "id": "1780442280446001cXES",
+     "inst": "1780442280446001cXES",
+     "code": "BIZ333-R1",
+     "title": "Design, Simulate, Ship: End-to-End AI Agents on Connect Customer",
+     "repeat": false
+    },
+    {
+     "id": "1780442227616001cEqa",
+     "inst": "1780442227616001cEqa",
+     "code": "BIZ334-R1",
+     "title": "Building Smarter Self-Service Experiences with AI",
+     "repeat": false
+    },
+    {
+     "id": "1780442256373001cBfG",
+     "inst": "1780442256373001cBfG",
+     "code": "CON348-R1",
+     "title": "Defense-in-Depth for Containers on Amazon EKS: A Layering Story",
+     "repeat": false
+    },
+    {
+     "id": "1793292932552001fogJ",
+     "inst": "1793292932552001fogJ",
+     "code": "COP357-R1",
+     "title": "Observe AI agents and workloads end to end",
+     "repeat": false
+    },
+    {
+     "id": "1780442243043001cKM8",
+     "inst": "1780442243043001cKM8",
+     "code": "CMP359-R1",
+     "title": "Simplifying how you use AWS: automating common patterns on your behalf",
+     "repeat": false
+    },
+    {
+     "id": "1780442243461001c7Po",
+     "inst": "1780442243461001c7Po",
+     "code": "NET342-R1",
+     "title": "Innovations in DNS and Amazon Route 53",
+     "repeat": false
+    },
+    {
+     "id": "1780442243401001cWq2",
+     "inst": "1780442243401001cWq2",
+     "code": "SVS349-R1",
+     "title": "Managing Lambda Runtimes at Scale for Platform Teams",
+     "repeat": false
+    },
+    {
+     "id": "1794344421507001WI0u",
+     "inst": "1794344421507001WI0u",
+     "code": "IND219",
+     "title": "How to Use AI Agents to Run Genomics Pipelines Faster and Cheaper",
+     "repeat": false
+    },
+    {
+     "id": "1780442227782001coB6",
+     "inst": "1780442227782001coB6",
+     "code": "BIZ335-R1",
+     "title": "Build an AI agent that understands customer intent",
+     "repeat": false
+    },
+    {
+     "id": "1793305648990001BeEm",
+     "inst": "1793305648990001BeEm",
+     "code": "IND3338-R1",
+     "title": "Accelerate Physical AI development with NVIDIA on AWS",
+     "repeat": false
+    },
+    {
+     "id": "1792784190584001PTIb",
+     "inst": "1792784190584001PTIb",
+     "code": "IND3357",
+     "title": "How Wisconsin DOR cut suspended tax returns with AWS Quick",
+     "repeat": false
+    },
+    {
+     "id": "1780442256205001cPKk",
+     "inst": "1780442256205001cPKk",
+     "code": "COP354-R1",
+     "title": "Diagnose Complex Workloads with AWS DevOps Agent",
+     "repeat": false
+    },
+    {
+     "id": "1780442242936001cMVb",
+     "inst": "1780442242936001cMVb",
+     "code": "STG369-R1",
+     "title": "AWS Backup: Architecture deep dive",
+     "repeat": false
+    },
+    {
+     "id": "1780442279702001cnYT",
+     "inst": "1780442279702001cnYT",
+     "code": "COP355-R1",
+     "title": "Resolve Incidents and Validate Releases with AWS DevOps Agent",
+     "repeat": false
+    },
+    {
+     "id": "1780442243524001cVfw",
+     "inst": "1780442243524001cVfw",
+     "code": "COP363-R1",
+     "title": "Investigate Incidents Across Teams with AWS DevOps Agent",
+     "repeat": false
+    },
+    {
+     "id": "1780442256429001cg1g",
+     "inst": "1780442256429001cg1g",
+     "code": "MAM350-R1",
+     "title": "Continuous tech debt analysis and remediation, from findings to fixes",
+     "repeat": false
+    },
+    {
+     "id": "1780442280382001cGPM",
+     "inst": "1780442280382001cGPM",
+     "code": "COP364-R1",
+     "title": "Build better, review faster: AI-Powered Well-Architected reviews",
+     "repeat": false
+    },
+    {
+     "id": "1780442227718001c1jV",
+     "inst": "1780442227718001c1jV",
+     "code": "PEX320-R1",
+     "title": "AI-Powered Migrations: AWS Transform Across the Lifecycle",
+     "repeat": false
+    },
+    {
+     "id": "1780442243104001cEHV",
+     "inst": "1780442243104001cEHV",
+     "code": "DVT343-R1",
+     "title": "From code to production in seconds — building web apps that last",
+     "repeat": false
+    },
+    {
+     "id": "1794524062911001bMKj",
+     "inst": "1794524062911001bMKj",
+     "code": "COP355-R2",
+     "title": "Resolve Incidents and Validate Releases with AWS DevOps Agent",
+     "repeat": false
+    },
+    {
+     "id": "1780442227669001cbd9",
+     "inst": "1780442227669001cbd9",
+     "code": "MAM348-R1",
+     "title": "Provision Desktops for Builders Faster with WorkSpaces",
+     "repeat": false
+    },
+    {
+     "id": "1780442227561001cemM",
+     "inst": "1780442227561001cemM",
+     "code": "SEC395-R1",
+     "title": "Find, prove, and fix code vulnerabilities with AWS Continuum",
+     "repeat": false
+    },
+    {
+     "id": "1794504212301001PoPb",
+     "inst": "1794504212301001PoPb",
+     "code": "STG422-R1",
+     "title": "Dive deep into resilience architectures for Amazon EBS",
+     "repeat": false
+    }
+   ],
+   "changed": [
+    {
+     "id": "1790358254244001idxy",
+     "inst": "1790358254244001idxy",
+     "code": "MAM310-R",
+     "title": "Rebuild a legacy ETL pipeline as serverless with AWS Transform",
+     "f": {
+      "code": [
+       "MAM310-R1",
+       "MAM310-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358237358001ii8o",
+     "inst": "1790358237358001ii8o",
+     "code": "MAM313-R",
+     "title": "Migrate and modernize infrastructure from your IDE with agentic AI",
+     "f": {
+      "code": [
+       "MAM313-R1",
+       "MAM313-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358241924001iFW7",
+     "inst": "1790358241924001iFW7",
+     "code": "OPN403-R",
+     "title": "Expedite model loading times on Kubernetes using kro and ACK - from storage to GPU",
+     "f": {
+      "code": [
+       "OPN403-R1",
+       "OPN403-R"
+      ]
+     }
+    },
+    {
+     "id": "1793386000316001r0q9",
+     "inst": "1793386000316001r0q9",
+     "code": "PEX319-R",
+     "title": "Automate your AWS partnership with a unified agentic operating model",
+     "f": {
+      "code": [
+       "PEX319-R1",
+       "PEX319-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358237757001iYMI",
+     "inst": "1790358237757001iYMI",
+     "code": "MAM306-R",
+     "title": "Build a data-driven migration plan with AWS Transform",
+     "f": {
+      "code": [
+       "MAM306-R1",
+       "MAM306-R"
+      ]
+     }
+    },
+    {
+     "id": "1780441471859001GlhT",
+     "inst": "1780441471859001GlhT",
+     "code": "CON347",
+     "title": "What's new in EKS compute and optimization",
+     "f": {
+      "title": [
+       "Intelligent, right-sized compute on Amazon EKS",
+       "What's new in EKS compute and optimization"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441496076001GRZY",
+     "inst": "1780441496076001GRZY",
+     "code": "INV530-R",
+     "title": "EC2 at 20: Rebuilding the control plane while it is running",
+     "f": {
+      "code": [
+       "INV530-R1",
+       "INV530-R"
+      ]
+     }
+    },
+    {
+     "id": "1780441495529001Gpyo",
+     "inst": "1780441495529001Gpyo",
+     "code": "INV538-R",
+     "title": "Building the machine that builds the machine: inside AWS Emulator",
+     "f": {
+      "code": [
+       "INV538",
+       "INV538-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358248382001i9HT",
+     "inst": "1790358248382001i9HT",
+     "code": "STG417-R",
+     "title": "The multi-account AWS Backup playbook: centralized data protection",
+     "f": {
+      "code": [
+       "STG417-R1",
+       "STG417-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358224772001iPKJ",
+     "inst": "1790358224772001iPKJ",
+     "code": "MAM205-R",
+     "title": "Move code modernization at scale from one-time to continuous",
+     "f": {
+      "code": [
+       "MAM205-R1",
+       "MAM205-R"
+      ]
+     }
+    },
+    {
+     "id": "1787870259875001fyyQ",
+     "inst": "1787870259875001fyyQ",
+     "code": "COM353-R",
+     "title": "CDK Lovers: Meetup for AWS CDK Contributors & Power Users",
+     "f": {
+      "code": [
+       "COM353",
+       "COM353-R"
+      ]
+     }
+    },
+    {
+     "id": "1780441474349001GemH",
+     "inst": "1780441474349001GemH",
+     "code": "BIZ220",
+     "title": "Industry Expert: The Next Era of AI",
+     "f": {
+      "start": [
+       "2026-12-02T20:00:00Z",
+       "2026-11-30T22:30:00Z"
+      ],
+      "end": [
+       "2026-12-02T21:00:00Z",
+       "2026-11-30T23:30:00Z"
+      ],
+      "room": [
+       "Caesars Palace | Promenade Level | Roman I",
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | Red Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780441496134001GM3i",
+     "inst": "1780441496134001GM3i",
+     "code": "INV515-R",
+     "title": "Modeling Human Preference: Pairwise Battles to Agentic Systems",
+     "f": {
+      "code": [
+       "INV515-R1",
+       "INV515-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358229282001ifUf",
+     "inst": "1790358229282001ifUf",
+     "code": "MAM315-R",
+     "title": "Best path forward: Rehost & replatform to containers with AWS Transform",
+     "f": {
+      "code": [
+       "MAM315-R1",
+       "MAM315-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358257755001i464",
+     "inst": "1790358257755001i464",
+     "code": "MAM316-R",
+     "title": "Reimagine legacy apps to be agentic AI ready with AWS Transform & Kiro",
+     "f": {
+      "code": [
+       "MAM316-R1",
+       "MAM316-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358226094001ib2o",
+     "inst": "1790358226094001ib2o",
+     "code": "MAM407-R",
+     "title": "Turn your cloud migration into a security transformation",
+     "f": {
+      "code": [
+       "MAM407-R1",
+       "MAM407-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358245540001iJxl",
+     "inst": "1790358245540001iJxl",
+     "code": "NET202-R",
+     "title": "Your network, your rules: Global routing policies with AWS Cloud WAN",
+     "f": {
+      "code": [
+       "NET202-R1",
+       "NET202-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358231191001iOIF",
+     "inst": "1790358231191001iOIF",
+     "code": "NET203-R",
+     "title": "Resolve it all: Build hybrid DNS architectures on AWS",
+     "f": {
+      "code": [
+       "NET203-R1",
+       "NET203-R"
+      ]
+     }
+    },
+    {
+     "id": "1780442236172001cIVj",
+     "inst": "1780442236172001cIVj",
+     "code": "BIZ304",
+     "title": "Security → Zero-Trust Identity & Data Protection in AWS Quick",
+     "f": {
+      "title": [
+       "Zero-Trust Identity & Data Protection in AWS Quick",
+       "Security → Zero-Trust Identity & Data Protection in AWS Quick"
+      ]
+     }
+    },
+    {
+     "id": "1780442256972001cSi8",
+     "inst": "1780442256972001cSi8",
+     "code": "MAM412-R",
+     "title": "Secure and modernize code simultaneously with agentic AI",
+     "f": {
+      "code": [
+       "MAM412",
+       "MAM412-R"
+      ]
+     }
+    },
+    {
+     "id": "1780441489698001GBDc",
+     "inst": "1780441489698001GBDc",
+     "code": "STG207-S",
+     "title": "From Risk Signal to Recovery: Building Agentic Resilience with MCP (sponsored by Commvault)",
+     "f": {
+      "speakers": [
+       [
+        "Akshay Joshi",
+        "Hiren Chandiramani",
+        "Lawrence Chang",
+        "Oron Noah"
+       ],
+       [
+        "Akshay Joshi",
+        "Hiren Chandiramani",
+        "Lawrence Chang"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1790358251244001iwM9",
+     "inst": "1790358251244001iwM9",
+     "code": "STG335-R",
+     "title": "Build an AI-powered AWS Backup analyst and remediate with AgentCore",
+     "f": {
+      "code": [
+       "STG335-R1",
+       "STG335-R"
+      ]
+     }
+    },
+    {
+     "id": "1792713993338001of3Y",
+     "inst": "1792713993338001of3Y",
+     "code": "ACT067-R1",
+     "title": "[PLACEHOLDER] Startup Plaza",
+     "f": {
+      "title": [
+       "Startup Plaza",
+       "[PLACEHOLDER] Startup Plaza"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1787852034046001jO69",
+     "inst": "1787852034046001jO69",
+     "code": "AWS114-R1",
+     "title": "Builder Zone in Expo",
+     "f": {
+      "title": [
+       "Builder Zone in the Expo",
+       "Builder Zone in Expo"
+      ]
+     }
+    },
+    {
+     "id": "1780442269648001cGDa",
+     "inst": "1780442269648001cGDa",
+     "code": "ARC334-S",
+     "title": "Build Resilient AI Platforms with Oracle AI Database@AWS (sponsored by Oracle)",
+     "f": {
+      "speakers": [
+       [
+        "Muneer Mirza",
+        "Vishal Patil"
+       ],
+       [
+        "Vishal Patil"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442229304001cBrh",
+     "inst": "1780442229304001cBrh",
+     "code": "MAM310-R1",
+     "title": "Rebuild a legacy ETL pipeline as serverless with AWS Transform",
+     "f": {
+      "code": [
+       "MAM310-R",
+       "MAM310-R1"
+      ]
+     }
+    },
+    {
+     "id": "1787870261295001fNY6",
+     "inst": "1787870261295001fNY6",
+     "code": "COM364-R",
+     "title": "The FinOps Control Room",
+     "f": {
+      "code": [
+       "COM364",
+       "COM364-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358243768001iqB3",
+     "inst": "1790358243768001iqB3",
+     "code": "IND327-R1",
+     "title": "Build a team of agents: From incident diagnosis to safe remediation",
+     "f": {
+      "title": [
+       "Build self-healing agents from diagnosis to disaster recovery",
+       "Build a team of agents: From incident diagnosis to safe remediation"
+      ]
+     }
+    },
+    {
+     "id": "1780442281997001cZ03",
+     "inst": "1780442281997001cZ03",
+     "code": "MAM315-R1",
+     "title": "Best path forward: Rehost & replatform to containers with AWS Transform",
+     "f": {
+      "code": [
+       "MAM315-R",
+       "MAM315-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780441488955001GvFC",
+     "inst": "1780441488955001GvFC",
+     "code": "AIM225-S",
+     "title": "Creating resilient multi-channel customer experiences for NAB with Amazon Connect (sponsored by Deloitte)",
+     "f": {
+      "title": [
+       "Creating resilient multi-channel customer experiences with Amazon Connect",
+       "Creating resilient multi-channel customer experiences for NAB with Amazon Connect (sponsored by Deloitte)"
+      ]
+     }
+    },
+    {
+     "id": "1780442266378001cwYw",
+     "inst": "1780442266378001cwYw",
+     "code": "DVT215-S",
+     "title": "The Best Engineer in the Room Doesn’t Write Code (sponsored by Anaconda)",
+     "f": {
+      "speakers": [
+       [
+        "Emilie Schario"
+       ],
+       []
+      ]
+     }
+    },
+    {
+     "id": "1780442247072001cBmg",
+     "inst": "1780442247072001cBmg",
+     "code": "MAM205-R1",
+     "title": "Move code modernization at scale from one-time to continuous",
+     "f": {
+      "code": [
+       "MAM205-R",
+       "MAM205-R1"
+      ]
+     }
+    },
+    {
+     "id": "1790358221025001iItI",
+     "inst": "1790358221025001iItI",
+     "code": "NET218-R",
+     "title": "Designing your AWS network for scale: From one VPC to many",
+     "f": {
+      "code": [
+       "NET218-R1",
+       "NET218-R"
+      ]
+     }
+    },
+    {
+     "id": "1790873637672001JSD3",
+     "inst": "1790873637672001JSD3",
+     "code": "SEC408-R",
+     "title": "Build a container pipeline that blocks tampered images at the gate",
+     "f": {
+      "code": [
+       "SEC408-R1",
+       "SEC408-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358238346001iH1E",
+     "inst": "1790358238346001iH1E",
+     "code": "MAM321-R",
+     "title": "Refactor your monolith for multi-tenancy and agentic AI in one pass",
+     "f": {
+      "code": [
+       "MAM321-R1",
+       "MAM321-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358222517001iUyP",
+     "inst": "1790358222517001iUyP",
+     "code": "NET216-R",
+     "title": "Understand your network: practical network observability on AWS",
+     "f": {
+      "code": [
+       "NET216-R1",
+       "NET216-R"
+      ]
+     }
+    },
+    {
+     "id": "1791492159918001UIY8",
+     "inst": "1791492159918001UIY8",
+     "code": "SUP106",
+     "title": "From MIT Lab to Market: Building Efficient AI for Every Enterprise",
+     "f": {
+      "title": [
+       "Inside Systalyze: Building the Fastest, Most Efficient AI",
+       "From MIT Lab to Market: Building Efficient AI for Every Enterprise"
+      ]
+     }
+    },
+    {
+     "id": "1790358238440001iWJK",
+     "inst": "1790358238440001iWJK",
+     "code": "BIZ323-R1",
+     "title": "Decision Frameworks, Evaluation, and Cost Management with AWS Quick",
+     "f": {
+      "title": [
+       "Decision Frameworks, Evaluation, and Cost Management with Amazon Quick",
+       "Decision Frameworks, Evaluation, and Cost Management with AWS Quick"
+      ]
+     }
+    },
+    {
+     "id": "1780442242053001cKxl",
+     "inst": "1780442242053001cKxl",
+     "code": "MAM347-R",
+     "title": "Meet Your AI-powered Advisor for WorkSpaces Administration",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1790358218975001iGh6",
+     "inst": "1790358218975001iGh6",
+     "code": "SEC424-R",
+     "title": "A deep dive on IAM policy evaluation",
+     "f": {
+      "code": [
+       "SEC424-R1",
+       "SEC424-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358257662001imSn",
+     "inst": "1790358257662001imSn",
+     "code": "SVS342-R",
+     "title": "Coding the tool layer for AI agents on Serverless",
+     "f": {
+      "code": [
+       "SVS342-R1",
+       "SVS342-R"
+      ]
+     }
+    },
+    {
+     "id": "1780441484305001GeG5",
+     "inst": "1780441484305001GeG5",
+     "code": "API202-S",
+     "title": "Bring Oracle Databases to AWS Without Starting Over (sponsored by Oracle)",
+     "f": {
+      "speakers": [
+       [
+        "Muneer Mirza",
+        "Tushar Pandit",
+        "Vishal Patil"
+       ],
+       [
+        "Muneer Mirza",
+        "Tushar Pandit"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1790358230531001iaNQ",
+     "inst": "1790358230531001iaNQ",
+     "code": "MAM322-R",
+     "title": "Build an AI testing safety net before you modernize",
+     "f": {
+      "code": [
+       "MAM322-R1",
+       "MAM322-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358251900001i6hN",
+     "inst": "1790358251900001i6hN",
+     "code": "MAM323-R",
+     "title": "Analyze your portfolio, prioritize what to fix, and transform it",
+     "f": {
+      "code": [
+       "MAM323-R1",
+       "MAM323-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358223830001iMGn",
+     "inst": "1790358223830001iMGn",
+     "code": "NET313-R",
+     "title": "Your WAN, reimagined: SD-WAN on the AWS global backbone",
+     "f": {
+      "code": [
+       "NET313-R1",
+       "NET313-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358223663001iYna",
+     "inst": "1790358223663001iYna",
+     "code": "NET317-R",
+     "title": "Origin management for multi-region resilient applications with Amazon CloudFront",
+     "f": {
+      "code": [
+       "NET317-R1",
+       "NET317-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358219547001iPCJ",
+     "inst": "1790358219547001iPCJ",
+     "code": "NET319-R",
+     "title": "Practical applications of edge compute in Amazon CloudFront",
+     "f": {
+      "code": [
+       "NET319-R1",
+       "NET319-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358223503001iicM",
+     "inst": "1790358223503001iicM",
+     "code": "OPN302-R",
+     "title": "Rethinking the AWS SDK for Python: Async, streaming, and more",
+     "f": {
+      "code": [
+       "OPN302-R1",
+       "OPN302-R"
+      ]
+     }
+    },
+    {
+     "id": "1790876688758001g8VH",
+     "inst": "1790876688758001g8VH",
+     "code": "SEC318-R",
+     "title": "Cryptographic computing on AWS: homomorphic encryption in practice",
+     "f": {
+      "code": [
+       "SEC318-R1",
+       "SEC318-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358246469001ia8x",
+     "inst": "1790358246469001ia8x",
+     "code": "STG418-R",
+     "title": "AWS Transfer Family: SFTP meets agentic AI workflows",
+     "f": {
+      "code": [
+       "STG418-R1",
+       "STG418-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358248293001iBgW",
+     "inst": "1790358248293001iBgW",
+     "code": "STG419-R",
+     "title": "Inside Amazon S3 Vectors: architecture and cost optimization for vector search",
+     "f": {
+      "code": [
+       "STG419-R1",
+       "STG419-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358242116001iR0i",
+     "inst": "1790358242116001iR0i",
+     "code": "STG420-R",
+     "title": "Advanced security patterns on Amazon S3",
+     "f": {
+      "code": [
+       "STG420-R1",
+       "STG420-R"
+      ]
+     }
+    },
+    {
+     "id": "1780442282930001cclr",
+     "inst": "1780442282930001cclr",
+     "code": "NET203-R1",
+     "title": "Resolve it all: Build hybrid DNS architectures on AWS",
+     "f": {
+      "code": [
+       "NET203-R",
+       "NET203-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442260614001cT5K",
+     "inst": "1780442260614001cT5K",
+     "code": "COP361",
+     "title": "Find the waste hiding in your accelerator fleet",
+     "f": {
+      "title": [
+       "Find the waste hiding in your accelerator fleetÂ",
+       "Find the waste hiding in your accelerator fleet"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1790358241103001iYZN",
+     "inst": "1790358241103001iYZN",
+     "code": "NET334-R",
+     "title": "AI agents are crawling your website? Identify, optimize, rate-limit, & monetize them",
+     "f": {
+      "code": [
+       "NET334-R1",
+       "NET334-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358246558001iY0C",
+     "inst": "1790358246558001iY0C",
+     "code": "SEC321-R",
+     "title": "Securing AI coding agents: defense in depth across the development lifecycle",
+     "f": {
+      "code": [
+       "SEC321-R1",
+       "SEC321-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358251334001ihNN",
+     "inst": "1790358251334001ihNN",
+     "code": "STG415-R",
+     "title": "Advanced vaulting: Ransomware resilience with AWS Backup",
+     "f": {
+      "code": [
+       "STG415-R1",
+       "STG415-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358221481001iUyQ",
+     "inst": "1790358221481001iUyQ",
+     "code": "STG416-R",
+     "title": "AWS Backup clean room recovery: Comprehensive resilience framework",
+     "f": {
+      "code": [
+       "STG416-R1",
+       "STG416-R"
+      ]
+     }
+    },
+    {
+     "id": "1780441494171001G2GD",
+     "inst": "1780441494171001G2GD",
+     "code": "INV515-R1",
+     "title": "Modeling Human Preference: Pairwise Battles to Agentic Systems",
+     "f": {
+      "code": [
+       "INV515-R",
+       "INV515-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442248444001cuFb",
+     "inst": "1780442248444001cuFb",
+     "code": "OPN403-R1",
+     "title": "Expedite model loading times on Kubernetes using kro and ACK - from storage to GPU",
+     "f": {
+      "code": [
+       "OPN403-R",
+       "OPN403-R1"
+      ]
+     }
+    },
+    {
+     "id": "1790358224155001iBqU",
+     "inst": "1790358224155001iBqU",
+     "code": "PEX311-R",
+     "title": "Agentic AI Governance for Regulated Industries",
+     "f": {
+      "code": [
+       "PEX311-R1",
+       "PEX311-R"
+      ]
+     }
+    },
+    {
+     "id": "1790871965922001gRAH",
+     "inst": "1790871965922001gRAH",
+     "code": "SEC352-R",
+     "title": "Build a security boundary for AI agents with WAF and Network Firewall",
+     "f": {
+      "code": [
+       "SEC352-R1",
+       "SEC352-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358250601001ih4N",
+     "inst": "1790358250601001ih4N",
+     "code": "STG348-R",
+     "title": "Designing performant and cost-effective data lakes on Amazon S3 Tables",
+     "f": {
+      "code": [
+       "STG348-R1",
+       "STG348-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358238247001iOuP",
+     "inst": "1790358238247001iOuP",
+     "code": "STG352-R",
+     "title": "Monitoring and optimizing Amazon S3 with observability tools",
+     "f": {
+      "code": [
+       "STG352-R1",
+       "STG352-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358254727001iKCM",
+     "inst": "1790358254727001iKCM",
+     "code": "SVS332-R",
+     "title": "Lambda Managed Instances: Always-on Serverless Compute",
+     "f": {
+      "code": [
+       "SVS332-R1",
+       "SVS332-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358244059001icjE",
+     "inst": "1790358244059001icjE",
+     "code": "SVS333-R",
+     "title": "Lambda MicroVMs: Secure stateful sandboxes for code execution",
+     "f": {
+      "code": [
+       "SVS333-R1",
+       "SVS333-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358235466001ivwi",
+     "inst": "1790358235466001ivwi",
+     "code": "SVS335-R",
+     "title": "Operating Serverless at scale: What changes at 1000+ functions",
+     "f": {
+      "code": [
+       "SVS335-R1",
+       "SVS335-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358247286001i4pb",
+     "inst": "1790358247286001i4pb",
+     "code": "SVS341-R",
+     "title": "Lambda performance tuning and cost optimization",
+     "f": {
+      "code": [
+       "SVS341-R1",
+       "SVS341-R"
+      ]
+     }
+    },
+    {
+     "id": "1792713993169001o1Zo",
+     "inst": "1792713993169001o1Zo",
+     "code": "ACT067-R2",
+     "title": "[PLACEHOLDER] Startup Plaza",
+     "f": {
+      "title": [
+       "Startup Plaza",
+       "[PLACEHOLDER] Startup Plaza"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442282116001cVxc",
+     "inst": "1780442282116001cVxc",
+     "code": "MAM407-R1",
+     "title": "Turn your cloud migration into a security transformation",
+     "f": {
+      "code": [
+       "MAM407-R",
+       "MAM407-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442247653001cle8",
+     "inst": "1780442247653001cle8",
+     "code": "NET317-R1",
+     "title": "Origin management for multi-region resilient applications with Amazon CloudFront",
+     "f": {
+      "code": [
+       "NET317-R",
+       "NET317-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442284434001c6tZ",
+     "inst": "1780442284434001c6tZ",
+     "code": "SEC318-R1",
+     "title": "Cryptographic computing on AWS: homomorphic encryption in practice",
+     "f": {
+      "code": [
+       "SEC318-R",
+       "SEC318-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442231149001cSe5",
+     "inst": "1780442231149001cSe5",
+     "code": "SEC408-R1",
+     "title": "Build a container pipeline that blocks tampered images at the gate",
+     "f": {
+      "code": [
+       "SEC408-R",
+       "SEC408-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442247771001cFer",
+     "inst": "1780442247771001cFer",
+     "code": "NET319-R1",
+     "title": "Practical applications of edge compute in Amazon CloudFront",
+     "f": {
+      "code": [
+       "NET319-R",
+       "NET319-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780441503152001G1ju",
+     "inst": "1780441503152001G1ju",
+     "code": "STG420-R1",
+     "title": "Advanced security patterns on Amazon S3",
+     "f": {
+      "code": [
+       "STG420-R",
+       "STG420-R1"
+      ]
+     }
+    },
+    {
+     "id": "1790358232008001iYI9",
+     "inst": "1790358232008001iYI9",
+     "code": "SVS327-R",
+     "title": "Build interactive web apps with AWS Lambda",
+     "f": {
+      "code": [
+       "SVS327-R1",
+       "SVS327-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358242478001iGZP",
+     "inst": "1790358242478001iGZP",
+     "code": "SVS330-R",
+     "title": "Operating Lambda at scale: Choosing the right execution model",
+     "f": {
+      "code": [
+       "SVS330-R1",
+       "SVS330-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358242836001iKqh",
+     "inst": "1790358242836001iKqh",
+     "code": "SVS331-R",
+     "title": "Serverless Java in 2026",
+     "f": {
+      "code": [
+       "SVS331-R1",
+       "SVS331-R"
+      ]
+     }
+    },
+    {
+     "id": "1780442258201001cF7X",
+     "inst": "1780442258201001cF7X",
+     "code": "SVS342-R1",
+     "title": "Coding the tool layer for AI agents on Serverless",
+     "f": {
+      "code": [
+       "SVS342-R",
+       "SVS342-R1"
+      ]
+     }
+    },
+    {
+     "id": "1787852034150001jjQs",
+     "inst": "1787852034150001jjQs",
+     "code": "AWS114-R2",
+     "title": "Builder Zone in Expo",
+     "f": {
+      "title": [
+       "Builder Zone in the Expo",
+       "Builder Zone in Expo"
+      ]
+     }
+    },
+    {
+     "id": "1780441482993001G0TR",
+     "inst": "1780441482993001G0TR",
+     "code": "DAT101-S",
+     "title": "Multicloud in the Real World: Financial Services, Healthcare, and Retail (sponsored by Oracle)",
+     "f": {
+      "speakers": [
+       [
+        "Doug Palmer",
+        "Edwin Upson",
+        "Sharjeel Farooq"
+       ],
+       [
+        "Doug Palmer",
+        "Sharjeel Farooq"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442256796001c6vT",
+     "inst": "1780442256796001c6vT",
+     "code": "MAM313-R1",
+     "title": "Migrate and modernize infrastructure from your IDE with agentic AI",
+     "f": {
+      "code": [
+       "MAM313-R",
+       "MAM313-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442230824001c1Jk",
+     "inst": "1780442230824001c1Jk",
+     "code": "SEC352-R1",
+     "title": "Build a security boundary for AI agents with WAF and Network Firewall",
+     "f": {
+      "code": [
+       "SEC352-R",
+       "SEC352-R1"
+      ]
+     }
+    },
+    {
+     "id": "1790358235562001iGPY",
+     "inst": "1790358235562001iGPY",
+     "code": "NET324-R",
+     "title": "Network security architecture: Deployment patterns for firewalls",
+     "f": {
+      "code": [
+       "NET324-R1",
+       "NET324-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358239334001isYb",
+     "inst": "1790358239334001isYb",
+     "code": "NET325-R",
+     "title": "Resilient by design: Last Mile and Multicloud Interconnect",
+     "f": {
+      "code": [
+       "NET325-R1",
+       "NET325-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358227757001i7w6",
+     "inst": "1790358227757001i7w6",
+     "code": "OPN314-R",
+     "title": "Kiro Crew: Architecture of an open source AI coding agent built on Kiro",
+     "f": {
+      "code": [
+       "OPN314-R1",
+       "OPN314-R"
+      ]
+     }
+    },
+    {
+     "id": "1780442250359001cRNb",
+     "inst": "1780442250359001cRNb",
+     "code": "SEC424-R1",
+     "title": "A deep dive on IAM policy evaluation",
+     "f": {
+      "code": [
+       "SEC424-R",
+       "SEC424-R1"
+      ]
+     }
+    },
+    {
+     "id": "1790358227852001iPKc",
+     "inst": "1790358227852001iPKc",
+     "code": "SEC430-R",
+     "title": "Multi-tenant isolation with IAM: ABAC, session tags, and token vending machines",
+     "f": {
+      "code": [
+       "SEC430-R1",
+       "SEC430-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358221923001iYxw",
+     "inst": "1790358221923001iYxw",
+     "code": "STG308-R",
+     "title": "Accelerate data migrations with AWS DataSync at any scale",
+     "f": {
+      "code": [
+       "STG308-R1",
+       "STG308-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358228016001iG5X",
+     "inst": "1790358228016001iG5X",
+     "code": "SEC337-R",
+     "title": "Cut through the noise: risk-based prioritization for your security findings",
+     "f": {
+      "code": [
+       "SEC337-R1",
+       "SEC337-R"
+      ]
+     }
+    },
+    {
+     "id": "1780441503025001GtwA",
+     "inst": "1780441503025001GtwA",
+     "code": "STG348-R1",
+     "title": "Designing performant and cost-effective data lakes on Amazon S3 Tables",
+     "f": {
+      "code": [
+       "STG348-R",
+       "STG348-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442252106001cqIo",
+     "inst": "1780442252106001cqIo",
+     "code": "STG415-R1",
+     "title": "Advanced vaulting: Ransomware resilience with AWS Backup",
+     "f": {
+      "code": [
+       "STG415-R",
+       "STG415-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780441471747001Ga93",
+     "inst": "1780441471747001Ga93",
+     "code": "IND3349",
+     "title": "From Generic to Industry Expert: The Next Era of AI",
+     "f": {
+      "start": [
+       "2026-11-30T22:30:00Z",
+       "2026-12-02T20:00:00Z"
+      ],
+      "end": [
+       "2026-11-30T23:30:00Z",
+       "2026-12-02T21:00:00Z"
+      ],
+      "room": [
+       "Caesars Forum | Level 1 | Forum 120 | Content Hub | Red Theater",
+       "Caesars Palace | Promenade Level | Roman I"
+      ]
+     }
+    },
+    {
+     "id": "1780442282568001cy1G",
+     "inst": "1780442282568001cy1G",
+     "code": "MAM417-R",
+     "title": "Modernize your full .NET and SQL Server stack with AWS Transform",
+     "f": {
+      "code": [
+       "MAM417",
+       "MAM417-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358250784001iTqJ",
+     "inst": "1790358250784001iTqJ",
+     "code": "OPN407-R",
+     "title": "Kubernetes-native agentic AI on Amazon EKS with open source primitives",
+     "f": {
+      "code": [
+       "OPN407-R1",
+       "OPN407-R"
+      ]
+     }
+    },
+    {
+     "id": "1780442283550001cWv7",
+     "inst": "1780442283550001cWv7",
+     "code": "PEX319-R1",
+     "title": "Automate your AWS partnership with a unified agentic operating model",
+     "f": {
+      "code": [
+       "PEX319-R",
+       "PEX319-R1"
+      ]
+     }
+    },
+    {
+     "id": "1790358246094001i5t9",
+     "inst": "1790358246094001i5t9",
+     "code": "SEC309-R",
+     "title": "Network firewall deployment without the guesswork: codify, deploy, done",
+     "f": {
+      "code": [
+       "SEC309-R1",
+       "SEC309-R"
+      ]
+     }
+    },
+    {
+     "id": "1780442249832001ch8t",
+     "inst": "1780442249832001ch8t",
+     "code": "SEC321-R1",
+     "title": "Securing AI coding agents: defense in depth across the development lifecycle",
+     "f": {
+      "code": [
+       "SEC321-R",
+       "SEC321-R1"
+      ]
+     }
+    },
+    {
+     "id": "1790358217403001iOIR",
+     "inst": "1790358217403001iOIR",
+     "code": "ANT448-R1",
+     "title": "Unified observability with Amazon OpenSearch Service",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442257296001cWnw",
+     "inst": "1780442257296001cWnw",
+     "code": "PEX311-R1",
+     "title": "Agentic AI Governance for Regulated Industries",
+     "f": {
+      "code": [
+       "PEX311-R",
+       "PEX311-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442251543001ca9u",
+     "inst": "1780442251543001ca9u",
+     "code": "SVS335-R1",
+     "title": "Operating Serverless at scale: What changes at 1000+ functions",
+     "f": {
+      "code": [
+       "SVS335-R",
+       "SVS335-R1"
+      ]
+     }
+    },
+    {
+     "id": "1790358242656001irxy",
+     "inst": "1790358242656001irxy",
+     "code": "SEC429-R",
+     "title": "Tenant-isolated agent memory: one IAM policy for AgentCore Memory",
+     "f": {
+      "code": [
+       "SEC429-R1",
+       "SEC429-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358226374001i7iS",
+     "inst": "1790358226374001i7iS",
+     "code": "SVS314-R",
+     "title": "Production-ready Lambda: Security and performance patterns",
+     "f": {
+      "code": [
+       "SVS314-R1",
+       "SVS314-R"
+      ]
+     }
+    },
+    {
+     "id": "1780442251413001cC5e",
+     "inst": "1780442251413001cC5e",
+     "code": "SVS333-R1",
+     "title": "Lambda MicroVMs: Secure stateful sandboxes for code execution",
+     "f": {
+      "code": [
+       "SVS333-R",
+       "SVS333-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780441495052001GeWQ",
+     "inst": "1780441495052001GeWQ",
+     "code": "INV530-R1",
+     "title": "EC2 at 20: Rebuilding the control plane while it is running",
+     "f": {
+      "code": [
+       "INV530-R",
+       "INV530-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442282342001cISn",
+     "inst": "1780442282342001cISn",
+     "code": "MAM323-R1",
+     "title": "Analyze your portfolio, prioritize what to fix, and transform it",
+     "f": {
+      "code": [
+       "MAM323-R",
+       "MAM323-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442242816001ckuX",
+     "inst": "1780442242816001ckuX",
+     "code": "AIM3324",
+     "title": "Stateful agents, smaller token bills with Strands and AgentCore",
+     "f": {
+      "title": [
+       "Govern your agent fleet, wherever it runs, with AgentCore and Strands",
+       "Stateful agents, smaller token bills with Strands and AgentCore"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442252223001cnCR",
+     "inst": "1780442252223001cnCR",
+     "code": "STG417-R1",
+     "title": "The multi-account AWS Backup playbook: centralized data protection",
+     "f": {
+      "code": [
+       "STG417-R",
+       "STG417-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442248328001cjnN",
+     "inst": "1780442248328001cjnN",
+     "code": "OPN302-R1",
+     "title": "Rethinking the AWS SDK for Python: Async, streaming, and more",
+     "f": {
+      "code": [
+       "OPN302-R",
+       "OPN302-R1"
+      ]
+     }
+    },
+    {
+     "id": "1790358238147001iFjU",
+     "inst": "1790358238147001iFjU",
+     "code": "SEC371-R",
+     "title": "Stop troubleshooting your AWS network from memory and stale diagrams",
+     "f": {
+      "code": [
+       "SEC371-R1",
+       "SEC371-R"
+      ]
+     }
+    },
+    {
+     "id": "1790358228207001iHya",
+     "inst": "1790358228207001iHya",
+     "code": "SVS343-R",
+     "title": "A day in the life of a Serverless builder",
+     "f": {
+      "code": [
+       "SVS343-R1",
+       "SVS343-R"
+      ]
+     }
+    },
+    {
+     "id": "1792713993253001oGTk",
+     "inst": "1792713993253001oGTk",
+     "code": "ACT067-R3",
+     "title": "[PLACEHOLDER] Startup Plaza",
+     "f": {
+      "title": [
+       "Startup Plaza",
+       "[PLACEHOLDER] Startup Plaza"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442282232001cyxE",
+     "inst": "1780442282232001cyxE",
+     "code": "MAM316-R1",
+     "title": "Reimagine legacy apps to be agentic AI ready with AWS Transform & Kiro",
+     "f": {
+      "code": [
+       "MAM316-R",
+       "MAM316-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780441501608001GKca",
+     "inst": "1780441501608001GKca",
+     "code": "NET324-R1",
+     "title": "Network security architecture: Deployment patterns for firewalls",
+     "f": {
+      "code": [
+       "NET324-R",
+       "NET324-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442231841001cArp",
+     "inst": "1780442231841001cArp",
+     "code": "STG335-R1",
+     "title": "Build an AI-powered AWS Backup analyst and remediate with AgentCore",
+     "f": {
+      "code": [
+       "STG335-R",
+       "STG335-R1"
+      ]
+     }
+    },
+    {
+     "id": "1787852034298001jIKi",
+     "inst": "1787852034298001jIKi",
+     "code": "AWS114-R3",
+     "title": "Builder Zone in Expo",
+     "f": {
+      "title": [
+       "Builder Zone in the Expo",
+       "Builder Zone in Expo"
+      ]
+     }
+    },
+    {
+     "id": "1786043769700001qr5E",
+     "inst": "1786043769700001qr5E",
+     "code": "SEC430-R1",
+     "title": "Multi-tenant isolation with IAM: ABAC, session tags, and token vending machines",
+     "f": {
+      "code": [
+       "SEC430-R",
+       "SEC430-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442252522001cEGS",
+     "inst": "1780442252522001cEGS",
+     "code": "STG419-R1",
+     "title": "Inside Amazon S3 Vectors: architecture and cost optimization for vector search",
+     "f": {
+      "code": [
+       "STG419-R",
+       "STG419-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442248152001c9jR",
+     "inst": "1780442248152001c9jR",
+     "code": "NET218-R1",
+     "title": "Designing your AWS network for scale: From one VPC to many",
+     "f": {
+      "code": [
+       "NET218-R",
+       "NET218-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442257183001cvm5",
+     "inst": "1780442257183001cvm5",
+     "code": "NET334-R1",
+     "title": "AI agents are crawling your website? Identify, optimize, rate-limit, & monetize them",
+     "f": {
+      "code": [
+       "NET334-R",
+       "NET334-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442250166001cxTo",
+     "inst": "1780442250166001cxTo",
+     "code": "SEC371-R1",
+     "title": "Stop troubleshooting your AWS network from memory and stale diagrams",
+     "f": {
+      "code": [
+       "SEC371-R",
+       "SEC371-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780441474107001GxQL",
+     "inst": "1780441474107001GxQL",
+     "code": "AIM3321",
+     "title": "Govern your whole agent fleet with AWS Agent Registry",
+     "f": {
+      "title": [
+       "Control and optimize the cost of agents on Amazon Bedrock AgentCore",
+       "Govern your whole agent fleet with AWS Agent Registry"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441485793001GCv2",
+     "inst": "1780441485793001GCv2",
+     "code": "AIM384-S",
+     "title": "Inside OpenAI’s Cyber Defense Factory (sponsored by OpenAI)",
+     "f": {
+      "speakers": [
+       [
+        "Matt Boyle",
+        "Shikhar Kwatra"
+       ],
+       [
+        "Shikhar Kwatra"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442229375001cxBS",
+     "inst": "1780442229375001cxBS",
+     "code": "MAM306-R1",
+     "title": "Build a data-driven migration plan with AWS Transform",
+     "f": {
+      "code": [
+       "MAM306-R",
+       "MAM306-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442230252001c47O",
+     "inst": "1780442230252001c47O",
+     "code": "SEC309-R1",
+     "title": "Network firewall deployment without the guesswork: codify, deploy, done.",
+     "f": {
+      "code": [
+       "SEC309-R",
+       "SEC309-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442250619001cawF",
+     "inst": "1780442250619001cawF",
+     "code": "SEC337-R1",
+     "title": "Cut through the noise: risk-based prioritization for your security findings",
+     "f": {
+      "code": [
+       "SEC337-R",
+       "SEC337-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780441473949001Gols",
+     "inst": "1780441473949001Gols",
+     "code": "AIM3318",
+     "title": "Guardrails for What Your Agent Does, Not Just What It Says",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442282287001ctly",
+     "inst": "1780442282287001ctly",
+     "code": "MAM322-R1",
+     "title": "Build an AI testing safety net before you modernize",
+     "f": {
+      "code": [
+       "MAM322-R",
+       "MAM322-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442282858001cJvp",
+     "inst": "1780442282858001cJvp",
+     "code": "NET202-R1",
+     "title": "Your network, your rules: Global routing policies with AWS Cloud WAN",
+     "f": {
+      "code": [
+       "NET202-R",
+       "NET202-R1"
+      ]
+     }
+    },
+    {
+     "id": "1790358242389001iFc8",
+     "inst": "1790358242389001iFc8",
+     "code": "BIZ315-R1",
+     "title": "Customize workspaces and build guided workflows using AI in Connect Customer",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441466533001G6Ew",
+     "inst": "1780441466533001G6Ew",
+     "code": "COP303",
+     "title": "Improving operations with agentic AI",
+     "f": {
+      "start": [
+       "2026-12-01T21:30:00Z",
+       "2026-12-03T21:00:00Z"
+      ],
+      "end": [
+       "2026-12-01T22:30:00Z",
+       "2026-12-03T22:00:00Z"
+      ],
+      "room": [
+       "Wynn/Encore | Upper Convention Promenade | Cristal 2 | Content Hub | Purple Theater",
+       "MGM Grand | Level 1 | Grand 117"
+      ]
+     }
+    },
+    {
+     "id": "1792716339504001zRyn",
+     "inst": "1792716339504001zRyn",
+     "code": "SEC003",
+     "title": "The Old Security Playbook Is Dead",
+     "f": {
+      "code": [
+       "SEC002",
+       "SEC003"
+      ]
+     }
+    },
+    {
+     "id": "1780442252282001cSbh",
+     "inst": "1780442252282001cSbh",
+     "code": "STG418-R1",
+     "title": "AWS Transfer Family: SFTP meets agentic AI workflows",
+     "f": {
+      "code": [
+       "STG418-R",
+       "STG418-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442251614001csoK",
+     "inst": "1780442251614001csoK",
+     "code": "SVS341-R1",
+     "title": "Lambda performance tuning and cost optimization",
+     "f": {
+      "code": [
+       "SVS341-R",
+       "SVS341-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442247824001cCFP",
+     "inst": "1780442247824001cCFP",
+     "code": "NET216-R1",
+     "title": "Understand your network: practical network observability on AWS",
+     "f": {
+      "code": [
+       "NET216-R",
+       "NET216-R1"
+      ]
+     }
+    },
+    {
+     "id": "1785441035591001GjfZ",
+     "inst": "1785441035591001GjfZ",
+     "code": "OPN314-R1",
+     "title": "Kiro Crew: Architecture of an open source AI coding agent built on Kiro",
+     "f": {
+      "code": [
+       "OPN314-R",
+       "OPN314-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442251060001cMDO",
+     "inst": "1780442251060001cMDO",
+     "code": "SVS327-R1",
+     "title": "Build interactive web apps with AWS Lambda",
+     "f": {
+      "code": [
+       "SVS327-R",
+       "SVS327-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442258278001co42",
+     "inst": "1780442258278001co42",
+     "code": "SVS343-R1",
+     "title": "A day in the life of a Serverless builder",
+     "f": {
+      "code": [
+       "SVS343-R",
+       "SVS343-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442247890001cNv2",
+     "inst": "1780442247890001cNv2",
+     "code": "NET325-R1",
+     "title": "Resilient by design: Last Mile and Multicloud Interconnect",
+     "f": {
+      "code": [
+       "NET325-R",
+       "NET325-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442251841001c5he",
+     "inst": "1780442251841001c5he",
+     "code": "STG352-R1",
+     "title": "Monitoring and optimizing Amazon S3 with observability tools",
+     "f": {
+      "code": [
+       "STG352-R",
+       "STG352-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442231438001clcu",
+     "inst": "1780442231438001clcu",
+     "code": "SVS314-R1",
+     "title": "Production-ready Lambda: Security and performance patterns",
+     "f": {
+      "code": [
+       "SVS314-R",
+       "SVS314-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442247130001cI3A",
+     "inst": "1780442247130001cI3A",
+     "code": "MAM321-R1",
+     "title": "Refactor your monolith for multi-tenancy and agentic AI in one pass",
+     "f": {
+      "code": [
+       "MAM321-R",
+       "MAM321-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442283238001cHYb",
+     "inst": "1780442283238001cHYb",
+     "code": "OPN407-R1",
+     "title": "Kubernetes-native agentic AI on Amazon EKS with open source primitives",
+     "f": {
+      "code": [
+       "OPN407-R",
+       "OPN407-R1"
+      ]
+     }
+    },
+    {
+     "id": "1792716379689001MrpS",
+     "inst": "1792716379689001MrpS",
+     "code": "SEC002",
+     "title": "Your new playbook: Operationalizing security in a world of AI",
+     "f": {
+      "code": [
+       "SEC003",
+       "SEC002"
+      ]
+     }
+    },
+    {
+     "id": "1780442251242001cTC8",
+     "inst": "1780442251242001cTC8",
+     "code": "SVS330-R1",
+     "title": "Operating Lambda at scale: Choosing the right execution model",
+     "f": {
+      "code": [
+       "SVS330-R",
+       "SVS330-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442261056001c8FF",
+     "inst": "1780442261056001c8FF",
+     "code": "NET408",
+     "title": "Five-nines network availability with multipath resilience",
+     "f": {
+      "title": [
+       "Innovations across the AWS Backbone",
+       "Five-nines network availability with multipath resilience"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1794508479288001jNbz",
+     "inst": "1794508479288001jNbz",
+     "code": "MAM347-R1",
+     "title": "Meet Your AI-powered Advisor for WorkSpaces Administration",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780441501427001GwcG",
+     "inst": "1780441501427001GwcG",
+     "code": "NET313-R1",
+     "title": "Your WAN, reimagined: SD-WAN on the AWS global backbone",
+     "f": {
+      "code": [
+       "NET313-R",
+       "NET313-R1"
+      ]
+     }
+    },
+    {
+     "id": "1790875693688001I7vi",
+     "inst": "1790875693688001I7vi",
+     "code": "SEC350-R",
+     "title": "Shared judgment: security culture for the agentic era",
+     "f": {
+      "code": [
+       "SEC350-R1",
+       "SEC350-R"
+      ]
+     }
+    },
+    {
+     "id": "1780441502555001GzrA",
+     "inst": "1780441502555001GzrA",
+     "code": "STG308-R1",
+     "title": "Accelerate data migrations with AWS DataSync at any scale",
+     "f": {
+      "code": [
+       "STG308-R",
+       "STG308-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442252160001cuTG",
+     "inst": "1780442252160001cuTG",
+     "code": "STG416-R1",
+     "title": "AWS Backup clean room recovery: Comprehensive resilience framework",
+     "f": {
+      "code": [
+       "STG416-R",
+       "STG416-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442251295001c8MV",
+     "inst": "1780442251295001c8MV",
+     "code": "SVS331-R1",
+     "title": "Serverless Java in 2026",
+     "f": {
+      "code": [
+       "SVS331-R",
+       "SVS331-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780442251356001c6Yh",
+     "inst": "1780442251356001c6Yh",
+     "code": "SVS332-R1",
+     "title": "Lambda Managed Instances: Always-on Serverless Compute",
+     "f": {
+      "code": [
+       "SVS332-R",
+       "SVS332-R1"
+      ]
+     }
+    },
+    {
+     "id": "1786043769482001qaEr",
+     "inst": "1786043769482001qaEr",
+     "code": "SEC429-R1",
+     "title": "Tenant-isolated agent memory: one IAM policy for AgentCore Memory",
+     "f": {
+      "code": [
+       "SEC429-R",
+       "SEC429-R1"
+      ]
+     }
+    },
+    {
+     "id": "1780441502219001GmKT",
+     "inst": "1780441502219001GmKT",
+     "code": "SEC350-R1",
+     "title": "Shared judgment: security culture for the agentic era",
+     "f": {
+      "code": [
+       "SEC350-R",
+       "SEC350-R1"
+      ]
+     }
+    }
+   ],
+   "unknownRooms": []
+  },
+  {
    "at": "2026-11-17T18:43:14Z",
    "milestones": [],
    "added": [

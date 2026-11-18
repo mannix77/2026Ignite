@@ -1,0 +1,126 @@
+<!-- summary:44211305089-1 -->
+Added 12 · removed 24 · changed 155
+
+**Added**
+- `COM349` A new area of AWS Cloud Observability
+- `COM365-R1` Unattended Coding Agents: Memory, Guardrails, and Cost Control - Kiro Crew
+- `MAM412-R1` Secure and modernize code simultaneously with agentic AI
+- `COM207-R1` Let Your Database Speak: AI Agents for RDS and Redshift
+- `COM353-R1` CDK Lovers: Meetup for AWS CDK Contributors & Power Users
+- `COM212-R1` The 7 Rs in the Real World: Honest Migration War Stories
+- `AIM450-R1` Context engineering for production agents on AgentCore
+- `COM351-R1` Serverless Hosting for Agents: Lambda vs. Bedrock AgentCore Runtime
+- `COM354-R1` Dealing with Terraform/IaC/Compliance in AI-era
+- `COM357-R1` Hadoop to EMR & Airflow: Lessons from Migrating 90+ Data Pipelines
+- `COM364-R1` The FinOps Control Room
+- `COM363-R1` Scaling data and AI products in the enterprise
+
+**Removed**
+- `IND3360` How Jabil AI agents power a 1M-part weekly manufacturing supply chain
+- `BIZ333-R1` Design, Simulate, Ship: End-to-End AI Agents on Connect Customer
+- `BIZ334-R1` Building Smarter Self-Service Experiences with AI
+- `CON348-R1` Defense-in-Depth for Containers on Amazon EKS: A Layering Story
+- `COP357-R1` Observe AI agents and workloads end to end
+- `CMP359-R1` Simplifying how you use AWS: automating common patterns on your behalf
+- `NET342-R1` Innovations in DNS and Amazon Route 53
+- `SVS349-R1` Managing Lambda Runtimes at Scale for Platform Teams
+- `IND219` How to Use AI Agents to Run Genomics Pipelines Faster and Cheaper
+- `BIZ335-R1` Build an AI agent that understands customer intent
+- `IND3338-R1` Accelerate Physical AI development with NVIDIA on AWS
+- `IND3357` How Wisconsin DOR cut suspended tax returns with AWS Quick
+- `COP354-R1` Diagnose Complex Workloads with AWS DevOps Agent
+- `STG369-R1` AWS Backup: Architecture deep dive
+- `COP355-R1` Resolve Incidents and Validate Releases with AWS DevOps Agent
+- `COP363-R1` Investigate Incidents Across Teams with AWS DevOps Agent
+- `MAM350-R1` Continuous tech debt analysis and remediation, from findings to fixes
+- `COP364-R1` Build better, review faster: AI-Powered Well-Architected reviews
+- `PEX320-R1` AI-Powered Migrations: AWS Transform Across the Lifecycle
+- `DVT343-R1` From code to production in seconds — building web apps that last
+- `COP355-R2` Resolve Incidents and Validate Releases with AWS DevOps Agent
+- `MAM348-R1` Provision Desktops for Builders Faster with WorkSpaces
+- `SEC395-R1` Find, prove, and fix code vulnerabilities with AWS Continuum
+- `STG422-R1` Dive deep into resilience architectures for Amazon EBS
+
+**Changed**
+- `ACT067-R1` [PLACEHOLDER] Startup Plaza — title: Startup Plaza → [PLACEHOLDER] Startup Plaza; desc
+- `ACT067-R2` [PLACEHOLDER] Startup Plaza — title: Startup Plaza → [PLACEHOLDER] Startup Plaza; desc
+- `ACT067-R3` [PLACEHOLDER] Startup Plaza — title: Startup Plaza → [PLACEHOLDER] Startup Plaza; desc
+- `AIM225-S` Creating resilient multi-channel customer experiences for NAB with Amazon Connect (sponsored by Deloitte) — title: …with Amazon Connect → …for NAB with Amazon Connect (sponsored by Deloitte)
+- `AIM3318` Guardrails for What Your Agent Does, Not Just What It Says — desc
+- `AIM3321` Govern your whole agent fleet with AWS Agent Registry — title: Control and optimize the cost of agents on Amazon Bedrock… → Govern your whole agent fleet with AWS Agent Registry; desc
+- `AIM3324` Stateful agents, smaller token bills with Strands and AgentCore — title: Govern your agent fleet, wherever it runs, with AgentCore… → Stateful agents, smaller token bills with Strands and Age…; desc
+- `AIM384-S` Inside OpenAI’s Cyber Defense Factory (sponsored by OpenAI) — speakers: Matt Boyle, Shikhar Kwatra → Shikhar Kwatra
+- `ANT448-R1` Unified observability with Amazon OpenSearch Service — desc
+- `API202-S` Bring Oracle Databases to AWS Without Starting Over (sponsored by Oracle) — speakers: Muneer Mirza, Tushar Pandit, Vishal Patil → Muneer Mirza, Tushar Pandit
+- `ARC334-S` Build Resilient AI Platforms with Oracle AI Database@AWS (sponsored by Oracle) — speakers: Muneer Mirza, Vishal Patil → Vishal Patil
+- `AWS114-R1` Builder Zone in Expo — title: Builder Zone in the Expo → Builder Zone in Expo
+- `AWS114-R2` Builder Zone in Expo — title: Builder Zone in the Expo → Builder Zone in Expo
+- `AWS114-R3` Builder Zone in Expo — title: Builder Zone in the Expo → Builder Zone in Expo
+- `BIZ220` Industry Expert: The Next Era of AI — start: 2026-12-02T20:00:00Z → 2026-11-30T22:30:00Z; end: 2026-12-02T21:00:00Z → 2026-11-30T23:30:00Z; room: …Palace | Promenade Level | Roman I → …Forum | Level 1 | Forum 120 | Content Hub | Red Theater
+- `BIZ304` Security → Zero-Trust Identity & Data Protection in AWS Quick — title: Zero-Trust Identity & Data Protection in AWS Quick → Security → Zero-Trust Identity & Data Protection in AWS Q…
+- `BIZ315-R1` Customize workspaces and build guided workflows using AI in Connect Customer — desc
+- `BIZ323-R1` Decision Frameworks, Evaluation, and Cost Management with AWS Quick — title: …Amazon Quick → …AWS Quick
+- `COM353-R` CDK Lovers: Meetup for AWS CDK Contributors & Power Users — code: COM353 → COM353-R
+- `COM364-R` The FinOps Control Room — code: COM364 → COM364-R
+- `CON347` What's new in EKS compute and optimization — title: Intelligent, right-sized compute on Amazon EKS → What's new in EKS compute and optimization; desc
+- `COP303` Improving operations with agentic AI — start: 2026-12-01T21:30:00Z → 2026-12-03T21:00:00Z; end: 2026-12-01T22:30:00Z → 2026-12-03T22:00:00Z; room: Wynn/Encore | Upper Convention Promenade | Cristal 2 | Co… → MGM Grand | Level 1 | Grand 117
+- `COP361` Find the waste hiding in your accelerator fleet — title: Find the waste hiding in your accelerator fleetÂ → Find the waste hiding in your accelerator fleet; desc
+- `DAT101-S` Multicloud in the Real World: Financial Services, Healthcare, and Retail (sponsored by Oracle) — speakers: Doug Palmer, Edwin Upson, Sharjeel Farooq → Doug Palmer, Sharjeel Farooq
+- `DVT215-S` The Best Engineer in the Room Doesn’t Write Code (sponsored by Anaconda) — speakers: Emilie Schario → —
+- `IND327-R1` Build a team of agents: From incident diagnosis to safe remediation — title: …self-healing agents from diagnosis to disaster recovery → …a team of agents: From incident diagnosis to safe remedi…
+- `IND3349` From Generic to Industry Expert: The Next Era of AI — start: 2026-11-30T22:30:00Z → 2026-12-02T20:00:00Z; end: 2026-11-30T23:30:00Z → 2026-12-02T21:00:00Z; room: …Forum | Level 1 | Forum 120 | Content Hub | Red Theater → …Palace | Promenade Level | Roman I
+- `INV515-R` Modeling Human Preference: Pairwise Battles to Agentic Systems — code: INV515-R1 → INV515-R
+- `INV515-R1` Modeling Human Preference: Pairwise Battles to Agentic Systems — code: INV515-R → INV515-R1
+- `INV530-R` EC2 at 20: Rebuilding the control plane while it is running — code: INV530-R1 → INV530-R
+- `INV530-R1` EC2 at 20: Rebuilding the control plane while it is running — code: INV530-R → INV530-R1
+- `INV538-R` Building the machine that builds the machine: inside AWS Emulator — code: INV538 → INV538-R
+- `MAM205-R` Move code modernization at scale from one-time to continuous — code: MAM205-R1 → MAM205-R
+- `MAM205-R1` Move code modernization at scale from one-time to continuous — code: MAM205-R → MAM205-R1
+- `MAM306-R` Build a data-driven migration plan with AWS Transform — code: MAM306-R1 → MAM306-R
+- `MAM306-R1` Build a data-driven migration plan with AWS Transform — code: MAM306-R → MAM306-R1
+- `MAM310-R` Rebuild a legacy ETL pipeline as serverless with AWS Transform — code: MAM310-R1 → MAM310-R
+- `MAM310-R1` Rebuild a legacy ETL pipeline as serverless with AWS Transform — code: MAM310-R → MAM310-R1
+- `MAM313-R` Migrate and modernize infrastructure from your IDE with agentic AI — code: MAM313-R1 → MAM313-R
+- `MAM313-R1` Migrate and modernize infrastructure from your IDE with agentic AI — code: MAM313-R → MAM313-R1
+- `MAM315-R` Best path forward: Rehost & replatform to containers with AWS Transform — code: MAM315-R1 → MAM315-R
+- `MAM315-R1` Best path forward: Rehost & replatform to containers with AWS Transform — code: MAM315-R → MAM315-R1
+- `MAM316-R` Reimagine legacy apps to be agentic AI ready with AWS Transform & Kiro — code: MAM316-R1 → MAM316-R
+- `MAM316-R1` Reimagine legacy apps to be agentic AI ready with AWS Transform & Kiro — code: MAM316-R → MAM316-R1
+- `MAM321-R` Refactor your monolith for multi-tenancy and agentic AI in one pass — code: MAM321-R1 → MAM321-R
+- `MAM321-R1` Refactor your monolith for multi-tenancy and agentic AI in one pass — code: MAM321-R → MAM321-R1
+- `MAM322-R` Build an AI testing safety net before you modernize — code: MAM322-R1 → MAM322-R
+- `MAM322-R1` Build an AI testing safety net before you modernize — code: MAM322-R → MAM322-R1
+- `MAM323-R` Analyze your portfolio, prioritize what to fix, and transform it — code: MAM323-R1 → MAM323-R
+- `MAM323-R1` Analyze your portfolio, prioritize what to fix, and transform it — code: MAM323-R → MAM323-R1
+- `MAM347-R` Meet Your AI-powered Advisor for WorkSpaces Administration — desc
+- `MAM347-R1` Meet Your AI-powered Advisor for WorkSpaces Administration — desc
+- `MAM407-R` Turn your cloud migration into a security transformation — code: MAM407-R1 → MAM407-R
+- `MAM407-R1` Turn your cloud migration into a security transformation — code: MAM407-R → MAM407-R1
+- `MAM412-R` Secure and modernize code simultaneously with agentic AI — code: MAM412 → MAM412-R
+- `MAM417-R` Modernize your full .NET and SQL Server stack with AWS Transform — code: MAM417 → MAM417-R
+- `NET202-R` Your network, your rules: Global routing policies with AWS Cloud WAN — code: NET202-R1 → NET202-R
+- `NET202-R1` Your network, your rules: Global routing policies with AWS Cloud WAN — code: NET202-R → NET202-R1
+- `NET203-R` Resolve it all: Build hybrid DNS architectures on AWS — code: NET203-R1 → NET203-R
+- `NET203-R1` Resolve it all: Build hybrid DNS architectures on AWS — code: NET203-R → NET203-R1
+- `NET216-R` Understand your network: practical network observability on AWS — code: NET216-R1 → NET216-R
+- `NET216-R1` Understand your network: practical network observability on AWS — code: NET216-R → NET216-R1
+- `NET218-R` Designing your AWS network for scale: From one VPC to many — code: NET218-R1 → NET218-R
+- `NET218-R1` Designing your AWS network for scale: From one VPC to many — code: NET218-R → NET218-R1
+- `NET313-R` Your WAN, reimagined: SD-WAN on the AWS global backbone — code: NET313-R1 → NET313-R
+- `NET313-R1` Your WAN, reimagined: SD-WAN on the AWS global backbone — code: NET313-R → NET313-R1
+- `NET317-R` Origin management for multi-region resilient applications with Amazon CloudFront — code: NET317-R1 → NET317-R
+- `NET317-R1` Origin management for multi-region resilient applications with Amazon CloudFront — code: NET317-R → NET317-R1
+- `NET319-R` Practical applications of edge compute in Amazon CloudFront — code: NET319-R1 → NET319-R
+- `NET319-R1` Practical applications of edge compute in Amazon CloudFront — code: NET319-R → NET319-R1
+- `NET324-R` Network security architecture: Deployment patterns for firewalls — code: NET324-R1 → NET324-R
+- `NET324-R1` Network security architecture: Deployment patterns for firewalls — code: NET324-R → NET324-R1
+- `NET325-R` Resilient by design: Last Mile and Multicloud Interconnect — code: NET325-R1 → NET325-R
+- `NET325-R1` Resilient by design: Last Mile and Multicloud Interconnect — code: NET325-R → NET325-R1
+- `NET334-R` AI agents are crawling your website? Identify, optimize, rate-limit, & monetize them — code: NET334-R1 → NET334-R
+- `NET334-R1` AI agents are crawling your website? Identify, optimize, rate-limit, & monetize them — code: NET334-R → NET334-R1
+- `NET408` Five-nines network availability with multipath resilience — title: Innovations across the AWS Backbone → Five-nines network availability with multipath resilience; desc
+- `OPN302-R` Rethinking the AWS SDK for Python: Async, streaming, and more — code: OPN302-R1 → OPN302-R
+- `OPN302-R1` Rethinking the AWS SDK for Python: Async, streaming, and more — code: OPN302-R → OPN302-R1
+- `OPN314-R` Kiro Crew: Architecture of an open source AI coding agent built on Kiro — code: OPN314-R1 → OPN314-R
+- …and 75 more
+
