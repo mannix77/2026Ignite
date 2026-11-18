@@ -3,21 +3,31 @@ Feature: The top of My plan stays out of the way
   day's plan began. Minesh wants the day in view when he opens My plan, with the totals in one
   line and only the numbers that need him.
 
-  Rule: The plan's totals are one line, and a zero is left out
+  Rule: The plan's totals are one line; a clash, tight-walk or missed total of zero is left out
 
     Scenario: A plan with clashes and missed picks
-      Given a plan of 21 sessions with 16 clashes to decide, no tight transfer and 57 picks missed
+      Given a plan of 21 sessions with 16 clashes to decide, no tight walk and 57 picks missed
       When Minesh opens My plan
-      Then one line reads 21 sessions in your plan, 16 clashes to decide, 57 picks you'll miss
+      Then one line reads 21 sessions, 16 clashes, 57 missed
       And the clashes are marked as needing attention
 
     Scenario: A plan with nothing to sort out
-      Given a plan of 12 sessions with no clash, no tight transfer and no pick missed
+      Given a plan of 12 sessions with no clash, no tight walk and no pick missed
       When Minesh opens My plan
-      Then the line reads 12 sessions in your plan and nothing else
+      Then the line reads 12 sessions and nothing else
+
+    Scenario: A plan that fits no session
+      Given picks of which none fits the plan
+      When Minesh opens My plan
+      Then the line still reads 0 sessions
+
+    Scenario: All four totals on a phone
+      Given a plan with clashes, tight walks and missed picks, each in two digits
+      When Minesh opens My plan on a 375-point-wide phone
+      Then the totals fit one line
 
     Scenario: A single one of each
-      Given a plan of 1 session with 1 clash, 1 tight transfer and 1 pick missed
+      Given a plan of 1 session with 1 clash, 1 tight walk and 1 pick missed
       When Minesh opens My plan
       Then each total is worded in the singular
 

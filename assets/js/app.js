@@ -2041,6 +2041,9 @@ function render() {
   clearInterval(app.nowTimer);
   const fk = focusKey(document.activeElement);
   const scrolls = [...main.querySelectorAll('[data-scroll]')].map(e => [e.dataset.scroll, e.scrollTop]);
+  // A fold opened or closed a moment ago may not have had its toggle event yet, and a fold that
+  // is replaced never gets one: take each kept fold's state from the page itself.
+  for (const d of main.querySelectorAll('details[data-keep]')) app.openClash[d.open ? 'add' : 'delete'](d.dataset.keep);
   const view = { browse: renderBrowse, triage: renderTriage, plan: renderPlan, now: renderNow, changes: renderChanges, settings: renderSettings }[app.tab];
   main.innerHTML = view();
   app.rendered = true;

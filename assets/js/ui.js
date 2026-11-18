@@ -300,14 +300,15 @@ export function seatsDetail(s, held) {
 }
 
 // The top of My plan (specs/features/plan-summary.feature). The plan's totals as one line: the
-// session count always, then only the totals that are not zero; `warn` marks the ones that
-// need the user.
+// session count always (a zero too), then only the clash, tight-walk and missed totals that are
+// not zero; `warn` marks the ones that need the user. The labels are short so that all four fit
+// one line on a 375px-wide phone (.plan-sum).
 export function planSummary({ sessions = 0, clashes = 0, tight = 0, missed = 0 } = {}) {
   const one = (n, single, many) => (n === 1 ? single : many);
-  const parts = [{ n: sessions, label: one(sessions, 'session in your plan', 'sessions in your plan'), warn: false }];
-  if (clashes > 0) parts.push({ n: clashes, label: one(clashes, 'clash to decide', 'clashes to decide'), warn: true });
-  if (tight > 0) parts.push({ n: tight, label: one(tight, 'tight transfer', 'tight transfers'), warn: true });
-  if (missed > 0) parts.push({ n: missed, label: one(missed, "pick you'll miss", "picks you'll miss"), warn: false });
+  const parts = [{ n: sessions, label: one(sessions, 'session', 'sessions'), warn: false }];
+  if (clashes > 0) parts.push({ n: clashes, label: one(clashes, 'clash', 'clashes'), warn: true });
+  if (tight > 0) parts.push({ n: tight, label: one(tight, 'tight walk', 'tight walks'), warn: true });
+  if (missed > 0) parts.push({ n: missed, label: 'missed', warn: false });
   return parts;
 }
 
