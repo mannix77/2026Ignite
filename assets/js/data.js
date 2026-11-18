@@ -115,6 +115,11 @@ export const AVAILABILITY = new Set(['reserved', 'reserve_a_seat', 'session_full
 const NO_RESERVATION = new Set(['session_full', 'walk_up_only', 'waitlist']);
 const count = v => (Number.isInteger(v) && v >= 0 ? v : null);
 
+// A run's repeat group as the catalog gives it, cleaned, or null when it is not usable (not
+// text, or blank): the planner, the picks and the clash cards all compare this one value, so
+// two runs whose group differs only by stray spaces are one session.
+const usableGroup = v => (typeof v === 'string' && v.trim() !== '' ? v.trim() : null);
+
 // The usable seat record for a session, or null: an untrusted file is read, never trusted.
 export function seatInfo(seats, id) {
   const table = seats && typeof seats === 'object' ? seats.seats : null;
@@ -202,7 +207,7 @@ export function buildModel(doc, settings, rsvp, conf, venue, seats = null) {
     if (!byId.has(s.id)) byId.set(s.id, []);
     byId.get(s.id).push(s);
     if (!byCode.has(s.code)) byCode.set(s.code, s);
-    s.group = rec.group || s.code;
+    s.group = usableGroup(rec.group) ?? s.code;
     if (!byGroup.has(s.group)) byGroup.set(s.group, []);
     byGroup.get(s.group).push(s);
     s.topics.forEach(t => bump(facets.topics, t));

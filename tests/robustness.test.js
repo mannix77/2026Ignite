@@ -76,6 +76,20 @@ const acknowledged = runs => diffKnown(catalog(runs), new Set(['ANT319']), {}).n
 const alertsAfter = (before, after, picked = ['ANT319']) =>
   diffKnown(catalog(after), new Set(picked), acknowledged(before)).alerts.map(a => [a.kind, a.code, Object.keys(a.fields || {})]);
 
+// ---- a run's repeat group is a usable identifier (specs/features/pick-resolution.feature)
+const groupsOf = runs => { const m = catalog(runs); return [m.sessions.map(s => s.group), [...m.byGroup].map(([g, list]) => [g, list.map(s => s.code)])]; };
+await test('should put two runs in one group when the group differs only by stray spaces', () => {
+  eq(groupsOf([run('ANT319', { id: 'A1', group: 'ANT319 ' }), run('ANT319-R', { id: 'A2', group: ' ANT319' }), run('ANT319-R2', { id: 'A3' })]),
+    [['ANT319', 'ANT319', 'ANT319'], [['ANT319', ['ANT319', 'ANT319-R', 'ANT319-R2']]]]);
+});
+await test('should group a run by its own code when its group is blank, missing or not text', () => {
+  eq(groupsOf([run('B1', { id: 'B1', group: '   ' }), run('B2', { id: 'B2', group: undefined }), run('B3', { id: 'B3', group: 7 }), run('B4', { id: 'B4', group: ['B1'] })]),
+    [['B1', 'B2', 'B3', 'B4'], [['B1', ['B1']], ['B2', ['B2']], ['B3', ['B3']], ['B4', ['B4']]]]);
+});
+await test('should keep runs apart when their groups differ by more than spaces', () => {
+  eq(groupsOf([run('C1', { id: 'C1', group: 'ANT 319' }), run('C2', { id: 'C2', group: 'ANT319' }), run('C3', { id: 'C3', group: 'ant319' })]),
+    [['ANT 319', 'ANT319', 'ant319'], [['ANT 319', ['C1']], ['ANT319', ['C2']], ['ant319', ['C3']]]]);
+});
 await test('should alert when a picked session moves room', () => {
   eq(alertsAfter([run('ANT319-R')], [run('ANT319-R', { room: 'Moscone South, Room 156' })]), [['changed', 'ANT319-R', ['room']]]);
 });
