@@ -161,10 +161,16 @@ export function buildModel(doc, settings, rsvp, conf, venue, seats = null) {
 
   for (const rec of Array.isArray(doc.sessions) ? doc.sessions : []) {
     if (!rec || typeof rec !== 'object' || !rec.id) continue;
+    // An id that is neither text nor a number is junk (and String() of it may throw).
+    if (typeof rec.id !== 'string' && !Number.isFinite(rec.id)) continue;
     const s = { ...rec, key: rec.inst || rec.id };
     for (const k of ['topics', 'tags', 'audience', 'delivery', 'vendors']) s[k] = list(rec[k]);
     s.speakers = Array.isArray(rec.speakers) ? rec.speakers.filter(Array.isArray) : [];
     s.code = typeof rec.code === 'string' && rec.code ? rec.code : String(rec.id);
+    // Without a usable group a run is its own session: by its code, cleaned the same way, then
+    // by its id, then by its own key. A record with none of these has nothing to be found by.
+    s.group = usableGroup(rec.group) ?? usableGroup(s.code) ?? usableGroup(String(rec.id)) ?? usableGroup(s.key);
+    if (s.group === null) continue;
     s.title = typeof rec.title === 'string' ? rec.title : '';
     s.desc = typeof rec.desc === 'string' ? rec.desc : '';
     s.inPerson = s.delivery.some(d => /^in[- ]?person$/i.test(d));
@@ -207,8 +213,6 @@ export function buildModel(doc, settings, rsvp, conf, venue, seats = null) {
     if (!byId.has(s.id)) byId.set(s.id, []);
     byId.get(s.id).push(s);
     if (!byCode.has(s.code)) byCode.set(s.code, s);
-    // Without a usable group a run is its own session: by its code, cleaned the same way, then by its id.
-    s.group = usableGroup(rec.group) ?? usableGroup(s.code) ?? usableGroup(String(rec.id)) ?? s.key;
     if (!byGroup.has(s.group)) byGroup.set(s.group, []);
     byGroup.get(s.group).push(s);
     s.topics.forEach(t => bump(facets.topics, t));

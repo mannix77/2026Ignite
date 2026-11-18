@@ -93,8 +93,25 @@ await test('should clean the code the same way when it stands in for a missing g
   eq(m.sessions.map(s => s.code), [' ABC ', 'ABC-R'], 'the session code itself is left as the catalog wrote it');
 });
 await test('should group a run by its id when it has no usable group and its code is blank', () => {
-  const m = catalog([run('E1', { id: ' Z9 ', code: '   ', group: '' }), run('E2', { id: 77, code: '', group: null })]);
+  const m = catalog([run('E1', { id: ' Z9 ', code: '   ', group: '' }), run('E2', { id: 77, code: '   ', group: null })]);
+  eq(m.sessions.map(s => s.code), ['   ', '   '], 'both codes are blank, so neither can stand in for the group');
   eq([m.sessions.map(s => s.group), [...m.byGroup].map(([g, list]) => [g, list.map(s => s.key)])], [['Z9', '77'], [['Z9', ['E1']], ['77', ['E2']]]]);
+});
+await test('should group a run by its own key when its group, code and id are all blank', () => {
+  const m = catalog([run('F1', { id: '  ', code: '   ', group: undefined })]);
+  eq([m.sessions.map(s => [s.key, s.code, s.group]), [...m.byGroup.keys()]], [[['F1', '   ', 'F1']], ['F1']]);
+});
+await test('should skip a record with an id of the wrong type or nothing usable to group it by, and keep the rest', () => {
+  const junk = [
+    run('G1', { id: { toString: null }, code: '   ', group: undefined }),    // an id that cannot be turned into text
+    run('G2', { id: { toString: null }, code: undefined, group: undefined }), // the same, with no code either
+    run('   ', { id: '  ', code: '   ', group: '  ' }),                       // every identifier blank
+    run('G4', { id: ['x'], code: 7, group: null }),                           // an id that is not text or a number
+    run('G6', { id: NaN, code: 'G6' }), run('G7', { id: Infinity, code: 'G7' }), run('G8', { id: true, code: 'G8' }),   // ids of the wrong type, though the rest is fine
+  ];
+  const m = catalog([...junk, run('GOOD', { id: 'GOOD' })]);
+  eq([m.sessions.map(s => [s.key, s.code, s.group]), [...m.byGroup].map(([g, list]) => [g, list.map(s => s.key)]), [...m.byKey.keys()]],
+    [[['GOOD', 'GOOD', 'ANT319']], [['ANT319', ['GOOD']]], ['GOOD']]);
 });
 await test('should keep runs apart when their groups differ by more than spaces', () => {
   eq(groupsOf([run('C1', { id: 'C1', group: 'ANT 319' }), run('C2', { id: 'C2', group: 'ANT319' }), run('C3', { id: 'C3', group: 'ant319' })]),
