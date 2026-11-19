@@ -3,6 +3,13 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-11-19T06:45:51Z · https://catalog.awsevents.com/api/sessions
+
+Added 0 · removed 0 · changed 1
+
+**Changed**
+- `SEC315-R1` Hands-on Network Defense with AWS Network Firewall and Route 53 DNS Firewall — end: 2026-12-04T17:00:00Z → 2026-12-04T18:00:00Z; dur: 60 → 120
+
 ## 2026-11-19T00:50:50Z · https://catalog.awsevents.com/api/sessions
 
 Added 20 · removed 2 · changed 80
