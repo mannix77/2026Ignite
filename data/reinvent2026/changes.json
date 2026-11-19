@@ -1,6 +1,202 @@
 {
  "batches": [
   {
+   "at": "2026-11-19T18:43:20Z",
+   "milestones": [],
+   "added": [
+    {
+     "id": "1794525822868001PuE8",
+     "inst": "1794525822868001PuE8",
+     "code": "NET348",
+     "title": "IP Address Management and DNS Architecture Patterns on AWS",
+     "repeat": false
+    },
+    {
+     "id": "1786406739814001LbQh",
+     "inst": "1786406739814001LbQh",
+     "code": "AWS128",
+     "title": "Built for people: Frontline AI with the Now Go Build CTO Fellows",
+     "repeat": false
+    },
+    {
+     "id": "1789084255319001Sqys",
+     "inst": "1789084255319001Sqys",
+     "code": "MUP223",
+     "title": "How to Ensure Your CCoE Is Accelerating Your Cloud Transformation, Not Hindering It",
+     "repeat": false
+    },
+    {
+     "id": "1786406740495001LrEE",
+     "inst": "1786406740495001LrEE",
+     "code": "AWS209",
+     "title": "Testing in prod, building in public: An interview with Charity Majors",
+     "repeat": false
+    },
+    {
+     "id": "1786406740187001Lzsy",
+     "inst": "1786406740187001Lzsy",
+     "code": "AWS301",
+     "title": "The history of servers, the cloud, and what’s next",
+     "repeat": false
+    }
+   ],
+   "removed": [
+    {
+     "id": "1786406740308001LMl3",
+     "inst": "1786406740308001LMl3",
+     "code": "AWS122",
+     "title": "The annual forecast for where sports AI is heading",
+     "repeat": false
+    }
+   ],
+   "changed": [
+    {
+     "id": "1789084255188001SdjP",
+     "inst": "1789084255188001SdjP",
+     "code": "MUP209",
+     "title": "Shared Responsibility for Resilience: Build, Test, and Prove Recovery with GenAI",
+     "f": {
+      "start": [
+       "2026-12-01T23:00:00Z",
+       "2026-12-01T00:00:00Z"
+      ],
+      "end": [
+       "2026-12-01T23:45:00Z",
+       "2026-12-01T00:45:00Z"
+      ]
+     }
+    },
+    {
+     "id": "1780442265395001cUtP",
+     "inst": "1780442265395001cUtP",
+     "code": "COP369",
+     "title": "Resilient and compliant workloads : Where Humans and AI Operate Together",
+     "f": {
+      "speakers": [
+       [
+        "Stephen Clarke"
+       ],
+       [
+        "Saurabh Saxena",
+        "Stephen Clarke"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441482700001GnHK",
+     "inst": "1780441482700001GnHK",
+     "code": "AIM381-S",
+     "title": "Inside the frontier: What builders are creating at OpenAI (sponsored by OpenAI)",
+     "f": {
+      "speakers": [
+       [
+        "Dominik Kundel",
+        "Evan Weiss"
+       ],
+       [
+        "Evan Weiss"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780442258468001cyLY",
+     "inst": "1780442258468001cyLY",
+     "code": "GHJ319-R",
+     "title": "re:Architecture Rodeo: Architecting AI Governance & Security at Scale",
+     "f": {
+      "speakers": [
+       [
+        "Dodd Pfeffer",
+        "Hasan Mehdi Rizvi",
+        "Omkar Deshmane"
+       ],
+       [
+        "Dodd Pfeffer",
+        "Hasan Mehdi",
+        "Omkar Deshmane"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441495229001GNU6",
+     "inst": "1780441495229001GNU6",
+     "code": "INV533",
+     "title": "How AI is Changing Everything (Computer Systems, Education, Driving, and More)",
+     "f": {
+      "start": [
+       "2026-12-01T19:30:00Z",
+       "2026-12-02T17:00:00Z"
+      ],
+      "end": [
+       "2026-12-01T20:30:00Z",
+       "2026-12-02T18:00:00Z"
+      ],
+      "room": [
+       "Caesars Forum | Level 1 | Forum 103",
+       "Caesars Forum | Level 1 | Summit 216 | Showcase Theater"
+      ]
+     }
+    },
+    {
+     "id": "1780442261412001cARm",
+     "inst": "1780442261412001cARm",
+     "code": "PEX218",
+     "title": "Connecting sellers with their AWS Marketplace buyers",
+     "f": {
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442232565001ca4K",
+     "inst": "1780442232565001ca4K",
+     "code": "ANT331",
+     "title": "From raw to reliable: Building trusted datasets with Amazon SageMaker",
+     "f": {
+      "title": [
+       "Develop with natural language and agentic AI in Amazon SageMaker",
+       "From raw to reliable: Building trusted datasets with Amazon SageMaker"
+      ],
+      "desc": true
+     }
+    },
+    {
+     "id": "1780442263672001cQ9j",
+     "inst": "1780442263672001cQ9j",
+     "code": "IND3344",
+     "title": "Aon: Turning raw exposure data into faster underwriting",
+     "f": {
+      "speakers": [
+       [
+        "Hasan Mehdi Rizvi",
+        "Sudipto Dasgupta"
+       ],
+       [
+        "Hasan Mehdi",
+        "Sudipto Dasgupta"
+       ]
+      ]
+     }
+    },
+    {
+     "id": "1780441494051001GY8h",
+     "inst": "1780441494051001GY8h",
+     "code": "INV513",
+     "title": "Lifecycle of a Pod: Trust Boundaries in Nitro Sandboxes",
+     "f": {
+      "title": [
+       "Lifecycle of a pod: trust boundaries in VM-isolated containers",
+       "Lifecycle of a Pod: Trust Boundaries in Nitro Sandboxes"
+      ],
+      "desc": true
+     }
+    }
+   ],
+   "unknownRooms": []
+  },
+  {
    "at": "2026-11-19T06:45:51Z",
    "milestones": [],
    "added": [],
