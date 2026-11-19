@@ -1,0 +1,111 @@
+<!-- summary:44432265591-1 -->
+Added 20 · removed 2 · changed 80
+
+**Added**
+- `IND3360` How Jabil AI agents power a 1M-part weekly manufacturing supply chain
+- `ARC323-R` Deterministic meets probabilistic: Patterns for reliable AI integration
+- `COP369` Resilient and compliant workloads : Where Humans and AI Operate Together
+- `COP306-R` Cut through Kubernetes signal overload with unified observability
+- `SEC296` What's new in network and edge protection on AWS
+- `SEC290` Detection and response at machine speed
+- `ANT415-R` Build a grounded AI support assistant on Amazon OpenSearch Service
+- `AIM3329` Scaling agents from pilot to production on Amazon Bedrock AgentCore
+- `SVS349-R1` Managing Lambda Runtimes at Scale for Platform Teams
+- `IND219` How to Use AI Agents to Run Genomics Pipelines Faster and Cheaper
+- `DVT339-R1` Best practices for making coding agent orchestration more deterministic
+- `IND3338-R1` Accelerate Physical AI development with NVIDIA on AWS
+- `IND3357` How Wisconsin DOR cut suspended tax returns with AWS Quick
+- `AIM3330` Any framework, any model: build agents on Amazon Bedrock AgentCore
+- `AIM3331` Agent security: policy, guardrails, isolation on Bedrock AgentCore
+- `COP408-R` Correlate database query latency to user impact
+- `IND3361` Building mission-grade cyber defense agents, for the Army and beyond
+- `SEC297` What's new in AI security: agents, identity, and the edge
+- `API312-R1` Building distributed multi-agent architectures on serverless
+- `STG422-R1` Dive deep into resilience architectures for Amazon EBS
+
+**Removed**
+- `AIM225-S` Creating resilient multi-channel customer experiences for NAB with Amazon Connect (sponsored by Deloitte)
+- `AIM450-R1` Context engineering for production agents on AgentCore
+
+**Changed**
+- `ACT065` Amazon’s World Famous Chicken Wing Eating Competition — start: 2026-12-03T14:45:00Z → 2026-12-04T02:45:00Z; end: 2026-12-03T15:35:00Z → 2026-12-04T03:35:00Z
+- `AIM260-S` The Frontier Doesn't Hold Still: Running Claude Agents at Scale on AWS (sponsored by Anthropic) — speakers: Daniel Xu, Lauren Polansky → Daniel Xu
+- `AIM335-R` Build Provable Zero-Trust Agents with Automated Reasoning checks — speakers: Nafi Diallo, Wale Akinfaderin → Nafi Diallo
+- `AIM335-R1` Build Provable Zero-Trust Agents with Automated Reasoning checks — speakers: Nafi Diallo, Wale Akinfaderin → Nafi Diallo
+- `AIM351-R` Build an automated evaluation pipeline for AI agents — speakers: Aishwarya Gavili, Dheeraj Hegde, Sam Palani, Suyin Wang, … → Aishwarya Gavili, Dheeraj Hegde, Sam Palani, Wale Akinfad…
+- `AIM351-R1` Build an automated evaluation pipeline for AI agents — speakers: Aishwarya Gavili, Dheeraj Hegde, Sam Palani, Suyin Wang, … → Aishwarya Gavili, Dheeraj Hegde, Sam Palani, Wale Akinfad…
+- `AIM352` Build and deploy a voice agent with Amazon Nova 2.5 Sonic — speakers: Hector Lopez, Mark Paguay, Reilly Manton, Srini Veeravana… → Hector Lopez, Mark Paguay, Reilly Manton, Srini Veeravana…
+- `AIM375-S` Building the Intelligent Health System, CXO blueprint for the agentic era (sponsored by PwC) — speakers: Abbas Mooraj, Geoffry Hook, Rares Almasan → Abbas Mooraj, Geoffry Hook
+- `AIM398` Customer paths to production grade domain-specific AI with Forge — speakers: Deepak Rupakula, Echeyde Cubillo, Haritez Narrisetty, Hen… → Deepak Rupakula, Echeyde Cubillo, Haritez Narrisetty, Hen…
+- `AIM403` Build and Optimize AI Pipelines with Ray on SageMaker HyperPod — speakers: Anoop Saha, Chakravarthy Nagarajan, Ioan CATANA, Mijanur … → Anoop Saha, Ioan CATANA, Mijanur Palash, Tomonori Shimomu…
+- `AIM406` End-to-end foundation model pipelines on SageMaker HyperPod with EKS — speakers: Farrukh Sohail, Harsh Asnani, Mayank Gupta, Mijanur Palash → Farrukh Sohail, Mayank Gupta, Mijanur Palash
+- `ARC208-S` Powering Agentic AI with Real - Time Market Data Transformation for LSEG (sponsored by AMD) — speakers: Madhusudhan Rangarajan, Mike Thompson, Stuart Bunyan → Mike Thompson, Stuart Bunyan
+- `ARC325-R` Serverless at 1M RPS: Lambda, DynamoDB & SQS Scaling Lessons — speakers: Jay Colodner, Nishtha Yadav → Jay Colodner
+- `ARC325-R1` Serverless at 1M RPS: Lambda, DynamoDB & SQS Scaling Lessons — speakers: Jay Colodner, Nishtha Yadav → Jay Colodner
+- `ARC404-R` Event storming: Find your service boundaries before production does — speakers: Jim Fernandes, John Dougherty, Ramesh Chidirala, Vaibhav … → Jim Fernandes, John Dougherty, Ramesh Chidirala, Yongzhe Ren
+- `ARC404-R1` Event storming: Find your service boundaries before production does — speakers: Jim Fernandes, John Dougherty, Ramesh Chidirala, Vaibhav … → Jim Fernandes, John Dougherty, Ramesh Chidirala, Yongzhe Ren
+- `CMP315` Optimize a .NET application for Graviton 5 using AWS Transform — speakers: Chintan Agrawal, Jitesh Kumar, Kumar Shubham, Pranjali Ra… → Jitesh Kumar, Kumar Shubham, Pranjali Rawat, Shubhendu Dubey
+- `CON206-S` Don't build agents, build environments instead (sponsored by Modal) — speakers: Adam Azzam → —
+- `CON314` Modernize and containerize legacy apps to Amazon ECS with AWS Transform — speakers: Abhishek Nanda, Asiel Bencomo Corona, Avinash Desireddy, … → Abhishek Nanda, Asiel Bencomo Corona, Avinash Desireddy, …
+- `CON325` Running AI agents you can trust on Amazon EKS — desc
+- `CON335-R` Architect production MCP servers on Amazon ECS — desc
+- `COP102-S` Enterprise-Grade Outcomes. Within Reach for Growing Businesses. (sponsored by Accenture) — speakers: Chris Wegmann, Dusshyant Roy → Dusshyant Roy
+- `COP309-R` I didn't know my AI agent was doing that! — speakers: PJ Ng, Shane Carragher, Shanna Chang, Yash Doshi, YoungMi… → PJ Ng, Shanna Chang, Yash Doshi, YoungMin Joung
+- `COP309-R1` I didn't know my AI agent was doing that! — speakers: PJ Ng, Shane Carragher, Shanna Chang, Yash Doshi, YoungMi… → PJ Ng, Shanna Chang, Yash Doshi, YoungMin Joung
+- `COP323-R` Trust but verify: Building the audit loop for AI agents in production — speakers: Bhavini Bhatia, Farzin Bagheri, Justin Ossai, Simone Poma… → Bhavini Bhatia, Farzin Bagheri, Justin Ossai, Simone Pomata
+- `COP323-R1` Trust but verify: Building the audit loop for AI agents in production — speakers: Bhavini Bhatia, Farzin Bagheri, Justin Ossai, Simone Poma… → Bhavini Bhatia, Farzin Bagheri, Justin Ossai, Simone Pomata
+- `DAT434-R` Fast and easy bulk operations with Amazon DynamoDB — speakers: Colin Leek, Jason Hunter, Ruskin Dantra → Colin Leek, Ruskin Dantra
+- `DAT434-R1` Fast and easy bulk operations with Amazon DynamoDB — speakers: Colin Leek, Jason Hunter, Ruskin Dantra → Colin Leek, Jason Hunter
+- `DVT204` Beyond the pilot: How customers scaled Kiro and proved the value — speakers: Diana Kennedy, Kym Weiland, Michael Erdman, Rory Richards… → Kym Weiland, Michael Erdman, Rory Richardson (AWS)
+- `DVT306-R` Deploy without drama: Safe, automated releases on AWS — speakers: Anastasia Giannoulas, Mark Rambow, Michael Michael → Michael Michael
+- `DVT306-R1` Deploy without drama: Safe, automated releases on AWS — speakers: Anastasia Giannoulas, Mark Rambow, Michael Michael → Michael Michael
+- `DVT405` Trusted intent: How Kiro proves your specs before writing any code — speakers: Brian Beach, Nadia Labai → Nadia Labai
+- `HMC209` How SAP built its multicloud Center of Excellence — code: HMC321 → HMC209
+- `IND102-S` Accelerating with NVIDIA Omniverse: VW’s Battery Manufacturing Digital Twin (sponsored by NVIDIA) — speakers: Joerg Clobes, Martin Jaster → —
+- `IND108-S` From AI that responds to AI that delivers measurable outcomes with Zendesk and AWS (sponsored by Zendesk) — speakers: Bailey Backal, Hannah Deveney → Bailey Backal
+- `IND215` Deploying Governed AI Agents in Clinical AI — speakers: Bret Borota, Ekta Walia Bhullar, Mark Logan → Bret Borota, Ekta Walia Bhullar
+- `IND309` Advancing the Mission with AI and HPC Supercomputing Pods on AWS — speakers: Lowell Wofford, Nicci Neal → —
+- `IND311-R` Build a payment-enabled agent with Amazon Bedrock AgentCore Payments — speakers: Anil Nadiminti, Deepika Prabhakara, Karim Akacem, Khozaim… → Anil Nadiminti, Deepika Prabhakara, Karim Akacem, Khozaim…
+- `IND311-R1` Build a payment-enabled agent with Amazon Bedrock AgentCore Payments — speakers: Anil Nadiminti, Deepika Prabhakara, Karim Akacem, Khozaim… → Anil Nadiminti, Deepika Prabhakara, Karim Akacem, Khozaim…
+- `IND3345` Robinhood: Scaling in-app agentic trading to every investor on AWS — desc
+- `IND3356` How Audi is Building an Adaptive Factory with Physical AI on AWS — start: 2026-12-03T00:00:00Z → 2026-12-03T00:30:00Z; end: 2026-12-03T01:00:00Z → 2026-12-03T01:30:00Z
+- `IND352-R` Gotta detect 'em all: finding rogue devices with Amazon Bedrock — speakers: Anthony Castaneda, Collin Chew, Insoo Jang, Jenifer Wang,… → Anthony Castaneda, Collin Chew, Jenifer Wang, Reshad Habi…
+- `IND355-R` Healthcare & Life Sciences AI Agents: From Spec to Demo in 120 Min — speakers: Ariella Sasson, Nadeem Bulsara, Necibe Ahat → Nadeem Bulsara, Necibe Ahat
+- `IND355-R1` Healthcare & Life Sciences AI Agents: From Spec to Demo in 120 Min — speakers: Ariella Sasson, Nadeem Bulsara, Necibe Ahat → Nadeem Bulsara, Necibe Ahat
+- `IND423` Modernizing government rules engines with Neurosymbolic AI — title: Replacing eligibility rules engines with Neurosymbolic AI… → Modernizing government rules engines with Neurosymbolic AI; desc
+- `MAM219` Transforming business and SAP with Amazon Innovations — speakers: Paul Chen, Shankar Lakshmanan, Soulat Khan → Paul Chen, Soulat Khan
+- `MAM220` A Unified AWS Data and AI Strategy for SAP Customers — start: 2026-12-03T21:00:00Z → 2026-12-04T00:00:00Z; end: 2026-12-03T22:00:00Z → 2026-12-04T01:00:00Z; room: …Purple Theater → …Red Theater
+- `MAM221` Accelerating AI-powered business transformation and SAP Modernization — start: 2026-12-04T00:00:00Z → 2026-12-03T21:00:00Z; end: 2026-12-04T01:00:00Z → 2026-12-03T22:00:00Z; room: …Red Theater → …Purple Theater
+- `MAM222` AWS migration agents fast-tracking SAP modernization — speakers: Alex Kakhanovich, Erik Kamman, Rob Lawrence → Alex Kakhanovich, Erik Kamman
+- `MAM228` 20-minute guide: Cut migration validation to hours with AWS Transform — title: …guide to automating post-migration validation → …guide: Cut migration validation to hours with AWS Transform; desc
+- `MAM323-R` Analyze your portfolio, prioritize what to fix, and transform it — speakers: Lucas Soriano Alves Duarte, Manmohit Pal Singh → Lucas Soriano Alves Duarte
+- `MAM323-R1` Analyze your portfolio, prioritize what to fix, and transform it — speakers: Aritra Nag, Lucas Soriano Alves Duarte, Manmohit Pal Singh → Lucas Soriano Alves Duarte, Manmohit Pal Singh
+- `MAM347-R1` Meet Your AI-powered Advisor for WorkSpaces Administration — desc
+- `NET342-R` Amazon Route 53 Global Resolver: Anycast DNS over private connections — title: Innovations in DNS and Amazon Route 53 → Amazon Route 53 Global Resolver: Anycast DNS over private…; desc
+- `NET342-R1` Amazon Route 53 Global Resolver: Anycast DNS over private connections — title: Innovations in DNS and Amazon Route 53 → Amazon Route 53 Global Resolver: Anycast DNS over private…; desc
+- `NET342-R2` Amazon Route 53 Global Resolver: Anycast DNS over private connections — title: Innovations in DNS and Amazon Route 53 → Amazon Route 53 Global Resolver: Anycast DNS over private…; desc
+- `NET345` Amazon Route 53 Global Resolver: Anycast DNS over private connections — title: Innovations in DNS and Amazon Route 53 → Amazon Route 53 Global Resolver: Anycast DNS over private…; desc
+- `PEX311-R` Agentic AI Governance for Regulated Industries — speakers: Jayanthi Rajaraman, Jennifer Bergstrom, Ranjan Banerji → Jayanthi Rajaraman, Ranjan Banerji
+- `PEX312` Turn AWS Marketplace listings into self-service buyer journeys — speakers: Justin Cook, Nora Zhang, Salvador Lopez Beneyto → Justin Cook, Nora Zhang
+- `PEX401-R1` Building a Zero Trust for Agentic AI Practice: A Partner Framework — speakers: Henry Axelrod, Kishore Tatavarthi, Krishna Prasad Prasad,… → Henry Axelrod, Kishore Tatavarthi, Krishna Prasad Prasad,…
+- `SEC229-S` From Signals to Action for SDG&E and SoCalGas: AI-Powered Cybersecurity on AWS (sponsored by Accenture) — speakers: Ben Gordon, Brent Shaffer, JONATHAN HOLT → Ben Gordon, Brent Shaffer
+- `SEC326` What's New In Application Security: Securing Applications At Machine Speed — speakers: Christopher Rae, Daniel Santana, Joao Melo → Christopher Rae, Daniel Santana
+- `SEC364` Securing software and AI supply chains with Network Firewall at Coupang — speakers: Amish Shah, Andrew (Kyungshik) Shin, Sang Won Kim → Amish Shah, Andrew (Kyungshik) Shin
+- `SEC406` Navigating the inter-workings of an agentic SOC & threat hunting analyst — speakers: Chris Elmore, Gopinath Jagadesan, Jonathan Nguyen, Michae… → Chris Elmore, Gopinath Jagadesan, Jonathan Nguyen, Michae…
+- `STG308-R` Accelerate data migrations with AWS DataSync at any scale — speakers: Madhukumar Adavi, Tugba Goksel → Tugba Goksel
+- `STG308-R1` Accelerate data migrations with AWS DataSync at any scale — speakers: Madhukumar Adavi, Sravan Rachiraju, Tugba Goksel → Madhukumar Adavi, Tugba Goksel
+- `STG326-R` Bring your S3 data to your compute with S3 Files — speakers: Andrew Peng, Prabir Sekhri, Tom McDonald → Prabir Sekhri, Tom McDonald
+- `STG326-R1` Bring your S3 data to your compute with S3 Files — speakers: Andrew Peng, Prabir Sekhri, Tom McDonald → Prabir Sekhri, Tom McDonald
+- `STG351-R1` A practical guide to Amazon S3 data protection — speakers: Denton He, Ed Gummett, Jonathan Wong → Denton He, Ed Gummett
+- `SUP209` Self-Improving AI: The Race to Autonomous Systems — speakers: Glenn Rachlin, Jerry Tworek → Jerry Tworek
+- `SUP215` Building AI products at startup speed — speakers: Anupam Mishra, Paul Vincent → Paul Vincent
+- `SVS331-R` Serverless Java in 2026 — speakers: Christian Mueller, Lefteris Karageorgiou → Lefteris Karageorgiou
+- `TNC103` The Amplification Effect: How AI Sharpens the Builder — speakers: ADAM B, Umesh Sampat → ADAM B
+- `TNC104` How T&C Empowers Partners to Build AI-Ready Teams and Drive Customer Impact? — speakers: Brian Henry, Mark Daigle → Brian Henry
+- `TNC221-R` Evaluate Enterprise AI Agents with an Eval-First Approach — speakers: Jonathan Dion, Rashmi Sahasrabudhe → Rashmi Sahasrabudhe; desc
+- `TNC221-R1` Evaluate Enterprise AI Agents with an Eval-First Approach — speakers: Jonathan Dion, Rashmi Sahasrabudhe → Rashmi Sahasrabudhe
+- `TNC302-R` Agentic Powered AWS Frontier Agents — speakers: Frank Spiess, Jonathan Dion → Frank Spiess
+- `TNC302-R1` Agentic Powered AWS Frontier Agents — speakers: Jonathan Dion, Marco Tamassia → Marco Tamassia
+- `TNC330` Monitor Agent Performance and Telemetry using AgentCore Observability — desc
+- `WOC102` The rules for AI are being written right now and nobody’s watching — speakers: Caroline McKee, Christina Mitine, Sarah Eichten, Soumya S… → Caroline McKee, Sarah Eichten, Soumya Srinagesh Tulloss
+
