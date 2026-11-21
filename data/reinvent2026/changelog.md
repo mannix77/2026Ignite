@@ -3,6 +3,13 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-11-21T06:43:40Z · https://catalog.awsevents.com/api/sessions
+
+Added 0 · removed 0 · changed 1
+
+**Changed**
+- `DVT202` AWS infrastructure as code: A year in review — desc
+
 ## 2026-11-21T00:50:45Z · https://catalog.awsevents.com/api/sessions
 
 Added 194 · removed 4 · changed 43
