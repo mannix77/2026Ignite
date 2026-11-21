@@ -3,6 +3,124 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-11-21T00:50:45Z · https://catalog.awsevents.com/api/sessions
+
+Added 194 · removed 4 · changed 43
+
+**Added**
+- `COP344-S-SC2` Agentic AI Needs Agentic Infrastructure: Autonomy on Amazon EKS (sponsored by ScaleOps)
+- `DVT206-SC2` 10x or bust: How Amazon's Frontier teams ship with Kiro
+- `DVT206-SC3` 10x or bust: How Amazon's Frontier teams ship with Kiro
+- `DVT220-S-SC2` The Agentic SDLC (sponsored by Postman)
+- `MAM201-SC2` How IT leaders actually pulled off their cloud migrations
+- `ANT314-SC2` Accelerating data analytics on Apache Iceberg with Amazon S3 Tables
+- `DVT345-SC2` Continuous integration and continuous delivery (CI/CD) on AWS
+- `IND216-SC2` Beyond AIOps: Operating safely in the age of agent sprawl
+- `AIM371-SC2` Open for Business: OpenAI on AWS
+- `BIZ101-SC2` How Southwest Airlines put AI at the center of customer experience
+- `HMC304-SC2` Real-world migrations: Lessons learned migrating to AWS Outposts
+- `SEC302-SC2` Governance foundations for AI workloads that grow into autonomous agents
+- `SEC302-SC3` Governance foundations for AI workloads that grow into autonomous agents
+- `SEC302-SC4` Governance foundations for AI workloads that grow into autonomous agents
+- `CMP202-SC2` Amazon EC2: New silicon, new instances, new possibilities
+- `COP367-SC2` Operationalizing resilience with AWS Resilience Hub
+- `DVT338-SC2` Scale agentic development with automated orchestration
+- `API402-SC2` Building event-driven architectures in the age of AI agents
+- `COM401-SC2` AI Didn't Wait for Security: Now What?
+- `COM401-SC3` AI Didn't Wait for Security: Now What?
+- `COM401-SC4` AI Didn't Wait for Security: Now What?
+- `CON347-SC2` Intelligent, right-sized compute on Amazon EKS
+- `DVT202-SC2` AWS infrastructure as code: A year in review
+- `DAT424-SC2` Advanced data modeling for Amazon ElastiCache
+- `DAT424-SC3` Advanced data modeling for Amazon ElastiCache
+- `DVT316-SC2` What's new in web and mobile app development on AWS
+- `IND394-SC2` Mastercard: Training a large transaction model on billions of transactions
+- `IND394-SC3` Mastercard: Training a large transaction model on billions of transactions
+- `DAT441-SC2` DynamoDB: the database designed for trillion-scale vector search
+- `DVT214-S-SC2` Claude Keeps Building: How Coding Agents Change Software Development (sponsored by Anthropic)
+- `DVT214-S-SC3` Claude Keeps Building: How Coding Agents Change Software Development (sponsored by Anthropic)
+- `NET326-SC2` Deep dive into Elastic Load Balancing for modern workloads
+- `SEC101-S-SC2` 15 Minutes Is Too Late: Stop AWS Intrusions with CrowdStrike’s Cloud SOC Agent (sponsored by CrowdStrike)
+- `STG310-SC2` Accelerating AI/ML Pipelines with Amazon EBS
+- `AIM385-S-SC2` Small Language Models, Total Control: Sovereign AI Agents, Lower Cost (sponsored by Boomi)
+- `IND3305-SC2` How Citizens Bank reimagined CX with Amazon Connect Customer & GenAI
+- `IND3305-SC3` How Citizens Bank reimagined CX with Amazon Connect Customer & GenAI
+- `NET338-SC2` Innovations in Elastic Load Balancing and application networking
+- `AIM370-SC2` Trusting agents in production: end-to-end security with AgentCore
+- `AIM370-SC3` Trusting agents in production: end-to-end security with AgentCore
+- `IND3329-SC2` Allianz: Building domain AI agents that scale across the enterprise
+- `IND3349-SC2` From Generic to Industry Expert: The Next Era of AI
+- `IND3349-SC3` From Generic to Industry Expert: The Next Era of AI
+- `IND3349-SC4` From Generic to Industry Expert: The Next Era of AI
+- `DAT317-SC2` A practitioner's guide to data for agentic AI
+- `DAT318-S-SC2` 10x Faster Vector Indexes: GPU Acceleration in Amazon OpenSearch with NVIDIA cuVS (sponsored by NVIDIA)
+- `STG342-SC2` Amazon S3 performance: Architecture, design, and optimization
+- `SVS338-SC2` Serverless developers in the agentic era: What changes, what doesn't
+- `AIM289-S-SC2` How the most advanced teams manage the full SDLC on an agentic stack (sponsored by SpaceXSI)
+- `AIM319-SC2` Token Counts to Business Impact: Measurable AI Architectures at Scale
+- `API319-SC2` Orchestrating AI agents with AWS serverless services
+- `DAT405-SC2` Deep dive into Amazon Aurora DSQL and its architecture
+- `IND379-SC2` Scaling Multi-Account IAM at Netflix: Access, VisibilityÂ andÂ Credentials
+- `DVT212-S-SC2` After the Agents Write the Code: A Field Report From 100 Million Code Reviews (sponsored by CodeRabbit)
+- `MAM206-SC2` End-to-end agentic modernization with United Airlines & Bank Hapoalim
+- `AIM241-S-SC2` 4 foundations for building the agentic enterprise on AWS​ (sponsored by IBM)
+- `AIM241-S-SC3` 4 foundations for building the agentic enterprise on AWS​ (sponsored by IBM)
+- `CON346-SC2` Beyond the registry: Discover, trust, & consume containers on AWS
+- `MAM327-SC2` 5 steps to faster data center exits with AWS Transform
+- `SVS336-SC2` Building production AI agents on AWS: compute, security, state, and cost
+- …and 134 more
+
+**Removed**
+- `SEC309-R` Network firewall deployment without the guesswork: codify, deploy, done
+- `SEC319-R1` Preventing unintended access: a practical guide to data perimeter controls
+- `SEC390` How Woodside handed SOC monitoring to AWS SIR to focus on threat hunting
+- `CON348-R` Defense-in-Depth for Containers on Amazon EKS: A Layering Story
+
+**Changed**
+- `AIM106-S` How Vanguard Scales AI Oversight Without Scaling Human Review (sponsored by Capgemini) — speakers: Anand Mudaliar, Ayush Sharma, Jithin Pradeep, Piyush Saxena → Anand Mudaliar, Ayush Sharma, Piyush Saxena
+- `AIM137-S` Transforming Customer Experiences Through Tapestry’s Order Management (sponsored by Digitate) — speakers: Asif Iqbal, Sonal Sharan → Sonal Sharan
+- `AIM2214` Accelerating AI with Data on AWS Marketplace — title: Accelerating Applications with Data on AWS Marketplace → Accelerating AI with Data on AWS Marketplace; speakers: — → Christopher Sterkel, Dev SenGupta, Jeetesh Srivastva, Mic…; desc
+- `AIM287-S` When Guardrails Break: Defense in Depth for Non-Deterministic AI (sponsored by Darktrace) — speakers: Margaret Cunningham → Steve Tilden
+- `AIM311-R` From 1 to 20,000: Scale reliably on AWS Trainium with AWS EKS — speakers: Chelsie Zhang → Chelsie Zhang, Yahav Biran
+- `AIM311-R1` From 1 to 20,000: Scale reliably on AWS Trainium with AWS EKS — speakers: Chelsie Zhang → Chelsie Zhang, Yahav Biran
+- `AIM323` Serving world models on AWS Trainium with native PyTorch — speakers: Lingfan Yu → Lingfan Yu, Yahav Biran
+- `AIM3318` Guardrails for What Your Agent Does, Not Just What It Says — desc
+- `ANT420` Ground your agents with AWS Context and Amazon SageMaker — desc
+- `API102-S` Cloud agent work needs infrastructure. We built it. (sponsored by Asana) — speakers: Amritansh Raghav, Arnab Bose → Amritansh Raghav, Trevin Chow
+- `ARC404-R` Event storming: Find your service boundaries before production does — speakers: Jim Fernandes, John Dougherty, Ramesh Chidirala, Yongzhe Ren → Brian Dowhan, Jim Fernandes, John Dougherty, Ramesh Chidi…
+- `ARC404-R1` Event storming: Find your service boundaries before production does — speakers: Jim Fernandes, John Dougherty, Ramesh Chidirala, Yongzhe Ren → Brian Dowhan, Jim Fernandes, John Dougherty, Ramesh Chidi…
+- `AWS208` How AI agents are changing the way engineering teams work — desc
+- `DVT219-S` Build Once, Deploy Anywhere: Agentic AI from Data Center to Edge with Qualcomm & AWS (sponsored by Qualcomm) — speakers: — → Vinesh Sukumar
+- `MUP114` Cutting manual accounts payable work — code: CMP102 → MUP114
+- `MUP225` What's new in network and edge protection on AWS — code: SEC296 → MUP225; speakers: Gopinath Durairaj, Mary Kay Sondecker, Saleem Muhammad, S… → —
+- `MUP226` What's new in AI security: agents, identity, and the edge — code: SEC297 → MUP226
+- `MUP227` Network Firewall ingress & egress just leveled up: what to use when — code: SEC298 → MUP227
+- `MUP323` Scaling agents from pilot to production on Amazon Bedrock AgentCore — code: AIM3329 → MUP323
+- `MUP324` Any framework, any model: build agents on Amazon Bedrock AgentCore — code: AIM3330 → MUP324
+- `MUP325` Agent security: policy, guardrails, isolation on Bedrock AgentCore — code: AIM3331 → MUP325
+- `MUP326` Run agents cost-effectively on Amazon Bedrock AgentCore — code: AIM3332 → MUP326
+- `MUP327` Build on the AI platform you trust with Amazon Bedrock — code: AIM3333 → MUP327
+- `MUP328` Giving AI agents the context they need with AWS Context — code: ANT357 → MUP328; speakers: Leonardo Gomez Virahonda, Raghu Prabhu → —
+- `MUP329` Interactive and largescale analytics with Amazon Athena and Amazon EMR — code: ANT358 → MUP329
+- `MUP330` Open, governed data and AI with the AWS Glue Data Catalog — code: ANT359 → MUP330
+- `MUP331` Simplifying how you use AWS: automating common patterns on your behalf — code: CMP361 → MUP331
+- `MUP332` Graviton5 for data workloads — code: CMP362 → MUP332
+- `MUP333` Use AI to Take Your Resilience to the Next Level — code: COP370 → MUP333; speakers: Arnav Khare, Mike Haken, Rob Charlton, Shivani Sharma → —
+- `MUP334` Who's Watching Your Agents? Observability for the AI Era — code: COP376 → MUP334
+- `MUP335` Ship web apps that just work — code: SVS352 → MUP335
+- `MUP336` Lambda Web Functions: Serverless Compute for HTTP Workloads — code: SVS353 → MUP336
+- `MUP337` Lambda Managed Instances: EC2 Power with Serverless Simplicity — code: SVS354 → MUP337; speakers: Brian Krygsman → —
+- `MUP402` What's new in Amazon Aurora: Ask the engineers — code: DAT454 → MUP402; speakers: Abhinav Dhandh → —
+- `NET342-R1` Innovations in DNS and Amazon Route 53 — title: Amazon Route 53 Global Resolver: Anycast DNS over private… → Innovations in DNS and Amazon Route 53; desc
+- `NET342-R2` Innovations in DNS and Amazon Route 53 — title: Amazon Route 53 Global Resolver: Anycast DNS over private… → Innovations in DNS and Amazon Route 53; desc
+- `NET348` IP Address Management and DNS Architecture Patterns on AWS — speakers: — → Pan Mittal, Steve Seymour
+- `TNC209-R` AI Powered Business Intelligence with AWS Quick — title: AI Powered Business Intelligence with Amazon Quick → AI Powered Business Intelligence with AWS Quick; desc
+- `TNC209-R1` AI Powered Business Intelligence with AWS Quick — title: AI Powered Business Intelligence with Amazon Quick → AI Powered Business Intelligence with AWS Quick; desc
+- `TNC211` AWS Partner: Agentic AI workflows for business users on AWS Quick — title: …Amazon Quick → …AWS Quick; desc
+- `TNC219` Organizing Enterprise Knowledge and Securing Data with AWS Quick — title: …Amazon Quick → …AWS Quick; desc
+- `TNC334-R` Streamlining Claims Processing with AWS Quick — title: Streamlining Claims Processing with Amazon Quick → Streamlining Claims Processing with AWS Quick; desc
+- `TNC334-R1` Streamlining Claims Processing with AWS Quick — title: Streamlining Claims Processing with Amazon Quick → Streamlining Claims Processing with AWS Quick; desc
+
 ## 2026-11-20T18:43:10Z · https://catalog.awsevents.com/api/sessions
 
 Added 0 · removed 0 · changed 11
