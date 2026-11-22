@@ -428,6 +428,14 @@ final class AgendaTests: XCTestCase {
         other.reserveAnswer = .success(BulkResult(successful: ["b"]))
         let mismatched = await Sync.change(backend: other, sessionID: "a") { try await $0.reserve(["a"]) }
         XCTAssertEqual(mismatched.problem as? APIError, .unconfirmed)
+
+        // Nor does another session's refusal stand in for this one's.
+        let unrelated = CountingBackend()
+        unrelated.reserveAnswer = .success(BulkResult(failed: [BulkFailure(sessionId: "b", code: "sessionFull")]))
+        let stray = await Sync.change(backend: unrelated, sessionID: "a") { try await $0.reserve(["a"]) }
+        XCTAssertNil(stray.refusal)
+        XCTAssertEqual(stray.problem as? APIError, .unconfirmed)
+        XCTAssertEqual(unrelated.calls("schedule"), 1)
     }
 
     func testASignInRejectedOnReadBackIsReportedEvenWhenTheChangeAlsoFailed() async {
