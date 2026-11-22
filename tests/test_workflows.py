@@ -3,6 +3,7 @@ must not leave its checkout half-rebased when a push loses a race.
 
     python3 -m unittest tests.test_workflows -v
 """
+import json
 import os
 import re
 import shutil
@@ -257,6 +258,61 @@ class DeployRetryTests(unittest.TestCase):
         step = report.split("- name: Open, update or close the production issue\n")[1].split("\n      - name:")[0]
         env = step.split("        env:\n")[1].split("        run:")[0]
         self.assertIn("          DEPLOY: ${{ needs.deploy.result }}", env.splitlines())
+
+
+def workflow_text(name):
+    return open(os.path.join(ROOT, ".github", "workflows", name), encoding="utf-8").read()
+
+
+def one_line_step(text, name):
+    """The command of the step called `name` when its `run:` is a single line, else None."""
+    m = re.search(r"- name: " + re.escape(name) + r"\n\s+run: ([^\n]+)\n", text)
+    return m.group(1) if m else None
+
+
+def setup_versions(text):
+    """(python-version, node-version) the workflow's first job sets up."""
+    py = re.search(r"actions/setup-python@\S+[^\n]*\n\s+with:\n\s+python-version: \"([^\"\n]+)\"", text)
+    node = re.search(r"actions/setup-node@\S+[^\n]*\n\s+with:\n\s+node-version: \"([^\"\n]+)\"", text)
+    return (py and py.group(1), node and node.group(1))
+
+
+class TestGateTests(unittest.TestCase):
+    """`npm test` is the one list of tests, and both a pull request and the sync run it."""
+
+    def test_npm_test_runs_every_test_file_on_disk(self):
+        js, py_nested = [], []
+        for folder, _, files in os.walk(HERE):
+            for f in files:
+                rel = os.path.relpath(os.path.join(folder, f), ROOT).replace(os.sep, "/")
+                if f.endswith(".test.js"):
+                    js.append(rel)
+                elif f.startswith("test_") and f.endswith(".py") and folder != HERE:
+                    py_nested.append(rel)
+        self.assertIn("tests/ics.test.js", js)       # the file the sync's own list had left out
+        commands = [c.strip() for c in json.load(open(os.path.join(ROOT, "package.json"),
+                                                      encoding="utf-8"))["scripts"]["test"].split("&&")]
+        self.assertEqual(sorted(c[len("node "):] for c in commands if c.startswith("node ")), sorted(js))
+        # `unittest discover` only looks in tests/ itself (the subfolders are not packages).
+        self.assertEqual(commands[-1], "python3 -m unittest discover -s tests")
+        self.assertEqual(py_nested, [])
+
+    def test_the_sync_runs_the_suite_through_npm_test(self):
+        # Its own copy of the list had drifted from package.json (tests/ics.test.js never ran).
+        self.assertEqual(one_line_step(sync_job_text(), "Run tests"), "npm test")
+
+    def test_every_pull_request_and_push_to_main_runs_npm_test(self):
+        text = workflow_text("tests.yml")
+        triggers = text.split("\non:\n")[1].split("\n\n")[0].splitlines()
+        # No `paths:` filter under either trigger: a change anywhere runs the suite.
+        self.assertEqual(triggers, ["  push:", "    branches: [main]", "  pull_request:"])
+        self.assertEqual(one_line_step(text, "Run tests"), "npm test")
+        self.assertIn("\npermissions:\n  contents: read\n", text)
+        self.assertRegex(text, r"\n    timeout-minutes: \d+\n")
+
+    def test_pull_requests_are_tested_on_the_versions_the_sync_runs_on(self):
+        self.assertEqual(setup_versions(sync_job_text()), ("3.12", "22"))
+        self.assertEqual(setup_versions(workflow_text("tests.yml")), ("3.12", "22"))
 
 
 if __name__ == "__main__":

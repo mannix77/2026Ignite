@@ -64,20 +64,9 @@ jobs:
         with:
           node-version: "22"
 
+      # The list of tests lives in package.json only (this step's own copy had drifted).
       - name: Run tests
-        run: |
-          node tests/planner.test.js
-          node tests/clash.test.js
-          node tests/picks.test.js
-          node tests/robustness.test.js
-          node tests/profile.test.js
-          node tests/catalog.test.js
-          node tests/store.test.js
-          node tests/instance.test.js
-          node tests/health.test.js
-          node tests/suggest.test.js
-          node tests/grid.test.js
-          python3 -m unittest discover -s tests
+        run: npm test
 
       - name: Sync the catalog
         id: sync
