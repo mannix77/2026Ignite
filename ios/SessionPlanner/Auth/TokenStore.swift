@@ -22,9 +22,12 @@ enum Keychain {
         return item as? Data
     }
 
+    /// Replaces the saved item in place, so a failed save leaves the previous sign-in intact.
     @discardableResult
     static func save(_ data: Data) -> Bool {
-        SecItemDelete(query as CFDictionary)
+        let updated = SecItemUpdate(query as CFDictionary, [kSecValueData as String: data] as CFDictionary)
+        if updated == errSecSuccess { return true }
+        guard updated == errSecItemNotFound else { return false }
         var q = query
         q[kSecValueData as String] = data
         // Readable after the first unlock, on this device only: never synced or restored elsewhere.
@@ -86,6 +89,15 @@ actor TokenStore: AccessTokenSource {
         refreshing = task
         defer { refreshing = nil }
         let new = try await task.value
+        // The attendee may have signed out, or signed in afresh, while this was in flight.
+        // Tokens renewed for a sign-in that is gone are revoked, never kept.
+        guard tokens == current else {
+            if new.refreshToken != current.refreshToken {
+                _ = try? await session.data(for: OAuthFlow.revokeRequest(config: config, refreshToken: new.refreshToken))
+            }
+            guard let replacement = tokens else { throw APIError.signInNeeded }
+            return replacement
+        }
         keep(new)
         return new
     }

@@ -96,6 +96,24 @@ public struct PlanSnapshot: Codable, Equatable, Sendable {
         return map
     }
 
+    /// Every session on the attendee's schedule with how firmly it is there. A reserved seat
+    /// outranks an invitation, which outranks a favorite.
+    public var commitmentsByID: [String: Commitment] {
+        var map: [String: Commitment] = [:]
+        for id in schedule.favorites { map[id] = .favorite }
+        for session in schedule.invitedSessions { map[session.sessionId] = .invited }
+        for id in schedule.reserved { map[id] = .reserved }
+        return map
+    }
+
+    /// The day to open on: today when the conference is on, otherwise the first day with
+    /// something on his schedule, otherwise the first day of the catalog.
+    public func defaultDay(today: String) -> String? {
+        let all = days()
+        if all.contains(today) { return today }
+        return days(committedOnly: true).first ?? all.first
+    }
+
     public func commitment(of sessionID: String) -> Commitment? {
         if schedule.reserved.contains(sessionID) { return .reserved }
         if schedule.invitedSessions.contains(where: { $0.sessionId == sessionID }) { return .invited }
@@ -131,16 +149,12 @@ public struct PlanSnapshot: Codable, Equatable, Sendable {
     }
 
     /// What is on the calendar for one day: reserved and invited sessions, plus favorites when asked.
-    public func agenda(on date: String, includeFavorites: Bool) -> DayAgenda {
-        let known = sessionsByID
-        var chosen: [String: Commitment] = [:]
-        func choose(_ id: String, _ commitment: Commitment) {
-            if let existing = chosen[id], existing <= commitment { return }
-            chosen[id] = commitment
-        }
-        for id in schedule.reserved { choose(id, .reserved) }
-        for session in schedule.invitedSessions { choose(session.sessionId, .invited) }
-        if includeFavorites { for id in schedule.favorites { choose(id, .favorite) } }
+    /// `index` and `commitments` take the values of `sessionsByID` and `commitmentsByID` when
+    /// the caller already holds them, so a redraw does not rebuild them.
+    public func agenda(on date: String, includeFavorites: Bool, index: [String: Session]? = nil,
+                       commitments: [String: Commitment]? = nil) -> DayAgenda {
+        let known = index ?? sessionsByID
+        let chosen = (commitments ?? commitmentsByID).filter { includeFavorites || $0.value != .favorite }
 
         var timed: [AgendaEntry] = []
         var allDay: [AgendaEntry] = []
@@ -160,22 +174,59 @@ public struct PlanSnapshot: Codable, Equatable, Sendable {
                          warnings: PlanSnapshot.transferWarnings(timed.filter { $0.commitment != .favorite }))
     }
 
-    /// Consecutive commitments in different venues with less than `tightTransferMinutes` between
-    /// them. Entries must be in start order. Sessions without a venue are not judged.
+    /// A commitment in a different venue from the one he is coming from, with less than
+    /// `tightTransferMinutes` between them. "Coming from" is the earlier commitment that ends
+    /// last, so an overlapping or venue-less entry in between does not hide the walk. Entries
+    /// must be in start order. Sessions without a venue are not judged.
     static func transferWarnings(_ entries: [AgendaEntry]) -> [TransferWarning] {
         var warnings: [TransferWarning] = []
-        for (a, b) in zip(entries, entries.dropFirst()) {
-            guard let from = a.session.venue, let to = b.session.venue, from != to else { continue }
-            let gap = b.start - a.end
-            if gap < tightTransferMinutes {
-                warnings.append(TransferWarning(fromID: a.id, toID: b.id, fromVenue: from, toVenue: to, gapMinutes: gap))
+        var comingFrom: AgendaEntry?
+        for entry in entries {
+            guard let to = entry.session.venue else { continue }
+            if let previous = comingFrom, let from = previous.session.venue, from != to {
+                let gap = entry.start - previous.end
+                if gap < tightTransferMinutes {
+                    warnings.append(TransferWarning(fromID: previous.id, toID: entry.id, fromVenue: from, toVenue: to,
+                                                    gapMinutes: gap))
+                }
             }
+            if comingFrom.map({ entry.end >= $0.end }) ?? true { comingFrom = entry }
         }
         return warnings
     }
 }
 
+/// What came of one change on the conference site.
+public struct ChangeOutcome: Sendable {
+    /// The schedule as read back afterwards; nil when it could not be read.
+    public var schedule: Schedule?
+    /// Why the conference site refused the change, when it did.
+    public var refusal: BulkFailure?
+    /// What went wrong sending the change or reading the schedule back.
+    public var problem: Error?
+}
+
 public enum Sync {
+    /// Sends one change, then reads the schedule back: the conference site's answer is what is
+    /// shown, never a guess. The change is sent once. When its answer never arrives, the
+    /// schedule is still read, and the change is not sent again.
+    public static func change(backend: PlanBackend, sessionID: String,
+                              _ action: @Sendable (PlanBackend) async throws -> BulkResult) async -> ChangeOutcome {
+        var outcome = ChangeOutcome()
+        do {
+            let result = try await action(backend)
+            outcome.refusal = result.failed.first { $0.sessionId == sessionID } ?? result.failed.first
+        } catch {
+            outcome.problem = error
+        }
+        do {
+            outcome.schedule = try await backend.loadSchedule()
+        } catch {
+            if outcome.problem == nil { outcome.problem = error }
+        }
+        return outcome
+    }
+
     /// Fetches the catalog and the schedule and builds a snapshot. Throws, leaving `previous`
     /// in place, when either fetch fails or the new catalog is under half the size of the one held.
     public static func refresh(backend: PlanBackend, previous: PlanSnapshot?, now: Date) async throws -> PlanSnapshot {

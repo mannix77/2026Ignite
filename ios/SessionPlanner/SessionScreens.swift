@@ -111,21 +111,13 @@ struct SessionDetailView: View {
 }
 
 struct SessionsScreen: View {
-    enum Filter: String, CaseIterable, Identifiable {
-        case all = "All"
-        case mine = "Mine"
-        case open = "Seats open"
-
-        var id: String { rawValue }
-    }
-
     @Environment(AppModel.self) private var model
     @State private var search = ""
-    @State private var filter: Filter = .mine
+    @State private var filter: SessionFilter = .mine
 
     var body: some View {
         NavigationStack {
-            let rows = matches()
+            let rows = model.sessions(matching: filter, search: search)
             List {
                 if rows.isEmpty {
                     Text(model.snapshot == nil ? "No sessions loaded yet." : "No sessions match.")
@@ -145,37 +137,12 @@ struct SessionsScreen: View {
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     Picker("Show", selection: $filter) {
-                        ForEach(Filter.allCases) { Text($0.rawValue).tag($0) }
+                        ForEach(SessionFilter.allCases) { Text($0.rawValue).tag($0) }
                     }
                     .pickerStyle(.segmented)
                     .frame(maxWidth: 320)
                 }
             }
-        }
-    }
-
-    private func matches() -> [Session] {
-        guard let snapshot = model.snapshot else { return [] }
-        let needle = search.trimmingCharacters(in: .whitespaces).lowercased()
-        let pool: [Session]
-        switch filter {
-        case .all:
-            pool = snapshot.sessions
-        case .mine:
-            pool = model.sessionsByID.values.filter { snapshot.commitment(of: $0.sessionId) != nil }
-        case .open:
-            pool = snapshot.sessions.filter {
-                $0.isReservable == true && ["available", "limited", "veryLimited"].contains($0.seatAvailability ?? "")
-            }
-        }
-        let found = needle.isEmpty ? pool : pool.filter { session in
-            ([session.title, session.code] + session.speakerNames + (session.topics ?? []))
-                .contains { $0.lowercased().contains(needle) }
-        }
-        return found.sorted { a, b in
-            let ka = (a.sessionTime?.date ?? "9999", a.sessionTime?.startMinute ?? 0, a.code, a.sessionId)
-            let kb = (b.sessionTime?.date ?? "9999", b.sessionTime?.startMinute ?? 0, b.code, b.sessionId)
-            return ka < kb
         }
     }
 }
@@ -227,11 +194,11 @@ struct SettingsScreen: View {
                         LabeledContent("Invitations", value: "\(snapshot.schedule.invitedSessions.count)")
                         LabeledContent("Favorites", value: "\(snapshot.schedule.favorites.count)")
                         LabeledContent("Sessions in catalog", value: "\(snapshot.sessions.count)")
-                        if !snapshot.unresolvedIDs.isEmpty {
-                            LabeledContent("No longer listed", value: "\(snapshot.unresolvedIDs.count)")
+                        if model.unresolvedCount > 0 {
+                            LabeledContent("No longer listed", value: "\(model.unresolvedCount)")
                         }
-                        if snapshot.skipped > 0 {
-                            LabeledContent("Unreadable sessions skipped", value: "\(snapshot.skipped)")
+                        if snapshot.skipped + snapshot.schedule.skipped > 0 {
+                            LabeledContent("Unreadable entries skipped", value: "\(snapshot.skipped + snapshot.schedule.skipped)")
                         }
                         LabeledContent("Updated") {
                             Text(snapshot.fetchedAt, format: .relative(presentation: .named))

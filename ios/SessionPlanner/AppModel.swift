@@ -13,6 +13,38 @@ struct EventInfo {
     static let sample = EventInfo(id: "sample", name: "Sample Conference", timeZone: .current)
 }
 
+/// The saved copy of the calendar. Reading and writing several megabytes of JSON happens here,
+/// off the main actor. Each save carries a version, so a slow older save never lands on top of
+/// a newer one, and nothing issued before a sign-out is written after it.
+actor SnapshotStore {
+    private var newest = 0
+
+    private static var url: URL {
+        let folder = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
+        return folder.appendingPathComponent("snapshot-reinvent2026.json")
+    }
+
+    func save(_ snapshot: PlanSnapshot, version: Int) throws {
+        guard version > newest else { return }
+        newest = version
+        let url = SnapshotStore.url
+        try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
+        try JSONEncoder().encode(snapshot).write(to: url, options: [.atomic, .completeFileProtectionUntilFirstUserAuthentication])
+    }
+
+    /// A missing or unreadable saved copy just means starting from a fresh fetch.
+    func load() -> PlanSnapshot? {
+        guard let data = try? Data(contentsOf: SnapshotStore.url) else { return nil }
+        return try? JSONDecoder().decode(PlanSnapshot.self, from: data)
+    }
+
+    /// Removes the saved copy and refuses every save issued up to `version`.
+    func delete(through version: Int) {
+        newest = max(newest, version)
+        try? FileManager.default.removeItem(at: SnapshotStore.url)
+    }
+}
+
 @MainActor
 @Observable
 final class AppModel {
@@ -22,7 +54,12 @@ final class AppModel {
 
     private(set) var mode: Mode = .signedOut
     private(set) var snapshot: PlanSnapshot?
+    // Lookups derived from the snapshot once, when it changes, so redraws do not rebuild them.
     private(set) var sessionsByID: [String: Session] = [:]
+    private(set) var commitmentsByID: [String: Commitment] = [:]
+    private(set) var days: [String] = []
+    private(set) var committedDays: [String] = []
+    private(set) var unresolvedCount = 0
     private(set) var isRefreshing = false
     private(set) var isSigningIn = false
     /// True when the saved sign-in was rejected: the calendar stays, but updating needs a new sign-in.
@@ -34,6 +71,8 @@ final class AppModel {
     }
 
     private let tokens = TokenStore()
+    private let store = SnapshotStore()
+    private var saveVersion = 0
     private var backend: PlanBackend?
     private var signInFlow: SignInFlow?
 
@@ -49,7 +88,7 @@ final class AppModel {
         case .live:
             guard await tokens.isSignedIn else { return }
             enterLive()
-            loadSavedSnapshot()
+            await loadSavedSnapshot()
             await refresh()
         case .signedOut:
             break
@@ -69,8 +108,24 @@ final class AppModel {
 
     private func setSnapshot(_ new: PlanSnapshot?) {
         snapshot = new
-        sessionsByID = new?.sessionsByID ?? [:]
+        let index = new?.sessionsByID ?? [:]
+        sessionsByID = index
+        commitmentsByID = new?.commitmentsByID ?? [:]
+        days = new?.days() ?? []
+        committedDays = new?.days(committedOnly: true) ?? []
+        unresolvedCount = new?.unresolvedIDs.count ?? 0
     }
+
+    // MARK: What the screens show
+
+    func commitment(of sessionID: String) -> Commitment? { commitmentsByID[sessionID] }
+
+    func sessions(matching filter: SessionFilter, search: String) -> [Session] {
+        snapshot?.sessions(matching: filter, search: search, commitments: commitmentsByID) ?? []
+    }
+
+    /// Today's date and minute in the conference's time zone.
+    var eventNow: (date: String, minute: Int) { Wording.eventNow(Date(), timeZone: event.timeZone) }
 
     // MARK: Signing in and out
 
@@ -86,7 +141,7 @@ final class AppModel {
             let kept = await tokens.keep(new)
             if mode != .live { setSnapshot(nil) }
             enterLive()
-            loadSavedSnapshot()
+            await loadSavedSnapshot()
             await refresh()
             if !kept, notice == nil {
                 notice = "Signed in, but the sign-in could not be saved to the keychain. You will need to sign in again next time."
@@ -103,13 +158,13 @@ final class AppModel {
     }
 
     func signOut() async {
-        await tokens.signOut()
-        try? FileManager.default.removeItem(at: AppModel.snapshotURL)
         backend = nil
         setSnapshot(nil)
         needsSignIn = false
         notice = nil
         setMode(.signedOut)
+        await tokens.signOut()
+        await store.delete(through: saveVersion)
     }
 
     func startDemo() async {
@@ -131,16 +186,20 @@ final class AppModel {
     /// Fetches the catalog and schedule. On any failure the calendar last seen is kept.
     func refresh() async {
         guard let backend, !isRefreshing else { return }
+        let startedIn = mode
         isRefreshing = true
         defer { isRefreshing = false }
         do {
             let new = try await Sync.refresh(backend: backend, previous: snapshot, now: Date())
+            // An answer for a conference he has since left (signed out, switched) is dropped.
+            guard mode == startedIn else { return }
             setSnapshot(new)
             needsSignIn = false
             if mode == .live { save(new) }
         } catch is CancellationError {
             // The screen went away mid-refresh.
         } catch {
+            guard mode == startedIn else { return }
             report(error)
         }
     }
@@ -153,76 +212,62 @@ final class AppModel {
 
     // MARK: Changing things on the conference site
 
-    func commitment(of sessionID: String) -> Commitment? { snapshot?.commitment(of: sessionID) }
-
     func setFavorite(_ session: Session, _ favorite: Bool) async {
-        await change(session) { backend in
-            if favorite { return try await backend.favorite([session.sessionId]) }
-            try await backend.unfavorite(session.sessionId)
-            return BulkResult(successful: [session.sessionId])
+        let id = session.sessionId
+        await change(id) { backend in
+            if favorite { return try await backend.favorite([id]) }
+            try await backend.unfavorite(id)
+            return BulkResult(successful: [id])
         }
     }
 
     func reserve(_ session: Session) async {
-        await change(session) { try await $0.reserve([session.sessionId]) }
+        let id = session.sessionId
+        await change(id) { try await $0.reserve([id]) }
     }
 
     func cancelReservation(_ session: Session) async {
-        await change(session) { backend in
-            try await backend.cancelReservation(session.sessionId)
-            return BulkResult(successful: [session.sessionId])
+        let id = session.sessionId
+        await change(id) { backend in
+            try await backend.cancelReservation(id)
+            return BulkResult(successful: [id])
         }
     }
 
-    /// Sends one change, then reads the schedule back: the conference site's answer is what is
-    /// shown, never a guess. When the answer to the change never arrived, the schedule is still
-    /// read and the change is not sent again.
-    private func change(_ session: Session, _ action: (PlanBackend) async throws -> BulkResult) async {
+    /// Sends one change and shows the schedule the conference site reads back (see `Sync.change`).
+    private func change(_ sessionID: String, _ action: @Sendable (PlanBackend) async throws -> BulkResult) async {
         guard let backend else { return }
-        var problem: String?
-        do {
-            let result = try await action(backend)
-            if let failure = result.failed.first(where: { $0.sessionId == session.sessionId }) ?? result.failed.first {
-                problem = Wording.refusal(failure) { [sessionsByID] id in sessionsByID[id]?.code }
-            }
-        } catch {
-            if error as? APIError == .signInNeeded { needsSignIn = true }
-            problem = Wording.problem(error)
+        let startedIn = mode
+        let outcome = await Sync.change(backend: backend, sessionID: sessionID, action)
+        guard mode == startedIn else { return }
+        if let schedule = outcome.schedule, var updated = snapshot {
+            updated.schedule = schedule
+            setSnapshot(updated)
+            if mode == .live { save(updated) }
         }
-        do {
-            let schedule = try await backend.loadSchedule()
-            if var updated = snapshot {
-                updated.schedule = schedule
-                setSnapshot(updated)
-                if mode == .live { save(updated) }
-            }
-        } catch {
-            if problem == nil { problem = Wording.problem(error) }
+        if let refusal = outcome.refusal {
+            notice = Wording.refusal(refusal) { [sessionsByID] id in sessionsByID[id]?.code }
+        } else if let problem = outcome.problem {
+            report(problem)
         }
-        if let problem { notice = problem }
     }
 
     // MARK: The saved copy
 
-    private static var snapshotURL: URL {
-        let folder = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
-        return folder.appendingPathComponent("snapshot-reinvent2026.json")
-    }
-
     private func save(_ snapshot: PlanSnapshot) {
-        do {
-            let url = AppModel.snapshotURL
-            try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
-            try JSONEncoder().encode(snapshot).write(to: url, options: [.atomic, .completeFileProtectionUntilFirstUserAuthentication])
-        } catch {
-            notice = "The calendar could not be saved on this phone, so it will not be available offline."
+        saveVersion += 1
+        let version = saveVersion
+        Task {
+            do {
+                try await store.save(snapshot, version: version)
+            } catch {
+                notice = "The calendar could not be saved on this phone, so it will not be available offline."
+            }
         }
     }
 
-    /// A missing or unreadable saved copy just means starting from a fresh fetch.
-    private func loadSavedSnapshot() {
-        guard snapshot == nil, let data = try? Data(contentsOf: AppModel.snapshotURL),
-              let saved = try? JSONDecoder().decode(PlanSnapshot.self, from: data) else { return }
+    private func loadSavedSnapshot() async {
+        guard snapshot == nil, let saved = await store.load(), snapshot == nil, mode == .live else { return }
         setSnapshot(saved)
     }
 }

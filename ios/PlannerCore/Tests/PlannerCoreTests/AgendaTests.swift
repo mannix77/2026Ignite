@@ -78,12 +78,21 @@ final class ModelsTests: XCTestCase {
         XCTAssertEqual(schedule.invitedSessions.map(\.sessionId), ["inv1"])
         XCTAssertEqual(schedule.invitedSessions.first?.sessionTime?.timezone, "America/Los_Angeles")
         XCTAssertEqual(schedule.personalTime, [])
+        // Two unusable reserved ids and one invitation without an id were dropped, and counted.
+        XCTAssertEqual(schedule.skipped, 3)
+    }
+
+    func testACleanScheduleCountsNothingSkipped() throws {
+        let schedule = try JSONDecoder().decode(
+            Schedule.self, from: Data(#"{"reserved":["r1"],"favorites":["f1"],"personalTime":[]}"#.utf8))
+        XCTAssertEqual(schedule, Schedule(reserved: ["r1"], favorites: ["f1"]))
+        XCTAssertEqual(schedule.skipped, 0)
     }
 
     func testASnapshotSurvivesBeingSavedAndReadBack() throws {
         let snapshot = PlanSnapshot(
             sessions: [session("a"), Session(sessionId: "b", title: "Bare")],
-            schedule: Schedule(reserved: ["a"], favorites: ["b"], invitedSessions: [session("inv", venue: nil)]),
+            schedule: Schedule(reserved: ["a"], favorites: ["b"], invitedSessions: [session("inv", venue: nil)], skipped: 2),
             fetchedAt: Date(timeIntervalSince1970: 1_800_000_000), skipped: 2)
         let data = try JSONEncoder().encode(snapshot)
         XCTAssertEqual(try JSONDecoder().decode(PlanSnapshot.self, from: data), snapshot)
@@ -218,6 +227,177 @@ final class AgendaTests: XCTestCase {
 
     func testFavoritesAreNotJudgedForWalks() {
         XCTAssertEqual(warnings(gap: 0, secondIs: .favorite), [])
+    }
+
+    func testAVenuelessEntryInBetweenDoesNotHideTheWalk() {
+        let reception = session("reception", time: "12:30", length: "60", venue: nil)
+        let plan = snapshot([session("sec", time: "11:30", length: "60", venue: "Caesars Palace"),
+                             session("pex", time: "12:35", length: "120", venue: "MGM Grand")],
+                            reserved: ["sec", "pex"], invited: [reception])
+        let day = plan.agenda(on: "2026-12-02", includeFavorites: false)
+        XCTAssertEqual(day.timed.map(\.id), ["sec", "reception", "pex"])
+        XCTAssertEqual(day.warnings, [
+            TransferWarning(fromID: "sec", toID: "pex", fromVenue: "Caesars Palace", toVenue: "MGM Grand", gapMinutes: 5),
+        ])
+    }
+
+    func testHeIsComingFromTheSessionThatEndsLastNotTheOneThatStartedLast() {
+        let plan = snapshot([session("long", time: "10:00", length: "120", venue: "MGM Grand"),
+                             session("short", time: "10:30", length: "30", venue: "MGM Grand"),
+                             session("next", time: "12:00", length: "60", venue: "Caesars Palace")],
+                            reserved: ["long", "short", "next"])
+        let day = plan.agenda(on: "2026-12-02", includeFavorites: false)
+        XCTAssertEqual(day.timed.map(\.id), ["long", "short", "next"])
+        XCTAssertEqual(day.warnings, [
+            TransferWarning(fromID: "long", toID: "next", fromVenue: "MGM Grand", toVenue: "Caesars Palace", gapMinutes: 0),
+        ])
+    }
+
+    // MARK: Lookups
+
+    func testCommitmentsByIdRankReservedOverInvitedOverFavorite() {
+        let plan = snapshot([session("a"), session("b"), session("c"), session("d")],
+                            reserved: ["a", "b"], favorites: ["a", "c", "inv"], invited: [session("b"), session("inv")])
+        XCTAssertEqual(plan.commitmentsByID, ["a": .reserved, "b": .reserved, "c": .favorite, "inv": .invited])
+        for id in ["a", "b", "c", "d", "inv"] {
+            XCTAssertEqual(plan.commitmentsByID[id], plan.commitment(of: id), id)
+        }
+    }
+
+    func testAnAgendaBuiltFromHeldLookupsIsTheSame() {
+        let plan = snapshot([session("res", time: "08:00"), session("fav", time: "13:00")],
+                            reserved: ["res"], favorites: ["fav"])
+        let held = plan.agenda(on: "2026-12-02", includeFavorites: true, index: plan.sessionsByID,
+                               commitments: plan.commitmentsByID)
+        XCTAssertEqual(held.timed.map(\.id), ["res", "fav"])
+        XCTAssertEqual(held.timed.map(\.commitment), [.reserved, .favorite])
+        XCTAssertEqual(held, plan.agenda(on: "2026-12-02", includeFavorites: true))
+    }
+
+    func testTheDayToOpenOn() {
+        let plan = snapshot([session("a", date: "2026-11-30"), session("b", date: "2026-12-01"),
+                             session("c", date: "2026-12-02")], reserved: ["b"])
+        XCTAssertEqual(plan.defaultDay(today: "2026-12-02"), "2026-12-02")
+        XCTAssertEqual(plan.defaultDay(today: "2026-11-22"), "2026-12-01")
+        let uncommitted = snapshot([session("a", date: "2026-11-30"), session("b", date: "2026-12-01")])
+        XCTAssertEqual(uncommitted.defaultDay(today: "2026-11-22"), "2026-11-30")
+        XCTAssertNil(snapshot([]).defaultDay(today: "2026-11-22"))
+    }
+
+    // MARK: The session list
+
+    private func listed(_ plan: PlanSnapshot, _ filter: SessionFilter, _ search: String = "") -> [String] {
+        plan.sessions(matching: filter, search: search).map(\.sessionId)
+    }
+
+    func testTheWholeCatalogIsListedInDayTimeCodeOrderWithUnscheduledLast() {
+        let plan = snapshot([Session(sessionId: "untimed", title: "No time yet"),
+                             session("late", code: "AAA", date: "2026-12-02", time: "15:00"),
+                             session("z", code: "ZZZ", date: "2026-12-01", time: "09:00"),
+                             session("a", code: "AAA", date: "2026-12-01", time: "09:00"),
+                             session("early", code: "MMM", date: "2026-12-01", time: "08:00")])
+        XCTAssertEqual(listed(plan, .all), ["early", "a", "z", "late", "untimed"])
+    }
+
+    func testMineListsWhatIsOnHisScheduleIncludingInvitationsOutsideTheCatalog() {
+        let reception = session("inv", code: "RECEPTION", date: "2026-11-30", time: "18:00", venue: nil)
+        var catalogCopy = session("both", code: "BOTH", time: "09:00")
+        catalogCopy.title = "From the catalog"
+        var invitedCopy = catalogCopy
+        invitedCopy.title = "From the invitation"
+        let plan = snapshot([session("res", time: "08:00"), session("fav", time: "13:00"), session("other"), catalogCopy],
+                            reserved: ["res"], favorites: ["fav", "gone"], invited: [reception, invitedCopy])
+        XCTAssertEqual(listed(plan, .mine), ["inv", "res", "both", "fav"])
+        XCTAssertEqual(plan.sessions(matching: .mine).first { $0.sessionId == "both" }?.title, "From the catalog")
+        XCTAssertEqual(plan.sessions(matching: .mine, commitments: plan.commitmentsByID).map(\.sessionId),
+                       ["inv", "res", "both", "fav"])
+    }
+
+    func testSeatsOpenListsOnlyReservableSessionsWithASeatLeft() {
+        func seat(_ id: String, _ band: String?, reservable: Bool = true) -> Session {
+            var s = session(id)
+            s.isReservable = reservable
+            s.seatAvailability = band
+            return s
+        }
+        let plan = snapshot([seat("a", "available"), seat("b", "limited"), seat("c", "veryLimited"),
+                             seat("full", "unavailable"), seat("walk", "walkUp"), seat("unknown", nil),
+                             seat("closed", "available", reservable: false), seat("held", "limited"),
+                             seat("wanted", "available")],
+                            reserved: ["held"], favorites: ["wanted"])
+        // A seat he already holds is left out; a favorite with a seat left stays in.
+        XCTAssertEqual(listed(plan, .open), ["a", "b", "c", "wanted"])
+        XCTAssertEqual(listed(plan, .mine), ["held", "wanted"])
+    }
+
+    func testSearchLooksAtCodeTitleSpeakerAndTopicIgnoringCase() {
+        var byTitle = session("t", code: "AAA101")
+        byTitle.title = "Tracing a request"
+        var bySpeaker = session("s", code: "BBB202")
+        bySpeaker.speakers = [Speaker(name: "Tracy Example")]
+        var byTopic = session("p", code: "CCC303")
+        byTopic.topics = ["Distributed Tracing"]
+        let plan = snapshot([byTitle, bySpeaker, byTopic, session("none", code: "DDD404")])
+        XCTAssertEqual(listed(plan, .all, "trac"), ["t", "s", "p"])
+        XCTAssertEqual(listed(plan, .all, "  bbb2 "), ["s"])
+        XCTAssertEqual(listed(plan, .all, "ddd404"), ["none"])
+        XCTAssertEqual(listed(plan, .all, "nothing like this"), [])
+        XCTAssertEqual(listed(plan, .all, "   "), ["t", "s", "p", "none"])
+    }
+
+    // MARK: Changing things on the conference site
+
+    func testAChangeIsSentOnceAndTheScheduleReadBack() async {
+        let backend = CountingBackend()
+        backend.reserveAnswer = .success(BulkResult(successful: ["a"]))
+        backend.scheduleAnswer = .success(Schedule(reserved: ["a"]))
+        let outcome = await Sync.change(backend: backend, sessionID: "a") { try await $0.reserve(["a"]) }
+        XCTAssertEqual(outcome.schedule, Schedule(reserved: ["a"]))
+        XCTAssertNil(outcome.refusal)
+        XCTAssertNil(outcome.problem)
+        XCTAssertEqual(backend.calls("reserve"), 1)
+        XCTAssertEqual(backend.calls("schedule"), 1)
+    }
+
+    func testARefusalForThisSessionIsReportedAndTheScheduleStillRead() async {
+        let backend = CountingBackend()
+        backend.reserveAnswer = .success(BulkResult(failed: [
+            BulkFailure(sessionId: "other", code: "sessionFull"),
+            BulkFailure(sessionId: "pex", code: "scheduleConflict", conflictsWith: ["aim"]),
+        ]))
+        backend.scheduleAnswer = .success(Schedule(reserved: ["aim"]))
+        let outcome = await Sync.change(backend: backend, sessionID: "pex") { try await $0.reserve(["pex"]) }
+        XCTAssertEqual(outcome.refusal, BulkFailure(sessionId: "pex", code: "scheduleConflict", conflictsWith: ["aim"]))
+        XCTAssertEqual(outcome.schedule, Schedule(reserved: ["aim"]))
+        XCTAssertNil(outcome.problem)
+    }
+
+    func testAChangeWhoseAnswerNeverArrivedIsFollowedByAReadNotASecondSend() async {
+        let backend = CountingBackend()
+        backend.reserveAnswer = .failure(.outcomeUnknown)
+        backend.scheduleAnswer = .success(Schedule(reserved: ["a"]))
+        let outcome = await Sync.change(backend: backend, sessionID: "a") { try await $0.reserve(["a"]) }
+        XCTAssertEqual(outcome.problem as? APIError, .outcomeUnknown)
+        XCTAssertEqual(outcome.schedule, Schedule(reserved: ["a"]))
+        XCTAssertEqual(backend.calls("reserve"), 1)
+        XCTAssertEqual(backend.calls("schedule"), 1)
+    }
+
+    func testAScheduleThatCannotBeReadBackIsReportedAndTheFirstProblemWins() async {
+        let unread = CountingBackend()
+        unread.reserveAnswer = .success(BulkResult(successful: ["a"]))
+        unread.scheduleAnswer = .failure(.busy)
+        let afterSuccess = await Sync.change(backend: unread, sessionID: "a") { try await $0.reserve(["a"]) }
+        XCTAssertNil(afterSuccess.schedule)
+        XCTAssertEqual(afterSuccess.problem as? APIError, .busy)
+
+        let both = CountingBackend()
+        both.reserveAnswer = .failure(.closed)
+        both.scheduleAnswer = .failure(.busy)
+        let afterFailure = await Sync.change(backend: both, sessionID: "a") { try await $0.reserve(["a"]) }
+        XCTAssertNil(afterFailure.schedule)
+        XCTAssertEqual(afterFailure.problem as? APIError, .closed)
+        XCTAssertEqual(both.calls("schedule"), 1)
     }
 
     // MARK: Refreshing

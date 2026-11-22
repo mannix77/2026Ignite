@@ -29,6 +29,25 @@ final class SignInFlow: NSObject, ASWebAuthenticationPresentationContextProvidin
         defer { listener.stop() }
         let port = listener.port
 
+        // The attendee may leave the app mid sign-in (to read a verification code in Mail).
+        // Ask for a little time before iOS suspends the app, and when it comes back make sure
+        // the listener still answers on the same port.
+        let application = UIApplication.shared
+        var grace = UIBackgroundTaskIdentifier.invalid
+        grace = application.beginBackgroundTask(withName: "sign-in") {
+            application.endBackgroundTask(grace)
+            grace = .invalid
+        }
+        let foreground = NotificationCenter.default.addObserver(
+            forName: UIApplication.willEnterForegroundNotification, object: nil, queue: .main
+        ) { _ in
+            Task { await listener.ensureAnswering() }
+        }
+        defer {
+            NotificationCenter.default.removeObserver(foreground)
+            if grace != .invalid { application.endBackgroundTask(grace) }
+        }
+
         let url = OAuthFlow.authorizationURL(config: config, port: port, state: state, pkce: pkce)
         // The sheet never completes through a custom scheme: the listener gets the answer and
         // the sheet is closed from here. Its completion only tells us the attendee closed it.

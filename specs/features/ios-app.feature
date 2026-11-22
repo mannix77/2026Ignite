@@ -15,6 +15,16 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       When an answer arrives that does not match that sign-in
       Then the app refuses it and he stays signed out
 
+    Example: The one who leaves to read a code
+      Given the conference site emailed him a verification code part way through signing in
+      When he leaves the app to read it and comes back
+      Then the sign-in still completes
+
+    Example: The one who signs out while access is being renewed
+      Given the app is renewing his access
+      When he signs out before the renewal finishes
+      Then no sign-in is left on the phone
+
     Example: The one with an expired pass
       Given his access has expired but his saved sign-in is still good
       When he opens the calendar
@@ -63,6 +73,26 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       And the next reserved session starts at 12:30 at "MGM Grand"
       When he opens that day
       Then the calendar warns about that change of venue
+
+    Example: The one with an invitation in between
+      Given a reserved session ends at 12:30 at "Caesars Palace"
+      And an invitation with no venue starts at 12:30
+      And the next reserved session starts at 12:35 at "MGM Grand"
+      When he opens that day
+      Then the calendar still warns about the change of venue
+
+  Rule: The session list finds what he is looking for
+
+    Example: The one looking for a seat
+      Given "AIM358" still has seats and he already holds one in it
+      And "SVS350" still has seats and he does not
+      When he lists the sessions with seats open
+      Then he sees "SVS350" and not "AIM358"
+
+    Example: The one searching by speaker
+      Given a session is presented by "Tracy Example"
+      When he searches for "trac"
+      Then that session is listed
 
   Rule: A bad answer never replaces a good calendar
 

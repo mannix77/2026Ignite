@@ -10,17 +10,20 @@ struct CalendarScreen: View {
         NavigationStack {
             Group {
                 if let snapshot = model.snapshot {
-                    let days = snapshot.days()
+                    let days = model.days
+                    let now = model.eventNow
                     if days.isEmpty {
                         ContentUnavailableView("No sessions yet", systemImage: "calendar",
                                                description: Text("The conference site has not published any timed sessions."))
                     } else {
-                        let day = selectedDay.flatMap { days.contains($0) ? $0 : nil } ?? defaultDay(days)
+                        let day = selectedDay.flatMap { days.contains($0) ? $0 : nil }
+                            ?? snapshot.defaultDay(today: now.date) ?? days[0]
                         VStack(spacing: 0) {
-                            DayStrip(days: days, busy: Set(snapshot.days(committedOnly: true)), selected: day) { selectedDay = $0 }
+                            DayStrip(days: days, busy: Set(model.committedDays), selected: day) { selectedDay = $0 }
                             Divider()
-                            DayView(agenda: snapshot.agenda(on: day, includeFavorites: model.showFavorites),
-                                    nowMinute: nowMinute(on: day))
+                            DayView(agenda: snapshot.agenda(on: day, includeFavorites: model.showFavorites,
+                                                            index: model.sessionsByID, commitments: model.commitmentsByID),
+                                    nowMinute: now.date == day ? now.minute : nil)
                                 .refreshable { await model.refresh() }
                         }
                     }
@@ -59,18 +62,6 @@ struct CalendarScreen: View {
                 }
             }
         }
-    }
-
-    /// Today when the conference is on, otherwise the first day with something on it.
-    private func defaultDay(_ days: [String]) -> String {
-        let today = Wording.eventNow(Date(), timeZone: model.event.timeZone).date
-        if days.contains(today) { return today }
-        return model.snapshot?.days(committedOnly: true).first ?? days[0]
-    }
-
-    private func nowMinute(on day: String) -> Int? {
-        let now = Wording.eventNow(Date(), timeZone: model.event.timeZone)
-        return now.date == day ? now.minute : nil
     }
 }
 

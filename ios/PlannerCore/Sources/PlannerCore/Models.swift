@@ -211,27 +211,36 @@ public struct Schedule: Codable, Equatable, Sendable {
     public var favorites: [String]
     public var invitedSessions: [Session]
     public var personalTime: [PersonalTime]
+    /// Entries dropped because they were unusable: a blank id, an invitation without a title.
+    public var skipped: Int
 
     public init(reserved: [String] = [], favorites: [String] = [], invitedSessions: [Session] = [],
-                personalTime: [PersonalTime] = []) {
+                personalTime: [PersonalTime] = [], skipped: Int = 0) {
         self.reserved = reserved
         self.favorites = favorites
         self.invitedSessions = invitedSessions
         self.personalTime = personalTime
+        self.skipped = skipped
     }
 
-    private enum CodingKeys: String, CodingKey { case reserved, favorites, invitedSessions, personalTime }
+    private enum CodingKeys: String, CodingKey { case reserved, favorites, invitedSessions, personalTime, skipped }
 
     /// `reserved` and `favorites` are required: a schedule without them is not a schedule, and
     /// reading it as "nothing reserved" would wipe a good calendar.
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
-        reserved = try c.decode([Lossy<String>].self, forKey: .reserved).compactMap { Identifier.clean($0.value) }
-        favorites = try c.decode([Lossy<String>].self, forKey: .favorites).compactMap { Identifier.clean($0.value) }
-        invitedSessions = ((try? c.decodeIfPresent([Lossy<Session>].self, forKey: .invitedSessions)) ?? [])
-            .compactMap(\.value)
-        personalTime = ((try? c.decodeIfPresent([Lossy<PersonalTime>].self, forKey: .personalTime)) ?? [])
-            .compactMap(\.value)
+        let rawReserved = try c.decode([Lossy<String>].self, forKey: .reserved)
+        let rawFavorites = try c.decode([Lossy<String>].self, forKey: .favorites)
+        let rawInvited = (try? c.decodeIfPresent([Lossy<Session>].self, forKey: .invitedSessions)) ?? []
+        let rawPersonal = (try? c.decodeIfPresent([Lossy<PersonalTime>].self, forKey: .personalTime)) ?? []
+        reserved = rawReserved.compactMap { Identifier.clean($0.value) }
+        favorites = rawFavorites.compactMap { Identifier.clean($0.value) }
+        invitedSessions = rawInvited.compactMap(\.value)
+        personalTime = rawPersonal.compactMap(\.value)
+        // A saved copy carries the count from when it was fetched; a fresh answer is counted here.
+        let dropped = (rawReserved.count - reserved.count) + (rawFavorites.count - favorites.count)
+            + (rawInvited.count - invitedSessions.count) + (rawPersonal.count - personalTime.count)
+        skipped = ((try? c.decodeIfPresent(Int.self, forKey: .skipped)) ?? 0) + dropped
     }
 }
 
