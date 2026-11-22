@@ -16,6 +16,12 @@ struct EventInfo {
 /// The saved copy of the calendar. Reading and writing several megabytes of JSON happens here,
 /// off the main actor. Each save carries a version, so a slow older save never lands on top of
 /// a newer one, and nothing issued before a sign-out is written after it.
+/// The saved calendar with the id of the sign-in that fetched it.
+private struct SavedSnapshot: Codable {
+    var owner: String
+    var snapshot: PlanSnapshot
+}
+
 actor SnapshotStore {
     /// The highest version accepted or ruled out so far.
     private var newest = 0
@@ -27,28 +33,46 @@ actor SnapshotStore {
         return folder.appendingPathComponent("snapshot-reinvent2026.json")
     }
 
-    func save(_ snapshot: PlanSnapshot, version: Int) throws {
+    func save(_ snapshot: PlanSnapshot, owner: String, version: Int) throws {
         guard version > newest else { return }
         newest = version
         onDisk = version
         let url = SnapshotStore.url
         try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
-        try JSONEncoder().encode(snapshot).write(to: url, options: [.atomic, .completeFileProtectionUntilFirstUserAuthentication])
+        try JSONEncoder().encode(SavedSnapshot(owner: owner, snapshot: snapshot))
+            .write(to: url, options: [.atomic, .completeFileProtectionUntilFirstUserAuthentication])
     }
 
-    /// A missing or unreadable saved copy just means starting from a fresh fetch.
-    func load() -> PlanSnapshot? {
+    /// The saved calendar, only if it was fetched under the sign-in `owner`. A copy that is
+    /// missing, unreadable, from an older build, or from any other sign-in is not returned,
+    /// and is removed: this is what keeps one attendee's calendar from another's sign-in even
+    /// if an earlier delete was cut short or failed.
+    func load(owner: String) -> PlanSnapshot? {
         guard let data = try? Data(contentsOf: SnapshotStore.url) else { return nil }
-        return try? JSONDecoder().decode(PlanSnapshot.self, from: data)
+        if let saved = try? JSONDecoder().decode(SavedSnapshot.self, from: data), saved.owner == owner {
+            return saved.snapshot
+        }
+        _ = remove()
+        return nil
     }
 
     /// Refuses every save issued up to `version`, and removes the saved copy unless a later
     /// save has already replaced it (a new sign-in's calendar is not the departing one's).
-    func delete(through version: Int) {
+    /// Returns false when a copy that should be gone could not be removed or emptied.
+    @discardableResult
+    func delete(through version: Int) -> Bool {
         newest = max(newest, version)
-        guard onDisk <= version else { return }
+        guard onDisk <= version else { return true }
         onDisk = 0
-        try? FileManager.default.removeItem(at: SnapshotStore.url)
+        return remove()
+    }
+
+    /// Removes the file; if that fails, empties it. True when no calendar is left in it.
+    private func remove() -> Bool {
+        let url = SnapshotStore.url
+        guard FileManager.default.fileExists(atPath: url.path) else { return true }
+        if (try? FileManager.default.removeItem(at: url)) != nil { return true }
+        return (try? Data().write(to: url, options: .atomic)) != nil
     }
 }
 
@@ -80,6 +104,8 @@ final class AppModel {
     private let tokens = TokenStore()
     private let store = SnapshotStore()
     private var saveVersion = 0
+    /// The id of the sign-in the live calendar belongs to; saved copies are tagged with it.
+    private var signInID: String?
     private var backend: PlanBackend?
     /// Goes up every time the backend changes (sign-in, sign-out, sample conference). An
     /// answer is applied only if the backend it was asked of is still the current one.
@@ -99,6 +125,7 @@ final class AppModel {
             await startDemo()
         case .live:
             guard await tokens.isSignedIn else { return }
+            signInID = await tokens.signInID
             enterLive()
             await loadSavedSnapshot()
             await refresh()
@@ -162,13 +189,18 @@ final class AppModel {
         defer { signInFlow = nil }
         do {
             let new = try await flow.signIn()
-            let kept = await tokens.keep(new)
             // Nothing says this is the same attendee as before, so no earlier calendar, on
-            // screen or saved, is carried into the new sign-in.
+            // screen or saved, is carried into the new sign-in. The saved copy is removed
+            // before the new tokens are kept; and since every saved copy is tagged with the
+            // sign-in that fetched it, one that survives (a crash here, a failed delete) is
+            // still refused under the new sign-in's id.
             let departing = saveVersion
             setSnapshot(nil)
-            enterLive()
+            setBackend(nil)
             await store.delete(through: departing)
+            let kept = await tokens.keep(new, freshSignIn: true)
+            signInID = await tokens.signInID
+            enterLive()
             await refresh()
             if !kept, notice == nil {
                 notice = "Signed in, but the sign-in could not be saved to the keychain. You will need to sign in again next time."
@@ -195,9 +227,13 @@ final class AppModel {
         setMode(.signedOut)
         // Revocation can wait on the network for a while. The saved calendar is deleted
         // alongside it, not after it, so quitting the app during that wait leaves nothing behind.
+        signInID = nil
         async let revoked: Void = tokens.signOut()
-        await store.delete(through: departing)
+        let removed = await store.delete(through: departing)
         await revoked
+        if !removed, mode == .signedOut {
+            notice = "You are signed out, but the saved calendar could not be removed from this phone. Delete the app to remove it."
+        }
     }
 
     func startDemo() async {
@@ -298,11 +334,12 @@ final class AppModel {
     // MARK: The saved copy
 
     private func save(_ snapshot: PlanSnapshot) {
+        guard let owner = signInID else { return }
         saveVersion += 1
         let version = saveVersion
         Task {
             do {
-                try await store.save(snapshot, version: version)
+                try await store.save(snapshot, owner: owner, version: version)
             } catch {
                 notice = "The calendar could not be saved on this phone, so it will not be available offline."
             }
@@ -311,7 +348,8 @@ final class AppModel {
 
     private func loadSavedSnapshot() async {
         let asked = generation
-        guard snapshot == nil, let saved = await store.load(), snapshot == nil, generation == asked else { return }
+        guard snapshot == nil, let owner = signInID, let saved = await store.load(owner: owner),
+              snapshot == nil, generation == asked else { return }
         setSnapshot(saved)
     }
 }
