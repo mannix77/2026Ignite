@@ -103,7 +103,9 @@ final class AppModel {
             await loadSavedSnapshot()
             await refresh()
         case .signedOut:
-            break
+            // Nobody is signed in, so no saved calendar should exist. One left by a sign-out
+            // that was cut short is removed here.
+            await store.delete(through: saveVersion)
         }
     }
 
@@ -191,8 +193,11 @@ final class AppModel {
         needsSignIn = false
         notice = nil
         setMode(.signedOut)
-        await tokens.signOut()
+        // Revocation can wait on the network for a while. The saved calendar is deleted
+        // alongside it, not after it, so quitting the app during that wait leaves nothing behind.
+        async let revoked: Void = tokens.signOut()
         await store.delete(through: departing)
+        await revoked
     }
 
     func startDemo() async {
