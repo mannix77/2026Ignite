@@ -45,7 +45,8 @@ actor TokenStore: AccessTokenSource {
     private let config: OAuthConfig
     private let session: URLSession
     private var tokens: TokenSet?
-    private var refreshing: Task<TokenSet, Error>?
+    /// The renewal in flight, and the sign-in it is renewing.
+    private var refreshing: (of: TokenSet, task: Task<TokenSet, Error>)?
 
     init(config: OAuthConfig = .awsEvents) {
         self.config = config
@@ -75,40 +76,49 @@ actor TokenStore: AccessTokenSource {
     /// One refresh at a time: callers that arrive while one is running share its answer, so a
     /// rotated refresh token is never spent twice.
     private func refresh(_ current: TokenSet) async throws -> TokenSet {
-        if let refreshing { return try await refreshing.value }
-        let request = OAuthFlow.refreshRequest(config: config, refreshToken: current.refreshToken)
-        let session = self.session
-        let task = Task<TokenSet, Error> {
-            let (data, response) = try await session.data(for: request)
-            let status = (response as? HTTPURLResponse)?.statusCode ?? 0
-            // The token endpoint answers 400 or 401 when the refresh token is no longer good.
-            if status == 400 || status == 401 { throw APIError.signInNeeded }
-            guard status == 200 else { throw APIError.server(status) }
-            return try TokenSet.parse(data, now: Date(), previousRefreshToken: current.refreshToken)
-        }
-        refreshing = task
-        defer { refreshing = nil }
-        let new = try await task.value
-        // The attendee may have signed out, or signed in afresh, while this was in flight.
-        // Tokens renewed for a sign-in that is gone are revoked, never kept.
-        guard tokens == current else {
-            if new.refreshToken != current.refreshToken {
-                _ = try? await session.data(for: OAuthFlow.revokeRequest(config: config, refreshToken: new.refreshToken))
+        let task: Task<TokenSet, Error>
+        if let running = refreshing, running.of == current {
+            task = running.task
+        } else {
+            let request = OAuthFlow.refreshRequest(config: config, refreshToken: current.refreshToken)
+            let session = self.session
+            task = Task<TokenSet, Error> {
+                let (data, response) = try await session.data(for: request)
+                let status = (response as? HTTPURLResponse)?.statusCode ?? 0
+                // The token endpoint answers 400 or 401 when the refresh token is no longer good.
+                if status == 400 || status == 401 { throw APIError.signInNeeded }
+                guard status == 200 else { throw APIError.server(status) }
+                return try TokenSet.parse(data, now: Date(), previousRefreshToken: current.refreshToken)
             }
-            guard let replacement = tokens else { throw APIError.signInNeeded }
-            return replacement
+            refreshing = (current, task)
         }
-        keep(new)
-        return new
+        let result = await task.result
+        if let running = refreshing, running.task == task { refreshing = nil }
+        let new = try result.get()
+
+        // Every caller checks, whether it started the renewal or joined it: the attendee may
+        // have signed out, or signed in afresh, while it was in flight.
+        if tokens == current {
+            keep(new)
+            return new
+        }
+        if tokens == new { return new } // another caller of the same renewal already kept it
+        // Tokens renewed for a sign-in that is gone are revoked, never kept or handed out.
+        if new.refreshToken != current.refreshToken {
+            _ = try? await session.data(for: OAuthFlow.revokeRequest(config: config, refreshToken: new.refreshToken))
+        }
+        guard let replacement = tokens else { throw APIError.signInNeeded }
+        return replacement
     }
 
-    /// Revokes the refresh token (best effort) and forgets both tokens.
+    /// Forgets both tokens at once, then asks the sign-in service to revoke the refresh token
+    /// (best effort). Forgetting first means a sign-in made while the revocation is in flight
+    /// is not wiped when it returns.
     func signOut() async {
-        if let current = tokens {
-            _ = try? await session.data(for: OAuthFlow.revokeRequest(config: config, refreshToken: current.refreshToken))
-        }
+        guard let departing = tokens else { return }
         tokens = nil
         Keychain.delete()
+        _ = try? await session.data(for: OAuthFlow.revokeRequest(config: config, refreshToken: departing.refreshToken))
     }
 }
 

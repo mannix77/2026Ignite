@@ -59,10 +59,31 @@ final class ModelsTests: XCTestCase {
         XCTAssertTrue(time("10:00").hasValidDate)
         XCTAssertFalse(time("10:00", date: "12/02/2026").hasValidDate)
         XCTAssertFalse(time("10:00", date: "2026-13-02").hasValidDate)
+        // The longest length taken at its word is two weeks; beyond that it is not a length.
+        XCTAssertEqual(time("10:00", "20160").lengthMinutes, 20160)
+        XCTAssertEqual(time("10:00", "20161").lengthMinutes, 0)
+        XCTAssertEqual(time("10:00", "9223372036854775807").lengthMinutes, 0)
         // A length sent as a number is accepted too.
         let numeric = try JSONDecoder().decode(SessionTime.self, from: Data(#"{"date":"2026-12-02","time":"09:30","length":45}"#.utf8))
         XCTAssertEqual(numeric.lengthMinutes, 45)
         XCTAssertEqual(numeric.startMinute, 570)
+    }
+
+    func testANumericLengthTooLargeToCountIsTreatedAsNoLength() throws {
+        let huge = try JSONDecoder().decode(SessionTime.self, from: Data(#"{"date":"2026-12-02","time":"09:30","length":1e30}"#.utf8))
+        XCTAssertNil(huge.length)
+        XCTAssertEqual(huge.lengthMinutes, 0)
+        XCTAssertEqual(huge.startMinute, 570)
+        let fraction = try JSONDecoder().decode(SessionTime.self, from: Data(#"{"date":"2026-12-02","time":"09:30","length":45.9}"#.utf8))
+        XCTAssertEqual(fraction.lengthMinutes, 45)
+    }
+
+    func testAnAbsurdlyLongSessionStillHasAnEndThatCanBeComputed() {
+        let plan = PlanSnapshot(sessions: [session("forever", length: "9223372036854775807")],
+                                schedule: Schedule(reserved: ["forever"]), fetchedAt: Date(timeIntervalSince1970: 0))
+        let entry = plan.agenda(on: "2026-12-02", includeFavorites: false).timed.first
+        XCTAssertEqual(entry?.start, 600)
+        XCTAssertEqual(entry?.end, 600)
     }
 
     func testAScheduleKeepsWhatItCanReadOfInvitations() throws {
@@ -185,6 +206,15 @@ final class AgendaTests: XCTestCase {
         let entry = plan.agenda(on: "2026-12-02", includeFavorites: false).timed.first
         XCTAssertEqual(entry?.end, 600)
         XCTAssertEqual(entry?.drawnEnd, 620)
+    }
+
+    func testAnInvitationTheCatalogAlsoListsTakesItsDayFromTheCatalog() {
+        let invited = session("both", date: "2026-12-02")
+        let plan = snapshot([session("both", date: "2026-12-03"), session("other", date: "2026-12-01")], invited: [invited])
+        XCTAssertEqual(plan.days(committedOnly: true), ["2026-12-03"])
+        XCTAssertEqual(plan.days(), ["2026-12-01", "2026-12-03"])
+        XCTAssertEqual(plan.defaultDay(today: "2026-11-22"), "2026-12-03")
+        XCTAssertEqual(plan.agenda(on: "2026-12-03", includeFavorites: false).timed.map(\.id), ["both"])
     }
 
     func testDaysCoverTheWholeCatalogUnlessOnlyCommitmentsAreAsked() {
@@ -323,11 +353,11 @@ final class AgendaTests: XCTestCase {
         let plan = snapshot([seat("a", "available"), seat("b", "limited"), seat("c", "veryLimited"),
                              seat("full", "unavailable"), seat("walk", "walkUp"), seat("unknown", nil),
                              seat("closed", "available", reservable: false), seat("held", "limited"),
-                             seat("wanted", "available")],
-                            reserved: ["held"], favorites: ["wanted"])
-        // A seat he already holds is left out; a favorite with a seat left stays in.
+                             seat("wanted", "available"), seat("invited", "available")],
+                            reserved: ["held"], favorites: ["wanted"], invited: [seat("invited", "available")])
+        // A seat he already holds and an invitation are left out; a favorite with a seat left stays in.
         XCTAssertEqual(listed(plan, .open), ["a", "b", "c", "wanted"])
-        XCTAssertEqual(listed(plan, .mine), ["held", "wanted"])
+        XCTAssertEqual(listed(plan, .mine), ["held", "invited", "wanted"])
     }
 
     func testSearchLooksAtCodeTitleSpeakerAndTopicIgnoringCase() {
@@ -383,6 +413,39 @@ final class AgendaTests: XCTestCase {
         XCTAssertEqual(backend.calls("schedule"), 1)
     }
 
+    func testAChangeTheSiteSaysNothingAboutIsNotTakenAsDone() async {
+        let silent = CountingBackend()
+        silent.reserveAnswer = .success(BulkResult())
+        silent.scheduleAnswer = .success(Schedule(reserved: []))
+        let outcome = await Sync.change(backend: silent, sessionID: "a") { try await $0.reserve(["a"]) }
+        XCTAssertEqual(outcome.problem as? APIError, .unconfirmed)
+        XCTAssertNil(outcome.refusal)
+        XCTAssertEqual(outcome.schedule, Schedule(reserved: []))
+        XCTAssertNil(outcome.readBackProblem)
+
+        // Another session's success does not confirm this one.
+        let other = CountingBackend()
+        other.reserveAnswer = .success(BulkResult(successful: ["b"]))
+        let mismatched = await Sync.change(backend: other, sessionID: "a") { try await $0.reserve(["a"]) }
+        XCTAssertEqual(mismatched.problem as? APIError, .unconfirmed)
+    }
+
+    func testASignInRejectedOnReadBackIsReportedEvenWhenTheChangeAlsoFailed() async {
+        let backend = CountingBackend()
+        backend.reserveAnswer = .failure(.outcomeUnknown)
+        backend.scheduleAnswer = .failure(.signInNeeded)
+        let outcome = await Sync.change(backend: backend, sessionID: "a") { try await $0.reserve(["a"]) }
+        XCTAssertEqual(outcome.problem as? APIError, .outcomeUnknown)
+        XCTAssertEqual(outcome.readBackProblem as? APIError, .signInNeeded)
+        XCTAssertNil(outcome.schedule)
+
+        let fine = CountingBackend()
+        fine.reserveAnswer = .success(BulkResult(successful: ["a"]))
+        let clean = await Sync.change(backend: fine, sessionID: "a") { try await $0.reserve(["a"]) }
+        XCTAssertNil(clean.readBackProblem)
+        XCTAssertNil(clean.problem)
+    }
+
     func testAScheduleThatCannotBeReadBackIsReportedAndTheFirstProblemWins() async {
         let unread = CountingBackend()
         unread.reserveAnswer = .success(BulkResult(successful: ["a"]))
@@ -390,6 +453,7 @@ final class AgendaTests: XCTestCase {
         let afterSuccess = await Sync.change(backend: unread, sessionID: "a") { try await $0.reserve(["a"]) }
         XCTAssertNil(afterSuccess.schedule)
         XCTAssertEqual(afterSuccess.problem as? APIError, .busy)
+        XCTAssertEqual(afterSuccess.readBackProblem as? APIError, .busy)
 
         let both = CountingBackend()
         both.reserveAnswer = .failure(.closed)

@@ -74,6 +74,16 @@ final class EventsAPITests: XCTestCase {
         XCTAssertEqual(transport.sent.count, 2)
     }
 
+    func testACatalogSizeThatIsNotACountIsRefusedNotFatal() async {
+        for total in ["1e30", "-1", "2.5"] {
+            let (api, _, _, _) = makeAPI([.respond(status: 200, body: #"{"items":[],"totalCount":\#(total)}"#)])
+            await assertThrows(.badResponse) { try await api.loadCatalog() }
+        }
+        let (empty, _, _, _) = makeAPI([.respond(status: 200, body: #"{"items":[],"totalCount":0}"#)])
+        let catalog = try? await empty.loadCatalog()
+        XCTAssertEqual(catalog, Catalog(sessions: [], skipped: 0))
+    }
+
     func testAnAnswerThatIsNotACatalogIsRefused() async {
         let (api, _, _, _) = makeAPI([.respond(status: 200, body: "<html>edge error</html>")])
         await assertThrows(.badResponse) { try await api.loadCatalog() }

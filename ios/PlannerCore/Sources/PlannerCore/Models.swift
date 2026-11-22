@@ -35,8 +35,10 @@ public struct SessionTime: Codable, Equatable, Sendable {
         timezone = try? c.decodeIfPresent(String.self, forKey: .timezone)
         if let text = try? c.decodeIfPresent(String.self, forKey: .length) {
             length = text
-        } else if let number = try? c.decodeIfPresent(Double.self, forKey: .length) {
-            length = String(Int(number))
+        } else if let number = try? c.decodeIfPresent(Double.self, forKey: .length),
+                  let whole = Int(exactly: number.rounded(.towardZero)) {
+            // A number too large to be a count of minutes is treated as no length at all.
+            length = String(whole)
         } else {
             length = nil
         }
@@ -50,9 +52,14 @@ public struct SessionTime: Codable, Equatable, Sendable {
         return h * 60 + m
     }
 
-    /// Length in minutes; 0 when missing, negative or not a number.
+    /// The longest length taken at its word: two weeks. Anything longer is not a session
+    /// length, and bounding it keeps start-plus-length arithmetic from overflowing.
+    public static let longestMinutes = 14 * 24 * 60
+
+    /// Length in minutes; 0 when missing, negative, not a number, or longer than `longestMinutes`.
     public var lengthMinutes: Int {
-        guard let length, let n = Int(length.trimmingCharacters(in: .whitespaces)), n > 0 else { return 0 }
+        guard let length, let n = Int(length.trimmingCharacters(in: .whitespaces)), n > 0,
+              n <= SessionTime.longestMinutes else { return 0 }
         return n
     }
 
@@ -188,10 +195,10 @@ public struct SessionsPage: Decodable, Sendable {
         items = raw.compactMap(\.value)
         skipped = raw.count - items.count
         let total = try c.decode(Double.self, forKey: .totalCount)
-        guard total.isFinite, total >= 0, total == total.rounded() else {
+        guard total >= 0, let count = Int(exactly: total) else {
             throw DecodingError.dataCorruptedError(forKey: .totalCount, in: c, debugDescription: "not a count")
         }
-        totalCount = Int(total)
+        totalCount = count
         nextToken = Identifier.clean(try? c.decodeIfPresent(String.self, forKey: .nextToken))
     }
 }

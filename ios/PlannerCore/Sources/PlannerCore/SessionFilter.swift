@@ -30,10 +30,11 @@ extension PlanSnapshot {
                 marks[$0.sessionId] != nil && seen.insert($0.sessionId).inserted
             }
         case .open:
-            // A seat he already holds is not one he can still reserve.
+            // A seat he already holds is not one he can still reserve, and an invitation is
+            // not reserved through the app.
             pool = sessions.filter {
                 $0.isReservable == true && PlanSnapshot.openSeatBands.contains($0.seatAvailability ?? "")
-                    && marks[$0.sessionId] != .reserved
+                    && marks[$0.sessionId] != .reserved && marks[$0.sessionId] != .invited
             }
         }
         let needle = search.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
