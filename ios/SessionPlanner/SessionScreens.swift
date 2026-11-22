@@ -113,10 +113,11 @@ struct SessionDetailView: View {
 struct SessionsScreen: View {
     @Environment(AppModel.self) private var model
     @State private var search = ""
-    @State private var filter: SessionFilter = .mine
+    @State private var filter = Launch.string("shotFilter").flatMap(SessionFilter.init(rawValue:)) ?? .mine
+    @State private var path: [String] = Launch.string("shotSession").map { [$0] } ?? []
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             let rows = model.sessions(matching: filter, search: search)
             List {
                 if rows.isEmpty {
