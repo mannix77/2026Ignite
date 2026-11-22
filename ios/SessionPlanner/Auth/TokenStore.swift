@@ -40,11 +40,21 @@ enum Keychain {
     }
 }
 
+/// What is kept in the keychain: the tokens, and an id made up afresh at each interactive
+/// sign-in. The saved calendar carries the same id, so a calendar is only ever shown to the
+/// sign-in that fetched it.
+private struct SavedSignIn: Codable {
+    var tokens: TokenSet
+    var signInID: String
+}
+
 /// Holds the attendee's tokens and renews the access token when it is about to expire.
 actor TokenStore: AccessTokenSource {
     private let config: OAuthConfig
     private let session: URLSession
     private var tokens: TokenSet?
+    /// Identifies the interactive sign-in the tokens came from. Renewals keep it.
+    private(set) var signInID: String?
     /// The renewal in flight, and the sign-in it is renewing.
     private var refreshing: (of: TokenSet, task: Task<TokenSet, Error>)?
 
@@ -53,17 +63,31 @@ actor TokenStore: AccessTokenSource {
         let configuration = URLSessionConfiguration.ephemeral
         configuration.timeoutIntervalForRequest = 30
         session = URLSession(configuration: configuration)
-        tokens = Keychain.load().flatMap { try? JSONDecoder().decode(TokenSet.self, from: $0) }
+        if let data = Keychain.load() {
+            if let saved = try? JSONDecoder().decode(SavedSignIn.self, from: data) {
+                tokens = saved.tokens
+                signInID = saved.signInID
+            } else if let bare = try? JSONDecoder().decode(TokenSet.self, from: data) {
+                // Saved by a build from before sign-ins had ids. It gets a new one, which no
+                // saved calendar carries, so the calendar is fetched again.
+                tokens = bare
+                signInID = UUID().uuidString
+            }
+        }
     }
 
     var isSignedIn: Bool { tokens != nil }
 
     /// Keeps new tokens. Returns false when the keychain refused them: the sign-in then lasts
     /// only until the app is closed.
+    /// `freshSignIn` is true for tokens from an interactive sign-in, which starts a new id;
+    /// a renewal keeps the id it has.
     @discardableResult
-    func keep(_ new: TokenSet) -> Bool {
+    func keep(_ new: TokenSet, freshSignIn: Bool = false) -> Bool {
         tokens = new
-        guard let data = try? JSONEncoder().encode(new) else { return false }
+        if freshSignIn || signInID == nil { signInID = UUID().uuidString }
+        guard let id = signInID,
+              let data = try? JSONEncoder().encode(SavedSignIn(tokens: new, signInID: id)) else { return false }
         return Keychain.save(data)
     }
 
@@ -117,6 +141,7 @@ actor TokenStore: AccessTokenSource {
     func signOut() async {
         guard let departing = tokens else { return }
         tokens = nil
+        signInID = nil
         Keychain.delete()
         _ = try? await session.data(for: OAuthFlow.revokeRequest(config: config, refreshToken: departing.refreshToken))
     }
