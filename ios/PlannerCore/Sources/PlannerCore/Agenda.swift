@@ -220,7 +220,8 @@ public enum Sync {
         var outcome = ChangeOutcome()
         do {
             let result = try await action(backend)
-            outcome.refusal = result.failed.first { $0.sessionId == sessionID } ?? result.failed.first
+            // Only a refusal of this session counts; another session's is not this one's answer.
+            outcome.refusal = result.failed.first { $0.sessionId == sessionID }
             // The site is meant to answer for every session. One it says nothing about is
             // neither done nor refused, and must not pass for done.
             if outcome.refusal == nil, !result.successful.contains(sessionID) {
