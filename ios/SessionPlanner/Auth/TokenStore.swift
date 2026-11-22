@@ -4,7 +4,7 @@ import Security
 
 /// The phone's keychain, for the sign-in tokens only. Nothing here is ever logged.
 enum Keychain {
-    private static let service = "io.github.mannix77.sessionplanner.signin"
+    private static let service = "us.mannix.sessionplanner.signin"
     private static let account = "aws-events"
 
     private static var query: [String: Any] {
