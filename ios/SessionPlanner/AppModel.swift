@@ -23,10 +23,9 @@ private struct SavedSnapshot: Codable {
 }
 
 actor SnapshotStore {
-    /// The highest version accepted or ruled out so far.
-    private var newest = 0
-    /// The version of the copy on disk from this run, or 0 when this run has written none.
-    private var onDisk = 0
+    /// Which version is on disk and which are ruled out. It is told of a write or a removal
+    /// only after that has succeeded.
+    private var ledger = SaveLedger()
 
     private static var url: URL {
         let folder = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
@@ -34,13 +33,12 @@ actor SnapshotStore {
     }
 
     func save(_ snapshot: PlanSnapshot, owner: String, version: Int) throws {
-        guard version > newest else { return }
-        newest = version
-        onDisk = version
+        guard ledger.accept(version) else { return }
         let url = SnapshotStore.url
         try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
         try JSONEncoder().encode(SavedSnapshot(owner: owner, snapshot: snapshot))
             .write(to: url, options: [.atomic, .completeFileProtectionUntilFirstUserAuthentication])
+        ledger.didWrite(version)
     }
 
     /// The saved calendar, only if it was fetched under the sign-in `owner`. A copy that is
@@ -52,7 +50,7 @@ actor SnapshotStore {
         if let saved = try? JSONDecoder().decode(SavedSnapshot.self, from: data), saved.owner == owner {
             return saved.snapshot
         }
-        _ = remove()
+        if remove() { ledger.didRemove() }
         return nil
     }
 
@@ -61,10 +59,10 @@ actor SnapshotStore {
     /// Returns false when a copy that should be gone could not be removed or emptied.
     @discardableResult
     func delete(through version: Int) -> Bool {
-        newest = max(newest, version)
-        guard onDisk <= version else { return true }
-        onDisk = 0
-        return remove()
+        guard ledger.ruleOut(through: version) else { return true }
+        guard remove() else { return false }
+        ledger.didRemove()
+        return true
     }
 
     /// Removes the file; if that fails, empties it. True when no calendar is left in it.
