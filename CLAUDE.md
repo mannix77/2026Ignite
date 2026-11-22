@@ -8,7 +8,8 @@ repo settled on, mostly learned from CodeRabbit reviews during the October 2026 
 ## How a change is made
 
 - **Spec first for new behaviour.** Add or update a scenario in `specs/features/*.feature`
-  (BRIEF Gherkin; `bdd_lint.py` clean), then a failing test, then the code. Watch the test
+  (brief Gherkin; `python3 scripts/bdd_lint.py` clean, which `npm test` also checks), then a
+  failing test, then the code. Watch the test
   fail for the right reason before writing the fix.
 - **One small PR per change**, branched from the latest `main`, in its own worktree. The main
   checkout may hold someone else's work: don't commit, stash or switch it.
