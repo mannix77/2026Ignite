@@ -29,18 +29,19 @@ enum TestRules {
 
     /// `.now`, `.current` or `.init()` written without a type in front (an inferred `Date`,
     /// clock, time zone or calendar). A `DispatchTime` deadline, `.now() + 2`, only bounds a
-    /// wait, so it is allowed.
-    private static let implicitMember = #"(?<![\w)\]?!])\s*\."#
+    /// wait, so it is allowed. The dot counts as implicit only when the code before it (skipping
+    /// spaces and line breaks) doesn't end an expression, so `fixture .now` is a member access.
+    private static let implicitMember = #"(?<![\w)\]?!]\s{0,200})\."#
 
     private static let banned: [(rule: String, regex: NSRegularExpression)] = [
         (network, #"\bURLSession\b"#),
-        (network, #"(?m)^\s*(@\w+\s+)*import\s+(\w+\s+)?Network\b"#),
+        (network, #"(?m)^[ \t]*(@\w+\s+)*import\s+(\w+\s+)?(?<tok>Network)\b"#),
         (clock, #"\bN?S?Date\s*\(\s*\)"#),
         (clock, #"\bDate\s*\.\s*init\s*\(\s*\)"#),
         (clock, #"\bDate\s*\.\s*(now|timeIntervalSinceReferenceDate)\b"#),
         (clock, #"\bDate\s*\(\s*timeIntervalSinceNow\s*:"#),
         (clock, implicitMember + #"(now\b(?!\s*\()|current\b|autoupdatingCurrent\b)"#),
-        (clock, #":\s*Date\s*=\s*\.\s*init\s*\(\s*\)"#),
+        (clock, #":\s*Date\s*=\s*(?<tok>\.)\s*init\s*\(\s*\)"#),
         (clock, #"\b(ContinuousClock|SuspendingClock|DispatchWallTime)\s*\.\s*now\b"#),
         (clock, #"\b(TimeZone|Calendar|Locale|NSTimeZone|NSCalendar)\s*\.\s*(current|autoupdatingCurrent|local|system|default)\b"#),
         (clock, #"\bCalendar\s*\(\s*identifier\s*:"#),
@@ -48,7 +49,7 @@ enum TestRules {
         (clock, #"\bCFAbsoluteTimeGetCurrent\b"#),
         (clock, #"\bsystemUptime\b"#),
         (waitTimeout, #"\.\s*wait\s*\(\s*\)"#),
-        (waitTimeout, #"\btimeout\s*:\s*([A-Za-z]*\s*\.\s*)?(infinity|distantFuture)\b"#),
+        (waitTimeout, #"\btimeout\s*:\s*(?<tok>([A-Za-z]*\s*\.\s*)?(infinity|distantFuture))\b"#),
     ].map { ($0.0, regex($0.1)) }
 
     private static let waitCall = regex(#"\b(wait|fulfillment)\s*\(\s*(for|of)\s*:"#)
@@ -56,14 +57,19 @@ enum TestRules {
     private static let contentsOfCall = regex(#"\b(Data|String|NSData|NSString)\s*\(\s*contentsOf\s*:"#)
     private static let webAddress = regex(#""\s*https?:"#)
     private static let classDeclaration =
-        regex(#"\bclass\s+([A-Za-z_][A-Za-z0-9_]*)\s*(<[^>{]*>)?\s*:\s*([A-Za-z_][A-Za-z0-9_.]*)"#)
+        regex(#"\bclass\s+([A-Za-z_][A-Za-z0-9_]*)\s*(<[^>{]*>)?\s*(:\s*([A-Za-z_][A-Za-z0-9_.]*))?"#)
     private static let allowMarker = regex(#"//[ \t]*test-rules:[ \t]*allow[ \t]+\S"#)
-    private static let testCaseRoots: Set<String> = ["XCTestCase"]
+    /// A type declaration whose `{` opens a scope that nested classes are named in.
+    private static let typeHeader =
+        regex(#"\b(class|struct|enum|actor|extension|protocol)\s+([A-Za-z_][A-Za-z0-9_.]*)"#)
+    /// Module names a superclass may be written with (`XCTest.XCTestCase`).
+    private static let modules: Set<String> = ["XCTest", "PlannerCoreTests"]
 
     /// Every rule broken in `files` (name -> source), sorted by file and line.
     static func check(_ files: [String: String]) -> [Violation] {
         var found: [Violation] = []
-        var classes: [(file: String, line: Int, name: String, superclass: String)] = []
+        // `scope` is where the superclass name is looked up from.
+        var classes: [(file: String, line: Int, id: String, scope: [String], superclass: String)] = []
         var allowedByFile: [String: Set<Int>] = [:]
 
         for (name, source) in files {
@@ -76,7 +82,7 @@ enum TestRules {
             }
 
             for (rule, regex) in banned {
-                for match in lexed.codeMatches(regex) { add(rule, at: match.lowerBound) }
+                for offset in lexed.tokenOffsets(regex) { add(rule, at: offset) }
             }
             for match in lexed.codeMatches(waitCall) {
                 let call = lexed.arguments(from: match.upperBound)
@@ -86,35 +92,80 @@ enum TestRules {
             }
             for match in lexed.codeMatches(contentsOfCall) {
                 let call = lexed.arguments(from: match.upperBound)
-                let raw = String(lexed.raw[match.upperBound..<call.end])
+                // The call as written, strings included (that is where an address is) but
+                // comments blanked, so an address in a comment doesn't count.
+                let raw = String((match.upperBound..<call.end).map { lexed.kinds[$0] == .comment ? " " : lexed.raw[$0] })
                 if webAddress.firstMatch(in: raw, range: NSRange(raw.startIndex..., in: raw)) != nil {
                     add(network, at: match.lowerBound)
                 }
             }
+            let scopes = typeScopes(lexed)
             for match in lexed.codeMatches(classDeclaration) {
                 let parts = groups(classDeclaration, in: String(lexed.code[match]))
-                // A module-qualified superclass (XCTest.XCTestCase) counts by its own name.
-                let superclass = String(parts[2].split(separator: ".").last ?? "")
-                classes.append((name, lexed.line(at: match.lowerBound), parts[0], superclass))
+                // Every class is recorded (one without a superclass can still shadow a name;
+                // `class var` is recorded as a class named var, which nothing can subclass).
+                // A module-qualified superclass (XCTest.XCTestCase) is looked up from the top.
+                var superclass = parts[3].split(separator: ".").map(String.init)
+                let scope = scopes(match.lowerBound)
+                var lookupScope = scope
+                if superclass.count > 1, modules.contains(superclass[0]) { superclass.removeFirst(); lookupScope = [] }
+                classes.append((name, lexed.line(at: match.lowerBound), (scope + [parts[0]]).joined(separator: "."),
+                                lookupScope, superclass.joined(separator: ".")))
             }
         }
 
+        // A superclass name means the class declared nearest to where it is written: in the
+        // same scope, then each enclosing one (Swift's lookup). Nil means it isn't declared here.
+        let declared = Set(classes.map(\.id))
+        func resolve(_ name: String, from scope: [String]) -> String? {
+            for depth in stride(from: scope.count, through: 0, by: -1) {
+                let candidate = (scope.prefix(depth) + [name]).joined(separator: ".")
+                if declared.contains(candidate) { return candidate }
+            }
+            return nil
+        }
+        let resolved = classes.map { resolve($0.superclass, from: $0.scope) }
+
         // Test cases are the classes that reach XCTestCase through classes declared here.
-        var testCases = testCaseRoots
+        var testCases: Set<String> = []
         var grew = true
         while grew {
             grew = false
-            for c in classes where testCases.contains(c.superclass) && !testCases.contains(c.name) {
-                testCases.insert(c.name)
-                grew = true
+            for (c, parent) in zip(classes, resolved) where !testCases.contains(c.id) {
+                if parent.map(testCases.contains) ?? (c.superclass == "XCTestCase") {
+                    testCases.insert(c.id)
+                    grew = true
+                }
             }
         }
-        for c in classes where !testCaseRoots.contains(c.superclass) && testCases.contains(c.superclass)
-            && !(allowedByFile[c.file] ?? []).contains(c.line) {
+        for (c, parent) in zip(classes, resolved) {
+            guard let parent, testCases.contains(parent), !(allowedByFile[c.file] ?? []).contains(c.line) else { continue }
             found.append(Violation(file: c.file, line: c.line, rule: subclass))
         }
 
         return found.sorted { ($0.file, $0.line, $0.rule) < ($1.file, $1.line, $1.rule) }
+    }
+
+    /// For each offset in the file, the names of the types it is nested in (`Fixtures`, ...).
+    private static func typeScopes(_ lexed: Lexed) -> (Int) -> [String] {
+        // Which `{` opens which type's body.
+        var opens: [Int: String] = [:]
+        for match in lexed.codeMatches(typeHeader) {
+            // `class func` / `class var` also land here as a "type" named func or var; nothing
+            // can subclass that, and lookup falls back outward, so it changes no result.
+            let name = groups(typeHeader, in: String(lexed.code[match]))[1]
+            var i = match.upperBound
+            while i < lexed.code.count, !"{};".contains(lexed.code[i]) { i += 1 }
+            if i < lexed.code.count, lexed.code[i] == "{" { opens[i] = name }
+        }
+        var pathAt: [[String]] = []
+        pathAt.reserveCapacity(lexed.code.count)
+        var stack: [String?] = []
+        for (i, c) in lexed.code.enumerated() {
+            pathAt.append(stack.compactMap { $0 })
+            if c == "{" { stack.append(opens[i]) } else if c == "}", !stack.isEmpty { stack.removeLast() }
+        }
+        return { offset in offset < pathAt.count ? pathAt[offset] : [] }
     }
 
     /// A source file split into code, comments and strings, one entry per character.
@@ -210,6 +261,16 @@ enum TestRules {
             Lexed.matches(regex, in: code)
         }
 
+        /// Where each match of `regex` breaks the rule: the start of its `tok` group when the
+        /// pattern has one (so a prefix on an earlier line doesn't move it), else the match's start.
+        func tokenOffsets(_ regex: NSRegularExpression) -> [Int] {
+            guard regex.pattern.contains("(?<tok>") else { return codeMatches(regex).map(\.lowerBound) }
+            let text = String(code)
+            return regex.matches(in: text, range: NSRange(text.startIndex..., in: text)).compactMap { match in
+                Range(match.range(withName: "tok"), in: text).map { text.distance(from: text.startIndex, to: $0.lowerBound) }
+            }
+        }
+
         /// Lines with an allow marker that sits in a comment (not in a string or in code).
         func allowedLines() -> Set<Int> {
             Set(Lexed.matches(TestRules.allowMarker, in: raw)
@@ -218,16 +279,17 @@ enum TestRules {
         }
 
         /// The call's arguments from `offset` (just after its opening parenthesis) up to the
-        /// one that closes it: the text outside any nested brackets or parentheses (so an inner
-        /// call's `timeout:` doesn't count), and the offset just past the closing one.
+        /// one that closes it: the text outside any nested brackets, parentheses or braces (so an
+        /// inner call's or a closure's `timeout:` doesn't count), and the offset just past the
+        /// closing one.
         func arguments(from offset: Int) -> (topLevel: String, end: Int) {
             var depth = 1
             var topLevel = ""
             var i = offset
             while i < code.count && depth > 0 {
                 let c = code[i]
-                if c == "(" || c == "[" { depth += 1 } else if c == ")" || c == "]" { depth -= 1 }
-                if depth == 1 && c != ")" && c != "]" { topLevel.append(c) }
+                if "([{".contains(c) { depth += 1 } else if ")]}".contains(c) { depth -= 1 }
+                if depth == 1 && !")]}".contains(c) { topLevel.append(c) }
                 i += 1
             }
             return (topLevel, i)
@@ -295,6 +357,9 @@ final class TestRulesTests: XCTestCase {
             "@preconcurrency import Network",
             "import struct Network.NWConnection",
             "import NetworkExtras",
+            "let g = try String(contentsOf: localURL /* \"https://example.com\" */, encoding: .utf8)",
+            "let h = try String(contentsOf: localURL, // was \"https://example.com\"",
+            "                   encoding: .utf8)",
         ]), [violation(1, TestRules.network), violation(2, TestRules.network),
              violation(3, TestRules.network), violation(4, TestRules.network),
              violation(9, TestRules.network), violation(10, TestRules.network)])
@@ -341,6 +406,11 @@ final class TestRulesTests: XCTestCase {
             "let g = Thread.current",
             "let h = session.current",
             "let i = Date(timeInterval: 60, since: start)",
+            "let j = fixture .now",
+            "let k = list[0] .current",
+            "let l = fixture",
+            "    .now",
+            "let m = optional? .now",
         ]), [])
     }
 
@@ -368,12 +438,15 @@ final class TestRulesTests: XCTestCase {
              violation(11, TestRules.waitTimeout), violation(12, TestRules.waitTimeout)])
     }
 
-    func testATimeoutInsideANestedCallDoesNotCountForTheWait() {
-        // The first timeout belongs to make(...), not to the wait; the second wait has its own.
+    func testATimeoutInsideANestedCallOrClosureDoesNotCountForTheWait() {
+        // The first timeouts belong to make(...) and to a closure's local, not to the wait; the
+        // others have their own.
         XCTAssertEqual(check([
             "wait(for: [make(timeout: 2)])",
             "wait(for: [make(timeout: 2)], timeout: 3)",
-        ]), [violation(1, TestRules.waitTimeout)])
+            "wait(for: { let timeout: TimeInterval = 2; return [done] }())",
+            "wait(for: { let timeout: TimeInterval = 2; return [done] }(), timeout: 3)",
+        ]), [violation(1, TestRules.waitTimeout), violation(3, TestRules.waitTimeout)])
     }
 
     // MARK: Rule 13: subclassing
@@ -394,6 +467,26 @@ final class TestRulesTests: XCTestCase {
         ]), [violation(3, TestRules.subclass), violation(4, TestRules.subclass),
              violation(7, TestRules.subclass), violation(9, TestRules.subclass),
              violation(11, TestRules.subclass)])
+    }
+
+    func testASuperclassNameMeansTheClassInScope() {
+        XCTAssertEqual(check([
+            "class Base: XCTestCase {}",
+            "enum Fixtures {",
+            "    class Base {}",
+            "    final class Helper: Base {}",
+            "}",
+            "enum Suite {",
+            "    class Inner: XCTestCase {}",
+            "    final class Twice: Inner {}",
+            "}",
+            "final class Outer: Suite.Inner {}",
+            "extension Fixtures {",
+            "    final class Again: Base {}",
+            "    final class TopTwice: PlannerCoreTests.Base {}",
+            "}",
+            "final class Plain: Fixtures.Base {}",
+        ]), [violation(8, TestRules.subclass), violation(10, TestRules.subclass), violation(13, TestRules.subclass)])
     }
 
     func testSubclassingAcrossFilesIsRefused() {
@@ -452,6 +545,17 @@ final class TestRulesTests: XCTestCase {
             "let s = \"// test-rules: allow inside a string\"; let d = Date()",
             "class Base: XCTestCase {}",
             "final class Twice: Base {} // test-rules: allow checking the subclass marker",
-        ]), [violation(2, TestRules.clock), violation(3, TestRules.clock), violation(4, TestRules.clock)])
+            "// test-rules: allow a marker on the line before doesn't count",
+            "import Network",
+            "let e: Date = // test-rules: allow nor does one before a line break",
+            "    .now",
+            "let f: Date = // test-rules: allow nor before a split init",
+            "    .init()",
+            "wait(for: [done], timeout: // test-rules: allow nor here",
+            "    .infinity)",
+            "import Network // test-rules: allow a marker on the same line does",
+        ]), [violation(2, TestRules.clock), violation(3, TestRules.clock), violation(4, TestRules.clock),
+             violation(8, TestRules.network), violation(10, TestRules.clock), violation(12, TestRules.clock),
+             violation(14, TestRules.waitTimeout)])
     }
 }
