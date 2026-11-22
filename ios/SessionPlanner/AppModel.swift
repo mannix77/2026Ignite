@@ -17,7 +17,10 @@ struct EventInfo {
 /// off the main actor. Each save carries a version, so a slow older save never lands on top of
 /// a newer one, and nothing issued before a sign-out is written after it.
 actor SnapshotStore {
+    /// The highest version accepted or ruled out so far.
     private var newest = 0
+    /// The version of the copy on disk from this run, or 0 when this run has written none.
+    private var onDisk = 0
 
     private static var url: URL {
         let folder = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
@@ -27,6 +30,7 @@ actor SnapshotStore {
     func save(_ snapshot: PlanSnapshot, version: Int) throws {
         guard version > newest else { return }
         newest = version
+        onDisk = version
         let url = SnapshotStore.url
         try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
         try JSONEncoder().encode(snapshot).write(to: url, options: [.atomic, .completeFileProtectionUntilFirstUserAuthentication])
@@ -38,9 +42,12 @@ actor SnapshotStore {
         return try? JSONDecoder().decode(PlanSnapshot.self, from: data)
     }
 
-    /// Removes the saved copy and refuses every save issued up to `version`.
+    /// Refuses every save issued up to `version`, and removes the saved copy unless a later
+    /// save has already replaced it (a new sign-in's calendar is not the departing one's).
     func delete(through version: Int) {
         newest = max(newest, version)
+        guard onDisk <= version else { return }
+        onDisk = 0
         try? FileManager.default.removeItem(at: SnapshotStore.url)
     }
 }
@@ -74,6 +81,11 @@ final class AppModel {
     private let store = SnapshotStore()
     private var saveVersion = 0
     private var backend: PlanBackend?
+    /// Goes up every time the backend changes (sign-in, sign-out, sample conference). An
+    /// answer is applied only if the backend it was asked of is still the current one.
+    private var generation = 0
+    /// The generation a refresh is running for, if one is.
+    private var refreshingFor: Int?
     private var signInFlow: SignInFlow?
 
     var event: EventInfo { mode == .demo ? .sample : .reinvent2026 }
@@ -96,9 +108,17 @@ final class AppModel {
     }
 
     private func enterLive() {
-        backend = EventsAPI(eventID: EventInfo.reinvent2026.id, transport: URLSessionTransport(), tokens: tokens)
+        setBackend(EventsAPI(eventID: EventInfo.reinvent2026.id, transport: URLSessionTransport(), tokens: tokens))
         setMode(.live)
         needsSignIn = false
+    }
+
+    private func setBackend(_ new: PlanBackend?) {
+        backend = new
+        generation += 1
+        // A refresh still running for the old backend no longer counts as this one's.
+        refreshingFor = nil
+        isRefreshing = false
     }
 
     private func setMode(_ new: Mode) {
@@ -124,8 +144,10 @@ final class AppModel {
         snapshot?.sessions(matching: filter, search: search, commitments: commitmentsByID) ?? []
     }
 
-    /// Today's date and minute in the conference's time zone.
-    var eventNow: (date: String, minute: Int) { Wording.eventNow(Date(), timeZone: event.timeZone) }
+    /// The date and minute of `instant` in the conference's time zone.
+    func eventNow(at instant: Date) -> (date: String, minute: Int) {
+        Wording.eventNow(instant, timeZone: event.timeZone)
+    }
 
     // MARK: Signing in and out
 
@@ -139,9 +161,12 @@ final class AppModel {
         do {
             let new = try await flow.signIn()
             let kept = await tokens.keep(new)
-            if mode != .live { setSnapshot(nil) }
+            // Nothing says this is the same attendee as before, so no earlier calendar, on
+            // screen or saved, is carried into the new sign-in.
+            let departing = saveVersion
+            setSnapshot(nil)
             enterLive()
-            await loadSavedSnapshot()
+            await store.delete(through: departing)
             await refresh()
             if !kept, notice == nil {
                 notice = "Signed in, but the sign-in could not be saved to the keychain. You will need to sign in again next time."
@@ -158,24 +183,27 @@ final class AppModel {
     }
 
     func signOut() async {
-        backend = nil
+        // Fixed before the first wait: a calendar saved by a sign-in made while this is still
+        // revoking belongs to that sign-in and is not deleted.
+        let departing = saveVersion
+        setBackend(nil)
         setSnapshot(nil)
         needsSignIn = false
         notice = nil
         setMode(.signedOut)
         await tokens.signOut()
-        await store.delete(through: saveVersion)
+        await store.delete(through: departing)
     }
 
     func startDemo() async {
-        backend = DemoBackend()
+        setBackend(DemoBackend())
         setSnapshot(nil)
         setMode(.demo)
         await refresh()
     }
 
     func leaveDemo() {
-        backend = nil
+        setBackend(nil)
         setSnapshot(nil)
         notice = nil
         setMode(.signedOut)
@@ -185,21 +213,28 @@ final class AppModel {
 
     /// Fetches the catalog and schedule. On any failure the calendar last seen is kept.
     func refresh() async {
-        guard let backend, !isRefreshing else { return }
-        let startedIn = mode
+        let asked = generation
+        guard let backend, refreshingFor != asked else { return }
+        refreshingFor = asked
         isRefreshing = true
-        defer { isRefreshing = false }
+        defer {
+            if refreshingFor == asked {
+                refreshingFor = nil
+                isRefreshing = false
+            }
+        }
         do {
             let new = try await Sync.refresh(backend: backend, previous: snapshot, now: Date())
-            // An answer for a conference he has since left (signed out, switched) is dropped.
-            guard mode == startedIn else { return }
+            // An answer from a backend he has since left (signed out, signed in again,
+            // switched to the sample) is dropped, even if the mode reads the same.
+            guard generation == asked else { return }
             setSnapshot(new)
             needsSignIn = false
             if mode == .live { save(new) }
         } catch is CancellationError {
             // The screen went away mid-refresh.
         } catch {
-            guard mode == startedIn else { return }
+            guard generation == asked else { return }
             report(error)
         }
     }
@@ -237,9 +272,12 @@ final class AppModel {
     /// Sends one change and shows the schedule the conference site reads back (see `Sync.change`).
     private func change(_ sessionID: String, _ action: @Sendable (PlanBackend) async throws -> BulkResult) async {
         guard let backend else { return }
-        let startedIn = mode
+        let asked = generation
         let outcome = await Sync.change(backend: backend, sessionID: sessionID, action)
-        guard mode == startedIn else { return }
+        guard generation == asked else { return }
+        // A sign-in rejected while reading the schedule back is acted on even when the change
+        // itself is what gets reported.
+        if outcome.readBackProblem as? APIError == .signInNeeded { needsSignIn = true }
         if let schedule = outcome.schedule, var updated = snapshot {
             updated.schedule = schedule
             setSnapshot(updated)
@@ -267,7 +305,8 @@ final class AppModel {
     }
 
     private func loadSavedSnapshot() async {
-        guard snapshot == nil, let saved = await store.load(), snapshot == nil, mode == .live else { return }
+        let asked = generation
+        guard snapshot == nil, let saved = await store.load(), snapshot == nil, generation == asked else { return }
         setSnapshot(saved)
     }
 }

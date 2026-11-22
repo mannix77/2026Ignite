@@ -67,6 +67,8 @@ final class WordingTests: XCTestCase {
         XCTAssertEqual(Wording.problem(APIError.signInNeeded), "Your sign-in has expired. Sign in again to update.")
         XCTAssertEqual(Wording.problem(APIError.catalogIncomplete(expected: 2849, got: 250)),
                        "The session list arrived incomplete, so the last good copy was kept.")
+        XCTAssertEqual(Wording.problem(APIError.unconfirmed),
+                       "The conference site did not confirm the change. Your schedule was read again: check whether it went through.")
         XCTAssertEqual(Wording.problem(URLError(.notConnectedToInternet)),
                        "Could not reach the conference site. Check your connection and try again.")
     }

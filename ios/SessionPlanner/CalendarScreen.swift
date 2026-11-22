@@ -8,10 +8,12 @@ struct CalendarScreen: View {
     var body: some View {
         @Bindable var model = model
         NavigationStack {
-            Group {
+            // Redrawn every minute while on screen, so the "now" line moves and the day to
+            // open on rolls over at midnight in the conference's time zone.
+            TimelineView(.everyMinute) { clock in
                 if let snapshot = model.snapshot {
                     let days = model.days
-                    let now = model.eventNow
+                    let now = model.eventNow(at: clock.date)
                     if days.isEmpty {
                         ContentUnavailableView("No sessions yet", systemImage: "calendar",
                                                description: Text("The conference site has not published any timed sessions."))

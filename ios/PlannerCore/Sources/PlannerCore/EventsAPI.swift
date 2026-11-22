@@ -34,6 +34,8 @@ public enum APIError: Error, Equatable {
     case catalogShrank(previous: Int, got: Int)
     /// A change was sent but its answer never arrived. Read the schedule; do not send it again.
     case outcomeUnknown
+    /// The site answered a change without saying whether this session was done or refused.
+    case unconfirmed
 }
 
 /// Everything the app needs from a conference: the real API, or the sample conference.

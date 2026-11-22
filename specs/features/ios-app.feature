@@ -25,6 +25,11 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       When he signs out before the renewal finishes
       Then no sign-in is left on the phone
 
+    Example: The one who signs in after someone else
+      Given the phone shows a calendar from an earlier sign-in
+      When someone signs in afresh
+      Then the earlier calendar is gone from the screen and from the phone before theirs loads
+
     Example: The one with an expired pass
       Given his access has expired but his saved sign-in is still good
       When he opens the calendar
@@ -126,6 +131,11 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       Given he reserves a session and the connection drops
       When the app recovers
       Then it reads his schedule again instead of sending the request twice
+
+    Example: The one the site said nothing about
+      Given he reserves a session and the site answers without mentioning it
+      When the app reads his schedule back
+      Then it tells him the change was not confirmed
 
     Example: The one already cancelled
       Given he cancels a reservation the site no longer has

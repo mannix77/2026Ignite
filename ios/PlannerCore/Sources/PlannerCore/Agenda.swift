@@ -141,7 +141,9 @@ public struct PlanSnapshot: Codable, Equatable, Sendable {
         }
         if committedOnly {
             for id in schedule.reserved + schedule.favorites { add(known[id]) }
-            for session in schedule.invitedSessions { add(session) }
+            // Through the index, so the catalog's copy of an invited session decides its date,
+            // as it does everywhere else.
+            for session in schedule.invitedSessions { add(known[session.sessionId]) }
         } else {
             for session in known.values { add(session) }
         }
@@ -202,8 +204,11 @@ public struct ChangeOutcome: Sendable {
     public var schedule: Schedule?
     /// Why the conference site refused the change, when it did.
     public var refusal: BulkFailure?
-    /// What went wrong sending the change or reading the schedule back.
+    /// What went wrong: sending the change if that failed, otherwise reading the schedule back.
     public var problem: Error?
+    /// What went wrong reading the schedule back, even when the change itself also failed.
+    /// A rejected sign-in shows up here, so the caller can ask for sign-in either way.
+    public var readBackProblem: Error?
 }
 
 public enum Sync {
@@ -216,12 +221,18 @@ public enum Sync {
         do {
             let result = try await action(backend)
             outcome.refusal = result.failed.first { $0.sessionId == sessionID } ?? result.failed.first
+            // The site is meant to answer for every session. One it says nothing about is
+            // neither done nor refused, and must not pass for done.
+            if outcome.refusal == nil, !result.successful.contains(sessionID) {
+                outcome.problem = APIError.unconfirmed
+            }
         } catch {
             outcome.problem = error
         }
         do {
             outcome.schedule = try await backend.loadSchedule()
         } catch {
+            outcome.readBackProblem = error
             if outcome.problem == nil { outcome.problem = error }
         }
         return outcome

@@ -99,6 +99,8 @@ public enum Wording {
             return "The session list arrived incomplete, so the last good copy was kept."
         case .outcomeUnknown:
             return "The answer never arrived. Your schedule was read again: check whether the change went through."
+        case .unconfirmed:
+            return "The conference site did not confirm the change. Your schedule was read again: check whether it went through."
         }
     }
 
