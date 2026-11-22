@@ -98,32 +98,35 @@ counting failures.
 ## Before you push
 
 Reviews keep finding the same things, and almost all of them can be found before the push.
-CodeRabbit's included allowance is small (about one review an hour; its comment says when the
-next one is due), so a push it can't review costs the next one too.
+CodeRabbit costs the owner money and time, and its allowance is limited (its summary comment
+says how many reviews remain), so it is the last review a change gets, not the first: review
+the change ourselves, and send it to CodeRabbit once.
 
-1. **Self-review the diff first.** Run `coderabbit review` (or `coderabbit review --agent` for
-   structured, agent-friendly output); add `--base origin/main` to review a whole branch rather
-   than just uncommitted changes, and `--include-untracked` so a brand-new file that hasn't been
-   staged yet isn't silently skipped. The CLI works in this environment: install it with
-   `curl -fsSL https://cli.coderabbit.ai/install.sh | sh` (installs to `~/.local/bin`, already on
-   PATH) and sign in once with `coderabbit auth login` (a one-time browser login tied to the
-   owner's CodeRabbit account — ask the owner to complete it if this session isn't signed in;
-   `coderabbit doctor` checks readiness). Also re-read the diff by hand as a reviewer would, with
-   "Tests that can't pass for the wrong reason" and the path instructions in `.coderabbit.yaml`
-   open, and check every new test against the rules by number. When one instance of a problem
-   turns up, list the others in the same file yourself (rule 6). Then run the `/code-review`
-   skill on the diff.
+1. **Review the diff ourselves first.** Three passes, all before the PR is marked ready:
+   - Re-read the diff by hand as a reviewer would, with "Tests that can't pass for the wrong
+     reason" and the path instructions in `.coderabbit.yaml` open, and check every new test
+     against the rules by number. When one instance of a problem turns up, list the others in
+     the same file yourself (rule 6).
+   - Run the `/code-review` skill on the diff.
+   - Give the diff to a fresh reviewer that has none of the session's context (a subagent
+     started with the files and the rules here, never with your conclusions), and have it probe
+     the code with inputs of its own. It finds what the author's context hides.
+
+   Don't run the `coderabbit` CLI (`coderabbit review`) without asking the owner first: it is
+   tied to the owner's account, and whether it counts against the allowance is not known.
 2. **Run it, don't guess it.** An expected value in a test (a return tuple, a count, a message)
    comes from running the code once and judging the result, or from a published fact; never from
    memory. Copy commit SHAs, thread ids and other identifiers from tool output; never type or
    complete one from memory.
-3. **One push per PR, batched.** Fix everything for a PR locally (every open thread, conflicts,
+3. **Open as a draft, mark ready once, push once.** Open every PR as a draft
+   (`gh pr create --draft`): CodeRabbit doesn't review a draft, so nothing is spent while our
+   own review is still finding things. Mark it ready when that review is clean and the owner
+   wants CodeRabbit's. After its review, fix everything locally (every open thread, conflicts,
    nits that cite a rule here), then push once. Before pushing, read the PR's latest CodeRabbit
    comment: if it says "Review limit reached", wait for the time it gives unless the push is
    needed to unblock something. Pushing to several PRs in the same hour starves all of them;
    order them by what is waiting to merge. Replies and "resolved" don't use a review, so answer a
-   thread once its fix is pushed and name the commit. A draft PR isn't auto-reviewed: keep it
-   draft until a slot is free.
+   thread once its fix is pushed and name the commit.
 4. **Read the PR first.** Before changing a PR or acting on a finding, read all its threads and
    the issues it links to or is linked from. A decision recorded there ("deferred to #89", "keep
    the owner's wording") outranks a bot finding or a task list; if your change would reverse one,
