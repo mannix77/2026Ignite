@@ -26,9 +26,10 @@ repo settled on, mostly learned from CodeRabbit reviews during the October 2026 
 
   A "success" status from a rate-limited CodeRabbit is not a review.
 - **Another agent may be working in parallel.** Check open PRs that touch the same files.
-  The test-command lists in `package.json` and `.github/workflows/sync.yml` are
-  append-only lists that conflict easily: while another PR edits them, add tests to existing
-  files (or a Python file `unittest discover` picks up) instead of a new JS test file.
+  The test-command list in `package.json` (the only one: the Tests workflow and the catalog
+  sync both run `npm test`) is an append-only list that conflicts easily: while another PR
+  edits it, add tests to existing files (or a Python file `unittest discover` picks up)
+  instead of a new JS test file.
 
 ## Tests that can't pass for the wrong reason
 
