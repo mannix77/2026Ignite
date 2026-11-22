@@ -1,0 +1,28 @@
+name: iOS app tests
+
+# The Swift tests are not part of `npm test` (the other workflows run on Linux), so they run
+# here, on a Mac, whenever the iOS app changes.
+on:
+  push:
+    branches: [main]
+    paths: ["ios/**", ".github/workflows/ios-tests.yml"]
+  pull_request:
+    paths: ["ios/**", ".github/workflows/ios-tests.yml"]
+
+permissions:
+  contents: read
+
+jobs:
+  ios:
+    runs-on: macos-15
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: Core tests
+        run: swift test --package-path ios/PlannerCore
+      - name: Build the app for the simulator
+        run: >
+          xcodebuild -project ios/SessionPlanner.xcodeproj -scheme SessionPlanner
+          -configuration Debug -sdk iphonesimulator
+          -destination 'generic/platform=iOS Simulator'
+          CODE_SIGNING_ALLOWED=NO build
