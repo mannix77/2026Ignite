@@ -23,7 +23,7 @@ a detail only the account holder has.
 | Subtitle (30) | Your conference, as a calendar |
 | Primary category | Productivity |
 | Secondary category | Business |
-| Content rights | Does not contain third-party content that needs rights (session data is shown from the user's own account through AWS's public API) |
+| Content rights | **YOU** declare this. The app shows third-party content (AWS's session catalog and the attendee's schedule), so answer **Yes, it contains, shows or accesses third-party content**, and confirm you have the rights to use it. The basis is AWS's public developer guide, which documents the API for third-party apps (linked in the reviewer notes). Reading the content through a public API does not make it your own content |
 | Age rating | 4+ (answer "None" to every content question; "No" to unrestricted web access: the only web page is AWS's sign-in) |
 | Privacy Policy URL | https://mannix77.github.io/2026Ignite/ios/AppStore/privacy.html |
 | Support URL | https://mannix77.github.io/2026Ignite/ios/AppStore/support.html |
@@ -139,7 +139,7 @@ not ask.
 
 | Field | Value |
 | --- | --- |
-| Sign-in required | **No** (see notes: every feature can be reviewed without an account) |
+| Sign-in required | **No** (see notes: every feature can be reviewed without an account; whether Apple accepts that in place of a demo account is its call, see "No test account" under risks) |
 | Contact first name, last name, phone, email | **YOU** |
 
 **Notes for the reviewer** (paste as is)
@@ -176,8 +176,12 @@ or server of its own.
 - **Third-party sign-in and data (5.2.2, 5.2.3).** The reviewer may ask for proof that the app
   may use AWS's service. The answer is the public developer guide linked in the notes. If they
   insist on written permission from AWS, that would have to be requested from AWS.
-- **No test account (2.1).** Covered by the sample conference; if the reviewer still asks for
-  credentials, reply with the "About sign-in" paragraph.
+- **No test account (2.1).** Not settled by the sample conference alone. Guideline 2.1 accepts a
+  built-in demo mode in place of a demo account only with Apple's prior approval, and this app
+  has not asked for or been given that approval. The reviewer notes explain why no account can
+  be supplied and point to the sample conference, which is the request for that approval; Apple
+  may accept it, ask for credentials anyway, or reject. If asked, reply with the "About sign-in"
+  paragraph and ask for the demo mode to be accepted.
 - **Trademarks (2.3.7, 5.2.1).** Kept out of the name, subtitle, keywords and icon.
 - **Sign in with Apple (4.8).** Not required: the app offers a single sign-in that is the
   service's own account system, with no third-party social login offered by the app itself.
@@ -200,12 +204,15 @@ passed on the command line so it is never written into the project file in this 
 repository. With a free Personal Team the archive step works and the export stops with
 "does not have permission to create iOS App Store provisioning profiles".
 
-After the upload, in App Store Connect: create the app record with the bundle ID (first time
-only), fill in the fields from this page, add the screenshots, pick the processed build, and
-press Submit for Review.
+Before the first upload, create the app record in App Store Connect (My Apps > New App) with
+the bundle ID. Without it the upload fails with "App record ... not found".
 
-Before each upload, raise the build number (`CURRENT_PROJECT_VERSION` in the project); Apple
-refuses a build number it has already seen for the same version.
+After the upload, in App Store Connect: fill in the fields from this page, add the screenshots,
+pick the processed build, and press Submit for Review.
+
+Before each upload, raise the build number (`BUILD=3 TEAM=... UPLOAD=1 ios/AppStore/archive.sh`
+overrides `CURRENT_PROJECT_VERSION` without editing the project); Apple refuses a build number
+it has already seen for the same version.
 
 ## After approval
 
