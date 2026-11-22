@@ -12,8 +12,9 @@ a detail only the account holder has.
    chosen team (Xcode does this on the first signed archive). Change it in the project first if
    the team wants its own prefix; it cannot be changed after the first upload.
 3. **Privacy and support pages must be live.** They are `ios/AppStore/privacy.html` and
-   `ios/AppStore/support.html`. The site publishes the whole repository, so once this is merged
-   to `main` and deployed they are at the URLs below. Check both open before submitting.
+   `ios/AppStore/support.html`. `.github/workflows/pages.yml` publishes those two files (and
+   nothing else) on every change to them on `main`, at the URLs below. Check both open before
+   submitting.
 
 ## App information
 
