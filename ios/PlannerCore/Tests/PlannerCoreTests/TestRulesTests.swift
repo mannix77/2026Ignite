@@ -29,9 +29,11 @@ enum TestRules {
 
     /// `.now`, `.current` or `.init()` written without a type in front (an inferred `Date`,
     /// clock, time zone or calendar). A `DispatchTime` deadline, `.now() + 2`, only bounds a
-    /// wait, so it is allowed. The dot counts as implicit only when the code before it (skipping
-    /// spaces and line breaks) doesn't end an expression, so `fixture .now` is a member access.
-    private static let implicitMember = #"(?<![\w)\]?!]\s{0,200})\."#
+    /// wait, so it is allowed. The dot counts as implicit unless the code before it (skipping
+    /// spaces and line breaks) ends an expression, so `fixture .now` and `optional? .now` are
+    /// member accesses, but `return .now`, `cond ? .now : x` and `{ _ in .now }` are not.
+    private static let implicitMember =
+        #"(?:(?<![\w)\]][?!]?\s{0,200})|(?<=\b(?:return|throw|try|await|in)\s{1,200}))\."#
 
     private static let banned: [(rule: String, regex: NSRegularExpression)] = [
         (network, #"\bURLSession\b"#),
@@ -114,17 +116,45 @@ enum TestRules {
             }
         }
 
-        // A superclass name means the class declared nearest to where it is written: in the
-        // same scope, then each enclosing one (Swift's lookup). Nil means it isn't declared here.
+        // A superclass name means the class declared nearest to where it is written (Swift's
+        // lookup): in the same scope, including types it inherits as members, then each
+        // enclosing one. `A.B` also finds a B that A inherits. Nil means it isn't declared here.
         let declared = Set(classes.map(\.id))
+        let byID = Dictionary(classes.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
+        var parents: [String: String?] = [:]
+        var resolving: Set<String> = []
+        func parent(of id: String) -> String? {
+            if let known = parents[id] { return known }
+            guard let c = byID[id], !c.superclass.isEmpty, resolving.insert(id).inserted else { return nil }
+            let found = resolve(c.superclass, from: c.scope)
+            resolving.remove(id)
+            parents[id] = .some(found)
+            return found
+        }
+        /// The class `name` that `owner` declares or inherits.
+        func member(_ name: String, of owner: String, seen: Set<String> = []) -> String? {
+            if declared.contains(owner + "." + name) { return owner + "." + name }
+            guard !seen.contains(owner), let up = parent(of: owner) else { return nil }
+            return member(name, of: up, seen: seen.union([owner]))
+        }
         func resolve(_ name: String, from scope: [String]) -> String? {
+            let parts = name.split(separator: ".").map(String.init)
             for depth in stride(from: scope.count, through: 0, by: -1) {
                 let candidate = (scope.prefix(depth) + [name]).joined(separator: ".")
                 if declared.contains(candidate) { return candidate }
+                let owner = scope.prefix(depth).joined(separator: ".")
+                if depth > 0, parts.count == 1, byID[owner] != nil, let inherited = member(name, of: owner) {
+                    return inherited
+                }
             }
-            return nil
+            guard parts.count > 1, var current = resolve(parts[0], from: scope) else { return nil }
+            for part in parts.dropFirst() {
+                guard let next = member(part, of: current) else { return nil }
+                current = next
+            }
+            return current
         }
-        let resolved = classes.map { resolve($0.superclass, from: $0.scope) }
+        let resolved = classes.map { parent(of: $0.id) }
 
         // Test cases are the classes that reach XCTestCase through classes declared here.
         var testCases: Set<String> = []
@@ -367,7 +397,7 @@ final class TestRulesTests: XCTestCase {
 
     // MARK: Rule 10: clock and time zone
 
-    func testTheWallClockAndTheMachineTimeZoneAreRefused() {
+    func testTheWallClockAndTheMachineTimeZoneAreRefused() throws {
         let lines = [
             "let a = Date()",
             "let b = Date.now",
@@ -390,8 +420,16 @@ final class TestRulesTests: XCTestCase {
             "let r = Wording.eventNow(n, timeZone: .current)",
             "f.timeZone = .autoupdatingCurrent",
             "let s = NSDate()",
+            "func now() -> Date { return .now }",
+            "func zone() -> TimeZone { return",
+            "    .current }",
+            "let t = cond ? .now : fixed",
+            "let u = items.map { _ in .now }",
+            "let v = try .now",
         ]
-        XCTAssertEqual(check(lines), (1...lines.count).map { violation($0, TestRules.clock) })
+        // Every line breaks the rule, except the `return` whose `.current` is on the next line.
+        let split = try XCTUnwrap(lines.firstIndex(of: "func zone() -> TimeZone { return")) + 1
+        XCTAssertEqual(check(lines), (1...lines.count).filter { $0 != split }.map { violation($0, TestRules.clock) })
     }
 
     func testFixedTimesAndNamedTimeZonesAreAllowed() {
@@ -411,6 +449,7 @@ final class TestRulesTests: XCTestCase {
             "let l = fixture",
             "    .now",
             "let m = optional? .now",
+            "let n = optional! .now",
         ]), [])
     }
 
@@ -486,7 +525,24 @@ final class TestRulesTests: XCTestCase {
             "    final class TopTwice: PlannerCoreTests.Base {}",
             "}",
             "final class Plain: Fixtures.Base {}",
-        ]), [violation(8, TestRules.subclass), violation(10, TestRules.subclass), violation(13, TestRules.subclass)])
+            "class Holder {",
+            "    class Base: XCTestCase {}",
+            "}",
+            "class Derived: Holder {",
+            "    final class Inherited: Base {}",
+            "}",
+            "final class TwiceInherited: Derived.Base {}",
+            "class PlainHolder { class Base {} }",
+            "class PlainDerived: PlainHolder {",
+            "    final class StillPlain: Base {}",
+            "}",
+            "final class AlsoPlain: PlainDerived.Base {}",
+            "class LoopA: LoopB { final class Inner: Missing {} }",
+            "class LoopB: LoopA {}",
+            "final class Through: LoopA.Missing {}",
+            "class Ring: Ring.P.X { class P: Hidden {} }",
+        ]), [violation(8, TestRules.subclass), violation(10, TestRules.subclass), violation(13, TestRules.subclass),
+             violation(20, TestRules.subclass), violation(22, TestRules.subclass)])
     }
 
     func testSubclassingAcrossFilesIsRefused() {
