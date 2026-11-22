@@ -3,27 +3,29 @@
 # They encode what reviews of this repo kept finding (see CLAUDE.md).
 reviews:
   path_instructions:
-    - path: "tests/**"
+    - path: "ios/PlannerCore/Tests/**"
       instructions: |
         Check that each new or changed test can only pass for the right reason:
-        - it asserts the outcome (the returned value, the written file, the served response), not just that a call happened;
+        - it asserts the outcome (the returned value, the request sent, the saved file), not just that a call happened;
         - an absence check ("X stays empty") is paired with a check that the intended effect happened;
         - a precondition the test relies on is asserted in the same test;
         - every output of a multi-output function is asserted;
-        - expected values come from the source of truth (disk, the code's own fetch list, literals), not rebuilt with the code's rule;
+        - expected values come from the source of truth (the published API guide, literals, files on disk), not rebuilt with the code's rule;
         - a parity/differential test also asserts the expected result, not only that two implementations agree;
         - a tautological test is fixed with an independent expected value, not a weaker assertion;
         - thresholds are pinned on both sides, and isolation is tested in both directions;
         - no dependence on the wall clock or the machine's time zone;
-        - every subprocess or network call has a timeout;
-        - Python fixtures are shared through mixins, not by subclassing a concrete TestCase.
+        - no test touches the network; anything that waits has a timeout;
+        - fixtures are shared through helpers, not by subclassing a concrete XCTestCase.
         When one instance of a problem is flagged, list the other instances in the same file or suite.
-    - path: "{scripts/**,assets/js/**}"
+    - path: "{ios/PlannerCore/Sources/**,ios/SessionPlanner/**}"
       instructions: |
-        Identifiers from feeds, backups or storage must go through one validating helper (type, trimmed, non-blank) and lookups must use exact keys (Object.hasOwn), not truthiness or regex over source.
+        Identifiers from the API, saved files or the keychain must go through one validating helper (type, trimmed, non-blank) and lookups must use exact keys.
         A guard's threshold must not be adjustable by the data it checks.
-        Untrusted records are skipped and counted, never fatal; a mostly-junk feed must be refused and the last good data kept.
-        If assets/js/live.js and scripts/sync.py normalize or diff the catalog, check both changed together.
+        Untrusted records are skipped and counted, never fatal; a mostly-junk answer must be refused and the last good calendar kept.
+        Logic that decides what the user sees belongs in PlannerCore, where it is tested, not in a SwiftUI view or AppModel.
+        Tokens stay in the keychain; nothing is sent anywhere but the AWS Events API and its sign-in endpoints.
     - path: ".github/workflows/**"
       instructions: |
-        Pushes to main must retry a lost race (both sync workflows push to the same branch). Stage files explicitly; a fallback such as `git add -A <dir>` must not be reachable in the normal case.
+        pages.yml must publish only ios/AppStore/support.html and ios/AppStore/privacy.html, at those paths: the App Store listing links to them, and archive/ holds personal selections that must not be published.
+        Third-party actions are pinned to a commit SHA.
