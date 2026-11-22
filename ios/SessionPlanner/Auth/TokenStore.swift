@@ -68,10 +68,16 @@ actor TokenStore: AccessTokenSource {
                 tokens = saved.tokens
                 signInID = saved.signInID
             } else if let bare = try? JSONDecoder().decode(TokenSet.self, from: data) {
-                // Saved by a build from before sign-ins had ids. It gets a new one, which no
-                // saved calendar carries, so the calendar is fetched again.
+                // Saved by a build from before sign-ins had ids. It gets one now, written back
+                // at once so the next launch reads the same id. If that write fails the
+                // sign-in has no id for this launch, and no calendar is saved under one that
+                // the next launch could not reproduce.
                 tokens = bare
-                signInID = UUID().uuidString
+                let id = UUID().uuidString
+                if let envelope = try? JSONEncoder().encode(SavedSignIn(tokens: bare, signInID: id)),
+                   Keychain.save(envelope) {
+                    signInID = id
+                }
             }
         }
     }
@@ -85,10 +91,15 @@ actor TokenStore: AccessTokenSource {
     @discardableResult
     func keep(_ new: TokenSet, freshSignIn: Bool = false) -> Bool {
         tokens = new
-        if freshSignIn || signInID == nil { signInID = UUID().uuidString }
-        guard let id = signInID,
-              let data = try? JSONEncoder().encode(SavedSignIn(tokens: new, signInID: id)) else { return false }
-        return Keychain.save(data)
+        // The id is taken up only once it is in the keychain with the tokens, so a calendar
+        // is never saved under an id the next launch cannot read back.
+        let id = (freshSignIn ? nil : signInID) ?? UUID().uuidString
+        guard let data = try? JSONEncoder().encode(SavedSignIn(tokens: new, signInID: id)), Keychain.save(data) else {
+            signInID = nil
+            return false
+        }
+        signInID = id
+        return true
     }
 
     func accessToken(forceRefresh: Bool) async throws -> String {
