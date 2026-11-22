@@ -130,15 +130,20 @@ the change ourselves, and send it to CodeRabbit once.
    comes from running the code once and judging the result, or from a published fact; never from
    memory. Copy commit SHAs, thread ids and other identifiers from tool output; never type or
    complete one from memory.
-3. **Open as a draft, mark ready once, push once.** Open every PR as a draft
+3. **Open as a draft, mark ready once, one push per review.** Open every PR as a draft
    (`gh pr create --draft`): CodeRabbit doesn't review a draft, so nothing is spent while our
    own review is still finding things. Mark it ready when that review is clean and the owner
-   wants CodeRabbit's. After its review, fix everything locally (every open thread, conflicts,
-   nits that cite a rule here), then push once. Before pushing, read the PR's latest CodeRabbit
-   comment: if it says "Review limit reached", wait for the time it gives unless the push is
-   needed to unblock something. Pushing to several PRs in the same hour starves all of them;
-   order them by what is waiting to merge. Replies and "resolved" don't use a review, so answer a
-   thread once its fix is pushed and name the commit.
+   wants CodeRabbit's. If CodeRabbit skips that first review ("Review limit reached"), nothing
+   was pushed and nothing will retry it: wait for the time its comment gives, then ask for the
+   review with a PR comment, `@coderabbitai review`. After a review, fix everything it raised
+   locally (every open thread, conflicts, nits that cite a rule here), then push once: one
+   batched push per review, never a string of small ones. If the review of that push finds
+   something new, the same applies again (the merge gate still needs every thread resolved), so
+   a further batched push is allowed. Before any push, read the PR's latest CodeRabbit comment:
+   if it says "Review limit reached", wait for the time it gives unless the push is needed to
+   unblock something. Pushing to several PRs in the same hour starves all of them; order them
+   by what is waiting to merge. Replies and "resolved" don't use a review, so answer a thread
+   once its fix is pushed and name the commit.
 4. **Read the PR first.** Before changing a PR or acting on a finding, read all its threads and
    the issues it links to or is linked from. A decision recorded there ("deferred to #89", "keep
    the owner's wording") outranks a bot finding or a task list; if your change would reverse one,
