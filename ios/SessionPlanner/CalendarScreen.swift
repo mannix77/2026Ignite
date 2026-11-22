@@ -3,7 +3,7 @@ import SwiftUI
 
 struct CalendarScreen: View {
     @Environment(AppModel.self) private var model
-    @State private var selectedDay: String?
+    @State private var selectedDay: String? = Launch.string("shotDay")
 
     var body: some View {
         @Bindable var model = model

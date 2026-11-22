@@ -14,8 +14,21 @@ struct SessionPlannerApp: App {
     }
 }
 
+/// Launch arguments that stage a screen for App Store screenshots, for example
+/// `-mode demo -shotTab sessions`. Debug builds only: a release build ignores them.
+enum Launch {
+    static func string(_ key: String) -> String? {
+        #if DEBUG
+        return UserDefaults.standard.string(forKey: key)
+        #else
+        return nil
+        #endif
+    }
+}
+
 struct RootView: View {
     @Environment(AppModel.self) private var model
+    @State private var tab = Launch.string("shotTab") ?? "calendar"
 
     var body: some View {
         @Bindable var model = model
@@ -23,13 +36,16 @@ struct RootView: View {
             if model.mode == .signedOut {
                 WelcomeView()
             } else {
-                TabView {
+                TabView(selection: $tab) {
                     CalendarScreen()
                         .tabItem { Label("Calendar", systemImage: "calendar") }
+                        .tag("calendar")
                     SessionsScreen()
                         .tabItem { Label("Sessions", systemImage: "list.bullet") }
+                        .tag("sessions")
                     SettingsScreen()
                         .tabItem { Label("Settings", systemImage: "gearshape") }
+                        .tag("settings")
                 }
             }
         }
