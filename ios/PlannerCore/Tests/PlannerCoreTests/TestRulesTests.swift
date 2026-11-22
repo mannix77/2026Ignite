@@ -563,6 +563,17 @@ final class TestRulesTests: XCTestCase {
             "enum Space { enum Inner { class Case: XCTestCase {} } }",
             "final class Deep: Space.Inner.Case {}",
         ]), [violation(5, TestRules.subclass), violation(9, TestRules.subclass)])
+        // The reverse: the nearer Derived inherits an ordinary Base, so the outer test case
+        // named Derived.Base is not what Fine subclasses.
+        XCTAssertEqual(check([
+            "class Holder { class Base {} }",
+            "enum Derived { class Base: XCTestCase {} }",
+            "enum Scope {",
+            "    class Derived: Holder {}",
+            "    final class Fine: Derived.Base {}",
+            "}",
+            "final class Outside: Derived.Base {}",
+        ]), [violation(7, TestRules.subclass)])
     }
 
     func testSubclassingAcrossFilesIsRefused() {
