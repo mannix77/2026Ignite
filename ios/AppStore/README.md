@@ -8,7 +8,7 @@ a detail only the account holder has.
 1. **A paid Apple Developer Program team (YOU).** A free Personal Team cannot upload to
    TestFlight or the App Store. Decide which paid team publishes the app; it becomes the
    seller name shown on the store.
-2. **Bundle ID.** The project uses `io.github.mannix77.sessionplanner`. Register it under the
+2. **Bundle ID.** The project uses `us.mannix.sessionplanner`. Register it under the
    chosen team (Xcode does this on the first signed archive). Change it in the project first if
    the team wants its own prefix; it cannot be changed after the first upload.
 3. **Privacy and support pages must be live.** They are `ios/AppStore/privacy.html` and
@@ -106,7 +106,7 @@ with staging arguments (debug builds only; a release build ignores them), then c
 
 ```sh
 xcrun simctl status_bar <device> override --time "9:41" --batteryState charged --batteryLevel 100
-xcrun simctl launch <device> io.github.mannix77.sessionplanner -mode demo -showFavorites YES \
+xcrun simctl launch <device> us.mannix.sessionplanner -mode demo -showFavorites YES \
     -shotTab calendar -shotDay 2027-03-10
 xcrun simctl io <device> screenshot 1-calendar.png
 ```
