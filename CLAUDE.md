@@ -53,6 +53,12 @@ the practices the repo settled on, mostly learned from CodeRabbit reviews during
 Before pushing, check every new test against this list. Most review findings were one of
 these.
 
+Rules 10, 12 and 13 are also checked by `swift test` itself (`TestRulesTests.swift`): no wall
+clock or machine time zone (including `Calendar(identifier:)` and `DateFormatter()`, which
+start in the machine's zone), no network, no wait without a timeout, no subclassing of a
+concrete `XCTestCase`. A line that truly needs an exception says why on that line, with
+`// test-rules: allow <reason>`. The rest of the list still needs a reader.
+
 1. **Assert the outcome, not that something ran.** Check the returned value, the request that
    was sent, the saved file; not just that a handler or callback was called.
 2. **Pair "X didn't happen" with "Y did".** An absence check alone also passes when nothing
