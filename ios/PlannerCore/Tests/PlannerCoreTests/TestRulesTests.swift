@@ -73,6 +73,8 @@ enum TestRules {
         // `scope` is where the superclass name is looked up from.
         var classes: [(file: String, line: Int, id: String, scope: [String], superclass: String)] = []
         var allowedByFile: [String: Set<Int>] = [:]
+        // Every type declared here (classes, enums, structs, extended names), scope-qualified.
+        var types: Set<String> = []
 
         for (name, source) in files {
             let lexed = Lexed(source)
@@ -102,6 +104,10 @@ enum TestRules {
                 }
             }
             let scopes = typeScopes(lexed)
+            for match in lexed.codeMatches(typeHeader) {
+                let typeName = groups(typeHeader, in: String(lexed.code[match]))[1]
+                types.insert((scopes(match.lowerBound) + [typeName]).joined(separator: "."))
+            }
             for match in lexed.codeMatches(classDeclaration) {
                 let parts = groups(classDeclaration, in: String(lexed.code[match]))
                 // Every class is recorded (one without a superclass can still shadow a name;
@@ -116,10 +122,11 @@ enum TestRules {
             }
         }
 
-        // A superclass name means the class declared nearest to where it is written (Swift's
-        // lookup): in the same scope, including types it inherits as members, then each
-        // enclosing one. `A.B` also finds a B that A inherits. Nil means it isn't declared here.
+        // A superclass name resolves the way Swift looks it up: its first part in the nearest
+        // scope that has it (declared there, or inherited as a member of that class), then each
+        // further part as a member (declared or inherited). Nil means it isn't declared here.
         let declared = Set(classes.map(\.id))
+        types.formUnion(declared)
         let byID = Dictionary(classes.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
         var parents: [String: String?] = [:]
         var resolving: Set<String> = []
@@ -131,28 +138,26 @@ enum TestRules {
             parents[id] = .some(found)
             return found
         }
-        /// The class `name` that `owner` declares or inherits.
+        /// The type `name` that `owner` declares or (as a class) inherits.
         func member(_ name: String, of owner: String, seen: Set<String> = []) -> String? {
-            if declared.contains(owner + "." + name) { return owner + "." + name }
+            if types.contains(owner + "." + name) { return owner + "." + name }
             guard !seen.contains(owner), let up = parent(of: owner) else { return nil }
             return member(name, of: up, seen: seen.union([owner]))
         }
         func resolve(_ name: String, from scope: [String]) -> String? {
             let parts = name.split(separator: ".").map(String.init)
+            guard let head = parts.first else { return nil }
+            var current: String?
             for depth in stride(from: scope.count, through: 0, by: -1) {
-                let candidate = (scope.prefix(depth) + [name]).joined(separator: ".")
-                if declared.contains(candidate) { return candidate }
                 let owner = scope.prefix(depth).joined(separator: ".")
-                if depth > 0, parts.count == 1, byID[owner] != nil, let inherited = member(name, of: owner) {
-                    return inherited
-                }
+                let candidate = owner.isEmpty ? head : owner + "." + head
+                if types.contains(candidate) { current = candidate; break }
+                if !owner.isEmpty, let inherited = member(head, of: owner) { current = inherited; break }
             }
-            guard parts.count > 1, var current = resolve(parts[0], from: scope) else { return nil }
             for part in parts.dropFirst() {
-                guard let next = member(part, of: current) else { return nil }
-                current = next
+                current = current.flatMap { member(part, of: $0) }
             }
-            return current
+            return current.flatMap { declared.contains($0) ? $0 : nil }
         }
         let resolved = classes.map { parent(of: $0.id) }
 
@@ -543,6 +548,21 @@ final class TestRulesTests: XCTestCase {
             "class Ring: Ring.P.X { class P: Hidden {} }",
         ]), [violation(8, TestRules.subclass), violation(10, TestRules.subclass), violation(13, TestRules.subclass),
              violation(20, TestRules.subclass), violation(22, TestRules.subclass)])
+    }
+
+    func testTheFirstPartOfASuperclassNameResolvesInTheNearestScope() {
+        // `Derived.Base` inside Outer means Outer.Derived's inherited Base, not the global one.
+        XCTAssertEqual(check([
+            "class Derived { class Base {} }",
+            "class Outer {",
+            "    class Holder { class Base: XCTestCase {} }",
+            "    class Derived: Holder {}",
+            "    final class Twice: Derived.Base {}",
+            "}",
+            "final class Global: Derived.Base {}",
+            "enum Space { enum Inner { class Case: XCTestCase {} } }",
+            "final class Deep: Space.Inner.Case {}",
+        ]), [violation(5, TestRules.subclass), violation(9, TestRules.subclass)])
     }
 
     func testSubclassingAcrossFilesIsRefused() {
