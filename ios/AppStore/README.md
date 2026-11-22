@@ -19,7 +19,7 @@ a detail only the account holder has.
 
 | Field | Value |
 | --- | --- |
-| Name (30) | Session Planner |
+| Name (30) | PersonalSessionManager |
 | Subtitle (30) | Your conference, as a calendar |
 | Primary category | Productivity |
 | Secondary category | Business |
@@ -32,8 +32,11 @@ a detail only the account holder has.
 | Price | Free |
 | Availability | All countries, or the United States only if you prefer a narrow first release |
 
-If "Session Planner" is taken on the store, alternatives that fit in 30 characters:
-"Session Planner for Events", "My Session Calendar", "Conference Session Planner".
+The App Store name is "PersonalSessionManager", the name the app record was created with
+("Session Planner" was not available). The name under the icon on the phone, and in the app's
+own screens, is still "Session Planner". Apple expects the two to be recognisably the same app
+(guideline 2.3.8); if a reviewer objects, either rename the app record or change the display
+name in the project (`INFOPLIST_KEY_CFBundleDisplayName`) and upload a new build.
 
 ## Version information (1.0)
 
