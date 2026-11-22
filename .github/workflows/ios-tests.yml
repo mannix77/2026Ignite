@@ -1,7 +1,6 @@
 name: iOS app tests
 
-# The Swift tests are not part of `npm test` (the other workflows run on Linux), so they run
-# here, on a Mac, whenever the iOS app changes.
+# The Swift tests and a simulator build, on a Mac, whenever the iOS app changes.
 on:
   push:
     branches: [main]
