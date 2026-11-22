@@ -3,6 +3,13 @@
 Newest first. Written by `scripts/import_reinvent.py` on every import that changes the catalog;
 the same batches are in `changes.json`, which the app reads.
 
+## 2026-11-22T00:52:26Z · https://catalog.awsevents.com/api/sessions
+
+Added 0 · removed 0 · changed 1
+
+**Changed**
+- `SUP206` Simile: Making interview-trained AI that predicts consumer decisions — speakers: — → Elaina Yallen
+
 ## 2026-11-21T18:42:59Z · https://catalog.awsevents.com/api/sessions
 
 Added 0 · removed 0 · changed 3
