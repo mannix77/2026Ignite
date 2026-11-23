@@ -41,6 +41,11 @@ final class DayNavigationTests: XCTestCase {
         XCTAssertEqual(DayNavigation.day(from: "2026-12-01", by: -10, in: week), "2026-11-29")
     }
 
+    func testTheLargestPossibleMoveStopsAtTheEnd() {
+        XCTAssertEqual(DayNavigation.day(from: "2026-12-01", by: .max, in: week), "2026-12-04")
+        XCTAssertEqual(DayNavigation.day(from: "2026-12-01", by: .min, in: week), "2026-11-29")
+    }
+
     func testNoMoveStaysOnTheDay() {
         XCTAssertEqual(DayNavigation.day(from: "2026-12-01", by: 0, in: week), "2026-12-01")
     }

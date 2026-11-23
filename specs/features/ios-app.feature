@@ -87,8 +87,8 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       Then the calendar still warns about the change of venue
 
   Rule: A swipe across the calendar moves one day, and stops at the first and last day
-    The days are the ones the day strip shows. VoiceOver takes over swipes, so the same
-    moves are offered as "Next day" and "Previous day" actions.
+    The days are the ones the day strip shows. VoiceOver takes over swipes, so the selected
+    day in the strip offers the same moves as "Next day" and "Previous day" actions.
 
     Example: The one in the middle of the week
       Given the conference runs Sunday 29 November to Friday 4 December
@@ -116,6 +116,17 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       Given he is looking at a day with sessions from morning to night
       When he scrolls up and down through them
       Then the day does not change
+
+    Example: The one who taps a day instead
+      Given he is looking at Wednesday 2 December
+      When he taps Friday in the day strip
+      Then he sees Friday 4 December
+
+    Example: The one using VoiceOver
+      Given VoiceOver is on and he is on Wednesday 2 December in the day strip
+      When he chooses the "Next day" action
+      Then he sees Thursday 3 December
+      And VoiceOver says "Thu, Dec 3"
 
   Rule: The session list finds what he is looking for
 

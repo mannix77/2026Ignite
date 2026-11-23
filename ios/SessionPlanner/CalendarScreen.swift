@@ -22,8 +22,12 @@ struct CalendarScreen: View {
                             ?? snapshot.defaultDay(today: now.date) ?? days[0]
                         // One page per day: a horizontal swipe moves a day, a vertical drag scrolls
                         // the day, and the pager stops at the first and last day.
+                        // The VoiceOver "Next day" / "Previous day" actions: move, then say where
+                        // he landed, since focus stays on the chip he started from.
                         let move = { (offset: Int) in
-                            withAnimation { selectedDay = DayNavigation.day(from: day, by: offset, in: days) }
+                            let target = DayNavigation.day(from: day, by: offset, in: days)
+                            withAnimation { selectedDay = target }
+                            AccessibilityNotification.Announcement(Wording.day(target)).post()
                         }
                         VStack(spacing: 0) {
                             DayStrip(days: days, busy: Set(model.committedDays), selected: day, move: move) { picked in
@@ -32,17 +36,11 @@ struct CalendarScreen: View {
                             Divider()
                             TabView(selection: Binding(get: { day }, set: { selectedDay = $0 })) {
                                 ForEach(days, id: \.self) { page in
-                                    DayView(agenda: snapshot.agenda(on: page, includeFavorites: model.showFavorites,
-                                                                    index: model.sessionsByID, commitments: model.commitmentsByID),
-                                            nowMinute: now.date == page ? now.minute : nil)
-                                        .refreshable { await model.refresh() }
+                                    DayPage(snapshot: snapshot, day: page, nowMinute: now.date == page ? now.minute : nil)
                                         .tag(page)
                                 }
                             }
                             .tabViewStyle(.page(indexDisplayMode: .never))
-                            // VoiceOver takes over swipes, so the same moves are offered as actions.
-                            .accessibilityAction(named: "Next day") { move(1) }
-                            .accessibilityAction(named: "Previous day") { move(-1) }
                         }
                     }
                 } else if model.isRefreshing {
@@ -124,15 +122,23 @@ private struct DayStrip: View {
                         .id(day)
                         .accessibilityLabel(Wording.day(day))
                         .accessibilityAddTraits(day == selected ? .isSelected : [])
-                        .accessibilityAction(named: "Next day") { move(1) }
-                        .accessibilityAction(named: "Previous day") { move(-1) }
+                        // VoiceOver takes over swipes, so the selected day offers the same moves
+                        // as actions. Only the selected chip has them, so they always move from
+                        // the day the chip names.
+                        .accessibilityActions {
+                            if isSelected {
+                                Button("Next day") { move(1) }
+                                Button("Previous day") { move(-1) }
+                            }
+                        }
                     }
                 }
                 .padding(.horizontal, 12)
                 .padding(.vertical, 6)
             }
             // Keep the selected day in view when a swipe moves it off the edge of the strip.
-            .onAppear { strip.scrollTo(selected, anchor: .center) }
+            // Deferred a turn so the chips are laid out before scrolling to one.
+            .onAppear { DispatchQueue.main.async { strip.scrollTo(selected, anchor: .center) } }
             .onChange(of: selected) { _, day in
                 withAnimation { strip.scrollTo(day, anchor: .center) }
             }
@@ -150,6 +156,22 @@ private struct ChipText: View {
     var body: some View {
         Text(text).font(font.weight(.bold)).hidden()
             .overlay { Text(text).font(font.weight(bold ? .bold : .regular)) }
+    }
+}
+
+/// One page of the day pager. It builds its own day's agenda when it is drawn, so the pages
+/// SwiftUI hasn't drawn cost nothing.
+private struct DayPage: View {
+    @Environment(AppModel.self) private var model
+    let snapshot: PlanSnapshot
+    let day: String
+    let nowMinute: Int?
+
+    var body: some View {
+        DayView(agenda: snapshot.agenda(on: day, includeFavorites: model.showFavorites,
+                                        index: model.sessionsByID, commitments: model.commitmentsByID),
+                nowMinute: nowMinute)
+            .refreshable { await model.refresh() }
     }
 }
 
