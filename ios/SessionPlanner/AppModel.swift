@@ -172,8 +172,9 @@ final class AppModel {
     /// Built from the calendar the first time a gap is opened, and dropped when the calendar
     /// changes, so every gap is ranked against the same picks.
     @ObservationIgnored private var suggester: Suggester?
-    /// Goes up every time the calendar is replaced.
-    @ObservationIgnored private var snapshotVersion = 0
+    /// Goes up every time the calendar is replaced; a screen showing something worked out from
+    /// an earlier calendar watches it.
+    private(set) var snapshotVersion = 0
 
     /// The sessions that fit a free stretch, most like his picks first. The ranking is built and
     /// run off the main actor, so the screen doesn't stall on a large catalog.
@@ -218,9 +219,7 @@ final class AppModel {
             setBackend(nil)
             // Likewise the Calendar copy: it was the earlier attendee's choice, so it starts off,
             // and their calendar is never written to under this sign-in.
-            exportsToCalendar = false
-            calendarExportStatus = nil
-            calendarExporter.forget()
+            resetCalendarExport()
             await store.delete(through: departing)
             let kept = await tokens.keep(new, freshSignIn: true)
             signInID = await tokens.signInID
@@ -251,9 +250,7 @@ final class AppModel {
         setMode(.signedOut)
         // The Calendar copy was his choice: whoever signs in next starts with it off, and with a
         // calendar of their own. His is left in the Calendar app, his to keep or delete.
-        exportsToCalendar = false
-        calendarExportStatus = nil
-        calendarExporter.forget()
+        resetCalendarExport()
         // Revocation can wait on the network for a while. The saved calendar is deleted
         // alongside it, not after it, so quitting the app during that wait leaves nothing behind.
         signInID = nil
@@ -370,25 +367,63 @@ final class AppModel {
     private(set) var calendarExportStatus: String?
     @ObservationIgnored private lazy var calendarExporter = CalendarExporter()
 
+    /// Goes up with every request to turn the Calendar copy on or off, so an older one still
+    /// waiting on the permission prompt can tell it has been overtaken.
+    @ObservationIgnored private var calendarRequest = 0
+    /// Set when forgetting an earlier attendee's calendar record failed. Until a reset works,
+    /// nothing is written: the old record must never be acted on for someone else.
+    private var calendarNeedsReset = UserDefaults.standard.bool(forKey: "calendarNeedsReset") {
+        didSet { UserDefaults.standard.set(calendarNeedsReset, forKey: "calendarNeedsReset") }
+    }
+
+    /// Turns the Apple Calendar copy off and forgets the app's calendar and record (the
+    /// calendar stays in the Calendar app). Used whenever the attendee may have changed.
+    private func resetCalendarExport() {
+        calendarRequest += 1
+        exportsToCalendar = false
+        calendarExportStatus = nil
+        calendarNeedsReset = !calendarExporter.forget()
+    }
+
     /// Turns the Apple Calendar copy on (asking for permission, then writing it) or off. Off
     /// stops updates and leaves the calendar as it is.
     func setExportsToCalendar(_ on: Bool) async {
+        calendarRequest += 1
         guard on else {
             exportsToCalendar = false
             calendarExportStatus = nil
             return
         }
-        guard mode == .live, let snapshot else { return }
+        guard mode == .live, snapshot != nil else { return }
+        let request = calendarRequest
+        let asked = generation
         guard await calendarExporter.requestAccess() else {
             notice = "Session Planner can't add your sessions without access to Calendar. Allow it in the Settings app, under Privacy & Security, Calendars."
             return
         }
+        // While the prompt was up he may have turned it off again, signed out, or signed in as
+        // someone else, and the calendar may have been refreshed: act only if nothing changed,
+        // and on the calendar as it is now.
+        guard request == calendarRequest, generation == asked, mode == .live, let current = snapshot else { return }
+        if calendarNeedsReset {
+            guard calendarExporter.forget() else {
+                notice = "Calendar can't be turned on: the app couldn't remove an earlier attendee's record of their calendar. Delete the app and install it again to clear it."
+                return
+            }
+            calendarNeedsReset = false
+        }
+        // Turning it on is the way back from a record that can't be read (the notice asks him
+        // to delete the old calendar first): it is discarded and a new calendar started.
+        if calendarExporter.hasUnreadableRecord, !calendarExporter.forget() {
+            notice = "Calendar can't be turned on: the app's record of its events can't be read or removed."
+            return
+        }
         exportsToCalendar = true
-        exportToCalendar(snapshot)
+        exportToCalendar(current)
     }
 
     private func exportToCalendar(_ snapshot: PlanSnapshot) {
-        guard exportsToCalendar, mode == .live else { return }
+        guard exportsToCalendar, !calendarNeedsReset, mode == .live else { return }
         do {
             let count = try calendarExporter.sync(snapshot, calendarName: event.name, timeZone: event.timeZone)
             calendarExportStatus = Wording.calendarExport(count: count, calendar: event.name)
@@ -402,7 +437,9 @@ final class AppModel {
             calendarExportStatus = nil
             notice = "Calendar updates are off: the app couldn't save its record of the events it added, so updating again could add them twice. Delete the “\(event.name)” calendar in the Calendar app, then turn this on again."
         } catch CalendarExporter.Failure.unreadableRecords {
-            notice = "Calendar wasn't updated: the app's record of its events can't be read. Delete the “\(event.name)” calendar in the Calendar app, then turn this on again."
+            exportsToCalendar = false
+            calendarExportStatus = nil
+            notice = "Calendar updates are off: the app's record of its events can't be read. Delete the “\(event.name)” calendar in the Calendar app, then turn this on again to start a new one."
         } catch {
             notice = "Calendar couldn't be updated: \(error.localizedDescription)"
         }

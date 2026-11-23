@@ -218,7 +218,8 @@ public struct Suggester: Sendable {
             guard !held.contains(session.family), !seen.contains(session.sessionId), session.isAllDaySession != true,
                   let time = session.sessionTime, time.hasValidDate, time.date == gap.date,
                   let start = time.startMinute else { continue }
-            let end = start + time.lengthMinutes
+            // A session listed with no length still takes the time the calendar draws it for.
+            let end = start + max(time.lengthMinutes, AgendaEntry.minimumDrawnMinutes)
             guard start >= gap.start + gap.before.walk(to: session.venue),
                   end + gap.after.walk(to: session.venue) <= gap.end else { continue }
 

@@ -264,6 +264,9 @@ private struct GapSheet: View {
             }
         }
         .task { suggestions = await model.suggestions(in: gap) }
+        // Reserving one of these (from its page) changes the calendar: this stretch may no
+        // longer be free, so the list closes rather than offer what no longer fits.
+        .onChange(of: model.snapshotVersion) { dismiss() }
     }
 }
 

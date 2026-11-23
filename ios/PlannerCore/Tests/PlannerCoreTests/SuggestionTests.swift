@@ -145,6 +145,18 @@ final class SuggestionTests: XCTestCase {
         XCTAssertEqual(listed, ["onTime", "backInTime"])
     }
 
+    func testASessionWithNoLengthTakesTheTwentyMinutesTheCalendarDrawsForIt() {
+        // Back at the Forum by 16:00 means leaving Wynn by 15:40. Listed with no length, a
+        // session still takes the 20 minutes the calendar would draw it for once reserved.
+        let plan = snapshot(filler(4) + [
+            offered("pick", time: "09:00", topics: ["Rare"]),
+            offered("fits", time: "15:20", length: "", venue: "Wynn/Encore", topics: ["Rare"]),
+            offered("runsOver", time: "15:21", length: "", venue: "Wynn/Encore", topics: ["Rare"]),
+        ], favorites: ["pick"])
+        let listed = Set(ids(plan.suggestions(in: forumGap)))
+        XCTAssertEqual(listed, ["fits"])
+    }
+
     func testTheWalkInUsesTheVenueBeforeAndTheWalkOutTheVenueAfter() {
         // MGM to the Forum is 35 minutes; the Forum to the Wynn is 20.
         let gap = Gap(date: "2026-12-02", start: 600, end: 960, before: .at("MGM Grand"), after: .at("Wynn/Encore"))

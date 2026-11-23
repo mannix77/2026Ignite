@@ -95,6 +95,8 @@ public enum Wording {
         case .closed: return "This is closed on the conference site for now."
         case .busy: return "The conference site is busy. Try again in a minute."
         case .server, .badResponse: return "The conference site had a problem. Try again shortly."
+        case .scheduleMostlyJunk:
+            return "Your schedule arrived mostly unreadable, so the last good copy was kept."
         case .catalogIncomplete, .catalogChanged, .catalogMostlyJunk, .catalogShrank:
             return "The session list arrived incomplete, so the last good copy was kept."
         case .outcomeUnknown:

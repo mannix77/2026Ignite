@@ -49,10 +49,11 @@ final class CalendarExporter {
         if let id = saved.calendarID, let existing = store.calendar(withIdentifier: id) {
             calendar = existing
         } else {
-            // First time, or he deleted the calendar: its events went with it, so the old
-            // records mean nothing and a fresh calendar starts from none.
+            // First time, or he deleted the calendar. Its events went with it, except any he had
+            // moved to another calendar: those records are kept, the rest start afresh.
             calendar = try makeCalendar(named: calendarName)
-            saved = Saved(calendarID: calendar.calendarIdentifier, records: [:])
+            saved = Saved(calendarID: calendar.calendarIdentifier,
+                          records: saved.records.filter { find($0.value) != nil })
             do {
                 try write(saved)
             } catch {
@@ -63,48 +64,62 @@ final class CalendarExporter {
             }
         }
 
+        // An event he deleted while its session is still reserved is made again: its record
+        // is dropped, so the plan adds it.
+        let present = saved.records.filter { find($0.value) != nil }
+        if present.count != saved.records.count {
+            saved.records = present
+            try writeOrStop(saved)
+        }
+
         let plan = CalendarExport.plan(for: snapshot, records: saved.records, timeZone: timeZone,
                                        eventName: calendarName)
-        guard !plan.isEmpty else { return saved.records.count }
-
-        // Progress is recorded even if a step fails part way, so the next run doesn't add twice.
-        // If the record itself can't be saved, that is reported above any other failure: the
-        // caller must stop writing until it can be, or every event made here would be added again.
-        var failure: Error?
-        do {
-            for draft in plan.add {
-                saved.records[draft.sessionID] = ExportRecord(eventID: try save(draft, into: nil, calendar: calendar,
-                                                                                timeZone: timeZone), draft: draft)
-            }
-            for change in plan.update {
-                // An event the app made is found again wherever he moved it, and updated there;
-                // only one that is gone altogether is made again.
-                let event = saved.records[change.draft.sessionID].flatMap { find($0, in: calendar) }
-                saved.records[change.draft.sessionID] = ExportRecord(
-                    eventID: try save(change.draft, into: event, calendar: calendar, timeZone: timeZone), draft: change.draft)
-            }
-            for eventID in plan.remove {
-                guard let (sessionID, record) = saved.records.first(where: { $0.value.eventID == eventID }) else { continue }
-                if let event = find(record, in: calendar) { try store.remove(event, span: .thisEvent, commit: true) }
-                saved.records[sessionID] = nil
-            }
-        } catch {
-            failure = error
+        // The record is saved after every event written, so whatever happens next (a failed
+        // step, the app quitting) it matches what is in Calendar and nothing is added twice.
+        for draft in plan.add {
+            // An event the app already made for this session (its record lost) is reused.
+            let existing = findByKey(sessionID: draft.sessionID, around: draft)
+            saved.records[draft.sessionID] = ExportRecord(
+                eventID: try save(draft, into: existing, calendar: calendar, timeZone: timeZone), draft: draft)
+            try writeOrStop(saved)
         }
-        do { try write(saved) } catch { throw Failure.unwritableRecords }
-        if let failure { throw failure }
+        for change in plan.update {
+            // Found again wherever he moved it, and updated there; made again only if gone.
+            let event = saved.records[change.draft.sessionID].flatMap { find($0) }
+            saved.records[change.draft.sessionID] = ExportRecord(
+                eventID: try save(change.draft, into: event, calendar: calendar, timeZone: timeZone), draft: change.draft)
+            try writeOrStop(saved)
+        }
+        for eventID in plan.remove {
+            guard let (sessionID, record) = saved.records.first(where: { $0.value.eventID == eventID }) else { continue }
+            if let event = find(record) { try store.remove(event, span: .thisEvent, commit: true) }
+            saved.records[sessionID] = nil
+            try writeOrStop(saved)
+        }
         return saved.records.count
     }
 
-    /// The event the app made for a record. Its identifier is tried first; since a calendar
-    /// sync can change that, the app's calendar is then searched around the event's time for
-    /// the session key the app wrote into it. No other event can carry that key.
-    private func find(_ record: ExportRecord, in calendar: EKCalendar) -> EKEvent? {
-        if let event = store.event(withIdentifier: record.eventID) { return event }
+    /// Saves the record, or stops everything: writing on without it would add events twice.
+    private func writeOrStop(_ saved: Saved) throws {
+        do { try write(saved) } catch { throw Failure.unwritableRecords }
+    }
+
+    /// The event the app made for a record. Its identifier is tried first, and must still carry
+    /// the record's session key; since a calendar sync or a move between calendars can change
+    /// the identifier, every calendar is then searched around the event's time for that key.
+    private func find(_ record: ExportRecord) -> EKEvent? {
         let key = CalendarExporter.key(for: record.draft.sessionID)
+        if let event = store.event(withIdentifier: record.eventID), event.url == nil || event.url == key { return event }
+        return findByKey(sessionID: record.draft.sessionID, around: record.draft)
+    }
+
+    /// An event carrying the app's key for `sessionID`, within a day either side of `draft`.
+    /// Other events in that window are looked at only to compare their key; none is changed.
+    private func findByKey(sessionID: String, around draft: CalendarEventDraft) -> EKEvent? {
+        let key = CalendarExporter.key(for: sessionID)
         let day: TimeInterval = 24 * 60 * 60
-        let around = store.predicateForEvents(withStart: record.draft.start.addingTimeInterval(-day),
-                                              end: record.draft.end.addingTimeInterval(day), calendars: [calendar])
+        let around = store.predicateForEvents(withStart: draft.start.addingTimeInterval(-day),
+                                              end: draft.end.addingTimeInterval(day), calendars: nil)
         return store.events(matching: around).first { $0.url == key }
     }
 
@@ -160,9 +175,15 @@ final class CalendarExporter {
     }
 
     /// Forgets the app's calendar and its record of events, leaving both in the Calendar app.
-    /// The next time it is turned on, a new calendar is started.
-    func forget() {
-        try? FileManager.default.removeItem(at: CalendarExporter.url)
+    /// The next time it is turned on, a new calendar is started. If the file can't be removed it
+    /// is emptied, which no later run can read; false when neither worked and the old record
+    /// could still be used.
+    @discardableResult
+    func forget() -> Bool {
+        let url = CalendarExporter.url
+        guard FileManager.default.fileExists(atPath: url.path) else { return true }
+        if (try? FileManager.default.removeItem(at: url)) != nil { return true }
+        return (try? Data().write(to: url, options: .atomic)) != nil
     }
 
     /// The record, or none if it was never written. One that is there but can't be read (locked,
@@ -170,8 +191,20 @@ final class CalendarExporter {
     private func load() throws -> Saved {
         let url = CalendarExporter.url
         guard FileManager.default.fileExists(atPath: url.path) else { return Saved(calendarID: nil, records: [:]) }
-        guard let data = try? Data(contentsOf: url), let saved = try? JSONDecoder().decode(Saved.self, from: data) else { throw Failure.unreadableRecords }
-        return saved
+        guard let data = try? Data(contentsOf: url), let saved = try? JSONDecoder().decode(Saved.self, from: data) else {
+            throw Failure.unreadableRecords
+        }
+        // Read back like any other untrusted input: bad records are skipped, and a file that is
+        // mostly bad is not acted on at all.
+        let checked = CalendarExport.usableRecords(saved.records)
+        guard !checked.isMostlyJunk else { throw Failure.unreadableRecords }
+        return Saved(calendarID: Identifier.clean(saved.calendarID), records: checked.records)
+    }
+
+    /// True when a record file is there but can't be used.
+    var hasUnreadableRecord: Bool {
+        guard FileManager.default.fileExists(atPath: CalendarExporter.url.path) else { return false }
+        do { _ = try load(); return false } catch { return true }
     }
 
     private func write(_ saved: Saved) throws {

@@ -28,7 +28,33 @@ public struct ExportPlan: Equatable, Sendable {
     public var isEmpty: Bool { add.isEmpty && update.isEmpty && remove.isEmpty }
 }
 
+/// The records from the app's saved file that can be trusted, and how many could not.
+public struct UsableRecords: Equatable, Sendable {
+    public var records: [String: ExportRecord]
+    public var skipped: Int
+    /// More than half the records were unusable: the file is not to be acted on at all.
+    public var isMostlyJunk: Bool
+}
+
 public enum CalendarExport {
+    /// Checks the records read back from the app's own file before any is acted on. A record
+    /// is used only if its session id is usable and matches its draft's, and its event id is
+    /// usable and claimed by no other record; the rest are skipped and counted.
+    public static func usableRecords(_ saved: [String: ExportRecord]) -> UsableRecords {
+        var claims: [String: Int] = [:]
+        for record in saved.values {
+            if let event = Identifier.clean(record.eventID) { claims[event, default: 0] += 1 }
+        }
+        var kept: [String: ExportRecord] = [:]
+        for (key, record) in saved {
+            guard let id = Identifier.clean(key), id == Identifier.clean(record.draft.sessionID),
+                  let event = Identifier.clean(record.eventID), claims[event] == 1 else { continue }
+            kept[id] = ExportRecord(eventID: event, draft: record.draft)
+        }
+        let skipped = saved.count - kept.count
+        return UsableRecords(records: kept, skipped: skipped, isMostlyJunk: skipped * 2 > saved.count)
+    }
+
     /// The Calendar event for one session: "CODE – Title", from its start to its end in the
     /// conference's time zone, at "Venue, Room", with "<event> session CODE" in the notes. A
     /// session with no length gets the minutes the
