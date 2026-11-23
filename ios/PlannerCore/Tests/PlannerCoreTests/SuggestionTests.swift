@@ -98,6 +98,31 @@ final class GapTests: XCTestCase {
         ])
     }
 
+    func testACommitmentListedWithNoLengthBlocksTheTimeTheCalendarDrawsIt() {
+        let plan = snapshot([offered("a", time: "08:00", length: "60"), offered("b", time: "18:00", length: "60")],
+                            invited: [offered("party", time: "10:00", length: "0", venue: "MGM Grand")])
+        XCTAssertEqual(plan.gaps(on: "2026-12-02"), [
+            Gap(date: "2026-12-02", start: 480, end: 600, before: .open, after: .at("MGM Grand")),
+            Gap(date: "2026-12-02", start: 620, end: 1140, before: .at("MGM Grand"), after: .open),
+        ])
+    }
+
+    func testAnInvitationLaterThanEverySessionStretchesTheDay() {
+        let plan = snapshot([offered("a", time: "08:00", length: "60")],
+                            invited: [offered("party", time: "20:00", length: "180", venue: "Venetian")])
+        XCTAssertEqual(plan.gaps(on: "2026-12-02"),
+                       [Gap(date: "2026-12-02", start: 480, end: 1200, before: .open, after: .at("Venetian"))])
+    }
+
+    func testOfCommitmentsEndingTogetherHeIsAtTheOneThatStartedLater() {
+        let plan = snapshot([offered("day", time: "08:00", length: "600"),
+                             offered("long", time: "09:00", length: "120", venue: "Wynn/Encore"),
+                             offered("short", time: "10:00", length: "60", venue: "Venetian")],
+                            reserved: ["long", "short"])
+        XCTAssertEqual(plan.gaps(on: "2026-12-02").last,
+                       Gap(date: "2026-12-02", start: 660, end: 1080, before: .at("Venetian"), after: .open))
+    }
+
     func testBackToBackCommitmentsLeaveNoGapAndADayWithNoSessionsHasNone() {
         let plan = snapshot([offered("a", time: "09:00", length: "60"), offered("b", time: "10:00", length: "60")],
                             reserved: ["a", "b"])
@@ -118,6 +143,17 @@ final class SuggestionTests: XCTestCase {
         ], favorites: ["pick"])
         let listed = Set(ids(plan.suggestions(in: forumGap)))
         XCTAssertEqual(listed, ["onTime", "backInTime"])
+    }
+
+    func testTheWalkInUsesTheVenueBeforeAndTheWalkOutTheVenueAfter() {
+        // MGM to the Forum is 35 minutes; the Forum to the Wynn is 20.
+        let gap = Gap(date: "2026-12-02", start: 600, end: 960, before: .at("MGM Grand"), after: .at("Wynn/Encore"))
+        let plan = snapshot(filler(4) + [
+            offered("pick", time: "09:00", topics: ["Rare"]),
+            offered("onTime", time: "10:35", topics: ["Rare"]), offered("oneShort", time: "10:34", topics: ["Rare"]),
+            offered("backInTime", time: "14:40", topics: ["Rare"]), offered("backLate", time: "14:41", topics: ["Rare"]),
+        ], favorites: ["pick"])
+        XCTAssertEqual(Set(ids(plan.suggestions(in: gap))), ["onTime", "backInTime"])
     }
 
     func testFromTheStartOfTheDayThereIsNoWalk() {
@@ -189,6 +225,50 @@ final class SuggestionTests: XCTestCase {
         XCTAssertEqual(plan.suggestions(in: forumGap).map(\.shared), [["Z", "Y", "X"]])
     }
 
+    func testLevelAndTypeAreInterestsToo() {
+        let plan = snapshot(filler(4) + [
+            offered("pick", time: "09:00", level: "300 – Advanced", type: "Workshop"),
+            offered("sameLevel", code: "AAA1", level: "300 – Advanced"),
+            offered("sameType", code: "BBB1", type: "Workshop"),
+            offered("neither", code: "CCC1", level: "200 – Intermediate", type: "Chalk talk"),
+        ], favorites: ["pick"])
+        let found = plan.suggestions(in: forumGap)
+        XCTAssertEqual(Set(ids(found)), ["sameLevel", "sameType"])
+        XCTAssertEqual(Set(found.map(\.shared)), [["300 – Advanced"], ["Workshop"]])
+    }
+
+    func testANameUnderTwoHeadingsIsGivenOnce() {
+        let plan = snapshot(filler(4) + [offered("pick", time: "09:00", topics: ["Security"], areas: ["Security"]),
+                                         offered("cand", topics: ["Security"], areas: ["Security"])],
+                            favorites: ["pick"])
+        XCTAssertEqual(plan.suggestions(in: forumGap).map(\.shared), [["Security"]])
+    }
+
+    func testASessionTheCatalogListsTwiceIsSuggestedOnce() {
+        let twice = offered("cand", topics: ["Rare"])
+        let plan = snapshot(filler(4) + [offered("pick", time: "09:00", topics: ["Rare"]), twice, twice],
+                            favorites: ["pick"])
+        XCTAssertEqual(ids(plan.suggestions(in: forumGap)), ["cand"])
+    }
+
+    func testWithNoPicksNothingIsListed() {
+        let plan = snapshot(filler(4) + [offered("cand", topics: ["Rare"]), offered("other", time: "09:00", topics: ["Rare"])])
+        XCTAssertEqual(plan.sessions.filter { $0.sessionTime?.date == "2026-12-02" }.count, 2)
+        XCTAssertEqual(ids(plan.suggestions(in: forumGap)), [])
+    }
+
+    func testARareTraitWeighsMoreInTheScore() {
+        // "A" is on 2 of 4 sessions (weight ln 2), "B" on 1 (weight ln 4 = 2 ln 2). The pick's unit
+        // vector is (1, 2)/sqrt(5) and the candidate's is (1, 0), so the score is 1/sqrt(5).
+        let plan = snapshot([offered("pick", time: "09:00", topics: ["A", "B"]), offered("cand", topics: ["A"]),
+                             offered("o1", date: "2026-12-03", topics: ["Y"]),
+                             offered("o2", date: "2026-12-03", topics: ["Y"])],
+                            favorites: ["pick"])
+        let found = plan.suggestions(in: forumGap)
+        XCTAssertEqual(ids(found), ["cand"])
+        XCTAssertEqual(found[0].score, 0.4472135954999579, accuracy: 1e-12)
+    }
+
     func testAScoreIsTheSimilarityToHisPicks() {
         // One pick and one candidate with the same single trait, shared by half the catalog:
         // their vectors are identical unit vectors, so the score is exactly 1.
@@ -215,7 +295,9 @@ final class SuggestionTests: XCTestCase {
            invited: [offered("party", time: "17:00", topics: ["PartyTopic"])])
         let found = plan.suggestions(in: forumGap)
         XCTAssertEqual(ids(found), ["likeSeat", "likeFav"])
-        XCTAssertEqual(found[0].score, 2 * found[1].score, accuracy: 1e-12)
+        // Each is a unit vector identical to its pick's, so the scores are the pick weights.
+        XCTAssertEqual(found[0].score, 2, accuracy: 1e-12)
+        XCTAssertEqual(found[1].score, 1, accuracy: 1e-12)
     }
 
     func testOfTwoEquallyLikeSessionsTheOneWithSeatsComesFirst() {
@@ -229,7 +311,7 @@ final class SuggestionTests: XCTestCase {
         let found = plan.suggestions(in: forumGap)
         XCTAssertEqual(ids(found), ["open", "full", "notReservable"])
         XCTAssertEqual(found.map(\.seat), [.reserve, .walkUp, .walkUp])
-        XCTAssertEqual(found[0].score, found[1].score)
+        XCTAssertEqual(Set(found.map(\.score)).count, 1)
     }
 
     func testEveryOpenSeatBandOffersAReservation() {
@@ -297,7 +379,9 @@ final class SuggestionTests: XCTestCase {
             offered("earlyB", code: "BBB1", time: "11:00", topics: ["Rare"]),
             offered("earlyA", code: "AAA2", time: "11:00", topics: ["Rare"]),
         ], favorites: ["pick"])
-        XCTAssertEqual(ids(plan.suggestions(in: forumGap)), ["earlyA", "earlyB", "late"])
+        let found = plan.suggestions(in: forumGap)
+        XCTAssertEqual(ids(found), ["earlyA", "earlyB", "late"])
+        XCTAssertEqual(Set(found.map(\.score)).count, 1)
     }
 
     func testARepeatFamilyIsTheCodeWithoutItsRepeatSuffix() {

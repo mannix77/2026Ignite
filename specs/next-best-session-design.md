@@ -1,6 +1,7 @@
 # Next best session: design draft
 
-Status: draft for Minesh's review, 2026-11-22. Nothing is built. re:Invent runs 30 Nov to 4 Dec.
+Status: 2026-11-23. The ranking and gaps are built in `PlannerCore` (see "Built so far"); no
+screen shows them yet. re:Invent runs 30 Nov to 4 Dec.
 
 ## What it does
 
