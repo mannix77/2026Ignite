@@ -157,3 +157,54 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       When he shows favorites on that day
       Then the seat he holds keeps its place on the calendar
       And the 9 favorites appear as one marker for that hour, which opens their list
+
+  Rule: A gap in his day lists the sessions he could still make, most like his picks first
+    Picks are his reserved seats (counted twice) and his favorites. Invitations are not
+    picks: a reception says nothing about what he wants to learn. A trait few sessions share
+    counts for more than one most of them share. Walks between venues are the planner's old
+    estimates: 10 to 25 minutes between the four resorts north of MGM, 35 to or from the
+    MGM Grand by shuttle, 8 inside one venue, 15 when a venue is unknown.
+
+    Example: The one that fits only if he hurries
+      Given a reserved session ends at 11:00 at "Caesars Forum"
+      And the next reserved session starts at 14:00 at "Caesars Forum"
+      And the walk between "Caesars Forum" and "Wynn/Encore" takes 20 minutes
+      When he asks what fits between them
+      Then a session at "Wynn/Encore" starting at 11:20 is listed and one starting at 11:19 is not
+      And one ending at 13:40 is listed and one ending at 13:41 is not
+
+    Example: The one with the whole day free
+      Given nothing is on his calendar on Tuesday
+      And Tuesday's sessions run from 08:00 to 19:00
+      When he asks for the gaps on Tuesday
+      Then there is one gap, from 08:00 to 19:00, with no walk at either end
+
+    Example: The one he already holds a seat for
+      Given he holds a seat in "AIM320" and its repeat "AIM320-R1" falls in the gap
+      When he asks what fits in the gap
+      Then neither is listed
+
+    Example: The favorite that clashes, whose repeat fits
+      Given "COP319" is a favorite at a time he is busy
+      And its repeat "COP319-R1" falls in the gap
+      When he asks what fits in the gap
+      Then "COP319-R1" is listed as the same session as a favorite
+
+    Example: The one with a rare trait in common
+      Given his picks all cover "Agentic AI", which most sessions cover
+      And one pick covers "AWS Distro for OpenTelemetry", which few sessions cover
+      When he asks what fits in the gap
+      Then a session on "AWS Distro for OpenTelemetry" comes before one on "Agentic AI" only
+      And each says which of his interests it shares
+
+    Example: The one with no seats left
+      Given two sessions in the gap are equally like his picks
+      And one still has seats and the other has none
+      When he asks what fits in the gap
+      Then the one with seats comes first, offered to reserve
+      And the other is offered as a walk-up
+
+    Example: The one with nothing in common
+      Given a session in the gap shares nothing with his picks
+      When he asks what fits in the gap
+      Then it is not listed

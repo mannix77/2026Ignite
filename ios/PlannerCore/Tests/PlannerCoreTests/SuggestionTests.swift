@@ -1,0 +1,289 @@
+import XCTest
+@testable import PlannerCore
+
+/// A catalog session with the traits suggestions are ranked on.
+private func offered(_ id: String, code: String? = nil, time: String = "12:00", length: String = "60",
+                     date: String = "2026-12-02", venue: String? = "Caesars Forum", topics: [String] = [],
+                     areas: [String] = [], services: [String] = [], level: String? = nil, type: String? = nil,
+                     seats: String? = nil, reservable: Bool? = nil, allDay: Bool = false) -> Session {
+    Session(sessionId: id, title: "Title \(id)", abbreviation: code ?? id.uppercased(), type: type, level: level,
+            venue: venue, isAllDaySession: allDay, isReservable: reservable, seatAvailability: seats,
+            sessionTime: SessionTime(date: date, time: time, length: length), topics: topics,
+            areasOfInterest: areas, services: services)
+}
+
+/// Sessions that only fill out the catalog, so that "Filler" is a common trait and the traits
+/// under test are rare. They sit on another day, so they are never in the gap.
+private func filler(_ count: Int) -> [Session] {
+    (0..<count).map { offered("f\($0)", date: "2026-12-03", topics: ["Filler"]) }
+}
+
+private func snapshot(_ sessions: [Session], reserved: [String] = [], favorites: [String] = [],
+                      invited: [Session] = []) -> PlanSnapshot {
+    PlanSnapshot(sessions: sessions,
+                 schedule: Schedule(reserved: reserved, favorites: favorites, invitedSessions: invited),
+                 fetchedAt: Date(timeIntervalSince1970: 0))
+}
+
+/// 10:00 to 16:00 on 2 Dec, coming from and going back to the Forum.
+private let forumGap = Gap(date: "2026-12-02", start: 600, end: 960,
+                           before: .at("Caesars Forum"), after: .at("Caesars Forum"))
+
+private func ids(_ suggestions: [Suggestion]) -> [String] { suggestions.map(\.session.sessionId) }
+
+final class WalkTests: XCTestCase {
+    func testWalksAreThePlannersPublishedEstimatesInBothDirections() {
+        // From the retired web planner's Las Vegas model (assets/js/conferences.js, LAS_VEGAS_DEF,
+        // removed in #173), with the venue names the Events API sends.
+        let table: [(String, String, Int)] = [
+            ("Venetian", "Wynn/Encore", 15), ("Caesars Forum", "Venetian", 15),
+            ("Caesars Palace", "Caesars Forum", 10), ("Caesars Palace", "Venetian", 15),
+            ("Caesars Palace", "Wynn/Encore", 25), ("Caesars Forum", "Wynn/Encore", 20),
+            ("Caesars Palace", "MGM Grand", 35), ("Caesars Forum", "MGM Grand", 35),
+            ("MGM Grand", "Venetian", 35), ("MGM Grand", "Wynn/Encore", 35),
+        ]
+        for (a, b, minutes) in table {
+            XCTAssertEqual(Walks.minutes(from: a, to: b), minutes, "\(a) to \(b)")
+            XCTAssertEqual(Walks.minutes(from: b, to: a), minutes, "\(b) to \(a)")
+        }
+        // Every pair of the five venues is covered.
+        let venues = ["Venetian", "Wynn/Encore", "Caesars Forum", "Caesars Palace", "MGM Grand"]
+        XCTAssertEqual(Set(table.map { Set([$0.0, $0.1]) }).count, venues.count * (venues.count - 1) / 2)
+    }
+
+    func testInsideOneVenueAndUnknownVenues() {
+        XCTAssertEqual(Walks.minutes(from: "MGM Grand", to: "MGM Grand"), 8)
+        XCTAssertEqual(Walks.minutes(from: "MGM Grand", to: nil), 15)
+        XCTAssertEqual(Walks.minutes(from: nil, to: "Venetian"), 15)
+        XCTAssertEqual(Walks.minutes(from: nil, to: nil), 15)
+        XCTAssertEqual(Walks.minutes(from: "Sphere", to: "Venetian"), 15)
+    }
+}
+
+final class GapTests: XCTestCase {
+    func testAFreeDayIsOneGapFromTheFirstSessionToTheLastWithNoWalk() {
+        // An all-day session (the expo) does not stretch the day.
+        let plan = snapshot([offered("a", time: "08:00", length: "60", topics: ["X"]),
+                             offered("b", time: "17:00", length: "120", topics: ["X"]),
+                             offered("expo", time: "00:00", length: "1440", allDay: true),
+                             offered("other", time: "06:00", length: "60", date: "2026-12-03")])
+        XCTAssertEqual(plan.gaps(on: "2026-12-02"),
+                       [Gap(date: "2026-12-02", start: 480, end: 1140, before: .open, after: .open)])
+    }
+
+    func testGapsSitBeforeBetweenAndAfterCommitmentsWithTheirVenues() {
+        let plan = snapshot([offered("early", time: "08:00", length: "30"),
+                             offered("late", time: "18:00", length: "60"),
+                             offered("seat1", time: "10:00", length: "60", venue: "MGM Grand"),
+                             offered("seat2", time: "13:00", length: "60", venue: nil),
+                             offered("fav", time: "11:00", length: "60")],
+                            reserved: ["seat1", "seat2"], favorites: ["fav"],
+                            invited: [offered("party", time: "15:00", length: "60", venue: "Venetian")])
+        XCTAssertEqual(plan.gaps(on: "2026-12-02"), [
+            Gap(date: "2026-12-02", start: 480, end: 600, before: .open, after: .at("MGM Grand")),
+            Gap(date: "2026-12-02", start: 660, end: 780, before: .at("MGM Grand"), after: .at(nil)),
+            Gap(date: "2026-12-02", start: 840, end: 900, before: .at(nil), after: .at("Venetian")),
+            Gap(date: "2026-12-02", start: 960, end: 1140, before: .at("Venetian"), after: .open),
+        ])
+    }
+
+    func testAfterOverlappingCommitmentsTheGapStartsWhenTheLaterOneEnds() {
+        let plan = snapshot([offered("day", time: "08:00", length: "600"),
+                             offered("long", time: "09:00", length: "180", venue: "Wynn/Encore"),
+                             offered("short", time: "10:00", length: "30", venue: "Venetian")],
+                            reserved: ["long", "short"])
+        XCTAssertEqual(plan.gaps(on: "2026-12-02"), [
+            Gap(date: "2026-12-02", start: 480, end: 540, before: .open, after: .at("Wynn/Encore")),
+            Gap(date: "2026-12-02", start: 720, end: 1080, before: .at("Wynn/Encore"), after: .open),
+        ])
+    }
+
+    func testBackToBackCommitmentsLeaveNoGapAndADayWithNoSessionsHasNone() {
+        let plan = snapshot([offered("a", time: "09:00", length: "60"), offered("b", time: "10:00", length: "60")],
+                            reserved: ["a", "b"])
+        XCTAssertEqual(plan.gaps(on: "2026-12-02"), [])
+        XCTAssertEqual(plan.gaps(on: "2026-12-05"), [])
+    }
+}
+
+final class SuggestionTests: XCTestCase {
+    func testASessionMustLeaveTimeForTheWalkThereAndBack() {
+        // Forum to Wynn is 20 minutes each way. The seat ends at 10:00 and the next is at 16:00.
+        let plan = snapshot(filler(4) + [
+            offered("pick", time: "09:00", topics: ["Rare"]),
+            offered("onTime", time: "10:20", venue: "Wynn/Encore", topics: ["Rare"]),
+            offered("oneShort", time: "10:19", venue: "Wynn/Encore", topics: ["Rare"]),
+            offered("backInTime", time: "14:40", venue: "Wynn/Encore", topics: ["Rare"]),
+            offered("backLate", time: "14:41", venue: "Wynn/Encore", topics: ["Rare"]),
+        ], favorites: ["pick"])
+        let listed = Set(ids(plan.suggestions(in: forumGap)))
+        XCTAssertEqual(listed, ["onTime", "backInTime"])
+    }
+
+    func testFromTheStartOfTheDayThereIsNoWalk() {
+        let gap = Gap(date: "2026-12-02", start: 480, end: 600, before: .open, after: .open)
+        let plan = snapshot(filler(4) + [offered("pick", time: "13:00", topics: ["Rare"]),
+                                         offered("first", time: "08:00", length: "120", venue: "MGM Grand",
+                                                 topics: ["Rare"])],
+                            favorites: ["pick"])
+        XCTAssertEqual(ids(plan.suggestions(in: gap)), ["first"])
+    }
+
+    func testNothingHeHoldsNorItsRepeatIsListedButAFavoriteIs() {
+        let plan = snapshot(filler(6) + [
+            offered("seat", code: "AIM320", time: "11:00", topics: ["Rare"]),
+            offered("seatRepeat", code: "AIM320-R1", time: "12:00", topics: ["Rare"]),
+            offered("party", code: "PTY001", time: "13:00", topics: ["Rare"]),
+            offered("partyRepeat", code: "PTY001-R", time: "14:00", topics: ["Rare"]),
+            offered("fav", code: "COP305", time: "12:00", topics: ["Rare"]),
+            offered("other", code: "DEV200", time: "12:00", topics: ["Rare"]),
+        ], reserved: ["seat"], favorites: ["fav"],
+           invited: [offered("party", code: "PTY001", time: "13:00", topics: ["Rare"])])
+        let found = plan.suggestions(in: forumGap)
+        XCTAssertEqual(Set(ids(found)), ["fav", "other"])
+        XCTAssertEqual(found.first { $0.session.sessionId == "fav" }?.isFavorite, true)
+        XCTAssertEqual(found.first { $0.session.sessionId == "other" }?.isFavorite, false)
+        // A favorite is not a repeat of itself.
+        XCTAssertEqual(found.first { $0.session.sessionId == "fav" }?.isRepeatOfFavorite, false)
+    }
+
+    func testTheRepeatOfAFavoriteThatClashesIsMarkedAsTheSameSession() {
+        let plan = snapshot(filler(4) + [
+            offered("fav", code: "COP319", time: "09:00", topics: ["Rare"]),
+            offered("favRepeat", code: "COP319-R1", time: "12:00", topics: ["Rare"]),
+            offered("other", code: "DEV200", time: "12:00", topics: ["Rare"]),
+        ], favorites: ["fav"])
+        let found = plan.suggestions(in: forumGap)
+        XCTAssertEqual(Set(ids(found)), ["favRepeat", "other"])
+        XCTAssertEqual(found.first { $0.session.sessionId == "favRepeat" }?.isRepeatOfFavorite, true)
+        XCTAssertEqual(found.first { $0.session.sessionId == "other" }?.isRepeatOfFavorite, false)
+    }
+
+    func testARareSharedTraitOutranksACommonOneAndEachSaysWhatItShares() {
+        // "Agentic AI" is on every pick and most of the catalog; "ADOT" is on one pick and one
+        // other session, as "Kiro" is.
+        let common = ["Agentic AI"]
+        let plan = snapshot((0..<6).map { offered("c\($0)", date: "2026-12-03", areas: common) } + [
+            offered("kiroTwin", date: "2026-12-03", services: ["Kiro"]),
+            offered("p1", time: "09:00", areas: common, services: ["ADOT"]),
+            offered("p2", time: "09:00", areas: common, services: ["Kiro"]),
+            offered("aiOnly", time: "12:00", areas: common),
+            offered("adot", time: "12:00", services: ["ADOT"]),
+        ], favorites: ["p1", "p2"])
+        let found = plan.suggestions(in: forumGap)
+        XCTAssertEqual(ids(found), ["adot", "aiOnly"])
+        XCTAssertEqual(found.map(\.shared), [["ADOT"], ["Agentic AI"]])
+        XCTAssertGreaterThan(found[0].score, found[1].score)
+    }
+
+    func testAtMostThreeSharedTraitsAreGivenTheRarestFirst() {
+        // "A" is on 2 sessions, "B" on 3, "C" on 4, "D" on 5: the rarer, the more it says.
+        let plan = snapshot(filler(4) + [
+            offered("pick", time: "09:00", topics: ["D", "B", "A", "C"]),
+            offered("cand", topics: ["C", "A", "D", "B"]),
+            offered("b1", date: "2026-12-03", topics: ["B", "C", "D"]),
+            offered("c1", date: "2026-12-03", topics: ["C", "D"]),
+            offered("d1", date: "2026-12-03", topics: ["D"]),
+        ], favorites: ["pick"])
+        XCTAssertEqual(plan.suggestions(in: forumGap).map(\.shared), [["A", "B", "C"]])
+    }
+
+    func testAScoreIsTheSimilarityToHisPicks() {
+        // One pick and one candidate with the same single trait, shared by half the catalog:
+        // their vectors are identical unit vectors, so the score is exactly 1.
+        let plan = snapshot([offered("pick", time: "09:00", topics: ["X"]), offered("cand", topics: ["X"]),
+                             offered("o1", date: "2026-12-03", topics: ["Y"]),
+                             offered("o2", date: "2026-12-03", topics: ["Y"])],
+                            favorites: ["pick"])
+        let found = plan.suggestions(in: forumGap)
+        XCTAssertEqual(ids(found), ["cand"])
+        XCTAssertEqual(found[0].score, 1, accuracy: 1e-12)
+        XCTAssertEqual(found[0].shared, ["X"])
+        XCTAssertEqual(found[0].seat, .walkUp)
+    }
+
+    func testAReservedSeatCountsTwiceAndAnInvitationNotAtAll() {
+        let plan = snapshot(filler(8) + [
+            offered("seat", time: "09:00", topics: ["SeatTopic"]),
+            offered("fav", time: "09:00", topics: ["FavTopic"]),
+            offered("likeFav", time: "12:00", topics: ["FavTopic"]),
+            offered("likeSeat", time: "12:00", topics: ["SeatTopic"]),
+            offered("likeParty", time: "12:00", topics: ["PartyTopic"]),
+            offered("partyTwin", date: "2026-12-03", topics: ["PartyTopic"]),
+        ], reserved: ["seat"], favorites: ["fav"],
+           invited: [offered("party", time: "17:00", topics: ["PartyTopic"])])
+        let found = plan.suggestions(in: forumGap)
+        XCTAssertEqual(ids(found), ["likeSeat", "likeFav"])
+        XCTAssertEqual(found[0].score, 2 * found[1].score, accuracy: 1e-12)
+    }
+
+    func testOfTwoEquallyLikeSessionsTheOneWithSeatsComesFirst() {
+        let plan = snapshot(filler(4) + [
+            offered("pick", time: "09:00", topics: ["Rare"]),
+            offered("full", code: "AAA100", time: "11:00", topics: ["Rare"], seats: "unavailable", reservable: true),
+            offered("open", code: "ZZZ100", time: "12:00", topics: ["Rare"], seats: "limited", reservable: true),
+            offered("notReservable", code: "BBB100", time: "11:30", topics: ["Rare"], seats: "available",
+                    reservable: false),
+        ], favorites: ["pick"])
+        let found = plan.suggestions(in: forumGap)
+        XCTAssertEqual(ids(found), ["open", "full", "notReservable"])
+        XCTAssertEqual(found.map(\.seat), [.reserve, .walkUp, .walkUp])
+        XCTAssertEqual(found[0].score, found[1].score)
+    }
+
+    func testEveryOpenSeatBandOffersAReservation() {
+        for band in ["available", "limited", "veryLimited"] {
+            let plan = snapshot(filler(4) + [offered("pick", time: "09:00", topics: ["Rare"]),
+                                             offered("s", topics: ["Rare"], seats: band, reservable: true)],
+                                favorites: ["pick"])
+            XCTAssertEqual(plan.suggestions(in: forumGap).map(\.seat), [.reserve], band)
+        }
+        for band in ["unavailable", "walkUp", ""] {
+            let plan = snapshot(filler(4) + [offered("pick", time: "09:00", topics: ["Rare"]),
+                                             offered("s", topics: ["Rare"], seats: band, reservable: true)],
+                                favorites: ["pick"])
+            XCTAssertEqual(plan.suggestions(in: forumGap).map(\.seat), [.walkUp], band)
+        }
+    }
+
+    func testASessionWithNothingInCommonIsNotListed() {
+        let plan = snapshot(filler(4) + [offered("pick", time: "09:00", topics: ["Rare"]),
+                                         offered("alike", topics: ["Rare"]),
+                                         offered("unalike", topics: ["Elsewhere"]),
+                                         offered("bare")],
+                            favorites: ["pick"])
+        XCTAssertEqual(ids(plan.suggestions(in: forumGap)), ["alike"])
+    }
+
+    func testOnlyTimedSessionsOnThatDayAreListed() {
+        let plan = snapshot(filler(4) + [
+            offered("pick", time: "09:00", topics: ["Rare"]),
+            offered("today", topics: ["Rare"]),
+            offered("tomorrow", date: "2026-12-03", topics: ["Rare"]),
+            offered("allDay", topics: ["Rare"], allDay: true),
+            Session(sessionId: "untimed", title: "Untimed", topics: ["Rare"]),
+        ], favorites: ["pick"])
+        XCTAssertEqual(ids(plan.suggestions(in: forumGap)), ["today"])
+    }
+
+    func testEqualSuggestionsAreInTimeThenCodeOrder() {
+        let plan = snapshot(filler(4) + [
+            offered("pick", time: "09:00", topics: ["Rare"]),
+            offered("late", code: "AAA1", time: "13:00", topics: ["Rare"]),
+            offered("earlyB", code: "BBB1", time: "11:00", topics: ["Rare"]),
+            offered("earlyA", code: "AAA2", time: "11:00", topics: ["Rare"]),
+        ], favorites: ["pick"])
+        XCTAssertEqual(ids(plan.suggestions(in: forumGap)), ["earlyA", "earlyB", "late"])
+    }
+
+    func testARepeatFamilyIsTheCodeWithoutItsRepeatSuffix() {
+        let cases: [(String?, String)] = [
+            ("AIM320-R1", "AIM320"), ("COP305-R", "COP305"), ("AIM110-S-SC2", "AIM110-S"),
+            ("GHJ308-S-R", "GHJ308-S"), ("SEC213-S", "SEC213-S"), ("DAT317", "DAT317"),
+            (" AIM320-R2 ", "AIM320"), (nil, "id1"), ("  ", "id1"),
+        ]
+        for (code, family) in cases {
+            XCTAssertEqual(Session(sessionId: "id1", title: "T", abbreviation: code).family, family, code ?? "nil")
+        }
+    }
+}
