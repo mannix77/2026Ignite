@@ -264,6 +264,14 @@ final class CalendarExportRecordTests: XCTestCase {
         XCTAssertNil(CalendarExport.readFile(Data(#"{"calendarID":"cal-1"}"#.utf8)))
     }
 
+    func testAnEmptyRecordReadsAsNothingYetNotUnreadable() {
+        // What the app writes when it can't delete the file on sign-out: no calendar, no events.
+        let read = CalendarExport.readFile(Data(#"{"records":{}}"#.utf8))
+        XCTAssertNotNil(read)
+        XCTAssertNil(read?.calendarID)
+        XCTAssertEqual(read?.checked, UsableRecords(records: [:], skipped: 0, isMostlyJunk: false))
+    }
+
     func testABlankOrMissingCalendarIDCountsAsNone() {
         XCTAssertNil(CalendarExport.readFile(file(json("e1", for: "aim"), calendar: #""  ""#))?.calendarID)
         XCTAssertNil(CalendarExport.readFile(file(json("e1", for: "aim"), calendar: "null"))?.calendarID)

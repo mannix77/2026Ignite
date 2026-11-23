@@ -78,8 +78,10 @@ final class CalendarExporter {
         // step, the app quitting) it matches what is in Calendar and nothing is added twice.
         for draft in plan.add {
             // An event already in this export's calendar for this session (its record lost) is
-            // reused. Only this calendar: an earlier attendee's calendar is never adopted.
-            let existing = findByKey(sessionID: draft.sessionID, around: draft, in: [calendar])
+            // reused. Only this calendar: an earlier attendee's calendar is never adopted. It is
+            // searched a year either side, since the session may have moved since the event was
+            // made; the calendar holds only the app's few events, so this stays cheap.
+            let existing = findByKey(sessionID: draft.sessionID, around: draft, in: [calendar], within: 365)
             saved.records[draft.sessionID] = ExportRecord(
                 eventID: try save(draft, into: existing, calendar: calendar, timeZone: timeZone), draft: draft)
             try writeOrStop(saved)
@@ -112,17 +114,18 @@ final class CalendarExporter {
     private func find(_ record: ExportRecord) -> EKEvent? {
         guard let key = CalendarExporter.key(for: record.draft.sessionID) else { return nil }
         if let event = store.event(withIdentifier: record.eventID), event.url == key { return event }
-        return findByKey(sessionID: record.draft.sessionID, around: record.draft, in: nil)
+        return findByKey(sessionID: record.draft.sessionID, around: record.draft, in: nil, within: 1)
     }
 
-    /// An event carrying the app's key for `sessionID`, within a day either side of `draft`, in
+    /// An event carrying the app's key for `sessionID`, within `days` either side of `draft`, in
     /// `calendars` (nil for all). Other events in that window are looked at only to compare
     /// their key; none is changed.
-    private func findByKey(sessionID: String, around draft: CalendarEventDraft, in calendars: [EKCalendar]?) -> EKEvent? {
+    private func findByKey(sessionID: String, around draft: CalendarEventDraft, in calendars: [EKCalendar]?,
+                           within days: Double) -> EKEvent? {
         guard let key = CalendarExporter.key(for: sessionID) else { return nil }
-        let day: TimeInterval = 24 * 60 * 60
-        let around = store.predicateForEvents(withStart: draft.start.addingTimeInterval(-day),
-                                              end: draft.end.addingTimeInterval(day), calendars: calendars)
+        let span = days * 24 * 60 * 60
+        let around = store.predicateForEvents(withStart: draft.start.addingTimeInterval(-span),
+                                              end: draft.end.addingTimeInterval(span), calendars: calendars)
         return store.events(matching: around).first { $0.url == key }
     }
 
@@ -179,14 +182,14 @@ final class CalendarExporter {
 
     /// Forgets the app's calendar and its record of events, leaving both in the Calendar app.
     /// The next time it is turned on, a new calendar is started. If the file can't be removed it
-    /// is emptied, which no later run can read; false when neither worked and the old record
-    /// could still be used.
+    /// is overwritten with a record of nothing (no calendar, no events), which starts afresh the
+    /// same way; false when neither worked and the old record could still be used.
     @discardableResult
     func forget() -> Bool {
         let url = CalendarExporter.url
         guard FileManager.default.fileExists(atPath: url.path) else { return true }
         if (try? FileManager.default.removeItem(at: url)) != nil { return true }
-        return (try? Data().write(to: url, options: .atomic)) != nil
+        return (try? write(Saved(calendarID: nil, records: [:]))) != nil
     }
 
     /// The record, or none if it was never written. One that is there but can't be read (locked,
