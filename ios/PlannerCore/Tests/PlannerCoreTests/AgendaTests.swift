@@ -582,6 +582,8 @@ final class CalendarLayoutTests: XCTestCase {
 
     func testATallerHourLabelSticksOutByHalfTheExcess() {
         XCTAssertEqual(CalendarLayout.hourLabelOverhang(labelHeight: 12.5), 0.25)
+        // caption2's line height at the standard text size is about 13.3 pt.
+        XCTAssertEqual(CalendarLayout.hourLabelOverhang(labelHeight: 13.3), 0.65, accuracy: 0.000_001)
         XCTAssertEqual(CalendarLayout.hourLabelOverhang(labelHeight: 44), 16)
     }
 }

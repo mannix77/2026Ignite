@@ -169,10 +169,9 @@ private struct Timeline: View {
     @ScaledMetric(relativeTo: .caption2) private var scaledGutter: CGFloat = 50
     private var gutter: CGFloat { CalendarLayout.hourColumnWidth(scaled: scaledGutter) }
     private let laneWidth: CGFloat = 76
-    /// The hour labels' height scaled with their text; the timeline is padded top and bottom
-    /// by however far that sticks out of the 12 pt row.
-    @ScaledMetric(relativeTo: .caption2) private var labelHeight: CGFloat = 12
-    private var labelOverhang: CGFloat { CalendarLayout.hourLabelOverhang(labelHeight: labelHeight) }
+    /// Each hour label's rendered height, by hour. The timeline is padded at the top and bottom
+    /// by however far the first and last labels stick out of their 12 pt rows.
+    @State private var labelHeights: [Int: CGFloat] = [:]
 
     var body: some View {
         let starts = entries.map(\.start) + favorites.map { $0.hour * 60 }
@@ -194,6 +193,7 @@ private struct Timeline: View {
                             .lineLimit(1)
                             .minimumScaleFactor(0.5)
                             .fixedSize(horizontal: false, vertical: true) // shrink for width only
+                            .onGeometryChange(for: CGFloat.self, of: { $0.size.height }) { labelHeights[hour] = $0 }
                             .frame(width: gutter - 6, alignment: .trailing)
                         Rectangle().fill(.quaternary).frame(height: 1)
                     }
@@ -232,10 +232,15 @@ private struct Timeline: View {
             }
         }
         .frame(height: CGFloat(last - first) * hourHeight + 12)
-        .padding(.vertical, labelOverhang)
+        .padding(.top, overhang(first))
+        .padding(.bottom, overhang(last))
         .sheet(item: $openBucket) { bucket in
             FavoriteBucketSheet(bucket: bucket)
         }
+    }
+
+    private func overhang(_ hour: Int) -> CGFloat {
+        CalendarLayout.hourLabelOverhang(labelHeight: labelHeights[hour] ?? 0)
     }
 
     private func y(_ minute: Int, _ firstHour: Int) -> CGFloat {
