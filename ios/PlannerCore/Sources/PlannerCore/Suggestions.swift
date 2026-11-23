@@ -57,11 +57,13 @@ public struct Gap: Equatable, Sendable {
 }
 
 /// What he can do to get into a suggested session.
-public enum SeatOutlook: Equatable, Sendable {
+public enum SeatOutlook: Int, Comparable, Sendable {
     /// The site shows a seat he can still reserve.
-    case reserve
+    case reserve = 0
     /// No seat to reserve: the walk-up line, if there is one.
-    case walkUp
+    case walkUp = 1
+
+    public static func < (a: SeatOutlook, b: SeatOutlook) -> Bool { a.rawValue < b.rawValue }
 }
 
 /// A session that fits a gap, with how much it is like his picks.
@@ -98,6 +100,9 @@ extension Session {
         return false
     }
 
+    /// The level the site gives a session that has none. It says nothing about his interests.
+    static let noLevel = "No Level"
+
     /// What suggestions are ranked on: topics, areas of interest, services, level and type.
     var traits: Set<Trait> {
         var all = Set<Trait>()
@@ -107,16 +112,18 @@ extension Session {
         add(.topic, topics)
         add(.area, areasOfInterest)
         add(.service, services)
-        add(.level, level.map { [$0] })
+        add(.level, level.map { [$0] }?.filter { $0 != Session.noLevel })
         add(.type, type.map { [$0] })
         return all
     }
 }
 
-struct Trait: Hashable, Sendable {
+struct Trait: Hashable, Comparable, Sendable {
     enum Kind: Int, Sendable { case topic, area, service, level, type }
     var kind: Kind
     var value: String
+
+    static func < (a: Trait, b: Trait) -> Bool { (a.kind.rawValue, a.value) < (b.kind.rawValue, b.value) }
 }
 
 extension PlanSnapshot {
@@ -155,29 +162,50 @@ extension PlanSnapshot {
     }
 
     /// Catalog sessions he could get to in the gap and back from, most like his picks first.
-    /// Picks are his reserved seats and favorites; invitations are not. Nothing he holds a seat
-    /// in or is invited to is suggested, nor another run of it. A session sharing nothing with
-    /// his picks is left out. Equal scores put a session with a seat to reserve first, then
-    /// earlier, then by code.
-    public func suggestions(in gap: Gap) -> [Suggestion] {
-        let weights = traitWeights()
-        let known = sessionsByID
-        let marks = commitmentsByID
+    /// For several gaps, build one `Suggester` and ask it for each.
+    public func suggestions(in gap: Gap) -> [Suggestion] { Suggester(self).suggestions(in: gap) }
+
+}
+
+/// Ranks sessions for gaps against one snapshot. Everything that doesn't depend on the gap
+/// (trait weights, his profile, what he holds) is worked out once, here. Sums run in a fixed
+/// order, so equal sessions get bit-for-bit equal scores on every launch.
+public struct Suggester: Sendable {
+    let sessions: [Session]
+    let marks: [String: Commitment]
+    let weights: [Trait: Double]
+    let profile: [Trait: Double]
+    let held: Set<String>
+    let favoriteFamilies: [String: Set<String>]
+
+    public init(_ plan: PlanSnapshot) {
+        sessions = plan.sessions
+        let known = plan.sessionsByID
+        let marks = plan.commitmentsByID
+        self.marks = marks
+        let weights = Suggester.traitWeights(plan.sessions)
+        self.weights = weights
 
         var profile: [Trait: Double] = [:]
-        for (id, mark) in marks where mark != .invited {
-            guard let pick = known[id] else { continue }
-            let weight = mark == .reserved ? PlanSnapshot.reservedWeight : 1
-            for (trait, value) in PlanSnapshot.vector(pick, weights) { profile[trait, default: 0] += weight * value }
-        }
-
         var held = Set<String>()
         var favoriteFamilies: [String: Set<String>] = [:]
-        for (id, mark) in marks {
-            guard let session = known[id] else { continue }
+        for id in marks.keys.sorted() {
+            guard let mark = marks[id], let session = known[id] else { continue }
             if mark == .favorite { favoriteFamilies[session.family, default: []].insert(id) } else { held.insert(session.family) }
+            // Invitations are not picks: a reception says nothing about what he wants to learn.
+            guard mark != .invited else { continue }
+            let weight = mark == .reserved ? PlanSnapshot.reservedWeight : 1
+            for (trait, value) in Suggester.vector(session, weights) { profile[trait, default: 0] += weight * value }
         }
+        self.profile = profile
+        self.held = held
+        self.favoriteFamilies = favoriteFamilies
+    }
 
+    /// Nothing he holds a seat in or is invited to is suggested, nor another run of it. A
+    /// session sharing nothing with his picks is left out. Equal scores put a session with a
+    /// seat to reserve first, then earlier, then by code.
+    public func suggestions(in gap: Gap) -> [Suggestion] {
         var found: [(suggestion: Suggestion, start: Int)] = []
         for session in sessions {
             // A reserved or invited session is in a held family, so this also leaves it out.
@@ -188,33 +216,29 @@ extension PlanSnapshot {
             guard start >= gap.start + gap.before.walk(to: session.venue),
                   end + gap.after.walk(to: session.venue) <= gap.end else { continue }
 
-            var parts: [(trait: Trait, value: Double)] = []
-            for (trait, value) in PlanSnapshot.vector(session, weights) {
-                if let mine = profile[trait] { parts.append((trait, value * mine)) }
-            }
+            let parts = Suggester.vector(session, weights).compactMap { trait, value in
+                profile[trait].map { (trait: trait, value: value * $0) }
+            }.sorted { $0.trait < $1.trait }
             let score = parts.reduce(0) { $0 + $1.value }
             guard score > 0 else { continue }
-            parts.sort { ($0.value, $1.trait.kind.rawValue, $1.trait.value) > ($1.value, $0.trait.kind.rawValue, $0.trait.value) }
+            let strongest = parts.sorted { ($0.value, $1.trait) > ($1.value, $0.trait) }
 
             let open = session.isReservable == true && PlanSnapshot.openSeatBands.contains(session.seatAvailability ?? "")
-            let isFavorite = marks[session.sessionId] == .favorite
             let runs = favoriteFamilies[session.family] ?? []
-            found.append((Suggestion(session: session, score: score, shared: parts.prefix(3).map(\.trait.value),
-                                     seat: open ? .reserve : .walkUp, isFavorite: isFavorite,
+            found.append((Suggestion(session: session, score: score, shared: strongest.prefix(3).map(\.trait.value),
+                                     seat: open ? .reserve : .walkUp, isFavorite: marks[session.sessionId] == .favorite,
                                      isRepeatOfFavorite: !runs.subtracting([session.sessionId]).isEmpty), start))
         }
         return found.sorted { a, b in
             if a.suggestion.score != b.suggestion.score { return a.suggestion.score > b.suggestion.score }
-            let seatA = a.suggestion.seat == .reserve ? 0 : 1
-            let seatB = b.suggestion.seat == .reserve ? 0 : 1
-            return (seatA, a.start, a.suggestion.session.code, a.suggestion.id)
-                < (seatB, b.start, b.suggestion.session.code, b.suggestion.id)
+            return (a.suggestion.seat.rawValue, a.start, a.suggestion.session.code, a.suggestion.id)
+                < (b.suggestion.seat.rawValue, b.start, b.suggestion.session.code, b.suggestion.id)
         }.map(\.suggestion)
     }
 
     /// How telling each trait is: the log of how many catalog sessions there are over how many
     /// carry it, so a trait on every session counts for nothing.
-    func traitWeights() -> [Trait: Double] {
+    static func traitWeights(_ sessions: [Session]) -> [Trait: Double] {
         var counts: [Trait: Int] = [:]
         for session in sessions { for trait in session.traits { counts[trait, default: 0] += 1 } }
         let total = Double(sessions.count)
@@ -225,8 +249,8 @@ extension PlanSnapshot {
     /// (an invitation's) weigh nothing.
     static func vector(_ session: Session, _ weights: [Trait: Double]) -> [Trait: Double] {
         var vector: [Trait: Double] = [:]
-        for trait in session.traits { if let weight = weights[trait], weight > 0 { vector[trait] = weight } }
-        let length = vector.values.reduce(0) { $0 + $1 * $1 }.squareRoot()
+        for trait in session.traits.sorted() { if let weight = weights[trait], weight > 0 { vector[trait] = weight } }
+        let length = vector.keys.sorted().reduce(0) { $0 + vector[$1]! * vector[$1]! }.squareRoot()
         return length > 0 ? vector.mapValues { $0 / length } : [:]
     }
 }

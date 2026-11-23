@@ -177,15 +177,16 @@ final class SuggestionTests: XCTestCase {
     }
 
     func testAtMostThreeSharedTraitsAreGivenTheRarestFirst() {
-        // "A" is on 2 sessions, "B" on 3, "C" on 4, "D" on 5: the rarer, the more it says.
+        // "Z" is on 2 sessions, "Y" on 3, "X" on 4, "W" on 5: the rarer, the more it says.
+        // Rarity runs against the alphabet, so name order can't pass for it.
         let plan = snapshot(filler(4) + [
-            offered("pick", time: "09:00", topics: ["D", "B", "A", "C"]),
-            offered("cand", topics: ["C", "A", "D", "B"]),
-            offered("b1", date: "2026-12-03", topics: ["B", "C", "D"]),
-            offered("c1", date: "2026-12-03", topics: ["C", "D"]),
-            offered("d1", date: "2026-12-03", topics: ["D"]),
+            offered("pick", time: "09:00", topics: ["W", "Y", "Z", "X"]),
+            offered("cand", topics: ["X", "Z", "W", "Y"]),
+            offered("y1", date: "2026-12-03", topics: ["Y", "X", "W"]),
+            offered("x1", date: "2026-12-03", topics: ["X", "W"]),
+            offered("w1", date: "2026-12-03", topics: ["W"]),
         ], favorites: ["pick"])
-        XCTAssertEqual(plan.suggestions(in: forumGap).map(\.shared), [["A", "B", "C"]])
+        XCTAssertEqual(plan.suggestions(in: forumGap).map(\.shared), [["Z", "Y", "X"]])
     }
 
     func testAScoreIsTheSimilarityToHisPicks() {
@@ -253,6 +254,29 @@ final class SuggestionTests: XCTestCase {
                                          offered("bare")],
                             favorites: ["pick"])
         XCTAssertEqual(ids(plan.suggestions(in: forumGap)), ["alike"])
+    }
+
+    func testNoLevelIsNotAnInterest() {
+        let plan = snapshot(filler(4) + [
+            offered("pick", time: "09:00", topics: ["Rare"], level: "No Level"),
+            offered("reception", time: "18:00", length: "60", level: "No Level"),
+            offered("talk", topics: ["Rare"], level: "No Level"),
+        ], favorites: ["pick"])
+        let gap = Gap(date: "2026-12-02", start: 600, end: 1200, before: .open, after: .open)
+        let found = plan.suggestions(in: gap)
+        XCTAssertEqual(ids(found), ["talk"])
+        XCTAssertEqual(found.map(\.shared), [["Rare"]])
+    }
+
+    func testOneSuggesterAnswersEveryGapAsTheSnapshotDoes() {
+        let plan = snapshot(filler(4) + [offered("pick", time: "09:00", topics: ["Rare"]),
+                                         offered("noon", topics: ["Rare"]), offered("eve", time: "17:00", topics: ["Rare"])],
+                            favorites: ["pick"])
+        let suggester = Suggester(plan)
+        let evening = Gap(date: "2026-12-02", start: 960, end: 1200, before: .open, after: .open)
+        XCTAssertEqual(ids(suggester.suggestions(in: forumGap)), ["noon"])
+        XCTAssertEqual(ids(suggester.suggestions(in: evening)), ["eve"])
+        XCTAssertEqual(suggester.suggestions(in: evening), plan.suggestions(in: evening))
     }
 
     func testOnlyTimedSessionsOnThatDayAreListed() {

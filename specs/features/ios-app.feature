@@ -191,8 +191,8 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       Then "COP319-R1" is listed as the same session as a favorite
 
     Example: The one with a rare trait in common
-      Given his picks all cover "Agentic AI", which most sessions cover
-      And one pick covers "AWS Distro for OpenTelemetry", which few sessions cover
+      Given his picks all cover "Agentic AI", which most sessions cover, each with a rarer interest
+      And one of those is "AWS Distro for OpenTelemetry", which few sessions cover
       When he asks what fits in the gap
       Then a session on "AWS Distro for OpenTelemetry" comes before one on "Agentic AI" only
       And each says which of his interests it shares
@@ -208,3 +208,8 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       Given a session in the gap shares nothing with his picks
       When he asks what fits in the gap
       Then it is not listed
+
+    Example: The reception with no level
+      Given a reception in the gap and one of his picks both have "No Level" and nothing else in common
+      When he asks what fits in the gap
+      Then the reception is not listed
