@@ -222,6 +222,17 @@ final class CalendarExportRecordTests: XCTestCase {
         XCTAssertTrue(mostly.isMostlyJunk)
     }
 
+    func testAKeptRecordCarriesTheCleanedSessionID() {
+        // Saved under "aim", drafted for " aim ": kept, and from now on it says "aim", so the
+        // app looks for the event keyed "aim".
+        var padded = record("e1", for: "aim")
+        padded.draft.sessionID = " aim "
+        let checked = CalendarExport.usableRecords(["aim": padded])
+        XCTAssertEqual(checked.records["aim"]?.draft.sessionID, "aim")
+        XCTAssertEqual(checked.records["aim"]?.eventID, "e1")
+        XCTAssertEqual(checked.skipped, 0)
+    }
+
     func testTwoRecordsForTheSameSessionOnceCleanedAreBothSkipped() {
         let saved = ["aim": record("e1", for: "aim"), " aim ": record("e2", for: "aim"),
                      "sec": record("e3", for: "sec"), "dev": record("e4", for: "dev"),

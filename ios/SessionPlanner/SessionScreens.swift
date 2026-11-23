@@ -221,7 +221,7 @@ struct SettingsScreen: View {
                     Text("Apple Calendar")
                 } footer: {
                     Text(model.mode == .live
-                         ? "Your reserved sessions go in a calendar of their own, “\(model.event.name)”, and stay matched as your schedule changes. Turning this off stops the updates; delete that calendar in the Calendar app to remove the events. Nothing is sent anywhere."
+                         ? "Your reserved sessions go in a calendar of their own, “\(model.event.name)”, and stay matched as your schedule changes. Turning this off stops the updates; delete that calendar in the Calendar app to remove the events. The app sends it to no one; your Calendar account (such as iCloud) syncs it like your other calendars."
                          : "Not available for the sample conference.")
                 }
 

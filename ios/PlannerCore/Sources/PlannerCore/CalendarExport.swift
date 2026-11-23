@@ -72,7 +72,10 @@ public enum CalendarExport {
         for (key, record) in saved {
             guard let id = Identifier.clean(key), sessionClaims[id] == 1, id == Identifier.clean(record.draft.sessionID),
                   let event = Identifier.clean(record.eventID), eventClaims[event] == 1 else { continue }
-            kept[id] = ExportRecord(eventID: event, draft: record.draft)
+            // Kept with the cleaned ids, so the app looks for the event under the key it wrote.
+            var draft = record.draft
+            draft.sessionID = id
+            kept[id] = ExportRecord(eventID: event, draft: draft)
         }
         let total = saved.count + malformed
         let skipped = total - kept.count

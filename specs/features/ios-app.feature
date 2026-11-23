@@ -319,8 +319,8 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
   Rule: He can add his reserved sessions to Apple Calendar, and keep them matching
     Off until he turns it on. The events go in a calendar of their own, named for the
     conference, so he can hide or delete them in one go. Only events the app made are ever
-    changed. Favorites, invitations and personal time stay out. Nothing is sent anywhere: the
-    calendar is written on the phone.
+    changed. Favorites, invitations and personal time stay out. The app sends the calendar to
+    no one; it lives in his Calendar account (such as iCloud), which syncs it like his others.
 
     Example: The one who turns it on
       Given he holds a seat at "AIM320" on 2 December from 10:00 to 11:00 Las Vegas time, in "Venetian" "Level 3, Murano 3201"
