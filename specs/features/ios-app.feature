@@ -295,3 +295,23 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       Given a reception in the gap and one of his picks both have "No Level" and nothing else in common
       When he asks what fits in the gap
       Then the reception is not listed
+
+  Rule: A free stretch on the calendar opens the sessions that fit it
+    Only a stretch of at least 30 minutes is offered: anything shorter can't hold a session
+    and the walks either side.
+
+    Example: The one just long enough
+      Given he holds seats from 09:00 to 10:00 and from 10:30 to 11:30
+      When he opens that day
+      Then the free stretch from 10:00 to 10:30 is offered as "Free 10:00 – 10:30 AM"
+
+    Example: The one a minute too short
+      Given he holds seats from 09:00 to 10:00 and from 10:29 to 11:30
+      When he opens that day
+      Then no free stretch is offered between them
+
+    Example: The one he taps
+      Given a free stretch is offered
+      When he taps it
+      Then he sees the sessions that fit, most like his picks first
+      And each says what it shares with his picks and how he can get in

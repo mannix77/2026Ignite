@@ -155,6 +155,7 @@ final class AppModel {
 
     private func setSnapshot(_ new: PlanSnapshot?) {
         snapshot = new
+        suggester = nil
         let index = new?.sessionsByID ?? [:]
         sessionsByID = index
         commitmentsByID = new?.commitmentsByID ?? [:]
@@ -166,6 +167,18 @@ final class AppModel {
     // MARK: What the screens show
 
     func commitment(of sessionID: String) -> Commitment? { commitmentsByID[sessionID] }
+
+    /// Built from the calendar the first time a gap is opened, and dropped when the calendar
+    /// changes, so every gap is ranked against the same picks.
+    @ObservationIgnored private var suggester: Suggester?
+
+    /// The sessions that fit a free stretch, most like his picks first.
+    func suggestions(in gap: Gap) -> [Suggestion] {
+        guard let snapshot else { return [] }
+        let ranker = suggester ?? Suggester(snapshot)
+        suggester = ranker
+        return ranker.suggestions(in: gap)
+    }
 
     func sessions(matching filter: SessionFilter, search: String) -> [Session] {
         snapshot?.sessions(matching: filter, search: search, commitments: commitmentsByID) ?? []
