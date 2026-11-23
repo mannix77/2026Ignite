@@ -242,8 +242,8 @@ final class CalendarExportRecordTests: XCTestCase {
                                               skipped: 2, isMostlyJunk: false))
     }
 
-    private func file(_ records: String, calendar: String = #""cal-1""#) -> Data {
-        Data(#"{"calendarID":\#(calendar),"records":{\#(records)}}"#.utf8)
+    private func file(_ records: String, calendar: String = #""cal-1""#, export: String = #""exp-1""#) -> Data {
+        Data(#"{"calendarID":\#(calendar),"exportID":\#(export),"records":{\#(records)}}"#.utf8)
     }
 
     private func json(_ eventID: String, for sessionID: String) -> String {
@@ -255,6 +255,7 @@ final class CalendarExportRecordTests: XCTestCase {
         let read = CalendarExport.readFile(file([json("e1", for: "aim"), json("e2", for: "sec"), #""bad":null"#]
             .joined(separator: ",")))
         XCTAssertEqual(read?.calendarID, "cal-1")
+        XCTAssertEqual(read?.exportID, "exp-1")
         XCTAssertEqual(read?.checked.records.keys.sorted(), ["aim", "sec"])
         XCTAssertEqual(read?.checked.skipped, 1)
         XCTAssertEqual(read?.checked.isMostlyJunk, false)
@@ -280,7 +281,19 @@ final class CalendarExportRecordTests: XCTestCase {
         let read = CalendarExport.readFile(Data(#"{"records":{}}"#.utf8))
         XCTAssertNotNil(read)
         XCTAssertNil(read?.calendarID)
+        XCTAssertNil(read?.exportID)
         XCTAssertEqual(read?.checked, UsableRecords(records: [:], skipped: 0, isMostlyJunk: false))
+    }
+
+    func testABlankOrMissingExportIDCountsAsNone() {
+        for export in [#""  ""#, "null"] {
+            guard let read = CalendarExport.readFile(file(json("e1", for: "aim"), export: export)) else {
+                return XCTFail("a file with exportID \(export) was refused")
+            }
+            XCTAssertNil(read.exportID, "exportID \(export)")
+            XCTAssertEqual(read.calendarID, "cal-1", "exportID \(export)")
+            XCTAssertEqual(read.checked.records.keys.sorted(), ["aim"], "exportID \(export)")
+        }
     }
 
     func testABlankOrMissingCalendarIDCountsAsNone() {

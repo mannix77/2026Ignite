@@ -26,8 +26,14 @@ final class CalendarExporter {
 
     private struct Saved: Encodable {
         var calendarID: String?
+        /// Names this export (one attendee's, from turning it on until a reset). It is part of
+        /// every event's key, so an export never claims another export's events.
+        var exportID: String?
         var records: [String: ExportRecord]
     }
+
+    /// The export id of the sync under way; keys are made with it.
+    private var exportID: String?
 
     private static var url: URL {
         FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
@@ -45,6 +51,14 @@ final class CalendarExporter {
     func sync(_ snapshot: PlanSnapshot, calendarName: String, timeZone: TimeZone) throws -> Int {
         guard CalendarExporter.hasAccess else { throw Failure.denied }
         var saved = try load()
+        if saved.exportID == nil {
+            // First use, or the first since a reset: a new export, whose events no earlier
+            // export's key can match. Saved before any event is written with it.
+            saved.exportID = UUID().uuidString
+            try writeOrStop(saved)
+        }
+        exportID = saved.exportID
+        defer { exportID = nil }
         let calendar: EKCalendar
         if let id = saved.calendarID, let existing = store.calendar(withIdentifier: id) {
             calendar = existing
@@ -52,7 +66,7 @@ final class CalendarExporter {
             // First time, or he deleted the calendar. Its events went with it, except any he had
             // moved to another calendar: those records are kept, the rest start afresh.
             calendar = try makeCalendar(named: calendarName)
-            saved = Saved(calendarID: calendar.calendarIdentifier,
+            saved = Saved(calendarID: calendar.calendarIdentifier, exportID: saved.exportID,
                           records: saved.records.filter { find($0.value) != nil })
             do {
                 try write(saved)
@@ -112,7 +126,7 @@ final class CalendarExporter {
     /// app made it. Since a calendar sync or a move between calendars can change the
     /// identifier, every calendar is then searched around the event's time for that key.
     private func find(_ record: ExportRecord) -> EKEvent? {
-        guard let key = CalendarExporter.key(for: record.draft.sessionID) else { return nil }
+        guard let key = key(for: record.draft.sessionID) else { return nil }
         if let event = store.event(withIdentifier: record.eventID), event.url == key { return event }
         return findByKey(sessionID: record.draft.sessionID, around: record.draft, in: nil, within: 1)
     }
@@ -122,19 +136,21 @@ final class CalendarExporter {
     /// their key; none is changed.
     private func findByKey(sessionID: String, around draft: CalendarEventDraft, in calendars: [EKCalendar]?,
                            within days: Double) -> EKEvent? {
-        guard let key = CalendarExporter.key(for: sessionID) else { return nil }
+        guard let key = key(for: sessionID) else { return nil }
         let span = days * 24 * 60 * 60
         let around = store.predicateForEvents(withStart: draft.start.addingTimeInterval(-span),
                                               end: draft.end.addingTimeInterval(span), calendars: calendars)
         return store.events(matching: around).first { $0.url == key }
     }
 
-    /// The key written into each event the app makes, naming its session.
-    private static func key(for sessionID: String) -> URL? {
+    /// The key written into each event the app makes: this export and the session. Nil outside
+    /// a sync, so no event can be matched or marked without an export.
+    private func key(for sessionID: String) -> URL? {
+        guard let exportID else { return nil }
         var parts = URLComponents()
         parts.scheme = "sessionplanner"
         parts.host = "session"
-        parts.path = "/" + sessionID
+        parts.path = "/" + exportID + "/" + sessionID
         return parts.url
     }
 
@@ -149,7 +165,7 @@ final class CalendarExporter {
         event.timeZone = timeZone
         event.location = draft.location
         event.notes = draft.notes
-        event.url = CalendarExporter.key(for: draft.sessionID)
+        event.url = key(for: draft.sessionID)
         try store.save(event, span: .thisEvent, commit: true)
         return event.eventIdentifier
     }
@@ -189,19 +205,19 @@ final class CalendarExporter {
         let url = CalendarExporter.url
         guard FileManager.default.fileExists(atPath: url.path) else { return true }
         if (try? FileManager.default.removeItem(at: url)) != nil { return true }
-        return (try? write(Saved(calendarID: nil, records: [:]))) != nil
+        return (try? write(Saved(calendarID: nil, exportID: nil, records: [:]))) != nil
     }
 
     /// The record, or none if it was never written. One that is there but can't be read (locked,
     /// damaged) is not taken as none: starting over would make a second copy of every event.
     private func load() throws -> Saved {
         let url = CalendarExporter.url
-        guard FileManager.default.fileExists(atPath: url.path) else { return Saved(calendarID: nil, records: [:]) }
+        guard FileManager.default.fileExists(atPath: url.path) else { return Saved(calendarID: nil, exportID: nil, records: [:]) }
         // Read back like any other untrusted input: a bad or malformed record is skipped, and a
         // file that is mostly bad, or not such a file at all, is not acted on.
         guard let data = try? Data(contentsOf: url), let read = CalendarExport.readFile(data),
               !read.checked.isMostlyJunk else { throw Failure.unreadableRecords }
-        return Saved(calendarID: read.calendarID, records: read.checked.records)
+        return Saved(calendarID: read.calendarID, exportID: read.exportID, records: read.checked.records)
     }
 
     /// True when a record file is there but can't be used.

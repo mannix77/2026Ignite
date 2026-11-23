@@ -41,20 +41,24 @@ public enum CalendarExport {
     /// malformed is skipped and counted instead of losing the whole file.
     private struct RawFile: Decodable {
         var calendarID: Lossy<String>?
+        var exportID: Lossy<String>?
         var records: [String: Lossy<ExportRecord>]
     }
 
     /// Reads the app's saved file of the events it made. Nil when it isn't such a file at all;
-    /// otherwise its calendar (nil when blank) and its records, checked by `usableRecords`, with
-    /// malformed ones counted towards "mostly unusable".
-    public static func readFile(_ data: Data) -> (calendarID: String?, checked: UsableRecords)? {
+    /// otherwise its calendar and its export id (each nil when blank or missing) and its
+    /// records, checked by `usableRecords`, with malformed ones counted towards "mostly unusable".
+    /// The export id is written into every event the app makes, so one export never claims
+    /// another's events (an earlier attendee's, say) for the same session.
+    public static func readFile(_ data: Data) -> (calendarID: String?, exportID: String?, checked: UsableRecords)? {
         guard let raw = try? JSONDecoder().decode(RawFile.self, from: data) else { return nil }
         var readable: [String: ExportRecord] = [:]
         var malformed = 0
         for (key, entry) in raw.records {
             if let record = entry.value { readable[key] = record } else { malformed += 1 }
         }
-        return (Identifier.clean(raw.calendarID?.value), usableRecords(readable, malformed: malformed))
+        return (Identifier.clean(raw.calendarID?.value), Identifier.clean(raw.exportID?.value),
+                usableRecords(readable, malformed: malformed))
     }
 
     /// Checks the records read back from the app's own file before any is acted on. A record
