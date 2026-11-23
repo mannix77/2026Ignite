@@ -284,9 +284,15 @@ final class CalendarExportRecordTests: XCTestCase {
     }
 
     func testABlankOrMissingCalendarIDCountsAsNone() {
-        XCTAssertNil(CalendarExport.readFile(file(json("e1", for: "aim"), calendar: #""  ""#))?.calendarID)
-        XCTAssertNil(CalendarExport.readFile(file(json("e1", for: "aim"), calendar: "null"))?.calendarID)
-        XCTAssertEqual(CalendarExport.readFile(file(json("e1", for: "aim"), calendar: "null"))?.checked.records.count, 1)
+        for calendar in [#""  ""#, "null"] {
+            // The file itself is read, and its record kept; only the calendar id counts as none.
+            guard let read = CalendarExport.readFile(file(json("e1", for: "aim"), calendar: calendar)) else {
+                return XCTFail("a file with calendarID \(calendar) was refused")
+            }
+            XCTAssertNil(read.calendarID, "calendarID \(calendar)")
+            XCTAssertEqual(read.checked.records.keys.sorted(), ["aim"], "calendarID \(calendar)")
+            XCTAssertEqual(read.checked.skipped, 0, "calendarID \(calendar)")
+        }
     }
 
     func testNoRecordsIsFine() {

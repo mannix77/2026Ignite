@@ -148,9 +148,11 @@ final class SuggestionTests: XCTestCase {
     func testTheDayRunsToTheDrawnEndOfALastSessionWithNoLength() {
         // His seat is 09:00–10:00; the day's last catalog session starts at 12:00 with no length,
         // so the day ends at 12:20, the end the calendar draws for it.
-        let plan = snapshot([offered("seat", time: "09:00"), offered("last", time: "12:00", length: "")],
-                            reserved: ["seat"])
-        XCTAssertEqual(plan.gaps(on: "2026-12-02").map { [$0.start, $0.end] }, [[600, 740]])
+        let last = offered("last", time: "12:00", length: "")
+        XCTAssertEqual(last.sessionTime?.lengthMinutes, 0)
+        let plan = snapshot([offered("seat", time: "09:00"), last], reserved: ["seat"])
+        XCTAssertEqual(plan.gaps(on: "2026-12-02"),
+                       [Gap(date: "2026-12-02", start: 600, end: 740, before: .at("Caesars Forum"), after: .open)])
     }
 
     func testASessionWithNoLengthTakesTheTwentyMinutesTheCalendarDrawsForIt() {
