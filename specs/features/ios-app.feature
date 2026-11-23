@@ -315,3 +315,43 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       When he taps it
       Then he sees the sessions that fit, most like his picks first
       And each says what it shares with his picks and how he can get in
+
+  Rule: He can add his reserved sessions to Apple Calendar, and keep them matching
+    Off until he turns it on. The events go in a calendar of their own, named for the
+    conference, so he can hide or delete them in one go. Only events the app made are ever
+    changed. Favorites, invitations and personal time stay out. Nothing is sent anywhere: the
+    calendar is written on the phone.
+
+    Example: The one who turns it on
+      Given he holds a seat at "AIM320" on 2 December from 10:00 to 11:00 Las Vegas time, in "Venetian" "Level 3, Murano 3201"
+      When he turns on "Add reserved sessions to Calendar"
+      Then his calendar shows "AIM320 – " and the title, from 18:00 to 19:00 UTC on 2 December
+      And its location is "Venetian, Level 3, Murano 3201"
+
+    Example: The one who turns it on twice
+      Given his reserved sessions are already in the calendar
+      When the app brings the calendar up to date again
+      Then nothing is added, changed or removed
+
+    Example: The one whose session moved
+      Given "AIM320" is in the calendar at 10:00
+      When the conference moves it to 13:00 and the app refreshes
+      Then the same event moves to 13:00, with no second copy
+
+    Example: The one who cancelled
+      Given "AIM320" is in the calendar
+      When he cancels the reservation and the app refreshes
+      Then the event is removed
+      And the events for his other reserved sessions stay
+
+    Example: The one whose session came back unreadable
+      Given "AIM320" is in the calendar
+      And the conference sends it with a time the app cannot read, still reserved
+      When the app refreshes
+      Then the event is left as it was
+
+    Example: The one who said no
+      Given he turns it on
+      When he refuses the phone's calendar permission
+      Then the app says it can't add the sessions without that permission
+      And nothing is written

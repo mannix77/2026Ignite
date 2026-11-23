@@ -209,6 +209,22 @@ struct SettingsScreen: View {
                         .disabled(model.isRefreshing)
                 }
 
+                Section {
+                    Toggle("Add reserved sessions to Calendar", isOn: Binding(
+                        get: { model.exportsToCalendar },
+                        set: { on in Task { await model.setExportsToCalendar(on) } }))
+                        .disabled(model.mode != .live)
+                    if let status = model.calendarExportStatus {
+                        Text(status).font(.footnote)
+                    }
+                } header: {
+                    Text("Apple Calendar")
+                } footer: {
+                    Text(model.mode == .live
+                         ? "Your reserved sessions go in a calendar of their own, “\(model.event.name)”, and stay matched as your schedule changes. Turning this off stops the updates; delete that calendar in the Calendar app to remove the events. Nothing is sent anywhere."
+                         : "Not available for the sample conference.")
+                }
+
                 Section("Account") {
                     if model.mode == .demo {
                         Text("You are looking at a made-up sample conference. Nothing is sent to any conference site.")

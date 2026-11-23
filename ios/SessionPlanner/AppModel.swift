@@ -342,9 +342,54 @@ final class AppModel {
         }
     }
 
+    // MARK: Apple Calendar
+
+    /// Whether his reserved sessions are kept in Apple Calendar. Off until he turns it on.
+    private(set) var exportsToCalendar = UserDefaults.standard.bool(forKey: "exportsToCalendar") {
+        didSet { UserDefaults.standard.set(exportsToCalendar, forKey: "exportsToCalendar") }
+    }
+    /// What the setting says after the last update.
+    private(set) var calendarExportStatus: String?
+    @ObservationIgnored private lazy var calendarExporter = CalendarExporter()
+
+    /// Turns the Apple Calendar copy on (asking for permission, then writing it) or off. Off
+    /// stops updates and leaves the calendar as it is.
+    func setExportsToCalendar(_ on: Bool) async {
+        guard on else {
+            exportsToCalendar = false
+            calendarExportStatus = nil
+            return
+        }
+        guard mode == .live, let snapshot else { return }
+        guard await calendarExporter.requestAccess() else {
+            notice = "Session Planner can't add your sessions without access to Calendar. Allow it in the Settings app, under Privacy & Security, Calendars."
+            return
+        }
+        exportsToCalendar = true
+        exportToCalendar(snapshot)
+    }
+
+    private func exportToCalendar(_ snapshot: PlanSnapshot) {
+        guard exportsToCalendar, mode == .live else { return }
+        do {
+            let count = try calendarExporter.sync(snapshot, calendarName: event.name, timeZone: event.timeZone)
+            calendarExportStatus = Wording.calendarExport(count: count, calendar: event.name)
+        } catch CalendarExporter.Failure.denied {
+            exportsToCalendar = false
+            calendarExportStatus = nil
+            notice = "Calendar access was turned off, so your sessions are no longer kept in Calendar."
+        } catch CalendarExporter.Failure.unreadableRecords {
+            notice = "Calendar wasn't updated: the app's record of its events can't be read. Delete the “\(event.name)” calendar in the Calendar app, then turn this on again."
+        } catch {
+            notice = "Calendar couldn't be updated: \(error.localizedDescription)"
+        }
+    }
+
     // MARK: The saved copy
 
     private func save(_ snapshot: PlanSnapshot) {
+        // Every live calendar the app keeps also brings Apple Calendar up to date, if he asked.
+        exportToCalendar(snapshot)
         guard let owner = signInID else { return }
         saveVersion += 1
         let version = saveVersion
