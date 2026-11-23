@@ -78,18 +78,26 @@ private struct DayStrip: View {
             HStack(spacing: 8) {
                 ForEach(days, id: \.self) { day in
                     let chip = Wording.dayChip(day)
+                    let isSelected = day == selected
+                    // Selected: a solid accent chip with bold text in the background colour (white
+                    // in light mode, black in dark mode), so shape and weight mark it, not tint alone.
+                    // Contrast of that text on AccentColor: 5.8:1 light, 7.2:1 dark (WCAG AA). A
+                    // fixed white would be 2.9:1 on the lighter dark-mode accent.
+                    let ink: Color = isSelected ? Color(uiColor: .systemBackground) : .primary
                     Button {
                         select(day)
                     } label: {
                         VStack(spacing: 2) {
-                            Text(chip.weekday).font(.caption)
-                            Text(chip.number).font(.headline)
+                            Text(chip.weekday).font(.caption.weight(isSelected ? .semibold : .regular))
+                            Text(chip.number).font(.headline.weight(isSelected ? .bold : .semibold))
                             Circle()
-                                .fill(busy.contains(day) ? AnyShapeStyle(.tint) : AnyShapeStyle(.clear))
+                                .fill(busy.contains(day) ? (isSelected ? AnyShapeStyle(ink) : AnyShapeStyle(.tint)) : AnyShapeStyle(.clear))
                                 .frame(width: 5, height: 5)
                         }
+                        .foregroundStyle(ink)
                         .frame(minWidth: 48, minHeight: 56)
-                        .background(day == selected ? Color.accentColor.opacity(0.18) : .clear, in: RoundedRectangle(cornerRadius: 10))
+                        .background(isSelected ? Color.accentColor : .clear, in: RoundedRectangle(cornerRadius: 10))
+                        .contentShape(RoundedRectangle(cornerRadius: 10))
                     }
                     .buttonStyle(.plain)
                     .accessibilityLabel(Wording.day(day))
