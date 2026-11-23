@@ -86,6 +86,37 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       When he opens that day
       Then the calendar still warns about the change of venue
 
+  Rule: A swipe across the calendar moves one day, and stops at the first and last day
+    The days are the ones the day strip shows. VoiceOver takes over swipes, so the same
+    moves are offered as "Next day" and "Previous day" actions.
+
+    Example: The one in the middle of the week
+      Given the conference runs Sunday 29 November to Friday 4 December
+      And he is looking at Wednesday 2 December
+      When he swipes left
+      Then he sees Thursday 3 December
+      And the day strip shows Thursday as the selected day
+
+    Example: The one going back a day
+      Given he is looking at Wednesday 2 December
+      When he swipes right
+      Then he sees Tuesday 1 December
+
+    Example: The one on the last day
+      Given he is looking at Friday 4 December
+      When he swipes left
+      Then he still sees Friday 4 December
+
+    Example: The one on the first day
+      Given he is looking at Sunday 29 November
+      When he swipes right
+      Then he still sees Sunday 29 November
+
+    Example: The one scrolling through a busy day
+      Given he is looking at a day with sessions from morning to night
+      When he scrolls up and down through them
+      Then the day does not change
+
   Rule: The session list finds what he is looking for
 
     Example: The one looking for a seat

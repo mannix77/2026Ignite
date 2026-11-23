@@ -20,13 +20,29 @@ struct CalendarScreen: View {
                     } else {
                         let day = selectedDay.flatMap { days.contains($0) ? $0 : nil }
                             ?? snapshot.defaultDay(today: now.date) ?? days[0]
+                        // One page per day: a horizontal swipe moves a day, a vertical drag scrolls
+                        // the day, and the pager stops at the first and last day.
+                        let move = { (offset: Int) in
+                            withAnimation { selectedDay = DayNavigation.day(from: day, by: offset, in: days) }
+                        }
                         VStack(spacing: 0) {
-                            DayStrip(days: days, busy: Set(model.committedDays), selected: day) { selectedDay = $0 }
+                            DayStrip(days: days, busy: Set(model.committedDays), selected: day, move: move) { picked in
+                                withAnimation { selectedDay = picked }
+                            }
                             Divider()
-                            DayView(agenda: snapshot.agenda(on: day, includeFavorites: model.showFavorites,
-                                                            index: model.sessionsByID, commitments: model.commitmentsByID),
-                                    nowMinute: now.date == day ? now.minute : nil)
-                                .refreshable { await model.refresh() }
+                            TabView(selection: Binding(get: { day }, set: { selectedDay = $0 })) {
+                                ForEach(days, id: \.self) { page in
+                                    DayView(agenda: snapshot.agenda(on: page, includeFavorites: model.showFavorites,
+                                                                    index: model.sessionsByID, commitments: model.commitmentsByID),
+                                            nowMinute: now.date == page ? now.minute : nil)
+                                        .refreshable { await model.refresh() }
+                                        .tag(page)
+                                }
+                            }
+                            .tabViewStyle(.page(indexDisplayMode: .never))
+                            // VoiceOver takes over swipes, so the same moves are offered as actions.
+                            .accessibilityAction(named: "Next day") { move(1) }
+                            .accessibilityAction(named: "Previous day") { move(-1) }
                         }
                     }
                 } else if model.isRefreshing {
@@ -71,44 +87,55 @@ private struct DayStrip: View {
     let days: [String]
     let busy: Set<String>
     let selected: String
+    let move: (Int) -> Void
     let select: (String) -> Void
 
     var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 8) {
-                ForEach(days, id: \.self) { day in
-                    let chip = Wording.dayChip(day)
-                    let isSelected = day == selected
-                    // Selected: a solid accent chip with bold text in the background colour (white
-                    // in light mode, black in dark mode), so shape and weight mark it, not tint alone.
-                    // Contrast of that text on AccentColor: 5.8:1 light, 7.2:1 dark (WCAG AA). A
-                    // fixed white would be 2.9:1 on the lighter dark-mode accent.
-                    let ink: Color = isSelected ? Color(uiColor: .systemBackground) : .primary
-                    let dot: Color = isSelected ? ink : .accentColor
-                    Button {
-                        select(day)
-                    } label: {
-                        VStack(spacing: 2) {
-                            ChipText(text: chip.weekday, font: .caption, bold: isSelected)
-                            ChipText(text: chip.number, font: .headline, bold: isSelected)
-                            Circle()
-                                .fill(dot)
-                                .frame(width: 5, height: 5)
-                                .opacity(busy.contains(day) ? 1 : 0)
+        ScrollViewReader { strip in
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    ForEach(days, id: \.self) { day in
+                        let chip = Wording.dayChip(day)
+                        let isSelected = day == selected
+                        // Selected: a solid accent chip with bold text in the background colour (white
+                        // in light mode, black in dark mode), so shape and weight mark it, not tint alone.
+                        // Contrast of that text on AccentColor: 5.8:1 light, 7.2:1 dark (WCAG AA). A
+                        // fixed white would be 2.9:1 on the lighter dark-mode accent.
+                        let ink: Color = isSelected ? Color(uiColor: .systemBackground) : .primary
+                        let dot: Color = isSelected ? ink : .accentColor
+                        Button {
+                            select(day)
+                        } label: {
+                            VStack(spacing: 2) {
+                                ChipText(text: chip.weekday, font: .caption, bold: isSelected)
+                                ChipText(text: chip.number, font: .headline, bold: isSelected)
+                                Circle()
+                                    .fill(dot)
+                                    .frame(width: 5, height: 5)
+                                    .opacity(busy.contains(day) ? 1 : 0)
+                            }
+                            .foregroundStyle(ink)
+                            .padding(.horizontal, 6)
+                            .frame(minWidth: 48, minHeight: 56)
+                            .background(isSelected ? Color.accentColor : .clear, in: RoundedRectangle(cornerRadius: 10))
+                            .contentShape(RoundedRectangle(cornerRadius: 10))
                         }
-                        .foregroundStyle(ink)
-                        .padding(.horizontal, 6)
-                        .frame(minWidth: 48, minHeight: 56)
-                        .background(isSelected ? Color.accentColor : .clear, in: RoundedRectangle(cornerRadius: 10))
-                        .contentShape(RoundedRectangle(cornerRadius: 10))
+                        .buttonStyle(.plain)
+                        .id(day)
+                        .accessibilityLabel(Wording.day(day))
+                        .accessibilityAddTraits(day == selected ? .isSelected : [])
+                        .accessibilityAction(named: "Next day") { move(1) }
+                        .accessibilityAction(named: "Previous day") { move(-1) }
                     }
-                    .buttonStyle(.plain)
-                    .accessibilityLabel(Wording.day(day))
-                    .accessibilityAddTraits(day == selected ? .isSelected : [])
                 }
+                .padding(.horizontal, 12)
+                .padding(.vertical, 6)
             }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 6)
+            // Keep the selected day in view when a swipe moves it off the edge of the strip.
+            .onAppear { strip.scrollTo(selected, anchor: .center) }
+            .onChange(of: selected) { _, day in
+                withAnimation { strip.scrollTo(day, anchor: .center) }
+            }
         }
     }
 }
