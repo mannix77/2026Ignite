@@ -78,18 +78,29 @@ private struct DayStrip: View {
             HStack(spacing: 8) {
                 ForEach(days, id: \.self) { day in
                     let chip = Wording.dayChip(day)
+                    let isSelected = day == selected
+                    // Selected: a solid accent chip with bold text in the background colour (white
+                    // in light mode, black in dark mode), so shape and weight mark it, not tint alone.
+                    // Contrast of that text on AccentColor: 5.8:1 light, 7.2:1 dark (WCAG AA). A
+                    // fixed white would be 2.9:1 on the lighter dark-mode accent.
+                    let ink: Color = isSelected ? Color(uiColor: .systemBackground) : .primary
+                    let dot: Color = isSelected ? ink : .accentColor
                     Button {
                         select(day)
                     } label: {
                         VStack(spacing: 2) {
-                            Text(chip.weekday).font(.caption)
-                            Text(chip.number).font(.headline)
+                            ChipText(text: chip.weekday, font: .caption, bold: isSelected)
+                            ChipText(text: chip.number, font: .headline, bold: isSelected)
                             Circle()
-                                .fill(busy.contains(day) ? AnyShapeStyle(.tint) : AnyShapeStyle(.clear))
+                                .fill(dot)
                                 .frame(width: 5, height: 5)
+                                .opacity(busy.contains(day) ? 1 : 0)
                         }
+                        .foregroundStyle(ink)
+                        .padding(.horizontal, 6)
                         .frame(minWidth: 48, minHeight: 56)
-                        .background(day == selected ? Color.accentColor.opacity(0.18) : .clear, in: RoundedRectangle(cornerRadius: 10))
+                        .background(isSelected ? Color.accentColor : .clear, in: RoundedRectangle(cornerRadius: 10))
+                        .contentShape(RoundedRectangle(cornerRadius: 10))
                     }
                     .buttonStyle(.plain)
                     .accessibilityLabel(Wording.day(day))
@@ -99,6 +110,19 @@ private struct DayStrip: View {
             .padding(.horizontal, 12)
             .padding(.vertical, 6)
         }
+    }
+}
+
+/// Chip text that is bold when selected but always takes the bold width, so selecting a day
+/// doesn't widen its chip and push the others sideways at large Dynamic Type sizes.
+private struct ChipText: View {
+    let text: String
+    let font: Font
+    let bold: Bool
+
+    var body: some View {
+        Text(text).font(font.weight(.bold)).hidden()
+            .overlay { Text(text).font(font.weight(bold ? .bold : .regular)) }
     }
 }
 
