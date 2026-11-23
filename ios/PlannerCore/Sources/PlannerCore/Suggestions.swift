@@ -143,7 +143,8 @@ extension PlanSnapshot {
             guard let time = session.sessionTime, time.hasValidDate, time.date == date,
                   session.isAllDaySession != true, let start = time.startMinute else { continue }
             dayStart = min(dayStart ?? start, start)
-            dayEnd = max(dayEnd ?? start, start + time.lengthMinutes)
+            // A session with no length ends where the calendar draws it, as in the fit check.
+            dayEnd = max(dayEnd ?? start, start + max(time.lengthMinutes, AgendaEntry.minimumDrawnMinutes))
         }
         guard let dayStart, let dayEnd else { return [] }
 

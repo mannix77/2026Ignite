@@ -37,22 +37,46 @@ public struct UsableRecords: Equatable, Sendable {
 }
 
 public enum CalendarExport {
+    /// The shape of the app's saved file. Each record is read on its own, so one that is
+    /// malformed is skipped and counted instead of losing the whole file.
+    private struct RawFile: Decodable {
+        var calendarID: Lossy<String>?
+        var records: [String: Lossy<ExportRecord>]
+    }
+
+    /// Reads the app's saved file of the events it made. Nil when it isn't such a file at all;
+    /// otherwise its calendar (nil when blank) and its records, checked by `usableRecords`, with
+    /// malformed ones counted towards "mostly unusable".
+    public static func readFile(_ data: Data) -> (calendarID: String?, checked: UsableRecords)? {
+        guard let raw = try? JSONDecoder().decode(RawFile.self, from: data) else { return nil }
+        var readable: [String: ExportRecord] = [:]
+        var malformed = 0
+        for (key, entry) in raw.records {
+            if let record = entry.value { readable[key] = record } else { malformed += 1 }
+        }
+        return (Identifier.clean(raw.calendarID?.value), usableRecords(readable, malformed: malformed))
+    }
+
     /// Checks the records read back from the app's own file before any is acted on. A record
-    /// is used only if its session id is usable and matches its draft's, and its event id is
-    /// usable and claimed by no other record; the rest are skipped and counted.
-    public static func usableRecords(_ saved: [String: ExportRecord]) -> UsableRecords {
-        var claims: [String: Int] = [:]
-        for record in saved.values {
-            if let event = Identifier.clean(record.eventID) { claims[event, default: 0] += 1 }
+    /// is used only if its session id is usable, matches its draft's and is claimed by no other
+    /// record, and its event id is usable and claimed by no other record; the rest, and any
+    /// `malformed` records that couldn't be read at all, are skipped and counted.
+    public static func usableRecords(_ saved: [String: ExportRecord], malformed: Int = 0) -> UsableRecords {
+        var eventClaims: [String: Int] = [:]
+        var sessionClaims: [String: Int] = [:]
+        for (key, record) in saved {
+            if let event = Identifier.clean(record.eventID) { eventClaims[event, default: 0] += 1 }
+            if let id = Identifier.clean(key) { sessionClaims[id, default: 0] += 1 }
         }
         var kept: [String: ExportRecord] = [:]
         for (key, record) in saved {
-            guard let id = Identifier.clean(key), id == Identifier.clean(record.draft.sessionID),
-                  let event = Identifier.clean(record.eventID), claims[event] == 1 else { continue }
+            guard let id = Identifier.clean(key), sessionClaims[id] == 1, id == Identifier.clean(record.draft.sessionID),
+                  let event = Identifier.clean(record.eventID), eventClaims[event] == 1 else { continue }
             kept[id] = ExportRecord(eventID: event, draft: record.draft)
         }
-        let skipped = saved.count - kept.count
-        return UsableRecords(records: kept, skipped: skipped, isMostlyJunk: skipped * 2 > saved.count)
+        let total = saved.count + malformed
+        let skipped = total - kept.count
+        return UsableRecords(records: kept, skipped: skipped, isMostlyJunk: skipped * 2 > total)
     }
 
     /// The Calendar event for one session: "CODE – Title", from its start to its end in the

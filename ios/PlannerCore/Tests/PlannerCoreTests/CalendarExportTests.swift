@@ -222,6 +222,54 @@ final class CalendarExportRecordTests: XCTestCase {
         XCTAssertTrue(mostly.isMostlyJunk)
     }
 
+    func testTwoRecordsForTheSameSessionOnceCleanedAreBothSkipped() {
+        let saved = ["aim": record("e1", for: "aim"), " aim ": record("e2", for: "aim"),
+                     "sec": record("e3", for: "sec"), "dev": record("e4", for: "dev"),
+                     "ops": record("e5", for: "ops")]
+        let checked = CalendarExport.usableRecords(saved)
+        XCTAssertEqual(checked, UsableRecords(records: ["sec": saved["sec"]!, "dev": saved["dev"]!, "ops": saved["ops"]!],
+                                              skipped: 2, isMostlyJunk: false))
+    }
+
+    private func file(_ records: String, calendar: String = #""cal-1""#) -> Data {
+        Data(#"{"calendarID":\#(calendar),"records":{\#(records)}}"#.utf8)
+    }
+
+    private func json(_ eventID: String, for sessionID: String) -> String {
+        let data = try! JSONEncoder().encode(record(eventID, for: sessionID))
+        return #""\#(sessionID)":"# + String(decoding: data, as: UTF8.self)
+    }
+
+    func testAFileWithOneMalformedRecordKeepsTheOthers() {
+        let read = CalendarExport.readFile(file([json("e1", for: "aim"), json("e2", for: "sec"), #""bad":null"#]
+            .joined(separator: ",")))
+        XCTAssertEqual(read?.calendarID, "cal-1")
+        XCTAssertEqual(read?.checked.records.keys.sorted(), ["aim", "sec"])
+        XCTAssertEqual(read?.checked.skipped, 1)
+        XCTAssertEqual(read?.checked.isMostlyJunk, false)
+    }
+
+    func testAFileOfMostlyMalformedRecordsIsRefused() {
+        let read = CalendarExport.readFile(file([json("e1", for: "aim"), #""bad":null"#, #""worse":{"eventID":7}"#]
+            .joined(separator: ",")))
+        XCTAssertEqual(read?.checked.records.keys.sorted(), ["aim"])
+        XCTAssertEqual(read?.checked.skipped, 2)
+        XCTAssertEqual(read?.checked.isMostlyJunk, true)
+    }
+
+    func testAFileThatIsNotARecordFileAtAllIsUnreadable() {
+        XCTAssertNotNil(CalendarExport.readFile(file(json("e1", for: "aim"))))
+        XCTAssertNil(CalendarExport.readFile(Data("not json".utf8)))
+        XCTAssertNil(CalendarExport.readFile(Data()))
+        XCTAssertNil(CalendarExport.readFile(Data(#"{"calendarID":"cal-1"}"#.utf8)))
+    }
+
+    func testABlankOrMissingCalendarIDCountsAsNone() {
+        XCTAssertNil(CalendarExport.readFile(file(json("e1", for: "aim"), calendar: #""  ""#))?.calendarID)
+        XCTAssertNil(CalendarExport.readFile(file(json("e1", for: "aim"), calendar: "null"))?.calendarID)
+        XCTAssertEqual(CalendarExport.readFile(file(json("e1", for: "aim"), calendar: "null"))?.checked.records.count, 1)
+    }
+
     func testNoRecordsIsFine() {
         XCTAssertEqual(CalendarExport.usableRecords([:]), UsableRecords(records: [:], skipped: 0, isMostlyJunk: false))
     }
