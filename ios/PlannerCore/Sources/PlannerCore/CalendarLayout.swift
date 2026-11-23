@@ -14,6 +14,18 @@ public struct Placement: Equatable, Sendable {
 }
 
 public enum CalendarLayout {
+    /// The width of the hour column down the side of the timeline, given the width the text
+    /// size asks for (50 points scaled with the hour labels' text style). It grows with larger
+    /// text so "12 PM" stays on one line, but never past 88 points, which leaves the sessions
+    /// most of the width; past that the label shrinks to fit. It never goes below 50, so the
+    /// standard and smaller sizes look as they always did.
+    public static func hourColumnWidth(scaled: Double) -> Double {
+        min(max(scaled, standardHourColumn), widestHourColumn)
+    }
+
+    static let standardHourColumn: Double = 50
+    static let widestHourColumn: Double = 88
+
     /// Places blocks side by side when they overlap. Blocks that only touch (one ends as the
     /// next starts) do not overlap. Every block in a run of overlapping blocks gets the same
     /// number of columns, so widths line up.

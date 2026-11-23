@@ -555,6 +555,25 @@ final class CalendarLayoutTests: XCTestCase {
         XCTAssertEqual(placed["c"], Placement(id: "c", column: 2, columns: 3))
         XCTAssertEqual(placed["alone"], Placement(id: "alone", column: 0, columns: 1))
     }
+
+    // The scaled inputs were read from @ScaledMetric(relativeTo: .caption2) = 50 in the
+    // simulator: 50 at the extra-small and standard sizes, 184.67 at AX XXXL.
+    func testTheHourColumnIsUnchangedAtTheStandardTextSize() {
+        XCTAssertEqual(CalendarLayout.hourColumnWidth(scaled: 50), 50)
+    }
+
+    func testTheHourColumnGrowsWithLargerTextUpToItsCap() {
+        XCTAssertEqual(CalendarLayout.hourColumnWidth(scaled: 70), 70)
+        XCTAssertEqual(CalendarLayout.hourColumnWidth(scaled: 87.5), 87.5)
+        XCTAssertEqual(CalendarLayout.hourColumnWidth(scaled: 88), 88)
+        XCTAssertEqual(CalendarLayout.hourColumnWidth(scaled: 88.5), 88)
+        XCTAssertEqual(CalendarLayout.hourColumnWidth(scaled: 184.67), 88)
+    }
+
+    func testTheHourColumnNeverShrinksBelowItsStandardWidth() {
+        XCTAssertEqual(CalendarLayout.hourColumnWidth(scaled: 50.5), 50.5)
+        XCTAssertEqual(CalendarLayout.hourColumnWidth(scaled: 49.5), 50)
+    }
 }
 
 final class DemoBackendTests: XCTestCase {

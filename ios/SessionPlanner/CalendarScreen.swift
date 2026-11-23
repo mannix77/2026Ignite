@@ -166,7 +166,8 @@ private struct Timeline: View {
     @State private var openBucket: FavoriteBucket?
 
     private let hourHeight: CGFloat = 72
-    private let gutter: CGFloat = 50
+    @ScaledMetric(relativeTo: .caption2) private var scaledGutter: CGFloat = 50
+    private var gutter: CGFloat { CalendarLayout.hourColumnWidth(scaled: scaledGutter) }
     private let laneWidth: CGFloat = 76
 
     var body: some View {
@@ -186,9 +187,15 @@ private struct Timeline: View {
                         Text(hourLabel(hour))
                             .font(.caption2)
                             .foregroundStyle(.secondary)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.5)
+                            .fixedSize(horizontal: false, vertical: true) // shrink for width only
                             .frame(width: gutter - 6, alignment: .trailing)
                         Rectangle().fill(.quaternary).frame(height: 1)
                     }
+                    // A fixed height keeps the line on the hour however tall the label is;
+                    // a taller label overflows evenly above and below it.
+                    .frame(height: 12)
                     .offset(y: y(hour * 60, first) - 6)
                 }
                 ForEach(entries) { entry in

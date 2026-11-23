@@ -71,6 +71,24 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       When he opens that day
       Then each takes the full width
 
+  Rule: The hours down the side stay readable at every text size
+
+    Example: The one at the standard text size
+      Given the phone's text size is the standard one
+      When he opens the calendar
+      Then the hour column is 50 points wide, as it always was
+
+    Example: The one with the largest accessibility text
+      Given the largest accessibility text size would make the hour column about 185 points wide
+      When he opens the calendar
+      Then the hour column stops growing at 88 points
+      And each hour label stays on one line, shrunk to fit if it must
+
+    Example: The one with the smallest text
+      Given the phone's text size is the smallest one
+      When he opens the calendar
+      Then the hour column stays 50 points wide, never narrower
+
   Rule: A walk he cannot make is pointed out
 
     Example: The one with no time to cross the Strip
