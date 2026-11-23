@@ -239,8 +239,12 @@ private struct Timeline: View {
     @State private var openBucket: FavoriteBucket?
 
     private let hourHeight: CGFloat = 72
-    private let gutter: CGFloat = 50
+    @ScaledMetric(relativeTo: .caption2) private var scaledGutter: CGFloat = 50
+    private var gutter: CGFloat { CalendarLayout.hourColumnWidth(scaled: scaledGutter) }
     private let laneWidth: CGFloat = 76
+    /// Each hour label's rendered height, by hour. The timeline is padded at the top and bottom
+    /// by however far the first and last labels stick out of their 12 pt rows.
+    @State private var labelHeights: [Int: CGFloat] = [:]
 
     var body: some View {
         let starts = entries.map(\.start) + favorites.map { $0.hour * 60 }
@@ -259,9 +263,16 @@ private struct Timeline: View {
                         Text(hourLabel(hour))
                             .font(.caption2)
                             .foregroundStyle(.secondary)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.5)
+                            .fixedSize(horizontal: false, vertical: true) // shrink for width only
+                            .onGeometryChange(for: CGFloat.self, of: { $0.size.height }) { labelHeights[hour] = $0 }
                             .frame(width: gutter - 6, alignment: .trailing)
                         Rectangle().fill(.quaternary).frame(height: 1)
                     }
+                    // A fixed height keeps the line on the hour however tall the label is;
+                    // a taller label overflows evenly above and below it.
+                    .frame(height: 12)
                     .offset(y: y(hour * 60, first) - 6)
                 }
                 ForEach(entries) { entry in
@@ -294,9 +305,15 @@ private struct Timeline: View {
             }
         }
         .frame(height: CGFloat(last - first) * hourHeight + 12)
+        .padding(.top, overhang(first))
+        .padding(.bottom, overhang(last))
         .sheet(item: $openBucket) { bucket in
             FavoriteBucketSheet(bucket: bucket)
         }
+    }
+
+    private func overhang(_ hour: Int) -> CGFloat {
+        CalendarLayout.hourLabelOverhang(labelHeight: labelHeights[hour] ?? 0)
     }
 
     private func y(_ minute: Int, _ firstHour: Int) -> CGFloat {

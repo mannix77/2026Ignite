@@ -555,6 +555,37 @@ final class CalendarLayoutTests: XCTestCase {
         XCTAssertEqual(placed["c"], Placement(id: "c", column: 2, columns: 3))
         XCTAssertEqual(placed["alone"], Placement(id: "alone", column: 0, columns: 1))
     }
+
+    // The scaled inputs were read from @ScaledMetric(relativeTo: .caption2) = 50 in the
+    // simulator: 50 at the extra-small and standard sizes, 184.67 at AX XXXL.
+    func testTheHourColumnIsUnchangedAtTheStandardTextSize() {
+        XCTAssertEqual(CalendarLayout.hourColumnWidth(scaled: 50), 50)
+    }
+
+    func testTheHourColumnGrowsWithLargerTextUpToItsCap() {
+        XCTAssertEqual(CalendarLayout.hourColumnWidth(scaled: 70), 70)
+        XCTAssertEqual(CalendarLayout.hourColumnWidth(scaled: 87.5), 87.5)
+        XCTAssertEqual(CalendarLayout.hourColumnWidth(scaled: 88), 88)
+        XCTAssertEqual(CalendarLayout.hourColumnWidth(scaled: 88.5), 88)
+        XCTAssertEqual(CalendarLayout.hourColumnWidth(scaled: 184.67), 88)
+    }
+
+    func testTheHourColumnNeverShrinksBelowItsStandardWidth() {
+        XCTAssertEqual(CalendarLayout.hourColumnWidth(scaled: 50.5), 50.5)
+        XCTAssertEqual(CalendarLayout.hourColumnWidth(scaled: 49.5), 50)
+    }
+
+    func testAnHourLabelNoTallerThanItsRowDoesNotStickOut() {
+        XCTAssertEqual(CalendarLayout.hourLabelOverhang(labelHeight: 11.5), 0)
+        XCTAssertEqual(CalendarLayout.hourLabelOverhang(labelHeight: 12), 0)
+    }
+
+    func testATallerHourLabelSticksOutByHalfTheExcess() {
+        XCTAssertEqual(CalendarLayout.hourLabelOverhang(labelHeight: 12.5), 0.25)
+        // caption2's line height at the standard text size is about 13.3 pt.
+        XCTAssertEqual(CalendarLayout.hourLabelOverhang(labelHeight: 13.3), 0.65, accuracy: 0.000_001)
+        XCTAssertEqual(CalendarLayout.hourLabelOverhang(labelHeight: 44), 16)
+    }
 }
 
 final class DemoBackendTests: XCTestCase {
