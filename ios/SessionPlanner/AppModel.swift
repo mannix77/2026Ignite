@@ -156,6 +156,7 @@ final class AppModel {
     private func setSnapshot(_ new: PlanSnapshot?) {
         snapshot = new
         suggester = nil
+        snapshotVersion += 1
         let index = new?.sessionsByID ?? [:]
         sessionsByID = index
         commitmentsByID = new?.commitmentsByID ?? [:]
@@ -171,13 +172,20 @@ final class AppModel {
     /// Built from the calendar the first time a gap is opened, and dropped when the calendar
     /// changes, so every gap is ranked against the same picks.
     @ObservationIgnored private var suggester: Suggester?
+    /// Goes up every time the calendar is replaced.
+    @ObservationIgnored private var snapshotVersion = 0
 
-    /// The sessions that fit a free stretch, most like his picks first.
-    func suggestions(in gap: Gap) -> [Suggestion] {
+    /// The sessions that fit a free stretch, most like his picks first. The ranking is built and
+    /// run off the main actor, so the screen doesn't stall on a large catalog.
+    func suggestions(in gap: Gap) async -> [Suggestion] {
         guard let snapshot else { return [] }
-        let ranker = suggester ?? Suggester(snapshot)
-        suggester = ranker
-        return ranker.suggestions(in: gap)
+        let built = suggester
+        let version = snapshotVersion
+        let ranker = await Task.detached(priority: .userInitiated) { built ?? Suggester(snapshot) }.value
+        // Kept only if the calendar hasn't changed meanwhile; either way this answer is for the
+        // calendar the gap came from.
+        if suggester == nil, snapshotVersion == version { suggester = ranker }
+        return await Task.detached(priority: .userInitiated) { ranker.suggestions(in: gap) }.value
     }
 
     func sessions(matching filter: SessionFilter, search: String) -> [Session] {
@@ -208,6 +216,11 @@ final class AppModel {
             let departing = saveVersion
             setSnapshot(nil)
             setBackend(nil)
+            // Likewise the Calendar copy: it was the earlier attendee's choice, so it starts off,
+            // and their calendar is never written to under this sign-in.
+            exportsToCalendar = false
+            calendarExportStatus = nil
+            calendarExporter.forget()
             await store.delete(through: departing)
             let kept = await tokens.keep(new, freshSignIn: true)
             signInID = await tokens.signInID
@@ -236,6 +249,11 @@ final class AppModel {
         needsSignIn = false
         notice = nil
         setMode(.signedOut)
+        // The Calendar copy was his choice: whoever signs in next starts with it off, and with a
+        // calendar of their own. His is left in the Calendar app, his to keep or delete.
+        exportsToCalendar = false
+        calendarExportStatus = nil
+        calendarExporter.forget()
         // Revocation can wait on the network for a while. The saved calendar is deleted
         // alongside it, not after it, so quitting the app during that wait leaves nothing behind.
         signInID = nil
@@ -378,6 +396,11 @@ final class AppModel {
             exportsToCalendar = false
             calendarExportStatus = nil
             notice = "Calendar access was turned off, so your sessions are no longer kept in Calendar."
+        } catch CalendarExporter.Failure.unwritableRecords {
+            // Stop here: another update before the record is saved would add every event again.
+            exportsToCalendar = false
+            calendarExportStatus = nil
+            notice = "Calendar updates are off: the app couldn't save its record of the events it added, so updating again could add them twice. Delete the “\(event.name)” calendar in the Calendar app, then turn this on again."
         } catch CalendarExporter.Failure.unreadableRecords {
             notice = "Calendar wasn't updated: the app's record of its events can't be read. Delete the “\(event.name)” calendar in the Calendar app, then turn this on again."
         } catch {

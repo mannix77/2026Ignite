@@ -29,37 +29,37 @@ private func plan(_ sessions: [Session], reserved: [String], favorites: [String]
 
 final class CalendarExportDraftTests: XCTestCase {
     func testAReservedSessionBecomesAnEventInLasVegasTime() {
-        let draft = CalendarExport.draft(for: held("a", code: "AIM320"), timeZone: vegas)
+        let draft = CalendarExport.draft(for: held("a", code: "AIM320"), timeZone: vegas, eventName: "re:Invent 2026")
         XCTAssertEqual(draft, CalendarEventDraft(sessionID: "a", title: "AIM320 – Agents at scale",
                                                  start: dec2At1800Z, end: dec2At1900Z,
                                                  location: "Venetian, Level 3, Murano 3201",
-                                                 notes: "re:Invent session AIM320"))
+                                                 notes: "re:Invent 2026 session AIM320"))
     }
 
     func testTheLocationUsesWhateverOfVenueAndRoomIsGiven() {
-        XCTAssertEqual(CalendarExport.draft(for: held("a", code: "A", room: nil), timeZone: vegas)?.location, "Venetian")
-        XCTAssertEqual(CalendarExport.draft(for: held("a", code: "A", venue: nil), timeZone: vegas)?.location,
+        XCTAssertEqual(CalendarExport.draft(for: held("a", code: "A", room: nil), timeZone: vegas, eventName: "re:Invent 2026")?.location, "Venetian")
+        XCTAssertEqual(CalendarExport.draft(for: held("a", code: "A", venue: nil), timeZone: vegas, eventName: "re:Invent 2026")?.location,
                        "Level 3, Murano 3201")
-        XCTAssertNil(CalendarExport.draft(for: held("a", code: "A", venue: nil, room: nil), timeZone: vegas)?.location)
+        XCTAssertNil(CalendarExport.draft(for: held("a", code: "A", venue: nil, room: nil), timeZone: vegas, eventName: "re:Invent 2026")?.location)
         // Blank values count as missing.
-        XCTAssertEqual(CalendarExport.draft(for: held("a", code: "A", room: "  "), timeZone: vegas)?.location, "Venetian")
+        XCTAssertEqual(CalendarExport.draft(for: held("a", code: "A", room: "  "), timeZone: vegas, eventName: "re:Invent 2026")?.location, "Venetian")
     }
 
     func testASessionWithNoLengthTakesTheTwentyMinutesTheCalendarDrawsForIt() {
-        let draft = CalendarExport.draft(for: held("a", code: "A", length: ""), timeZone: vegas)
+        let draft = CalendarExport.draft(for: held("a", code: "A", length: ""), timeZone: vegas, eventName: "re:Invent 2026")
         XCTAssertEqual(draft?.start, dec2At1800Z)
         XCTAssertEqual(draft?.end, dec2At1820Z)
     }
 
     func testASessionWithNoTimeOrAllDayIsNotDrafted() {
         // The precondition: the same session with a good time is drafted.
-        XCTAssertNotNil(CalendarExport.draft(for: held("a", code: "A"), timeZone: vegas))
-        XCTAssertNil(CalendarExport.draft(for: held("a", code: "A", time: "25:00"), timeZone: vegas))
-        XCTAssertNil(CalendarExport.draft(for: held("a", code: "A", date: "2026-13-02"), timeZone: vegas))
-        XCTAssertNil(CalendarExport.draft(for: held("a", code: "A", allDay: true), timeZone: vegas))
+        XCTAssertNotNil(CalendarExport.draft(for: held("a", code: "A"), timeZone: vegas, eventName: "re:Invent 2026"))
+        XCTAssertNil(CalendarExport.draft(for: held("a", code: "A", time: "25:00"), timeZone: vegas, eventName: "re:Invent 2026"))
+        XCTAssertNil(CalendarExport.draft(for: held("a", code: "A", date: "2026-13-02"), timeZone: vegas, eventName: "re:Invent 2026"))
+        XCTAssertNil(CalendarExport.draft(for: held("a", code: "A", allDay: true), timeZone: vegas, eventName: "re:Invent 2026"))
         var noTime = held("a", code: "A")
         noTime.sessionTime = nil
-        XCTAssertNil(CalendarExport.draft(for: noTime, timeZone: vegas))
+        XCTAssertNil(CalendarExport.draft(for: noTime, timeZone: vegas, eventName: "re:Invent 2026"))
     }
 }
 
@@ -73,7 +73,7 @@ final class CalendarExportPlanTests: XCTestCase {
         var out: [String: ExportRecord] = [:]
         for session in sessions {
             out[session.sessionId] = ExportRecord(eventID: "event-\(session.sessionId)",
-                                                  draft: CalendarExport.draft(for: session, timeZone: vegas)!)
+                                                  draft: CalendarExport.draft(for: session, timeZone: vegas, eventName: "re:Invent 2026")!)
         }
         return out
     }
@@ -84,7 +84,7 @@ final class CalendarExportPlanTests: XCTestCase {
         XCTAssertEqual(snapshot.commitment(of: "fav"), .favorite)
         XCTAssertEqual(snapshot.commitment(of: "party"), .invited)
 
-        let result = CalendarExport.plan(for: snapshot, records: [:], timeZone: vegas)
+        let result = CalendarExport.plan(for: snapshot, records: [:], timeZone: vegas, eventName: "re:Invent 2026")
         XCTAssertEqual(result.add.map(\.sessionID), ["aim", "sec"])
         XCTAssertEqual(result.add.map(\.start), [dec2At1800Z, dec3At1730Z])
         XCTAssertEqual(result.add.map(\.end), [dec2At1900Z, dec3At1830Z])
@@ -97,7 +97,7 @@ final class CalendarExportPlanTests: XCTestCase {
         let snapshot = plan([aim, sec], reserved: ["aim", "sec"])
         let existing = records(for: [aim, sec])
         XCTAssertEqual(existing.count, 2)
-        let result = CalendarExport.plan(for: snapshot, records: existing, timeZone: vegas)
+        let result = CalendarExport.plan(for: snapshot, records: existing, timeZone: vegas, eventName: "re:Invent 2026")
         XCTAssertEqual(result, ExportPlan(add: [], update: [], remove: [], skipped: 0))
         XCTAssertTrue(result.isEmpty)
     }
@@ -108,7 +108,7 @@ final class CalendarExportPlanTests: XCTestCase {
         var moved = aim
         moved.sessionTime = SessionTime(date: "2026-12-02", time: "13:00", length: "60")
         let result = CalendarExport.plan(for: plan([moved, sec], reserved: ["aim", "sec"]), records: existing,
-                                         timeZone: vegas)
+                                         timeZone: vegas, eventName: "re:Invent 2026")
         XCTAssertEqual(result.update.map(\.eventID), ["event-aim"])
         XCTAssertEqual(result.update.map(\.draft.start), [dec2At2100Z])
         XCTAssertEqual(result.update.map(\.draft.end), [dec2At2200Z])
@@ -119,7 +119,7 @@ final class CalendarExportPlanTests: XCTestCase {
     func testACancelledSessionIsRemovedAndTheOthersStay() {
         let existing = records(for: [aim, sec])
         XCTAssertEqual(Set(existing.keys), ["aim", "sec"])
-        let result = CalendarExport.plan(for: plan([aim, sec], reserved: ["sec"]), records: existing, timeZone: vegas)
+        let result = CalendarExport.plan(for: plan([aim, sec], reserved: ["sec"]), records: existing, timeZone: vegas, eventName: "re:Invent 2026")
         XCTAssertEqual(result.remove, ["event-aim"])
         XCTAssertEqual(result.add, [])
         XCTAssertEqual(result.update, [])
@@ -131,7 +131,7 @@ final class CalendarExportPlanTests: XCTestCase {
         var garbled = aim
         garbled.sessionTime = SessionTime(date: "2026-12-02", time: "soon")
         let result = CalendarExport.plan(for: plan([garbled, sec], reserved: ["aim", "sec"]), records: existing,
-                                         timeZone: vegas)
+                                         timeZone: vegas, eventName: "re:Invent 2026")
         XCTAssertEqual(result, ExportPlan(add: [], update: [], remove: [], skipped: 1))
     }
 
@@ -139,14 +139,27 @@ final class CalendarExportPlanTests: XCTestCase {
         let existing = records(for: [aim, sec])
         XCTAssertNotNil(existing["aim"])
         // "aim" is still reserved, but the catalog no longer lists it.
-        let result = CalendarExport.plan(for: plan([sec], reserved: ["aim", "sec"]), records: existing, timeZone: vegas)
+        let result = CalendarExport.plan(for: plan([sec], reserved: ["aim", "sec"]), records: existing, timeZone: vegas, eventName: "re:Invent 2026")
         XCTAssertEqual(result, ExportPlan(add: [], update: [], remove: [], skipped: 1))
     }
 
     func testRemovalsComeInAFixedOrder() {
-        let existing = records(for: [aim, sec, fav])
-        let result = CalendarExport.plan(for: plan([aim, sec, fav], reserved: []), records: existing, timeZone: vegas)
-        XCTAssertEqual(result.remove, ["event-aim", "event-fav", "event-sec"])
+        // Twelve records, so a dictionary's own order can't match by luck.
+        let many = (1...12).map { held(String(format: "s%02d", $0), code: "C\($0)") }
+        let existing = records(for: many)
+        XCTAssertEqual(existing.count, 12)
+        let result = CalendarExport.plan(for: plan(many, reserved: []), records: existing, timeZone: vegas,
+                                         eventName: "re:Invent 2026")
+        XCTAssertEqual(result.remove, (1...12).map { String(format: "event-s%02d", $0) })
+    }
+
+    func testARepeatedOrBlankReservedIdAddsOneEventOnly() {
+        // The site lists "aim" twice (once with spaces) and a blank id; "sec" once.
+        let snapshot = plan([aim, sec], reserved: ["aim", " aim ", "", "  ", "sec", "sec"])
+        let result = CalendarExport.plan(for: snapshot, records: [:], timeZone: vegas, eventName: "re:Invent 2026")
+        XCTAssertEqual(result.add.map(\.sessionID), ["aim", "sec"])
+        XCTAssertEqual(result.skipped, 0)
+        XCTAssertEqual(result.remove, [])
     }
 }
 

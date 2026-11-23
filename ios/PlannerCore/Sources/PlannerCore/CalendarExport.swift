@@ -30,10 +30,11 @@ public struct ExportPlan: Equatable, Sendable {
 
 public enum CalendarExport {
     /// The Calendar event for one session: "CODE – Title", from its start to its end in the
-    /// conference's time zone, at "Venue, Room". A session with no length gets the minutes the
+    /// conference's time zone, at "Venue, Room", with "<event> session CODE" in the notes. A
+    /// session with no length gets the minutes the
     /// app's own calendar draws for it. Nil for a session with no readable time, or one that
     /// lasts all day.
-    public static func draft(for session: Session, timeZone: TimeZone) -> CalendarEventDraft? {
+    public static func draft(for session: Session, timeZone: TimeZone, eventName: String) -> CalendarEventDraft? {
         guard session.isAllDaySession != true, let time = session.sessionTime, time.hasValidDate,
               let startMinute = time.startMinute else { return nil }
         let parts = time.date.split(separator: "-").compactMap { Int($0) }
@@ -49,7 +50,7 @@ public enum CalendarExport {
         return CalendarEventDraft(sessionID: session.sessionId, title: "\(session.code) – \(session.title)",
                                   start: start, end: start.addingTimeInterval(TimeInterval(minutes * 60)),
                                   location: place.isEmpty ? nil : place.joined(separator: ", "),
-                                  notes: "re:Invent session \(session.code)")
+                                  notes: "\(eventName) session \(session.code)")
     }
     /// What to change in the app's own Calendar events so they match his reserved sessions.
     /// `records` are the events the app made before, by session id; nothing else is touched.
@@ -58,13 +59,13 @@ public enum CalendarExport {
     /// counted in `skipped` and its event, if any, is left as it was: an unreadable answer is
     /// never a reason to delete.
     public static func plan(for snapshot: PlanSnapshot, records: [String: ExportRecord],
-                            timeZone: TimeZone) -> ExportPlan {
+                            timeZone: TimeZone, eventName: String) -> ExportPlan {
         let catalog = snapshot.sessionsByID
         var result = ExportPlan(add: [], update: [], remove: [], skipped: 0)
         var stillReserved = Set<String>()
         for raw in snapshot.schedule.reserved {
             guard let id = Identifier.clean(raw), stillReserved.insert(id).inserted else { continue }
-            guard let session = catalog[id], let draft = draft(for: session, timeZone: timeZone) else {
+            guard let session = catalog[id], let draft = draft(for: session, timeZone: timeZone, eventName: eventName) else {
                 result.skipped += 1
                 continue
             }

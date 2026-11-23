@@ -170,7 +170,7 @@ private struct DayPage: View {
     var body: some View {
         DayView(agenda: snapshot.agenda(on: day, includeFavorites: model.showFavorites,
                                         index: model.sessionsByID, commitments: model.commitmentsByID),
-                gaps: snapshot.offeredGaps(on: day),
+                gaps: snapshot.offeredGaps(on: day, index: model.sessionsByID),
                 nowMinute: nowMinute)
             .refreshable { await model.refresh() }
     }
@@ -263,7 +263,7 @@ private struct GapSheet: View {
                 ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } }
             }
         }
-        .task { suggestions = model.suggestions(in: gap) }
+        .task { suggestions = await model.suggestions(in: gap) }
     }
 }
 

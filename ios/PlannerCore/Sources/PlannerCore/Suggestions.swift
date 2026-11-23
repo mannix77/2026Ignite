@@ -134,8 +134,9 @@ extension PlanSnapshot {
     /// the first session that day to the end of the last, invitations included. A commitment
     /// takes at least the time the calendar draws it for, so one listed with no length still
     /// blocks its slot. After overlapping commitments he is where the one that ends last is.
-    public func gaps(on date: String) -> [Gap] {
-        let known = sessionsByID
+    /// `index` is `sessionsByID`, passed in when the caller already has it built.
+    public func gaps(on date: String, index: [String: Session]? = nil) -> [Gap] {
+        let known = index ?? sessionsByID
         var dayStart: Int?
         var dayEnd: Int?
         for session in known.values {

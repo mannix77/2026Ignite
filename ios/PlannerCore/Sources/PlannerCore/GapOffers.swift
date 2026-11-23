@@ -6,9 +6,9 @@ extension PlanSnapshot {
     public static let shortestOfferedGap = 30
 
     /// The free stretches of a day the calendar offers suggestions for: its gaps of at least
-    /// `shortestOfferedGap` minutes.
-    public func offeredGaps(on date: String) -> [Gap] {
-        gaps(on: date).filter { $0.end - $0.start >= PlanSnapshot.shortestOfferedGap }
+    /// `shortestOfferedGap` minutes. `index` is `sessionsByID`, if the caller has it built.
+    public func offeredGaps(on date: String, index: [String: Session]? = nil) -> [Gap] {
+        gaps(on: date, index: index).filter { $0.end - $0.start >= PlanSnapshot.shortestOfferedGap }
     }
 }
 

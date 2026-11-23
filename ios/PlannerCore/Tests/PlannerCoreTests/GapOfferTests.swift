@@ -33,6 +33,13 @@ final class GapOfferTests: XCTestCase {
         XCTAssertEqual(plan.offeredGaps(on: "2026-12-02").map { [$0.start, $0.end] }, [[689, 750]])
     }
 
+    func testAnIndexPassedInGivesTheSameGaps() {
+        let plan = dayWithSeats(secondStart: "10:30")
+        XCTAssertEqual(plan.offeredGaps(on: "2026-12-02", index: plan.sessionsByID).map { [$0.start, $0.end] },
+                       [[600, 630]])
+        XCTAssertEqual(plan.gaps(on: "2026-12-02", index: plan.sessionsByID).map { [$0.start, $0.end] }, [[600, 630]])
+    }
+
     func testTheGapIsWordedAsFreeTime() {
         let gap = Gap(date: "2026-12-02", start: 600, end: 630, before: .open, after: .open)
         XCTAssertEqual(Wording.gap(gap), "Free 10:00 – 10:30 AM")
