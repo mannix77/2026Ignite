@@ -217,6 +217,10 @@ final class CalendarExporter {
         // file that is mostly bad, or not such a file at all, is not acted on.
         guard let data = try? Data(contentsOf: url), let read = CalendarExport.readFile(data),
               !read.checked.isMostlyJunk else { throw Failure.unreadableRecords }
+        // Records made under an export id that is no longer in the file can't be matched to
+        // their events: a new id would copy every reserved session's event, so refuse instead.
+        // A file with no records (first use, or after a reset) still starts a new export.
+        if read.exportID == nil, !read.checked.records.isEmpty { throw Failure.unreadableRecords }
         return Saved(calendarID: read.calendarID, exportID: read.exportID, records: read.checked.records)
     }
 
