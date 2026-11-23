@@ -166,23 +166,45 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
     MGM Grand by shuttle, 8 inside one venue, 15 when a venue is unknown.
 
     Example: The one that fits only if he hurries
-      Given a reserved session ends at 11:00 at "Caesars Forum"
-      And the next reserved session starts at 14:00 at "Caesars Forum"
+      Given a reserved session ends at 10:00 at "Caesars Forum"
+      And the next reserved session starts at 16:00 at "Caesars Forum"
       And the walk between "Caesars Forum" and "Wynn/Encore" takes 20 minutes
       When he asks what fits between them
-      Then a session at "Wynn/Encore" starting at 11:20 is listed and one starting at 11:19 is not
-      And one ending at 13:40 is listed and one ending at 13:41 is not
+      Then a session at "Wynn/Encore" starting at 10:20 is listed and one starting at 10:19 is not
+      And one ending at 15:40 is listed and one ending at 15:41 is not
+
+    Example: The one between two different venues
+      Given a reserved session ends at 10:00 at "MGM Grand"
+      And the next reserved session starts at 16:00 at "Wynn/Encore"
+      When he asks what fits between them
+      Then a session at "Caesars Forum" starting at 10:35 is listed and one starting at 10:34 is not
+      And one ending at 15:40 is listed and one ending at 15:41 is not
+
+    Example: The reception listed with no length
+      Given he is invited to a reception at 10:00 that the site lists with no length
+      When he asks for the gaps that day
+      Then the next gap starts at 10:20, the shortest time the calendar draws
 
     Example: The one with the whole day free
-      Given nothing is on his calendar on Tuesday
-      And Tuesday's sessions run from 08:00 to 19:00
-      When he asks for the gaps on Tuesday
+      Given nothing is on his calendar on Wednesday
+      And Wednesday's sessions run from 08:00 to 19:00
+      When he asks for the gaps on Wednesday
       Then there is one gap, from 08:00 to 19:00, with no walk at either end
 
     Example: The one he already holds a seat for
       Given he holds a seat in "AIM320" and its repeat "AIM320-R1" falls in the gap
       When he asks what fits in the gap
       Then neither is listed
+
+    Example: The favorite in the gap
+      Given "COP305" is a favorite that falls in the gap
+      When he asks what fits in the gap
+      Then it is listed and marked as a favorite
+
+    Example: The one with no picks yet
+      Given he has no reserved seats and no favorites
+      When he asks what fits in a gap
+      Then nothing is listed, since there is nothing to compare with
 
     Example: The favorite that clashes, whose repeat fits
       Given "COP319" is a favorite at a time he is busy

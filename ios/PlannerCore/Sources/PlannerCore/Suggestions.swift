@@ -112,7 +112,7 @@ extension Session {
         add(.topic, topics)
         add(.area, areasOfInterest)
         add(.service, services)
-        add(.level, level.map { [$0] }?.filter { $0 != Session.noLevel })
+        add(.level, Identifier.clean(level).map { [$0] }?.filter { $0 != Session.noLevel })
         add(.type, type.map { [$0] })
         return all
     }
@@ -131,8 +131,9 @@ extension PlanSnapshot {
     static let reservedWeight = 2.0
 
     /// The free stretches of one day around his reserved and invited sessions. The day runs from
-    /// the first session the site lists that day to the end of the last one. After overlapping
-    /// commitments he is where the one that ends last is.
+    /// the first session that day to the end of the last, invitations included. A commitment
+    /// takes at least the time the calendar draws it for, so one listed with no length still
+    /// blocks its slot. After overlapping commitments he is where the one that ends last is.
     public func gaps(on date: String) -> [Gap] {
         let known = sessionsByID
         var dayStart: Int?
@@ -152,8 +153,8 @@ extension PlanSnapshot {
             if entry.start > free {
                 gaps.append(Gap(date: date, start: free, end: entry.start, before: here, after: .at(entry.session.venue)))
             }
-            if entry.end >= free {
-                free = entry.end
+            if entry.drawnEnd >= free {
+                free = entry.drawnEnd
                 here = .at(entry.session.venue)
             }
         }
@@ -169,7 +170,8 @@ extension PlanSnapshot {
 
 /// Ranks sessions for gaps against one snapshot. Everything that doesn't depend on the gap
 /// (trait weights, his profile, what he holds) is worked out once, here. Sums run in a fixed
-/// order, so equal sessions get bit-for-bit equal scores on every launch.
+/// order, so a score is the same on every launch, and scores are compared rounded to
+/// `scoreResolution`, so two sessions equally alike in theory are not split by rounding noise.
 public struct Suggester: Sendable {
     let sessions: [Session]
     let marks: [String: Commitment]
@@ -177,6 +179,8 @@ public struct Suggester: Sendable {
     let profile: [Trait: Double]
     let held: Set<String>
     let favoriteFamilies: [String: Set<String>]
+
+    static let scoreResolution = 1e-9
 
     public init(_ plan: PlanSnapshot) {
         sessions = plan.sessions
@@ -206,10 +210,11 @@ public struct Suggester: Sendable {
     /// session sharing nothing with his picks is left out. Equal scores put a session with a
     /// seat to reserve first, then earlier, then by code.
     public func suggestions(in gap: Gap) -> [Suggestion] {
-        var found: [(suggestion: Suggestion, start: Int)] = []
+        var found: [(suggestion: Suggestion, start: Int, rank: Double)] = []
+        var seen = Set<String>()
         for session in sessions {
             // A reserved or invited session is in a held family, so this also leaves it out.
-            guard !held.contains(session.family), session.isAllDaySession != true,
+            guard !held.contains(session.family), !seen.contains(session.sessionId), session.isAllDaySession != true,
                   let time = session.sessionTime, time.hasValidDate, time.date == gap.date,
                   let start = time.startMinute else { continue }
             let end = start + time.lengthMinutes
@@ -221,16 +226,22 @@ public struct Suggester: Sendable {
             }.sorted { $0.trait < $1.trait }
             let score = parts.reduce(0) { $0 + $1.value }
             guard score > 0 else { continue }
-            let strongest = parts.sorted { ($0.value, $1.trait) > ($1.value, $0.trait) }
+            seen.insert(session.sessionId)
+            var names: [String] = []
+            for part in parts.sorted(by: { ($0.value, $1.trait) > ($1.value, $0.trait) })
+            where !names.contains(part.trait.value) && names.count < 3 {
+                names.append(part.trait.value)
+            }
 
             let open = session.isReservable == true && PlanSnapshot.openSeatBands.contains(session.seatAvailability ?? "")
             let runs = favoriteFamilies[session.family] ?? []
-            found.append((Suggestion(session: session, score: score, shared: strongest.prefix(3).map(\.trait.value),
+            found.append((Suggestion(session: session, score: score, shared: names,
                                      seat: open ? .reserve : .walkUp, isFavorite: marks[session.sessionId] == .favorite,
-                                     isRepeatOfFavorite: !runs.subtracting([session.sessionId]).isEmpty), start))
+                                     isRepeatOfFavorite: !runs.subtracting([session.sessionId]).isEmpty), start,
+                          (score / Suggester.scoreResolution).rounded()))
         }
         return found.sorted { a, b in
-            if a.suggestion.score != b.suggestion.score { return a.suggestion.score > b.suggestion.score }
+            if a.rank != b.rank { return a.rank > b.rank }
             return (a.suggestion.seat.rawValue, a.start, a.suggestion.session.code, a.suggestion.id)
                 < (b.suggestion.seat.rawValue, b.start, b.suggestion.session.code, b.suggestion.id)
         }.map(\.suggestion)
