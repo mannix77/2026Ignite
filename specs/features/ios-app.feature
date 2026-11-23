@@ -79,7 +79,7 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       Then the hour column is 50 points wide, as it always was
 
     Example: The one with the largest accessibility text
-      Given the largest accessibility text size would make the hour column about 185 points wide
+      Given the phone's text size is the largest accessibility size
       When he opens the calendar
       Then the hour column stops growing at 88 points
       And each hour label stays on one line, shrunk to fit if it must
@@ -87,7 +87,7 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
     Example: The one with the smallest text
       Given the phone's text size is the smallest one
       When he opens the calendar
-      Then the hour column stays 50 points wide, never narrower
+      Then the hour column is 50 points wide, the same as at the standard size
 
   Rule: A walk he cannot make is pointed out
 

@@ -169,6 +169,10 @@ private struct Timeline: View {
     @ScaledMetric(relativeTo: .caption2) private var scaledGutter: CGFloat = 50
     private var gutter: CGFloat { CalendarLayout.hourColumnWidth(scaled: scaledGutter) }
     private let laneWidth: CGFloat = 76
+    /// The hour labels' row height scaled with their text: half of what exceeds the 12 pt row
+    /// sticks out above the first hour and below the last, so the timeline is padded by that.
+    @ScaledMetric(relativeTo: .caption2) private var labelHeight: CGFloat = 12
+    private var labelOverhang: CGFloat { max(0, labelHeight / 2 - 6) }
 
     var body: some View {
         let starts = entries.map(\.start) + favorites.map { $0.hour * 60 }
@@ -228,6 +232,7 @@ private struct Timeline: View {
             }
         }
         .frame(height: CGFloat(last - first) * hourHeight + 12)
+        .padding(.vertical, labelOverhang)
         .sheet(item: $openBucket) { bucket in
             FavoriteBucketSheet(bucket: bucket)
         }
