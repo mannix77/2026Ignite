@@ -574,6 +574,16 @@ final class CalendarLayoutTests: XCTestCase {
         XCTAssertEqual(CalendarLayout.hourColumnWidth(scaled: 50.5), 50.5)
         XCTAssertEqual(CalendarLayout.hourColumnWidth(scaled: 49.5), 50)
     }
+
+    func testAnHourLabelNoTallerThanItsRowDoesNotStickOut() {
+        XCTAssertEqual(CalendarLayout.hourLabelOverhang(labelHeight: 11.5), 0)
+        XCTAssertEqual(CalendarLayout.hourLabelOverhang(labelHeight: 12), 0)
+    }
+
+    func testATallerHourLabelSticksOutByHalfTheExcess() {
+        XCTAssertEqual(CalendarLayout.hourLabelOverhang(labelHeight: 12.5), 0.25)
+        XCTAssertEqual(CalendarLayout.hourLabelOverhang(labelHeight: 44), 16)
+    }
 }
 
 final class DemoBackendTests: XCTestCase {

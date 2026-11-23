@@ -23,6 +23,15 @@ public enum CalendarLayout {
         min(max(scaled, standardHourColumn), widestHourColumn)
     }
 
+    /// How far an hour label sticks out above (and below) its 12 pt row, given the label's
+    /// height. The timeline is padded by this at its top and bottom so the first and last
+    /// labels don't run into what sits around it.
+    public static func hourLabelOverhang(labelHeight: Double) -> Double {
+        max(0, labelHeight / 2 - hourLabelRow / 2)
+    }
+
+    static let hourLabelRow: Double = 12
+
     static let standardHourColumn: Double = 50
     static let widestHourColumn: Double = 88
 

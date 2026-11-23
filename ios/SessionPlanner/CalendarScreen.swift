@@ -169,10 +169,10 @@ private struct Timeline: View {
     @ScaledMetric(relativeTo: .caption2) private var scaledGutter: CGFloat = 50
     private var gutter: CGFloat { CalendarLayout.hourColumnWidth(scaled: scaledGutter) }
     private let laneWidth: CGFloat = 76
-    /// The hour labels' row height scaled with their text: half of what exceeds the 12 pt row
-    /// sticks out above the first hour and below the last, so the timeline is padded by that.
+    /// The hour labels' height scaled with their text; the timeline is padded top and bottom
+    /// by however far that sticks out of the 12 pt row.
     @ScaledMetric(relativeTo: .caption2) private var labelHeight: CGFloat = 12
-    private var labelOverhang: CGFloat { max(0, labelHeight / 2 - 6) }
+    private var labelOverhang: CGFloat { CalendarLayout.hourLabelOverhang(labelHeight: labelHeight) }
 
     var body: some View {
         let starts = entries.map(\.start) + favorites.map { $0.hour * 60 }
