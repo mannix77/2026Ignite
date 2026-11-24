@@ -39,7 +39,9 @@ own screens, is still "Session Planner". Apple expects the two to be recognisabl
 (guideline 2.3.8); if a reviewer objects, either rename the app record or change the display
 name in the project (`INFOPLIST_KEY_CFBundleDisplayName`) and upload a new build.
 
-## Version information (1.1)
+## Version information (1.1.1)
+
+The promotional text, description and keywords are unchanged from 1.1.
 
 **Promotional text (170)**
 
@@ -95,6 +97,12 @@ conference,schedule,calendar,sessions,agenda,planner,events,reserve,favorites,at
 No AWS or re:Invent trademark is used in the name, subtitle or keywords on purpose: Apple
 rejects other companies' trademarks there (guideline 2.3.7). They appear only in the
 description, descriptively, with the trademark line.
+
+**What's New (1.1.1)**
+
+```
+• On the day itself, free stretches start at the current time, so every session offered is one you can still make.
+```
 
 **What's New (1.1)**
 
@@ -256,8 +264,9 @@ it has already seen for the same version.
 
 ## After approval
 
-- The version string is `1.1` (build 3) for the second release; `1.0` (builds 1–2) was the
-  first. Use `1.1.1` and up for fixes, and raise the build number for every upload.
+- The version string is `1.1.1` (build 4) for the third release; `1.1` (build 3) was the
+  second and `1.0` (builds 1–2) the first. Use `1.1.2` and up for fixes, and raise the build
+  number for every upload.
 - re:Invent 2026 runs 30 November to 4 December 2026. Review usually takes one to three days
   but can take longer, and is not guaranteed before the event. TestFlight internal testing
   (your own team's Apple IDs) needs no review and is the dependable route for that week.
