@@ -183,8 +183,9 @@ extension PlanSnapshot {
     /// Catalog sessions he could get to and into in the gap, and back from in time for what
     /// comes next, most like his picks first.
     /// For several gaps, build one `Suggester` and ask it for each.
-    public func suggestions(in gap: Gap, lineUp: LineUp = LineUp()) -> [Suggestion] {
-        Suggester(self).suggestions(in: gap, lineUp: lineUp)
+    public func suggestions(in gap: Gap, lineUp: LineUp = LineUp(),
+                            preferences: SessionPreferences = SessionPreferences()) -> [Suggestion] {
+        Suggester(self).suggestions(in: gap, lineUp: lineUp, preferences: preferences)
     }
 
 }
@@ -228,9 +229,12 @@ public struct Suggester: Sendable {
     }
 
     /// Nothing he holds a seat in or is invited to is suggested, nor another run of it. A
-    /// session sharing nothing with his picks is left out. Equal scores put a session with a
-    /// seat to reserve first, then earlier, then by code.
-    public func suggestions(in gap: Gap, lineUp: LineUp = LineUp()) -> [Suggestion] {
+    /// session sharing nothing with his picks is left out. The score is multiplied by what he
+    /// chose in Settings (`SessionPreferences.factor(for:)`), which re-orders but never adds or
+    /// removes a session. Equal scores put a session with a seat to reserve first, then
+    /// earlier, then by code.
+    public func suggestions(in gap: Gap, lineUp: LineUp = LineUp(),
+                            preferences: SessionPreferences = SessionPreferences()) -> [Suggestion] {
         var found: [(suggestion: Suggestion, start: Int, rank: Double)] = []
         var seen = Set<String>()
         for session in sessions {
@@ -250,8 +254,9 @@ public struct Suggester: Sendable {
             let parts = Suggester.vector(session, weights).compactMap { trait, value in
                 profile[trait].map { (trait: trait, value: value * $0) }
             }.sorted { $0.trait < $1.trait }
-            let score = parts.reduce(0) { $0 + $1.value }
-            guard score > 0 else { continue }
+            let alike = parts.reduce(0) { $0 + $1.value }
+            guard alike > 0 else { continue }
+            let score = alike * preferences.factor(for: session)
             seen.insert(session.sessionId)
             var names: [String] = []
             for part in parts.sorted(by: { ($0.value, $1.trait) > ($1.value, $0.trait) })
@@ -289,5 +294,25 @@ public struct Suggester: Sendable {
         for trait in session.traits.sorted() { if let weight = weights[trait], weight > 0 { vector[trait] = weight } }
         let length = vector.keys.sorted().reduce(0) { $0 + vector[$1]! * vector[$1]! }.squareRoot()
         return length > 0 ? vector.mapValues { $0 / length } : [:]
+    }
+}
+
+extension SessionPreferences {
+    /// A level or format he prefers multiplies a session's score by this, each.
+    static let preferredFactor = 1.5
+    /// A format he skips multiplies it by this: lower, but still listed (owner's decision, #193).
+    static let skippedFactor = 0.5
+
+    /// What his choices in Settings multiply `session`'s score by: `preferredFactor` for a
+    /// level he prefers and again for a format he prefers, `skippedFactor` for a format he
+    /// skips. The site's level and format are cleaned as Settings stores them.
+    func factor(for session: Session) -> Double {
+        var factor = 1.0
+        if let level = AttendeeProfile.key(session.level), levels.contains(level) { factor *= SessionPreferences.preferredFactor }
+        if let format = AttendeeProfile.key(session.type) {
+            if preferredFormats.contains(format) { factor *= SessionPreferences.preferredFactor }
+            if skippedFormats.contains(format) { factor *= SessionPreferences.skippedFactor }
+        }
+        return factor
     }
 }

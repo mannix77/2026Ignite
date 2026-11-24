@@ -197,18 +197,22 @@ final class AppModel {
     /// an earlier calendar watches it.
     private(set) var snapshotVersion = 0
 
-    /// The sessions that fit a free stretch, most like his picks first. The ranking is built and
-    /// run off the main actor, so the screen doesn't stall on a large catalog.
+    /// The sessions that fit a free stretch, most like his picks first, re-ordered by his session
+    /// preferences as they are when it opens. The ranking is built and run off the main actor,
+    /// so the screen doesn't stall on a large catalog.
     func suggestions(in gap: Gap) async -> [Suggestion] {
         guard let snapshot else { return [] }
         let built = suggester
         let version = snapshotVersion
         let lineUp = lineUp
+        let preferences = preferences
         let ranker = await Task.detached(priority: .userInitiated) { built ?? Suggester(snapshot) }.value
         // Kept only if the calendar hasn't changed meanwhile; either way this answer is for the
         // calendar the gap came from.
         if suggester == nil, snapshotVersion == version { suggester = ranker }
-        return await Task.detached(priority: .userInitiated) { ranker.suggestions(in: gap, lineUp: lineUp) }.value
+        return await Task.detached(priority: .userInitiated) {
+            ranker.suggestions(in: gap, lineUp: lineUp, preferences: preferences)
+        }.value
     }
 
     func sessions(matching filter: SessionFilter, search: String) -> [Session] {
