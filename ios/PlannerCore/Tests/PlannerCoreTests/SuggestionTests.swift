@@ -25,9 +25,10 @@ private func snapshot(_ sessions: [Session], reserved: [String] = [], favorites:
                  fetchedAt: Date(timeIntervalSince1970: 0))
 }
 
-/// 10:00 to 16:00 on 2 Dec, coming from and going back to the Forum.
+/// 10:00 to 16:00 on 2 Dec, coming from a seat at the Forum and going back to another there.
 private let forumGap = Gap(date: "2026-12-02", start: 600, end: 960,
-                           before: .at("Caesars Forum"), after: .at("Caesars Forum"))
+                           before: .at("Caesars Forum"), after: .at("Caesars Forum"),
+                           lineFrom: 600, lineUpAfter: true)
 
 private func ids(_ suggestions: [Suggestion]) -> [String] { suggestions.map(\.session.sessionId) }
 
@@ -68,7 +69,8 @@ final class GapTests: XCTestCase {
                              offered("expo", time: "00:00", length: "1440", allDay: true),
                              offered("other", time: "06:00", length: "60", date: "2026-12-03")])
         XCTAssertEqual(plan.gaps(on: "2026-12-02"),
-                       [Gap(date: "2026-12-02", start: 480, end: 1140, before: .open, after: .open)])
+                       [Gap(date: "2026-12-02", start: 480, end: 1140, before: .open, after: .open,
+                            lineFrom: nil, lineUpAfter: false)])
     }
 
     func testGapsSitBeforeBetweenAndAfterCommitmentsWithTheirVenues() {
@@ -79,11 +81,17 @@ final class GapTests: XCTestCase {
                              offered("fav", time: "11:00", length: "60")],
                             reserved: ["seat1", "seat2"], favorites: ["fav"],
                             invited: [offered("party", time: "15:00", length: "60", venue: "Venetian")])
+        // He lines up inside every gap but the one that opens the day, and for the seats after a
+        // gap but not for the invitation.
         XCTAssertEqual(plan.gaps(on: "2026-12-02"), [
-            Gap(date: "2026-12-02", start: 480, end: 600, before: .open, after: .at("MGM Grand")),
-            Gap(date: "2026-12-02", start: 660, end: 780, before: .at("MGM Grand"), after: .at(nil)),
-            Gap(date: "2026-12-02", start: 840, end: 900, before: .at(nil), after: .at("Venetian")),
-            Gap(date: "2026-12-02", start: 960, end: 1140, before: .at("Venetian"), after: .open),
+            Gap(date: "2026-12-02", start: 480, end: 600, before: .open, after: .at("MGM Grand"),
+                lineFrom: nil, lineUpAfter: true),
+            Gap(date: "2026-12-02", start: 660, end: 780, before: .at("MGM Grand"), after: .at(nil),
+                lineFrom: 660, lineUpAfter: true),
+            Gap(date: "2026-12-02", start: 840, end: 900, before: .at(nil), after: .at("Venetian"),
+                lineFrom: 840, lineUpAfter: false),
+            Gap(date: "2026-12-02", start: 960, end: 1140, before: .at("Venetian"), after: .open,
+                lineFrom: 960, lineUpAfter: false),
         ])
     }
 
@@ -93,8 +101,10 @@ final class GapTests: XCTestCase {
                              offered("short", time: "10:00", length: "30", venue: "Venetian")],
                             reserved: ["long", "short"])
         XCTAssertEqual(plan.gaps(on: "2026-12-02"), [
-            Gap(date: "2026-12-02", start: 480, end: 540, before: .open, after: .at("Wynn/Encore")),
-            Gap(date: "2026-12-02", start: 720, end: 1080, before: .at("Wynn/Encore"), after: .open),
+            Gap(date: "2026-12-02", start: 480, end: 540, before: .open, after: .at("Wynn/Encore"),
+                lineFrom: nil, lineUpAfter: true),
+            Gap(date: "2026-12-02", start: 720, end: 1080, before: .at("Wynn/Encore"), after: .open,
+                lineFrom: 720, lineUpAfter: false),
         ])
     }
 
@@ -102,8 +112,10 @@ final class GapTests: XCTestCase {
         let plan = snapshot([offered("a", time: "08:00", length: "60"), offered("b", time: "18:00", length: "60")],
                             invited: [offered("party", time: "10:00", length: "0", venue: "MGM Grand")])
         XCTAssertEqual(plan.gaps(on: "2026-12-02"), [
-            Gap(date: "2026-12-02", start: 480, end: 600, before: .open, after: .at("MGM Grand")),
-            Gap(date: "2026-12-02", start: 620, end: 1140, before: .at("MGM Grand"), after: .open),
+            Gap(date: "2026-12-02", start: 480, end: 600, before: .open, after: .at("MGM Grand"),
+                lineFrom: nil, lineUpAfter: false),
+            Gap(date: "2026-12-02", start: 620, end: 1140, before: .at("MGM Grand"), after: .open,
+                lineFrom: 620, lineUpAfter: false),
         ])
     }
 
@@ -111,7 +123,8 @@ final class GapTests: XCTestCase {
         let plan = snapshot([offered("a", time: "08:00", length: "60")],
                             invited: [offered("party", time: "20:00", length: "180", venue: "Venetian")])
         XCTAssertEqual(plan.gaps(on: "2026-12-02"),
-                       [Gap(date: "2026-12-02", start: 480, end: 1200, before: .open, after: .at("Venetian"))])
+                       [Gap(date: "2026-12-02", start: 480, end: 1200, before: .open, after: .at("Venetian"),
+                            lineFrom: nil, lineUpAfter: false)])
     }
 
     func testOfCommitmentsEndingTogetherHeIsAtTheOneThatStartedLater() {
@@ -120,7 +133,8 @@ final class GapTests: XCTestCase {
                              offered("short", time: "10:00", length: "60", venue: "Venetian")],
                             reserved: ["long", "short"])
         XCTAssertEqual(plan.gaps(on: "2026-12-02").last,
-                       Gap(date: "2026-12-02", start: 660, end: 1080, before: .at("Venetian"), after: .open))
+                       Gap(date: "2026-12-02", start: 660, end: 1080, before: .at("Venetian"), after: .open,
+                           lineFrom: 660, lineUpAfter: false))
     }
 
     func testBackToBackCommitmentsLeaveNoGapAndADayWithNoSessionsHasNone() {
@@ -132,14 +146,15 @@ final class GapTests: XCTestCase {
 }
 
 final class SuggestionTests: XCTestCase {
-    func testASessionMustLeaveTimeForTheWalkThereAndBack() {
-        // Forum to Wynn is 20 minutes each way. The seat ends at 10:00 and the next is at 16:00.
+    func testASessionMustLeaveTimeForTheWalkAndTheLineThereAndBack() {
+        // Forum to Wynn is 20 minutes each way, and he is in line 30 minutes before each start.
+        // The seat ends at 10:00 and the next is at 16:00: in by 10:50, out by 15:10.
         let plan = snapshot(filler(4) + [
             offered("pick", time: "09:00", topics: ["Rare"]),
-            offered("onTime", time: "10:20", venue: "Wynn/Encore", topics: ["Rare"]),
-            offered("oneShort", time: "10:19", venue: "Wynn/Encore", topics: ["Rare"]),
-            offered("backInTime", time: "14:40", venue: "Wynn/Encore", topics: ["Rare"]),
-            offered("backLate", time: "14:41", venue: "Wynn/Encore", topics: ["Rare"]),
+            offered("onTime", time: "10:50", venue: "Wynn/Encore", topics: ["Rare"]),
+            offered("oneShort", time: "10:49", venue: "Wynn/Encore", topics: ["Rare"]),
+            offered("backInTime", time: "14:10", venue: "Wynn/Encore", topics: ["Rare"]),
+            offered("backLate", time: "14:11", venue: "Wynn/Encore", topics: ["Rare"]),
         ], favorites: ["pick"])
         let listed = Set(ids(plan.suggestions(in: forumGap)))
         XCTAssertEqual(listed, ["onTime", "backInTime"])
@@ -152,39 +167,67 @@ final class SuggestionTests: XCTestCase {
         XCTAssertEqual(last.sessionTime?.lengthMinutes, 0)
         let plan = snapshot([offered("seat", time: "09:00"), last], reserved: ["seat"])
         XCTAssertEqual(plan.gaps(on: "2026-12-02"),
-                       [Gap(date: "2026-12-02", start: 600, end: 740, before: .at("Caesars Forum"), after: .open)])
+                       [Gap(date: "2026-12-02", start: 600, end: 740, before: .at("Caesars Forum"), after: .open,
+                            lineFrom: 600, lineUpAfter: false)])
     }
 
     func testASessionWithNoLengthTakesTheTwentyMinutesTheCalendarDrawsForIt() {
-        // Back at the Forum by 16:00 means leaving Wynn by 15:40. Listed with no length, a
+        // In line at the Forum by 15:30 means leaving Wynn by 15:10. Listed with no length, a
         // session still takes the 20 minutes the calendar would draw it for once reserved.
         let plan = snapshot(filler(4) + [
             offered("pick", time: "09:00", topics: ["Rare"]),
-            offered("fits", time: "15:20", length: "", venue: "Wynn/Encore", topics: ["Rare"]),
-            offered("runsOver", time: "15:21", length: "", venue: "Wynn/Encore", topics: ["Rare"]),
+            offered("fits", time: "14:50", length: "", venue: "Wynn/Encore", topics: ["Rare"]),
+            offered("runsOver", time: "14:51", length: "", venue: "Wynn/Encore", topics: ["Rare"]),
         ], favorites: ["pick"])
         let listed = Set(ids(plan.suggestions(in: forumGap)))
         XCTAssertEqual(listed, ["fits"])
     }
 
     func testTheWalkInUsesTheVenueBeforeAndTheWalkOutTheVenueAfter() {
-        // MGM to the Forum is 35 minutes; the Forum to the Wynn is 20.
-        let gap = Gap(date: "2026-12-02", start: 600, end: 960, before: .at("MGM Grand"), after: .at("Wynn/Encore"))
+        // MGM to the Forum is 35 minutes; the Forum to the Wynn is 20; 30 in line at each end.
+        let gap = Gap(date: "2026-12-02", start: 600, end: 960, before: .at("MGM Grand"), after: .at("Wynn/Encore"),
+                      lineFrom: 600, lineUpAfter: true)
         let plan = snapshot(filler(4) + [
             offered("pick", time: "09:00", topics: ["Rare"]),
-            offered("onTime", time: "10:35", topics: ["Rare"]), offered("oneShort", time: "10:34", topics: ["Rare"]),
-            offered("backInTime", time: "14:40", topics: ["Rare"]), offered("backLate", time: "14:41", topics: ["Rare"]),
+            offered("onTime", time: "11:05", topics: ["Rare"]), offered("oneShort", time: "11:04", topics: ["Rare"]),
+            offered("backInTime", time: "14:10", topics: ["Rare"]), offered("backLate", time: "14:11", topics: ["Rare"]),
         ], favorites: ["pick"])
         XCTAssertEqual(Set(ids(plan.suggestions(in: gap))), ["onTime", "backInTime"])
     }
 
-    func testFromTheStartOfTheDayThereIsNoWalk() {
-        let gap = Gap(date: "2026-12-02", start: 480, end: 600, before: .open, after: .open)
+    func testFromTheStartOfTheDayThereIsNoWalkAndNoLineInTheGap() {
+        // He can line up before the day's first sessions, so one starting as the day does fits.
+        let gap = Gap(date: "2026-12-02", start: 480, end: 600, before: .open, after: .open,
+                      lineFrom: nil, lineUpAfter: false)
         let plan = snapshot(filler(4) + [offered("pick", time: "13:00", topics: ["Rare"]),
                                          offered("first", time: "08:00", length: "120", venue: "MGM Grand",
                                                  topics: ["Rare"])],
                             favorites: ["pick"])
         XCTAssertEqual(ids(plan.suggestions(in: gap)), ["first"])
+    }
+
+    func testHeLinesUpForAReservedSeatAfterTheGapButNotForAnInvitation() {
+        // From a seat at the Forum ending at 10:00 to a 16:00 commitment at the Forum, with
+        // sessions at the Wynn, 20 minutes away. Reserved next: out by 15:10. Invited: by 15:40.
+        let candidates = [
+            offered("pick", time: "09:00", topics: ["Rare"]),
+            offered("beforeTheLine", time: "14:10", venue: "Wynn/Encore", topics: ["Rare"]),
+            offered("intoTheLine", time: "14:11", venue: "Wynn/Encore", topics: ["Rare"]),
+            offered("beforeTheWalk", time: "14:40", venue: "Wynn/Encore", topics: ["Rare"]),
+            offered("pastTheWalk", time: "14:41", venue: "Wynn/Encore", topics: ["Rare"]),
+        ]
+        let seat = offered("seat", time: "09:00")
+        let next = offered("next", time: "16:00")
+        let reservedNext = snapshot(filler(4) + candidates + [seat, next], reserved: ["seat", "next"], favorites: ["pick"])
+        let invitedNext = snapshot(filler(4) + candidates + [seat], reserved: ["seat"], favorites: ["pick"],
+                                   invited: [next])
+        let reservedGap = reservedNext.gaps(on: "2026-12-02")
+        let invitedGap = invitedNext.gaps(on: "2026-12-02")
+        // Precondition: the same stretch either way, 10:00 to 16:00.
+        XCTAssertEqual(reservedGap.map { [$0.start, $0.end] }, [[600, 960]])
+        XCTAssertEqual(invitedGap.map { [$0.start, $0.end] }, [[600, 960]])
+        XCTAssertEqual(Set(ids(reservedNext.suggestions(in: reservedGap[0]))), ["beforeTheLine"])
+        XCTAssertEqual(Set(ids(invitedNext.suggestions(in: invitedGap[0]))), ["beforeTheLine", "intoTheLine", "beforeTheWalk"])
     }
 
     func testNothingHeHoldsNorItsRepeatIsListedButAFavoriteIs() {
@@ -366,7 +409,8 @@ final class SuggestionTests: XCTestCase {
             offered("reception", time: "18:00", length: "60", level: "No Level"),
             offered("talk", topics: ["Rare"], level: "No Level"),
         ], favorites: ["pick"])
-        let gap = Gap(date: "2026-12-02", start: 600, end: 1200, before: .open, after: .open)
+        let gap = Gap(date: "2026-12-02", start: 600, end: 1200, before: .open, after: .open,
+                      lineFrom: nil, lineUpAfter: false)
         let found = plan.suggestions(in: gap)
         XCTAssertEqual(ids(found), ["talk"])
         XCTAssertEqual(found.map(\.shared), [["Rare"]])
@@ -377,7 +421,8 @@ final class SuggestionTests: XCTestCase {
                                          offered("noon", topics: ["Rare"]), offered("eve", time: "17:00", topics: ["Rare"])],
                             favorites: ["pick"])
         let suggester = Suggester(plan)
-        let evening = Gap(date: "2026-12-02", start: 960, end: 1200, before: .open, after: .open)
+        let evening = Gap(date: "2026-12-02", start: 960, end: 1200, before: .open, after: .open,
+                          lineFrom: nil, lineUpAfter: false)
         XCTAssertEqual(ids(suggester.suggestions(in: forumGap)), ["noon"])
         XCTAssertEqual(ids(suggester.suggestions(in: evening)), ["eve"])
     }

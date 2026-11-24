@@ -15,14 +15,18 @@ extension PlanSnapshot {
     /// The free stretches of a day the calendar offers suggestions for: its gaps of at least
     /// `shortestOfferedGap` minutes. `now` is the event's date and minute (`Wording.eventNow`):
     /// on that day a stretch under way starts now, so nothing that has already started is
-    /// suggested, and one with less than `shortestOfferedGap` minutes left is not offered.
+    /// suggested, and one with less than `shortestOfferedGap` minutes left is not offered. On
+    /// that day he can't start lining up before now, even for the day's first sessions.
     /// Other days are not cut. `index` is `sessionsByID`, if the caller has it built.
     public func offeredGaps(on date: String, now: (date: String, minute: Int)? = nil,
                             index: [String: Session]? = nil) -> [Gap] {
         let cut = now.flatMap { PlanSnapshot.minute(of: $0, on: date) }
         return gaps(on: date, index: index).compactMap { whole in
             var gap = whole
-            if let cut { gap.start = max(gap.start, cut) }
+            if let cut {
+                gap.start = max(gap.start, cut)
+                gap.lineFrom = max(gap.lineFrom ?? cut, cut)
+            }
             return gap.end - gap.start >= PlanSnapshot.shortestOfferedGap ? gap : nil
         }
     }

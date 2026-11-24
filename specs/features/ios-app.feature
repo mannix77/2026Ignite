@@ -224,21 +224,57 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
     counts for more than one most of them share. Walks between venues are the planner's old
     estimates: 10 to 25 minutes between the four resorts north of MGM, 35 to or from the
     MGM Grand by shuttle, 8 inside one venue, 15 when a venue is unknown.
+    Getting in takes time as well as the walk: he needs to be in line 30 minutes before a
+    session starts. So a session in a gap must leave him the walk plus 30 minutes to get into
+    it, and, when the next thing on his calendar is a reserved session, the walk plus 30
+    minutes to get into that one too.
 
     Example: The one that fits only if he hurries
       Given a reserved session ends at 10:00 at "Caesars Forum"
       And the next reserved session starts at 16:00 at "Caesars Forum"
       And the walk between "Caesars Forum" and "Wynn/Encore" takes 20 minutes
       When he asks what fits between them
-      Then a session at "Wynn/Encore" starting at 10:20 is listed and one starting at 10:19 is not
-      And one ending at 15:40 is listed and one ending at 15:41 is not
+      Then a session at "Wynn/Encore" starting at 10:50 is listed and one starting at 10:49 is not
+      And one ending at 15:10 is listed and one ending at 15:11 is not
 
     Example: The one between two different venues
       Given a reserved session ends at 10:00 at "MGM Grand"
       And the next reserved session starts at 16:00 at "Wynn/Encore"
       When he asks what fits between them
-      Then a session at "Caesars Forum" starting at 10:35 is listed and one starting at 10:34 is not
-      And one ending at 15:40 is listed and one ending at 15:41 is not
+      Then a session at "Caesars Forum" starting at 11:05 is listed and one starting at 11:04 is not
+      And one ending at 15:10 is listed and one ending at 15:11 is not
+
+    Example: The invitation after the gap
+      Given a reserved session ends at 10:00 at "Caesars Forum"
+      And he is invited to a reception at 16:00 at "Caesars Forum"
+      When he asks what fits between them
+      Then a session at "Wynn/Encore" ending at 15:40 is listed and one ending at 15:41 is not,
+        since he doesn't line up for an invitation
+
+    Example: The first session of a free morning
+      Given nothing is on his calendar before 12:00 on Wednesday
+      And Wednesday's sessions start at 08:00
+      When he asks what fits in the morning
+      Then a session starting at 08:00 is listed, since he can line up before the day's first sessions
+
+    Example: The one already part way through the morning
+      Given nothing is on his calendar before 12:00 on Wednesday
+      When he opens that day at 09:10
+      Then a session starting at 09:40 is listed and one starting at 09:39 is not
+
+    Example: The one opened just before the day starts
+      Given nothing is on his calendar before 12:00 on Wednesday
+      And Wednesday's sessions start at 08:00
+      When he opens that day at 07:45
+      Then the free stretch still starts at 08:00
+      And a session starting at 08:15 is listed and one starting at 08:14 is not,
+        since he can't be in line before 07:45
+
+    Example: The one part way through a gap
+      Given he holds seats at "MGM Grand" from 09:00 to 10:00 and from 14:00 to 15:00
+      When he opens that day at 11:00
+      Then a session at "MGM Grand" starting at 11:38 is listed and one starting at 11:37 is not,
+        since the walk inside one venue is 8 minutes, then 30 in line
 
     Example: The reception listed with no length
       Given he is invited to a reception at 10:00 that the site lists with no length
