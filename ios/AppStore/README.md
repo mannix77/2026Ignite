@@ -39,7 +39,7 @@ own screens, is still "Session Planner". Apple expects the two to be recognisabl
 (guideline 2.3.8); if a reviewer objects, either rename the app record or change the display
 name in the project (`INFOPLIST_KEY_CFBundleDisplayName`) and upload a new build.
 
-## Version information (1.0)
+## Version information (1.1)
 
 **Promotional text (170)**
 
@@ -56,8 +56,16 @@ A CALENDAR, NOT A LIST
 • Sessions that overlap sit side by side, so a clash is obvious.
 • Favorites stay out of the way until you ask for them, then appear as one marker per hour that opens the list.
 
+• Swipe left or right to move between days; the selected day is easy to spot in light and dark mode.
+
+FILL A GAP IN YOUR DAY
+• Free stretches of 30 minutes or more show on the calendar. Tap one to see the sessions you could still make there, most like the ones you picked first, with what they share with your picks and whether there is a seat to reserve or a walk-up line.
+
 KNOW WHEN A WALK IS TOO TIGHT
 • The app warns you when two sessions in different venues are less than 30 minutes apart.
+
+YOUR SESSIONS IN APPLE CALENDAR (OPTIONAL)
+• Turn on "Add reserved sessions to Calendar" in Settings and your reserved sessions go into a calendar of their own, kept up to date as your schedule changes, next to your other events and alerts. It is off until you turn it on, and the app only ever changes the events it made.
 
 FIND AND CHANGE SESSIONS
 • Search the whole catalog by code, title, speaker or topic.
@@ -71,6 +79,7 @@ PRIVATE BY DESIGN
 • You sign in on AWS's own page. The app never sees your password.
 • Your sign-in is kept in the iPhone's keychain, on this device only.
 • No analytics, no ads, no tracking, and no server of the developer's.
+• Readable at every text size, including the largest accessibility sizes.
 
 TRY IT FIRST
 • No Builder ID? Choose "Try the sample conference" to explore every screen with made-up sessions.
@@ -87,9 +96,16 @@ No AWS or re:Invent trademark is used in the name, subtitle or keywords on purpo
 rejects other companies' trademarks there (guideline 2.3.7). They appear only in the
 description, descriptively, with the trademark line.
 
-**What's New**
+**What's New (1.1)**
 
-First release.
+```
+• Fill a gap: free stretches on the calendar now show the sessions you could still make there, most like your picks first.
+• Apple Calendar: optionally add your reserved sessions to a calendar of their own, kept up to date as your schedule changes.
+• Swipe left or right to change day.
+• The selected day stands out clearly, and the hours stay readable at the largest text sizes.
+```
+
+(1.0: First release.)
 
 ## Screenshots
 
@@ -97,11 +113,14 @@ In `ios/AppStore/screenshots/`, taken on the iPhone 6.9" simulator with the samp
 (no real schedule, names or sessions appear). Upload them in this order to the 6.9" slot; App
 Store Connect scales them for smaller iPhones.
 
-1. `1-calendar.png`: the day as a calendar, with a venue-change warning and favorites
-2. `2-day.png`: a quieter day with an invitation
+1. `1-calendar.png`: the day as a calendar, with a venue-change warning, favorites and a free stretch
+2. `2-day.png`: a quieter day with two free stretches and favorites
 3. `3-session.png`: a session with reserve and favorite
 4. `4-sessions.png`: the session list with search and "Seats open"
-5. `5-settings.png`: counts, update, account and privacy
+5. `5-settings.png`: counts, update, the Apple Calendar setting, account and privacy
+6. `6-suggestions.png` (new in 1.1): the sessions that fit a free stretch, with what they share and how to get in
+
+Retaken for 1.1 on the iPhone 18 Pro Max simulator (1320 × 2868), flattened (no alpha).
 
 The app is iPhone only, so no iPad screenshots are needed.
 
@@ -115,13 +134,18 @@ xcrun simctl launch <device> us.mannix.sessionplanner -mode demo -showFavorites 
 xcrun simctl io <device> screenshot 1-calendar.png
 ```
 
-The other four use `-shotDay 2027-03-09`; `-shotTab sessions -shotSession demo-104`;
-`-shotTab sessions -shotFilter "Seats open"`; and `-shotTab settings`. Simulator screenshots
+The others use `-shotDay 2027-03-09`; `-shotTab sessions -shotSession demo-104`;
+`-shotTab sessions -shotFilter "Seats open"`; `-shotTab settings`; and for the sixth
+`-shotDay 2027-03-09 -shotGap 2027-03-09`, which opens that day's first free stretch. Boot the
+simulator and let it settle (one plain launch first) before capturing, or the first shot can
+catch the home screen. Simulator screenshots
 carry an alpha channel, which App Store Connect refuses: flatten them before uploading.
 
 ## App Privacy ("nutrition label")
 
 Answer **"No, we do not collect data from this app."** The result is "Data Not Collected".
+Unchanged in 1.1: the Apple Calendar copy is written on the phone into the user's own Calendar
+account and is never sent to the developer.
 
 Why that is accurate: the developer has no server and receives nothing. The app sends the
 user's requests straight to AWS, on the user's instruction, using the user's own sign-in.
@@ -140,20 +164,22 @@ not ask.
 
 | Field | Value |
 | --- | --- |
-| Sign-in required | **No** (see notes: every feature can be reviewed without an account; whether Apple accepts that in place of a demo account is its call, see "No test account" under risks) |
+| Sign-in required | **No** to try the sample conference. The "Add reserved sessions to Calendar" setting requires a registered attendee account. Apple decides whether to accept the sample in place of a demo account (see "No test account" and "Calendar permission" under risks). |
 | Contact first name, last name, phone, email | **YOU** |
 
-**Notes for the reviewer** (paste as is)
+**Notes for the reviewer** (paste as is; the APPLE CALENDAR paragraph is new in 1.1)
 
 ```
 Session Planner shows an attendee's AWS re:Invent schedule as a calendar.
 
 HOW TO REVIEW WITHOUT AN ACCOUNT
 On the first screen, tap "Try the sample conference". This loads a made-up conference stored
-in the app and exercises every feature with no account and no network: the calendar, favorites,
-the venue-change warning (open Wed 10), search and filters, session details, adding and removing
+in the app. Without an account or network, you can try the in-app calendar, swiping between days,
+favorites, the venue-change warning (open Wed 10), the free stretches and the sessions that fit
+them (tap "Free 9:00 – 11:00 AM" on Tue 9), search and filters, session details, adding and removing
 a favorite, reserving a seat (try ARC420 to see a refused clash, SEC220 to see a success) and
-cancelling a reservation.
+cancelling a reservation. The "Add reserved sessions to Calendar" setting is disabled in the
+sample conference (see APPLE CALENDAR below).
 
 ABOUT SIGN-IN
 "Sign in with AWS Builder ID" is for people registered for the event. A Builder ID that is not
@@ -166,6 +192,15 @@ publishes a shared public client ID for this purpose and states that an applicat
 distributed to attendees as long as it signs them in on their own device, which this app does.
 The app opens AWS's own sign-in page in a system authentication sheet, never sees the password,
 and stores the resulting token in the keychain.
+
+APPLE CALENDAR (new in 1.1)
+Settings > "Add reserved sessions to Calendar" is off by default. When turned on it asks for
+Calendar access and writes the signed-in attendee's reserved sessions into a calendar of their
+own, kept up to date. Full access (not write-only) is needed because the app must find its own
+events again to move or remove them when a session changes or is cancelled; it never changes
+any other event. The setting needs a signed-in attendee, so it is disabled in the sample
+conference and cannot be exercised without a registered account; the usage text is shown
+before access is requested.
 
 The app is independent. It is not affiliated with, sponsored by or endorsed by Amazon Web
 Services, and says so on its first screen and in Settings. It has no analytics, ads, tracking
@@ -186,8 +221,12 @@ or server of its own.
 - **Trademarks (2.3.7, 5.2.1).** Kept out of the name, subtitle, keywords and icon.
 - **Sign in with Apple (4.8).** Not required: the app offers a single sign-in that is the
   service's own account system, with no third-party social login offered by the app itself.
+- **Calendar permission without a way to try it (5.1.1, 2.1), new in 1.1.** The reviewer can
+  see the permission text but cannot turn the feature on without a registered account. The
+  notes explain this. If Apple asks to see it working, the options are a screen recording made
+  on a signed-in phone, or allowing the setting in the sample conference (a code change).
 - **Usefulness outside the event (4.2).** The app is for one event's attendees. The sample
-  conference shows the full function; say so if asked.
+  conference shows the planning workflow; say so if asked.
 
 ## Building and uploading
 
@@ -217,7 +256,8 @@ it has already seen for the same version.
 
 ## After approval
 
-- The version string is `1.0`. Use `1.0.1` and up for fixes.
+- The version string is `1.1` (build 3) for the second release; `1.0` (builds 1–2) was the
+  first. Use `1.1.1` and up for fixes, and raise the build number for every upload.
 - re:Invent 2026 runs 30 November to 4 December 2026. Review usually takes one to three days
   but can take longer, and is not guaranteed before the event. TestFlight internal testing
   (your own team's Apple IDs) needs no review and is the dependable route for that week.
