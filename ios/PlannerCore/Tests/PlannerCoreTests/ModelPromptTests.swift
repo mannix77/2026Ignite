@@ -332,6 +332,9 @@ final class ModelPromptTests: XCTestCase {
         XCTAssertEqual(prompt.sentIDs, ["s"])
         // The only bars left are the session line's own separators.
         XCTAssertEqual(prompt.text.components(separatedBy: "|").count - 1, 3)
+        // 396 bytes: 132 tokens; the profile "About them:\nInterests: AI / ML (1)" is 35: 12.
+        XCTAssertEqual(prompt.text.utf8.count, 396)
+        XCTAssertEqual(prompt.metrics, PromptMetrics(estimatedTokens: 132, window: 4096, answerReserve: 1000, headroom: 2964, sessionsInBlock: 1, sessionsSent: 1, sessionsLeftOut: 0, abstractsCut: 0, profileTokens: 12, profile: ProfileUse(interestsNamed: 1, levels: nil, formats: nil, skips: false, reservedToday: false)))
     }
 
     func testTheSameInterestWrittenTwiceCountsOncePerPick() {
@@ -359,6 +362,10 @@ final class ModelPromptTests: XCTestCase {
         let prompt = ModelPrompt.build(question: question, ranked: [], sessionsInBlock: 0, picks: [pick])
         XCTAssertTrue(prompt.text.contains("About them:\nInterests: " + summary + "\n"))
         XCTAssertFalse(prompt.text.contains(sixty + "f"))
+        XCTAssertEqual(prompt.sentIDs, [])
+        // The profile: 23 + 64 + 2 + 61 = 150 bytes, 50 tokens; the prompt 473 bytes, 158.
+        XCTAssertEqual(prompt.text.utf8.count, 473)
+        XCTAssertEqual(prompt.metrics, PromptMetrics(estimatedTokens: 158, window: 4096, answerReserve: 1000, headroom: 2938, sessionsInBlock: 0, sessionsSent: 0, sessionsLeftOut: 0, abstractsCut: 0, profileTokens: 50, profile: ProfileUse(interestsNamed: 2, levels: nil, formats: nil, skips: false, reservedToday: false)))
     }
 
     func testTheFixedTextCantCrowdOutTheSessions() {
@@ -455,15 +462,24 @@ final class ModelPromptTests: XCTestCase {
         let prompt = ModelPrompt.build(question: question, ranked: [], sessionsInBlock: 0, picks: [pick])
         XCTAssertTrue(prompt.text.contains("Question: " + String(repeating: "😀", count: 299) + "…\n"))
         XCTAssertTrue(prompt.text.contains("About them:\nInterests: " + String(repeating: "😀", count: 59) + "… (1)\n"))
+        // Instructions 268 bytes, "\n\nQuestion: " 12, question 1,199, "\n\n" 2, profile 266,
+        // "\n\nSessions:" 11: 1,758 bytes, 586 tokens; the profile 89.
+        XCTAssertEqual(prompt.text.utf8.count, 1758)
+        XCTAssertEqual(prompt.sentIDs, [])
+        XCTAssertEqual(prompt.metrics, PromptMetrics(estimatedTokens: 586, window: 4096, answerReserve: 1000, headroom: 2510, sessionsInBlock: 0, sessionsSent: 0, sessionsLeftOut: 0, abstractsCut: 0, profileTokens: 89, profile: ProfileUse(interestsNamed: 1, levels: nil, formats: nil, skips: false, reservedToday: false)))
         // A name of exactly 240 bytes is kept whole (rule 9).
         var whole = session("w")
         whole.topics = [String(repeating: "😀", count: 60)]
         let kept = ModelPrompt.build(question: question, ranked: [], sessionsInBlock: 0, picks: [whole])
         XCTAssertTrue(kept.text.contains("About them:\nInterests: " + String(repeating: "😀", count: 60) + " (1)\n"))
+        XCTAssertEqual(kept.sentIDs, [])
+        XCTAssertEqual(kept.metrics, PromptMetrics(estimatedTokens: 587, window: 4096, answerReserve: 1000, headroom: 2509, sessionsInBlock: 0, sessionsSent: 0, sessionsLeftOut: 0, abstractsCut: 0, profileTokens: 89, profile: ProfileUse(interestsNamed: 1, levels: nil, formats: nil, skips: false, reservedToday: false))) // 1,759 bytes, profile 267
         // Exactly 1,200 bytes is sent whole (rule 9).
         let exact = String(repeating: "😀", count: 300)
         XCTAssertEqual(exact.utf8.count, 1200)
         let fits = ModelPrompt.build(question: exact, ranked: [], sessionsInBlock: 0, picks: [])
         XCTAssertTrue(fits.text.contains("Question: " + exact + "\n"))
+        XCTAssertEqual(fits.sentIDs, [])
+        XCTAssertEqual(fits.metrics, PromptMetrics(estimatedTokens: 508, window: 4096, answerReserve: 1000, headroom: 2588, sessionsInBlock: 0, sessionsSent: 0, sessionsLeftOut: 0, abstractsCut: 0, profileTokens: 11, profile: ProfileUse(interestsNamed: 0, levels: nil, formats: nil, skips: false, reservedToday: false))) // 1,524 bytes, profile 31
     }
 }

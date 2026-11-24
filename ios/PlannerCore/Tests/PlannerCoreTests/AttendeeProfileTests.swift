@@ -62,6 +62,7 @@ final class AttendeeProfileTests: XCTestCase {
             Levels they choose: 300 – Advanced
             Formats they choose: Workshop
             """)
+        XCTAssertEqual(profile(three).use, ProfileUse(interestsNamed: 1, levels: .inferred, formats: .inferred, skips: false, reservedToday: false))
     }
 
     func testNoLevelIsNeverNamedEvenWhenMostCommon() {
@@ -69,6 +70,7 @@ final class AttendeeProfileTests: XCTestCase {
             + Array(repeating: expert, count: 6)
         let built = profile((0..<20).map { pick("p\($0)", level: levels[$0]) })
         XCTAssertEqual(built.text, "About them:\nInterests: none yet\nLevels they choose: 300 – Advanced, 400 – Expert")
+        XCTAssertEqual(built.use, ProfileUse(interestsNamed: 0, levels: .inferred, formats: nil, skips: false, reservedToday: false))
     }
 
     func testNoLevelIsNeverNamedAndTheMostAreTwoLevelsAndThreeFormats() {
@@ -82,6 +84,7 @@ final class AttendeeProfileTests: XCTestCase {
         XCTAssertTrue(built.text.contains("Levels they choose: 200 – Intermediate, 300 – Advanced\n"))
         XCTAssertTrue(built.text.hasSuffix("Formats they choose: Breakout session, Chalk talk, Lightning talk"))
         XCTAssertFalse(built.text.contains("No Level"))
+        XCTAssertEqual(built.use, ProfileUse(interestsNamed: 0, levels: .inferred, formats: .inferred, skips: false, reservedToday: false))
     }
 
     func testFiveHundredCanBeInferredThoughSettingsDoesNotOfferIt() {
@@ -93,7 +96,8 @@ final class AttendeeProfileTests: XCTestCase {
         preferences.setLevel(expert, chosen: true)
         XCTAssertEqual(preferences.levels, [expert])
         let picks = (0..<3).map { pick("p\($0)", level: "500 – Distinguished") }
-        XCTAssertTrue(profile(picks).text.contains("Levels they choose: 500 – Distinguished"))
+        XCTAssertEqual(profile(picks).text, "About them:\nInterests: none yet\nLevels they choose: 500 – Distinguished")
+        XCTAssertEqual(profile(picks).use, ProfileUse(interestsNamed: 0, levels: .inferred, formats: nil, skips: false, reservedToday: false))
     }
 
     // MARK: His picks
@@ -157,12 +161,15 @@ final class AttendeeProfileTests: XCTestCase {
     func testTheSameFormatWrittenTwoWaysCountsOnce() {
         let picks = (0..<3).map { pick("a\($0)", type: "Chalk talk") } + (0..<3).map { pick("b\($0)", type: "Chalk\ntalk") }
         XCTAssertEqual(profile(picks).text, "About them:\nInterests: none yet\nFormats they choose: Chalk talk")
+        XCTAssertEqual(profile(picks).use, ProfileUse(interestsNamed: 0, levels: nil, formats: .inferred, skips: false, reservedToday: false))
         // 2 and 2 are 4 of 4 picks: named, where counted apart neither would reach 3.
         let four = (0..<2).map { pick("c\($0)", type: "Chalk talk") } + (0..<2).map { pick("d\($0)", type: " Chalk  talk ") }
         XCTAssertEqual(profile(four).text, "About them:\nInterests: none yet\nFormats they choose: Chalk talk")
+        XCTAssertEqual(profile(four).use, ProfileUse(interestsNamed: 0, levels: nil, formats: .inferred, skips: false, reservedToday: false))
         // "Chalk | talk" is written "Chalk / talk": another name, on 1 pick, not named.
         let five = four + [pick("e", type: "Chalk | talk")]
         XCTAssertEqual(profile(five).text, "About them:\nInterests: none yet\nFormats they choose: Chalk talk")
+        XCTAssertEqual(profile(five).use, ProfileUse(interestsNamed: 0, levels: nil, formats: .inferred, skips: false, reservedToday: false))
         // A format he picks in Settings is stored the same way, so it matches the catalog's.
         var preferences = SessionPreferences()
         preferences.setPreferred(" Chalk\ntalk ", true)
@@ -181,12 +188,19 @@ final class AttendeeProfileTests: XCTestCase {
         XCTAssertEqual(formats[0], "A" + String(repeating: family, count: 9) + "…")
         formats.forEach { preferences.setSkipped($0, true) }
         let built = profile(catalog, preferences)
+        // Only the first name fits the 300-byte line: "They skip: " (11) and 229 bytes; a second
+        // would add 231.
         let skipLine = built.text.split(separator: "\n").last.map(String.init) ?? ""
         XCTAssertTrue(skipLine.hasPrefix("They skip: A"))
         XCTAssertLessThanOrEqual(skipLine.utf8.count, 300)
         XCTAssertLessThanOrEqual(TokenEstimate.tokens(built.text), 400)
+        let expected = "About them:\nInterests: none yet\nThey skip: A" + String(repeating: family, count: 9) + "…"
+        XCTAssertEqual(built.text, expected)
+        XCTAssertEqual(built.use, ProfileUse(interestsNamed: 0, levels: nil, formats: nil, skips: true, reservedToday: false))
         let prompt = ModelPrompt.build(question: "Which?", ranked: [session("a", time: "13:00")], sessionsInBlock: 1,
                                        picks: catalog, preferences: preferences)
+        XCTAssertEqual(prompt.text, ModelPrompt.instructions + "\n\nQuestion: Which?\n\n" + expected
+                                    + "\n\nSessions:\n\nA | Title a | MGM Grand | 13:00, 60 min")
         XCTAssertTrue(prompt.fits)
         XCTAssertEqual(prompt.sentIDs, ["a"])
         XCTAssertLessThanOrEqual(prompt.metrics.profileTokens, 400)
@@ -199,6 +213,9 @@ final class AttendeeProfileTests: XCTestCase {
         XCTAssertFalse(preferences.isEmpty)
         preferences.setPreferred("Workshop", true)
         preferences.setSkipped("Keynote", true)
+        XCTAssertEqual(preferences.levels, [advanced])
+        XCTAssertEqual(preferences.preferredFormats, ["Workshop"])
+        XCTAssertEqual(preferences.skippedFormats, ["Keynote"])
         preferences.reset()
         XCTAssertEqual(preferences, SessionPreferences())
         XCTAssertTrue(preferences.isEmpty)
@@ -271,6 +288,9 @@ final class AttendeeProfileTests: XCTestCase {
         preferences.setLevel(advanced, chosen: true)
         preferences.setPreferred("Workshop", true)
         preferences.setSkipped("Keynote", true)
+        XCTAssertEqual(preferences.levels, [advanced])
+        XCTAssertEqual(preferences.preferredFormats, ["Workshop"])
+        XCTAssertEqual(preferences.skippedFormats, ["Keynote"])
         XCTAssertEqual(SessionPreferences(saved: preferences.saved), preferences)
         XCTAssertEqual(SessionPreferences(saved: nil), SessionPreferences())
         XCTAssertEqual(SessionPreferences(saved: Data("not json".utf8)), SessionPreferences())
@@ -288,10 +308,13 @@ final class AttendeeProfileTests: XCTestCase {
         let built = profile(picks)
         // A value with no break is cut at exactly 59 characters and the "…".
         let unbroken = (0..<3).map { pick("u\($0)", type: String(repeating: "x", count: 70)) }
-        XCTAssertTrue(profile(unbroken).text.hasSuffix("Formats they choose: " + String(repeating: "x", count: 59) + "…"))
+        XCTAssertEqual(profile(unbroken).text, "About them:\nInterests: none yet\nFormats they choose: "
+                                                + String(repeating: "x", count: 59) + "…")
+        XCTAssertEqual(profile(unbroken).use, ProfileUse(interestsNamed: 0, levels: nil, formats: .inferred, skips: false, reservedToday: false))
         // "Work / shop abcd abcd …" is 86 characters; cut at the last word within 60.
         XCTAssertEqual(built.text.split(separator: "\n").last.map(String.init),
                        "Formats they choose: Work / shop " + String(repeating: "abcd ", count: 8) + "abcd…")
+        XCTAssertEqual(built.use, ProfileUse(interestsNamed: 0, levels: nil, formats: .inferred, skips: false, reservedToday: false))
     }
 
     // MARK: The cap
@@ -323,6 +346,11 @@ final class AttendeeProfileTests: XCTestCase {
                                        sessionsInBlock: catalog.count, picks: picks, preferences: preferences,
                                        reservedToday: 12)
         XCTAssertTrue(prompt.text.contains(built.text))
+        // The 12 with the longest text, 558 to 549 bytes, as measured on the fixture.
+        XCTAssertEqual(prompt.sentIDs, ["1780441485149001GoLZ", "1790794144474001JL79", "1780441483049001GqoD",
+                                        "1780442268555001c3pp", "1780441489120001GbbU", "1780442269516001ceDZ",
+                                        "1780441485931001Goud", "1780441487120001GgdE", "1780441489876001GD4T",
+                                        "1780442267542001cH2e", "1780442267792001cgYN", "1780441482581001GJV7"])
         XCTAssertEqual(prompt.metrics.sessionsSent, 12)
         XCTAssertLessThan(prompt.metrics.estimatedTokens, 3096)
     }
@@ -373,8 +401,10 @@ final class AttendeeProfileTests: XCTestCase {
         var budget = PromptBudget()
         budget.profileTokenLimit = 24
         XCTAssertEqual(profile(picks, budget: budget).text, whole)
+        XCTAssertEqual(profile(picks, budget: budget).use, ProfileUse(interestsNamed: 2, levels: nil, formats: .inferred, skips: false, reservedToday: false))
         budget.profileTokenLimit = 23
         XCTAssertEqual(profile(picks, budget: budget).text, "About them:\nInterests: Alpha (3), Beta (2)")
+        XCTAssertEqual(profile(picks, budget: budget).use, ProfileUse(interestsNamed: 2, levels: nil, formats: nil, skips: false, reservedToday: false))
     }
 
     func testInferredLevelsGoBeforeInferredFormats() {
@@ -386,8 +416,10 @@ final class AttendeeProfileTests: XCTestCase {
         var budget = PromptBudget()
         budget.profileTokenLimit = 33
         XCTAssertEqual(profile(picks, budget: budget).text, whole)
+        XCTAssertEqual(profile(picks, budget: budget).use, ProfileUse(interestsNamed: 0, levels: .inferred, formats: .inferred, skips: false, reservedToday: false))
         budget.profileTokenLimit = 32
         XCTAssertEqual(profile(picks, budget: budget).text, "About them:\nInterests: none yet\nFormats they choose: Workshop")
+        XCTAssertEqual(profile(picks, budget: budget).use, ProfileUse(interestsNamed: 0, levels: nil, formats: .inferred, skips: false, reservedToday: false))
     }
 
     // MARK: In the prompt
