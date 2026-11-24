@@ -230,6 +230,7 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       Given his schedule named a new session and the catalog was downloaded for it
       When reading his schedule again fails
       Then the first schedule is shown with the new catalog
+      And the failure is reported like any other, so a rejected sign-in still asks him to sign in
 
     Example: The one with a damaged list of missing sessions
       Given a saved calendar whose list of sessions the catalog lacked has a blank or unreadable entry

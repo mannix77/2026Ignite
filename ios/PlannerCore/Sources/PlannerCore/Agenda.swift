@@ -285,6 +285,9 @@ public enum Sync {
         public var catalogProblem: Error?
         /// Whether the catalog was tried, so the caller can wait before trying it again.
         public var triedCatalog: Bool
+        /// Why reading his schedule again after an early catalog download failed, when it did;
+        /// the first read is shown instead, and this is reported like any other problem.
+        public var scheduleProblem: Error?
     }
 
     /// Reads his schedule, and downloads the whole catalog too when `wholeCatalog` asks for it,
@@ -298,10 +301,11 @@ public enum Sync {
                               catalogLastTried: Date?) async throws -> UpdateResult {
         guard let previous else {
             return UpdateResult(snapshot: try await refresh(backend: backend, previous: nil, now: now),
-                                catalogProblem: nil, triedCatalog: true)
+                                catalogProblem: nil, triedCatalog: true, scheduleProblem: nil)
         }
         var updated = previous
         var problem: Error?
+        var scheduleProblem: Error?
         var tried = false
         /// Downloads the catalog into `updated`, or notes why it couldn't.
         func download() async throws {
@@ -325,17 +329,19 @@ public enum Sync {
         if !tried, RefreshPlan.catalogWantedFor(updated, lastAttempt: catalogLastTried, now: now) {
             try await download()
             // Read again, so the schedule is still the newest answer; if that fails, the first
-            // read (moments old) stands.
+            // read (moments old) stands and the failure is returned.
             if problem == nil {
                 do {
                     updated.schedule = try await backend.loadSchedule()
                 } catch is CancellationError {
                     throw CancellationError()
-                } catch {}
+                } catch {
+                    scheduleProblem = error
+                }
             }
         }
         if tried, problem == nil { updated.catalogMissing = updated.unresolvedIDs }
-        return UpdateResult(snapshot: updated, catalogProblem: problem, triedCatalog: tried)
+        return UpdateResult(snapshot: updated, catalogProblem: problem, triedCatalog: tried, scheduleProblem: scheduleProblem)
     }
 
     /// Whether `update` will try the whole catalog before reading his schedule. Known before it

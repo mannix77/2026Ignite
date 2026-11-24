@@ -346,8 +346,11 @@ final class AppModel {
             setSnapshot(new)
             needsSignIn = false
             if mode == .live { save(new) }
-            if let problem = result.catalogProblem, RefreshPlan.shouldShow(problem, quiet: refreshIsQuiet) {
+            // A failed second schedule read comes first: a rejected sign-in matters more.
+            for problem in [result.scheduleProblem, result.catalogProblem].compactMap({ $0 })
+            where RefreshPlan.shouldShow(problem, quiet: refreshIsQuiet) {
                 report(problem)
+                break
             }
         } catch is CancellationError {
             // The screen went away mid-refresh.

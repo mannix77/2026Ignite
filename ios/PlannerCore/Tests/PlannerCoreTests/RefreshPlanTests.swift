@@ -81,6 +81,7 @@ final class RefreshPlanTests: XCTestCase {
         XCTAssertEqual(backend.log, ["schedule"])
         XCTAssertFalse(result.triedCatalog)
         XCTAssertNil(result.catalogProblem)
+        XCTAssertNil(result.scheduleProblem)
         XCTAssertEqual(result.snapshot, PlanSnapshot(sessions: [session("a"), session("b")],
                                                      schedule: Schedule(reserved: ["b"], favorites: ["a"]),
                                                      fetchedAt: now, skipped: 2, catalogFetchedAt: ago(86399)))
@@ -94,6 +95,7 @@ final class RefreshPlanTests: XCTestCase {
         XCTAssertEqual(backend.log, ["catalog", "schedule"])
         XCTAssertTrue(result.triedCatalog)
         XCTAssertNil(result.catalogProblem)
+        XCTAssertNil(result.scheduleProblem)
         XCTAssertEqual(result.snapshot, PlanSnapshot(sessions: [session("a"), session("b"), session("c")],
                                                      schedule: Schedule(reserved: ["c"], favorites: ["gone"]),
                                                      fetchedAt: now, skipped: 0, catalogFetchedAt: now,
@@ -108,6 +110,7 @@ final class RefreshPlanTests: XCTestCase {
         XCTAssertEqual(backend.log, ["catalog", "schedule"])
         XCTAssertTrue(result.triedCatalog)
         XCTAssertNil(result.catalogProblem)
+        XCTAssertNil(result.scheduleProblem)
         XCTAssertEqual(result.snapshot, PlanSnapshot(sessions: [session("a"), session("b")],
                                                      schedule: Schedule(reserved: ["b"], favorites: []),
                                                      fetchedAt: now, catalogFetchedAt: now))
@@ -121,6 +124,7 @@ final class RefreshPlanTests: XCTestCase {
         XCTAssertEqual(backend.log, ["catalog", "schedule"])
         XCTAssertTrue(result.triedCatalog)
         XCTAssertNil(result.catalogProblem)
+        XCTAssertNil(result.scheduleProblem)
         XCTAssertEqual(result.snapshot, PlanSnapshot(sessions: [session("a"), session("b")],
                                                      schedule: Schedule(reserved: ["a"], favorites: []),
                                                      fetchedAt: now, skipped: 1, catalogFetchedAt: now))
@@ -134,6 +138,7 @@ final class RefreshPlanTests: XCTestCase {
         XCTAssertEqual(backend.log, ["catalog", "schedule"])
         XCTAssertTrue(result.triedCatalog)
         XCTAssertNil(result.catalogProblem)
+        XCTAssertNil(result.scheduleProblem)
         XCTAssertEqual(result.snapshot, PlanSnapshot(sessions: [session("a")], schedule: Schedule(reserved: ["a"], favorites: []),
                                                      fetchedAt: now, catalogFetchedAt: now))
     }
@@ -158,6 +163,7 @@ final class RefreshPlanTests: XCTestCase {
         XCTAssertEqual(backend.log, ["catalog", "schedule"])
         XCTAssertTrue(result.triedCatalog)
         XCTAssertEqual(result.catalogProblem as? APIError, .server(503))
+        XCTAssertNil(result.scheduleProblem)
         XCTAssertEqual(result.snapshot, PlanSnapshot(sessions: [session("a"), session("b")],
                                                      schedule: Schedule(reserved: ["b"], favorites: []),
                                                      fetchedAt: now, skipped: 2, catalogFetchedAt: ago(86400)))
@@ -173,6 +179,7 @@ final class RefreshPlanTests: XCTestCase {
         XCTAssertEqual(backend.log, ["catalog", "schedule"])
         XCTAssertTrue(result.triedCatalog)
         XCTAssertEqual(result.catalogProblem as? APIError, .catalogShrank(previous: 2, got: 0))
+        XCTAssertNil(result.scheduleProblem)
         XCTAssertEqual(result.snapshot, PlanSnapshot(sessions: [session("a"), session("b")],
                                                      schedule: Schedule(reserved: ["a"], favorites: []),
                                                      fetchedAt: now, skipped: 2, catalogFetchedAt: ago(86400)))
@@ -185,6 +192,7 @@ final class RefreshPlanTests: XCTestCase {
         XCTAssertEqual(backend.log, ["schedule"])
         XCTAssertFalse(result.triedCatalog)
         XCTAssertNil(result.catalogProblem)
+        XCTAssertNil(result.scheduleProblem)
         XCTAssertEqual(result.snapshot, PlanSnapshot(sessions: [session("a"), session("b")],
                                                      schedule: Schedule(reserved: ["b"], favorites: []),
                                                      fetchedAt: now, skipped: 2, catalogFetchedAt: ago(2 * 86400)))
@@ -202,6 +210,7 @@ final class RefreshPlanTests: XCTestCase {
         XCTAssertEqual(backend.log, ["schedule", "catalog", "schedule"])
         XCTAssertTrue(result.triedCatalog)
         XCTAssertNil(result.catalogProblem)
+        XCTAssertNil(result.scheduleProblem)
         XCTAssertEqual(result.snapshot, PlanSnapshot(sessions: [session("a"), session("b"), session("new")],
                                                      schedule: Schedule(reserved: ["b"], favorites: ["a", "new"]),
                                                      fetchedAt: now, skipped: 1, catalogFetchedAt: now))
@@ -210,11 +219,13 @@ final class RefreshPlanTests: XCTestCase {
     func testAFailedSecondReadKeepsTheFirstScheduleWithTheNewCatalog() async throws {
         let backend = CountingBackend()
         backend.catalogAnswer = .success(Catalog(sessions: [session("a"), session("b"), session("new")]))
-        backend.scheduleAnswers = [.success(Schedule(reserved: [], favorites: ["new"])), .failure(.server(503))]
+        backend.scheduleAnswers = [.success(Schedule(reserved: [], favorites: ["new"])), .failure(.signInNeeded)]
         let result = try await update(backend, held(catalogAge: 3600))
         XCTAssertEqual(backend.log, ["schedule", "catalog", "schedule"])
         XCTAssertTrue(result.triedCatalog)
         XCTAssertNil(result.catalogProblem)
+        // The failed read is returned, so a rejected sign-in is still acted on.
+        XCTAssertEqual(result.scheduleProblem as? APIError, .signInNeeded)
         XCTAssertEqual(result.snapshot, PlanSnapshot(sessions: [session("a"), session("b"), session("new")],
                                                      schedule: Schedule(reserved: [], favorites: ["new"]),
                                                      fetchedAt: now, catalogFetchedAt: now))
@@ -228,6 +239,7 @@ final class RefreshPlanTests: XCTestCase {
         XCTAssertEqual(backend.log, ["schedule"])
         XCTAssertFalse(result.triedCatalog)
         XCTAssertNil(result.catalogProblem)
+        XCTAssertNil(result.scheduleProblem)
         XCTAssertEqual(result.snapshot, PlanSnapshot(sessions: previous.sessions,
                                                      schedule: Schedule(reserved: [], favorites: ["a", "new"]),
                                                      fetchedAt: now, skipped: 2, catalogFetchedAt: ago(3599)))
@@ -242,6 +254,7 @@ final class RefreshPlanTests: XCTestCase {
         XCTAssertEqual(backend.log, ["schedule"])
         XCTAssertFalse(result.triedCatalog)
         XCTAssertNil(result.catalogProblem)
+        XCTAssertNil(result.scheduleProblem)
         XCTAssertEqual(result.snapshot, PlanSnapshot(sessions: previous.sessions,
                                                      schedule: Schedule(reserved: ["b"], favorites: ["a", "gone"]),
                                                      fetchedAt: now, skipped: 2, catalogFetchedAt: ago(10 * 3600),
@@ -255,6 +268,7 @@ final class RefreshPlanTests: XCTestCase {
         XCTAssertEqual(other.log, ["schedule", "catalog", "schedule"])
         XCTAssertTrue(next.triedCatalog)
         XCTAssertNil(next.catalogProblem)
+        XCTAssertNil(next.scheduleProblem)
         XCTAssertEqual(next.snapshot, PlanSnapshot(sessions: [session("a"), session("b"), session("new")],
                                                    schedule: Schedule(reserved: ["new"], favorites: ["a", "gone", "new"]),
                                                    fetchedAt: now, catalogFetchedAt: now, catalogMissing: ["gone"]))
@@ -268,6 +282,7 @@ final class RefreshPlanTests: XCTestCase {
         XCTAssertEqual(backend.log, ["schedule"])
         XCTAssertFalse(waiting.triedCatalog)
         XCTAssertNil(waiting.catalogProblem)
+        XCTAssertNil(waiting.scheduleProblem)
         XCTAssertEqual(waiting.snapshot, PlanSnapshot(sessions: previous.sessions,
                                                       schedule: Schedule(reserved: ["b"], favorites: ["new"]),
                                                       fetchedAt: now, skipped: 2, catalogFetchedAt: ago(2 * 3600)))
@@ -279,6 +294,7 @@ final class RefreshPlanTests: XCTestCase {
         XCTAssertEqual(other.log, ["schedule", "catalog", "schedule"])
         XCTAssertTrue(trying.triedCatalog)
         XCTAssertNil(trying.catalogProblem)
+        XCTAssertNil(trying.scheduleProblem)
         XCTAssertEqual(trying.snapshot, PlanSnapshot(sessions: [session("a"), session("b"), session("new")],
                                                      schedule: Schedule(reserved: ["a"], favorites: ["new"]),
                                                      fetchedAt: now, catalogFetchedAt: now))
@@ -292,6 +308,7 @@ final class RefreshPlanTests: XCTestCase {
         XCTAssertEqual(backend.log, ["catalog", "schedule"])
         XCTAssertTrue(result.triedCatalog)
         XCTAssertEqual(result.catalogProblem as? APIError, .server(503))
+        XCTAssertNil(result.scheduleProblem)
         XCTAssertEqual(result.snapshot, PlanSnapshot(sessions: [session("a"), session("b")],
                                                      schedule: Schedule(reserved: [], favorites: ["new"]),
                                                      fetchedAt: now, skipped: 2, catalogFetchedAt: ago(86400)))
@@ -305,6 +322,7 @@ final class RefreshPlanTests: XCTestCase {
         let result = try await update(backend, nil)
         XCTAssertTrue(result.triedCatalog)
         XCTAssertNil(result.catalogProblem)
+        XCTAssertNil(result.scheduleProblem)
         XCTAssertEqual(result.snapshot, PlanSnapshot(sessions: [session("a")],
                                                      schedule: Schedule(reserved: ["a"], favorites: ["gone"]),
                                                      fetchedAt: now, catalogFetchedAt: now, catalogMissing: ["gone"]))
@@ -320,6 +338,7 @@ final class RefreshPlanTests: XCTestCase {
         XCTAssertEqual(backend.log, ["schedule", "catalog"])
         XCTAssertTrue(result.triedCatalog)
         XCTAssertEqual(result.catalogProblem as? APIError, .catalogShrank(previous: 2, got: 0))
+        XCTAssertNil(result.scheduleProblem)
         XCTAssertEqual(result.snapshot, PlanSnapshot(sessions: previous.sessions,
                                                      schedule: Schedule(reserved: [], favorites: ["new"]),
                                                      fetchedAt: now, skipped: 2, catalogFetchedAt: ago(3600)))
