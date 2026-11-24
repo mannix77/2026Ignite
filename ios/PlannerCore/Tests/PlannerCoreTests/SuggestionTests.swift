@@ -615,6 +615,11 @@ final class PreferenceRankingTests: XCTestCase {
                                          offered("workshop", topics: ["Elsewhere"], type: "Workshop")],
                             favorites: ["pick"])
         XCTAssertEqual(ids(plan.suggestions(in: forumGap, preferences: preferring(formats: ["Workshop"]))), ["alike"])
+        // Precondition: the workshop fits the gap, so only its score keeps it out.
+        let sharing = snapshot(filler(4) + [offered("pick", time: "09:00", topics: ["Rare"]),
+                                            offered("workshop", topics: ["Rare"], type: "Workshop")],
+                               favorites: ["pick"])
+        XCTAssertEqual(ids(sharing.suggestions(in: forumGap)), ["workshop"])
     }
 
     func testASkippedSessionThatTiesGoesByTime() {
@@ -622,8 +627,9 @@ final class PreferenceRankingTests: XCTestCase {
         let plan = snapshot(filler(8) + [
             offered("seat", time: "09:00", topics: ["SeatTopic"], type: "Keynote"),
             offered("fav", time: "09:00", topics: ["FavTopic"]),
-            offered("likeSeat", time: "12:00", topics: ["SeatTopic"], type: "Keynote"),
-            offered("likeFav", time: "11:00", topics: ["FavTopic"]),
+            // The later one has the earlier code, so only time can put it second.
+            offered("likeSeat", code: "AAA100", time: "12:00", topics: ["SeatTopic"], type: "Keynote"),
+            offered("likeFav", code: "ZZZ100", time: "11:00", topics: ["FavTopic"]),
         ], reserved: ["seat"], favorites: ["fav"])
         let plain = plan.suggestions(in: forumGap)
         XCTAssertEqual(ids(plain), ["likeSeat", "likeFav"])
