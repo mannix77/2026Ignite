@@ -20,6 +20,11 @@ public struct PromptBudget: Equatable, Sendable {
     /// Characters of an interest's name sent at most, so the fixed text can't crowd out the
     /// sessions: with every cap at its longest, in 4-byte characters, it still leaves room.
     public var interestNameLimit = 60
+    /// Bytes of his question, and of an interest's name, sent at most: 4 a character. A
+    /// character can be far larger (a family emoji is 25 bytes), so the fixed text is bounded
+    /// by bytes too, and fits whatever it is written in.
+    public var questionByteLimit = 1200
+    public var interestNameByteLimit = 240
     /// Topics named on a session's line at most.
     public var maxTopics = 3
 
@@ -75,10 +80,11 @@ public struct ModelPrompt: Equatable, Sendable {
     /// out from the bottom until the prompt fits.
     public static func build(question: String, ranked: [Session], sessionsInBlock: Int, picks: [Session],
                              budget: PromptBudget = PromptBudget()) -> ModelPrompt {
-        let asked = cut(clean(question), to: budget.questionLimit)
+        let asked = cut(clean(question), to: budget.questionLimit, maxBytes: budget.questionByteLimit)
         let head = [instructions,
                     "Question: " + (asked.isEmpty ? "(none)" : asked),
-                    "Their interests: " + interests(of: picks, limit: budget.maxInterests, nameLimit: budget.interestNameLimit),
+                    "Their interests: " + interests(of: picks, limit: budget.maxInterests, nameLimit: budget.interestNameLimit,
+                                                          nameByteLimit: budget.interestNameByteLimit),
                     "Sessions:"].joined(separator: "\n\n")
         var lines: [(id: String, text: String, cut: Bool)] = ranked.prefix(budget.maxSessions).map { session in
             let abstract = clean(session.abstract ?? "")
@@ -125,6 +131,24 @@ public struct ModelPrompt: Equatable, Sendable {
         flat(text).replacingOccurrences(of: "|", with: "/")
     }
 
+    /// `cut(text, to: limit)`, and also at most `maxBytes` UTF-8 bytes: when the characters kept
+    /// take more, as many whole characters as fit with the "…" are kept instead. Since those
+    /// bytes run out within the first `limit` characters, the result keeps both caps.
+    static func cut(_ text: String, to limit: Int, maxBytes: Int) -> String {
+        let byCharacters = cut(text, to: limit)
+        guard byCharacters.utf8.count > maxBytes else { return byCharacters }
+        // Whole characters while they and the "…" (3 bytes) fit.
+        var kept = ""
+        var bytes = 0
+        for character in text {
+            let size = character.utf8.count
+            guard bytes + size + 3 <= maxBytes else { break }
+            kept.append(character)
+            bytes += size
+        }
+        return kept.trimmingCharacters(in: .whitespaces) + "…"
+    }
+
     /// `text` whole if it has at most `limit` characters; otherwise cut at the last word end
     /// that leaves room for "…", so the result has at most `limit` characters. A limit below 1
     /// gives nothing.
@@ -142,11 +166,11 @@ public struct ModelPrompt: Equatable, Sendable {
     /// "Agentic AI (12), Amazon Bedrock (9), …": the topics and services his picks share most,
     /// most common first, then by name. Names are cleaned and cut to `nameLimit` first, so the
     /// same name written twice on one pick counts once, and blank ones are skipped.
-    static func interests(of picks: [Session], limit: Int, nameLimit: Int) -> String {
+    static func interests(of picks: [Session], limit: Int, nameLimit: Int, nameByteLimit: Int = .max) -> String {
         var counts: [String: Int] = [:]
         for session in picks {
             let names = Set(((session.topics ?? []) + (session.services ?? []))
-                .map { cut(clean($0), to: nameLimit) }
+                .map { cut(clean($0), to: nameLimit, maxBytes: nameByteLimit) }
                 .filter { !$0.isEmpty })
             for name in names { counts[name, default: 0] += 1 }
         }

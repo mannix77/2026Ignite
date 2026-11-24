@@ -369,4 +369,61 @@ final class ModelPromptTests: XCTestCase {
         XCTAssertGreaterThan(prompt.metrics.headroom, 1000)
         XCTAssertEqual(prompt.sentIDs, [])
     }
+
+    func testTheFixedTextFitsWhateverTheCharacters() {
+        // The family emoji is one character of 25 bytes: the character caps alone would let
+        // the fixed text run to about 7,500 tokens.
+        let family = "👨‍👩‍👧‍👦"
+        XCTAssertEqual(family.count, 1)
+        XCTAssertEqual(family.utf8.count, 25)
+        let question = String(repeating: family, count: 300)
+        let picks = (0..<135).map { i -> Session in
+            var s = session("p\(i)")
+            s.topics = "ABCDEFGHIJKLMNO".map { String(repeating: family, count: 59) + String($0) }
+            return s
+        }
+        let prompt = ModelPrompt.build(question: question, ranked: [session("a", time: "13:00")], sessionsInBlock: 1,
+                                       picks: picks)
+        XCTAssertTrue(prompt.fits)
+        XCTAssertEqual(prompt.sentIDs, ["a"])
+        // The question: as many whole emoji as fit 1,197 bytes, then "…" (3 bytes) = 47 emoji.
+        XCTAssertTrue(prompt.text.contains("Question: " + String(repeating: family, count: 47) + "…\n"))
+        // Each name: as many as fit 237 bytes = 9 emoji, then "…".
+        XCTAssertTrue(prompt.text.contains(String(repeating: family, count: 9) + "… (135)"))
+    }
+
+    func testTheByteCapIsKeptExactly() {
+        // 4 characters of 3 bytes ("会議会議" = 12 bytes): a cap of 12 keeps it whole; 11 cuts it
+        // to what fits in 8 bytes plus the 3-byte "…".
+        XCTAssertEqual(ModelPrompt.cut("会議会議", to: 300, maxBytes: 12), "会議会議")
+        XCTAssertEqual(ModelPrompt.cut("会議会議", to: 300, maxBytes: 11), "会議…")
+        // Two characters and the "…" come to exactly 9 bytes: kept at 9, not at 8.
+        XCTAssertEqual(ModelPrompt.cut("会議会議", to: 300, maxBytes: 9), "会議…")
+        XCTAssertEqual(ModelPrompt.cut("会議会議", to: 300, maxBytes: 8), "会…")
+        // Plain English under both caps is untouched; over the character cap it is cut by words.
+        XCTAssertEqual(ModelPrompt.cut("plain words", to: 300, maxBytes: 1200), "plain words")
+        XCTAssertEqual(ModelPrompt.cut("plain words here", to: 12, maxBytes: 1200), "plain words…")
+    }
+
+    func testTheQuestionAndInterestByteCapsAre1200And240() {
+        // One character of 5 bytes ("a" with two accents) after 4-byte emoji, so each text is
+        // within its character cap but exactly one byte over its byte cap.
+        let five = "a\u{0301}\u{0301}"
+        XCTAssertEqual(five.count, 1)
+        XCTAssertEqual(five.utf8.count, 5)
+        let question = String(repeating: "😀", count: 299) + five // 300 characters, 1,201 bytes
+        let name = String(repeating: "😀", count: 59) + five      // 60 characters, 241 bytes
+        XCTAssertEqual(question.utf8.count, 1201)
+        XCTAssertEqual(name.utf8.count, 241)
+        var pick = session("p")
+        pick.topics = [name]
+        let prompt = ModelPrompt.build(question: question, ranked: [], sessionsInBlock: 0, picks: [pick])
+        XCTAssertTrue(prompt.text.contains("Question: " + String(repeating: "😀", count: 299) + "…\n"))
+        XCTAssertTrue(prompt.text.contains("Their interests: " + String(repeating: "😀", count: 59) + "… (1)\n"))
+        // Exactly 1,200 bytes is sent whole (rule 9).
+        let exact = String(repeating: "😀", count: 300)
+        XCTAssertEqual(exact.utf8.count, 1200)
+        let fits = ModelPrompt.build(question: exact, ranked: [], sessionsInBlock: 0, picks: [])
+        XCTAssertTrue(fits.text.contains("Question: " + exact + "\n"))
+    }
 }

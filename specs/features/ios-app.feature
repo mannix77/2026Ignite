@@ -413,6 +413,8 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
     Example: The fixed text can't crowd out the sessions
       Given a 300-character question and 15 interests of 60 characters, all in 4-byte characters
       Then the fixed text alone still fits the window, with room for sessions
+      And the same holds for characters of any size, such as the 25-byte family emoji,
+        because the question is also cut to 1,200 bytes and each interest name to 240
 
     Example: A window too small for the fixed text
       Given a window smaller than the real one, too small for the instructions alone
