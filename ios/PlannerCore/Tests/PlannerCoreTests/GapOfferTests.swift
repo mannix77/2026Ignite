@@ -246,10 +246,17 @@ final class GapSuggestionsTests: XCTestCase {
         XCTAssertEqual(loaded.list(for: at11), found)
         // A minute later the same stretch has moved on: its list is still loading, the old one is hidden.
         XCTAssertNil(loaded.list(for: at1101))
-        // Only the line moving on is enough to hide it too.
+        // And the other way: the newer stretch's list is not shown for the older one.
+        let newer = GapSuggestions(gap: at1101, suggestions: found)
+        XCTAssertEqual(newer.list(for: at1101), found)
+        XCTAssertNil(newer.list(for: at11))
+        // Only the line moving on is enough to hide it too, in both directions.
         var lineOnly = at11
         lineOnly.lineFrom = 661
         XCTAssertNil(loaded.list(for: lineOnly))
+        let lineMoved = GapSuggestions(gap: lineOnly, suggestions: found)
+        XCTAssertEqual(lineMoved.list(for: lineOnly), found)
+        XCTAssertNil(lineMoved.list(for: at11))
         // An empty list for the current stretch is an answer ("Nothing fits"), not "still loading".
         XCTAssertEqual(GapSuggestions(gap: at11, suggestions: []).list(for: at11), [])
     }
