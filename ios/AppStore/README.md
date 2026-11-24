@@ -164,7 +164,7 @@ not ask.
 
 | Field | Value |
 | --- | --- |
-| Sign-in required | **No** (see notes: every feature except the optional Apple Calendar setting can be reviewed without an account; whether Apple accepts that in place of a demo account is its call, see "No test account" and "Calendar permission" under risks) |
+| Sign-in required | **No** to try the sample conference. The "Add reserved sessions to Calendar" setting requires a registered attendee account. Apple decides whether to accept the sample in place of a demo account (see "No test account" and "Calendar permission" under risks). |
 | Contact first name, last name, phone, email | **YOU** |
 
 **Notes for the reviewer** (paste as is; the APPLE CALENDAR paragraph is new in 1.1)
@@ -174,11 +174,12 @@ Session Planner shows an attendee's AWS re:Invent schedule as a calendar.
 
 HOW TO REVIEW WITHOUT AN ACCOUNT
 On the first screen, tap "Try the sample conference". This loads a made-up conference stored
-in the app and exercises every feature except the optional Apple Calendar setting (see below),
-with no account and no network: the calendar, swiping between days, favorites, the venue-change
-warning (open Wed 10), the free stretches and the sessions that fit them (tap "Free 9:00 - 11:00
-AM" on Tue 9), search and filters, session details, adding and removing a favorite, reserving a
-seat (try ARC420 to see a refused clash, SEC220 to see a success) and cancelling a reservation.
+in the app. Without an account or network, you can try the in-app calendar, swiping between days,
+favorites, the venue-change warning (open Wed 10), the free stretches and the sessions that fit
+them (tap "Free 9:00 – 11:00 AM" on Tue 9), search and filters, session details, adding and removing
+a favorite, reserving a seat (try ARC420 to see a refused clash, SEC220 to see a success) and
+cancelling a reservation. The "Add reserved sessions to Calendar" setting is disabled in the
+sample conference (see APPLE CALENDAR below).
 
 ABOUT SIGN-IN
 "Sign in with AWS Builder ID" is for people registered for the event. A Builder ID that is not
@@ -225,7 +226,7 @@ or server of its own.
   notes explain this. If Apple asks to see it working, the options are a screen recording made
   on a signed-in phone, or allowing the setting in the sample conference (a code change).
 - **Usefulness outside the event (4.2).** The app is for one event's attendees. The sample
-  conference shows the full function; say so if asked.
+  conference shows the planning workflow; say so if asked.
 
 ## Building and uploading
 
