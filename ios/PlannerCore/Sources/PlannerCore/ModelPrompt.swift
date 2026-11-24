@@ -27,6 +27,9 @@ public struct PromptBudget: Equatable, Sendable {
     public var interestNameByteLimit = 240
     /// Topics named on a session's line at most.
     public var maxTopics = 3
+    /// Tokens the profile of him (`AttendeeProfile`) may take at most (owner's decision, #197:
+    /// the longest profile the real catalog can produce is about 396).
+    public var profileTokenLimit = 400
 
     public init() {}
 
@@ -54,9 +57,12 @@ public struct PromptMetrics: Equatable, Sendable {
     /// Ranked sessions not sent, for the session cap or to fit the window.
     public var sessionsLeftOut: Int
     public var abstractsCut: Int
+    /// The profile of him: its estimated tokens, and which lines it held (never their text).
+    public var profileTokens: Int
+    public var profile: ProfileUse
 }
 
-/// The text the on-device model gets: instructions, his question, a summary of his picks and
+/// The text the on-device model gets: instructions, his question, the profile of him and
 /// the top of the ranking, kept within `PromptBudget`.
 public struct ModelPrompt: Equatable, Sendable {
     public var text: String
@@ -64,7 +70,7 @@ public struct ModelPrompt: Equatable, Sendable {
     public var sentIDs: [String]
     public var metrics: PromptMetrics
 
-    /// False when the fixed text alone (instructions, question, interests) is over the limit,
+    /// False when the fixed text alone (instructions, question, profile) is over the limit,
     /// which only a window smaller than the real one allows: then no session is sent and the
     /// prompt is not to be sent either.
     public var fits: Bool { metrics.headroom >= 0 }
@@ -77,14 +83,17 @@ public struct ModelPrompt: Equatable, Sendable {
 
     /// `ranked` is the pre-filter's order, best first; `sessionsInBlock` how many sessions the
     /// block held before it. Sessions are sent from the top until `maxSessions`, and then left
-    /// out from the bottom until the prompt fits.
+    /// out from the bottom until the prompt fits. `picks`, `preferences` and `reservedToday`
+    /// make the profile of him (`AttendeeProfile`).
     public static func build(question: String, ranked: [Session], sessionsInBlock: Int, picks: [Session],
+                             preferences: SessionPreferences = SessionPreferences(), reservedToday: Int = 0,
                              budget: PromptBudget = PromptBudget()) -> ModelPrompt {
         let asked = cut(clean(question), to: budget.questionLimit, maxBytes: budget.questionByteLimit)
+        let profile = AttendeeProfile.build(picks: picks, preferences: preferences, reservedToday: reservedToday,
+                                            budget: budget)
         let head = [instructions,
                     "Question: " + (asked.isEmpty ? "(none)" : asked),
-                    "Their interests: " + interests(of: picks, limit: budget.maxInterests, nameLimit: budget.interestNameLimit,
-                                                          nameByteLimit: budget.interestNameByteLimit),
+                    profile.text,
                     "Sessions:"].joined(separator: "\n\n")
         var lines: [(id: String, text: String, cut: Bool)] = ranked.prefix(budget.maxSessions).map { session in
             let abstract = clean(session.abstract ?? "")
@@ -105,7 +114,8 @@ public struct ModelPrompt: Equatable, Sendable {
             metrics: PromptMetrics(estimatedTokens: tokens, window: budget.window, answerReserve: budget.answerReserve,
                                    headroom: budget.promptLimit - tokens, sessionsInBlock: sessionsInBlock,
                                    sessionsSent: lines.count, sessionsLeftOut: ranked.count - lines.count,
-                                   abstractsCut: lines.filter(\.cut).count))
+                                   abstractsCut: lines.filter(\.cut).count,
+                                   profileTokens: TokenEstimate.tokens(profile.text), profile: profile.use))
     }
 
     /// "AIM301 | Title | Workshop | 300 – Advanced | Venetian | 13:00, 60 min | Topic, Topic":
@@ -175,6 +185,13 @@ public struct ModelPrompt: Equatable, Sendable {
     /// most common first, then by name. Names are cleaned and cut to `nameLimit` first, so the
     /// same name written twice on one pick counts once, and blank ones are skipped.
     static func interests(of picks: [Session], limit: Int, nameLimit: Int, nameByteLimit: Int = .max) -> String {
+        let top = interestCounts(of: picks, limit: limit, nameLimit: nameLimit, nameByteLimit: nameByteLimit)
+        return top.isEmpty ? "none yet" : top.map { "\($0.name) (\($0.count))" }.joined(separator: ", ")
+    }
+
+    /// The interests behind `interests`, most common first.
+    static func interestCounts(of picks: [Session], limit: Int, nameLimit: Int,
+                               nameByteLimit: Int = .max) -> [(name: String, count: Int)] {
         var counts: [String: Int] = [:]
         for session in picks {
             let names = Set(((session.topics ?? []) + (session.services ?? []))
@@ -182,7 +199,6 @@ public struct ModelPrompt: Equatable, Sendable {
                 .filter { !$0.isEmpty })
             for name in names { counts[name, default: 0] += 1 }
         }
-        let top = counts.sorted { ($0.value, $1.key) > ($1.value, $0.key) }.prefix(limit)
-        return top.isEmpty ? "none yet" : top.map { "\($0.key) (\($0.value))" }.joined(separator: ", ")
+        return counts.sorted { ($0.value, $1.key) > ($1.value, $0.key) }.prefix(limit).map { ($0.key, $0.value) }
     }
 }

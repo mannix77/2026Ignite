@@ -637,3 +637,87 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       Then each prompt reports its estimated tokens, the window, the room kept for the answer,
         the headroom left, the sessions in the block, the sessions sent, those left out,
         and the abstracts cut
+  Rule: The model is told what kind of sessions he chooses
+    A short profile built on the phone from his picks (reserved sessions and favorites; one
+    that is both counts once) and from any preferences he sets goes into the prompt in place
+    of the interests line. Levels and formats he sets in Settings win; otherwise they are
+    inferred when at least 3 picks share one and it is at least 20% of them. What he skips
+    comes only from Settings. The profile stays within 400 estimated tokens and never leaves
+    the phone.
+
+    Example: Levels and formats from his picks
+      Given he has 10 picks: 6 at "300 – Advanced", 3 at "400 – Expert", 1 at "200 – Intermediate"
+      And 5 are workshops, 3 chalk talks and 2 breakout sessions
+      Then the profile says "Levels they choose: 300 – Advanced, 400 – Expert"
+      And "Formats they choose: Workshop, Chalk talk"
+      And breakout sessions (2 picks, under the minimum of 3) and the 200 level (1 pick) are not named
+
+    Example: Just enough to count
+      Given he has 15 picks, 3 of them chalk talks (20%)
+      Then chalk talks are named
+      But given 16 picks, 3 of them chalk talks (under 20%), they are not
+
+    Example: Too few picks to tell
+      Given he has 2 picks, both workshops at "300 – Advanced"
+      Then the profile names his interests but no levels or formats
+
+    Example: A session without a real level
+      Given 5 of his picks are marked "No Level"
+      Then "No Level" is never named as a level he chooses
+
+    Example: A reserved favorite counts once
+      Given a workshop he has both reserved and favorited
+      Then it counts as 1 pick
+
+    Example: What he set wins
+      Given his picks are mostly "200 – Intermediate"
+      And in Settings he prefers "400 – Expert"
+      Then the profile says "Levels they choose: 400 – Expert"
+
+    Example: The levels Settings offers
+      Then Settings offers the levels 100 to 400
+      And "500 – Distinguished" can still be named when his picks show it
+
+    Example: Skipping is only what he says
+      Given he has never picked a keynote
+      Then the profile has no "They skip" line
+      But given he skips keynotes in Settings, it says "They skip: Keynote"
+
+    Example: A format can't be preferred and skipped
+      Given he prefers workshops
+      When he chooses to skip workshops
+      Then workshops are no longer preferred, and the reverse
+
+    Example: The formats Settings offers
+      Then the formats offered are the downloaded catalog's own, most common first
+      And a format he chose earlier that the catalog no longer has is still listed, so he can clear it
+
+    Example: Reserved today
+      Given he has reserved 4 sessions on Thursday 3 December and 2 on Wednesday
+      When the block is Thursday 13:00 to 14:00
+      Then the profile says "Already reserved today: 4 sessions"
+      And with none reserved that day the line is left out
+
+    Example: No picks and no preferences
+      Then the profile reads "Interests: none yet", as before
+
+    Example: The longest profile still fits
+      Given the catalog's 15 longest interest names on 135 picks, every level and format line filled,
+        the 12 sessions with the longest text and a 300-character question
+      Then the profile is within 400 estimated tokens and the prompt within 3,096, with all 12 sent
+
+    Example: Over the cap, what he set is kept
+      Given a profile over 400 tokens with levels he set in Settings
+      Then interests are cut from the bottom to 5, then the reserved-today line goes,
+        then inferred levels and formats, then interests below 5 until it fits
+      And the levels he set are still there
+
+    Example: A damaged saved preference
+      Given his saved preferences are unreadable, or name a level Settings doesn't offer
+      Then the app opens with what can be read, and the rest is dropped
+
+    Example: What is logged
+      Then each prompt reports the profile's estimated tokens, how many interests it named,
+        and for levels, formats, skips and reserved today whether each was there and where
+        it came from, but not their text
+

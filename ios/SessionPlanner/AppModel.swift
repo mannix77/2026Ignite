@@ -103,6 +103,10 @@ final class AppModel {
     var lineUp = LineUp(saved: UserDefaults.standard.object(forKey: "lineUpMinutes")) {
         didSet { UserDefaults.standard.set(lineUp.minutes, forKey: "lineUpMinutes") }
     }
+    /// The levels and formats he looks for and the formats he skips (#197). Kept on the phone.
+    var preferences = SessionPreferences(saved: UserDefaults.standard.data(forKey: "sessionPreferences")) {
+        didSet { UserDefaults.standard.set(preferences.saved, forKey: "sessionPreferences") }
+    }
 
     private let tokens = TokenStore()
     private let store = SnapshotStore()

@@ -225,6 +225,35 @@ struct SettingsScreen: View {
                 }
 
                 Section {
+                    NavigationLink {
+                        PreferenceList(title: "Levels I prefer", options: SessionPreferences.offeredLevels,
+                                       chosen: model.preferences.levels) { level, on in
+                            model.preferences.setLevel(level, chosen: on)
+                        }
+                    } label: {
+                        LabeledContent("Levels I prefer", value: summary(model.preferences.levels))
+                    }
+                    NavigationLink {
+                        PreferenceList(title: "Formats I prefer", options: formats, chosen: model.preferences.preferredFormats) {
+                            model.preferences.setPreferred($0, $1)
+                        }
+                    } label: {
+                        LabeledContent("Formats I prefer", value: summary(model.preferences.preferredFormats))
+                    }
+                    NavigationLink {
+                        PreferenceList(title: "Formats I skip", options: formats, chosen: model.preferences.skippedFormats) {
+                            model.preferences.setSkipped($0, $1)
+                        }
+                    } label: {
+                        LabeledContent("Formats I skip", value: summary(model.preferences.skippedFormats, none: "None"))
+                    }
+                } header: {
+                    Text("Session preferences")
+                } footer: {
+                    Text("What you look for in a session. Left as Any, your reserved sessions and favorites decide. Kept on this iPhone.")
+                }
+
+                Section {
                     Toggle("Add reserved sessions to Calendar", isOn: Binding(
                         get: { model.exportsToCalendar },
                         set: { on in Task { await model.setExportsToCalendar(on) } }))
@@ -278,5 +307,50 @@ struct SettingsScreen: View {
             }
             .navigationTitle("Settings")
         }
+    }
+
+    /// The downloaded catalog's formats, and any he chose that it no longer has.
+    private var formats: [String] {
+        SessionPreferences.formats(in: model.snapshot?.sessions ?? [], keeping: model.preferences)
+    }
+
+    private func summary(_ chosen: [String], none: String = "Any") -> String {
+        switch chosen.count {
+        case 0: none
+        case 1: chosen[0]
+        default: "\(chosen.count) chosen"
+        }
+    }
+}
+
+/// A list to tick, for one of his session preferences.
+private struct PreferenceList: View {
+    let title: String
+    let options: [String]
+    let chosen: [String]
+    let set: (String, Bool) -> Void
+
+    var body: some View {
+        List(options, id: \.self) { option in
+            let isOn = chosen.contains(option)
+            Button {
+                set(option, !isOn)
+            } label: {
+                HStack {
+                    Text(option)
+                    Spacer()
+                    if isOn { Image(systemName: "checkmark").foregroundStyle(Color.accentColor) }
+                }
+            }
+            .tint(.primary)
+            .accessibilityAddTraits(isOn ? .isSelected : [])
+        }
+        .overlay {
+            if options.isEmpty {
+                ContentUnavailableView("No formats yet", systemImage: "list.bullet",
+                                       description: Text("They appear once the catalog has downloaded."))
+            }
+        }
+        .navigationTitle(title)
     }
 }
