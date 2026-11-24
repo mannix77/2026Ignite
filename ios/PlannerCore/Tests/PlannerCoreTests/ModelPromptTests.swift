@@ -117,16 +117,16 @@ final class ModelPromptTests: XCTestCase {
         let head = ModelPrompt.instructions + "\n\nQuestion: Which of these should I go to?\n\nAbout them:\nInterests: none yet\n\nSessions:"
         let a = "A | Title a | MGM Grand | 13:00, 60 min", b = "B | Title b | MGM Grand | 14:00, 60 min"
         let expected = [head, a, b].joined(separator: "\n\n")
-        // 419 bytes, all one byte each: 419 / 3 = 139.7, so 140 tokens.
-        XCTAssertEqual(expected.utf8.count, 419)
+        // 436 bytes, all one byte each: 436 / 3 = 145.3, so 146 tokens.
+        XCTAssertEqual(expected.utf8.count, 436)
         var exact = PromptBudget()
-        exact.window = 140 + exact.answerReserve
+        exact.window = 146 + exact.answerReserve
         let atLimit = ModelPrompt.build(question: question, ranked: ranked, sessionsInBlock: 2, picks: [], budget: exact)
         XCTAssertEqual(atLimit.text, expected)
         XCTAssertEqual(atLimit.sentIDs, ["a", "b"])
         XCTAssertTrue(atLimit.fits) // exactly at the limit still fits
         // The profile "About them:\nInterests: none yet" is 31 bytes: 11 tokens.
-        XCTAssertEqual(atLimit.metrics, PromptMetrics(estimatedTokens: 140, window: 1140, answerReserve: 1000, headroom: 0,
+        XCTAssertEqual(atLimit.metrics, PromptMetrics(estimatedTokens: 146, window: 1146, answerReserve: 1000, headroom: 0,
                                                       sessionsInBlock: 2, sessionsSent: 2, sessionsLeftOut: 0, abstractsCut: 0,
                                                       profileTokens: 11, profile: ProfileUse(interestsNamed: 0, levels: nil, formats: nil, skips: false, reservedToday: false)))
         var under = exact
@@ -183,9 +183,9 @@ final class ModelPromptTests: XCTestCase {
         // No abstract: the line is the session's whole entry, with nothing after it.
         XCTAssertTrue(prompt.text.hasSuffix("\n\nBARE | Title bare"))
         XCTAssertEqual(prompt.sentIDs, ["many", "bare"])
-        // 392 bytes: 131 tokens, 3,096 - 131 to spare.
-        XCTAssertEqual(prompt.text.utf8.count, 392)
-        XCTAssertEqual(prompt.metrics, PromptMetrics(estimatedTokens: 131, window: 4096, answerReserve: 1000, headroom: 2965,
+        // 409 bytes: 137 tokens, 3,096 - 137 to spare.
+        XCTAssertEqual(prompt.text.utf8.count, 409)
+        XCTAssertEqual(prompt.metrics, PromptMetrics(estimatedTokens: 137, window: 4096, answerReserve: 1000, headroom: 2959,
                                                      sessionsInBlock: 2, sessionsSent: 2, sessionsLeftOut: 0, abstractsCut: 0,
                                                      profileTokens: 11, profile: ProfileUse(interestsNamed: 0, levels: nil, formats: nil, skips: false, reservedToday: false)))
     }
@@ -264,12 +264,12 @@ final class ModelPromptTests: XCTestCase {
         var short = session("short", time: "14:00")
         short.abstract = "Short." // sent whole
         let prompt = ModelPrompt.build(question: question, ranked: [long, short], sessionsInBlock: 7, picks: [])
-        // 743 bytes (741 characters, the "…" taking 3): 248 tokens at 3 bytes each, rounded
-        // up; 3,096 - 248 to spare.
-        XCTAssertEqual(prompt.text.count, 741)
-        XCTAssertEqual(prompt.text.utf8.count, 743)
-        XCTAssertEqual(prompt.metrics, PromptMetrics(estimatedTokens: 248, window: 4096, answerReserve: 1000,
-                                                     headroom: 2848, sessionsInBlock: 7, sessionsSent: 2,
+        // 760 bytes (758 characters, the "…" taking 3): 254 tokens at 3 bytes each, rounded
+        // up; 3,096 - 254 to spare.
+        XCTAssertEqual(prompt.text.count, 758)
+        XCTAssertEqual(prompt.text.utf8.count, 760)
+        XCTAssertEqual(prompt.metrics, PromptMetrics(estimatedTokens: 254, window: 4096, answerReserve: 1000,
+                                                     headroom: 2842, sessionsInBlock: 7, sessionsSent: 2,
                                                      sessionsLeftOut: 0, abstractsCut: 1, profileTokens: 11, profile: ProfileUse(interestsNamed: 0, levels: nil, formats: nil, skips: false, reservedToday: false)))
         XCTAssertEqual(prompt.sentIDs, ["long", "short"])
         XCTAssertTrue(prompt.text.contains("Question: Which of these should I go to?"))

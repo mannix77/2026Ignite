@@ -642,8 +642,10 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
     that is both counts once) and from any preferences he sets goes into the prompt in place
     of the interests line. Levels and formats he sets in Settings win; otherwise they are
     inferred when at least 3 picks share one and it is at least 20% of them. What he skips
-    comes only from Settings. The profile stays within 400 estimated tokens and never leaves
-    the phone.
+    comes only from Settings, and a format he skips is never inferred as one he chooses. The
+    model is told to rank by what the profile says. The profile stays within 400 estimated
+    tokens whatever the catalog holds, and never leaves the phone. Preferences belong to the
+    phone, not the sign-in (the phone isn't shared), and can be reset.
 
     Example: Levels and formats from his picks
       Given he has 10 picks: 6 at "300 – Advanced", 3 at "400 – Expert", 1 at "200 – Intermediate"
@@ -688,6 +690,26 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       When he chooses to skip workshops
       Then workshops are no longer preferred, and the reverse
 
+    Example: A format he skips is never one he chooses
+      Given 5 of his picks are keynotes
+      And in Settings he skips keynotes
+      Then the profile says "They skip: Keynote" and doesn't name keynotes as a format he chooses
+
+    Example: The same format written two ways
+      Given 3 of his picks say "Chalk talk" and 3 say "Chalk" and "talk" on two lines
+      Then the profile names "Chalk talk" once, counting all 6
+
+    Example: A catalog with very long format names
+      Given 16 formats whose names are 60 large emoji each, all skipped in Settings
+      Then each name is cut to 240 bytes and the skip line to 300 bytes
+      And the profile stays within 400 tokens and a session is still sent
+
+    Example: Resetting his preferences
+      Given he has chosen levels, preferred formats and skipped formats
+      When he chooses "Reset preferences"
+      Then all three are back to Any, Any and None
+      And they stay on the phone when someone else signs in, until reset
+
     Example: The formats Settings offers
       Then the formats offered are the downloaded catalog's own, most common first
       And a format he chose earlier that the catalog no longer has is still listed, so he can clear it
@@ -709,7 +731,7 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
     Example: Over the cap, what he set is kept
       Given a profile over 400 tokens with levels he set in Settings
       Then interests are cut from the bottom to 5, then the reserved-today line goes,
-        then inferred levels and formats, then interests below 5 until it fits
+        then inferred levels, then inferred formats, then interests below 5 until it fits
       And the levels he set are still there
 
     Example: A damaged saved preference

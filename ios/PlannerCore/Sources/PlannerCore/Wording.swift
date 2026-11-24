@@ -73,6 +73,16 @@ public enum Wording {
         return sample ? "Updating the sample conference…" : "Updating from AWS…"
     }
 
+    /// A Settings row's value for a list he chooses from: `none` when empty, the one name, or
+    /// how many.
+    public static func preferenceSummary(_ chosen: [String], none: String) -> String {
+        switch chosen.count {
+        case 0: none
+        case 1: chosen[0]
+        default: "\(chosen.count) chosen"
+        }
+    }
+
     /// What to say about seats. A seat the attendee holds reads "unavailable" on the site, so
     /// the reservation is checked first.
     public static func seats(_ session: Session, commitment: Commitment?) -> String? {

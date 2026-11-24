@@ -142,6 +142,81 @@ final class AttendeeProfileTests: XCTestCase {
         XCTAssertEqual(built.use.formats, .inferred)
     }
 
+    func testAFormatHeSkipsIsNeverInferredAsOneHeChooses() {
+        let picks = (0..<5).map { pick("p\($0)", level: advanced, type: "Keynote") }
+        var preferences = SessionPreferences()
+        preferences.setSkipped("Keynote", true)
+        let built = profile(picks, preferences)
+        XCTAssertEqual(built.text, "About them:\nInterests: none yet\nLevels they choose: 300 – Advanced\nThey skip: Keynote")
+        XCTAssertNil(built.use.formats)
+        XCTAssertTrue(built.use.skips)
+        // Without the skip it is inferred (rule 2).
+        XCTAssertTrue(profile(picks).text.hasSuffix("Formats they choose: Keynote"))
+    }
+
+    func testTheSameFormatWrittenTwoWaysCountsOnce() {
+        let picks = (0..<3).map { pick("a\($0)", type: "Chalk talk") } + (0..<3).map { pick("b\($0)", type: "Chalk\ntalk") }
+        XCTAssertEqual(profile(picks).text, "About them:\nInterests: none yet\nFormats they choose: Chalk talk")
+        // 2 and 2 are 4 of 4 picks: named, where counted apart neither would reach 3.
+        let four = (0..<2).map { pick("c\($0)", type: "Chalk talk") } + (0..<2).map { pick("d\($0)", type: " Chalk  talk ") }
+        XCTAssertEqual(profile(four).text, "About them:\nInterests: none yet\nFormats they choose: Chalk talk")
+        // "Chalk | talk" is written "Chalk / talk": another name, on 1 pick, not named.
+        let five = four + [pick("e", type: "Chalk | talk")]
+        XCTAssertEqual(profile(five).text, "About them:\nInterests: none yet\nFormats they choose: Chalk talk")
+        // A format he picks in Settings is stored the same way, so it matches the catalog's.
+        var preferences = SessionPreferences()
+        preferences.setPreferred(" Chalk\ntalk ", true)
+        preferences.setSkipped("Key | note", true)
+        XCTAssertEqual(preferences.preferredFormats, ["Chalk talk"])
+        XCTAssertEqual(preferences.skippedFormats, ["Key / note"])
+    }
+
+    func testAVeryLongCatalogStillFitsTheCap() {
+        let family = "👨‍👩‍👧‍👦"
+        let catalog = "ABCDEFGHIJKLMNOP".map { pick("t\($0)", type: String($0) + String(repeating: family, count: 59)) }
+        var preferences = SessionPreferences()
+        let formats = SessionPreferences.formats(in: catalog, keeping: preferences)
+        XCTAssertEqual(formats.count, 16)
+        // Each name as offered is already cut: its letter, 9 emoji and "…" (229 bytes).
+        XCTAssertEqual(formats[0], "A" + String(repeating: family, count: 9) + "…")
+        formats.forEach { preferences.setSkipped($0, true) }
+        let built = profile(catalog, preferences)
+        let skipLine = built.text.split(separator: "\n").last.map(String.init) ?? ""
+        XCTAssertTrue(skipLine.hasPrefix("They skip: A"))
+        XCTAssertLessThanOrEqual(skipLine.utf8.count, 300)
+        XCTAssertLessThanOrEqual(TokenEstimate.tokens(built.text), 400)
+        let prompt = ModelPrompt.build(question: "Which?", ranked: [session("a", time: "13:00")], sessionsInBlock: 1,
+                                       picks: catalog, preferences: preferences)
+        XCTAssertTrue(prompt.fits)
+        XCTAssertEqual(prompt.sentIDs, ["a"])
+        XCTAssertLessThanOrEqual(prompt.metrics.profileTokens, 400)
+    }
+
+    func testResettingClearsAllThree() {
+        var preferences = SessionPreferences()
+        XCTAssertTrue(preferences.isEmpty)
+        preferences.setLevel(advanced, chosen: true)
+        XCTAssertFalse(preferences.isEmpty)
+        preferences.setPreferred("Workshop", true)
+        preferences.setSkipped("Keynote", true)
+        preferences.reset()
+        XCTAssertEqual(preferences, SessionPreferences())
+        XCTAssertTrue(preferences.isEmpty)
+        var onlySkip = SessionPreferences()
+        onlySkip.setSkipped("Keynote", true)
+        XCTAssertFalse(onlySkip.isEmpty)
+        var onlyPreferred = SessionPreferences()
+        onlyPreferred.setPreferred("Workshop", true)
+        XCTAssertFalse(onlyPreferred.isEmpty)
+    }
+
+    func testTheSettingsRowsSummariseWhatIsChosen() {
+        XCTAssertEqual(Wording.preferenceSummary([], none: "Any"), "Any")
+        XCTAssertEqual(Wording.preferenceSummary([], none: "None"), "None")
+        XCTAssertEqual(Wording.preferenceSummary(["Workshop"], none: "Any"), "Workshop")
+        XCTAssertEqual(Wording.preferenceSummary(["Workshop", "Keynote"], none: "Any"), "2 chosen")
+    }
+
     func testSkippingIsOnlyWhatHeSays() {
         let picks = (0..<5).map { pick("p\($0)", type: "Workshop") }
         XCTAssertFalse(profile(picks).text.contains("They skip"))
@@ -286,19 +361,33 @@ final class AttendeeProfileTests: XCTestCase {
         XCTAssertEqual(bare.text, "About them:\nLevels they choose: 400 – Expert")
     }
 
-    func testEachStepFitsTheCapWhenItCan() {
-        let picks = (0..<10).map { i in pick("p\(i)", type: "Workshop", topics: (0...i).map { "Interest number \($0)" }) }
+    func testTheCapIsKeptToTheToken() {
+        // 3 picks: "About them:\nInterests: Alpha (3), Beta (2)\nFormats they choose: Workshop" is
+        // 12 + 31 + 29 = 72 bytes, 24 tokens. At 24 it is whole; at 23 the inferred formats go
+        // (2 interests are under the 5 kept first).
+        let picks = [pick("a", type: "Workshop", topics: ["Alpha", "Beta"]),
+                     pick("b", type: "Workshop", topics: ["Alpha", "Beta"]),
+                     pick("c", type: "Workshop", topics: ["Alpha"])]
+        let whole = "About them:\nInterests: Alpha (3), Beta (2)\nFormats they choose: Workshop"
+        XCTAssertEqual(whole.utf8.count, 72)
         var budget = PromptBudget()
-        // The whole profile, measured once: 10 interests and the formats line.
-        let whole = profile(picks, reservedToday: 3)
-        let size = TokenEstimate.tokens(whole.text)
-        XCTAssertEqual(whole.use.interestsNamed, 10)
-        budget.profileTokenLimit = size
-        XCTAssertEqual(profile(picks, reservedToday: 3, budget: budget), whole) // exactly at the cap: kept whole
-        budget.profileTokenLimit = size - 1
-        let one = profile(picks, reservedToday: 3, budget: budget)
-        XCTAssertEqual(one.use.interestsNamed, 9) // one token under: the last interest goes
-        XCTAssertLessThanOrEqual(TokenEstimate.tokens(one.text), size - 1)
+        budget.profileTokenLimit = 24
+        XCTAssertEqual(profile(picks, budget: budget).text, whole)
+        budget.profileTokenLimit = 23
+        XCTAssertEqual(profile(picks, budget: budget).text, "About them:\nInterests: Alpha (3), Beta (2)")
+    }
+
+    func testInferredLevelsGoBeforeInferredFormats() {
+        let picks = (0..<3).map { pick("p\($0)", level: advanced, type: "Workshop") }
+        let whole = profile(picks).text
+        XCTAssertEqual(whole, "About them:\nInterests: none yet\nLevels they choose: 300 – Advanced\nFormats they choose: Workshop")
+        // 98 bytes (33 tokens) whole; without the levels line 61 (21 tokens).
+        XCTAssertEqual(whole.utf8.count, 98)
+        var budget = PromptBudget()
+        budget.profileTokenLimit = 33
+        XCTAssertEqual(profile(picks, budget: budget).text, whole)
+        budget.profileTokenLimit = 32
+        XCTAssertEqual(profile(picks, budget: budget).text, "About them:\nInterests: none yet\nFormats they choose: Workshop")
     }
 
     // MARK: In the prompt

@@ -231,26 +231,28 @@ struct SettingsScreen: View {
                             model.preferences.setLevel(level, chosen: on)
                         }
                     } label: {
-                        LabeledContent("Levels I prefer", value: summary(model.preferences.levels))
+                        LabeledContent("Levels I prefer", value: Wording.preferenceSummary(model.preferences.levels, none: "Any"))
                     }
                     NavigationLink {
                         PreferenceList(title: "Formats I prefer", options: formats, chosen: model.preferences.preferredFormats) {
                             model.preferences.setPreferred($0, $1)
                         }
                     } label: {
-                        LabeledContent("Formats I prefer", value: summary(model.preferences.preferredFormats))
+                        LabeledContent("Formats I prefer", value: Wording.preferenceSummary(model.preferences.preferredFormats, none: "Any"))
                     }
                     NavigationLink {
                         PreferenceList(title: "Formats I skip", options: formats, chosen: model.preferences.skippedFormats) {
                             model.preferences.setSkipped($0, $1)
                         }
                     } label: {
-                        LabeledContent("Formats I skip", value: summary(model.preferences.skippedFormats, none: "None"))
+                        LabeledContent("Formats I skip", value: Wording.preferenceSummary(model.preferences.skippedFormats, none: "None"))
                     }
+                    Button("Reset preferences", role: .destructive) { model.preferences.reset() }
+                        .disabled(model.preferences.isEmpty)
                 } header: {
                     Text("Session preferences")
                 } footer: {
-                    Text("What you look for in a session. Left as Any, your reserved sessions and favorites decide. Kept on this iPhone.")
+                    Text("What you look for in a session. Left as Any, your reserved sessions and favorites decide. Kept on this iPhone until you reset them.")
                 }
 
                 Section {
@@ -312,14 +314,6 @@ struct SettingsScreen: View {
     /// The downloaded catalog's formats, and any he chose that it no longer has.
     private var formats: [String] {
         SessionPreferences.formats(in: model.snapshot?.sessions ?? [], keeping: model.preferences)
-    }
-
-    private func summary(_ chosen: [String], none: String = "Any") -> String {
-        switch chosen.count {
-        case 0: none
-        case 1: chosen[0]
-        default: "\(chosen.count) chosen"
-        }
     }
 }
 

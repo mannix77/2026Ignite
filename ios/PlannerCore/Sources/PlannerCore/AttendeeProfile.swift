@@ -14,6 +14,12 @@ public struct SessionPreferences: Codable, Equatable, Sendable {
 
     public init() {}
 
+    /// Nothing chosen: every row reads Any or None.
+    public var isEmpty: Bool { levels.isEmpty && preferredFormats.isEmpty && skippedFormats.isEmpty }
+
+    /// Back to nothing chosen.
+    public mutating func reset() { self = SessionPreferences() }
+
     /// A level Settings doesn't offer is ignored.
     public mutating func setLevel(_ level: String, chosen: Bool) {
         let others = levels.filter { $0 != level }
@@ -22,14 +28,14 @@ public struct SessionPreferences: Codable, Equatable, Sendable {
 
     /// Preferring a format stops skipping it.
     public mutating func setPreferred(_ format: String, _ on: Bool) {
-        guard let format = Identifier.clean(format) else { return }
+        guard let format = AttendeeProfile.key(format) else { return }
         preferredFormats = SessionPreferences.toggled(preferredFormats, format, on)
         if on { skippedFormats.removeAll { $0 == format } }
     }
 
     /// Skipping a format stops preferring it.
     public mutating func setSkipped(_ format: String, _ on: Bool) {
-        guard let format = Identifier.clean(format) else { return }
+        guard let format = AttendeeProfile.key(format) else { return }
         skippedFormats = SessionPreferences.toggled(skippedFormats, format, on)
         if on { preferredFormats.removeAll { $0 == format } }
     }
@@ -69,7 +75,7 @@ public struct SessionPreferences: Codable, Equatable, Sendable {
     public static func formats(in sessions: [Session], keeping preferences: SessionPreferences) -> [String] {
         var counts: [String: Int] = [:]
         for session in sessions {
-            if let type = Identifier.clean(session.type) { counts[type, default: 0] += 1 }
+            if let type = AttendeeProfile.key(session.type) { counts[type, default: 0] += 1 }
         }
         let catalog = counts.sorted { ($0.value, $1.key) > ($1.value, $0.key) }.map(\.key)
         let chosen = (preferences.preferredFormats + preferences.skippedFormats).filter { counts[$0] == nil }.sorted()
@@ -112,8 +118,12 @@ public struct AttendeeProfile: Equatable, Sendable {
     static let minimumShare = 20
     static let maxLevels = 2
     static let maxFormats = 3
-    /// Characters of a level or format name sent at most.
+    /// Characters and bytes of a level or format name sent at most, as for interest names.
     static let valueLimit = 60
+    static let valueByteLimit = 240
+    /// Bytes a line he set in Settings may take, so those lines, which are never cut by the
+    /// cap, can't crowd it: three of them are at most 300 tokens of the 400.
+    static let settingsLineByteLimit = 300
     /// Interests kept before the other lines are cut, when over the cap.
     static let minInterests = 5
     /// Levels the site uses that aren't a level.
@@ -137,7 +147,8 @@ public struct AttendeeProfile: Equatable, Sendable {
         if !preferences.preferredFormats.isEmpty {
             formats = (preferences.preferredFormats, .settings)
         } else {
-            let inferred = infer(picks.compactMap(\.type), of: picks.count, max: maxFormats)
+            let inferred = infer(picks.compactMap(\.type), of: picks.count, max: maxFormats,
+                                 excluding: Set(preferences.skippedFormats))
             formats = inferred.isEmpty ? nil : (inferred, .inferred)
         }
         let skips = preferences.skippedFormats
@@ -150,9 +161,9 @@ public struct AttendeeProfile: Equatable, Sendable {
             } else if !hadInterests {
                 lines.append("Interests: none yet")
             }
-            if let levels { lines.append("Levels they choose: " + named(levels.names)) }
-            if let formats { lines.append("Formats they choose: " + named(formats.names)) }
-            if !skips.isEmpty { lines.append("They skip: " + named(skips)) }
+            if let levels { lines.append(line("Levels they choose: ", levels.names)) }
+            if let formats { lines.append(line("Formats they choose: ", formats.names)) }
+            if !skips.isEmpty { lines.append(line("They skip: ", skips)) }
             if reserved > 0 { lines.append("Already reserved today: \(reserved) session" + (reserved == 1 ? "" : "s")) }
             return AttendeeProfile(text: lines.joined(separator: "\n"),
                                    use: ProfileUse(interestsNamed: interests.count, levels: levels?.source,
@@ -177,7 +188,7 @@ public struct AttendeeProfile: Equatable, Sendable {
     private static func infer(_ values: [String], of total: Int, max: Int, excluding: Set<String> = []) -> [String] {
         var counts: [String: Int] = [:]
         for value in values {
-            if let value = Identifier.clean(value), !excluding.contains(value) { counts[value, default: 0] += 1 }
+            if let value = key(value), !excluding.contains(value) { counts[value, default: 0] += 1 }
         }
         return counts.filter { $0.value >= minimumPicks && $0.value * 100 >= total * minimumShare }
             .sorted { ($0.value, $1.key) > ($1.value, $0.key) }
@@ -185,8 +196,24 @@ public struct AttendeeProfile: Equatable, Sendable {
             .map(\.key)
     }
 
-    private static func named(_ values: [String]) -> String {
-        values.map { ModelPrompt.cut(ModelPrompt.clean($0), to: valueLimit) }.joined(separator: ", ")
+    /// A level or format as counted, stored and shown: on one line, "|" written as "/", cut to
+    /// `valueLimit` characters and `valueByteLimit` bytes. Nil when nothing is left.
+    public static func key(_ value: String?) -> String? {
+        guard let value = Identifier.clean(value) else { return nil }
+        let kept = ModelPrompt.cut(ModelPrompt.clean(value), to: valueLimit, maxBytes: valueByteLimit)
+        return kept.isEmpty ? nil : kept
+    }
+
+    /// `label` and as many of `values` as fit `settingsLineByteLimit`. One value always fits:
+    /// it is at most `valueByteLimit` bytes, and the labels are short.
+    private static func line(_ label: String, _ values: [String]) -> String {
+        var text = label
+        for (i, value) in values.enumerated() {
+            let next = (i == 0 ? "" : ", ") + value
+            if (text + next).utf8.count > settingsLineByteLimit { break }
+            text += next
+        }
+        return text
     }
 }
 
