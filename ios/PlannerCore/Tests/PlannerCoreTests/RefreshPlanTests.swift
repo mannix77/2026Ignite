@@ -224,6 +224,33 @@ final class RefreshPlanTests: XCTestCase {
                                                      fetchedAt: now, skipped: 2, catalogFetchedAt: ago(86400)))
     }
 
+    func testACatalogOfExactlyHalfIsAcceptedOnBothPaths() async throws {
+        // Held: 2 sessions. 1 is half, the most a catalog may shrink by; 0 (tested above) is refused.
+        let daily = CountingBackend()
+        daily.catalogAnswer = .success(Catalog(sessions: [session("a")]))
+        daily.scheduleAnswer = .success(Schedule(reserved: ["a"], favorites: []))
+        let dailyResult = try await update(daily, held(catalogAge: 86400))
+        XCTAssertEqual(daily.log, ["catalog", "schedule"])
+        XCTAssertTrue(dailyResult.triedCatalog)
+        XCTAssertNil(dailyResult.catalogProblem)
+        XCTAssertNil(dailyResult.scheduleProblem)
+        XCTAssertEqual(dailyResult.snapshot, PlanSnapshot(sessions: [session("a")],
+                                                          schedule: Schedule(reserved: ["a"], favorites: []),
+                                                          fetchedAt: now, catalogFetchedAt: now))
+        let early = CountingBackend()
+        early.catalogAnswer = .success(Catalog(sessions: [session("new")]))
+        early.scheduleAnswers = [.success(Schedule(reserved: [], favorites: ["new"])),
+                                 .success(Schedule(reserved: ["new"], favorites: ["new"]))]
+        let earlyResult = try await update(early, held(catalogAge: 3600))
+        XCTAssertEqual(early.log, ["schedule", "catalog", "schedule"])
+        XCTAssertTrue(earlyResult.triedCatalog)
+        XCTAssertNil(earlyResult.catalogProblem)
+        XCTAssertNil(earlyResult.scheduleProblem)
+        XCTAssertEqual(earlyResult.snapshot, PlanSnapshot(sessions: [session("new")],
+                                                          schedule: Schedule(reserved: ["new"], favorites: ["new"]),
+                                                          fetchedAt: now, catalogFetchedAt: now))
+    }
+
     func testARecentlyFailedCatalogIsNotTriedAgain() async throws {
         let backend = CountingBackend()
         backend.scheduleAnswer = .success(Schedule(reserved: ["b"], favorites: []))
