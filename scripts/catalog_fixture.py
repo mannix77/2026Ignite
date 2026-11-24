@@ -128,7 +128,10 @@ def focus(title):
 
 
 def placeholder(session, target):
-    """Sentences in the catalog's style, chosen to come within a few characters of `target`."""
+    """Sentences in the catalog's style, chosen to come within a few characters of `target`.
+    No abstract (a length of 0) gives no placeholder."""
+    if target <= 0:
+        return ""
     rng = random.Random(hashlib.sha256(session["sessionId"].encode()).hexdigest())
     services = session.get("services") or ["AWS"]
     topics = session.get("topics") or ["cloud"]

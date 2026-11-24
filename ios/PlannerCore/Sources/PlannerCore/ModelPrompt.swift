@@ -17,6 +17,9 @@ public struct PromptBudget: Equatable, Sendable {
     public var questionLimit = 300
     /// Interests named in the summary of his picks at most.
     public var maxInterests = 15
+    /// Characters of an interest's name sent at most, so the fixed text can't crowd out the
+    /// sessions: with every cap at its longest, in 4-byte characters, it still leaves room.
+    public var interestNameLimit = 60
     /// Topics named on a session's line at most.
     public var maxTopics = 3
 
@@ -56,6 +59,11 @@ public struct ModelPrompt: Equatable, Sendable {
     public var sentIDs: [String]
     public var metrics: PromptMetrics
 
+    /// False when the fixed text alone (instructions, question, interests) is over the limit,
+    /// which only a window smaller than the real one allows: then no session is sent and the
+    /// prompt is not to be sent either.
+    public var fits: Bool { metrics.headroom >= 0 }
+
     static let instructions = """
         You help an attendee at AWS re:Invent choose which of the sessions below to go to. Rank \
         them from most to least worth attending for this attendee, using their interests, and \
@@ -67,13 +75,13 @@ public struct ModelPrompt: Equatable, Sendable {
     /// out from the bottom until the prompt fits.
     public static func build(question: String, ranked: [Session], sessionsInBlock: Int, picks: [Session],
                              budget: PromptBudget = PromptBudget()) -> ModelPrompt {
-        let asked = cut(flat(question), to: budget.questionLimit)
+        let asked = cut(clean(question), to: budget.questionLimit)
         let head = [instructions,
                     "Question: " + (asked.isEmpty ? "(none)" : asked),
-                    "Their interests: " + interests(of: picks, limit: budget.maxInterests),
+                    "Their interests: " + interests(of: picks, limit: budget.maxInterests, nameLimit: budget.interestNameLimit),
                     "Sessions:"].joined(separator: "\n\n")
         var lines: [(id: String, text: String, cut: Bool)] = ranked.prefix(budget.maxSessions).map { session in
-            let abstract = flat(session.abstract ?? "")
+            let abstract = clean(session.abstract ?? "")
             let shortened = cut(abstract, to: budget.abstractLimit)
             let entry = shortened.isEmpty ? line(session, topics: budget.maxTopics)
                                           : line(session, topics: budget.maxTopics) + "\n" + shortened
@@ -101,7 +109,7 @@ public struct ModelPrompt: Equatable, Sendable {
         let time = session.sessionTime.map { "\($0.time), \($0.lengthMinutes) min" }
         let fields: [String?] = [session.abbreviation, session.title, session.type, session.level, session.venue, time,
                       (session.topics ?? []).prefix(topics).joined(separator: ", ")]
-        return fields.compactMap { $0.map { flat($0).replacingOccurrences(of: "|", with: "/") } }
+        return fields.compactMap { $0.map(clean) }
             .filter { !$0.isEmpty }
             .joined(separator: " | ")
     }
@@ -109,6 +117,12 @@ public struct ModelPrompt: Equatable, Sendable {
     /// `text` on one line: every run of whitespace, line breaks included, becomes one space.
     static func flat(_ text: String) -> String {
         text.split(whereSeparator: \.isWhitespace).joined(separator: " ")
+    }
+
+    /// Any text from the site or from him, as it goes into the prompt: on one line, with "|"
+    /// (the session line's separator) written as "/", so nothing can pose as a field or entry.
+    static func clean(_ text: String) -> String {
+        flat(text).replacingOccurrences(of: "|", with: "/")
     }
 
     /// `text` whole if it has at most `limit` characters; otherwise cut at the last word end
@@ -126,11 +140,15 @@ public struct ModelPrompt: Equatable, Sendable {
     }
 
     /// "Agentic AI (12), Amazon Bedrock (9), …": the topics and services his picks share most,
-    /// most common first, then by name.
-    static func interests(of picks: [Session], limit: Int) -> String {
+    /// most common first, then by name. Names are cleaned and cut to `nameLimit` first, so the
+    /// same name written twice on one pick counts once, and blank ones are skipped.
+    static func interests(of picks: [Session], limit: Int, nameLimit: Int) -> String {
         var counts: [String: Int] = [:]
         for session in picks {
-            for name in Set((session.topics ?? []) + (session.services ?? [])) { counts[flat(name), default: 0] += 1 }
+            let names = Set(((session.topics ?? []) + (session.services ?? []))
+                .map { cut(clean($0), to: nameLimit) }
+                .filter { !$0.isEmpty })
+            for name in names { counts[name, default: 0] += 1 }
         }
         let top = counts.sorted { ($0.value, $1.key) > ($1.value, $0.key) }.prefix(limit)
         return top.isEmpty ? "none yet" : top.map { "\($0.key) (\($0.value))" }.joined(separator: ", ")

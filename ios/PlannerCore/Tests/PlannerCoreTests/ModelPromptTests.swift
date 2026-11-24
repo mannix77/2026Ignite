@@ -9,7 +9,7 @@ final class ModelPromptTests: XCTestCase {
     /// The bytes a session adds to the prompt, as sent.
     private func sentBytes(_ session: Session) -> Int {
         ModelPrompt.line(session, topics: 3).utf8.count
-            + ModelPrompt.cut(ModelPrompt.flat(session.abstract ?? ""), to: 300).utf8.count
+            + ModelPrompt.cut(ModelPrompt.clean(session.abstract ?? ""), to: 300).utf8.count
     }
 
     /// The sessions with the longest text as sent first: the worst case for the budget.
@@ -47,6 +47,12 @@ final class ModelPromptTests: XCTestCase {
         XCTAssertEqual(prompt.metrics.sessionsInBlock, 149)
         XCTAssertLessThan(prompt.metrics.estimatedTokens, 3096)
         XCTAssertGreaterThan(prompt.metrics.headroom, 0)
+        XCTAssertTrue(prompt.fits)
+        // The text names the 12 sent, each starting an entry, and not the 13th.
+        for sent in ranked.prefix(12) {
+            XCTAssertTrue(prompt.text.contains("\n\n" + (sent.abbreviation ?? "?") + " | "), sent.code)
+        }
+        XCTAssertFalse(prompt.text.contains("\n\n" + (ranked[12].abbreviation ?? "?") + " | "))
     }
 
     func testEveryHourOfTheConferenceFitsWithTwelveSessions() throws {
@@ -60,9 +66,13 @@ final class ModelPromptTests: XCTestCase {
                 guard !block.isEmpty else { continue }
                 blocks += 1
                 busiest = max(busiest, block.count)
-                let prompt = ModelPrompt.build(question: question, ranked: longestFirst(block),
-                                               sessionsInBlock: block.count, picks: [])
+                let ranked = longestFirst(block)
+                let prompt = ModelPrompt.build(question: question, ranked: ranked, sessionsInBlock: block.count, picks: [])
                 XCTAssertLessThan(prompt.metrics.estimatedTokens, 3096, "\(day) \(hour):00")
+                XCTAssertEqual(prompt.sentIDs, ranked.prefix(12).map(\.sessionId), "\(day) \(hour):00")
+                // The last one sent starts an entry in the text.
+                let last = ranked[min(12, ranked.count) - 1]
+                XCTAssertTrue(prompt.text.contains("\n\n" + (last.abbreviation ?? "?") + " | "), "\(day) \(hour):00")
                 // Nothing had to be left out to fit: the cap of 12 is what limits it.
                 XCTAssertEqual(prompt.metrics.sessionsSent, min(12, block.count), "\(day) \(hour):00")
             }
@@ -90,6 +100,7 @@ final class ModelPromptTests: XCTestCase {
         XCTAssertTrue(prompt.text.contains("Question: " + question + "\n"))
         XCTAssertTrue(longest.allSatisfy { prompt.text.contains($0 + " (135)") })
         XCTAssertEqual(prompt.metrics.sessionsSent, 12)
+        XCTAssertEqual(prompt.sentIDs, longestFirst(catalog).prefix(12).map(\.sessionId))
         XCTAssertLessThan(prompt.metrics.estimatedTokens, 2700) // as PromptBudget's comment says
     }
 
@@ -97,18 +108,26 @@ final class ModelPromptTests: XCTestCase {
         // Two sessions come to some number of tokens; with exactly that limit both are sent,
         // and with one token less the second is left out.
         let ranked = [session("a", time: "13:00"), session("b", time: "14:00")]
-        let both = ModelPrompt.build(question: question, ranked: ranked, sessionsInBlock: 2, picks: [])
-        XCTAssertEqual(both.metrics.sessionsSent, 2) // precondition
+        let head = ModelPrompt.instructions + "\n\nQuestion: Which of these should I go to?\n\nTheir interests: none yet\n\nSessions:"
+        let a = "A | Title a | MGM Grand | 13:00, 60 min", b = "B | Title b | MGM Grand | 14:00, 60 min"
+        let expected = [head, a, b].joined(separator: "\n\n")
+        // 413 bytes, all one byte each: 413 / 3 = 137.7, so 138 tokens.
+        XCTAssertEqual(expected.utf8.count, 413)
         var exact = PromptBudget()
-        exact.window = both.metrics.estimatedTokens + exact.answerReserve
+        exact.window = 138 + exact.answerReserve
         let atLimit = ModelPrompt.build(question: question, ranked: ranked, sessionsInBlock: 2, picks: [], budget: exact)
+        XCTAssertEqual(atLimit.text, expected)
         XCTAssertEqual(atLimit.sentIDs, ["a", "b"])
-        XCTAssertEqual(atLimit.metrics.headroom, 0)
+        XCTAssertTrue(atLimit.fits) // exactly at the limit still fits
+        XCTAssertEqual(atLimit.metrics, PromptMetrics(estimatedTokens: 138, window: 1138, answerReserve: 1000, headroom: 0,
+                                                      sessionsInBlock: 2, sessionsSent: 2, sessionsLeftOut: 0, abstractsCut: 0))
         var under = exact
         under.window -= 1
         let overLimit = ModelPrompt.build(question: question, ranked: ranked, sessionsInBlock: 2, picks: [], budget: under)
+        XCTAssertEqual(overLimit.text, [head, a].joined(separator: "\n\n"))
         XCTAssertEqual(overLimit.sentIDs, ["a"])
         XCTAssertEqual(overLimit.metrics.sessionsLeftOut, 1)
+        XCTAssertTrue(overLimit.fits)
     }
 
     func testWhenTheFixedTextAloneIsTooLongNoSessionIsSent() {
@@ -119,7 +138,12 @@ final class ModelPromptTests: XCTestCase {
         XCTAssertEqual(prompt.sentIDs, [])
         XCTAssertEqual(prompt.metrics.sessionsLeftOut, 1)
         XCTAssertLessThan(prompt.metrics.headroom, 0)
+        XCTAssertFalse(prompt.fits)
         XCTAssertTrue(prompt.text.hasPrefix(ModelPrompt.instructions))
+        // The same with the real window fits and sends the session (rule 2).
+        let real = ModelPrompt.build(question: question, ranked: [session("a", time: "13:00")], sessionsInBlock: 1, picks: [])
+        XCTAssertTrue(real.fits)
+        XCTAssertEqual(real.sentIDs, ["a"])
     }
 
     func testEveryFieldStaysInItsPlace() throws {
@@ -133,7 +157,10 @@ final class ModelPromptTests: XCTestCase {
                         .compactMap { $0 }.count + 1 + ((kiroween.topics ?? []).isEmpty ? 0 : 1))
         let prompt = ModelPrompt.build(question: question, ranked: [kiroween], sessionsInBlock: 1, picks: [])
         XCTAssertFalse(prompt.text.contains("\nFAKE1"))
-        XCTAssertTrue(prompt.text.hasSuffix("Real text. FAKE1 | Injected | Workshop More text."))
+        XCTAssertTrue(prompt.text.hasSuffix("Real text. FAKE1 / Injected / Workshop More text."))
+        XCTAssertEqual(prompt.sentIDs, [kiroween.sessionId])
+        XCTAssertEqual(prompt.metrics.sessionsSent, 1)
+        XCTAssertEqual(prompt.metrics.abstractsCut, 0)
     }
 
     func testMissingFieldsAreSkippedAndABlankQuestionSaysSo() {
@@ -147,6 +174,11 @@ final class ModelPromptTests: XCTestCase {
         XCTAssertTrue(prompt.text.contains("MANY | Title many | MGM Grand | 13:00, 60 min | T1, T2, T3\n\n"))
         // No abstract: the line is the session's whole entry, with nothing after it.
         XCTAssertTrue(prompt.text.hasSuffix("\n\nBARE | Title bare"))
+        XCTAssertEqual(prompt.sentIDs, ["many", "bare"])
+        // 386 bytes: 129 tokens, 3,096 - 129 to spare.
+        XCTAssertEqual(prompt.text.utf8.count, 386)
+        XCTAssertEqual(prompt.metrics, PromptMetrics(estimatedTokens: 129, window: 4096, answerReserve: 1000, headroom: 2967,
+                                                     sessionsInBlock: 2, sessionsSent: 2, sessionsLeftOut: 0, abstractsCut: 0))
     }
 
     func testAnAbstractIsCutAtAWordWithinThreeHundredCharacters() {
@@ -191,9 +223,12 @@ final class ModelPromptTests: XCTestCase {
         // The top of the ranking is kept, in order, and the rest counted as left out.
         XCTAssertEqual(prompt.sentIDs, ["s1", "s2", "s3", "s4"])
         XCTAssertEqual(prompt.metrics.sessionsLeftOut, 8)
+        XCTAssertTrue(prompt.text.contains("\n\nS4 | "))
+        XCTAssertFalse(prompt.text.contains("\n\nS5 | "))
         // One more would not have fitted.
         let oneMore = ModelPrompt.build(question: question, ranked: Array(ranked.prefix(5)), sessionsInBlock: 5,
                                         picks: [], budget: { var b = PromptBudget(); b.window = 100_000; return b }())
+        XCTAssertEqual(oneMore.sentIDs, ["s1", "s2", "s3", "s4", "s5"])
         XCTAssertGreaterThan(oneMore.metrics.estimatedTokens, 3096)
     }
 
@@ -204,14 +239,14 @@ final class ModelPromptTests: XCTestCase {
             s.topics = (0..<20).filter { i < 135 - $0 }.map { "I\($0)" }
             return s
         }
-        let summary = ModelPrompt.interests(of: picks, limit: 15)
+        let summary = ModelPrompt.interests(of: picks, limit: 15, nameLimit: 60)
         XCTAssertEqual(summary, (0..<15).map { "I\($0) (\(135 - $0))" }.joined(separator: ", "))
         // Equal counts go by name; no picks says so.
         var a = session("a"), b = session("b")
         a.topics = ["Zeta", "Alpha"]
         b.services = ["Beta"]
-        XCTAssertEqual(ModelPrompt.interests(of: [a, b], limit: 15), "Alpha (1), Beta (1), Zeta (1)")
-        XCTAssertEqual(ModelPrompt.interests(of: [], limit: 15), "none yet")
+        XCTAssertEqual(ModelPrompt.interests(of: [a, b], limit: 15, nameLimit: 60), "Alpha (1), Beta (1), Zeta (1)")
+        XCTAssertEqual(ModelPrompt.interests(of: [], limit: 15, nameLimit: 60), "none yet")
     }
 
     func testEachPromptReportsWhatItUsed() {
@@ -258,6 +293,7 @@ final class ModelPromptTests: XCTestCase {
         }
         let prompt = ModelPrompt.build(question: question, ranked: [whole, over], sessionsInBlock: 2, picks: picks)
         XCTAssertEqual(prompt.metrics.abstractsCut, 1)
+        XCTAssertEqual(prompt.sentIDs, ["whole", "over"])
         XCTAssertTrue(prompt.text.contains("Title whole | MGM Grand | 13:00, 60 min\n" + three00 + "\n"))
         XCTAssertTrue(prompt.text.hasSuffix("Title over | MGM Grand | 13:00, 60 min\n"
                                             + String(repeating: "abcd ", count: 58) + "abcd…"))
@@ -272,5 +308,65 @@ final class ModelPromptTests: XCTestCase {
         XCTAssertTrue(prompt.text.contains("Question: " + String(repeating: "why ", count: 74) + "why…\n"))
         XCTAssertFalse(prompt.text.contains(question))
         XCTAssertEqual(prompt.metrics.sessionsSent, 0)
+        XCTAssertEqual(prompt.sentIDs, [])
+    }
+
+    func testABarIsWrittenAsASlashInEveryField() {
+        var s = session("s", time: "13:00")
+        s.abstract = "Before | after."
+        var pick = session("p")
+        pick.topics = ["AI | ML"]
+        let prompt = ModelPrompt.build(question: "This | that?", ranked: [s], sessionsInBlock: 1, picks: [pick])
+        XCTAssertTrue(prompt.text.contains("Question: This / that?\n"))
+        XCTAssertTrue(prompt.text.contains("Their interests: AI / ML (1)\n"))
+        XCTAssertTrue(prompt.text.hasSuffix("S | Title s | MGM Grand | 13:00, 60 min\nBefore / after."))
+        XCTAssertEqual(prompt.sentIDs, ["s"])
+        // The only bars left are the session line's own separators.
+        XCTAssertEqual(prompt.text.components(separatedBy: "|").count - 1, 3)
+    }
+
+    func testTheSameInterestWrittenTwiceCountsOncePerPick() {
+        var one = session("one")
+        one.topics = ["AI", "", "  "]
+        one.services = [" AI ", "AI\n"]
+        XCTAssertEqual(ModelPrompt.interests(of: [one], limit: 15, nameLimit: 60), "AI (1)")
+        var two = session("two")
+        two.topics = ["AI"]
+        XCTAssertEqual(ModelPrompt.interests(of: [one, two], limit: 15, nameLimit: 60), "AI (2)")
+        // Only blanks: nothing to name.
+        var blank = session("blank")
+        blank.topics = ["", " "]
+        XCTAssertEqual(ModelPrompt.interests(of: [blank], limit: 15, nameLimit: 60), "none yet")
+    }
+
+    func testAnInterestNameIsCutAtSixtyCharacters() {
+        var pick = session("p")
+        let sixty = String(repeating: "abcd ", count: 11) + "abcde"
+        XCTAssertEqual(sixty.count, 60)
+        pick.topics = [sixty, sixty + "f"]
+        let summary = ModelPrompt.interests(of: [pick], limit: 15, nameLimit: 60)
+        XCTAssertEqual(summary, sixty + " (1), " + String(repeating: "abcd ", count: 10) + "abcd… (1)")
+        // The prompt builder applies the same cap.
+        let prompt = ModelPrompt.build(question: question, ranked: [], sessionsInBlock: 0, picks: [pick])
+        XCTAssertTrue(prompt.text.contains("Their interests: " + summary + "\n"))
+        XCTAssertFalse(prompt.text.contains(sixty + "f"))
+    }
+
+    func testTheFixedTextCantCrowdOutTheSessions() {
+        // The longest fixed text the budget allows, in 4-byte characters: a 300-character
+        // question and 15 interests of 60 characters, each on 135 picks.
+        let question = String(repeating: "😀", count: 300)
+        let picks = (0..<135).map { i -> Session in
+            var s = session("p\(i)")
+            s.topics = "ABCDEFGHIJKLMNO".map { String(repeating: "😀", count: 59) + String($0) }
+            return s
+        }
+        let prompt = ModelPrompt.build(question: question, ranked: [], sessionsInBlock: 0, picks: picks)
+        // Precondition: all of it went in, uncut.
+        XCTAssertTrue(prompt.text.contains("Question: " + question + "\n"))
+        XCTAssertTrue("ABCDEFGHIJKLMNO".allSatisfy { prompt.text.contains(String(repeating: "😀", count: 59) + String($0) + " (135)") })
+        XCTAssertTrue(prompt.fits)
+        XCTAssertGreaterThan(prompt.metrics.headroom, 1000)
+        XCTAssertEqual(prompt.sentIDs, [])
     }
 }

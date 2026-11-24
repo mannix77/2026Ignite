@@ -366,7 +366,7 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
   Rule: What goes to the on-device model fits its window
     The model sees at most 12 sessions, each abstract cut to 300 characters at a word and at
     most 3 topics on its line, his question cut the same way, and his picks as at most 15 of
-    their most common interests. Tokens are estimated as UTF-8 bytes divided by 3, rounded up
+    their most common interests, each name cut to 60 characters. Tokens are estimated as UTF-8 bytes divided by 3, rounded up
     (cautious for English, and for other scripts and emoji too), and the prompt stays within
     the model's 4,096 less 1,000 kept for the answer. Tested on the real re:Invent 2026
     catalog, with placeholder abstracts at the real lengths and no speakers.
@@ -408,6 +408,19 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       Given the real title "Kiroween '26 | Build something wicked for a shot at $100,000 in prizes"
       Then its line keeps every field in its place, the bar written as "/"
       And line breaks in a title, abstract or question become spaces, so nothing looks like another session
+      And a bar in his question, an abstract or an interest is written as "/" too
+
+    Example: The fixed text can't crowd out the sessions
+      Given a 300-character question and 15 interests of 60 characters, all in 4-byte characters
+      Then the fixed text alone still fits the window, with room for sessions
+
+    Example: A window too small for the fixed text
+      Given a window smaller than the real one, too small for the instructions alone
+      Then no session is sent and the prompt is marked as not to be sent
+
+    Example: The same interest written twice
+      Given one pick with the topic "AI" and the service " AI ", and a blank topic
+      Then the summary says "AI (1)", and a second pick with "AI" makes it "AI (2)"
 
     Example: The blank question and the missing fields
       Given a blank question and a session with no time, venue or abstract
