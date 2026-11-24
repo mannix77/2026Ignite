@@ -78,7 +78,8 @@ public enum SeatOutlook: Int, Comparable, Sendable {
 /// A session that fits a gap, with how much it is like his picks.
 public struct Suggestion: Equatable, Identifiable, Sendable {
     public var session: Session
-    /// Similarity to his picks; above zero for every suggestion.
+    /// Similarity to his picks, times what his session preferences make of it
+    /// (`SessionPreferences.factor(for:)`); above zero for every suggestion.
     public var score: Double
     /// Up to three traits it shares with his picks, the strongest first.
     public var shared: [String]
@@ -181,7 +182,7 @@ extension PlanSnapshot {
     }
 
     /// Catalog sessions he could get to and into in the gap, and back from in time for what
-    /// comes next, most like his picks first.
+    /// comes next, most like his picks first, re-ordered by `preferences`.
     /// For several gaps, build one `Suggester` and ask it for each.
     public func suggestions(in gap: Gap, lineUp: LineUp = LineUp(),
                             preferences: SessionPreferences = SessionPreferences()) -> [Suggestion] {

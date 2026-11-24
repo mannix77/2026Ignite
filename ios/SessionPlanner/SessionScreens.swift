@@ -252,7 +252,7 @@ struct SettingsScreen: View {
                 } header: {
                     Text("Session preferences")
                 } footer: {
-                    Text("What you look for in a session. Suggestions for a free stretch put these first and the formats you skip lower down. Left as Any, your reserved sessions and favorites decide. Kept on this iPhone until you reset them.")
+                    Text("What you look for in a session. Suggestions for a free stretch rank these higher and the formats you skip lower. Left as Any, your reserved sessions and favorites decide. Kept on this iPhone until you reset them.")
                 }
 
                 Section {
