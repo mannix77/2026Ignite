@@ -310,6 +310,13 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       When he opens that day
       Then no free stretch is offered between them
 
+    Example: The one already part way through the day
+      Given he holds seats from 09:00 to 10:00 and from 12:00 to 13:00
+      When he opens that day at 11:00
+      Then the free stretch is offered from 11:00 to 12:00, not from 10:00
+      And at 11:30 it is still offered, and at 11:31 it is not, with under 30 minutes left
+      And on another day nothing is cut
+
     Example: The one he taps
       Given a free stretch is offered
       When he taps it

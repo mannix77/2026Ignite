@@ -33,6 +33,64 @@ final class GapOfferTests: XCTestCase {
         XCTAssertEqual(plan.offeredGaps(on: "2026-12-02").map { [$0.start, $0.end] }, [[689, 750]])
     }
 
+    // On the day itself: 09:00–10:00 and 12:00–13:00 held, so 10:00–12:00 is free.
+    func testOnTheDayAStretchUnderWayStartsNow() {
+        let plan = dayWithSeats(secondStart: "12:00")
+        // Precondition: without a time the whole stretch is offered.
+        XCTAssertEqual(plan.offeredGaps(on: "2026-12-02").map { [$0.start, $0.end] }, [[600, 720]])
+        // At 11:00 it starts now; where he walks from and to is unchanged.
+        XCTAssertEqual(plan.offeredGaps(on: "2026-12-02", now: ("2026-12-02", 660)),
+                       [Gap(date: "2026-12-02", start: 660, end: 720, before: .at("MGM Grand"), after: .at("MGM Grand"))])
+        // Before it starts, it is left as it is.
+        XCTAssertEqual(plan.offeredGaps(on: "2026-12-02", now: ("2026-12-02", 540)).map { [$0.start, $0.end] }, [[600, 720]])
+    }
+
+    func testTheMinuteNowIsKnownOnlyOnTheSameDay() {
+        XCTAssertEqual(PlanSnapshot.minute(of: ("2026-12-02", 660), on: "2026-12-02"), 660)
+        XCTAssertNil(PlanSnapshot.minute(of: ("2026-12-01", 660), on: "2026-12-02"))
+        XCTAssertNil(PlanSnapshot.minute(of: ("2026-12-03", 660), on: "2026-12-02"))
+        // Midnight is a minute like any other, not "no time".
+        XCTAssertEqual(PlanSnapshot.minute(of: ("2026-12-02", 0), on: "2026-12-02"), 0)
+    }
+
+    func testAnotherDayIsNotCut() {
+        let plan = dayWithSeats(secondStart: "12:00")
+        // 11:00 on the day before and the day after: the whole stretch on 2 Dec is still offered.
+        XCTAssertEqual(plan.offeredGaps(on: "2026-12-02", now: ("2026-12-01", 660)).map { [$0.start, $0.end] }, [[600, 720]])
+        XCTAssertEqual(plan.offeredGaps(on: "2026-12-02", now: ("2026-12-03", 660)).map { [$0.start, $0.end] }, [[600, 720]])
+        // The same minute on 2 Dec itself cuts it.
+        XCTAssertEqual(plan.offeredGaps(on: "2026-12-02", now: ("2026-12-02", 660)).map { [$0.start, $0.end] }, [[660, 720]])
+    }
+
+    func testOnTheDayAStretchWithUnderThirtyMinutesLeftIsNotOffered() {
+        let plan = dayWithSeats(secondStart: "12:00")
+        XCTAssertEqual(plan.offeredGaps(on: "2026-12-02", now: ("2026-12-02", 690)).map { [$0.start, $0.end] }, [[690, 720]])
+        XCTAssertEqual(plan.offeredGaps(on: "2026-12-02", now: ("2026-12-02", 691)).map { [$0.start, $0.end] }, [])
+        // Over: not offered.
+        XCTAssertEqual(plan.offeredGaps(on: "2026-12-02", now: ("2026-12-02", 720)).map { [$0.start, $0.end] }, [])
+    }
+
+    func testAStretchUnderWayListsNothingThatHasStarted() {
+        // A favorite on another day gives him a profile; "began" started at 10:30, "next" starts at 11:10, both
+        // at the MGM Grand, 8 minutes' walk inside it.
+        var plan = dayWithSeats(secondStart: "12:00")
+        func offered(_ id: String, _ time: String, date: String = "2026-12-02") -> Session {
+            var s = session(id, date: date, time: time, length: "30", venue: "MGM Grand")
+            s.topics = ["Observability"]
+            return s
+        }
+        plan.sessions += [offered("fav", "15:00", date: "2026-12-03"), offered("began", "10:30"), offered("next", "11:10")]
+        plan.schedule.favorites = ["fav"]
+        // Precondition: the whole stretch lists both.
+        let whole = plan.offeredGaps(on: "2026-12-02")
+        XCTAssertEqual(whole.map { [$0.start, $0.end] }, [[600, 720]])
+        XCTAssertEqual(Set(plan.suggestions(in: whole[0]).map(\.id)), ["began", "next"])
+
+        let now = plan.offeredGaps(on: "2026-12-02", now: ("2026-12-02", 660))
+        XCTAssertEqual(now.map { [$0.start, $0.end] }, [[660, 720]])
+        XCTAssertEqual(plan.suggestions(in: now[0]).map(\.id), ["next"])
+    }
+
     func testAnIndexPassedInGivesTheSameGaps() {
         let plan = dayWithSeats(secondStart: "10:30")
         XCTAssertEqual(plan.offeredGaps(on: "2026-12-02", index: plan.sessionsByID).map { [$0.start, $0.end] },
