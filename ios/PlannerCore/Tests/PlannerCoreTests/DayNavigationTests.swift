@@ -40,22 +40,6 @@ final class DayNavigationTests: XCTestCase {
         XCTAssertEqual(DayNavigation.day(from: "2026-11-29", by: -1, in: week), "2026-11-29")
     }
 
-    // A wrap would take Friday forward to Sunday and Sunday back to Friday; each stays put.
-    func testTheEndsDoNotWrapAround() {
-        assertInWeek("2026-11-29", at: 0)
-        assertInWeek("2026-12-04", at: week.count - 1)
-        XCTAssertEqual(DayNavigation.day(from: "2026-12-04", by: 1, in: week), "2026-12-04")
-        XCTAssertEqual(DayNavigation.day(from: "2026-11-29", by: -1, in: week), "2026-11-29")
-    }
-
-    func testABigMoveStopsAtTheEnd() {
-        assertInWeek("2026-12-01", at: 2)
-        assertInWeek("2026-11-29", at: 0)
-        assertInWeek("2026-12-04", at: week.count - 1)
-        XCTAssertEqual(DayNavigation.day(from: "2026-12-01", by: 10, in: week), "2026-12-04")
-        XCTAssertEqual(DayNavigation.day(from: "2026-12-01", by: -10, in: week), "2026-11-29")
-    }
-
     func testTheLargestPossibleMoveStopsAtTheEnd() {
         assertInWeek("2026-12-01", at: 2)
         assertInWeek("2026-11-29", at: 0)
