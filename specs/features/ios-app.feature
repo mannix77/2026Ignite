@@ -362,3 +362,43 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       When he refuses the phone's calendar permission
       Then the app says it can't add the sessions without that permission
       And nothing is written
+
+  Rule: What goes to the on-device model fits its window
+    The model sees at most 12 sessions, each abstract cut to 300 characters at a word, his
+    question cut the same way, and his picks as at most 15 of their most common interests.
+    Tokens are estimated as characters divided by 3, rounded up, and the prompt stays within
+    the model's 4,096 less 1,000 kept for the answer. Tested on the real re:Invent 2026
+    catalog, with placeholder abstracts at the real lengths and no speakers.
+
+    Example: The busiest hour
+      Given the 149 sessions running on Thursday 3 December from 13:00 to 14:00
+      When the 12 with the longest text are sent
+      Then the prompt is estimated under 3,096 tokens, and 137 are counted as left out
+
+    Example: Every hour of the conference
+      Given every hour of the conference in the catalog
+      When the 12 sessions with the longest text in each are sent
+      Then every prompt is estimated under 3,096 tokens without leaving any more out
+
+    Example: The long abstract
+      Given an abstract of 301 characters
+      Then it is cut at the last whole word within 300 characters and ends with "…"
+      And an abstract of exactly 300 characters is sent whole
+
+    Example: The thirteenth session
+      Given 13 sessions ranked for the model
+      Then the first 12 are sent and 1 is counted as left out
+
+    Example: The prompt that would still be too long
+      Given 12 sessions with titles far longer than any in the catalog
+      Then sessions are left out from the bottom of the ranking until the prompt fits
+      And each one left out is counted
+
+    Example: The many picks
+      Given he has 135 favorites
+      Then his picks are summarised as his 15 most common interests, with how many picks share each
+
+    Example: What each prompt reports
+      Then each prompt reports its estimated tokens, the window, the room kept for the answer,
+        the headroom left, the sessions in the block, the sessions sent, those left out,
+        and the abstracts cut
