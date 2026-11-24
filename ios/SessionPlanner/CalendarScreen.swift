@@ -232,7 +232,11 @@ private struct DayView: View {
             }
             .padding(12)
         }
-        .sheet(item: $openGap) { GapSheet(gap: $0.gap) }
+        // The list follows the stretch as time passes, and closes once it is no longer offered.
+        .sheet(item: $openGap) { GapSheet(gap: $0.gap.current(in: gaps) ?? $0.gap) }
+        .onChange(of: gaps) {
+            if let open = openGap, open.gap.current(in: gaps) == nil { openGap = nil }
+        }
         // For App Store screenshots (debug builds only): `-shotGap 2027-03-09` opens that day's
         // first free stretch.
         .onAppear {
@@ -275,7 +279,7 @@ private struct GapSheet: View {
                 ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } }
             }
         }
-        .task { suggestions = await model.suggestions(in: gap) }
+        .task(id: gap) { suggestions = await model.suggestions(in: gap) }
         // Reserving one of these (from its page) changes the calendar: this stretch may no
         // longer be free, so the list closes rather than offer what no longer fits.
         .onChange(of: model.snapshotVersion) { dismiss() }

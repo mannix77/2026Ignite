@@ -34,6 +34,16 @@ extension PlanSnapshot {
     }
 }
 
+extension Gap {
+    /// This free stretch as it is in `gaps` now: the one on the same day ending at the same
+    /// minute, whose start and line may have moved on with the time. Nil once it is no longer
+    /// offered. An open list of suggestions follows it, so it never offers a session he could
+    /// no longer get into.
+    public func current(in gaps: [Gap]) -> Gap? {
+        gaps.first { $0.date == date && $0.end == end }
+    }
+}
+
 extension Wording {
     /// "Free 10:00 – 10:30 AM": the label of a free stretch on the calendar.
     public static func gap(_ gap: Gap) -> String {

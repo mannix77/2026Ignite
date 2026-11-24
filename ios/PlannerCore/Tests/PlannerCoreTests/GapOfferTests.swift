@@ -207,3 +207,28 @@ final class GapStagingTests: XCTestCase {
         XCTAssertNil(GapStaging.gapToOpen(requestedDay: "  ", in: [morning]))
     }
 }
+
+final class CurrentGapTests: XCTestCase {
+    func testAnOpenStretchFollowsTheTimeAndEndsWhenItIsNoLongerOffered() {
+        // Seats at the MGM Grand 09:00–10:00 and 12:00–13:00, and the day's sessions run to 16:00:
+        // stretches 10:00–12:00 and 13:00–16:00. The first is opened at 10:30.
+        let plan = PlanSnapshot(sessions: [session("first", time: "09:00"), session("second", time: "12:00"),
+                                           session("late", time: "15:00")],
+                                schedule: Schedule(reserved: ["first", "second"], favorites: []),
+                                fetchedAt: Date(timeIntervalSince1970: 0))
+        let opened = plan.offeredGaps(on: "2026-12-02", now: ("2026-12-02", 630))
+        XCTAssertEqual(opened.map { [$0.start, $0.end] }, [[630, 720], [780, 960]]) // precondition
+        // At 11:00 it is the same stretch, now starting and lining up from 11:00.
+        let later = opened[0].current(in: plan.offeredGaps(on: "2026-12-02", now: ("2026-12-02", 660)))
+        XCTAssertEqual(later, Gap(date: "2026-12-02", start: 660, end: 720, before: .at("MGM Grand"),
+                                  after: .at("MGM Grand"), lineFrom: 660, lineUpAfter: true))
+        // The afternoon stretch follows itself, not the morning one.
+        XCTAssertEqual(opened[1].current(in: plan.offeredGaps(on: "2026-12-02", now: ("2026-12-02", 660)))?.end, 960)
+        // At 11:31 it has under 30 minutes left and is no longer offered.
+        XCTAssertNil(opened[0].current(in: plan.offeredGaps(on: "2026-12-02", now: ("2026-12-02", 691))))
+        // A stretch ending at the same minute on another day is not it.
+        var otherDay = opened[0]
+        otherDay.date = "2026-12-03"
+        XCTAssertNil(otherDay.current(in: plan.offeredGaps(on: "2026-12-02", now: ("2026-12-02", 660))))
+    }
+}

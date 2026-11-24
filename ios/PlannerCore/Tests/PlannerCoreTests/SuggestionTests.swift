@@ -109,8 +109,10 @@ final class GapTests: XCTestCase {
     }
 
     func testACommitmentListedWithNoLengthBlocksTheTimeTheCalendarDrawsIt() {
+        let party = offered("party", time: "10:00", length: "0", venue: "MGM Grand")
+        XCTAssertEqual(party.sessionTime?.lengthMinutes, 0) // precondition: the 20 minutes come from the drawing
         let plan = snapshot([offered("a", time: "08:00", length: "60"), offered("b", time: "18:00", length: "60")],
-                            invited: [offered("party", time: "10:00", length: "0", venue: "MGM Grand")])
+                            invited: [party])
         XCTAssertEqual(plan.gaps(on: "2026-12-02"), [
             Gap(date: "2026-12-02", start: 480, end: 600, before: .open, after: .at("MGM Grand"),
                 lineFrom: nil, lineUpAfter: false),
@@ -174,11 +176,13 @@ final class SuggestionTests: XCTestCase {
     func testASessionWithNoLengthTakesTheTwentyMinutesTheCalendarDrawsForIt() {
         // In line at the Forum by 15:30 means leaving Wynn by 15:10. Listed with no length, a
         // session still takes the 20 minutes the calendar would draw it for once reserved.
-        let plan = snapshot(filler(4) + [
-            offered("pick", time: "09:00", topics: ["Rare"]),
-            offered("fits", time: "14:50", length: "", venue: "Wynn/Encore", topics: ["Rare"]),
-            offered("runsOver", time: "14:51", length: "", venue: "Wynn/Encore", topics: ["Rare"]),
-        ], favorites: ["pick"])
+        let fits = offered("fits", time: "14:50", length: "", venue: "Wynn/Encore", topics: ["Rare"])
+        let runsOver = offered("runsOver", time: "14:51", length: "", venue: "Wynn/Encore", topics: ["Rare"])
+        // Precondition: both are listed with no length, so the 20 minutes come from the drawing.
+        XCTAssertEqual(fits.sessionTime?.lengthMinutes, 0)
+        XCTAssertEqual(runsOver.sessionTime?.lengthMinutes, 0)
+        let plan = snapshot(filler(4) + [offered("pick", time: "09:00", topics: ["Rare"]), fits, runsOver],
+                            favorites: ["pick"])
         let listed = Set(ids(plan.suggestions(in: forumGap)))
         XCTAssertEqual(listed, ["fits"])
     }
