@@ -224,21 +224,65 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
     counts for more than one most of them share. Walks between venues are the planner's old
     estimates: 10 to 25 minutes between the four resorts north of MGM, 35 to or from the
     MGM Grand by shuttle, 8 inside one venue, 15 when a venue is unknown.
+    Getting in takes time as well as the walk: he needs to be in line before a session starts,
+    30 minutes for one that can be reserved (his time in line, a setting) and 5 for a walk-up
+    one, which can't be. So a session in a gap must leave him the walk plus that time to get
+    into it, and, when the next thing on his calendar is a reserved session, the walk plus his
+    time in line to get into that one too.
 
     Example: The one that fits only if he hurries
       Given a reserved session ends at 10:00 at "Caesars Forum"
       And the next reserved session starts at 16:00 at "Caesars Forum"
       And the walk between "Caesars Forum" and "Wynn/Encore" takes 20 minutes
       When he asks what fits between them
-      Then a session at "Wynn/Encore" starting at 10:20 is listed and one starting at 10:19 is not
-      And one ending at 15:40 is listed and one ending at 15:41 is not
+      Then a session at "Wynn/Encore" starting at 10:50 is listed and one starting at 10:49 is not
+      And one ending at 15:10 is listed and one ending at 15:11 is not
 
     Example: The one between two different venues
       Given a reserved session ends at 10:00 at "MGM Grand"
       And the next reserved session starts at 16:00 at "Wynn/Encore"
       When he asks what fits between them
-      Then a session at "Caesars Forum" starting at 10:35 is listed and one starting at 10:34 is not
-      And one ending at 15:40 is listed and one ending at 15:41 is not
+      Then a session at "Caesars Forum" starting at 11:05 is listed and one starting at 11:04 is not
+      And one ending at 15:10 is listed and one ending at 15:11 is not
+
+    Example: The walk-up session
+      Given a reserved session ends at 10:00 at "Caesars Forum"
+      And the next reserved session starts at 16:00 at "Caesars Forum"
+      When he asks what fits between them
+      Then a walk-up session at "Wynn/Encore" starting at 10:25 is listed and one starting at 10:24 is not
+      And one ending at 15:10 is listed and one ending at 15:11 is not, since the seat after it is reserved
+
+    Example: The invitation after the gap
+      Given a reserved session ends at 10:00 at "Caesars Forum"
+      And he is invited to a reception at 16:00 at "Caesars Forum"
+      When he asks what fits between them
+      Then a session at "Wynn/Encore" ending at 15:40 is listed and one ending at 15:41 is not,
+        since he doesn't line up for an invitation
+
+    Example: The first session of a free morning
+      Given nothing is on his calendar before 12:00 on Wednesday
+      And Wednesday's sessions start at 08:00
+      When he asks what fits in the morning
+      Then a session starting at 08:00 is listed, since he can line up before the day's first sessions
+
+    Example: The one already part way through the morning
+      Given nothing is on his calendar before 12:00 on Wednesday
+      When he opens that day at 09:10
+      Then a session starting at 09:40 is listed and one starting at 09:39 is not
+
+    Example: The one opened just before the day starts
+      Given nothing is on his calendar before 12:00 on Wednesday
+      And Wednesday's sessions start at 08:00
+      When he opens that day at 07:45
+      Then the free stretch still starts at 08:00
+      And a session starting at 08:15 is listed and one starting at 08:14 is not,
+        since he can't be in line before 07:45
+
+    Example: The one part way through a gap
+      Given he holds seats at "MGM Grand" from 09:00 to 10:00 and from 14:00 to 15:00
+      When he opens that day at 11:00
+      Then a session at "MGM Grand" starting at 11:38 is listed and one starting at 11:37 is not,
+        since the walk inside one venue is 8 minutes, then 30 in line
 
     Example: The reception listed with no length
       Given he is invited to a reception at 10:00 that the site lists with no length
@@ -296,9 +340,36 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       When he asks what fits in the gap
       Then the reception is not listed
 
+  Rule: He sets how long he allows to get in line
+    Gap suggestions allow 30 minutes in line for a session that can be reserved unless he
+    changes it in Settings, to any whole number of minutes from 1 to 60. A walk-up session
+    allows 5 minutes, or his time in line if that is shorter. A session the site doesn't say
+    can or can't be reserved is treated as one that can: the longer line is the safe guess.
+
+    Example: The one who never changed it
+      Given he has never changed the time in line
+      Then Settings shows 30 minutes and gap suggestions allow 30 minutes
+
+    Example: The shorter line
+      Given he sets the time in line to 10 minutes
+      And a reserved session ends at 10:00 at "Caesars Forum"
+      And the next reserved session starts at 16:00 at "Caesars Forum"
+      When he asks what fits between them
+      Then a session at "Wynn/Encore" he can reserve starting at 10:30 is listed and one starting at 10:29 is not
+      And one ending at 15:30 is listed and one ending at 15:31 is not
+
+    Example: The line shorter than a walk-up's
+      Given he sets the time in line to 3 minutes
+      Then a walk-up session allows 3 minutes, not 5
+
+    Example: The limits
+      Then he can set 1 and 60 minutes but not 0 or 61
+      And a saved value outside that range is read as the nearest limit, and an unreadable one as 30
+
   Rule: A free stretch on the calendar opens the sessions that fit it
     Only a stretch of at least 30 minutes is offered: anything shorter can't hold a session
-    and the walks either side.
+    and the walks either side. With time in line as well, a short stretch between two seats
+    will often list nothing.
 
     Example: The one just long enough
       Given he holds seats from 09:00 to 10:00 and from 10:30 to 11:30

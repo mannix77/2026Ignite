@@ -2,7 +2,9 @@ import Foundation
 
 extension PlanSnapshot {
     /// The shortest free stretch the calendar offers suggestions for, in minutes. Anything
-    /// shorter can't hold a session and the walks either side.
+    /// shorter can't hold a session and the walks either side. With time in line as well, a
+    /// short stretch between two seats will often list nothing; the threshold is kept as it is
+    /// by the owner's decision (#193).
     public static let shortestOfferedGap = 30
 
     /// The minute it is now when `date` is today (`now` is the event's date and minute, from
@@ -15,16 +17,48 @@ extension PlanSnapshot {
     /// The free stretches of a day the calendar offers suggestions for: its gaps of at least
     /// `shortestOfferedGap` minutes. `now` is the event's date and minute (`Wording.eventNow`):
     /// on that day a stretch under way starts now, so nothing that has already started is
-    /// suggested, and one with less than `shortestOfferedGap` minutes left is not offered.
+    /// suggested, and one with less than `shortestOfferedGap` minutes left is not offered. On
+    /// that day he can't start lining up before now, even for the day's first sessions.
     /// Other days are not cut. `index` is `sessionsByID`, if the caller has it built.
     public func offeredGaps(on date: String, now: (date: String, minute: Int)? = nil,
                             index: [String: Session]? = nil) -> [Gap] {
         let cut = now.flatMap { PlanSnapshot.minute(of: $0, on: date) }
         return gaps(on: date, index: index).compactMap { whole in
             var gap = whole
-            if let cut { gap.start = max(gap.start, cut) }
+            if let cut {
+                gap.start = max(gap.start, cut)
+                gap.lineFrom = max(gap.lineFrom ?? cut, cut)
+            }
             return gap.end - gap.start >= PlanSnapshot.shortestOfferedGap ? gap : nil
         }
+    }
+}
+
+extension Gap {
+    /// This free stretch as it is in `gaps` now: the one on the same day ending at the same
+    /// minute, whose start and line may have moved on with the time. Nil once it is no longer
+    /// offered. An open list of suggestions follows it, so it never offers a session he could
+    /// no longer get into.
+    public func current(in gaps: [Gap]) -> Gap? {
+        gaps.first { $0.date == date && $0.end == end }
+    }
+}
+
+/// A list of suggestions and the stretch it was worked out for. While an open stretch moves on
+/// with the minute and its list reloads, the old list is not shown, so nothing that no longer
+/// fits can be opened from it.
+public struct GapSuggestions: Equatable, Sendable {
+    public let gap: Gap
+    public let suggestions: [Suggestion]
+
+    public init(gap: Gap, suggestions: [Suggestion]) {
+        self.gap = gap
+        self.suggestions = suggestions
+    }
+
+    /// The list if it was worked out for `current`; nil while `current`'s own list loads.
+    public func list(for current: Gap) -> [Suggestion]? {
+        gap == current ? suggestions : nil
     }
 }
 

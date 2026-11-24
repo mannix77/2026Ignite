@@ -46,13 +46,22 @@ public struct Gap: Equatable, Sendable {
     public var end: Int
     public var before: Place
     public var after: Place
+    /// The first minute he can stand in line for a session in the gap: its start after a
+    /// commitment, and no earlier than now on the day itself. Nil when the gap opens the day
+    /// and the time is not known, since he can line up before the day's first sessions start.
+    public var lineFrom: Int?
+    /// Whether the commitment after the gap is a reserved session he has to line up for. An
+    /// invitation is not.
+    public var lineUpAfter: Bool
 
-    public init(date: String, start: Int, end: Int, before: Place, after: Place) {
+    public init(date: String, start: Int, end: Int, before: Place, after: Place, lineFrom: Int?, lineUpAfter: Bool) {
         self.date = date
         self.start = start
         self.end = end
         self.before = before
         self.after = after
+        self.lineFrom = lineFrom
+        self.lineUpAfter = lineUpAfter
     }
 }
 
@@ -134,6 +143,9 @@ extension PlanSnapshot {
     /// the first session that day to the end of the last, invitations included. A commitment
     /// takes at least the time the calendar draws it for, so one listed with no length still
     /// blocks its slot. After overlapping commitments he is where the one that ends last is.
+    /// He lines up inside every gap but the one that opens the day, and for a reserved seat
+    /// after a gap but not an invitation. Only the commitment that ends a gap counts: a seat
+    /// starting just after an invitation that ends the gap is already a clash on his calendar.
     /// `index` is `sessionsByID`, passed in when the caller already has it built.
     public func gaps(on date: String, index: [String: Session]? = nil) -> [Gap] {
         let known = index ?? sessionsByID
@@ -153,20 +165,27 @@ extension PlanSnapshot {
         var here = Place.open
         for entry in agenda(on: date, includeFavorites: false, index: known).timed {
             if entry.start > free {
-                gaps.append(Gap(date: date, start: free, end: entry.start, before: here, after: .at(entry.session.venue)))
+                gaps.append(Gap(date: date, start: free, end: entry.start, before: here, after: .at(entry.session.venue),
+                                lineFrom: here == .open ? nil : free, lineUpAfter: entry.commitment == .reserved))
             }
             if entry.drawnEnd >= free {
                 free = entry.drawnEnd
                 here = .at(entry.session.venue)
             }
         }
-        if dayEnd > free { gaps.append(Gap(date: date, start: free, end: dayEnd, before: here, after: .open)) }
+        if dayEnd > free {
+            gaps.append(Gap(date: date, start: free, end: dayEnd, before: here, after: .open,
+                            lineFrom: here == .open ? nil : free, lineUpAfter: false))
+        }
         return gaps
     }
 
-    /// Catalog sessions he could get to in the gap and back from, most like his picks first.
+    /// Catalog sessions he could get to and into in the gap, and back from in time for what
+    /// comes next, most like his picks first.
     /// For several gaps, build one `Suggester` and ask it for each.
-    public func suggestions(in gap: Gap) -> [Suggestion] { Suggester(self).suggestions(in: gap) }
+    public func suggestions(in gap: Gap, lineUp: LineUp = LineUp()) -> [Suggestion] {
+        Suggester(self).suggestions(in: gap, lineUp: lineUp)
+    }
 
 }
 
@@ -211,7 +230,7 @@ public struct Suggester: Sendable {
     /// Nothing he holds a seat in or is invited to is suggested, nor another run of it. A
     /// session sharing nothing with his picks is left out. Equal scores put a session with a
     /// seat to reserve first, then earlier, then by code.
-    public func suggestions(in gap: Gap) -> [Suggestion] {
+    public func suggestions(in gap: Gap, lineUp: LineUp = LineUp()) -> [Suggestion] {
         var found: [(suggestion: Suggestion, start: Int, rank: Double)] = []
         var seen = Set<String>()
         for session in sessions {
@@ -221,8 +240,12 @@ public struct Suggester: Sendable {
                   let start = time.startMinute else { continue }
             // A session listed with no length still takes the time the calendar draws it for.
             let end = start + max(time.lengthMinutes, AgendaEntry.minimumDrawnMinutes)
-            guard start >= gap.start + gap.before.walk(to: session.venue),
-                  end + gap.after.walk(to: session.venue) <= gap.end else { continue }
+            // In the gap after the walk, and in line in time for this session; then back in
+            // line in time for a reserved seat after the gap.
+            let inLine = gap.lineFrom.map { $0 + lineUp.minutes(for: session) } ?? gap.start
+            let lineOut = gap.lineUpAfter ? lineUp.minutes : 0
+            guard start >= max(gap.start, inLine) + gap.before.walk(to: session.venue),
+                  end + gap.after.walk(to: session.venue) + lineOut <= gap.end else { continue }
 
             let parts = Suggester.vector(session, weights).compactMap { trait, value in
                 profile[trait].map { (trait: trait, value: value * $0) }

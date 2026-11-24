@@ -232,7 +232,11 @@ private struct DayView: View {
             }
             .padding(12)
         }
-        .sheet(item: $openGap) { GapSheet(gap: $0.gap) }
+        // The list follows the stretch as time passes, and closes once it is no longer offered.
+        .sheet(item: $openGap) { GapSheet(gap: $0.gap.current(in: gaps) ?? $0.gap) }
+        .onChange(of: gaps) {
+            if let open = openGap, open.gap.current(in: gaps) == nil { openGap = nil }
+        }
         // For App Store screenshots (debug builds only): `-shotGap 2027-03-09` opens that day's
         // first free stretch.
         .onAppear {
@@ -249,14 +253,17 @@ private struct GapSheet: View {
     @Environment(AppModel.self) private var model
     @Environment(\.dismiss) private var dismiss
     let gap: Gap
-    @State private var suggestions: [Suggestion]?
+    /// The list and the stretch it was worked out for.
+    @State private var loaded: GapSuggestions?
 
     var body: some View {
+        // Shown only for the stretch as it is now: while a newer one loads, the old list goes.
+        let suggestions = loaded?.list(for: gap)
         NavigationStack {
             Group {
                 if let suggestions, suggestions.isEmpty {
                     ContentUnavailableView("Nothing fits", systemImage: "calendar.badge.clock",
-                                           description: Text("No session in this time is like your picks and leaves time for the walks."))
+                                           description: Text("No session in this time is like your picks and leaves time for the walks and the line."))
                 } else if let suggestions {
                     List(suggestions) { suggestion in
                         NavigationLink(value: suggestion.id) {
@@ -275,7 +282,12 @@ private struct GapSheet: View {
                 ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } }
             }
         }
-        .task { suggestions = await model.suggestions(in: gap) }
+        .task(id: gap) {
+            let found = await model.suggestions(in: gap)
+            // A newer stretch has replaced this one: its own task sets the list.
+            guard !Task.isCancelled else { return }
+            loaded = GapSuggestions(gap: gap, suggestions: found)
+        }
         // Reserving one of these (from its page) changes the calendar: this stretch may no
         // longer be free, so the list closes rather than offer what no longer fits.
         .onChange(of: model.snapshotVersion) { dismiss() }

@@ -99,6 +99,11 @@ final class AppModel {
         didSet { UserDefaults.standard.set(showFavorites, forKey: "showFavorites") }
     }
 
+    /// How long he allows to be in line before a session, for gap suggestions (Settings).
+    var lineUp = LineUp(saved: UserDefaults.standard.object(forKey: "lineUpMinutes")) {
+        didSet { UserDefaults.standard.set(lineUp.minutes, forKey: "lineUpMinutes") }
+    }
+
     private let tokens = TokenStore()
     private let store = SnapshotStore()
     private var saveVersion = 0
@@ -182,11 +187,12 @@ final class AppModel {
         guard let snapshot else { return [] }
         let built = suggester
         let version = snapshotVersion
+        let lineUp = lineUp
         let ranker = await Task.detached(priority: .userInitiated) { built ?? Suggester(snapshot) }.value
         // Kept only if the calendar hasn't changed meanwhile; either way this answer is for the
         // calendar the gap came from.
         if suggester == nil, snapshotVersion == version { suggester = ranker }
-        return await Task.detached(priority: .userInitiated) { ranker.suggestions(in: gap) }.value
+        return await Task.detached(priority: .userInitiated) { ranker.suggestions(in: gap, lineUp: lineUp) }.value
     }
 
     func sessions(matching filter: SessionFilter, search: String) -> [Session] {
