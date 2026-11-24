@@ -2,9 +2,9 @@ import Foundation
 
 extension PlanSnapshot {
     /// The shortest free stretch the calendar offers suggestions for, in minutes. Anything
-    /// shorter can't hold a session and the walks either side. With 30 minutes in line as well,
-    /// a stretch under about an hour and a half between two seats will usually list nothing;
-    /// the threshold is kept as it is by the owner's decision (#193).
+    /// shorter can't hold a session and the walks either side. With time in line as well, a
+    /// short stretch between two seats will often list nothing; the threshold is kept as it is
+    /// by the owner's decision (#193).
     public static let shortestOfferedGap = 30
 
     /// The minute it is now when `date` is today (`now` is the event's date and minute, from

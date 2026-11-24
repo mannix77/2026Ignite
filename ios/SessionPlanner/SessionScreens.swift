@@ -218,7 +218,7 @@ struct SettingsScreen: View {
                 } header: {
                     Text("Free time suggestions")
                 } footer: {
-                    Text("How early to be in line for a session you can reserve, and for your next reserved seat. Walk-up sessions allow \(model.lineUp.walkUp) min.")
+                    Text("How early to be in line for a session you can reserve, and for your next reserved seat. Sessions that can't be reserved allow \(model.lineUp.walkUp) min.")
                 }
 
                 Section {

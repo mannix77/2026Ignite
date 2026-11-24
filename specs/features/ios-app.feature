@@ -343,7 +343,8 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
   Rule: He sets how long he allows to get in line
     Gap suggestions allow 30 minutes in line for a session that can be reserved unless he
     changes it in Settings, to any whole number of minutes from 1 to 60. A walk-up session
-    allows 5 minutes, or his time in line if that is shorter.
+    allows 5 minutes, or his time in line if that is shorter. A session the site doesn't say
+    can or can't be reserved is treated as one that can: the longer line is the safe guess.
 
     Example: The one who never changed it
       Given he has never changed the time in line
