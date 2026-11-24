@@ -312,8 +312,10 @@ final class AppModel {
     /// Reads his schedule, and the whole catalog when it is due or `wholeCatalog` asks for it
     /// (`Sync.update`). On any failure the calendar last seen is kept. `automatic` (he didn't
     /// ask) keeps a failure to reach the site quiet, unless he asks for an update while it runs.
-    private func recordCatalogTry(_ time: Date, for asked: Int) {
-        if generation == asked { catalogLastTried = time }
+    /// Stamped when the download starts, which can be well after the refresh began (an early
+    /// download follows a schedule read), so the hour's wait runs from the try itself.
+    private func recordCatalogTry(for asked: Int) {
+        if generation == asked { catalogLastTried = Date() }
     }
 
     func refresh(automatic: Bool = false, wholeCatalog: Bool = false) async {
@@ -339,7 +341,7 @@ final class AppModel {
             // waits an hour before the next try.
             let result = try await Sync.update(backend: backend, previous: snapshot, now: now, wholeCatalog: wholeCatalog,
                                                catalogLastTried: catalogLastTried,
-                                               willTryCatalog: { [weak self] in await self?.recordCatalogTry(now, for: asked) })
+                                               willTryCatalog: { [weak self] in await self?.recordCatalogTry(for: asked) })
             // An answer from a backend he has since left (signed out, signed in again,
             // switched to the sample) is dropped, even if the mode reads the same.
             guard generation == asked else { return }
