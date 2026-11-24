@@ -40,3 +40,13 @@ extension Wording {
         suggestion.shared.isEmpty ? nil : "Shares \(suggestion.shared.joined(separator: ", "))"
     }
 }
+
+/// Staging for App Store screenshots: which free stretch to open on launch.
+public enum GapStaging {
+    /// The first of `gaps` when it is on `requestedDay` (a "YYYY-MM-DD" passed at launch);
+    /// otherwise none. No request, a blank one or another day opens nothing.
+    public static func gapToOpen(requestedDay: String?, in gaps: [Gap]) -> Gap? {
+        guard let day = Identifier.clean(requestedDay), let first = gaps.first, first.date == day else { return nil }
+        return first
+    }
+}

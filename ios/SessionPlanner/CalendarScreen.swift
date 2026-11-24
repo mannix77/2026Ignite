@@ -231,8 +231,8 @@ private struct DayView: View {
         // For App Store screenshots (debug builds only): `-shotGap 2027-03-09` opens that day's
         // first free stretch.
         .onAppear {
-            if openGap == nil, let day = Launch.string("shotGap"), let first = gaps.first, first.date == day {
-                openGap = OpenGap(gap: first)
+            if openGap == nil, let gap = GapStaging.gapToOpen(requestedDay: Launch.string("shotGap"), in: gaps) {
+                openGap = OpenGap(gap: gap)
             }
         }
     }

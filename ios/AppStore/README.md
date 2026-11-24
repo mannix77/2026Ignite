@@ -164,7 +164,7 @@ not ask.
 
 | Field | Value |
 | --- | --- |
-| Sign-in required | **No** (see notes: every feature can be reviewed without an account; whether Apple accepts that in place of a demo account is its call, see "No test account" under risks) |
+| Sign-in required | **No** (see notes: every feature except the optional Apple Calendar setting can be reviewed without an account; whether Apple accepts that in place of a demo account is its call, see "No test account" and "Calendar permission" under risks) |
 | Contact first name, last name, phone, email | **YOU** |
 
 **Notes for the reviewer** (paste as is; the APPLE CALENDAR paragraph is new in 1.1)
@@ -174,10 +174,11 @@ Session Planner shows an attendee's AWS re:Invent schedule as a calendar.
 
 HOW TO REVIEW WITHOUT AN ACCOUNT
 On the first screen, tap "Try the sample conference". This loads a made-up conference stored
-in the app and exercises every feature with no account and no network: the calendar, favorites,
-the venue-change warning (open Wed 10), search and filters, session details, adding and removing
-a favorite, reserving a seat (try ARC420 to see a refused clash, SEC220 to see a success) and
-cancelling a reservation.
+in the app and exercises every feature except the optional Apple Calendar setting (see below),
+with no account and no network: the calendar, swiping between days, favorites, the venue-change
+warning (open Wed 10), the free stretches and the sessions that fit them (tap "Free 9:00 - 11:00
+AM" on Tue 9), search and filters, session details, adding and removing a favorite, reserving a
+seat (try ARC420 to see a refused clash, SEC220 to see a success) and cancelling a reservation.
 
 ABOUT SIGN-IN
 "Sign in with AWS Builder ID" is for people registered for the event. A Builder ID that is not

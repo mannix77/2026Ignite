@@ -70,3 +70,24 @@ final class GapOfferTests: XCTestCase {
         XCTAssertNil(Wording.reasons(nothingShared))
     }
 }
+
+final class GapStagingTests: XCTestCase {
+    private let morning = Gap(date: "2027-03-09", start: 540, end: 660, before: .open, after: .at("South Pavilion"))
+    private let afternoon = Gap(date: "2027-03-09", start: 780, end: 1080, before: .at("South Pavilion"), after: .open)
+
+    func testTheRequestedDayOpensItsFirstFreeStretch() {
+        XCTAssertEqual(GapStaging.gapToOpen(requestedDay: "2027-03-09", in: [morning, afternoon]), morning)
+    }
+
+    func testNoRequestOpensNothing() {
+        XCTAssertEqual(GapStaging.gapToOpen(requestedDay: "2027-03-09", in: [morning]), morning) // precondition
+        XCTAssertNil(GapStaging.gapToOpen(requestedDay: nil, in: [morning, afternoon]))
+    }
+
+    func testAnotherDayOrNoFreeStretchOpensNothing() {
+        XCTAssertEqual(GapStaging.gapToOpen(requestedDay: "2027-03-09", in: [morning]), morning) // precondition
+        XCTAssertNil(GapStaging.gapToOpen(requestedDay: "2027-03-10", in: [morning, afternoon]))
+        XCTAssertNil(GapStaging.gapToOpen(requestedDay: "2027-03-09", in: []))
+        XCTAssertNil(GapStaging.gapToOpen(requestedDay: "  ", in: [morning]))
+    }
+}
