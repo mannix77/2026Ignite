@@ -203,10 +203,25 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       When he comes back to the app with no connection
       Then the calendar he last saw is kept and no message interrupts him
 
+    Example: The one who pulls to refresh while it updates by itself
+      Given the app is updating by itself with no connection
+      When he pulls to refresh before it finishes
+      Then he is told the site couldn't be reached, as when he refreshes
+
     Example: The one whose sign-in is no longer good
       Given the conference site rejects his saved sign-in
       When he comes back to the app after 5 minutes
       Then the app asks him to sign in again, as when he refreshes
+
+    Example: The one already asked to sign in again
+      Given the app has asked him to sign in again and he chose "Not now"
+      When he comes back to the app later
+      Then nothing is fetched and he is not asked again until he refreshes or signs in
+
+    Example: The one who leaves to read a code while signing in
+      Given he is signing in again
+      When he leaves the app to read the verification code and comes back
+      Then no update starts until the sign-in finishes
 
   Rule: The app waits when the site says it is busy
 

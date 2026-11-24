@@ -115,6 +115,11 @@ final class AppModel {
     private var generation = 0
     /// The generation a refresh is running for, if one is.
     private var refreshingFor: Int?
+    /// True while the running refresh is one he didn't ask for; a refresh he asks for while
+    /// it runs joins it and makes it report its problems like his own.
+    private var refreshIsQuiet = false
+    /// Set once `start()` has finished, so coming back to the app can't overtake launching.
+    private var started = false
     private var signInFlow: SignInFlow?
 
     var event: EventInfo { mode == .demo ? .sample : .reinvent2026 }
@@ -122,6 +127,7 @@ final class AppModel {
     // MARK: Starting up
 
     func start() async {
+        defer { started = true }
         let saved = Mode(rawValue: UserDefaults.standard.string(forKey: "mode") ?? "") ?? .signedOut
         switch saved {
         case .demo:
@@ -285,17 +291,26 @@ final class AppModel {
     // MARK: Reading
 
     /// Updates the calendar on coming back to the app, if it is old enough (`AutoRefresh`).
+    /// Not while he is signing in (he may have left to read a code), nor once his saved sign-in
+    /// is known to be rejected: that would only fail and ask again on every return.
     func refreshOnReturn() async {
-        guard mode != .signedOut, AutoRefresh.isDue(lastUpdated: snapshot?.fetchedAt, now: Date()) else { return }
+        guard started, mode != .signedOut, !isSigningIn, !needsSignIn,
+              AutoRefresh.isDue(lastUpdated: snapshot?.fetchedAt, now: Date()) else { return }
         await refresh(automatic: true)
     }
 
     /// Fetches the catalog and schedule. On any failure the calendar last seen is kept.
-    /// `automatic` (he didn't ask) keeps a failure to reach the site quiet.
+    /// `automatic` (he didn't ask) keeps a failure to reach the site quiet, unless he asks
+    /// for an update while it runs.
     func refresh(automatic: Bool = false) async {
         let asked = generation
-        guard let backend, refreshingFor != asked else { return }
+        guard let backend else { return }
+        guard refreshingFor != asked else {
+            if !automatic { refreshIsQuiet = false }
+            return
+        }
         refreshingFor = asked
+        refreshIsQuiet = automatic
         isRefreshing = true
         defer {
             if refreshingFor == asked {
@@ -314,7 +329,7 @@ final class AppModel {
         } catch is CancellationError {
             // The screen went away mid-refresh.
         } catch {
-            guard generation == asked, !automatic || AutoRefresh.shouldReport(error) else { return }
+            guard generation == asked, !refreshIsQuiet || AutoRefresh.shouldReport(error) else { return }
             report(error)
         }
     }
