@@ -36,7 +36,7 @@ struct CalendarScreen: View {
                             Divider()
                             TabView(selection: Binding(get: { day }, set: { selectedDay = $0 })) {
                                 ForEach(days, id: \.self) { page in
-                                    DayPage(snapshot: snapshot, day: page, nowMinute: now.date == page ? now.minute : nil)
+                                    DayPage(snapshot: snapshot, day: page, now: now)
                                         .tag(page)
                                 }
                             }
@@ -165,13 +165,15 @@ private struct DayPage: View {
     @Environment(AppModel.self) private var model
     let snapshot: PlanSnapshot
     let day: String
-    let nowMinute: Int?
+    /// The event's date and minute now.
+    let now: (date: String, minute: Int)
 
     var body: some View {
         DayView(agenda: snapshot.agenda(on: day, includeFavorites: model.showFavorites,
                                         index: model.sessionsByID, commitments: model.commitmentsByID),
-                gaps: snapshot.offeredGaps(on: day, index: model.sessionsByID),
-                nowMinute: nowMinute)
+                gaps: snapshot.offeredGaps(on: day, now: now, index: model.sessionsByID),
+                span: snapshot.offeredGaps(on: day, index: model.sessionsByID),
+                nowMinute: now.date == day ? now.minute : nil)
             .refreshable { await model.refresh() }
     }
 }
@@ -185,6 +187,9 @@ private struct OpenGap: Identifiable {
 private struct DayView: View {
     let agenda: DayAgenda
     let gaps: [Gap]
+    /// The day's free stretches before any are cut at the current minute: they set how much of
+    /// the day the timeline shows, so it doesn't shrink as time passes.
+    let span: [Gap]
     let nowMinute: Int?
 
     @State private var openGap: OpenGap?
@@ -212,7 +217,7 @@ private struct DayView: View {
                         .foregroundStyle(.secondary)
                         .frame(maxWidth: .infinity)
                         .padding(.top, 40)
-                    ForEach(gaps, id: \.start) { gap in
+                    ForEach(gaps, id: \.end) { gap in
                         Button {
                             openGap = OpenGap(gap: gap)
                         } label: {
@@ -222,7 +227,7 @@ private struct DayView: View {
                     }
                 } else {
                     Timeline(entries: agenda.commitments, favorites: agenda.favoriteBuckets, gaps: gaps,
-                             nowMinute: nowMinute) { openGap = OpenGap(gap: $0) }
+                             span: span, nowMinute: nowMinute) { openGap = OpenGap(gap: $0) }
                 }
             }
             .padding(12)
@@ -323,6 +328,8 @@ private struct Timeline: View {
     let entries: [AgendaEntry]
     let favorites: [FavoriteBucket]
     let gaps: [Gap]
+    /// The free stretches before any are cut at the current minute, for the timeline's extent.
+    let span: [Gap]
     let nowMinute: Int?
     let openGap: (Gap) -> Void
 
@@ -338,8 +345,8 @@ private struct Timeline: View {
 
     var body: some View {
         // Free stretches count too: the last one can run past his last commitment.
-        let starts = entries.map(\.start) + favorites.map { $0.hour * 60 } + gaps.map(\.start)
-        let ends = entries.map(\.drawnEnd) + favorites.map { ($0.hour + 1) * 60 } + gaps.map(\.end)
+        let starts = entries.map(\.start) + favorites.map { $0.hour * 60 } + span.map(\.start)
+        let ends = entries.map(\.drawnEnd) + favorites.map { ($0.hour + 1) * 60 } + span.map(\.end)
         let first = max(0, (starts.min() ?? 480) / 60 - 1)
         let last = max(first + 1, ((ends.max() ?? 1080) + 59) / 60)
         let placements = Dictionary(uniqueKeysWithValues:
@@ -386,7 +393,7 @@ private struct Timeline: View {
                     .frame(width: lane - 6, height: hourHeight - 6)
                     .offset(x: gutter + width + 6, y: y(bucket.hour * 60, first) + 2)
                 }
-                ForEach(gaps, id: \.start) { gap in
+                ForEach(gaps, id: \.end) { gap in
                     Button {
                         openGap(gap)
                     } label: {

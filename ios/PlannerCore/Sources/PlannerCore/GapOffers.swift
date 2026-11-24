@@ -6,9 +6,18 @@ extension PlanSnapshot {
     public static let shortestOfferedGap = 30
 
     /// The free stretches of a day the calendar offers suggestions for: its gaps of at least
-    /// `shortestOfferedGap` minutes. `index` is `sessionsByID`, if the caller has it built.
-    public func offeredGaps(on date: String, index: [String: Session]? = nil) -> [Gap] {
-        gaps(on: date, index: index).filter { $0.end - $0.start >= PlanSnapshot.shortestOfferedGap }
+    /// `shortestOfferedGap` minutes. `now` is the event's date and minute (`Wording.eventNow`):
+    /// on that day a stretch under way starts now, so nothing that has already started is
+    /// suggested, and one with less than `shortestOfferedGap` minutes left is not offered.
+    /// Other days are not cut. `index` is `sessionsByID`, if the caller has it built.
+    public func offeredGaps(on date: String, now: (date: String, minute: Int)? = nil,
+                            index: [String: Session]? = nil) -> [Gap] {
+        let cut = now.flatMap { $0.date == date ? $0.minute : nil }
+        return gaps(on: date, index: index).compactMap { whole in
+            var gap = whole
+            if let cut { gap.start = max(gap.start, cut) }
+            return gap.end - gap.start >= PlanSnapshot.shortestOfferedGap ? gap : nil
+        }
     }
 }
 
