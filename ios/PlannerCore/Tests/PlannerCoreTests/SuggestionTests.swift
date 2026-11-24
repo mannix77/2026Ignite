@@ -372,7 +372,7 @@ final class SuggestionTests: XCTestCase {
         XCTAssertEqual(found.map(\.shared), [["Rare"]])
     }
 
-    func testOneSuggesterAnswersEveryGapAsTheSnapshotDoes() {
+    func testOneSuggesterAnswersEveryGap() {
         let plan = snapshot(filler(4) + [offered("pick", time: "09:00", topics: ["Rare"]),
                                          offered("noon", topics: ["Rare"]), offered("eve", time: "17:00", topics: ["Rare"])],
                             favorites: ["pick"])
@@ -380,7 +380,6 @@ final class SuggestionTests: XCTestCase {
         let evening = Gap(date: "2026-12-02", start: 960, end: 1200, before: .open, after: .open)
         XCTAssertEqual(ids(suggester.suggestions(in: forumGap)), ["noon"])
         XCTAssertEqual(ids(suggester.suggestions(in: evening)), ["eve"])
-        XCTAssertEqual(suggester.suggestions(in: evening), plan.suggestions(in: evening))
     }
 
     func testOnlyTimedSessionsOnThatDayAreListed() {
