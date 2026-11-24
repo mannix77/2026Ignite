@@ -103,11 +103,12 @@ final class CountingBackend: PlanBackend, @unchecked Sendable {
     private var counts: [String: Int] = [:]
     var reserveAnswer: Result<BulkResult, APIError> = .success(BulkResult())
     var scheduleAnswer: Result<Schedule, APIError> = .success(Schedule())
+    var catalogAnswer: Result<Catalog, APIError> = .success(Catalog(sessions: []))
 
     private func count(_ name: String) { lock.withLock { counts[name, default: 0] += 1 } }
     func calls(_ name: String) -> Int { lock.withLock { counts[name, default: 0] } }
 
-    func loadCatalog() async throws -> Catalog { count("catalog"); return Catalog(sessions: []) }
+    func loadCatalog() async throws -> Catalog { count("catalog"); return try catalogAnswer.get() }
     func loadSchedule() async throws -> Schedule { count("schedule"); return try scheduleAnswer.get() }
     func reserve(_ sessionIds: [String]) async throws -> BulkResult { count("reserve"); return try reserveAnswer.get() }
     func cancelReservation(_ sessionId: String) async throws { count("cancel") }

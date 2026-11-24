@@ -74,15 +74,33 @@ public struct DayAgenda: Equatable, Sendable {
 public struct PlanSnapshot: Codable, Equatable, Sendable {
     public var sessions: [Session]
     public var schedule: Schedule
+    /// When his schedule was last read from the conference site.
     public var fetchedAt: Date
     /// Catalog records dropped on the last fetch because they were unusable.
     public var skipped: Int
+    /// When the whole catalog was last downloaded; it is downloaded less often than his schedule.
+    public var catalogFetchedAt: Date
 
-    public init(sessions: [Session], schedule: Schedule, fetchedAt: Date, skipped: Int = 0) {
+    /// `catalogFetchedAt` defaults to `fetchedAt`: both read together.
+    public init(sessions: [Session], schedule: Schedule, fetchedAt: Date, skipped: Int = 0, catalogFetchedAt: Date? = nil) {
         self.sessions = sessions
         self.schedule = schedule
         self.fetchedAt = fetchedAt
         self.skipped = skipped
+        self.catalogFetchedAt = catalogFetchedAt ?? fetchedAt
+    }
+
+    private enum CodingKeys: String, CodingKey { case sessions, schedule, fetchedAt, skipped, catalogFetchedAt }
+
+    /// A calendar saved before the catalog's own time was kept reads as both fetched together,
+    /// so it still opens.
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        sessions = try c.decode([Session].self, forKey: .sessions)
+        schedule = try c.decode(Schedule.self, forKey: .schedule)
+        fetchedAt = try c.decode(Date.self, forKey: .fetchedAt)
+        skipped = try c.decode(Int.self, forKey: .skipped)
+        catalogFetchedAt = try c.decodeIfPresent(Date.self, forKey: .catalogFetchedAt) ?? fetchedAt
     }
 
     /// A change of venue with less than this many minutes between commitments is flagged.
@@ -242,11 +260,39 @@ public enum Sync {
     /// Fetches the catalog and the schedule and builds a snapshot. Throws, leaving `previous`
     /// in place, when either fetch fails or the new catalog is under half the size of the one held.
     public static func refresh(backend: PlanBackend, previous: PlanSnapshot?, now: Date) async throws -> PlanSnapshot {
+        let catalog = try await loadCatalog(backend, previous: previous)
+        let schedule = try await backend.loadSchedule()
+        return PlanSnapshot(sessions: catalog.sessions, schedule: schedule, fetchedAt: now, skipped: catalog.skipped)
+    }
+
+    /// Reads his schedule, and downloads the whole catalog too only when `RefreshPlan` says it
+    /// is due, when his schedule names a session the catalog held doesn't have and the catalog
+    /// is `RefreshPlan.catalogForUnknownAfter` old, when nothing is held, or when
+    /// `wholeCatalog` asks for it. Throws, leaving `previous` in place, as `refresh` does.
+    public static func update(backend: PlanBackend, previous: PlanSnapshot?, now: Date,
+                              wholeCatalog: Bool = false) async throws -> PlanSnapshot {
+        guard let previous, !wholeCatalog, !RefreshPlan.catalogDue(previous, now: now) else {
+            return try await refresh(backend: backend, previous: previous, now: now)
+        }
+        var updated = previous
+        updated.schedule = try await backend.loadSchedule()
+        updated.fetchedAt = now
+        if !updated.unresolvedIDs.isEmpty,
+           now.timeIntervalSince(previous.catalogFetchedAt) >= RefreshPlan.catalogForUnknownAfter {
+            let catalog = try await loadCatalog(backend, previous: previous)
+            updated.sessions = catalog.sessions
+            updated.skipped = catalog.skipped
+            updated.catalogFetchedAt = now
+        }
+        return updated
+    }
+
+    /// The catalog, refused when it is under half the size of the one held.
+    private static func loadCatalog(_ backend: PlanBackend, previous: PlanSnapshot?) async throws -> Catalog {
         let catalog = try await backend.loadCatalog()
         if let previous, catalog.sessions.count * 2 < previous.sessions.count {
             throw APIError.catalogShrank(previous: previous.sessions.count, got: catalog.sessions.count)
         }
-        let schedule = try await backend.loadSchedule()
-        return PlanSnapshot(sessions: catalog.sessions, schedule: schedule, fetchedAt: now, skipped: catalog.skipped)
+        return catalog
     }
 }

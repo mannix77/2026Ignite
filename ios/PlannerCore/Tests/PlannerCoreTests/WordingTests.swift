@@ -74,4 +74,37 @@ final class WordingTests: XCTestCase {
         XCTAssertEqual(Wording.problem(URLError(.notConnectedToInternet)),
                        "Could not reach the conference site. Check your connection and try again.")
     }
+
+    // 2026-12-03T17:00:00Z, 09:00 in Las Vegas; the wording depends only on the difference.
+    private let updated = Date(timeIntervalSince1970: 1_796_317_200)
+
+    private func freshness(after seconds: TimeInterval, sample: Bool = false) -> String {
+        Wording.lastUpdated(updated, now: updated.addingTimeInterval(seconds), sample: sample)
+    }
+
+    func testLastUpdatedSaysHowLongAgoAndHowToUpdate() {
+        XCTAssertEqual(freshness(after: 12 * 60), "Updated from AWS 12 min ago. Pull down for the latest.")
+        XCTAssertEqual(freshness(after: 0), "Updated from AWS just now. Pull down for the latest.")
+        XCTAssertEqual(freshness(after: 2 * 3600), "Updated from AWS 2 hr ago. Pull down for the latest.")
+    }
+
+    func testLastUpdatedThresholds() {
+        XCTAssertEqual(freshness(after: 59), "Updated from AWS just now. Pull down for the latest.")
+        XCTAssertEqual(freshness(after: 60), "Updated from AWS 1 min ago. Pull down for the latest.")
+        XCTAssertEqual(freshness(after: 3599), "Updated from AWS 59 min ago. Pull down for the latest.")
+        XCTAssertEqual(freshness(after: 3600), "Updated from AWS 1 hr ago. Pull down for the latest.")
+        XCTAssertEqual(freshness(after: 86399), "Updated from AWS 23 hr ago. Pull down for the latest.")
+        XCTAssertEqual(freshness(after: 86400), "Updated from AWS 1 day ago. Pull down for the latest.")
+        XCTAssertEqual(freshness(after: 2 * 86400 + 5), "Updated from AWS 2 days ago. Pull down for the latest.")
+    }
+
+    func testLastUpdatedWithTheClockMovedBackGivesNoAge() {
+        XCTAssertEqual(freshness(after: -1800), "Updated from AWS. Pull down for the latest.")
+        XCTAssertEqual(freshness(after: -1), "Updated from AWS. Pull down for the latest.")
+    }
+
+    func testLastUpdatedForTheSampleConference() {
+        XCTAssertEqual(freshness(after: 0, sample: true), "Sample conference, updated just now. Pull down for the latest.")
+        XCTAssertEqual(freshness(after: -5, sample: true), "Sample conference. Pull down for the latest.")
+    }
 }

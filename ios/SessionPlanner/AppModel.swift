@@ -118,7 +118,7 @@ final class AppModel {
     /// True while the running refresh is one he didn't ask for; a refresh he asks for while
     /// it runs joins it and makes it report its problems like his own.
     private var refreshIsQuiet = false
-    /// Set once `start()` has finished, so coming back to the app can't overtake launching.
+    /// Set once `start()` has finished, so an update by itself can't overtake launching.
     private var started = false
     private var signInFlow: SignInFlow?
 
@@ -290,19 +290,20 @@ final class AppModel {
 
     // MARK: Reading
 
-    /// Updates the calendar on coming back to the app, if it is old enough (`AutoRefresh`).
-    /// Not while he is signing in (he may have left to read a code), nor once his saved sign-in
-    /// is known to be rejected: that would only fail and ask again on every return.
-    func refreshOnReturn() async {
+    /// Reads his schedule again if it is old enough (`RefreshPlan.scheduleDue`), as the
+    /// calendar does while it is open. Not while he is signing in (he may have left to read a
+    /// code), nor once his saved sign-in is known to be rejected: that would only fail and ask
+    /// again every few minutes.
+    func refreshIfDue() async {
         guard started, mode != .signedOut, !isSigningIn, !needsSignIn,
-              AutoRefresh.isDue(lastUpdated: snapshot?.fetchedAt, now: Date()) else { return }
+              RefreshPlan.scheduleDue(snapshot, now: Date()) else { return }
         await refresh(automatic: true)
     }
 
-    /// Fetches the catalog and schedule. On any failure the calendar last seen is kept.
-    /// `automatic` (he didn't ask) keeps a failure to reach the site quiet, unless he asks
-    /// for an update while it runs.
-    func refresh(automatic: Bool = false) async {
+    /// Reads his schedule, and the whole catalog when it is due or `wholeCatalog` asks for it
+    /// (`Sync.update`). On any failure the calendar last seen is kept. `automatic` (he didn't
+    /// ask) keeps a failure to reach the site quiet, unless he asks for an update while it runs.
+    func refresh(automatic: Bool = false, wholeCatalog: Bool = false) async {
         let asked = generation
         guard let backend else { return }
         guard refreshingFor != asked else {
@@ -319,7 +320,7 @@ final class AppModel {
             }
         }
         do {
-            let new = try await Sync.refresh(backend: backend, previous: snapshot, now: Date())
+            let new = try await Sync.update(backend: backend, previous: snapshot, now: Date(), wholeCatalog: wholeCatalog)
             // An answer from a backend he has since left (signed out, signed in again,
             // switched to the sample) is dropped, even if the mode reads the same.
             guard generation == asked else { return }
@@ -329,7 +330,7 @@ final class AppModel {
         } catch is CancellationError {
             // The screen went away mid-refresh.
         } catch {
-            guard generation == asked, !refreshIsQuiet || AutoRefresh.shouldReport(error) else { return }
+            guard generation == asked, !refreshIsQuiet || RefreshPlan.shouldReport(error) else { return }
             report(error)
         }
     }
@@ -375,6 +376,7 @@ final class AppModel {
         if outcome.readBackProblem as? APIError == .signInNeeded { needsSignIn = true }
         if let schedule = outcome.schedule, var updated = snapshot {
             updated.schedule = schedule
+            updated.fetchedAt = Date()
             setSnapshot(updated)
             if mode == .live { save(updated) }
         }

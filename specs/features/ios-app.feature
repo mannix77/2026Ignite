@@ -172,56 +172,84 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       Then that session is skipped and counted
       And the other 19 are shown
 
-  Rule: The calendar updates itself when he comes back to the app
-    During the conference the app can sit in the background for hours while he changes
-    reservations on the conference website. Coming back to the app updates the calendar if
-    it was last updated 5 minutes ago or more. An automatic update that can't reach the
-    site keeps the calendar quietly; Settings still says when it was last updated.
+  Rule: His schedule stays fresh without downloading every session each time
+    The whole catalog (about 2,900 sessions, 12 pages) is downloaded at sign-in and then at
+    most once every 24 hours. His schedule (reserved seats, favorites, invitations) is one small
+    request: while the calendar is open it is read again every 5 minutes, and pulling down
+    reads it at once. The calendar always says when it last read his schedule from AWS and
+    that pulling down gets the latest.
 
-    Example: The one back after a while
-      Given his calendar was last updated at 09:00
-      When he comes back to the app at 09:05
-      Then the app updates the calendar
+    Example: The one with the calendar open
+      Given his schedule was last read 5 minutes ago and the catalog 3 hours ago
+      When the calendar is open
+      Then the app reads his schedule again
+      And does not download the catalog
 
-    Example: The one back a moment later
-      Given his calendar was last updated at 09:00
-      When he comes back to the app at 09:04:59
-      Then nothing is fetched and the calendar stays as it was
+    Example: The one with the calendar open a moment longer
+      Given his schedule was last read 4 minutes 59 seconds ago
+      When the calendar is open
+      Then nothing is fetched
+
+    Example: The one whose catalog is a day old
+      Given the catalog was downloaded 24 hours ago
+      When his schedule is read
+      Then the whole catalog is downloaded again too
+      But at 23 hours 59 minutes 59 seconds it is not
+
+    Example: The one who favorited a brand-new session
+      Given he favorited a session on the website that the saved catalog doesn't have
+      And the catalog was downloaded an hour ago
+      When his schedule is read
+      Then the catalog is downloaded again so the session can be shown
+      But if the catalog is under an hour old, it waits, and the session shows as no longer listed
+
+    Example: The one who wants every session now
+      When he chooses "Download all sessions now" in Settings
+      Then the whole catalog and his schedule are downloaded, however recent they are
+
+    Example: The one who signs in
+      When he signs in
+      Then the whole catalog and his schedule are downloaded
 
     Example: The one whose phone clock was moved back
-      Given his calendar was last updated at 09:00
-      When he comes back to the app and the phone reads 08:30
-      Then the app updates the calendar
-
-    Example: The one with no calendar yet
-      Given no calendar has loaded
-      When he comes back to the app
-      Then the app updates the calendar
+      Given the phone's clock reads earlier than the last update
+      Then his schedule and the catalog are both fetched, since their age can't be known
 
     Example: The one with no connection
-      Given his calendar was last updated an hour ago
-      When he comes back to the app with no connection
+      Given the calendar is open with no connection
+      When the 5-minute update fails
       Then the calendar he last saw is kept and no message interrupts him
-
-    Example: The one who pulls to refresh while it updates by itself
-      Given the app is updating by itself with no connection
-      When he pulls to refresh before it finishes
-      Then he is told the site couldn't be reached, as when he refreshes
+      But when he pulls down, he is told the site couldn't be reached
 
     Example: The one whose sign-in is no longer good
-      Given the conference site rejects his saved sign-in
-      When he comes back to the app after 5 minutes
-      Then the app asks him to sign in again, as when he refreshes
-
-    Example: The one already asked to sign in again
       Given the app has asked him to sign in again and he chose "Not now"
-      When he comes back to the app later
-      Then nothing is fetched and he is not asked again until he refreshes or signs in
+      Then the calendar stops updating by itself until he signs in or pulls down
 
-    Example: The one who leaves to read a code while signing in
-      Given he is signing in again
-      When he leaves the app to read the verification code and comes back
-      Then no update starts until the sign-in finishes
+    Example: The one who checks how fresh it is
+      Given his schedule was last read from AWS 12 minutes ago
+      Then the calendar says "Updated from AWS 12 min ago. Pull down for the latest."
+
+    Example: The one just updated
+      Given his schedule was read 59 seconds ago
+      Then it says "Updated from AWS just now. Pull down for the latest."
+      But at 60 seconds it says "1 min ago"
+
+    Example: The one left for hours
+      Given his schedule was last read 59 minutes ago, then 60 minutes ago
+      Then it says "59 min ago", then "1 hr ago"
+      And a day after it says "1 day ago"
+
+    Example: The one whose phone clock reads earlier than the update
+      Then it says "Updated from AWS. Pull down for the latest." without an age it can't know
+
+    Example: The one trying the sample conference
+      Given he is trying the sample conference
+      Then the calendar says "Sample conference, updated just now. Pull down for the latest."
+
+    Example: The one with a calendar saved by the earlier version
+      Given a calendar saved before the catalog's own download time was kept
+      When the app opens
+      Then the calendar is shown, taking the catalog's download time as the schedule's
 
   Rule: The app waits when the site says it is busy
 

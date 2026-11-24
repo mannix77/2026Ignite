@@ -4,23 +4,12 @@ import SwiftUI
 @main
 struct SessionPlannerApp: App {
     @State private var model = AppModel()
-    @Environment(\.scenePhase) private var scenePhase
-    /// Set when the app goes to the background, so only a real return updates; launching is
-    /// `start()`'s job.
-    @State private var wasInBackground = false
 
     var body: some Scene {
         WindowGroup {
             RootView()
                 .environment(model)
                 .task { await model.start() }
-        }
-        .onChange(of: scenePhase) { _, phase in
-            if phase == .background { wasInBackground = true }
-            if phase == .active, wasInBackground {
-                wasInBackground = false
-                Task { await model.refreshOnReturn() }
-            }
         }
     }
 }
