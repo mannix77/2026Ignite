@@ -172,6 +172,42 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       Then that session is skipped and counted
       And the other 19 are shown
 
+  Rule: The calendar updates itself when he comes back to the app
+    During the conference the app can sit in the background for hours while he changes
+    reservations on the conference website. Coming back to the app updates the calendar if
+    it was last updated 5 minutes ago or more. An automatic update that can't reach the
+    site keeps the calendar quietly; Settings still says when it was last updated.
+
+    Example: The one back after a while
+      Given his calendar was last updated at 09:00
+      When he comes back to the app at 09:05
+      Then the app updates the calendar
+
+    Example: The one back a moment later
+      Given his calendar was last updated at 09:00
+      When he comes back to the app at 09:04:59
+      Then nothing is fetched and the calendar stays as it was
+
+    Example: The one whose phone clock was moved back
+      Given his calendar was last updated at 09:00
+      When he comes back to the app and the phone reads 08:30
+      Then the app updates the calendar
+
+    Example: The one with no calendar yet
+      Given no calendar has loaded
+      When he comes back to the app
+      Then the app updates the calendar
+
+    Example: The one with no connection
+      Given his calendar was last updated an hour ago
+      When he comes back to the app with no connection
+      Then the calendar he last saw is kept and no message interrupts him
+
+    Example: The one whose sign-in is no longer good
+      Given the conference site rejects his saved sign-in
+      When he comes back to the app after 5 minutes
+      Then the app asks him to sign in again, as when he refreshes
+
   Rule: The app waits when the site says it is busy
 
     Example: The one told to slow down

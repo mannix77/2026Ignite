@@ -284,8 +284,15 @@ final class AppModel {
 
     // MARK: Reading
 
+    /// Updates the calendar on coming back to the app, if it is old enough (`AutoRefresh`).
+    func refreshOnReturn() async {
+        guard mode != .signedOut, AutoRefresh.isDue(lastUpdated: snapshot?.fetchedAt, now: Date()) else { return }
+        await refresh(automatic: true)
+    }
+
     /// Fetches the catalog and schedule. On any failure the calendar last seen is kept.
-    func refresh() async {
+    /// `automatic` (he didn't ask) keeps a failure to reach the site quiet.
+    func refresh(automatic: Bool = false) async {
         let asked = generation
         guard let backend, refreshingFor != asked else { return }
         refreshingFor = asked
@@ -307,7 +314,7 @@ final class AppModel {
         } catch is CancellationError {
             // The screen went away mid-refresh.
         } catch {
-            guard generation == asked else { return }
+            guard generation == asked, !automatic || AutoRefresh.shouldReport(error) else { return }
             report(error)
         }
     }
