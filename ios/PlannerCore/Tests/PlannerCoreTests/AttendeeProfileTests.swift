@@ -203,7 +203,12 @@ final class AttendeeProfileTests: XCTestCase {
                                     + "\n\nSessions:\n\nA | Title a | MGM Grand | 13:00, 60 min")
         XCTAssertTrue(prompt.fits)
         XCTAssertEqual(prompt.sentIDs, ["a"])
-        XCTAssertLessThanOrEqual(prompt.metrics.profileTokens, 400)
+        // Profile 31 + 1 + 11 + 229 = 272 bytes, 91 tokens; prompt 268 + 18 + 274 + 11 + 41 =
+        // 612 bytes, 204 tokens.
+        XCTAssertEqual(prompt.metrics, PromptMetrics(estimatedTokens: 204, window: 4096, answerReserve: 1000, headroom: 2892,
+                                                     sessionsInBlock: 1, sessionsSent: 1, sessionsLeftOut: 0, abstractsCut: 0,
+                                                     profileTokens: 91, profile: ProfileUse(interestsNamed: 0, levels: nil,
+                                                         formats: nil, skips: true, reservedToday: false)))
     }
 
     func testResettingClearsAllThree() {
@@ -351,7 +356,12 @@ final class AttendeeProfileTests: XCTestCase {
                                         "1780442268555001c3pp", "1780441489120001GbbU", "1780442269516001ceDZ",
                                         "1780441485931001Goud", "1780441487120001GgdE", "1780441489876001GD4T",
                                         "1780442267542001cH2e", "1780442267792001cgYN", "1780441482581001GJV7"])
-        XCTAssertEqual(prompt.metrics.sessionsSent, 12)
+        // Lines of 11, 804, 96, 78, 151 and 35 bytes and 5 breaks: 1,180 bytes, 394 tokens.
+        XCTAssertEqual(built.text.split(separator: "\n").map(\.utf8.count), [11, 804, 96, 78, 151, 35])
+        XCTAssertEqual(built.text.utf8.count, 1180)
+        XCTAssertEqual(prompt.metrics, PromptMetrics(estimatedTokens: 2819, window: 4096, answerReserve: 1000, headroom: 277,
+                                                     sessionsInBlock: 2861, sessionsSent: 12, sessionsLeftOut: 2849,
+                                                     abstractsCut: 12, profileTokens: 394, profile: built.use))
         XCTAssertLessThan(prompt.metrics.estimatedTokens, 3096)
     }
 

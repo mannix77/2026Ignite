@@ -137,8 +137,9 @@ final class ModelPromptTests: XCTestCase {
         let overLimit = ModelPrompt.build(question: question, ranked: ranked, sessionsInBlock: 2, picks: [], budget: under)
         XCTAssertEqual(overLimit.text, [head, a].joined(separator: "\n\n"))
         XCTAssertEqual(overLimit.sentIDs, ["a"])
-        XCTAssertEqual(overLimit.metrics.sessionsLeftOut, 1)
         XCTAssertTrue(overLimit.fits)
+        // 354 + 41 = 395 bytes, 132 tokens, 13 to spare of 145.
+        XCTAssertEqual(overLimit.metrics, PromptMetrics(estimatedTokens: 132, window: 1145, answerReserve: 1000, headroom: 13, sessionsInBlock: 2, sessionsSent: 1, sessionsLeftOut: 1, abstractsCut: 0, profileTokens: 11, profile: ProfileUse(interestsNamed: 0, levels: nil, formats: nil, skips: false, reservedToday: false)))
     }
 
     func testWhenTheFixedTextAloneIsTooLongNoSessionIsSent() {
@@ -146,15 +147,19 @@ final class ModelPromptTests: XCTestCase {
         tiny.window = 1100 // 100 tokens for the prompt; the instructions alone take more
         let prompt = ModelPrompt.build(question: question, ranked: [session("a", time: "13:00")], sessionsInBlock: 1,
                                        picks: [], budget: tiny)
+        // The fixed text alone: instructions 268, question 42, profile 33, "Sessions:" 11 =
+        // 354 bytes, 118 tokens, 18 over the 100 allowed.
+        let head = modelInstructions + "\n\nQuestion: Which of these should I go to?\n\nAbout them:\nInterests: none yet\n\nSessions:"
+        XCTAssertEqual(prompt.text, head)
         XCTAssertEqual(prompt.sentIDs, [])
-        XCTAssertEqual(prompt.metrics.sessionsLeftOut, 1)
-        XCTAssertLessThan(prompt.metrics.headroom, 0)
         XCTAssertFalse(prompt.fits)
-        XCTAssertTrue(prompt.text.hasPrefix(modelInstructions))
-        // The same with the real window fits and sends the session (rule 2).
+        XCTAssertEqual(prompt.metrics, PromptMetrics(estimatedTokens: 118, window: 1100, answerReserve: 1000, headroom: -18, sessionsInBlock: 1, sessionsSent: 0, sessionsLeftOut: 1, abstractsCut: 0, profileTokens: 11, profile: ProfileUse(interestsNamed: 0, levels: nil, formats: nil, skips: false, reservedToday: false)))
+        // The same with the real window fits and sends the session (rule 2): 395 bytes, 132.
         let real = ModelPrompt.build(question: question, ranked: [session("a", time: "13:00")], sessionsInBlock: 1, picks: [])
+        XCTAssertEqual(real.text, head + "\n\nA | Title a | MGM Grand | 13:00, 60 min")
         XCTAssertTrue(real.fits)
         XCTAssertEqual(real.sentIDs, ["a"])
+        XCTAssertEqual(real.metrics, PromptMetrics(estimatedTokens: 132, window: 4096, answerReserve: 1000, headroom: 2964, sessionsInBlock: 1, sessionsSent: 1, sessionsLeftOut: 0, abstractsCut: 0, profileTokens: 11, profile: ProfileUse(interestsNamed: 0, levels: nil, formats: nil, skips: false, reservedToday: false)))
     }
 
     func testEveryFieldStaysInItsPlace() throws {
@@ -312,6 +317,14 @@ final class ModelPromptTests: XCTestCase {
         XCTAssertFalse(prompt.text.contains(three00 + "f"))
         XCTAssertTrue(prompt.text.contains("About them:\nInterests: " + (0..<15).map { "I\($0) (\(20 - $0))" }.joined(separator: ", ") + "\n"))
         XCTAssertFalse(prompt.text.contains("I15 ("))
+        // The whole prompt, as it should read.
+        let interests = (0..<15).map { "I\($0) (\(20 - $0))" }.joined(separator: ", ")
+        XCTAssertEqual(prompt.text, modelInstructions + "\n\nQuestion: Which of these should I go to?\n\nAbout them:\nInterests: "
+                       + interests + "\n\nSessions:\n\nWHOLE | Title whole | MGM Grand | 13:00, 60 min\n" + three00
+                       + "\n\nOVER | Title over | MGM Grand | 13:00, 60 min\n" + String(repeating: "abcd ", count: 58) + "abcd…")
+        XCTAssertTrue(prompt.fits)
+        // Profile 157 bytes (53 tokens); prompt 480 + 350 + 345 = 1,175 bytes, 392 tokens.
+        XCTAssertEqual(prompt.metrics, PromptMetrics(estimatedTokens: 392, window: 4096, answerReserve: 1000, headroom: 2704, sessionsInBlock: 2, sessionsSent: 2, sessionsLeftOut: 0, abstractsCut: 1, profileTokens: 53, profile: ProfileUse(interestsNamed: 15, levels: nil, formats: nil, skips: false, reservedToday: false)))
     }
 
     func testALongQuestionIsCutLikeAnAbstract() {
@@ -387,10 +400,14 @@ final class ModelPromptTests: XCTestCase {
         XCTAssertEqual(prompt.metrics.profile.interestsNamed, 4)
         XCTAssertTrue("ABCD".allSatisfy { prompt.text.contains(String(repeating: "😀", count: 59) + String($0) + " (135)") })
         XCTAssertFalse(prompt.text.contains(String(repeating: "😀", count: 59) + "E (135)"))
-        XCTAssertLessThanOrEqual(prompt.metrics.profileTokens, 400)
         XCTAssertTrue(prompt.fits)
-        XCTAssertGreaterThan(prompt.metrics.headroom, 1000)
         XCTAssertEqual(prompt.sentIDs, [])
+        let names = "ABCD".map { String(repeating: "😀", count: 59) + String($0) + " (135)" }.joined(separator: ", ")
+        XCTAssertEqual(prompt.text, modelInstructions + "\n\nQuestion: " + question + "\n\nAbout them:\nInterests: " + names
+                                    + "\n\nSessions:")
+        // Profile 23 + 4 × 243 + 6 = 1,001 bytes (334 tokens); prompt 268 + 12 + 1,200 + 2 +
+        // 1,001 + 11 = 2,494 bytes, 832 tokens.
+        XCTAssertEqual(prompt.metrics, PromptMetrics(estimatedTokens: 832, window: 4096, answerReserve: 1000, headroom: 2264, sessionsInBlock: 0, sessionsSent: 0, sessionsLeftOut: 0, abstractsCut: 0, profileTokens: 334, profile: ProfileUse(interestsNamed: 4, levels: nil, formats: nil, skips: false, reservedToday: false)))
     }
 
     func testTheFixedTextFitsWhateverTheCharacters() {
@@ -419,6 +436,13 @@ final class ModelPromptTests: XCTestCase {
             prompt.text.contains(String($0) + String(repeating: family, count: 9) + "… (135)")
         })
         XCTAssertFalse(prompt.text.contains("E" + String(repeating: family, count: 9) + "… (135)"))
+        let names = "ABCD".map { String($0) + String(repeating: family, count: 9) + "… (135)" }.joined(separator: ", ")
+        XCTAssertEqual(prompt.text, modelInstructions + "\n\nQuestion: " + String(repeating: family, count: 47) + "…"
+                                    + "\n\nAbout them:\nInterests: " + names
+                                    + "\n\nSessions:\n\nA | Title a | MGM Grand | 13:00, 60 min")
+        // Profile 23 + 4 × 235 + 6 = 969 bytes (323 tokens); prompt 268 + 12 + 1,178 + 2 + 969
+        // + 11 + 41 = 2,481 bytes, 827 tokens.
+        XCTAssertEqual(prompt.metrics, PromptMetrics(estimatedTokens: 827, window: 4096, answerReserve: 1000, headroom: 2269, sessionsInBlock: 1, sessionsSent: 1, sessionsLeftOut: 0, abstractsCut: 0, profileTokens: 323, profile: ProfileUse(interestsNamed: 4, levels: nil, formats: nil, skips: false, reservedToday: false)))
     }
 
     func testTheByteCapIsKeptExactly() {
