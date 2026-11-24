@@ -415,6 +415,12 @@ final class ModelPromptTests: XCTestCase {
         // Only a leading space to cut at: what fits is kept rather than nothing.
         XCTAssertEqual(ModelPrompt.cut(" 会議会議", to: 300, maxBytes: 9), "会…")
         XCTAssertEqual(ModelPrompt.cut("alpha bravo charlie", to: 300, maxBytes: 10), "alpha…")
+        // A cap too small for the "…" (3 bytes) gives nothing; at 3, the "…" alone.
+        XCTAssertEqual(ModelPrompt.cut("abcd", to: 300, maxBytes: 0), "")
+        XCTAssertEqual(ModelPrompt.cut("abcd", to: 300, maxBytes: 1), "")
+        XCTAssertEqual(ModelPrompt.cut("abcd", to: 300, maxBytes: 2), "")
+        XCTAssertEqual(ModelPrompt.cut("abcd", to: 300, maxBytes: 3), "…")
+        XCTAssertEqual(ModelPrompt.cut("abcd", to: 300, maxBytes: 4), "abcd")
         // Plain English under both caps is untouched; over the character cap it is cut by words.
         XCTAssertEqual(ModelPrompt.cut("plain words", to: 300, maxBytes: 1200), "plain words")
         XCTAssertEqual(ModelPrompt.cut("plain words here", to: 12, maxBytes: 1200), "plain words…")
@@ -435,6 +441,11 @@ final class ModelPromptTests: XCTestCase {
         let prompt = ModelPrompt.build(question: question, ranked: [], sessionsInBlock: 0, picks: [pick])
         XCTAssertTrue(prompt.text.contains("Question: " + String(repeating: "😀", count: 299) + "…\n"))
         XCTAssertTrue(prompt.text.contains("Their interests: " + String(repeating: "😀", count: 59) + "… (1)\n"))
+        // A name of exactly 240 bytes is kept whole (rule 9).
+        var whole = session("w")
+        whole.topics = [String(repeating: "😀", count: 60)]
+        let kept = ModelPrompt.build(question: question, ranked: [], sessionsInBlock: 0, picks: [whole])
+        XCTAssertTrue(kept.text.contains("Their interests: " + String(repeating: "😀", count: 60) + " (1)\n"))
         // Exactly 1,200 bytes is sent whole (rule 9).
         let exact = String(repeating: "😀", count: 300)
         XCTAssertEqual(exact.utf8.count, 1200)
