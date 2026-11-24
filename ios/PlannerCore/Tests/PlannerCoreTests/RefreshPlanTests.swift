@@ -229,7 +229,9 @@ final class RefreshPlanTests: XCTestCase {
         let daily = CountingBackend()
         daily.catalogAnswer = .success(Catalog(sessions: [session("a")]))
         daily.scheduleAnswer = .success(Schedule(reserved: ["a"], favorites: []))
-        let dailyResult = try await update(daily, held(catalogAge: 86400))
+        let dailyPrevious = held(catalogAge: 86400)
+        XCTAssertEqual(dailyPrevious.sessions.count, 2)
+        let dailyResult = try await update(daily, dailyPrevious)
         XCTAssertEqual(daily.log, ["catalog", "schedule"])
         XCTAssertTrue(dailyResult.triedCatalog)
         XCTAssertNil(dailyResult.catalogProblem)
@@ -241,7 +243,9 @@ final class RefreshPlanTests: XCTestCase {
         early.catalogAnswer = .success(Catalog(sessions: [session("new")]))
         early.scheduleAnswers = [.success(Schedule(reserved: [], favorites: ["new"])),
                                  .success(Schedule(reserved: ["new"], favorites: ["new"]))]
-        let earlyResult = try await update(early, held(catalogAge: 3600))
+        let earlyPrevious = held(catalogAge: 3600)
+        XCTAssertEqual(earlyPrevious.sessions.count, 2)
+        let earlyResult = try await update(early, earlyPrevious)
         XCTAssertEqual(early.log, ["schedule", "catalog", "schedule"])
         XCTAssertTrue(earlyResult.triedCatalog)
         XCTAssertNil(earlyResult.catalogProblem)
