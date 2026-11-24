@@ -151,16 +151,72 @@ carry an alpha channel, which App Store Connect refuses: flatten them before upl
 
 ## App Privacy ("nutrition label")
 
-Answer **"No, we do not collect data from this app."** The result is "Data Not Collected".
-Unchanged in 1.1: the Apple Calendar copy is written on the phone into the user's own Calendar
-account and is never sent to the developer.
+**Changes in 1.2** (#193): with the attendee's yes, the app sends Honeycomb one event per
+Apple Intelligence ranking. Opt-in still counts as collection (Apple's "optional disclosure"
+exception needs the user to choose it each time, which this doesn't), so the label changes from
+"Data Not Collected". Answer in App Store Connect, App Privacy:
 
-Why that is accurate: the developer has no server and receives nothing. The app sends the
-user's requests straight to AWS, on the user's instruction, using the user's own sign-in.
-Apple's definition of "collect" is data transmitted off the device to the developer or its
-partners in a way that lets them access it for longer than needed to service the request,
-which does not happen here. The bundled privacy manifest (`PrivacyInfo.xcprivacy`) says the
-same: no tracking, no collected data, and UserDefaults used for the app's own settings.
+1. "Do you or your third-party partners collect data from this app?" **Yes.**
+2. Data types, tick exactly these three:
+   - **Usage Data > Product Interaction**
+   - **Diagnostics > Performance Data**
+   - **Diagnostics > Other Diagnostic Data**
+3. For each of the three:
+   - Purposes: **Analytics** only.
+   - "Is this data linked to the user's identity?" **No.**
+   - "Is this data used for tracking purposes?" **No.**
+
+The result: "Data Not Linked to You: Usage Data, Diagnostics". Nothing under "Data Used to
+Track You" or "Data Linked to You".
+
+What an event really holds (`EventLog.fields` in `ios/PlannerCore/Sources/PlannerCore/EventLog.swift`,
+asserted field by field in `EventLogTests`): the event name `suggest.model`, the app's version and
+build, a random install id, the outcome (`ok`, `unavailable` with Apple's reason, `timeout`,
+`refused`, ...), the model step's duration in milliseconds, the prompt's estimated tokens, window,
+reserve and headroom, sessions in the time slot, sent, left out and abstracts cut, the profile's
+token count and number of interests, whether levels and formats came from Settings, were inferred
+or were absent, whether there were skipped formats and reserved sessions that day (yes/no), the
+model's own token counts, how many sessions it placed and how many entries were ignored, and
+whether the answer was remembered. No session codes, titles, prompt text, reasons, interests,
+schedule, personal time, sign-in, name or email.
+
+Why these answers:
+- Duration is Performance Data; outcomes and failure reasons are Other Diagnostic Data; counts of
+  what the ranking did each time a free stretch is opened are Product Interaction.
+- **Identifiers: not ticked.** The install id is a random UUID the app makes, not a device-level
+  id (Apple's "Device ID" is the advertising identifier or similar) and not an account id: it is
+  never joined with the AWS sign-in, the user can reset it, and saying no deletes it. If Apple
+  review disagrees, the cautious answer is to add **Identifiers > Device ID**, Analytics, not
+  linked, not tracking.
+- **Not linked**: the developer can't connect an event to a person; no account, name, email or
+  AWS identity is sent. **Not tracking**: nothing is combined with other companies' data or used
+  for advertising.
+
+The bundled privacy manifest (`PrivacyInfo.xcprivacy`) declares the same three types, not linked,
+not tracking, purpose Analytics, plus UserDefaults for the app's own settings.
+
+Up to 1.1.1 the answer was "No, we do not collect data from this app" ("Data Not Collected"):
+the developer has no server, and the app sends the user's requests straight to AWS on the user's
+instruction, using the user's own sign-in.
+
+### Honeycomb setup (owner)
+
+- **Key**: in Honeycomb, in the environment's API keys, create an **Ingest** key (send events
+  only; it can't read or configure). Pass it at build time:
+  `HONEYCOMB_KEY=<ingest key> TEAM=... BUILD=6 UPLOAD=1 ios/AppStore/archive.sh`. Anyone can pull it
+  out of the app, which is why it must be an ingest key; revoke and replace it if it's abused.
+  A build without `HONEYCOMB_KEY` neither asks nor sends.
+- **Dataset**: `session-planner` unless `HONEYCOMB_DATASET` says otherwise. Honeycomb creates it
+  with the first event.
+- **Retention**: Honeycomb's docs say events have a **fixed 60-day retention**, with no setting
+  to change it in the UI (docs.honeycomb.io, "How Honeycomb calculates usage": "Events and logs:
+  60-day fixed retention"; the dataset's Overview tab shows "Events Retention and Usage" as
+  information only). So there is nothing to set for "90 days": 60 is within it, and the privacy
+  policy promises "at most 90 days". Check the dataset's Overview tab says 60 days. A different
+  period can only be arranged through Honeycomb Support.
+- **Early deletion**: Environments > (environment) > Manage Data > Datasets > `session-planner`
+  > Delete (Team Owner, Deletion Protection off) deletes every event.
+- **Sampling**: none; every event is sent. A handful per attendee per day.
 
 ## Export compliance
 
@@ -210,9 +266,16 @@ any other event. The setting needs a signed-in attendee, so it is disabled in th
 conference and cannot be exercised without a registered account; the usage text is shown
 before access is requested.
 
+DIAGNOSTICS (new in 1.2)
+On first open the app asks "Share how suggestions work?". Nothing is sent unless you choose
+Share. With Share, each time Apple Intelligence ranks the suggestions for a free stretch, the
+app sends Honeycomb (a diagnostics service) the outcome, its duration and counts, with the app
+version and a random install id: no sign-in, name, schedule, sessions or typed text. Settings >
+Diagnostics changes the answer and resets the install id. It is described in the privacy policy.
+
 The app is independent. It is not affiliated with, sponsored by or endorsed by Amazon Web
-Services, and says so on its first screen and in Settings. It has no analytics, ads, tracking
-or server of its own.
+Services, and says so on its first screen and in Settings. It has no ads, tracking or server of
+its own.
 ```
 
 ## Risks to expect in review
@@ -261,6 +324,9 @@ pick the processed build, and press Submit for Review.
 Before each upload, raise the build number (`BUILD=3 TEAM=... UPLOAD=1 ios/AppStore/archive.sh`
 overrides `CURRENT_PROJECT_VERSION` without editing the project); Apple refuses a build number
 it has already seen for the same version.
+
+From 1.2, add `HONEYCOMB_KEY=...` (and `HONEYCOMB_DATASET=...` if not `session-planner`) to a
+release build that should be able to send diagnostics (see "Honeycomb setup").
 
 ## After approval
 

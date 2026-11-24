@@ -126,6 +126,38 @@ final class AppModel {
         didSet { UserDefaults.standard.set(preferences.saved, forKey: "sessionPreferences") }
     }
 
+    /// The build's Honeycomb ingest key and dataset, from the `Honeycomb.plist` that
+    /// `archive.sh` puts in a release build when given a key. A build without it sends nothing.
+    static let honeycomb = HoneycombConfig(file: Bundle.main.url(forResource: "Honeycomb", withExtension: "plist")
+        .flatMap { NSDictionary(contentsOf: $0) as? [String: Any] })
+    /// Whether he agreed to share how suggestions work with Honeycomb (#193): asked on first
+    /// open, changed in Settings. Not answered, or no, sends nothing.
+    private(set) var eventSharing = EventSharing(saved: UserDefaults.standard.object(forKey: "eventSharing")) {
+        didSet { UserDefaults.standard.set(eventSharing.saved, forKey: "eventSharing") }
+    }
+    /// The random id his events carry, made when first needed; never his AWS identity.
+    @ObservationIgnored private var installID = InstallID.usable(UserDefaults.standard.object(forKey: "installID")) {
+        didSet { UserDefaults.standard.set(installID, forKey: "installID") }
+    }
+    @ObservationIgnored private let eventLog = EventLog(config: AppModel.honeycomb, transport: URLSessionTransport())
+    @ObservationIgnored private let appBuild = AppBuild(
+        version: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "",
+        build: Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "")
+
+    /// Whether to ask him now, on opening the app.
+    var asksToShareEvents: Bool { EventLog.asksOnLaunch(eventSharing, config: AppModel.honeycomb) }
+    /// Whether this build can send to Honeycomb at all.
+    var canShareEvents: Bool { AppModel.honeycomb != nil }
+
+    /// His answer. Saying no also forgets the install id, so a later yes starts a new one.
+    func setEventSharing(_ allowed: Bool) {
+        eventSharing = allowed ? .allowed : .declined
+        if !allowed { installID = nil }
+    }
+
+    /// A new random install id: his next events can't be tied to the earlier ones.
+    func resetInstallID() { installID = InstallID.make() }
+
     private let tokens = TokenStore()
     private let store = SnapshotStore()
     private var saveVersion = 0
@@ -258,7 +290,7 @@ final class AppModel {
         let ranked = ModelStep.remembered(suggestions, sessionsInBlock: snapshot.sessionsStarting(in: gap), picks: snapshot.picks,
                                           preferences: preferences, reservedToday: snapshot.reservedCount(on: gap.date),
                                           ranker: onDeviceModel)
-        if let ranked { AppModel.log(ranked.run) }
+        if let ranked { log(ranked.run, duration: nil) }
         return ranked
     }
 
@@ -269,19 +301,29 @@ final class AppModel {
         let snapshot = snapshot
         let preferences = preferences
         let ranker = onDeviceModel
+        let clock = ContinuousClock()
+        let started = clock.now
         let work = Task.detached(priority: .userInitiated) {
             await ModelStep.rank(suggestions, sessionsInBlock: snapshot?.sessionsStarting(in: gap) ?? 0,
                                  picks: snapshot?.picks ?? [], preferences: preferences,
                                  reservedToday: snapshot?.reservedCount(on: gap.date) ?? 0, ranker: ranker)
         }
         let ranked = await withTaskCancellationHandler { await work.value } onCancel: { work.cancel() }
-        AppModel.log(ranked.run)
+        log(ranked.run, duration: clock.now - started)
         return ranked
     }
 
-    /// One line per request to the model, on the phone only: its outcome and counts, never the
-    /// prompt or the reasons (#193; Honeycomb comes in a later step).
-    private static func log(_ run: ModelRun) {
+    /// One line per request to the model on the phone, and one event to Honeycomb when he
+    /// agreed (`EventLog`): its outcome, counts and timing, never the prompt or the reasons.
+    private func log(_ run: ModelRun, duration: Duration?) {
+        if eventSharing == .allowed {
+            let id = installID ?? InstallID.make()
+            installID = id
+            let eventLog = eventLog, sharing = eventSharing, app = appBuild
+            Task.detached(priority: .utility) {
+                _ = await eventLog.send(run, duration: duration, sharing: sharing, installID: id, app: app)
+            }
+        }
         let outcome = run.outcome.rawValue
         let unavailable = run.unavailableReason ?? "-"
         let p = run.prompt

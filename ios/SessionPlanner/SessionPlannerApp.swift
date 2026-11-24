@@ -49,6 +49,12 @@ struct RootView: View {
                 }
             }
         }
+        .alert("Share how suggestions work?", isPresented: Binding(get: { model.asksToShareEvents }, set: { _ in })) {
+            Button("Share") { model.setEventSharing(true) }
+            Button("Don't share", role: .cancel) { model.setEventSharing(false) }
+        } message: {
+            Text(EventSharingText.question)
+        }
         .alert("Session Planner", isPresented: Binding(get: { model.notice != nil }, set: { if !$0 { model.notice = nil } })) {
             if model.needsSignIn {
                 Button("Sign in again") { Task { await model.signIn() } }
@@ -133,4 +139,10 @@ extension Commitment {
         case .favorite: .orange
         }
     }
+}
+
+/// What he is told about sharing with Honeycomb, on first open and in Settings.
+enum EventSharingText {
+    static let question = "When Apple Intelligence ranks suggestions for a free stretch, the app can send Honeycomb, a diagnostics service, how it went: whether it worked, how long it took and counts, with a random id. Never your sign-in, name, schedule, sessions or anything you type. Nothing is sent unless you choose Share. Change this any time in Settings."
+    static let footer = "Sends Honeycomb, a diagnostics service, how each Apple Intelligence ranking went: whether it worked, how long it took and counts, with the app's version and a random install id. Never your sign-in, name, schedule, sessions or anything you type. Kept at most 90 days. Resetting the id makes your next events unconnected to earlier ones."
 }

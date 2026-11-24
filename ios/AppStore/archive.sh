@@ -16,8 +16,14 @@
 #   BUILD=2 ...   sets the build number. Apple refuses a number it has already seen for the
 #                 same version, so raise it for every upload.
 #
-# The team id is passed on the command line on purpose, so it is never written into the
-# project file in this public repository.
+#   HONEYCOMB_KEY=hcaik_... ...   puts the send-only Honeycomb ingest key in the build, so it
+#                 can send how suggestions work, only if the attendee agrees (#193). Without
+#                 it the build asks nothing and sends nothing. HONEYCOMB_DATASET names the
+#                 dataset (default session-planner). The key is written to
+#                 ios/SessionPlanner/Honeycomb.plist only while the build runs; git ignores it.
+#
+# The team id and the Honeycomb key are passed on the command line on purpose, so they are
+# never written into this public repository.
 set -eu
 
 here=$(cd "$(dirname "$0")" && pwd)
@@ -28,6 +34,20 @@ export DEVELOPER_DIR="${DEVELOPER_DIR:-/Applications/Xcode.app/Contents/Develope
 
 rm -rf "$archive" "$out/export"
 mkdir -p "$out"
+
+# The Honeycomb key goes in only for this build: a file left from an earlier run is removed
+# first, so a build without HONEYCOMB_KEY never carries an old key.
+honeycomb="$ios/SessionPlanner/Honeycomb.plist"
+rm -f "$honeycomb"
+if [ -n "${HONEYCOMB_KEY:-}" ]; then
+    trap 'rm -f "$honeycomb"' EXIT
+    plutil -create xml1 "$honeycomb"
+    plutil -insert IngestKey -string "$HONEYCOMB_KEY" "$honeycomb"
+    plutil -insert Dataset -string "${HONEYCOMB_DATASET:-session-planner}" "$honeycomb"
+    echo "Honeycomb key included (dataset ${HONEYCOMB_DATASET:-session-planner})."
+else
+    echo "No HONEYCOMB_KEY: this build sends nothing to Honeycomb."
+fi
 
 set -- -project "$ios/SessionPlanner.xcodeproj" -scheme SessionPlanner -configuration Release \
     -destination 'generic/platform=iOS' -archivePath "$archive"
