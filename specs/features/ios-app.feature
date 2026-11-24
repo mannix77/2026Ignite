@@ -780,3 +780,87 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
         and for levels, formats, skips and reserved today whether each was there and where
         it came from, but not their text
 
+
+  Rule: Apple Intelligence ranks the top of a free stretch's list
+    The sessions that fit a free stretch show at once in their usual order. When the phone
+    has Apple Intelligence, the top of that list (at most 12, as many as fit the model's
+    window) then goes to the on-device model with his profile. The sessions it ranks move to
+    the top in its order, each with its one-line reason in place of what it shares with his
+    picks, and every other session follows in the usual order. Without Apple Intelligence, or
+    when the model fails in any way, the usual list stays as it is. Nothing leaves the phone,
+    nothing is reserved or favorited, and he types nothing (no question yet).
+
+    Example: The model's order
+      Given 14 sessions fit a free stretch, A to N in the usual order
+      When the model ranks L, B and A, with a reason for each
+      Then the list reads L, B, A, then C to K, M and N in the usual order
+      And L, B and A show the model's reasons, and the rest what they share with his picks
+      And the list is headed "Top 3 ranked by Apple Intelligence"
+
+    Example: Only what was sent can move
+      Given the model ranks "XYZ999", which wasn't sent, then B and C
+      And then M, which was in the list but not sent
+      Then B and C come first, M keeps its usual place, and nothing is shown for "XYZ999"
+
+    Example: A session named twice
+      Given the model ranks B, A and B again
+      Then B comes first and A second, once each
+      And a session named three times still counts as one right answer, not two wrong ones
+
+    Example: The code as it was shown
+      Given a session sent with the code "AIM301"
+      Then the model's "AIM301" moves it, and "aim301" doesn't: codes match exactly
+
+    Example: Two sessions sent with the same code
+      Given two or three sessions sent with the code "AIM301"
+      When the model ranks "AIM301"
+      Then none of them moves, since it can't be told which one it meant
+
+    Example: The answer that is mostly wrong
+      Given the model names 2 sessions that were sent and 3 that weren't
+      Then the usual list is shown, without the model's reasons
+      But with 2 that were sent and 2 that weren't, the 2 it named go first
+      And only codes it wasn't sent count as wrong, not a session named again
+
+    Example: The long and the empty reason
+      Given the model gives a reason of 151 characters
+      Then it is cut at a word to at most 150, ending with "…", and one of 150 is shown whole
+      And a session ranked with an empty reason moves up and shows what it shares with his picks
+      And a reason is shown on one line as written, a "|" included
+
+    Example: No Apple Intelligence
+      Given the phone can't run the model (not eligible, Apple Intelligence off, or the model
+        still downloading)
+      Then the usual list is shown and the model isn't asked
+
+    Example: The model fails
+      Given the model refuses, runs out of room, hits its guardrails, times out on its own,
+        or fails otherwise
+      Then the usual list stays, without the model's reasons
+      And the outcome says which
+
+    Example: The model that takes too long
+      Given the model hasn't answered after 20 seconds
+      Then the usual list stays and the outcome is a timeout
+      But an answer that comes first is used
+
+    Example: Nothing to rank
+      Given no session fits the stretch
+      Then the model isn't asked
+
+    Example: The stretch that moves on with the minute
+      Given the model has ranked an open stretch
+      When the minute moves on and the same sessions would be sent
+      Then the ranked list shows straight away from its last answer, and it isn't asked again
+      And the request is recorded as remembered, with no tokens
+      But when what would be sent changes, or its last attempt failed, it is asked
+
+    Example: The list closed while the model works
+      Given he closes the list, or the minute moves on, while the model is working
+      Then the request is recorded as stopped, not as a failure
+      And the model's answer, when it comes, is kept for the next time the same sessions are sent
+
+    Example: What is recorded
+      Then each request records its outcome, why the model was unavailable if it was, the
+        prompt's measures, the model's own token counts when it gives them, how many sessions
+        it placed and how many of its entries were ignored, but not the prompt or the reasons

@@ -1,6 +1,9 @@
 import Foundation
 import Observation
+import os
 import PlannerCore
+
+private let modelLog = Logger(subsystem: "SessionPlanner", category: "model")
 
 /// The conference the app talks to.
 struct EventInfo {
@@ -213,6 +216,49 @@ final class AppModel {
         return await Task.detached(priority: .userInitiated) {
             ranker.suggestions(in: gap, lineUp: lineUp, preferences: preferences)
         }.value
+    }
+
+    /// Apple's on-device model where the phone has it, answering a prompt it has just answered
+    /// from its last answer (an open stretch reloads every minute).
+    @ObservationIgnored private let onDeviceModel: RememberingRanker? = AppleIntelligence.ranker().map(RememberingRanker.init)
+
+    /// Whether the on-device model will be asked about `suggestions` (`ModelStep.willAsk`).
+    func willRankWithModel(_ suggestions: [Suggestion]) -> Bool { ModelStep.willAsk(suggestions, ranker: onDeviceModel) }
+
+    /// `suggestions` as the on-device model last ranked them, at once, when it has already
+    /// answered for this list (an open stretch reloading on the minute); nil otherwise.
+    func rememberedRanking(of suggestions: [Suggestion], in gap: Gap) -> RankedSuggestions? {
+        guard let onDeviceModel, let snapshot else { return nil }
+        let ranked = ModelStep.remembered(suggestions, sessionsInBlock: snapshot.sessionsStarting(in: gap), picks: snapshot.picks,
+                                          preferences: preferences, reservedToday: snapshot.reservedCount(on: gap.date),
+                                          ranker: onDeviceModel)
+        if let ranked { AppModel.log(ranked.run) }
+        return ranked
+    }
+
+    /// `suggestions` for `gap` after the on-device model's turn (`ModelStep`): what it ranks
+    /// first, with its reasons, then the rest; or the list as it was. Run off the main actor,
+    /// and stopped when the screen asking for it goes away.
+    func modelRanking(of suggestions: [Suggestion], in gap: Gap) async -> RankedSuggestions {
+        let snapshot = snapshot
+        let preferences = preferences
+        let ranker = onDeviceModel
+        let work = Task.detached(priority: .userInitiated) {
+            await ModelStep.rank(suggestions, sessionsInBlock: snapshot?.sessionsStarting(in: gap) ?? 0,
+                                 picks: snapshot?.picks ?? [], preferences: preferences,
+                                 reservedToday: snapshot?.reservedCount(on: gap.date) ?? 0, ranker: ranker)
+        }
+        let ranked = await withTaskCancellationHandler { await work.value } onCancel: { work.cancel() }
+        AppModel.log(ranked.run)
+        return ranked
+    }
+
+    /// One line per request to the model, on the phone only: its outcome and counts, never the
+    /// prompt or the reasons (#193; Honeycomb comes in a later step).
+    private static func log(_ run: ModelRun) {
+        let outcome = run.outcome.rawValue
+        let unavailable = run.unavailableReason ?? "-"
+        modelLog.info("model outcome=\(outcome, privacy: .public) unavailable=\(unavailable, privacy: .public) estimated=\(run.prompt?.estimatedTokens ?? -1) promptTokens=\(run.modelPromptTokens ?? -1) answerTokens=\(run.modelAnswerTokens ?? -1) inBlock=\(run.prompt?.sessionsInBlock ?? -1) sent=\(run.prompt?.sessionsSent ?? -1) placed=\(run.placed) ignored=\(run.ignored) remembered=\(run.remembered)")
     }
 
     func sessions(matching filter: SessionFilter, search: String) -> [Session] {

@@ -273,6 +273,10 @@ private struct GapSheet: View {
     let gap: Gap
     /// The list and the stretch it was worked out for.
     @State private var loaded: GapSuggestions?
+    /// Over the list once the on-device model has ranked it, for the stretch it ranked.
+    @State private var modelHeader: (gap: Gap, text: String)?
+    /// The stretch the on-device model is ranking now.
+    @State private var ranking: Gap?
 
     var body: some View {
         // Shown only for the stretch as it is now: while a newer one loads, the old list goes.
@@ -283,9 +287,19 @@ private struct GapSheet: View {
                     ContentUnavailableView("Nothing fits", systemImage: "calendar.badge.clock",
                                            description: Text("No session in this time is like your picks and leaves time for the walks and the line."))
                 } else if let suggestions {
-                    List(suggestions) { suggestion in
-                        NavigationLink(value: suggestion.id) {
-                            SuggestionRow(suggestion: suggestion)
+                    List {
+                        Section {
+                            ForEach(suggestions) { suggestion in
+                                NavigationLink(value: suggestion.id) {
+                                    SuggestionRow(suggestion: suggestion)
+                                }
+                            }
+                        } header: {
+                            if ranking == gap {
+                                Label("Ranking with Apple Intelligence…", systemImage: "apple.intelligence")
+                            } else if let modelHeader, modelHeader.gap == gap {
+                                Label(modelHeader.text, systemImage: "apple.intelligence")
+                            }
                         }
                     }
                     .listStyle(.plain)
@@ -304,7 +318,22 @@ private struct GapSheet: View {
             let found = await model.suggestions(in: gap)
             // A newer stretch has replaced this one: its own task sets the list.
             guard !Task.isCancelled else { return }
+            // What the on-device model already ranked shows at once, so a stretch reloading on
+            // the minute doesn't fall back to the usual order and back again.
+            if let remembered = model.rememberedRanking(of: found, in: gap) {
+                loaded = GapSuggestions(gap: gap, suggestions: remembered.suggestions)
+                modelHeader = Wording.modelHeader(remembered.run).map { (gap, $0) }
+                return
+            }
             loaded = GapSuggestions(gap: gap, suggestions: found)
+            // Then the on-device model's turn, where the phone has one.
+            guard model.willRankWithModel(found) else { return }
+            ranking = gap
+            let ranked = await model.modelRanking(of: found, in: gap)
+            if ranking == gap { ranking = nil }
+            guard !Task.isCancelled else { return }
+            loaded = GapSuggestions(gap: gap, suggestions: ranked.suggestions)
+            modelHeader = Wording.modelHeader(ranked.run).map { (gap, $0) }
         }
         // Reserving one of these (from its page) changes the calendar: this stretch may no
         // longer be free, so the list closes rather than offer what no longer fits.

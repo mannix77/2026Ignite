@@ -84,10 +84,17 @@ extension Wording {
         return parts.joined(separator: " · ")
     }
 
-    /// "Shares Agentic AI, Amazon Bedrock": why a session was suggested. Nil when it shares
-    /// nothing to name.
+    /// Why a session was suggested: the on-device model's reason when it ranked it, otherwise
+    /// "Shares Agentic AI, Amazon Bedrock". Nil when there is neither.
     public static func reasons(_ suggestion: Suggestion) -> String? {
-        suggestion.shared.isEmpty ? nil : "Shares \(suggestion.shared.joined(separator: ", "))"
+        if let reason = suggestion.modelReason { return reason }
+        return suggestion.shared.isEmpty ? nil : "Shares \(suggestion.shared.joined(separator: ", "))"
+    }
+
+    /// "Top 3 ranked by Apple Intelligence": over a list the model ranked; nil otherwise.
+    public static func modelHeader(_ run: ModelRun) -> String? {
+        guard run.outcome == .ok, run.placed > 0 else { return nil }
+        return run.placed == 1 ? "Top session ranked by Apple Intelligence" : "Top \(run.placed) ranked by Apple Intelligence"
     }
 }
 

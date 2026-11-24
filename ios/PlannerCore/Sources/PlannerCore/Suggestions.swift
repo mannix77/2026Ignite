@@ -87,6 +87,8 @@ public struct Suggestion: Equatable, Identifiable, Sendable {
     public var isFavorite: Bool
     /// Another run of a session he has favorited.
     public var isRepeatOfFavorite: Bool
+    /// Why the on-device model put it where it did (`ModelStep`); nil when it didn't rank it.
+    public var modelReason: String? = nil
 
     public var id: String { session.sessionId }
 }
@@ -137,6 +139,16 @@ struct Trait: Hashable, Comparable, Sendable {
 }
 
 extension PlanSnapshot {
+    /// How many catalog sessions start in the stretch, before any is ruled out: what the
+    /// model's request records as the sessions in the block.
+    public func sessionsStarting(in gap: Gap) -> Int {
+        sessions.filter { session in
+            guard session.isAllDaySession != true, let time = session.sessionTime, time.hasValidDate,
+                  time.date == gap.date, let start = time.startMinute else { return false }
+            return start >= gap.start && start < gap.end
+        }.count
+    }
+
     /// How much a reserved seat counts in his picks, against 1 for a favorite.
     static let reservedWeight = 2.0
 
