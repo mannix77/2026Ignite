@@ -474,16 +474,16 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
     Settings), re-order the sessions that fit a gap. How alike a session is to his picks is
     multiplied by 1.5 for a level he prefers and by 1.5 for a format he prefers, and halved
     for a format he skips. Nothing is listed for a preference alone, and nothing is removed
-    for one: a session he skips the format of is still listed, lower down. This order is
-    also what goes to the on-device model, and what is shown when there is no model.
+    for one: a session he skips the format of is still listed, lower down.
 
     Example: The level he prefers
       Given a session in the gap exactly as alike to his picks as one of them, at "300 – Advanced"
       When he prefers "300 – Advanced" in Settings
       Then its score is 1.5 instead of 1
 
-    Example: Level and format he both prefers
-      Given that session is also a "Workshop" and he prefers workshops
+    Example: A level and a format he prefers
+      Given a session in the gap exactly as alike to his picks as one of them, a "Workshop" at "300 – Advanced"
+      When he prefers "300 – Advanced" and workshops in Settings
       Then its score is 2.25
 
     Example: The format he skips
