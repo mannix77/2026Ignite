@@ -113,7 +113,13 @@ final class CountingBackend: PlanBackend, @unchecked Sendable {
     /// Every call, in the order it was made.
     var log: [String] { lock.withLock { order } }
 
-    func loadCatalog() async throws -> Catalog { count("catalog"); return try catalogAnswer.get() }
+    /// The catalog download is cancelled, as when he leaves the screen mid-download.
+    var catalogCancelled = false
+    func loadCatalog() async throws -> Catalog {
+        count("catalog")
+        if catalogCancelled { throw CancellationError() }
+        return try catalogAnswer.get()
+    }
     func loadSchedule() async throws -> Schedule {
         count("schedule")
         let next: Result<Schedule, APIError> = lock.withLock { scheduleAnswers.isEmpty ? scheduleAnswer : scheduleAnswers.removeFirst() }

@@ -303,7 +303,8 @@ final class AppModel {
     func refreshIfDue() async {
         let now = Date()
         guard started, mode != .signedOut, !isSigningIn, !needsSignIn,
-              RefreshPlan.scheduleDue(snapshot, lastAttempt: lastAutomaticAttempt, now: now) else { return }
+              RefreshPlan.scheduleDue(snapshot, lastAttempt: lastAutomaticAttempt, catalogLastTried: catalogLastTried,
+                                      now: now) else { return }
         lastAutomaticAttempt = now
         await refresh(automatic: true)
     }
@@ -311,6 +312,10 @@ final class AppModel {
     /// Reads his schedule, and the whole catalog when it is due or `wholeCatalog` asks for it
     /// (`Sync.update`). On any failure the calendar last seen is kept. `automatic` (he didn't
     /// ask) keeps a failure to reach the site quiet, unless he asks for an update while it runs.
+    private func recordCatalogTry(_ time: Date, for asked: Int) {
+        if generation == asked { catalogLastTried = time }
+    }
+
     func refresh(automatic: Bool = false, wholeCatalog: Bool = false) async {
         let asked = generation
         guard let backend else { return }
@@ -330,18 +335,14 @@ final class AppModel {
         do {
             let now = Date()
             let version = snapshotVersion
-            // The attempt is recorded before the update, so one that fails after trying the
-            // catalog still waits an hour before trying it again.
-            let lastTried = catalogLastTried
-            if Sync.triesCatalogFirst(previous: snapshot, wholeCatalog: wholeCatalog, catalogLastTried: lastTried, now: now) {
-                catalogLastTried = now
-            }
+            // Each catalog try is recorded as it starts, so one that fails or is cancelled still
+            // waits an hour before the next try.
             let result = try await Sync.update(backend: backend, previous: snapshot, now: now, wholeCatalog: wholeCatalog,
-                                               catalogLastTried: lastTried)
+                                               catalogLastTried: catalogLastTried,
+                                               willTryCatalog: { [weak self] in await self?.recordCatalogTry(now, for: asked) })
             // An answer from a backend he has since left (signed out, signed in again,
             // switched to the sample) is dropped, even if the mode reads the same.
             guard generation == asked else { return }
-            if result.triedCatalog { catalogLastTried = now }
             let new = Sync.landed(result.snapshot, current: snapshot, changedDuring: snapshotVersion != version)
             setSnapshot(new)
             needsSignIn = false

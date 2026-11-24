@@ -14,9 +14,12 @@ public enum RefreshPlan {
 
     /// True when the calendar should read his schedule again by itself: nothing is held, it is
     /// `scheduleEvery` old (or the phone's clock reads earlier than the last read, when its age
-    /// can't be known), and the last attempt by itself, if it failed, is as old.
-    public static func scheduleDue(_ snapshot: PlanSnapshot?, lastAttempt: Date?, now: Date) -> Bool {
+    /// can't be known), and the last attempt by itself, if it failed, is as old. With nothing
+    /// held the whole catalog comes too, so then it also waits `catalogRetry` after a catalog try.
+    public static func scheduleDue(_ snapshot: PlanSnapshot?, lastAttempt: Date?, catalogLastTried: Date? = nil,
+                                   now: Date) -> Bool {
         due(snapshot?.fetchedAt, every: scheduleEvery, now: now) && due(lastAttempt, every: scheduleEvery, now: now)
+            && (snapshot != nil || due(catalogLastTried, every: catalogRetry, now: now))
     }
 
     /// True when the whole catalog should be downloaded with his schedule: it is `catalogEvery`

@@ -226,6 +226,17 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       Then the calendar he last saw is kept
       And the catalog is still not tried again for an hour
 
+    Example: The one whose first download fails
+      Given no calendar has loaded yet and downloading the catalog just failed
+      When the calendar is open
+      Then it doesn't try again by itself for an hour
+      But pulling down or tapping Update tries at once
+
+    Example: The one who leaves the calendar during a download
+      Given the catalog is being downloaded early for a new session
+      When he switches tabs before it finishes
+      Then the attempt still counts, and the catalog isn't tried again for an hour
+
     Example: The one whose second schedule read fails
       Given his schedule named a new session and the catalog was downloaded for it
       When reading his schedule again fails

@@ -296,10 +296,14 @@ public enum Sync {
     /// (`RefreshPlan.catalogWantedFor`). The schedule is always read last, so it is the newest
     /// answer. Throws, leaving `previous` in place, when the schedule can't be read, or when
     /// nothing is held and the catalog can't be downloaded. If reading the schedule again after
-    /// an early download fails, the first read is kept with the new catalog.
+    /// an early download fails, the first read is kept with the new catalog. `willTryCatalog`
+    /// runs just before each catalog download, so the caller can record the try even if the
+    /// update then fails or is cancelled.
     public static func update(backend: PlanBackend, previous: PlanSnapshot?, now: Date, wholeCatalog: Bool = false,
-                              catalogLastTried: Date?) async throws -> UpdateResult {
+                              catalogLastTried: Date?,
+                              willTryCatalog: @Sendable () async -> Void = {}) async throws -> UpdateResult {
         guard let previous else {
+            await willTryCatalog()
             return UpdateResult(snapshot: try await refresh(backend: backend, previous: nil, now: now),
                                 catalogProblem: nil, triedCatalog: true, scheduleProblem: nil)
         }
@@ -310,6 +314,7 @@ public enum Sync {
         /// Downloads the catalog into `updated`, or notes why it couldn't.
         func download() async throws {
             tried = true
+            await willTryCatalog()
             do {
                 let catalog = try await loadCatalog(backend, previous: previous)
                 updated.sessions = catalog.sessions

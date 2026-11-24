@@ -45,6 +45,45 @@ final class RefreshPlanTests: XCTestCase {
         XCTAssertTrue(RefreshPlan.catalogDue(old, lastAttempt: ago(3600), now: now))
     }
 
+    func testWithNothingHeldAFailedCatalogWaitsAnHourByItself() {
+        XCTAssertFalse(RefreshPlan.scheduleDue(nil, lastAttempt: nil, catalogLastTried: ago(3599), now: now))
+        XCTAssertTrue(RefreshPlan.scheduleDue(nil, lastAttempt: nil, catalogLastTried: ago(3600), now: now))
+        // With a calendar held, the catalog's tries don't hold back his schedule (rule 2).
+        XCTAssertTrue(RefreshPlan.scheduleDue(held(scheduleAge: 300), lastAttempt: nil, catalogLastTried: ago(10), now: now))
+    }
+
+    func testEveryCatalogTryIsAnnouncedEvenWhenCancelled() async throws {
+        // An early download, cancelled mid-way: the update stops, but the try was announced.
+        let backend = CountingBackend()
+        backend.catalogCancelled = true
+        backend.scheduleAnswer = .success(Schedule(reserved: [], favorites: ["new"]))
+        let tries = TryCounter()
+        do {
+            _ = try await Sync.update(backend: backend, previous: held(catalogAge: 3600), now: now, catalogLastTried: nil,
+                                      willTryCatalog: { await tries.add() })
+            XCTFail("a cancelled update produced a snapshot")
+        } catch {
+            XCTAssertTrue(error is CancellationError)
+        }
+        XCTAssertEqual(backend.log, ["schedule", "catalog"])
+        let cancelled = await tries.count
+        XCTAssertEqual(cancelled, 1)
+        // Every path that downloads announces it once, and one that doesn't, never.
+        for (previous, whole, expected) in [(nil, false, 1), (held(catalogAge: 86400), false, 1),
+                                            (held(catalogAge: 60), true, 1), (held(catalogAge: 60), false, 0)] as [(PlanSnapshot?, Bool, Int)] {
+            let other = CountingBackend()
+            other.catalogAnswer = .success(Catalog(sessions: [session("a"), session("b")]))
+            other.scheduleAnswer = .success(Schedule(reserved: [], favorites: ["a"]))
+            let counter = TryCounter()
+            let result = try await Sync.update(backend: other, previous: previous, now: now, wholeCatalog: whole,
+                                               catalogLastTried: nil, willTryCatalog: { await counter.add() })
+            let announced = await counter.count
+            XCTAssertEqual(announced, expected)
+            XCTAssertEqual(other.calls("catalog"), expected)
+            XCTAssertEqual(result.triedCatalog, expected == 1)
+        }
+    }
+
     func testAClockMovedBackMakesBothDue() {
         XCTAssertTrue(RefreshPlan.scheduleDue(held(scheduleAge: -1), lastAttempt: nil, now: now))
         XCTAssertTrue(RefreshPlan.catalogDue(held(catalogAge: -1), lastAttempt: nil, now: now))
@@ -403,4 +442,10 @@ final class RefreshPlanTests: XCTestCase {
         XCTAssertEqual(decoded.catalogMissing, ["gone"])
         XCTAssertNotEqual(decoded.catalogFetchedAt, decoded.fetchedAt)
     }
+}
+
+/// Counts announced catalog tries.
+private actor TryCounter {
+    private(set) var count = 0
+    func add() { count += 1 }
 }
