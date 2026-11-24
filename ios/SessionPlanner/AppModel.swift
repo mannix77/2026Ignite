@@ -170,6 +170,10 @@ final class AppModel {
         isRefreshing = false
         lastAutomaticAttempt = nil
         catalogLastTried = nil
+        // What the model remembers belongs to the calendar it ranked: a new sign-in, the sample
+        // conference or signing out start with nothing. A request still running for the old
+        // one can only fill the ranker dropped here.
+        onDeviceModel = AppleIntelligence.ranker().map(RememberingRanker.init)
     }
 
     private func setMode(_ new: Mode) {
@@ -219,8 +223,9 @@ final class AppModel {
     }
 
     /// Apple's on-device model where the phone has it, answering a prompt it has just answered
-    /// from its last answer (an open stretch reloads every minute).
-    @ObservationIgnored private let onDeviceModel: RememberingRanker? = AppleIntelligence.ranker().map(RememberingRanker.init)
+    /// from its last answer (an open stretch reloads every minute). Replaced whenever the
+    /// sign-in changes (`setBackend`).
+    @ObservationIgnored private var onDeviceModel: RememberingRanker? = AppleIntelligence.ranker().map(RememberingRanker.init)
 
     /// Whether the on-device model will be asked about `suggestions` (`ModelStep.willAsk`).
     func willRankWithModel(_ suggestions: [Suggestion]) -> Bool { ModelStep.willAsk(suggestions, ranker: onDeviceModel) }
@@ -258,7 +263,9 @@ final class AppModel {
     private static func log(_ run: ModelRun) {
         let outcome = run.outcome.rawValue
         let unavailable = run.unavailableReason ?? "-"
-        modelLog.info("model outcome=\(outcome, privacy: .public) unavailable=\(unavailable, privacy: .public) estimated=\(run.prompt?.estimatedTokens ?? -1) promptTokens=\(run.modelPromptTokens ?? -1) answerTokens=\(run.modelAnswerTokens ?? -1) inBlock=\(run.prompt?.sessionsInBlock ?? -1) sent=\(run.prompt?.sessionsSent ?? -1) placed=\(run.placed) ignored=\(run.ignored) remembered=\(run.remembered)")
+        let p = run.prompt
+        let profile = p.map { "interests=\($0.profile.interestsNamed) levels=\($0.profile.levels?.rawValue ?? "-") formats=\($0.profile.formats?.rawValue ?? "-") skips=\($0.profile.skips) reservedToday=\($0.profile.reservedToday)" } ?? "-"
+        modelLog.info("model outcome=\(outcome, privacy: .public) unavailable=\(unavailable, privacy: .public) estimated=\(p?.estimatedTokens ?? -1) window=\(p?.window ?? -1) answerReserve=\(p?.answerReserve ?? -1) headroom=\(p?.headroom ?? -1) promptTokens=\(run.modelPromptTokens ?? -1) answerTokens=\(run.modelAnswerTokens ?? -1) inBlock=\(p?.sessionsInBlock ?? -1) sent=\(p?.sessionsSent ?? -1) leftOut=\(p?.sessionsLeftOut ?? -1) abstractsCut=\(p?.abstractsCut ?? -1) profileTokens=\(p?.profileTokens ?? -1) \(profile, privacy: .public) placed=\(run.placed) ignored=\(run.ignored) remembered=\(run.remembered)")
     }
 
     func sessions(matching filter: SessionFilter, search: String) -> [Session] {

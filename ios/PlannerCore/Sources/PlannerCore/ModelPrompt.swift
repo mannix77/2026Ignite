@@ -68,6 +68,9 @@ public struct ModelPrompt: Equatable, Sendable {
     public var text: String
     /// The sessions sent, in ranking order.
     public var sentIDs: [String]
+    /// Each sent session's code as the prompt shows it (`ModelStep.shownCode`), in the same
+    /// order; nil for a session sent without one.
+    public var sentCodes: [String?]
     public var metrics: PromptMetrics
 
     /// False when the fixed text alone (instructions, question, profile) is over the limit,
@@ -95,12 +98,12 @@ public struct ModelPrompt: Equatable, Sendable {
                     "Question: " + (asked.isEmpty ? "(none)" : asked),
                     profile.text,
                     "Sessions:"].joined(separator: "\n\n")
-        var lines: [(id: String, text: String, cut: Bool)] = ranked.prefix(budget.maxSessions).map { session in
+        var lines: [(id: String, code: String?, text: String, cut: Bool)] = ranked.prefix(budget.maxSessions).map { session in
             let abstract = clean(session.abstract ?? "")
             let shortened = cut(abstract, to: budget.abstractLimit)
             let entry = shortened.isEmpty ? line(session, topics: budget.maxTopics)
                                           : line(session, topics: budget.maxTopics) + "\n" + shortened
-            return (session.sessionId, entry, shortened != abstract)
+            return (session.sessionId, ModelStep.shownCode(session.abbreviation), entry, shortened != abstract)
         }
         func assemble() -> String { ([head] + lines.map(\.text)).joined(separator: "\n\n") }
         var text = assemble()
@@ -110,7 +113,7 @@ public struct ModelPrompt: Equatable, Sendable {
         }
         let tokens = TokenEstimate.tokens(text)
         return ModelPrompt(
-            text: text, sentIDs: lines.map(\.id),
+            text: text, sentIDs: lines.map(\.id), sentCodes: lines.map(\.code),
             metrics: PromptMetrics(estimatedTokens: tokens, window: budget.window, answerReserve: budget.answerReserve,
                                    headroom: budget.promptLimit - tokens, sessionsInBlock: sessionsInBlock,
                                    sessionsSent: lines.count, sessionsLeftOut: ranked.count - lines.count,

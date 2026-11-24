@@ -91,6 +91,15 @@ extension Wording {
         return suggestion.shared.isEmpty ? nil : "Shares \(suggestion.shared.joined(separator: ", "))"
     }
 
+    /// Over a free stretch's list: "Ranking with Apple Intelligence…" while the model ranks
+    /// this stretch (`ranking`), otherwise the header of its answer for this stretch
+    /// (`ranked`); nil when neither is for it.
+    public static func rankingHeader(for gap: Gap, ranking: Gap?, ranked: (gap: Gap, run: ModelRun)?) -> String? {
+        if ranking == gap { return "Ranking with Apple Intelligence…" }
+        guard let ranked, ranked.gap == gap else { return nil }
+        return modelHeader(ranked.run)
+    }
+
     /// "Top 3 ranked by Apple Intelligence": over a list the model ranked; nil otherwise.
     public static func modelHeader(_ run: ModelRun) -> String? {
         guard run.outcome == .ok, run.placed > 0 else { return nil }

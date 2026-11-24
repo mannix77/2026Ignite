@@ -44,22 +44,39 @@ public enum ModelFailure: Error, Equatable, Sendable {
 public protocol SessionRanker: Sendable {
     var availability: ModelAvailability { get }
     func rank(_ prompt: ModelPrompt) async throws -> ModelAnswer
+    /// Told when `ModelStep` gave up on `prompt` at its timeout: an answer to it that still
+    /// comes is not to be trusted later.
+    func abandon(_ prompt: ModelPrompt)
+}
+
+extension SessionRanker {
+    public func abandon(_ prompt: ModelPrompt) {}
 }
 
 /// A model that answers an identical prompt from its last answer instead of asking again: an
-/// open free stretch reloads every minute, and its list shouldn't be re-ranked each time. Only
-/// the last answer is kept, and a failure is never kept. A request runs on its own task, so
-/// when the list asking for it closes or reloads, the model still finishes and its answer is
-/// kept; asking the same prompt meanwhile waits for that same request.
+/// open free stretch reloads every minute, and its list shouldn't be re-ranked each time.
+/// Only the last usable answer is kept (`ModelStep.isUsable`); a failure, an unusable answer
+/// and one that came after its timeout are not. A request runs on its own task, so when the
+/// list asking for it closes or reloads, the model still finishes and its answer is kept;
+/// asking the same prompt meanwhile waits for that same request.
 public final class RememberingRanker: SessionRanker, @unchecked Sendable {
+    private struct Running {
+        var id: UUID
+        var task: Task<ModelAnswer, Error>
+        /// False once the request was abandoned at its timeout.
+        var keep: Bool
+    }
+
     private let model: any SessionRanker
     private let lock = NSLock()
     private var last: (prompt: String, answer: ModelAnswer)?
-    private var running: (prompt: String, task: Task<ModelAnswer, Error>)?
+    private var running: [String: Running] = [:]
     private var waiting = 0
 
     /// Callers waiting on a request now: for tests that need two to be waiting at once.
     var callersWaiting: Int { lock.withLock { waiting } }
+    /// Requests to the model not yet finished: for tests that wait for one to finish.
+    var requestsRunning: Int { lock.withLock { running.count } }
 
     public init(_ model: any SessionRanker) { self.model = model }
 
@@ -68,8 +85,13 @@ public final class RememberingRanker: SessionRanker, @unchecked Sendable {
     /// The last answer, if it was for this prompt: marked remembered, with no tokens, since
     /// the model doesn't run for it.
     public func lastAnswer(for prompt: ModelPrompt) -> ModelAnswer? {
-        guard let kept = lock.withLock({ last }), kept.prompt == prompt.text else { return nil }
-        var answer = kept.answer
+        lock.withLock { remembered(prompt) }
+    }
+
+    /// `lastAnswer`, with the lock held.
+    private func remembered(_ prompt: ModelPrompt) -> ModelAnswer? {
+        guard let last, last.prompt == prompt.text else { return nil }
+        var answer = last.answer
         answer.remembered = true
         answer.promptTokens = nil
         answer.answerTokens = nil
@@ -77,29 +99,47 @@ public final class RememberingRanker: SessionRanker, @unchecked Sendable {
     }
 
     public func rank(_ prompt: ModelPrompt) async throws -> ModelAnswer {
-        if let answer = lastAnswer(for: prompt) { return answer }
-        let task: Task<ModelAnswer, Error> = lock.withLock {
-            if let running, running.prompt == prompt.text { return running.task }
+        // The memory and the running requests are read together, so a request finishing in
+        // between can't make a second caller start the same one again.
+        let next: (answer: ModelAnswer?, task: Task<ModelAnswer, Error>?) = lock.withLock {
+            if let answer = remembered(prompt) { return (answer, nil) }
+            if let request = running[prompt.text] {
+                waiting += 1
+                return (nil, request.task)
+            }
+            let id = UUID()
             let model = model
             let task = Task { () throws -> ModelAnswer in
                 do {
                     let answer = try await model.rank(prompt)
                     self.lock.withLock {
-                        self.last = (prompt.text, answer)
-                        if self.running?.prompt == prompt.text { self.running = nil }
+                        let request = self.running[prompt.text]
+                        if request?.id == id {
+                            self.running[prompt.text] = nil
+                            if request?.keep == true, ModelStep.isUsable(answer, for: prompt) { self.last = (prompt.text, answer) }
+                        }
                     }
                     return answer
                 } catch {
-                    self.lock.withLock { if self.running?.prompt == prompt.text { self.running = nil } }
+                    self.lock.withLock { if self.running[prompt.text]?.id == id { self.running[prompt.text] = nil } }
                     throw error
                 }
             }
-            running = (prompt.text, task)
-            return task
+            running[prompt.text] = Running(id: id, task: task, keep: true)
+            waiting += 1
+            return (nil, task)
         }
-        lock.withLock { waiting += 1 }
+        if let answer = next.answer { return answer }
+        guard let task = next.task else { throw CancellationError() }
         defer { lock.withLock { waiting -= 1 } }
         return try await task.value
+    }
+
+    public func abandon(_ prompt: ModelPrompt) {
+        lock.withLock {
+            running[prompt.text]?.keep = false
+            if last?.prompt == prompt.text { last = nil }
+        }
     }
 }
 
@@ -187,19 +227,22 @@ public enum ModelStep {
 
     /// `suggestions` with what `answer` ranks first, or as they were when it isn't usable.
     static func apply(_ answer: ModelAnswer, prompt: ModelPrompt, to suggestions: [Suggestion]) -> RankedSuggestions {
-        let found = place(answer.picks, sent: prompt.sentIDs, in: suggestions)
-        let ignored = answer.picks.count - found.placed.count
+        let found = placement(answer.picks, prompt: prompt)
         func run(_ outcome: ModelOutcome, placed: Int) -> ModelRun {
             ModelRun(outcome: outcome, unavailableReason: nil, prompt: prompt.metrics,
                      modelPromptTokens: answer.promptTokens, modelAnswerTokens: answer.answerTokens,
-                     placed: placed, ignored: ignored, remembered: answer.remembered)
+                     placed: placed, ignored: answer.picks.count - found.placed.count, remembered: answer.remembered)
         }
-        guard isUsable(placed: found.placed.count, unknown: found.unknown) else {
-            return RankedSuggestions(suggestions: suggestions, run: run(.unusable, placed: 0))
+        guard found.isUsable else { return RankedSuggestions(suggestions: suggestions, run: run(.unusable, placed: 0)) }
+        let byID = Dictionary(suggestions.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
+        let placed = found.placed.compactMap { entry -> Suggestion? in
+            guard var suggestion = byID[entry.id] else { return nil }
+            suggestion.modelReason = entry.reason
+            return suggestion
         }
-        let first = Set(found.placed.map(\.id))
-        return RankedSuggestions(suggestions: found.placed + suggestions.filter { !first.contains($0.id) },
-                                 run: run(.ok, placed: found.placed.count))
+        let first = Set(placed.map(\.id))
+        return RankedSuggestions(suggestions: placed + suggestions.filter { !first.contains($0.id) },
+                                 run: run(.ok, placed: placed.count))
     }
 
     /// Whether `rank` will ask the model about `suggestions`: there are some, and the phone
@@ -210,7 +253,7 @@ public enum ModelStep {
     }
 
     /// The list as `rank` gives it from `ranker`'s last answer, worked out at once without
-    /// the model: nil when it has no answer for what this list would send.
+    /// the model: nil when it has no answer for the prompt this list would send.
     public static func remembered(_ suggestions: [Suggestion], sessionsInBlock: Int, picks: [Session],
                                   preferences: SessionPreferences = SessionPreferences(), reservedToday: Int = 0,
                                   ranker: RememberingRanker, budget: PromptBudget = PromptBudget()) -> RankedSuggestions? {
@@ -222,39 +265,54 @@ public enum ModelStep {
         return ranked.run.outcome == .ok ? ranked : nil
     }
 
-    /// An answer is used when it placed something and no more of its entries named a session
-    /// it wasn't sent than it placed: one that is mostly wrong isn't trusted for the rest
-    /// either. A session named again is ignored but isn't wrong.
-    static func isUsable(placed: Int, unknown: Int) -> Bool {
-        placed > 0 && unknown <= placed
+    /// Where the model's entries land.
+    struct Placement: Equatable {
+        /// The sessions it placed, in its order, with its reason.
+        var placed: [(id: String, reason: String?)]
+        /// Distinct codes it named that the prompt didn't show.
+        var unknown: Int
+
+        /// Used when it placed something and named no more codes it wasn't sent than it
+        /// placed: an answer that is mostly wrong isn't trusted for the rest either. A
+        /// session named again, or a code two sent sessions share, is ignored but not wrong.
+        var isUsable: Bool { !placed.isEmpty && unknown <= placed.count }
+
+        static func == (a: Placement, b: Placement) -> Bool {
+            a.unknown == b.unknown && a.placed.map(\.id) == b.placed.map(\.id) && a.placed.map(\.reason) == b.placed.map(\.reason)
+        }
     }
 
-    /// The suggestions the model named, in its order, each once, with its reason. Only a
-    /// session it was sent can be named, by its code as the prompt showed it; a code two sent
-    /// sessions share names neither.
-    static func place(_ picks: [ModelPick], sent: [String], in suggestions: [Suggestion]) -> (placed: [Suggestion], unknown: Int) {
-        let byID = Dictionary(suggestions.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
-        var byCode: [String: Suggestion] = [:]
+    /// Whether `answer` would be used for `prompt`.
+    static func isUsable(_ answer: ModelAnswer, for prompt: ModelPrompt) -> Bool {
+        placement(answer.picks, prompt: prompt).isUsable
+    }
+
+    /// The sessions the model named, in its order, each once, with its reason. Only a session
+    /// it was sent can be named, by the code the prompt showed for it; the model's code is
+    /// only trimmed, as any identifier is. A code two sent sessions share names neither.
+    static func placement(_ picks: [ModelPick], prompt: ModelPrompt) -> Placement {
+        var byCode: [String: String] = [:]
+        var shown = Set<String>()
         var shared = Set<String>()
-        for id in sent {
-            guard let suggestion = byID[id], let code = shownCode(suggestion.session.abbreviation) else { continue }
-            if byCode.removeValue(forKey: code) != nil || shared.contains(code) { shared.insert(code) } else { byCode[code] = suggestion }
+        for (id, code) in zip(prompt.sentIDs, prompt.sentCodes) {
+            guard let code else { continue }
+            if shown.insert(code).inserted { byCode[code] = id } else { shared.insert(code); byCode[code] = nil }
         }
-        var placed: [Suggestion] = []
+        var placed: [(id: String, reason: String?)] = []
         var seen = Set<String>()
-        var unknown = 0
+        var unknown = Set<String>()
         for pick in picks {
-            guard let code = shownCode(pick.code), var suggestion = byCode[code] else { unknown += 1; continue }
-            guard seen.insert(suggestion.id).inserted else { continue }
+            guard let code = Identifier.clean(pick.code) else { unknown.insert(""); continue }
+            guard shown.contains(code) else { unknown.insert(code); continue }
+            guard let id = byCode[code], seen.insert(id).inserted else { continue }
             // Shown as written, on one line: "|" only matters inside the prompt.
             let reason = ModelPrompt.cut(ModelPrompt.flat(pick.reason), to: reasonLimit)
-            suggestion.modelReason = reason.isEmpty ? nil : reason
-            placed.append(suggestion)
+            placed.append((id, reason.isEmpty ? nil : reason))
         }
-        return (placed, unknown)
+        return Placement(placed: placed, unknown: unknown.count)
     }
 
-    /// A code as the prompt shows it and as the model is matched on: on one line, "|" as "/".
+    /// A code as the prompt shows it: on one line, "|" as "/".
     static func shownCode(_ code: String?) -> String? {
         let shown = ModelPrompt.clean(code ?? "")
         return shown.isEmpty ? nil : shown
@@ -263,22 +321,27 @@ public enum ModelStep {
     /// The model's answer, or the outcome that stands for it: whichever of the answer and the
     /// timer comes first. Neither is waited for once the other has decided, so a model that
     /// keeps working after it is cancelled can't hold up the timeout. Cancelling the caller
-    /// gives `.cancelled` at once.
+    /// gives `.cancelled` at once, and once it has, the model isn't started. At the timeout,
+    /// `ranker` is told to abandon the prompt.
     static func answered(_ prompt: ModelPrompt, by ranker: any SessionRanker, within timeout: Duration,
                          sleep: @escaping @Sendable (Duration) async throws -> Void) async -> Result<ModelAnswer, ModelOutcomeError> {
         let race = Race<Result<ModelAnswer, ModelOutcomeError>>()
-        return await withTaskCancellationHandler {
+        let result = await withTaskCancellationHandler {
             await withCheckedContinuation { continuation in
                 race.start(continuation)
-                race.add(Task { race.finish(await outcome(of: prompt, by: ranker)) })
-                race.add(Task {
-                    // A timer that fails (cancelled) decides nothing.
-                    do { try await sleep(timeout); race.finish(.failure(ModelOutcomeError(.timeout))) } catch {}
-                })
+                race.launch { Task { race.finish(await outcome(of: prompt, by: ranker)) } }
+                race.launch {
+                    Task {
+                        // A timer that fails (cancelled) decides nothing.
+                        do { try await sleep(timeout); race.finish(.failure(ModelOutcomeError(.timeout))) } catch {}
+                    }
+                }
             }
         } onCancel: {
             race.finish(.failure(ModelOutcomeError(.cancelled)))
         }
+        if case let .failure(failed) = result, failed.outcome == .timeout { ranker.abandon(prompt) }
+        return result
     }
 
     /// What the model's answer, or the way it failed, stands for.
@@ -312,12 +375,13 @@ final class Race<Value: Sendable>: @unchecked Sendable {
         if let ready { continuation.resume(returning: ready) }
     }
 
-    func add(_ task: Task<Void, Never>) {
-        let late = lock.withLock { () -> Bool in
-            if !decided { tasks.append(task) }
-            return decided
+    /// Starts the task `make` creates, unless the race is already decided: the check and the
+    /// start happen together, so nothing starts after the decision.
+    func launch(_ make: () -> Task<Void, Never>) {
+        lock.withLock {
+            guard !decided else { return }
+            tasks.append(make())
         }
-        if late { task.cancel() }
     }
 
     func finish(_ value: Value) {

@@ -808,19 +808,21 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       And a session named three times still counts as one right answer, not two wrong ones
 
     Example: The code as it was shown
-      Given a session sent with the code "AIM301"
-      Then the model's "AIM301" moves it, and "aim301" doesn't: codes match exactly
+      Given a session sent with the code "AIM|301", which the prompt shows as "AIM/301"
+      Then the model's "AIM/301" moves it, and "AIM|301" and "aim/301" don't: codes match
+        exactly as shown, only trimmed of spaces
 
     Example: Two sessions sent with the same code
       Given two or three sessions sent with the code "AIM301"
       When the model ranks "AIM301"
       Then none of them moves, since it can't be told which one it meant
+      But it was sent, so it doesn't count as wrong
 
     Example: The answer that is mostly wrong
       Given the model names 2 sessions that were sent and 3 that weren't
       Then the usual list is shown, without the model's reasons
       But with 2 that were sent and 2 that weren't, the 2 it named go first
-      And only codes it wasn't sent count as wrong, not a session named again
+      And only codes it wasn't sent count as wrong, each once, not a session named again
 
     Example: The long and the empty reason
       Given the model gives a reason of 151 characters
@@ -850,15 +852,19 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
 
     Example: The stretch that moves on with the minute
       Given the model has ranked an open stretch
-      When the minute moves on and the same sessions would be sent
+      When the minute moves on and the same prompt would be sent
       Then the ranked list shows straight away from its last answer, and it isn't asked again
       And the request is recorded as remembered, with no tokens
-      But when what would be sent changes, or its last attempt failed, it is asked
+      But when the prompt changes (other sessions, or his profile, such as a new reservation
+        that day), it is asked
+      And it is asked again after a failure, an answer that wasn't used, or one that came
+        after the 20 seconds were up
+      And what it remembers is forgotten when he signs out or another sign-in starts
 
     Example: The list closed while the model works
       Given he closes the list, or the minute moves on, while the model is working
       Then the request is recorded as stopped, not as a failure
-      And the model's answer, when it comes, is kept for the next time the same sessions are sent
+      And the model's answer, when it comes, is kept for the next time the same prompt is sent
 
     Example: What is recorded
       Then each request records its outcome, why the model was unavailable if it was, the
