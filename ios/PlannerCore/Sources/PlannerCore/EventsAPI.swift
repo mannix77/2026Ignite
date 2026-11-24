@@ -30,6 +30,8 @@ public enum APIError: Error, Equatable {
     case catalogChanged
     /// More than half the records were unusable.
     case catalogMostlyJunk(skipped: Int, total: Int)
+    /// More than half the entries in a schedule answer were unusable.
+    case scheduleMostlyJunk(skipped: Int, total: Int)
     /// The new catalog is less than half the size of the one already held.
     case catalogShrank(previous: Int, got: Int)
     /// A change was sent but its answer never arrived. Read the schedule; do not send it again.
@@ -122,7 +124,19 @@ public struct EventsAPI: PlanBackend {
         guard let envelope = try? JSONDecoder().decode(ScheduleEnvelope.self, from: data) else {
             throw APIError.badResponse
         }
-        return envelope.schedule
+        // Counted from the answer's own entries, as the catalog is: an answer that is mostly
+        // unusable is refused, so it never stands for "nothing reserved" and the last good
+        // calendar (and the Calendar copy made from it) is kept.
+        var schedule = envelope.schedule
+        let raw = ((try? JSONSerialization.jsonObject(with: data)) as? [String: Any])?["schedule"] as? [String: Any]
+        let total = ["reserved", "favorites", "invitedSessions", "personalTime"]
+            .reduce(0) { $0 + ((raw?[$1] as? [Any])?.count ?? 0) }
+        let kept = schedule.reserved.count + schedule.favorites.count + schedule.invitedSessions.count
+            + schedule.personalTime.count
+        let dropped = max(0, total - kept)
+        guard dropped * 2 <= total else { throw APIError.scheduleMostlyJunk(skipped: dropped, total: total) }
+        schedule.skipped = dropped
+        return schedule
     }
 
     // MARK: Writes

@@ -170,14 +170,24 @@ private struct DayPage: View {
     var body: some View {
         DayView(agenda: snapshot.agenda(on: day, includeFavorites: model.showFavorites,
                                         index: model.sessionsByID, commitments: model.commitmentsByID),
+                gaps: snapshot.offeredGaps(on: day, index: model.sessionsByID),
                 nowMinute: nowMinute)
             .refreshable { await model.refresh() }
     }
 }
 
+/// A free stretch the attendee opened, as a sheet item.
+private struct OpenGap: Identifiable {
+    let gap: Gap
+    var id: String { "\(gap.date) \(gap.start)" }
+}
+
 private struct DayView: View {
     let agenda: DayAgenda
+    let gaps: [Gap]
     let nowMinute: Int?
+
+    @State private var openGap: OpenGap?
 
     var body: some View {
         ScrollView {
@@ -202,12 +212,83 @@ private struct DayView: View {
                         .foregroundStyle(.secondary)
                         .frame(maxWidth: .infinity)
                         .padding(.top, 40)
+                    ForEach(gaps, id: \.start) { gap in
+                        Button {
+                            openGap = OpenGap(gap: gap)
+                        } label: {
+                            Label("\(Wording.gap(gap)): see sessions that fit", systemImage: "sparkles")
+                        }
+                        .frame(maxWidth: .infinity)
+                    }
                 } else {
-                    Timeline(entries: agenda.commitments, favorites: agenda.favoriteBuckets, nowMinute: nowMinute)
+                    Timeline(entries: agenda.commitments, favorites: agenda.favoriteBuckets, gaps: gaps,
+                             nowMinute: nowMinute) { openGap = OpenGap(gap: $0) }
                 }
             }
             .padding(12)
         }
+        .sheet(item: $openGap) { GapSheet(gap: $0.gap) }
+    }
+}
+
+/// The sessions that fit one free stretch, most like his picks first, each leading to the
+/// session itself.
+private struct GapSheet: View {
+    @Environment(AppModel.self) private var model
+    @Environment(\.dismiss) private var dismiss
+    let gap: Gap
+    @State private var suggestions: [Suggestion]?
+
+    var body: some View {
+        NavigationStack {
+            Group {
+                if let suggestions, suggestions.isEmpty {
+                    ContentUnavailableView("Nothing fits", systemImage: "calendar.badge.clock",
+                                           description: Text("No session in this time is like your picks and leaves time for the walks."))
+                } else if let suggestions {
+                    List(suggestions) { suggestion in
+                        NavigationLink(value: suggestion.id) {
+                            SuggestionRow(suggestion: suggestion)
+                        }
+                    }
+                    .listStyle(.plain)
+                } else {
+                    ProgressView()
+                }
+            }
+            .navigationTitle(Wording.gap(gap))
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationDestination(for: String.self) { SessionDetailView(sessionID: $0) }
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } }
+            }
+        }
+        .task { suggestions = await model.suggestions(in: gap) }
+        // Reserving one of these (from its page) changes the calendar: this stretch may no
+        // longer be free, so the list closes rather than offer what no longer fits.
+        .onChange(of: model.snapshotVersion) { dismiss() }
+    }
+}
+
+private struct SuggestionRow: View {
+    let suggestion: Suggestion
+
+    var body: some View {
+        let session = suggestion.session
+        VStack(alignment: .leading, spacing: 3) {
+            Text(session.code).font(.caption.bold()).foregroundStyle(.secondary)
+            Text(session.title).font(.subheadline)
+            if let time = session.sessionTime, let start = time.startMinute {
+                Text([Wording.timeRange(start: start, end: start + time.lengthMinutes), session.venue]
+                    .compactMap { $0 }.joined(separator: " · "))
+                    .font(.caption).foregroundStyle(.secondary)
+            }
+            if let reasons = Wording.reasons(suggestion) {
+                Text(reasons).font(.caption)
+            }
+            Text(Wording.outlook(suggestion)).font(.caption).foregroundStyle(.tint)
+        }
+        .accessibilityElement(children: .combine)
     }
 }
 
@@ -234,7 +315,9 @@ private struct WarningRow: View {
 private struct Timeline: View {
     let entries: [AgendaEntry]
     let favorites: [FavoriteBucket]
+    let gaps: [Gap]
     let nowMinute: Int?
+    let openGap: (Gap) -> Void
 
     @State private var openBucket: FavoriteBucket?
 
@@ -247,8 +330,9 @@ private struct Timeline: View {
     @State private var labelHeights: [Int: CGFloat] = [:]
 
     var body: some View {
-        let starts = entries.map(\.start) + favorites.map { $0.hour * 60 }
-        let ends = entries.map(\.drawnEnd) + favorites.map { ($0.hour + 1) * 60 }
+        // Free stretches count too: the last one can run past his last commitment.
+        let starts = entries.map(\.start) + favorites.map { $0.hour * 60 } + gaps.map(\.start)
+        let ends = entries.map(\.drawnEnd) + favorites.map { ($0.hour + 1) * 60 } + gaps.map(\.end)
         let first = max(0, (starts.min() ?? 480) / 60 - 1)
         let last = max(first + 1, ((ends.max() ?? 1080) + 59) / 60)
         let placements = Dictionary(uniqueKeysWithValues:
@@ -295,6 +379,16 @@ private struct Timeline: View {
                     .frame(width: lane - 6, height: hourHeight - 6)
                     .offset(x: gutter + width + 6, y: y(bucket.hour * 60, first) + 2)
                 }
+                ForEach(gaps, id: \.start) { gap in
+                    Button {
+                        openGap(gap)
+                    } label: {
+                        GapBlock(gap: gap)
+                    }
+                    .buttonStyle(.plain)
+                    .frame(width: max(0, width - 3), height: max(20, CGFloat(gap.end - gap.start) / 60 * hourHeight - 3))
+                    .offset(x: gutter, y: y(gap.start, first))
+                }
                 if let nowMinute, nowMinute >= first * 60, nowMinute <= last * 60 {
                     Rectangle()
                         .fill(.red)
@@ -323,6 +417,26 @@ private struct Timeline: View {
     private func hourLabel(_ hour: Int) -> String {
         let h = hour % 24
         return "\(h % 12 == 0 ? 12 : h % 12) \(h < 12 ? "AM" : "PM")"
+    }
+}
+
+/// A free stretch on the timeline: a dashed outline that opens the sessions that fit it.
+private struct GapBlock: View {
+    let gap: Gap
+
+    var body: some View {
+        Label(Wording.gap(gap), systemImage: "sparkles")
+            .font(.caption)
+            .foregroundStyle(.tint)
+            .lineLimit(1)
+            .padding(6)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+            .overlay {
+                RoundedRectangle(cornerRadius: 8)
+                    .strokeBorder(.tint.opacity(0.5), style: StrokeStyle(lineWidth: 1, dash: [4, 3]))
+            }
+            .contentShape(Rectangle())
+            .accessibilityHint("Shows sessions that fit")
     }
 }
 

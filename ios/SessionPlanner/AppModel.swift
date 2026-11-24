@@ -155,6 +155,8 @@ final class AppModel {
 
     private func setSnapshot(_ new: PlanSnapshot?) {
         snapshot = new
+        suggester = nil
+        snapshotVersion += 1
         let index = new?.sessionsByID ?? [:]
         sessionsByID = index
         commitmentsByID = new?.commitmentsByID ?? [:]
@@ -166,6 +168,26 @@ final class AppModel {
     // MARK: What the screens show
 
     func commitment(of sessionID: String) -> Commitment? { commitmentsByID[sessionID] }
+
+    /// Built from the calendar the first time a gap is opened, and dropped when the calendar
+    /// changes, so every gap is ranked against the same picks.
+    @ObservationIgnored private var suggester: Suggester?
+    /// Goes up every time the calendar is replaced; a screen showing something worked out from
+    /// an earlier calendar watches it.
+    private(set) var snapshotVersion = 0
+
+    /// The sessions that fit a free stretch, most like his picks first. The ranking is built and
+    /// run off the main actor, so the screen doesn't stall on a large catalog.
+    func suggestions(in gap: Gap) async -> [Suggestion] {
+        guard let snapshot else { return [] }
+        let built = suggester
+        let version = snapshotVersion
+        let ranker = await Task.detached(priority: .userInitiated) { built ?? Suggester(snapshot) }.value
+        // Kept only if the calendar hasn't changed meanwhile; either way this answer is for the
+        // calendar the gap came from.
+        if suggester == nil, snapshotVersion == version { suggester = ranker }
+        return await Task.detached(priority: .userInitiated) { ranker.suggestions(in: gap) }.value
+    }
 
     func sessions(matching filter: SessionFilter, search: String) -> [Session] {
         snapshot?.sessions(matching: filter, search: search, commitments: commitmentsByID) ?? []
@@ -195,6 +217,9 @@ final class AppModel {
             let departing = saveVersion
             setSnapshot(nil)
             setBackend(nil)
+            // Likewise the Calendar copy: it was the earlier attendee's choice, so it starts off,
+            // and their calendar is never written to under this sign-in.
+            resetCalendarExport()
             await store.delete(through: departing)
             let kept = await tokens.keep(new, freshSignIn: true)
             signInID = await tokens.signInID
@@ -223,6 +248,9 @@ final class AppModel {
         needsSignIn = false
         notice = nil
         setMode(.signedOut)
+        // The Calendar copy was his choice: whoever signs in next starts with it off, and with a
+        // calendar of their own. His is left in the Calendar app, his to keep or delete.
+        resetCalendarExport()
         // Revocation can wait on the network for a while. The saved calendar is deleted
         // alongside it, not after it, so quitting the app during that wait leaves nothing behind.
         signInID = nil
@@ -329,9 +357,99 @@ final class AppModel {
         }
     }
 
+    // MARK: Apple Calendar
+
+    /// Whether his reserved sessions are kept in Apple Calendar. Off until he turns it on.
+    private(set) var exportsToCalendar = UserDefaults.standard.bool(forKey: "exportsToCalendar") {
+        didSet { UserDefaults.standard.set(exportsToCalendar, forKey: "exportsToCalendar") }
+    }
+    /// What the setting says after the last update.
+    private(set) var calendarExportStatus: String?
+    @ObservationIgnored private lazy var calendarExporter = CalendarExporter()
+
+    /// Goes up with every request to turn the Calendar copy on or off, so an older one still
+    /// waiting on the permission prompt can tell it has been overtaken.
+    @ObservationIgnored private var calendarRequest = 0
+    /// Set when forgetting an earlier attendee's calendar record failed. Until a reset works,
+    /// nothing is written: the old record must never be acted on for someone else.
+    private var calendarNeedsReset = UserDefaults.standard.bool(forKey: "calendarNeedsReset") {
+        didSet { UserDefaults.standard.set(calendarNeedsReset, forKey: "calendarNeedsReset") }
+    }
+
+    /// Turns the Apple Calendar copy off and forgets the app's calendar and record (the
+    /// calendar stays in the Calendar app). Used whenever the attendee may have changed.
+    private func resetCalendarExport() {
+        calendarRequest += 1
+        exportsToCalendar = false
+        calendarExportStatus = nil
+        calendarNeedsReset = !calendarExporter.forget()
+    }
+
+    /// Turns the Apple Calendar copy on (asking for permission, then writing it) or off. Off
+    /// stops updates and leaves the calendar as it is.
+    func setExportsToCalendar(_ on: Bool) async {
+        calendarRequest += 1
+        guard on else {
+            exportsToCalendar = false
+            calendarExportStatus = nil
+            return
+        }
+        guard mode == .live, snapshot != nil else { return }
+        let request = calendarRequest
+        let asked = generation
+        guard await calendarExporter.requestAccess() else {
+            notice = "Session Planner can't add your sessions without access to Calendar. Allow it in the Settings app, under Privacy & Security, Calendars."
+            return
+        }
+        // While the prompt was up he may have turned it off again, signed out, or signed in as
+        // someone else, and the calendar may have been refreshed: act only if nothing changed,
+        // and on the calendar as it is now.
+        guard request == calendarRequest, generation == asked, mode == .live, let current = snapshot else { return }
+        if calendarNeedsReset {
+            guard calendarExporter.forget() else {
+                notice = "Calendar can't be turned on: the app couldn't remove an earlier attendee's record of their calendar. Delete the app and install it again to clear it."
+                return
+            }
+            calendarNeedsReset = false
+        }
+        // Turning it on is the way back from a record that can't be read (the notice asks him
+        // to delete the old calendar first): it is discarded and a new calendar started.
+        if calendarExporter.hasUnreadableRecord, !calendarExporter.forget() {
+            notice = "Calendar can't be turned on: the app's record of its events can't be read or removed."
+            return
+        }
+        exportsToCalendar = true
+        exportToCalendar(current)
+    }
+
+    private func exportToCalendar(_ snapshot: PlanSnapshot) {
+        guard exportsToCalendar, !calendarNeedsReset, mode == .live else { return }
+        do {
+            let count = try calendarExporter.sync(snapshot, calendarName: event.name, timeZone: event.timeZone)
+            calendarExportStatus = Wording.calendarExport(count: count, calendar: event.name)
+        } catch CalendarExporter.Failure.denied {
+            exportsToCalendar = false
+            calendarExportStatus = nil
+            notice = "Calendar access was turned off, so your sessions are no longer kept in Calendar."
+        } catch CalendarExporter.Failure.unwritableRecords {
+            // Stop here: another update before the record is saved would add every event again.
+            exportsToCalendar = false
+            calendarExportStatus = nil
+            notice = "Calendar updates are off: the app couldn't save its record of the events it added, so updating again could add them twice. Delete the “\(event.name)” calendar in the Calendar app, then turn this on again."
+        } catch CalendarExporter.Failure.unreadableRecords {
+            exportsToCalendar = false
+            calendarExportStatus = nil
+            notice = "Calendar updates are off: the app's record of its events can't be read. Delete the “\(event.name)” calendar in the Calendar app, then turn this on again to start a new one."
+        } catch {
+            notice = "Calendar couldn't be updated: \(error.localizedDescription)"
+        }
+    }
+
     // MARK: The saved copy
 
     private func save(_ snapshot: PlanSnapshot) {
+        // Every live calendar the app keeps also brings Apple Calendar up to date, if he asked.
+        exportToCalendar(snapshot)
         guard let owner = signInID else { return }
         saveVersion += 1
         let version = saveVersion

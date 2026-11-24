@@ -217,3 +217,141 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       When he shows favorites on that day
       Then the seat he holds keeps its place on the calendar
       And the 9 favorites appear as one marker for that hour, which opens their list
+
+  Rule: A gap in his day lists the sessions he could still make, most like his picks first
+    Picks are his reserved seats (counted twice) and his favorites. Invitations are not
+    picks: a reception says nothing about what he wants to learn. A trait few sessions share
+    counts for more than one most of them share. Walks between venues are the planner's old
+    estimates: 10 to 25 minutes between the four resorts north of MGM, 35 to or from the
+    MGM Grand by shuttle, 8 inside one venue, 15 when a venue is unknown.
+
+    Example: The one that fits only if he hurries
+      Given a reserved session ends at 10:00 at "Caesars Forum"
+      And the next reserved session starts at 16:00 at "Caesars Forum"
+      And the walk between "Caesars Forum" and "Wynn/Encore" takes 20 minutes
+      When he asks what fits between them
+      Then a session at "Wynn/Encore" starting at 10:20 is listed and one starting at 10:19 is not
+      And one ending at 15:40 is listed and one ending at 15:41 is not
+
+    Example: The one between two different venues
+      Given a reserved session ends at 10:00 at "MGM Grand"
+      And the next reserved session starts at 16:00 at "Wynn/Encore"
+      When he asks what fits between them
+      Then a session at "Caesars Forum" starting at 10:35 is listed and one starting at 10:34 is not
+      And one ending at 15:40 is listed and one ending at 15:41 is not
+
+    Example: The reception listed with no length
+      Given he is invited to a reception at 10:00 that the site lists with no length
+      When he asks for the gaps that day
+      Then the next gap starts at 10:20, the shortest time the calendar draws
+
+    Example: The one with the whole day free
+      Given nothing is on his calendar on Wednesday
+      And Wednesday's sessions run from 08:00 to 19:00
+      When he asks for the gaps on Wednesday
+      Then there is one gap, from 08:00 to 19:00, with no walk at either end
+
+    Example: The one he already holds a seat for
+      Given he holds a seat in "AIM320" and its repeat "AIM320-R1" falls in the gap
+      When he asks what fits in the gap
+      Then neither is listed
+
+    Example: The favorite in the gap
+      Given "COP305" is a favorite that falls in the gap
+      When he asks what fits in the gap
+      Then it is listed and marked as a favorite
+
+    Example: The one with no picks yet
+      Given he has no reserved seats and no favorites
+      When he asks what fits in a gap
+      Then nothing is listed, since there is nothing to compare with
+
+    Example: The favorite that clashes, whose repeat fits
+      Given "COP319" is a favorite at a time he is busy
+      And its repeat "COP319-R1" falls in the gap
+      When he asks what fits in the gap
+      Then "COP319-R1" is listed as the same session as a favorite
+
+    Example: The one with a rare trait in common
+      Given his picks all cover "Agentic AI", which most sessions cover, each with a rarer interest
+      And one of those is "AWS Distro for OpenTelemetry", which few sessions cover
+      When he asks what fits in the gap
+      Then a session on "AWS Distro for OpenTelemetry" comes before one on "Agentic AI" only
+      And each says which of his interests it shares
+
+    Example: The one with no seats left
+      Given two sessions in the gap are equally like his picks
+      And one still has seats and the other has none
+      When he asks what fits in the gap
+      Then the one with seats comes first, offered to reserve
+      And the other is offered as a walk-up
+
+    Example: The one with nothing in common
+      Given a session in the gap shares nothing with his picks
+      When he asks what fits in the gap
+      Then it is not listed
+
+    Example: The reception with no level
+      Given a reception in the gap and one of his picks both have "No Level" and nothing else in common
+      When he asks what fits in the gap
+      Then the reception is not listed
+
+  Rule: A free stretch on the calendar opens the sessions that fit it
+    Only a stretch of at least 30 minutes is offered: anything shorter can't hold a session
+    and the walks either side.
+
+    Example: The one just long enough
+      Given he holds seats from 09:00 to 10:00 and from 10:30 to 11:30
+      When he opens that day
+      Then the free stretch from 10:00 to 10:30 is offered as "Free 10:00 – 10:30 AM"
+
+    Example: The one a minute too short
+      Given he holds seats from 09:00 to 10:00 and from 10:29 to 11:30
+      When he opens that day
+      Then no free stretch is offered between them
+
+    Example: The one he taps
+      Given a free stretch is offered
+      When he taps it
+      Then he sees the sessions that fit, most like his picks first
+      And each says what it shares with his picks and how he can get in
+
+  Rule: He can add his reserved sessions to Apple Calendar, and keep them matching
+    Off until he turns it on. The events go in a calendar of their own, named for the
+    conference, so he can hide or delete them in one go. Only events the app made are ever
+    changed. Favorites, invitations and personal time stay out. The app sends the calendar to
+    no one; it lives in his Calendar account (such as iCloud), which syncs it like his others.
+
+    Example: The one who turns it on
+      Given he holds a seat at "AIM320" on 2 December from 10:00 to 11:00 Las Vegas time, in "Venetian" "Level 3, Murano 3201"
+      When he turns on "Add reserved sessions to Calendar"
+      Then his calendar shows "AIM320 – " and the title, from 18:00 to 19:00 UTC on 2 December
+      And its location is "Venetian, Level 3, Murano 3201"
+
+    Example: The one who turns it on twice
+      Given his reserved sessions are already in the calendar
+      When the app brings the calendar up to date again
+      Then nothing is added, changed or removed
+
+    Example: The one whose session moved
+      Given "AIM320" is in the calendar at 10:00
+      When the conference moves it to 13:00 and the app refreshes
+      Then the same event moves to 13:00, with no second copy
+
+    Example: The one who cancelled
+      Given "AIM320" is in the calendar
+      When he cancels the reservation and the app refreshes
+      Then the event is removed
+      And the events for his other reserved sessions stay
+
+    Example: The one whose session came back unreadable
+      Given "AIM320" is in the calendar
+      And the conference sends it with a time the app cannot read, still reserved
+      When the app refreshes
+      Then the event is left as it was
+
+    Example: The one who said no
+      Given he turns it on
+      When he refuses the phone's calendar permission
+      Then the app says it can't add the sessions without that permission
+      And nothing is written

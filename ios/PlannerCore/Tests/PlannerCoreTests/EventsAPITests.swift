@@ -89,6 +89,45 @@ final class EventsAPITests: XCTestCase {
         await assertThrows(.badResponse) { try await api.loadCatalog() }
     }
 
+    // MARK: A mostly unreadable schedule
+
+    private func scheduleAnswer(reserved: [String], favorites: [String] = [], extra: String = "") -> String {
+        let quoted = { (ids: [String]) in ids.map { "\"\($0)\"" }.joined(separator: ",") }
+        return #"{"schedule":{"reserved":["# + quoted(reserved) + #"],"favorites":["# + quoted(favorites)
+            + #"],"personalTime":[]"# + extra + "}}"
+    }
+
+    func testAScheduleHalfUnreadableIsKeptAndOneMostlyUnreadableIsRefused() async throws {
+        // Both sides of "more than half": 2 good and 2 blank ids is kept; 1 good and 2 blank is not.
+        let (half, _, _, _) = makeAPI([.respond(status: 200, body: scheduleAnswer(reserved: ["r1", "r2", "", "  "]))])
+        let kept = try await half.loadSchedule()
+        XCTAssertEqual(kept, Schedule(reserved: ["r1", "r2"], skipped: 2))
+
+        let (mostly, _, _, _) = makeAPI([.respond(status: 200, body: scheduleAnswer(reserved: ["r1", "", "  "]))])
+        await assertThrows(.scheduleMostlyJunk(skipped: 2, total: 3)) { try await mostly.loadSchedule() }
+    }
+
+    func testEveryKindOfEntryCountsTowardsTheTotal() async throws {
+        // One good reservation and two good favorites carry two blank reservations.
+        let (api, _, _, _) = makeAPI([.respond(status: 200,
+                                               body: scheduleAnswer(reserved: ["r1", "", ""], favorites: ["f1", "f2"]))])
+        let schedule = try await api.loadSchedule()
+        XCTAssertEqual(schedule, Schedule(reserved: ["r1"], favorites: ["f1", "f2"], skipped: 2))
+    }
+
+    func testAnEmptyScheduleIsKeptSoCancellationsStillShow() async throws {
+        let (api, _, _, _) = makeAPI([.respond(status: 200, body: scheduleAnswer(reserved: []))])
+        let schedule = try await api.loadSchedule()
+        XCTAssertEqual(schedule, Schedule())
+    }
+
+    func testASkippedCountSentByTheSiteIsNotBelieved() async throws {
+        // The count is made from the answer's own entries, never taken from the answer.
+        let (api, _, _, _) = makeAPI([.respond(status: 200, body: scheduleAnswer(reserved: ["r1"], extra: #","skipped":99"#))])
+        let schedule = try await api.loadSchedule()
+        XCTAssertEqual(schedule, Schedule(reserved: ["r1"], skipped: 0))
+    }
+
     // MARK: Waiting and retrying
 
     func testToldToSlowDownItWaitsAsLongAsToldThenCarriesOn() async throws {
