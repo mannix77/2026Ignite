@@ -132,21 +132,26 @@ public struct ModelPrompt: Equatable, Sendable {
     }
 
     /// `cut(text, to: limit)`, and also at most `maxBytes` UTF-8 bytes: when the characters kept
-    /// take more, as many whole characters as fit with the "…" are kept instead. Since those
+    /// take more, the text is cut where the bytes run out instead, at the last word end as
+    /// `cut` does (inside a word only when it has no break, as a run of emoji). Since those
     /// bytes run out within the first `limit` characters, the result keeps both caps.
     static func cut(_ text: String, to limit: Int, maxBytes: Int) -> String {
         let byCharacters = cut(text, to: limit)
         guard byCharacters.utf8.count > maxBytes else { return byCharacters }
         // Whole characters while they and the "…" (3 bytes) fit.
-        var kept = ""
+        var room = ""
         var bytes = 0
         for character in text {
             let size = character.utf8.count
             guard bytes + size + 3 <= maxBytes else { break }
-            kept.append(character)
+            room.append(character)
             bytes += size
         }
-        return kept.trimmingCharacters(in: .whitespaces) + "…"
+        // A word that ends exactly where the room does is kept whole.
+        let endsAtWord = text.dropFirst(room.count).first?.isWhitespace == true
+        let atWord = endsAtWord ? room : room.lastIndex(where: \.isWhitespace).map { String(room[..<$0]) } ?? room
+        let kept = atWord.trimmingCharacters(in: .whitespaces)
+        return (kept.isEmpty ? room.trimmingCharacters(in: .whitespaces) : kept) + "…"
     }
 
     /// `text` whole if it has at most `limit` characters; otherwise cut at the last word end

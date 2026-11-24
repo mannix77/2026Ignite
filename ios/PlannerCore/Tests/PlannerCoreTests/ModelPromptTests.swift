@@ -379,7 +379,8 @@ final class ModelPromptTests: XCTestCase {
         let question = String(repeating: family, count: 300)
         let picks = (0..<135).map { i -> Session in
             var s = session("p\(i)")
-            s.topics = "ABCDEFGHIJKLMNO".map { String(repeating: family, count: 59) + String($0) }
+            // Distinct before the cut: the letter comes first.
+            s.topics = "ABCDEFGHIJKLMNO".map { String($0) + String(repeating: family, count: 59) }
             return s
         }
         let prompt = ModelPrompt.build(question: question, ranked: [session("a", time: "13:00")], sessionsInBlock: 1,
@@ -388,8 +389,10 @@ final class ModelPromptTests: XCTestCase {
         XCTAssertEqual(prompt.sentIDs, ["a"])
         // The question: as many whole emoji as fit 1,197 bytes, then "…" (3 bytes) = 47 emoji.
         XCTAssertTrue(prompt.text.contains("Question: " + String(repeating: family, count: 47) + "…\n"))
-        // Each name: as many as fit 237 bytes = 9 emoji, then "…".
-        XCTAssertTrue(prompt.text.contains(String(repeating: family, count: 9) + "… (135)"))
+        // Each name: its letter and as many emoji as fit 237 bytes (9), then "…"; all 15 named.
+        XCTAssertTrue("ABCDEFGHIJKLMNO".allSatisfy {
+            prompt.text.contains(String($0) + String(repeating: family, count: 9) + "… (135)")
+        })
     }
 
     func testTheByteCapIsKeptExactly() {
@@ -400,6 +403,15 @@ final class ModelPromptTests: XCTestCase {
         // Two characters and the "…" come to exactly 9 bytes: kept at 9, not at 8.
         XCTAssertEqual(ModelPrompt.cut("会議会議", to: 300, maxBytes: 9), "会議…")
         XCTAssertEqual(ModelPrompt.cut("会議会議", to: 300, maxBytes: 8), "会…")
+        // When the bytes run out mid-word, the cut goes back to the last word end ("aaa"); when
+        // they run out at a word end, the whole word is kept ("会議").
+        XCTAssertEqual(ModelPrompt.cut("aaa 会議会議", to: 300, maxBytes: 12), "aaa…")
+        XCTAssertEqual(ModelPrompt.cut("会議 aaaa", to: 300, maxBytes: 9), "会議…")
+        XCTAssertEqual(ModelPrompt.cut("会議 aaaa", to: 300, maxBytes: 10), "会議…")
+        // "a 会議" is 8 bytes, and a space follows: kept whole, not cut back to "a".
+        XCTAssertEqual(ModelPrompt.cut("a 会議 bbbb", to: 300, maxBytes: 11), "a 会議…")
+        // Only a leading space to cut at: what fits is kept rather than nothing.
+        XCTAssertEqual(ModelPrompt.cut(" 会議会議", to: 300, maxBytes: 9), "会…")
         // Plain English under both caps is untouched; over the character cap it is cut by words.
         XCTAssertEqual(ModelPrompt.cut("plain words", to: 300, maxBytes: 1200), "plain words")
         XCTAssertEqual(ModelPrompt.cut("plain words here", to: 12, maxBytes: 1200), "plain words…")
