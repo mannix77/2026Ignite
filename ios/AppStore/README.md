@@ -113,11 +113,14 @@ In `ios/AppStore/screenshots/`, taken on the iPhone 6.9" simulator with the samp
 (no real schedule, names or sessions appear). Upload them in this order to the 6.9" slot; App
 Store Connect scales them for smaller iPhones.
 
-1. `1-calendar.png`: the day as a calendar, with a venue-change warning and favorites
-2. `2-day.png`: a quieter day with an invitation
+1. `1-calendar.png`: the day as a calendar, with a venue-change warning, favorites and a free stretch
+2. `2-day.png`: a quieter day with two free stretches and favorites
 3. `3-session.png`: a session with reserve and favorite
 4. `4-sessions.png`: the session list with search and "Seats open"
-5. `5-settings.png`: counts, update, account and privacy
+5. `5-settings.png`: counts, update, the Apple Calendar setting, account and privacy
+6. `6-suggestions.png` (new in 1.1): the sessions that fit a free stretch, with what they share and how to get in
+
+Retaken for 1.1 on the iPhone 18 Pro Max simulator (1320 × 2868), flattened (no alpha).
 
 The app is iPhone only, so no iPad screenshots are needed.
 
@@ -131,8 +134,11 @@ xcrun simctl launch <device> us.mannix.sessionplanner -mode demo -showFavorites 
 xcrun simctl io <device> screenshot 1-calendar.png
 ```
 
-The other four use `-shotDay 2027-03-09`; `-shotTab sessions -shotSession demo-104`;
-`-shotTab sessions -shotFilter "Seats open"`; and `-shotTab settings`. Simulator screenshots
+The others use `-shotDay 2027-03-09`; `-shotTab sessions -shotSession demo-104`;
+`-shotTab sessions -shotFilter "Seats open"`; `-shotTab settings`; and for the sixth
+`-shotDay 2027-03-09 -shotGap 2027-03-09`, which opens that day's first free stretch. Boot the
+simulator and let it settle (one plain launch first) before capturing, or the first shot can
+catch the home screen. Simulator screenshots
 carry an alpha channel, which App Store Connect refuses: flatten them before uploading.
 
 ## App Privacy ("nutrition label")
