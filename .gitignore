@@ -8,3 +8,9 @@ ios/PlannerCore/.build/
 ios/**/xcuserdata/
 ios/build/
 ios/DerivedData/
+
+# Leftovers from the retired web planner that may still sit in old checkouts.
+# .local-data/ can hold a dump of the owner's real schedule; never commit it.
+.local-data/
+data/*/meta.json
+tests/fixtures/
