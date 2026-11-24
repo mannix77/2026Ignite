@@ -469,6 +469,43 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       When he asks what fits in the gap
       Then the reception is not listed
 
+  Rule: What he chose in Settings moves sessions up or down the list
+    The levels and formats he prefers, and the formats he skips (Session preferences in
+    Settings), re-order the sessions that fit a gap. How alike a session is to his picks is
+    multiplied by 1.5 for a level he prefers and by 1.5 for a format he prefers, and halved
+    for a format he skips. Nothing is listed for a preference alone, and nothing is removed
+    for one: a session he skips the format of is still listed, lower down.
+
+    Example: The level he prefers
+      Given a session in the gap exactly as alike to his picks as one of them, at "300 – Advanced"
+      When he prefers "300 – Advanced" in Settings
+      Then its score is 1.5 instead of 1
+
+    Example: A level and a format he prefers
+      Given a session in the gap exactly as alike to his picks as one of them, a "Workshop" at "300 – Advanced"
+      When he prefers "300 – Advanced" and workshops in Settings
+      Then its score is 2.25
+
+    Example: The format he skips
+      Given a session in the gap exactly as alike to his picks as one of them, a "Keynote"
+      When he skips keynotes in Settings
+      Then it is still listed, with a score of 0.5
+
+    Example: The preferred one overtakes
+      Given a "Chalk talk" scoring 1 and a "Workshop" scoring 0.84 in the gap
+      When he prefers workshops
+      Then the workshop (1.26) comes before the chalk talk (1)
+
+    Example: The preference with nothing in common
+      Given a "Workshop" in the gap that shares nothing with his picks
+      When he prefers workshops
+      Then it is not listed
+
+    Example: The skipped one that ties
+      Given a session like his reserved seat (2) in a format he skips, at 12:00
+      And one like his favorite (1), at 11:00
+      Then both score 1 and the earlier one comes first
+
   Rule: He sets how long he allows to get in line
     Gap suggestions allow 30 minutes in line for a session that can be reserved unless he
     changes it in Settings, to any whole number of minutes from 1 to 60. A walk-up session
