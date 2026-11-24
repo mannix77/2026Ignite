@@ -11,6 +11,12 @@ public enum EventSharing: String, Equatable, Sendable {
     }
 
     public var saved: String { rawValue }
+
+    /// His answer, and the install id to keep: a yes keeps the one he has; a no forgets it, so
+    /// a later yes starts a new one.
+    public static func answer(_ allowed: Bool, installID: String?) -> (sharing: EventSharing, installID: String?) {
+        allowed ? (.allowed, InstallID.usable(installID)) : (.declined, nil)
+    }
 }
 
 /// Where events go: the build's send-only Honeycomb ingest key and dataset. A build made
@@ -66,6 +72,9 @@ public enum InstallID {
     }
 
     public static func make() -> String { UUID().uuidString }
+
+    /// The id an event carries: the saved one when usable, otherwise a new one (to be saved).
+    public static func forSending(_ saved: Any?) -> String { usable(saved) ?? make() }
 }
 
 /// What became of one event.

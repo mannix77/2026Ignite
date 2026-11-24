@@ -216,7 +216,12 @@ instruction, using the user's own sign-in.
   period can only be arranged through Honeycomb Support.
 - **Early deletion**: Environments > (environment) > Manage Data > Datasets > `session-planner`
   > Delete (Team Owner, Deletion Protection off) deletes every event.
-- **Sampling**: none; every event is sent. A handful per attendee per day.
+- **Sampling**: none; every event is sent. A handful per attendee per day, plus one
+  `remembered=true` event a minute while a ranked free stretch stays open (filter on
+  `remembered = false` to count model calls). A phone that can't run the model sends one
+  `outcome=unavailable` event per launch, when a free stretch is first opened.
+- **A leftover key file**: if `archive.sh` is killed before it finishes, delete
+  `ios/SessionPlanner/Honeycomb.plist` by hand, or Xcode's own builds will carry the real key.
 
 ## Export compliance
 

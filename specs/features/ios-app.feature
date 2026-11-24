@@ -953,6 +953,12 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
         app's version and build, and his install id
       And nothing else
 
+    Example: A phone without Apple Intelligence
+      Given he said yes and the phone can't run the model
+      When he opens free stretches
+      Then one event per launch says the model was unavailable, and why
+      And the model isn't asked
+
     Example: No sends nothing
       Given he said no, or changed his answer to no in Settings
       When the model ranks a free stretch's list

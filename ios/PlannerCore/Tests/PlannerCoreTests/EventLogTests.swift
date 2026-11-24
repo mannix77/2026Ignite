@@ -223,6 +223,15 @@ final class EventLogTests: XCTestCase {
         XCTAssertEqual(refusedResult, .refused(401))
         XCTAssertEqual(refused.sent.count, 1)
 
+        // Both sides of "2xx is sent".
+        for (status, expected) in [(199, EventDelivery.refused(199)), (200, .sent), (299, .sent), (300, .refused(300))] {
+            let transport = ScriptedTransport([.respond(status: status)])
+            let result = await EventLog(config: config, transport: transport)
+                .send(fullRun, duration: nil, sharing: .allowed, installID: installID, app: app)
+            XCTAssertEqual(result, expected, "status \(status)")
+            XCTAssertEqual(transport.sent.count, 1)
+        }
+
         let unreachable = ScriptedTransport([.fail, .respond(status: 200)])
         let unreachableResult = await EventLog(config: config, transport: unreachable)
             .send(fullRun, duration: nil, sharing: .allowed, installID: installID, app: app)
@@ -238,6 +247,28 @@ final class EventLogTests: XCTestCase {
     }
 
     // MARK: Install id
+
+    func testYesKeepsHisInstallIDAndNoForgetsIt() {
+        let yes = EventSharing.answer(true, installID: installID)
+        XCTAssertEqual(yes.sharing, .allowed)
+        XCTAssertEqual(yes.installID, installID)
+        let no = EventSharing.answer(false, installID: installID)
+        XCTAssertEqual(no.sharing, .declined)
+        XCTAssertNil(no.installID)
+        let yesWithJunk = EventSharing.answer(true, installID: "junk")
+        XCTAssertEqual(yesWithJunk.sharing, .allowed)
+        XCTAssertNil(yesWithJunk.installID)
+    }
+
+    func testAnEventUsesTheSavedIDOrANewOne() {
+        XCTAssertEqual(InstallID.forSending(installID), installID)
+        let made = InstallID.forSending(nil)
+        XCTAssertEqual(InstallID.usable(made), made)
+        XCTAssertNotEqual(made, installID)
+        let replaced = InstallID.forSending("his-email@example.com")
+        XCTAssertEqual(InstallID.usable(replaced), replaced)
+        XCTAssertNotEqual(replaced, "his-email@example.com")
+    }
 
     func testInstallIDIsAUUIDAndANewOneDiffers() {
         XCTAssertEqual(InstallID.usable(" 6f1c2b9a-3d4e-4f5a-8b6c-7d8e9f0a1b2c "), installID)

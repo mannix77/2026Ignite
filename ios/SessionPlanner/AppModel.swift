@@ -151,8 +151,7 @@ final class AppModel {
 
     /// His answer. Saying no also forgets the install id, so a later yes starts a new one.
     func setEventSharing(_ allowed: Bool) {
-        eventSharing = allowed ? .allowed : .declined
-        if !allowed { installID = nil }
+        (eventSharing, installID) = EventSharing.answer(allowed, installID: installID)
     }
 
     /// A new random install id: his next events can't be tied to the earlier ones.
@@ -294,6 +293,20 @@ final class AppModel {
         return ranked
     }
 
+    /// Whether a request the model wasn't asked about, because the phone can't run it, has been
+    /// recorded since launch: once is enough to count such phones.
+    @ObservationIgnored private var recordedUnavailable = false
+
+    /// Records, once per launch, that a free stretch's list wasn't ranked because the phone
+    /// can't run the model (`ModelOutcome.unavailable` and why). Asks no model.
+    func recordModelNotAsked(_ suggestions: [Suggestion], in gap: Gap) async {
+        guard !recordedUnavailable, !suggestions.isEmpty, !ModelStep.willAsk(suggestions, ranker: onDeviceModel) else { return }
+        recordedUnavailable = true
+        let ranked = await ModelStep.rank(suggestions, sessionsInBlock: snapshot?.sessionsStarting(in: gap) ?? 0,
+                                          picks: [], ranker: onDeviceModel)
+        log(ranked.run, duration: nil)
+    }
+
     /// `suggestions` for `gap` after the on-device model's turn (`ModelStep`): what it ranks
     /// first, with its reasons, then the rest; or the list as it was. Run off the main actor,
     /// and stopped when the screen asking for it goes away.
@@ -317,7 +330,7 @@ final class AppModel {
     /// agreed (`EventLog`): its outcome, counts and timing, never the prompt or the reasons.
     private func log(_ run: ModelRun, duration: Duration?) {
         if eventSharing == .allowed {
-            let id = installID ?? InstallID.make()
+            let id = InstallID.forSending(installID)
             installID = id
             let eventLog = eventLog, sharing = eventSharing, app = appBuild
             Task.detached(priority: .utility) {
