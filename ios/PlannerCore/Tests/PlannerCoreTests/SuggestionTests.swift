@@ -206,6 +206,44 @@ final class SuggestionTests: XCTestCase {
         XCTAssertEqual(ids(plan.suggestions(in: gap)), ["first"])
     }
 
+    func testAWalkUpSessionNeedsFiveMinutesInLineButTheSeatAfterItStillThirty() {
+        // Forum to Wynn is 20 minutes. Into a walk-up: 10:00 + 20 + 5 = 10:25. Out of it, back in
+        // line for the 16:00 seat: 16:00 - 30 - 20 = 15:10.
+        func walkUp(_ id: String, _ time: String) -> Session {
+            offered(id, time: time, venue: "Wynn/Encore", topics: ["Rare"], reservable: false)
+        }
+        let plan = snapshot(filler(4) + [
+            offered("pick", time: "09:00", topics: ["Rare"]),
+            walkUp("onTime", "10:25"), walkUp("oneShort", "10:24"),
+            walkUp("backInTime", "14:10"), walkUp("backLate", "14:11"),
+            // The same start as "onTime", but one he can reserve: 30 minutes in line.
+            offered("reservable", time: "10:25", venue: "Wynn/Encore", topics: ["Rare"], reservable: true),
+        ], favorites: ["pick"])
+        XCTAssertEqual(Set(ids(plan.suggestions(in: forumGap))), ["onTime", "backInTime"])
+    }
+
+    func testHisTimeInLineIsUsedBeforeTheSessionAndBeforeTheSeatAfterIt() {
+        // With 10 minutes in line: in by 10:00 + 20 + 10 = 10:30, out by 16:00 - 10 - 20 = 15:30.
+        let plan = snapshot(filler(4) + [
+            offered("pick", time: "09:00", topics: ["Rare"]),
+            offered("onTime", time: "10:30", venue: "Wynn/Encore", topics: ["Rare"], reservable: true),
+            offered("oneShort", time: "10:29", venue: "Wynn/Encore", topics: ["Rare"], reservable: true),
+            offered("backInTime", time: "14:30", venue: "Wynn/Encore", topics: ["Rare"], reservable: true),
+            offered("backLate", time: "14:31", venue: "Wynn/Encore", topics: ["Rare"], reservable: true),
+        ], favorites: ["pick"])
+        // Precondition: with the default 30 minutes none of them fits.
+        XCTAssertEqual(Set(ids(plan.suggestions(in: forumGap))), [])
+        XCTAssertEqual(Set(ids(plan.suggestions(in: forumGap, lineUp: LineUp(minutes: 10)))), ["onTime", "backInTime"])
+        // A walk-up with 3 minutes set needs only 3: 10:00 + 20 + 3 = 10:23.
+        let walkUps = snapshot(filler(4) + [
+            offered("pick", time: "09:00", topics: ["Rare"]),
+            offered("in3", time: "10:23", venue: "Wynn/Encore", topics: ["Rare"], reservable: false),
+            offered("in2", time: "10:22", venue: "Wynn/Encore", topics: ["Rare"], reservable: false),
+        ], favorites: ["pick"])
+        XCTAssertEqual(Set(ids(walkUps.suggestions(in: forumGap, lineUp: LineUp(minutes: 3)))), ["in3"])
+        XCTAssertEqual(Set(ids(walkUps.suggestions(in: forumGap))), [])
+    }
+
     func testHeLinesUpForAReservedSeatAfterTheGapButNotForAnInvitation() {
         // From a seat at the Forum ending at 10:00 to a 16:00 commitment at the Forum, with
         // sessions at the Wynn, 20 minutes away. Reserved next: out by 15:10. Invited: by 15:40.

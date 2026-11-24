@@ -139,10 +139,6 @@ extension PlanSnapshot {
     /// How much a reserved seat counts in his picks, against 1 for a favorite.
     static let reservedWeight = 2.0
 
-    /// Minutes he needs to be in line before a session starts to be sure of getting in (the
-    /// owner's experience of re:Invent: 15 at the least, 30 to be safe).
-    public static let lineUpMinutes = 30
-
     /// The free stretches of one day around his reserved and invited sessions. The day runs from
     /// the first session that day to the end of the last, invitations included. A commitment
     /// takes at least the time the calendar draws it for, so one listed with no length still
@@ -187,7 +183,9 @@ extension PlanSnapshot {
     /// Catalog sessions he could get to and into in the gap, and back from in time for what
     /// comes next, most like his picks first.
     /// For several gaps, build one `Suggester` and ask it for each.
-    public func suggestions(in gap: Gap) -> [Suggestion] { Suggester(self).suggestions(in: gap) }
+    public func suggestions(in gap: Gap, lineUp: LineUp = LineUp()) -> [Suggestion] {
+        Suggester(self).suggestions(in: gap, lineUp: lineUp)
+    }
 
 }
 
@@ -232,7 +230,7 @@ public struct Suggester: Sendable {
     /// Nothing he holds a seat in or is invited to is suggested, nor another run of it. A
     /// session sharing nothing with his picks is left out. Equal scores put a session with a
     /// seat to reserve first, then earlier, then by code.
-    public func suggestions(in gap: Gap) -> [Suggestion] {
+    public func suggestions(in gap: Gap, lineUp: LineUp = LineUp()) -> [Suggestion] {
         var found: [(suggestion: Suggestion, start: Int, rank: Double)] = []
         var seen = Set<String>()
         for session in sessions {
@@ -242,9 +240,10 @@ public struct Suggester: Sendable {
                   let start = time.startMinute else { continue }
             // A session listed with no length still takes the time the calendar draws it for.
             let end = start + max(time.lengthMinutes, AgendaEntry.minimumDrawnMinutes)
-            // In the gap after the walk, and in line by `lineUpMinutes` before the start.
-            let inLine = gap.lineFrom.map { $0 + PlanSnapshot.lineUpMinutes } ?? gap.start
-            let lineOut = gap.lineUpAfter ? PlanSnapshot.lineUpMinutes : 0
+            // In the gap after the walk, and in line in time for this session; then back in
+            // line in time for a reserved seat after the gap.
+            let inLine = gap.lineFrom.map { $0 + lineUp.minutes(for: session) } ?? gap.start
+            let lineOut = gap.lineUpAfter ? lineUp.minutes : 0
             guard start >= max(gap.start, inLine) + gap.before.walk(to: session.venue),
                   end + gap.after.walk(to: session.venue) + lineOut <= gap.end else { continue }
 

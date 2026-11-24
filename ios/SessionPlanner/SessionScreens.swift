@@ -210,6 +210,18 @@ struct SettingsScreen: View {
                 }
 
                 Section {
+                    Stepper(value: Binding(get: { model.lineUp.minutes },
+                                           set: { model.lineUp = LineUp(minutes: $0) }),
+                            in: LineUp.allowedMinutes) {
+                        LabeledContent("Time in line", value: "\(model.lineUp.minutes) min")
+                    }
+                } header: {
+                    Text("Free time suggestions")
+                } footer: {
+                    Text("How early to be in line for a session you can reserve, and for your next reserved seat. Walk-up sessions allow \(model.lineUp.walkUp) min.")
+                }
+
+                Section {
                     Toggle("Add reserved sessions to Calendar", isOn: Binding(
                         get: { model.exportsToCalendar },
                         set: { on in Task { await model.setExportsToCalendar(on) } }))
