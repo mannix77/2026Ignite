@@ -57,7 +57,9 @@ final class ModelPromptTests: XCTestCase {
 
     func testEveryHourOfTheConferenceFitsWithTwelveSessions() throws {
         let catalog = try realCatalog()
-        let days = ["2026-11-30", "2026-12-01", "2026-12-02", "2026-12-03", "2026-12-04"]
+        // Every day the catalog has sessions on, the Sunday before the conference included.
+        let days = Set(catalog.compactMap { $0.sessionTime?.date }).sorted()
+        XCTAssertEqual(days, ["2026-11-29", "2026-11-30", "2026-12-01", "2026-12-02", "2026-12-03", "2026-12-04"])
         var blocks = 0
         var busiest = 0
         for day in days {
@@ -412,6 +414,7 @@ final class ModelPromptTests: XCTestCase {
         XCTAssertEqual(ModelPrompt.cut("a 会議 bbbb", to: 300, maxBytes: 11), "a 会議…")
         // Only a leading space to cut at: what fits is kept rather than nothing.
         XCTAssertEqual(ModelPrompt.cut(" 会議会議", to: 300, maxBytes: 9), "会…")
+        XCTAssertEqual(ModelPrompt.cut("alpha bravo charlie", to: 300, maxBytes: 10), "alpha…")
         // Plain English under both caps is untouched; over the character cap it is cut by words.
         XCTAssertEqual(ModelPrompt.cut("plain words", to: 300, maxBytes: 1200), "plain words")
         XCTAssertEqual(ModelPrompt.cut("plain words here", to: 12, maxBytes: 1200), "plain words…")
