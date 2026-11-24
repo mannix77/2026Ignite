@@ -521,12 +521,17 @@ final class SuggestionTests: XCTestCase {
     }
 }
 
-/// Preferences with these levels and formats set, as Settings would set them.
-private func preferring(levels: [String] = [], formats: [String] = [], skipping: [String] = []) -> SessionPreferences {
+/// Preferences with these levels and formats set, as Settings would set them. Asserts each
+/// was kept, so a test of a preference that changes nothing is never one of no preference.
+private func preferring(levels: [String] = [], formats: [String] = [], skipping: [String] = [],
+                        file: StaticString = #filePath, line: UInt = #line) -> SessionPreferences {
     var preferences = SessionPreferences()
     levels.forEach { preferences.setLevel($0, chosen: true) }
     formats.forEach { preferences.setPreferred($0, true) }
     skipping.forEach { preferences.setSkipped($0, true) }
+    XCTAssertEqual(preferences.levels, levels, "levels kept", file: file, line: line)
+    XCTAssertEqual(preferences.preferredFormats, formats, "preferred formats kept", file: file, line: line)
+    XCTAssertEqual(preferences.skippedFormats, skipping, "skipped formats kept", file: file, line: line)
     return preferences
 }
 
