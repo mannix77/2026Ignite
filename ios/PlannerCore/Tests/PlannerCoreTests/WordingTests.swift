@@ -107,4 +107,15 @@ final class WordingTests: XCTestCase {
         XCTAssertEqual(freshness(after: 0, sample: true), "Sample conference, updated just now. Pull down for the latest.")
         XCTAssertEqual(freshness(after: -5, sample: true), "Sample conference. Pull down for the latest.")
     }
+
+    func testTheCalendarSaysWhenItIsUpdating() {
+        XCTAssertEqual(Wording.calendarStatus(refreshing: true, fetchedAt: updated, now: updated, sample: false),
+                       "Updating from AWS…")
+        XCTAssertEqual(Wording.calendarStatus(refreshing: true, fetchedAt: updated, now: updated, sample: true),
+                       "Updating the sample conference…")
+        XCTAssertEqual(Wording.calendarStatus(refreshing: false, fetchedAt: updated, now: updated.addingTimeInterval(720), sample: false),
+                       "Updated from AWS 12 min ago. Pull down for the latest.")
+        XCTAssertEqual(Wording.calendarStatus(refreshing: false, fetchedAt: updated, now: updated, sample: true),
+                       "Sample conference, updated just now. Pull down for the latest.")
+    }
 }

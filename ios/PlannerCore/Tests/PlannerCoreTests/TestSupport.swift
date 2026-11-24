@@ -103,6 +103,8 @@ final class CountingBackend: PlanBackend, @unchecked Sendable {
     private var counts: [String: Int] = [:]
     var reserveAnswer: Result<BulkResult, APIError> = .success(BulkResult())
     var scheduleAnswer: Result<Schedule, APIError> = .success(Schedule())
+    /// Answers for successive schedule reads, first to last; once used up, `scheduleAnswer`.
+    var scheduleAnswers: [Result<Schedule, APIError>] = []
     var catalogAnswer: Result<Catalog, APIError> = .success(Catalog(sessions: []))
 
     private var order: [String] = []
@@ -112,7 +114,11 @@ final class CountingBackend: PlanBackend, @unchecked Sendable {
     var log: [String] { lock.withLock { order } }
 
     func loadCatalog() async throws -> Catalog { count("catalog"); return try catalogAnswer.get() }
-    func loadSchedule() async throws -> Schedule { count("schedule"); return try scheduleAnswer.get() }
+    func loadSchedule() async throws -> Schedule {
+        count("schedule")
+        let next: Result<Schedule, APIError> = lock.withLock { scheduleAnswers.isEmpty ? scheduleAnswer : scheduleAnswers.removeFirst() }
+        return try next.get()
+    }
     func reserve(_ sessionIds: [String]) async throws -> BulkResult { count("reserve"); return try reserveAnswer.get() }
     func cancelReservation(_ sessionId: String) async throws { count("cancel") }
     func favorite(_ sessionIds: [String]) async throws -> BulkResult { count("favorite"); return BulkResult() }

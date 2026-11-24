@@ -34,10 +34,10 @@ struct CalendarScreen: View {
                                 withAnimation { selectedDay = picked }
                             }
                             Divider()
-                            Text(model.isRefreshing ? "Updating from \(model.mode == .demo ? "the sample conference" : "AWS")…"
-                                 // The actual time: the timeline's tick is the start of the minute,
-                                 // which can be earlier than an update made within it.
-                                 : Wording.lastUpdated(snapshot.fetchedAt, now: Date(), sample: model.mode == .demo))
+                            // The actual time: the timeline's tick is the start of the minute,
+                            // which can be earlier than an update made within it.
+                            Text(Wording.calendarStatus(refreshing: model.isRefreshing, fetchedAt: snapshot.fetchedAt,
+                                                        now: Date(), sample: model.mode == .demo))
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                                 .multilineTextAlignment(.center)

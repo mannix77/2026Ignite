@@ -108,7 +108,9 @@ public struct PlanSnapshot: Codable, Equatable, Sendable {
         fetchedAt = try c.decode(Date.self, forKey: .fetchedAt)
         skipped = try c.decode(Int.self, forKey: .skipped)
         catalogFetchedAt = try c.decodeIfPresent(Date.self, forKey: .catalogFetchedAt) ?? fetchedAt
-        catalogMissing = try c.decodeIfPresent([String].self, forKey: .catalogMissing) ?? []
+        // Only a hint for when to download early: a bad entry is dropped, never fatal.
+        let rawMissing = (try? c.decodeIfPresent([Lossy<String>].self, forKey: .catalogMissing)) ?? []
+        catalogMissing = rawMissing.compactMap { Identifier.clean($0.value) }
     }
 
     /// A change of venue with less than this many minutes between commitments is flagged.
@@ -290,7 +292,8 @@ public enum Sync {
     /// the catalog lacks that downloading hasn't already failed to find
     /// (`RefreshPlan.catalogWantedFor`). The schedule is always read last, so it is the newest
     /// answer. Throws, leaving `previous` in place, when the schedule can't be read, or when
-    /// nothing is held and the catalog can't be downloaded.
+    /// nothing is held and the catalog can't be downloaded. If reading the schedule again after
+    /// an early download fails, the first read is kept with the new catalog.
     public static func update(backend: PlanBackend, previous: PlanSnapshot?, now: Date, wholeCatalog: Bool = false,
                               catalogLastTried: Date?) async throws -> UpdateResult {
         guard let previous else {
@@ -314,18 +317,44 @@ public enum Sync {
                 problem = error
             }
         }
-        if wholeCatalog || RefreshPlan.catalogDue(previous, lastAttempt: catalogLastTried, now: now) {
+        if triesCatalogFirst(previous: previous, wholeCatalog: wholeCatalog, catalogLastTried: catalogLastTried, now: now) {
             try await download()
         }
         updated.schedule = try await backend.loadSchedule()
         updated.fetchedAt = now
         if !tried, RefreshPlan.catalogWantedFor(updated, lastAttempt: catalogLastTried, now: now) {
             try await download()
-            // Read again, so the schedule is still the newest answer.
-            if problem == nil { updated.schedule = try await backend.loadSchedule() }
+            // Read again, so the schedule is still the newest answer; if that fails, the first
+            // read (moments old) stands.
+            if problem == nil {
+                do {
+                    updated.schedule = try await backend.loadSchedule()
+                } catch is CancellationError {
+                    throw CancellationError()
+                } catch {}
+            }
         }
         if tried, problem == nil { updated.catalogMissing = updated.unresolvedIDs }
         return UpdateResult(snapshot: updated, catalogProblem: problem, triedCatalog: tried)
+    }
+
+    /// Whether `update` will try the whole catalog before reading his schedule. Known before it
+    /// runs, so the caller can record the attempt even if the update then fails.
+    public static func triesCatalogFirst(previous: PlanSnapshot?, wholeCatalog: Bool, catalogLastTried: Date?,
+                                         now: Date) -> Bool {
+        previous == nil || wholeCatalog || RefreshPlan.catalogDue(previous, lastAttempt: catalogLastTried, now: now)
+    }
+
+    /// What to show when an update lands. If a reserve, favorite or cancel read his schedule
+    /// back while the update ran (`changedDuring`), that schedule and its time are kept: it was
+    /// read after his own change, which the update's read may have missed, and the next read
+    /// brings in anything newer. The update's catalog is shown either way.
+    public static func landed(_ update: PlanSnapshot, current: PlanSnapshot?, changedDuring: Bool) -> PlanSnapshot {
+        guard changedDuring, let current else { return update }
+        var shown = update
+        shown.schedule = current.schedule
+        shown.fetchedAt = current.fetchedAt
+        return shown
     }
 
     /// The catalog, refused when it is under half the size of the one held.

@@ -66,6 +66,13 @@ public enum Wording {
         return joined + ". Pull down for the latest."
     }
 
+    /// The calendar's status line: what is happening while it updates, and how fresh it is
+    /// otherwise (`lastUpdated`).
+    public static func calendarStatus(refreshing: Bool, fetchedAt: Date, now: Date, sample: Bool) -> String {
+        guard refreshing else { return lastUpdated(fetchedAt, now: now, sample: sample) }
+        return sample ? "Updating the sample conference…" : "Updating from AWS…"
+    }
+
     /// What to say about seats. A seat the attendee holds reads "unavailable" on the site, so
     /// the reservation is checked first.
     public static func seats(_ session: Session, commitment: Commitment?) -> String? {

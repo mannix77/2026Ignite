@@ -218,6 +218,23 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       Given an update is downloading the catalog
       When he reserves a seat before it finishes
       Then the reservation stays on his calendar when the update lands
+      And the catalog the update downloaded is kept
+
+    Example: The one whose catalog download fails and then his schedule too
+      Given the catalog is due and the site fails to send it
+      When reading his schedule fails as well
+      Then the calendar he last saw is kept
+      And the catalog is still not tried again for an hour
+
+    Example: The one whose second schedule read fails
+      Given his schedule named a new session and the catalog was downloaded for it
+      When reading his schedule again fails
+      Then the first schedule is shown with the new catalog
+
+    Example: The one with a damaged list of missing sessions
+      Given a saved calendar whose list of sessions the catalog lacked has a blank or unreadable entry
+      When the app opens
+      Then the calendar is shown, the bad entries are dropped and padded ones are trimmed
 
     Example: The one who wants every session now
       When he chooses "Download all sessions now" in Settings
@@ -262,6 +279,10 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
     Example: The one trying the sample conference
       Given he is trying the sample conference
       Then the calendar says "Sample conference, updated just now. Pull down for the latest."
+
+    Example: The one watching it update
+      While his schedule is being read
+      Then the calendar says "Updating from AWS…", or "Updating the sample conference…" for the sample
 
     Example: The one with a calendar saved by the earlier version
       Given a calendar saved before the catalog's own download time was kept

@@ -330,19 +330,19 @@ final class AppModel {
         do {
             let now = Date()
             let version = snapshotVersion
+            // The attempt is recorded before the update, so one that fails after trying the
+            // catalog still waits an hour before trying it again.
+            let lastTried = catalogLastTried
+            if Sync.triesCatalogFirst(previous: snapshot, wholeCatalog: wholeCatalog, catalogLastTried: lastTried, now: now) {
+                catalogLastTried = now
+            }
             let result = try await Sync.update(backend: backend, previous: snapshot, now: now, wholeCatalog: wholeCatalog,
-                                               catalogLastTried: catalogLastTried)
+                                               catalogLastTried: lastTried)
             // An answer from a backend he has since left (signed out, signed in again,
             // switched to the sample) is dropped, even if the mode reads the same.
             guard generation == asked else { return }
             if result.triedCatalog { catalogLastTried = now }
-            var new = result.snapshot
-            // A reserve, favorite or cancel that landed while this ran read the schedule back
-            // after this did: that newer schedule is kept.
-            if snapshotVersion != version, let current = snapshot {
-                new.schedule = current.schedule
-                new.fetchedAt = current.fetchedAt
-            }
+            let new = Sync.landed(result.snapshot, current: snapshot, changedDuring: snapshotVersion != version)
             setSnapshot(new)
             needsSignIn = false
             if mode == .live { save(new) }
