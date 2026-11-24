@@ -4,8 +4,10 @@
 The catalog sits behind attendee sign-in and this repository is public, so the fixture keeps
 only what the tests need (no speakers, rooms or seat counts), and every abstract is replaced by
 placeholder text. The placeholder is written from the session's own title, type, level, topics
-and services, in the catalog's style, at the real abstract's length, so token counts and model
-behaviour match real data. Nothing of the real abstract is kept except its length.
+and services, in the catalog's style, at the real abstract's length, so token counts match real
+data. It is assembled from a pool of sentences, so it reads like an abstract but is not a
+substitute for real ones when judging the quality of a model's answers. Nothing of the real
+abstract is kept except its length.
 
 Usage (the export stays outside the repository):
 
@@ -54,7 +56,31 @@ MIDDLES = [
     "Get practical guidance on governance, reliability, and performance for {p}.",
     "Find out where {s2} fits, and when a simpler approach is the better choice.",
     "Dive into the latest capabilities of {s1} and how they change the way teams build.",
+    "As {p} workloads grow, teams need a way to {goal} without slowing down.",
+    "Many organizations struggle to {goal}; this session shows a path that works at scale.",
+    "We start with the problem, then build up a solution using {s1} and {s2}.",
+    "You'll see how {s1} helps teams {goal}, with examples drawn from real deployments.",
+    "We compare several approaches to {p} and explain when to choose each one.",
+    "Along the way, we share the metrics that matter and how to track them.",
+    "Expect a candid look at what went wrong, what went right, and why.",
+    "The session closes with a roadmap you can take back to your team.",
+    "We look at cost, latency, and resilience, and how to balance them with {s1}.",
+    "Using {s2}, we show how to {goal} while keeping security and compliance in view.",
+    "Learn the mental models experienced builders use when working with {s1}.",
+    "We demonstrate an end-to-end workflow, from first prototype to production.",
+    "Discover how to automate the repetitive parts of {p} so your team can focus on outcomes.",
+    "We discuss migration strategies for moving existing {p} workloads to {s1}.",
+    "Find out how to evaluate results, catch regressions early, and roll out changes safely.",
+    "Learn how leading teams organize people, process, and technology around {p}.",
 ]
+GOALS = ["ship features faster", "cut infrastructure costs", "improve reliability", "reduce operational toil",
+         "meet compliance requirements", "scale to millions of users", "modernize legacy systems",
+         "get more value from their data", "move from pilot to production", "respond to incidents faster",
+         "keep latency low under load", "govern access across accounts"]
+TOPIC_OPENERS = ["{P} is changing quickly, and {s1} is at the center of it.",
+                 "Teams building on {s1} face a familiar set of {p} challenges.",
+                 "Getting {p} right takes more than picking the right service."]
+
 LEVEL_LINES = {
     "100": "No prior experience is required.",
     "200": "Some familiarity with {p} is helpful.",
@@ -70,7 +96,7 @@ CLOSERS = ["Leave with practical guidance you can apply right away.",
 IMPERATIVES = {"accelerate", "achieve", "automate", "boost", "bring", "build", "create", "cut", "deliver",
                "deploy", "design", "drive", "get", "go", "harness", "improve", "make", "master", "migrate",
                "modernize", "optimize", "power", "protect", "reimagine", "run", "scale", "secure",
-               "simplify", "streamline", "supercharge", "take", "transform", "turn", "unlock", "use"}
+               "ship", "simplify", "streamline", "supercharge", "take", "transform", "turn", "unlock", "use"}
 SHORT = ["Seating is limited.", "Come with questions.", "Expect plenty of time for Q&A.",
          "Examples are shared after the session.", "All are welcome.", "Learn from real customer stories.",
          "See it working end to end.", "Q&A follows.", "Bring your use case.", "Demos included.",
@@ -111,10 +137,13 @@ def placeholder(session, target):
         s1 = rng.choice(services)
         others = [x for x in services if x != s1]
         s2 = rng.choice(others) if others else rng.choice(topics)
-        return s.format(t=phrase, s1=s1, s2=s2, p=rng.choice(topics))
+        topic = rng.choice(topics)
+        return s.format(t=phrase, s1=s1, s2=s2, p=topic, P=topic[:1].upper() + topic[1:], goal=rng.choice(GOALS))
 
     kind, phrase = focus(session["title"])
     head = [fill(rng.choice(OPENERS.get(session.get("type"), DEFAULT_OPENERS)[kind]))]
+    if rng.random() < 0.4:  # some abstracts set the scene before naming the session
+        head.insert(0, fill(rng.choice(TOPIC_OPENERS)))
     if session.get("type") in ("Workshop", "Builders' session"):
         head.append(HANDS_ON)
     level = LEVEL_LINES.get((session.get("level") or "")[:3])

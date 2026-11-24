@@ -1,8 +1,9 @@
 import Foundation
 
 /// How much of the on-device model's window a prompt may use (#193). The numbers were chosen
-/// against the real re:Invent 2026 catalog: 12 sessions with the longest text in its busiest
-/// hour, abstracts cut to 300 characters, come to about 2,130 estimated tokens.
+/// against the real re:Invent 2026 catalog: the 12 sessions with the longest text in the whole
+/// catalog, abstracts cut to 300 characters, with a 300-character question and the catalog's 15
+/// longest interest names, come to under 2,700 estimated tokens of the 3,096 allowed.
 public struct PromptBudget: Equatable, Sendable {
     /// The model's whole window, prompt and answer together.
     public var window = 4096
@@ -16,6 +17,8 @@ public struct PromptBudget: Equatable, Sendable {
     public var questionLimit = 300
     /// Interests named in the summary of his picks at most.
     public var maxInterests = 15
+    /// Topics named on a session's line at most.
+    public var maxTopics = 3
 
     public init() {}
 
@@ -23,10 +26,11 @@ public struct PromptBudget: Equatable, Sendable {
     public var promptLimit: Int { window - answerReserve }
 }
 
-/// Tokens a text is expected to take. Deliberately cautious: a character count divided by 3,
-/// rounded up, where English usually runs nearer 4 characters a token.
+/// Tokens a text is expected to take. Deliberately cautious: its UTF-8 bytes divided by 3,
+/// rounded up. English runs nearer 4 characters (bytes) a token; other scripts and emoji take
+/// more bytes a character, so counting bytes keeps the estimate on the safe side for them too.
 public enum TokenEstimate {
-    public static func tokens(_ text: String) -> Int { (text.count + 2) / 3 }
+    public static func tokens(_ text: String) -> Int { (text.utf8.count + 2) / 3 }
 }
 
 /// What one prompt used, for the logs (#193): every model call records these.
@@ -34,8 +38,8 @@ public struct PromptMetrics: Equatable, Sendable {
     public var estimatedTokens: Int
     public var window: Int
     public var answerReserve: Int
-    /// Tokens to spare within the prompt's share of the window; never negative for a prompt
-    /// `ModelPrompt` builds, unless its fixed text alone is too long.
+    /// Tokens to spare within the prompt's share of the window. Negative only when the fixed
+    /// text alone (instructions, question, interests) is too long; then no session is sent.
     public var headroom: Int
     public var sessionsInBlock: Int
     public var sessionsSent: Int
@@ -63,14 +67,17 @@ public struct ModelPrompt: Equatable, Sendable {
     /// out from the bottom until the prompt fits.
     public static func build(question: String, ranked: [Session], sessionsInBlock: Int, picks: [Session],
                              budget: PromptBudget = PromptBudget()) -> ModelPrompt {
+        let asked = cut(flat(question), to: budget.questionLimit)
         let head = [instructions,
-                    "Question: " + cut(question, to: budget.questionLimit),
+                    "Question: " + (asked.isEmpty ? "(none)" : asked),
                     "Their interests: " + interests(of: picks, limit: budget.maxInterests),
                     "Sessions:"].joined(separator: "\n\n")
         var lines: [(id: String, text: String, cut: Bool)] = ranked.prefix(budget.maxSessions).map { session in
-            let abstract = session.abstract ?? ""
+            let abstract = flat(session.abstract ?? "")
             let shortened = cut(abstract, to: budget.abstractLimit)
-            return (session.sessionId, line(session) + "\n" + shortened, shortened != abstract)
+            let entry = shortened.isEmpty ? line(session, topics: budget.maxTopics)
+                                          : line(session, topics: budget.maxTopics) + "\n" + shortened
+            return (session.sessionId, entry, shortened != abstract)
         }
         func assemble() -> String { ([head] + lines.map(\.text)).joined(separator: "\n\n") }
         var text = assemble()
@@ -87,22 +94,35 @@ public struct ModelPrompt: Equatable, Sendable {
                                    abstractsCut: lines.filter(\.cut).count))
     }
 
-    /// "AIM301 | Title | Workshop | 300 – Advanced | Venetian | 13:00, 60 min | Topic, Topic"
-    static func line(_ session: Session) -> String {
-        let time = session.sessionTime.map { "\($0.time), \($0.lengthMinutes) min" } ?? ""
-        return [session.code, session.title, session.type ?? "", session.level ?? "", session.venue ?? "", time,
-                (session.topics ?? []).prefix(3).joined(separator: ", ")].joined(separator: " | ")
+    /// "AIM301 | Title | Workshop | 300 – Advanced | Venetian | 13:00, 60 min | Topic, Topic":
+    /// fields the site leaves out are skipped, and a "|" or line break inside a field is
+    /// replaced, so every field stays in its place.
+    static func line(_ session: Session, topics: Int) -> String {
+        let time = session.sessionTime.map { "\($0.time), \($0.lengthMinutes) min" }
+        let fields: [String?] = [session.abbreviation, session.title, session.type, session.level, session.venue, time,
+                      (session.topics ?? []).prefix(topics).joined(separator: ", ")]
+        return fields.compactMap { $0.map { flat($0).replacingOccurrences(of: "|", with: "/") } }
+            .filter { !$0.isEmpty }
+            .joined(separator: " | ")
+    }
+
+    /// `text` on one line: every run of whitespace, line breaks included, becomes one space.
+    static func flat(_ text: String) -> String {
+        text.split(whereSeparator: \.isWhitespace).joined(separator: " ")
     }
 
     /// `text` whole if it has at most `limit` characters; otherwise cut at the last word end
-    /// that leaves room for "…", so the result has at most `limit` characters.
+    /// that leaves room for "…", so the result has at most `limit` characters. A limit below 1
+    /// gives nothing.
     static func cut(_ text: String, to limit: Int) -> String {
+        guard limit > 0 else { return "" }
         guard text.count > limit else { return text }
         let room = String(text.prefix(limit - 1))
         // A word that ends exactly where the room does is kept whole.
         let endsAtWord = text.dropFirst(limit - 1).first?.isWhitespace == true
-        let atWord = endsAtWord ? room : room.lastIndex(of: " ").map { String(room[..<$0]) } ?? room
-        return atWord.trimmingCharacters(in: .whitespaces) + "…"
+        let atWord = endsAtWord ? room : room.lastIndex(where: \.isWhitespace).map { String(room[..<$0]) } ?? room
+        let kept = atWord.trimmingCharacters(in: .whitespaces)
+        return (kept.isEmpty ? room.trimmingCharacters(in: .whitespaces) : kept) + "…"
     }
 
     /// "Agentic AI (12), Amazon Bedrock (9), …": the topics and services his picks share most,
@@ -110,7 +130,7 @@ public struct ModelPrompt: Equatable, Sendable {
     static func interests(of picks: [Session], limit: Int) -> String {
         var counts: [String: Int] = [:]
         for session in picks {
-            for name in Set((session.topics ?? []) + (session.services ?? [])) { counts[name, default: 0] += 1 }
+            for name in Set((session.topics ?? []) + (session.services ?? [])) { counts[flat(name), default: 0] += 1 }
         }
         let top = counts.sorted { ($0.value, $1.key) > ($1.value, $0.key) }.prefix(limit)
         return top.isEmpty ? "none yet" : top.map { "\($0.key) (\($0.value))" }.joined(separator: ", ")

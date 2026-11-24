@@ -364,9 +364,10 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       And nothing is written
 
   Rule: What goes to the on-device model fits its window
-    The model sees at most 12 sessions, each abstract cut to 300 characters at a word, his
-    question cut the same way, and his picks as at most 15 of their most common interests.
-    Tokens are estimated as characters divided by 3, rounded up, and the prompt stays within
+    The model sees at most 12 sessions, each abstract cut to 300 characters at a word and at
+    most 3 topics on its line, his question cut the same way, and his picks as at most 15 of
+    their most common interests. Tokens are estimated as UTF-8 bytes divided by 3, rounded up
+    (cautious for English, and for other scripts and emoji too), and the prompt stays within
     the model's 4,096 less 1,000 kept for the answer. Tested on the real re:Invent 2026
     catalog, with placeholder abstracts at the real lengths and no speakers.
 
@@ -374,6 +375,15 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       Given the 149 sessions running on Thursday 3 December from 13:00 to 14:00
       When the 12 with the longest text are sent
       Then the prompt is estimated under 3,096 tokens, and 137 are counted as left out
+
+    Example: The worst case in the whole catalog
+      Given the 12 sessions with the longest text anywhere in the catalog
+      And a 300-character question and the catalog's 15 longest interests on 135 picks
+      Then the prompt is estimated under 2,700 tokens
+
+    Example: The prompt at its limit
+      Given a prompt that comes to exactly the limit
+      Then every session is sent, and with one token less the last one is left out
 
     Example: Every hour of the conference
       Given every hour of the conference in the catalog
@@ -393,6 +403,15 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       Given 12 sessions with titles far longer than any in the catalog
       Then sessions are left out from the bottom of the ranking until the prompt fits
       And each one left out is counted
+
+    Example: The title with a bar in it
+      Given the real title "Kiroween '26 | Build something wicked for a shot at $100,000 in prizes"
+      Then its line keeps every field in its place, the bar written as "/"
+      And line breaks in a title, abstract or question become spaces, so nothing looks like another session
+
+    Example: The blank question and the missing fields
+      Given a blank question and a session with no time, venue or abstract
+      Then the question reads "(none)" and the session's line leaves out what it doesn't have
 
     Example: The many picks
       Given he has 135 favorites
