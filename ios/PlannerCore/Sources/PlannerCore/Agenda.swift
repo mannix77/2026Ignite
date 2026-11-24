@@ -74,15 +74,43 @@ public struct DayAgenda: Equatable, Sendable {
 public struct PlanSnapshot: Codable, Equatable, Sendable {
     public var sessions: [Session]
     public var schedule: Schedule
+    /// When his schedule was last read from the conference site.
     public var fetchedAt: Date
     /// Catalog records dropped on the last fetch because they were unusable.
     public var skipped: Int
+    /// When the whole catalog was last downloaded; it is downloaded less often than his schedule.
+    public var catalogFetchedAt: Date
+    /// Sessions on his schedule that the catalog lacked right after it was last downloaded.
+    /// They don't make the catalog download early again: downloading didn't find them.
+    public var catalogMissing: [String]
 
-    public init(sessions: [Session], schedule: Schedule, fetchedAt: Date, skipped: Int = 0) {
+    /// `catalogFetchedAt` defaults to `fetchedAt`: both read together.
+    public init(sessions: [Session], schedule: Schedule, fetchedAt: Date, skipped: Int = 0, catalogFetchedAt: Date? = nil,
+                catalogMissing: [String] = []) {
         self.sessions = sessions
         self.schedule = schedule
         self.fetchedAt = fetchedAt
         self.skipped = skipped
+        self.catalogFetchedAt = catalogFetchedAt ?? fetchedAt
+        self.catalogMissing = catalogMissing
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case sessions, schedule, fetchedAt, skipped, catalogFetchedAt, catalogMissing
+    }
+
+    /// A calendar saved before the catalog's own time was kept reads as both fetched together,
+    /// so it still opens.
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        sessions = try c.decode([Session].self, forKey: .sessions)
+        schedule = try c.decode(Schedule.self, forKey: .schedule)
+        fetchedAt = try c.decode(Date.self, forKey: .fetchedAt)
+        skipped = try c.decode(Int.self, forKey: .skipped)
+        catalogFetchedAt = try c.decodeIfPresent(Date.self, forKey: .catalogFetchedAt) ?? fetchedAt
+        // Only a hint for when to download early: a bad entry is dropped, never fatal.
+        let rawMissing = (try? c.decodeIfPresent([Lossy<String>].self, forKey: .catalogMissing)) ?? []
+        catalogMissing = rawMissing.compactMap { Identifier.clean($0.value) }
     }
 
     /// A change of venue with less than this many minutes between commitments is flagged.
@@ -242,11 +270,110 @@ public enum Sync {
     /// Fetches the catalog and the schedule and builds a snapshot. Throws, leaving `previous`
     /// in place, when either fetch fails or the new catalog is under half the size of the one held.
     public static func refresh(backend: PlanBackend, previous: PlanSnapshot?, now: Date) async throws -> PlanSnapshot {
+        let catalog = try await loadCatalog(backend, previous: previous)
+        let schedule = try await backend.loadSchedule()
+        var snapshot = PlanSnapshot(sessions: catalog.sessions, schedule: schedule, fetchedAt: now, skipped: catalog.skipped)
+        snapshot.catalogMissing = snapshot.unresolvedIDs
+        return snapshot
+    }
+
+    /// What an update brought back.
+    public struct UpdateResult: Sendable {
+        public var snapshot: PlanSnapshot
+        /// Why the catalog couldn't be downloaded, when it was tried and failed; his schedule
+        /// was still read, and the catalog held is kept.
+        public var catalogProblem: Error?
+        /// Whether the catalog was tried, so the caller can wait before trying it again.
+        public var triedCatalog: Bool
+        /// Why reading his schedule again after an early catalog download failed, when it did;
+        /// the first read is shown instead, and this is reported like any other problem.
+        public var scheduleProblem: Error?
+    }
+
+    /// Reads his schedule, and downloads the whole catalog too when `wholeCatalog` asks for it,
+    /// when nothing is held, when `RefreshPlan.catalogDue`, or when his schedule names a session
+    /// the catalog lacks that downloading hasn't already failed to find
+    /// (`RefreshPlan.catalogWantedFor`). The schedule is always read last, so it is the newest
+    /// answer. Throws, leaving `previous` in place, when the schedule can't be read, or when
+    /// nothing is held and the catalog can't be downloaded. If reading the schedule again after
+    /// an early download fails, the first read is kept with the new catalog. `willTryCatalog`
+    /// runs just before each catalog download, so the caller can record the try even if the
+    /// update then fails or is cancelled.
+    public static func update(backend: PlanBackend, previous: PlanSnapshot?, now: Date, wholeCatalog: Bool = false,
+                              catalogLastTried: Date?,
+                              willTryCatalog: @Sendable () async -> Void = {}) async throws -> UpdateResult {
+        guard let previous else {
+            await willTryCatalog()
+            return UpdateResult(snapshot: try await refresh(backend: backend, previous: nil, now: now),
+                                catalogProblem: nil, triedCatalog: true, scheduleProblem: nil)
+        }
+        var updated = previous
+        var problem: Error?
+        var scheduleProblem: Error?
+        var tried = false
+        /// Downloads the catalog into `updated`, or notes why it couldn't.
+        func download() async throws {
+            tried = true
+            await willTryCatalog()
+            do {
+                let catalog = try await loadCatalog(backend, previous: previous)
+                updated.sessions = catalog.sessions
+                updated.skipped = catalog.skipped
+                updated.catalogFetchedAt = now
+            } catch is CancellationError {
+                throw CancellationError()
+            } catch {
+                problem = error
+            }
+        }
+        if triesCatalogFirst(previous: previous, wholeCatalog: wholeCatalog, catalogLastTried: catalogLastTried, now: now) {
+            try await download()
+        }
+        updated.schedule = try await backend.loadSchedule()
+        updated.fetchedAt = now
+        if !tried, RefreshPlan.catalogWantedFor(updated, lastAttempt: catalogLastTried, now: now) {
+            try await download()
+            // Read again, so the schedule is still the newest answer; if that fails, the first
+            // read (moments old) stands and the failure is returned.
+            if problem == nil {
+                do {
+                    updated.schedule = try await backend.loadSchedule()
+                } catch is CancellationError {
+                    throw CancellationError()
+                } catch {
+                    scheduleProblem = error
+                }
+            }
+        }
+        if tried, problem == nil { updated.catalogMissing = updated.unresolvedIDs }
+        return UpdateResult(snapshot: updated, catalogProblem: problem, triedCatalog: tried, scheduleProblem: scheduleProblem)
+    }
+
+    /// Whether `update` will try the whole catalog before reading his schedule. Known before it
+    /// runs, so the caller can record the attempt even if the update then fails.
+    public static func triesCatalogFirst(previous: PlanSnapshot?, wholeCatalog: Bool, catalogLastTried: Date?,
+                                         now: Date) -> Bool {
+        previous == nil || wholeCatalog || RefreshPlan.catalogDue(previous, lastAttempt: catalogLastTried, now: now)
+    }
+
+    /// What to show when an update lands. If a reserve, favorite or cancel read his schedule
+    /// back while the update ran (`changedDuring`), that schedule and its time are kept: it was
+    /// read after his own change, which the update's read may have missed, and the next read
+    /// brings in anything newer. The update's catalog is shown either way.
+    public static func landed(_ update: PlanSnapshot, current: PlanSnapshot?, changedDuring: Bool) -> PlanSnapshot {
+        guard changedDuring, let current else { return update }
+        var shown = update
+        shown.schedule = current.schedule
+        shown.fetchedAt = current.fetchedAt
+        return shown
+    }
+
+    /// The catalog, refused when it is under half the size of the one held.
+    private static func loadCatalog(_ backend: PlanBackend, previous: PlanSnapshot?) async throws -> Catalog {
         let catalog = try await backend.loadCatalog()
         if let previous, catalog.sessions.count * 2 < previous.sessions.count {
             throw APIError.catalogShrank(previous: previous.sessions.count, got: catalog.sessions.count)
         }
-        let schedule = try await backend.loadSchedule()
-        return PlanSnapshot(sessions: catalog.sessions, schedule: schedule, fetchedAt: now, skipped: catalog.skipped)
+        return catalog
     }
 }

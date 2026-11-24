@@ -115,6 +115,15 @@ final class AppModel {
     private var generation = 0
     /// The generation a refresh is running for, if one is.
     private var refreshingFor: Int?
+    /// True while the running refresh is one he didn't ask for; a refresh he asks for while
+    /// it runs joins it and makes it report its problems like his own.
+    private var refreshIsQuiet = false
+    /// Set once `start()` has finished, so an update by itself can't overtake launching.
+    private var started = false
+    /// When the calendar last tried to update by itself, so a failure waits before the next try.
+    private var lastAutomaticAttempt: Date?
+    /// When the whole catalog was last tried, so a failed download waits before the next try.
+    private var catalogLastTried: Date?
     private var signInFlow: SignInFlow?
 
     var event: EventInfo { mode == .demo ? .sample : .reinvent2026 }
@@ -122,6 +131,7 @@ final class AppModel {
     // MARK: Starting up
 
     func start() async {
+        defer { started = true }
         let saved = Mode(rawValue: UserDefaults.standard.string(forKey: "mode") ?? "") ?? .signedOut
         switch saved {
         case .demo:
@@ -151,6 +161,8 @@ final class AppModel {
         // A refresh still running for the old backend no longer counts as this one's.
         refreshingFor = nil
         isRefreshing = false
+        lastAutomaticAttempt = nil
+        catalogLastTried = nil
     }
 
     private func setMode(_ new: Mode) {
@@ -284,11 +296,37 @@ final class AppModel {
 
     // MARK: Reading
 
-    /// Fetches the catalog and schedule. On any failure the calendar last seen is kept.
-    func refresh() async {
+    /// Reads his schedule again if it is old enough (`RefreshPlan.scheduleDue`), as the
+    /// calendar does while it is open. Not while he is signing in (he may have left to read a
+    /// code), nor once his saved sign-in is known to be rejected: that would only fail and ask
+    /// again every few minutes.
+    func refreshIfDue() async {
+        let now = Date()
+        guard started, mode != .signedOut, !isSigningIn, !needsSignIn,
+              RefreshPlan.scheduleDue(snapshot, lastAttempt: lastAutomaticAttempt, catalogLastTried: catalogLastTried,
+                                      now: now) else { return }
+        lastAutomaticAttempt = now
+        await refresh(automatic: true)
+    }
+
+    /// Reads his schedule, and the whole catalog when it is due or `wholeCatalog` asks for it
+    /// (`Sync.update`). On any failure the calendar last seen is kept. `automatic` (he didn't
+    /// ask) keeps a failure to reach the site quiet, unless he asks for an update while it runs.
+    /// Stamped when the download starts, which can be well after the refresh began (an early
+    /// download follows a schedule read), so the hour's wait runs from the try itself.
+    private func recordCatalogTry(for asked: Int) {
+        if generation == asked { catalogLastTried = Date() }
+    }
+
+    func refresh(automatic: Bool = false, wholeCatalog: Bool = false) async {
         let asked = generation
-        guard let backend, refreshingFor != asked else { return }
+        guard let backend else { return }
+        guard refreshingFor != asked else {
+            if !automatic { refreshIsQuiet = false }
+            return
+        }
         refreshingFor = asked
+        refreshIsQuiet = automatic
         isRefreshing = true
         defer {
             if refreshingFor == asked {
@@ -297,17 +335,30 @@ final class AppModel {
             }
         }
         do {
-            let new = try await Sync.refresh(backend: backend, previous: snapshot, now: Date())
+            let now = Date()
+            let version = snapshotVersion
+            // Each catalog try is recorded as it starts, so one that fails or is cancelled still
+            // waits an hour before the next try.
+            let result = try await Sync.update(backend: backend, previous: snapshot, now: now, wholeCatalog: wholeCatalog,
+                                               catalogLastTried: catalogLastTried,
+                                               willTryCatalog: { [weak self] in await self?.recordCatalogTry(for: asked) })
             // An answer from a backend he has since left (signed out, signed in again,
             // switched to the sample) is dropped, even if the mode reads the same.
             guard generation == asked else { return }
+            let new = Sync.landed(result.snapshot, current: snapshot, changedDuring: snapshotVersion != version)
             setSnapshot(new)
             needsSignIn = false
             if mode == .live { save(new) }
+            // A failed second schedule read comes first: a rejected sign-in matters more.
+            for problem in [result.scheduleProblem, result.catalogProblem].compactMap({ $0 })
+            where RefreshPlan.shouldShow(problem, quiet: refreshIsQuiet) {
+                report(problem)
+                break
+            }
         } catch is CancellationError {
             // The screen went away mid-refresh.
         } catch {
-            guard generation == asked else { return }
+            guard generation == asked, RefreshPlan.shouldShow(error, quiet: refreshIsQuiet) else { return }
             report(error)
         }
     }
@@ -353,6 +404,7 @@ final class AppModel {
         if outcome.readBackProblem as? APIError == .signInNeeded { needsSignIn = true }
         if let schedule = outcome.schedule, var updated = snapshot {
             updated.schedule = schedule
+            updated.fetchedAt = Date()
             setSnapshot(updated)
             if mode == .live { save(updated) }
         }

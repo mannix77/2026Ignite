@@ -46,6 +46,33 @@ public enum Wording {
         return (String(format: "%04d-%02d-%02d", c.year ?? 0, c.month ?? 0, c.day ?? 0), (c.hour ?? 0) * 60 + (c.minute ?? 0))
     }
 
+    /// The calendar's line on how fresh it is: "Updated from AWS 12 min ago. Pull down for the
+    /// latest." Under a minute is "just now"; whole minutes, hours, then days, rounded down. A
+    /// phone clock that reads earlier than the update leaves the age out rather than guess it.
+    public static func lastUpdated(_ fetchedAt: Date, now: Date, sample: Bool) -> String {
+        let seconds = now.timeIntervalSince(fetchedAt)
+        let age: String?
+        switch seconds {
+        case ..<0: age = nil
+        case ..<60: age = "just now"
+        case ..<3600: age = "\(Int(seconds / 60)) min ago"
+        case ..<86400: age = "\(Int(seconds / 3600)) hr ago"
+        default:
+            let days = Int(seconds / 86400)
+            age = days == 1 ? "1 day ago" : "\(days) days ago"
+        }
+        let source = sample ? "Sample conference" : "Updated from AWS"
+        let joined = age.map { sample ? "\(source), updated \($0)" : "\(source) \($0)" } ?? source
+        return joined + ". Pull down for the latest."
+    }
+
+    /// The calendar's status line: what is happening while it updates, and how fresh it is
+    /// otherwise (`lastUpdated`).
+    public static func calendarStatus(refreshing: Bool, fetchedAt: Date, now: Date, sample: Bool) -> String {
+        guard refreshing else { return lastUpdated(fetchedAt, now: now, sample: sample) }
+        return sample ? "Updating the sample conference…" : "Updating from AWS…"
+    }
+
     /// What to say about seats. A seat the attendee holds reads "unavailable" on the site, so
     /// the reservation is checked first.
     public static func seats(_ session: Session, commitment: Commitment?) -> String? {

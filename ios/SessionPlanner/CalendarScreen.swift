@@ -34,6 +34,16 @@ struct CalendarScreen: View {
                                 withAnimation { selectedDay = picked }
                             }
                             Divider()
+                            // The actual time: the timeline's tick is the start of the minute,
+                            // which can be earlier than an update made within it.
+                            Text(Wording.calendarStatus(refreshing: model.isRefreshing, fetchedAt: snapshot.fetchedAt,
+                                                        now: Date(), sample: model.mode == .demo))
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                                .multilineTextAlignment(.center)
+                                .frame(maxWidth: .infinity)
+                                .padding(.horizontal)
+                                .padding(.vertical, 4)
                             TabView(selection: Binding(get: { day }, set: { selectedDay = $0 })) {
                                 ForEach(days, id: \.self) { page in
                                     DayPage(snapshot: snapshot, day: page, now: now)
@@ -53,6 +63,14 @@ struct CalendarScreen: View {
                     } actions: {
                         Button("Update") { Task { await model.refresh() } }
                     }
+                }
+            }
+            // While the calendar is open, his schedule is read again every few minutes
+            // (`RefreshPlan`); the check itself sends nothing until one is due.
+            .task {
+                while !Task.isCancelled {
+                    await model.refreshIfDue()
+                    try? await Task.sleep(for: .seconds(60))
                 }
             }
             .navigationTitle(model.event.name)

@@ -172,6 +172,135 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       Then that session is skipped and counted
       And the other 19 are shown
 
+  Rule: His schedule stays fresh without downloading every session each time
+    The whole catalog (about 2,900 sessions, 12 pages) is downloaded at sign-in and then at
+    most once every 24 hours. His schedule (reserved seats, favorites, invitations) is one small
+    request: while the calendar is open it is read again every 5 minutes, and pulling down
+    reads it at once. The calendar always says when it last read his schedule from AWS and
+    that pulling down gets the latest.
+
+    Example: The one with the calendar open
+      Given his schedule was last read 5 minutes ago and the catalog 3 hours ago
+      When the calendar is open
+      Then the app reads his schedule again
+      And does not download the catalog
+
+    Example: The one with the calendar open a moment longer
+      Given his schedule was last read 4 minutes 59 seconds ago
+      When the calendar is open
+      Then nothing is fetched
+
+    Example: The one whose catalog is a day old
+      Given the catalog was downloaded 24 hours ago
+      When his schedule is read
+      Then the whole catalog is downloaded again too
+      But at 23 hours 59 minutes 59 seconds it is not
+
+    Example: The one who favorited a brand-new session
+      Given he favorited a session on the website that the saved catalog doesn't have
+      And the catalog was downloaded an hour ago
+      When his schedule is read
+      Then the catalog is downloaded again so the session can be shown
+      But if the catalog is under an hour old, it waits, and the session shows as no longer listed
+
+    Example: The one whose favorite was withdrawn
+      Given a favorite that the catalog no longer has, even after downloading it again
+      When his schedule is read every 5 minutes for the rest of the day
+      Then the catalog is not downloaded again for that session; it shows as no longer listed
+
+    Example: The one whose catalog download fails
+      Given the catalog is due and the site fails to send it
+      When his schedule is read
+      Then his new schedule is shown with the catalog he already had
+      And the catalog is not tried again for an hour
+
+    Example: The one who reserves during an update
+      Given an update is downloading the catalog
+      When he reserves a seat before it finishes
+      Then the reservation stays on his calendar when the update lands
+      And the catalog the update downloaded is kept
+
+    Example: The one whose catalog download fails and then his schedule too
+      Given the catalog is due and the site fails to send it
+      When reading his schedule fails as well
+      Then the calendar he last saw is kept
+      And the catalog is still not tried again for an hour
+
+    Example: The one whose first download fails
+      Given no calendar has loaded yet and downloading the catalog just failed
+      When the calendar is open
+      Then it doesn't try again by itself for an hour
+      But pulling down or tapping Update tries at once
+
+    Example: The one who leaves the calendar during a download
+      Given the catalog is being downloaded early for a new session
+      When he switches tabs before it finishes
+      Then the attempt still counts, and the catalog isn't tried again for an hour
+
+    Example: The one whose second schedule read fails
+      Given his schedule named a new session and the catalog was downloaded for it
+      When reading his schedule again fails
+      Then the first schedule is shown with the new catalog
+      And the failure is reported like any other, so a rejected sign-in still asks him to sign in
+
+    Example: The one with a damaged list of missing sessions
+      Given a saved calendar whose list of sessions the catalog lacked has a blank or unreadable entry
+      When the app opens
+      Then the calendar is shown, the bad entries are dropped and padded ones are trimmed
+
+    Example: The one who wants every session now
+      When he chooses "Download all sessions now" in Settings
+      Then the whole catalog and his schedule are downloaded, however recent they are
+
+    Example: The one who signs in
+      When he signs in
+      Then the whole catalog and his schedule are downloaded
+
+    Example: The one whose phone clock was moved back
+      Given the phone's clock reads earlier than the last update
+      Then his schedule and the catalog are both fetched, since their age can't be known
+
+    Example: The one with no connection
+      Given the calendar is open with no connection
+      When the 5-minute update fails
+      Then the calendar he last saw is kept and no message interrupts him
+      And the app doesn't try again by itself for another 5 minutes
+      But when he pulls down, he is told the site couldn't be reached
+
+    Example: The one whose sign-in is no longer good
+      Given the app has asked him to sign in again and he chose "Not now"
+      Then the calendar stops updating by itself until he signs in or pulls down
+
+    Example: The one who checks how fresh it is
+      Given his schedule was last read from AWS 12 minutes ago
+      Then the calendar says "Updated from AWS 12 min ago. Pull down for the latest."
+
+    Example: The one just updated
+      Given his schedule was read 59 seconds ago
+      Then it says "Updated from AWS just now. Pull down for the latest."
+      But at 60 seconds it says "1 min ago"
+
+    Example: The one left for hours
+      Given his schedule was last read 59 minutes ago, then 60 minutes ago
+      Then it says "59 min ago", then "1 hr ago"
+      And a day after it says "1 day ago"
+
+    Example: The one whose phone clock reads earlier than the update
+      Then it says "Updated from AWS. Pull down for the latest." without an age it can't know
+
+    Example: The one trying the sample conference
+      Given he is trying the sample conference
+      Then the calendar says "Sample conference, updated just now. Pull down for the latest."
+
+    Example: The one watching it update
+      While his schedule is being read
+      Then the calendar says "Updating from AWS…", or "Updating the sample conference…" for the sample
+
+    Example: The one with a calendar saved by the earlier version
+      Given a calendar saved before the catalog's own download time was kept
+      When the app opens
+      Then the calendar is shown, taking the catalog's download time as the schedule's
+
   Rule: The app waits when the site says it is busy
 
     Example: The one told to slow down

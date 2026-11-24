@@ -201,11 +201,14 @@ struct SettingsScreen: View {
                         if snapshot.skipped + snapshot.schedule.skipped > 0 {
                             LabeledContent("Unreadable entries skipped", value: "\(snapshot.skipped + snapshot.schedule.skipped)")
                         }
-                        LabeledContent("Updated") {
+                        LabeledContent("Schedule updated") {
                             Text(snapshot.fetchedAt, format: .relative(presentation: .named))
                         }
+                        LabeledContent("All sessions downloaded") {
+                            Text(snapshot.catalogFetchedAt, format: .relative(presentation: .named))
+                        }
                     }
-                    Button("Update now") { Task { await model.refresh() } }
+                    Button("Download all sessions now") { Task { await model.refresh(wholeCatalog: true) } }
                         .disabled(model.isRefreshing)
                 }
 
