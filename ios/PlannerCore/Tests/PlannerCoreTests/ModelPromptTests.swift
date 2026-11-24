@@ -62,11 +62,13 @@ final class ModelPromptTests: XCTestCase {
         XCTAssertEqual(days, ["2026-11-29", "2026-11-30", "2026-12-01", "2026-12-02", "2026-12-03", "2026-12-04"])
         var blocks = 0
         var busiest = 0
+        var daysTested: Set<String> = []
         for day in days {
             for hour in 0..<24 {
                 let block = runningInHour(catalog, date: day, hour: hour)
                 guard !block.isEmpty else { continue }
                 blocks += 1
+                daysTested.insert(day)
                 busiest = max(busiest, block.count)
                 let ranked = longestFirst(block)
                 let prompt = ModelPrompt.build(question: question, ranked: ranked, sessionsInBlock: block.count, picks: [])
@@ -79,7 +81,9 @@ final class ModelPromptTests: XCTestCase {
                 XCTAssertEqual(prompt.metrics.sessionsSent, min(12, block.count), "\(day) \(hour):00")
             }
         }
-        // Precondition: the loop saw the conference, including its busiest hour.
+        // Precondition: every day had at least one hour tested, and the loop saw the
+        // conference, including its busiest hour.
+        XCTAssertEqual(daysTested.sorted(), days)
         XCTAssertGreaterThan(blocks, 50)
         XCTAssertEqual(busiest, 149)
     }
