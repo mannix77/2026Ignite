@@ -45,6 +45,14 @@ final class GapOfferTests: XCTestCase {
         XCTAssertEqual(plan.offeredGaps(on: "2026-12-02", now: ("2026-12-02", 540)).map { [$0.start, $0.end] }, [[600, 720]])
     }
 
+    func testTheMinuteNowIsKnownOnlyOnTheSameDay() {
+        XCTAssertEqual(PlanSnapshot.minute(of: ("2026-12-02", 660), on: "2026-12-02"), 660)
+        XCTAssertNil(PlanSnapshot.minute(of: ("2026-12-01", 660), on: "2026-12-02"))
+        XCTAssertNil(PlanSnapshot.minute(of: ("2026-12-03", 660), on: "2026-12-02"))
+        // Midnight is a minute like any other, not "no time".
+        XCTAssertEqual(PlanSnapshot.minute(of: ("2026-12-02", 0), on: "2026-12-02"), 0)
+    }
+
     func testAnotherDayIsNotCut() {
         let plan = dayWithSeats(secondStart: "12:00")
         // 11:00 on the day before and the day after: the whole stretch on 2 Dec is still offered.

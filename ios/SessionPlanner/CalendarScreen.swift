@@ -173,7 +173,7 @@ private struct DayPage: View {
                                         index: model.sessionsByID, commitments: model.commitmentsByID),
                 gaps: snapshot.offeredGaps(on: day, now: now, index: model.sessionsByID),
                 span: snapshot.offeredGaps(on: day, index: model.sessionsByID),
-                nowMinute: now.date == day ? now.minute : nil)
+                nowMinute: PlanSnapshot.minute(of: now, on: day))
             .refreshable { await model.refresh() }
     }
 }

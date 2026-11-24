@@ -5,6 +5,13 @@ extension PlanSnapshot {
     /// shorter can't hold a session and the walks either side.
     public static let shortestOfferedGap = 30
 
+    /// The minute it is now when `date` is today (`now` is the event's date and minute, from
+    /// `Wording.eventNow`); nil on any other day. What the calendar cuts its free stretches at
+    /// and draws its "now" line at.
+    public static func minute(of now: (date: String, minute: Int), on date: String) -> Int? {
+        now.date == date ? now.minute : nil
+    }
+
     /// The free stretches of a day the calendar offers suggestions for: its gaps of at least
     /// `shortestOfferedGap` minutes. `now` is the event's date and minute (`Wording.eventNow`):
     /// on that day a stretch under way starts now, so nothing that has already started is
@@ -12,7 +19,7 @@ extension PlanSnapshot {
     /// Other days are not cut. `index` is `sessionsByID`, if the caller has it built.
     public func offeredGaps(on date: String, now: (date: String, minute: Int)? = nil,
                             index: [String: Session]? = nil) -> [Gap] {
-        let cut = now.flatMap { $0.date == date ? $0.minute : nil }
+        let cut = now.flatMap { PlanSnapshot.minute(of: $0, on: date) }
         return gaps(on: date, index: index).compactMap { whole in
             var gap = whole
             if let cut { gap.start = max(gap.start, cut) }
