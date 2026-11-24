@@ -120,6 +120,10 @@ final class AppModel {
     private var refreshIsQuiet = false
     /// Set once `start()` has finished, so an update by itself can't overtake launching.
     private var started = false
+    /// When the calendar last tried to update by itself, so a failure waits before the next try.
+    private var lastAutomaticAttempt: Date?
+    /// When the whole catalog was last tried, so a failed download waits before the next try.
+    private var catalogLastTried: Date?
     private var signInFlow: SignInFlow?
 
     var event: EventInfo { mode == .demo ? .sample : .reinvent2026 }
@@ -157,6 +161,8 @@ final class AppModel {
         // A refresh still running for the old backend no longer counts as this one's.
         refreshingFor = nil
         isRefreshing = false
+        lastAutomaticAttempt = nil
+        catalogLastTried = nil
     }
 
     private func setMode(_ new: Mode) {
@@ -295,8 +301,10 @@ final class AppModel {
     /// code), nor once his saved sign-in is known to be rejected: that would only fail and ask
     /// again every few minutes.
     func refreshIfDue() async {
+        let now = Date()
         guard started, mode != .signedOut, !isSigningIn, !needsSignIn,
-              RefreshPlan.scheduleDue(snapshot, now: Date()) else { return }
+              RefreshPlan.scheduleDue(snapshot, lastAttempt: lastAutomaticAttempt, now: now) else { return }
+        lastAutomaticAttempt = now
         await refresh(automatic: true)
     }
 
@@ -320,17 +328,31 @@ final class AppModel {
             }
         }
         do {
-            let new = try await Sync.update(backend: backend, previous: snapshot, now: Date(), wholeCatalog: wholeCatalog)
+            let now = Date()
+            let version = snapshotVersion
+            let result = try await Sync.update(backend: backend, previous: snapshot, now: now, wholeCatalog: wholeCatalog,
+                                               catalogLastTried: catalogLastTried)
             // An answer from a backend he has since left (signed out, signed in again,
             // switched to the sample) is dropped, even if the mode reads the same.
             guard generation == asked else { return }
+            if result.triedCatalog { catalogLastTried = now }
+            var new = result.snapshot
+            // A reserve, favorite or cancel that landed while this ran read the schedule back
+            // after this did: that newer schedule is kept.
+            if snapshotVersion != version, let current = snapshot {
+                new.schedule = current.schedule
+                new.fetchedAt = current.fetchedAt
+            }
             setSnapshot(new)
             needsSignIn = false
             if mode == .live { save(new) }
+            if let problem = result.catalogProblem, RefreshPlan.shouldShow(problem, quiet: refreshIsQuiet) {
+                report(problem)
+            }
         } catch is CancellationError {
             // The screen went away mid-refresh.
         } catch {
-            guard generation == asked, !refreshIsQuiet || RefreshPlan.shouldReport(error) else { return }
+            guard generation == asked, RefreshPlan.shouldShow(error, quiet: refreshIsQuiet) else { return }
             report(error)
         }
     }

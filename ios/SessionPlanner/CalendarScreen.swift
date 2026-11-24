@@ -37,7 +37,7 @@ struct CalendarScreen: View {
                             Text(model.isRefreshing ? "Updating from \(model.mode == .demo ? "the sample conference" : "AWS")…"
                                  // The actual time: the timeline's tick is the start of the minute,
                                  // which can be earlier than an update made within it.
-                                 : Wording.lastUpdated(snapshot.fetchedAt, now: max(clock.date, Date()), sample: model.mode == .demo))
+                                 : Wording.lastUpdated(snapshot.fetchedAt, now: Date(), sample: model.mode == .demo))
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                                 .multilineTextAlignment(.center)

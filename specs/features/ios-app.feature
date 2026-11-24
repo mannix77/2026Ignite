@@ -203,6 +203,22 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       Then the catalog is downloaded again so the session can be shown
       But if the catalog is under an hour old, it waits, and the session shows as no longer listed
 
+    Example: The one whose favorite was withdrawn
+      Given a favorite that the catalog no longer has, even after downloading it again
+      When his schedule is read every 5 minutes for the rest of the day
+      Then the catalog is not downloaded again for that session; it shows as no longer listed
+
+    Example: The one whose catalog download fails
+      Given the catalog is due and the site fails to send it
+      When his schedule is read
+      Then his new schedule is shown with the catalog he already had
+      And the catalog is not tried again for an hour
+
+    Example: The one who reserves during an update
+      Given an update is downloading the catalog
+      When he reserves a seat before it finishes
+      Then the reservation stays on his calendar when the update lands
+
     Example: The one who wants every session now
       When he chooses "Download all sessions now" in Settings
       Then the whole catalog and his schedule are downloaded, however recent they are
@@ -219,6 +235,7 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       Given the calendar is open with no connection
       When the 5-minute update fails
       Then the calendar he last saw is kept and no message interrupts him
+      And the app doesn't try again by itself for another 5 minutes
       But when he pulls down, he is told the site couldn't be reached
 
     Example: The one whose sign-in is no longer good

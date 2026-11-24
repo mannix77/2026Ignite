@@ -105,8 +105,11 @@ final class CountingBackend: PlanBackend, @unchecked Sendable {
     var scheduleAnswer: Result<Schedule, APIError> = .success(Schedule())
     var catalogAnswer: Result<Catalog, APIError> = .success(Catalog(sessions: []))
 
-    private func count(_ name: String) { lock.withLock { counts[name, default: 0] += 1 } }
+    private var order: [String] = []
+    private func count(_ name: String) { lock.withLock { counts[name, default: 0] += 1; order.append(name) } }
     func calls(_ name: String) -> Int { lock.withLock { counts[name, default: 0] } }
+    /// Every call, in the order it was made.
+    var log: [String] { lock.withLock { order } }
 
     func loadCatalog() async throws -> Catalog { count("catalog"); return try catalogAnswer.get() }
     func loadSchedule() async throws -> Schedule { count("schedule"); return try scheduleAnswer.get() }
