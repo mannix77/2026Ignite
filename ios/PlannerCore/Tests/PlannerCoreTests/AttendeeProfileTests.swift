@@ -199,7 +199,7 @@ final class AttendeeProfileTests: XCTestCase {
         XCTAssertEqual(built.use, ProfileUse(interestsNamed: 0, levels: nil, formats: nil, skips: true, reservedToday: false))
         let prompt = ModelPrompt.build(question: "Which?", ranked: [session("a", time: "13:00")], sessionsInBlock: 1,
                                        picks: catalog, preferences: preferences)
-        XCTAssertEqual(prompt.text, ModelPrompt.instructions + "\n\nQuestion: Which?\n\n" + expected
+        XCTAssertEqual(prompt.text, modelInstructions + "\n\nQuestion: Which?\n\n" + expected
                                     + "\n\nSessions:\n\nA | Title a | MGM Grand | 13:00, 60 min")
         XCTAssertTrue(prompt.fits)
         XCTAssertEqual(prompt.sentIDs, ["a"])

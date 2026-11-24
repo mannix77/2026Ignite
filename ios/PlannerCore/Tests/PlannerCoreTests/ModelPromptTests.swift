@@ -114,7 +114,10 @@ final class ModelPromptTests: XCTestCase {
         // Two sessions come to some number of tokens; with exactly that limit both are sent,
         // and with one token less the second is left out.
         let ranked = [session("a", time: "13:00"), session("b", time: "14:00")]
-        let head = ModelPrompt.instructions + "\n\nQuestion: Which of these should I go to?\n\nAbout them:\nInterests: none yet\n\nSessions:"
+        // The instructions as written out are 268 bytes, and the code says the same.
+        XCTAssertEqual(ModelPrompt.instructions, modelInstructions)
+        XCTAssertEqual(modelInstructions.utf8.count, 268)
+        let head = modelInstructions + "\n\nQuestion: Which of these should I go to?\n\nAbout them:\nInterests: none yet\n\nSessions:"
         let a = "A | Title a | MGM Grand | 13:00, 60 min", b = "B | Title b | MGM Grand | 14:00, 60 min"
         let expected = [head, a, b].joined(separator: "\n\n")
         // 436 bytes, all one byte each: 436 / 3 = 145.3, so 146 tokens.
@@ -147,7 +150,7 @@ final class ModelPromptTests: XCTestCase {
         XCTAssertEqual(prompt.metrics.sessionsLeftOut, 1)
         XCTAssertLessThan(prompt.metrics.headroom, 0)
         XCTAssertFalse(prompt.fits)
-        XCTAssertTrue(prompt.text.hasPrefix(ModelPrompt.instructions))
+        XCTAssertTrue(prompt.text.hasPrefix(modelInstructions))
         // The same with the real window fits and sends the session (rule 2).
         let real = ModelPrompt.build(question: question, ranked: [session("a", time: "13:00")], sessionsInBlock: 1, picks: [])
         XCTAssertTrue(real.fits)
