@@ -230,6 +230,23 @@ final class SuggestionTests: XCTestCase {
         XCTAssertEqual(Set(ids(invitedNext.suggestions(in: invitedGap[0]))), ["beforeTheLine", "intoTheLine", "beforeTheWalk"])
     }
 
+    func testASeatAndAnInvitationAtTheSameMinuteEndTheGapAtTheSeat() {
+        // At 16:00 he holds a seat at the Wynn and is invited to the Venetian. The seat counts:
+        // from the Forum that is 20 minutes' walk and 30 in line, so out by 15:10.
+        let plan = snapshot(filler(4) + [
+            offered("pick", time: "09:00", topics: ["Rare"]),
+            offered("seat", time: "09:00"),
+            offered("next", time: "16:00", venue: "Wynn/Encore"),
+            offered("inTime", time: "14:10", topics: ["Rare"]),
+            offered("late", time: "14:11", topics: ["Rare"]),
+        ], reserved: ["seat", "next"], favorites: ["pick"],
+           invited: [offered("party", time: "16:00", venue: "Venetian")])
+        let gaps = plan.gaps(on: "2026-12-02")
+        XCTAssertEqual(gaps.first, Gap(date: "2026-12-02", start: 600, end: 960, before: .at("Caesars Forum"),
+                                       after: .at("Wynn/Encore"), lineFrom: 600, lineUpAfter: true))
+        XCTAssertEqual(ids(plan.suggestions(in: gaps[0])), ["inTime"])
+    }
+
     func testNothingHeHoldsNorItsRepeatIsListedButAFavoriteIs() {
         let plan = snapshot(filler(6) + [
             offered("seat", code: "AIM320", time: "11:00", topics: ["Rare"]),

@@ -45,7 +45,7 @@ final class GapOfferTests: XCTestCase {
         let plan = dayWithSeats(secondStart: "12:00")
         // Precondition: without a time the whole stretch is offered.
         XCTAssertEqual(plan.offeredGaps(on: "2026-12-02").map { [$0.start, $0.end] }, [[600, 720]])
-        // At 11:00 it starts now; where he walks from and to, and the lines, are unchanged.
+        // At 11:00 it starts now, and so does his time in line; where he walks from and to is unchanged.
         XCTAssertEqual(plan.offeredGaps(on: "2026-12-02", now: ("2026-12-02", 660)),
                        [Gap(date: "2026-12-02", start: 660, end: 720, before: .at("MGM Grand"), after: .at("MGM Grand"),
                             lineFrom: 660, lineUpAfter: true)])
@@ -82,12 +82,7 @@ final class GapOfferTests: XCTestCase {
         // A favorite on another day gives him a profile; "began" started at 10:40, "next" starts at 11:40, both
         // at the MGM Grand: 8 minutes' walk inside it, then 30 in line.
         var plan = dayWithSeats(secondStart: "13:00")
-        func offered(_ id: String, _ time: String, date: String = "2026-12-02") -> Session {
-            var s = session(id, date: date, time: time, length: "30", venue: "MGM Grand")
-            s.topics = ["Observability"]
-            return s
-        }
-        plan.sessions += [offered("fav", "15:00", date: "2026-12-03"), offered("began", "10:40"), offered("next", "11:40")]
+        plan.sessions += [topical("fav", "15:00", date: "2026-12-03"), topical("began", "10:40"), topical("next", "11:40")]
         plan.schedule.favorites = ["fav"]
         // Precondition: the whole stretch lists both.
         let whole = plan.offeredGaps(on: "2026-12-02")
@@ -106,6 +101,9 @@ final class GapOfferTests: XCTestCase {
         plan.sessions += [topical("fav", "15:00", date: "2026-12-03"),
                           topical("onTime", "11:38"), topical("oneShort", "11:37")]
         plan.schedule.favorites = ["fav"]
+        // Precondition: without a time both fit the whole stretch from 10:00.
+        let whole = plan.offeredGaps(on: "2026-12-02")
+        XCTAssertEqual(Set(plan.suggestions(in: whole[0]).map(\.id)), ["onTime", "oneShort"])
         let now = plan.offeredGaps(on: "2026-12-02", now: ("2026-12-02", 660))
         XCTAssertEqual(now.map { [$0.start, $0.end] }, [[660, 840]])
         XCTAssertEqual(plan.suggestions(in: now[0]).map(\.id), ["onTime"])

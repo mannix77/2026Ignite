@@ -256,7 +256,7 @@ private struct GapSheet: View {
             Group {
                 if let suggestions, suggestions.isEmpty {
                     ContentUnavailableView("Nothing fits", systemImage: "calendar.badge.clock",
-                                           description: Text("No session in this time is like your picks and leaves time for the walks."))
+                                           description: Text("No session in this time is like your picks and leaves time for the walks and the line."))
                 } else if let suggestions {
                     List(suggestions) { suggestion in
                         NavigationLink(value: suggestion.id) {

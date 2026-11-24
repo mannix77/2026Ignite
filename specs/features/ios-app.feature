@@ -334,7 +334,8 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
 
   Rule: A free stretch on the calendar opens the sessions that fit it
     Only a stretch of at least 30 minutes is offered: anything shorter can't hold a session
-    and the walks either side.
+    and the walks either side. With 30 minutes in line as well, a shorter stretch between two
+    seats will usually list nothing.
 
     Example: The one just long enough
       Given he holds seats from 09:00 to 10:00 and from 10:30 to 11:30
