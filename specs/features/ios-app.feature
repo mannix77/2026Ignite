@@ -433,3 +433,78 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       When he refuses the phone's calendar permission
       Then the app says it can't add the sessions without that permission
       And nothing is written
+
+  Rule: What goes to the on-device model fits its window
+    The model sees at most 12 sessions, each abstract cut to 300 characters at a word and at
+    most 3 topics on its line, his question cut the same way, and his picks as at most 15 of
+    their most common interests, each name cut to 60 characters. Tokens are estimated as UTF-8 bytes divided by 3, rounded up
+    (cautious for English, and for other scripts and emoji too), and the prompt stays within
+    the model's 4,096 less 1,000 kept for the answer. Tested on the real re:Invent 2026
+    catalog, with placeholder abstracts at the real lengths and no speakers.
+
+    Example: The busiest hour
+      Given the 149 sessions running on Thursday 3 December from 13:00 to 14:00
+      When the 12 with the longest text are sent
+      Then the prompt is estimated under 3,096 tokens, and 137 are counted as left out
+
+    Example: The worst case in the whole catalog
+      Given the 12 sessions with the longest text anywhere in the catalog
+      And a 300-character question and the catalog's 15 longest interests on 135 picks
+      Then the prompt is estimated under 2,700 tokens
+
+    Example: The prompt at its limit
+      Given a prompt that comes to exactly the limit
+      Then every session is sent, and with one token less the last one is left out
+
+    Example: Every hour of the conference
+      Given every hour of the conference in the catalog
+      When the 12 sessions with the longest text in each are sent
+      Then every prompt is estimated under 3,096 tokens without leaving any more out
+
+    Example: The long abstract
+      Given an abstract of 301 characters
+      Then it is cut at the last whole word within 300 characters and ends with "…"
+      And an abstract of exactly 300 characters is sent whole
+
+    Example: The thirteenth session
+      Given 13 sessions ranked for the model
+      Then the first 12 are sent and 1 is counted as left out
+
+    Example: The prompt that would still be too long
+      Given 12 sessions with titles far longer than any in the catalog
+      Then sessions are left out from the bottom of the ranking until the prompt fits
+      And each one left out is counted
+
+    Example: The title with a bar in it
+      Given the real title "Kiroween '26 | Build something wicked for a shot at $100,000 in prizes"
+      Then its line keeps every field in its place, the bar written as "/"
+      And line breaks in a title, abstract or question become spaces, so nothing looks like another session
+      And a bar in his question, an abstract or an interest is written as "/" too
+
+    Example: The fixed text can't crowd out the sessions
+      Given a 300-character question and 15 interests of 60 characters, all in 4-byte characters
+      Then the fixed text alone still fits the window, with room for sessions
+      And the same holds for characters of any size, such as the 25-byte family emoji,
+        because the question is also cut to 1,200 bytes and each interest name to 240,
+        at a word where there is one
+
+    Example: A window too small for the fixed text
+      Given a window smaller than the real one, too small for the instructions alone
+      Then no session is sent and the prompt is marked as not to be sent
+
+    Example: The same interest written twice
+      Given one pick with the topic "AI" and the service " AI ", and a blank topic
+      Then the summary says "AI (1)", and a second pick with "AI" makes it "AI (2)"
+
+    Example: The blank question and the missing fields
+      Given a blank question and a session with no time, venue or abstract
+      Then the question reads "(none)" and the session's line leaves out what it doesn't have
+
+    Example: The many picks
+      Given he has 135 favorites
+      Then his picks are summarised as his 15 most common interests, with how many picks share each
+
+    Example: What each prompt reports
+      Then each prompt reports its estimated tokens, the window, the room kept for the answer,
+        the headroom left, the sessions in the block, the sessions sent, those left out,
+        and the abstracts cut

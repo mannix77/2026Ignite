@@ -1,3 +1,4 @@
+import XCTest
 import Foundation
 @testable import PlannerCore
 
@@ -113,4 +114,34 @@ final class CountingBackend: PlanBackend, @unchecked Sendable {
     func cancelReservation(_ sessionId: String) async throws { count("cancel") }
     func favorite(_ sessionIds: [String]) async throws -> BulkResult { count("favorite"); return BulkResult() }
     func unfavorite(_ sessionId: String) async throws { count("unfavorite") }
+}
+
+/// The re:Invent 2026 catalog as the app reads it, from `Fixtures/reinvent2026-catalog.json`:
+/// real sessions, times and venues, no speakers, and placeholder abstracts at the real lengths
+/// (built by `scripts/catalog_fixture.py`).
+func realCatalog() throws -> [Session] {
+    let url = try XCTUnwrap(Bundle.module.url(forResource: "reinvent2026-catalog", withExtension: "json",
+                                              subdirectory: "Fixtures"))
+    return try JSONDecoder().decode(SessionsPage.self, from: Data(contentsOf: url)).items
+}
+
+/// Each real abstract's length, by session id, as recorded in the fixture.
+func realAbstractLengths() throws -> [String: Int] {
+    let url = try XCTUnwrap(Bundle.module.url(forResource: "reinvent2026-catalog", withExtension: "json",
+                                              subdirectory: "Fixtures"))
+    let root = try XCTUnwrap(JSONSerialization.jsonObject(with: Data(contentsOf: url)) as? [String: Any])
+    let items = try XCTUnwrap(root["items"] as? [[String: Any]])
+    return Dictionary(uniqueKeysWithValues: items.compactMap { item in
+        (item["sessionId"] as? String).flatMap { id in (item["realAbstractLength"] as? Int).map { (id, $0) } }
+    })
+}
+
+/// The timed sessions running at any point in the hour from `hour`:00 on `date`.
+func runningInHour(_ sessions: [Session], date: String, hour: Int) -> [Session] {
+    sessions.filter { session in
+        guard session.isAllDaySession != true, let time = session.sessionTime, time.date == date,
+              let start = time.startMinute else { return false }
+        let end = start + max(time.lengthMinutes, 1)
+        return start < (hour + 1) * 60 && end > hour * 60
+    }
 }
