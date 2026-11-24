@@ -279,7 +279,12 @@ private struct GapSheet: View {
                 ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } }
             }
         }
-        .task(id: gap) { suggestions = await model.suggestions(in: gap) }
+        .task(id: gap) {
+            let found = await model.suggestions(in: gap)
+            // A newer stretch has replaced this one: its own task sets the list.
+            guard !Task.isCancelled else { return }
+            suggestions = found
+        }
         // Reserving one of these (from its page) changes the calendar: this stretch may no
         // longer be free, so the list closes rather than offer what no longer fits.
         .onChange(of: model.snapshotVersion) { dismiss() }
