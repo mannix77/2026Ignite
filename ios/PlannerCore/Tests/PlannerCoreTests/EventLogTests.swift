@@ -61,6 +61,10 @@ final class EventLogTests: XCTestCase {
         XCTAssertNil(HoneycombConfig(key: "hcxik abc", dataset: "session-planner"), "a key never holds a space")
         XCTAssertNil(HoneycombConfig(key: "hcxik_abc", dataset: "a/b"), "a slash would change the address")
         XCTAssertNil(HoneycombConfig(key: "hcxik_abc", dataset: "a?b"))
+        XCTAssertNil(HoneycombConfig(key: "hcxik_abc", dataset: ".."), "dots alone would leave the dataset's address")
+        XCTAssertNil(HoneycombConfig(key: "hcxik_abc", dataset: "."))
+        XCTAssertNil(HoneycombConfig(key: "hcxik\u{0}abc", dataset: "session-planner"))
+        XCTAssertNotNil(HoneycombConfig(key: "hcxik_abc", dataset: "a.b"))
         XCTAssertNotNil(HoneycombConfig(key: "hcxik_abc", dataset: "Session_Planner.v1"))
     }
 
@@ -244,6 +248,12 @@ final class EventLogTests: XCTestCase {
         _ = await EventLog(config: config, transport: transport)
             .send(fullRun, duration: nil, sharing: .allowed, installID: installID, app: app)
         XCTAssertEqual(try XCTUnwrap(transport.sent.first).timeoutInterval, 10)
+    }
+
+    func testDurationIsSentInWholeMillisecondsCutNotRounded() {
+        XCTAssertEqual(EventLog.milliseconds(.microseconds(1999)), 1)
+        XCTAssertEqual(EventLog.milliseconds(.microseconds(2000)), 2)
+        XCTAssertEqual(EventLog.milliseconds(.zero), 0)
     }
 
     // MARK: Install id

@@ -28,13 +28,15 @@ public struct HoneycombConfig: Equatable, Sendable {
     public let key: String
     public let dataset: String
 
-    /// Usable only as trimmed, non-blank strings: a key with no whitespace inside, and a
-    /// dataset of letters, digits, ".", "_" and "-", so it can't change the address.
+    /// Usable only as trimmed, non-blank strings: a key with no whitespace or control character
+    /// inside, and a dataset of letters, digits, ".", "_" and "-", not dots alone ("..")
+    /// so it can't change the address.
     public init?(key: Any?, dataset: Any?) {
         guard let key = (key as? String)?.trimmingCharacters(in: .whitespacesAndNewlines), !key.isEmpty,
-              key.rangeOfCharacter(from: .whitespacesAndNewlines) == nil,
+              key.rangeOfCharacter(from: .whitespacesAndNewlines.union(.controlCharacters)) == nil,
               let dataset = (dataset as? String)?.trimmingCharacters(in: .whitespacesAndNewlines), !dataset.isEmpty,
-              dataset.unicodeScalars.allSatisfy({ HoneycombConfig.datasetCharacters.contains($0) })
+              dataset.unicodeScalars.allSatisfy({ HoneycombConfig.datasetCharacters.contains($0) }),
+              dataset.contains(where: { $0 != "." })
         else { return nil }
         self.key = key
         self.dataset = dataset

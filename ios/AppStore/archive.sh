@@ -40,6 +40,10 @@ mkdir -p "$out"
 honeycomb="$ios/SessionPlanner/Honeycomb.plist"
 rm -f "$honeycomb"
 if [ -n "${HONEYCOMB_KEY:-}" ]; then
+    # The app refuses a key with a space or control character in it and would send nothing.
+    case "$HONEYCOMB_KEY" in
+        *[[:space:]]*|*[[:cntrl:]]*) echo "HONEYCOMB_KEY holds a space or control character; the app would refuse it." >&2; exit 1 ;;
+    esac
     trap 'rm -f "$honeycomb"' EXIT
     plutil -create xml1 "$honeycomb"
     plutil -insert IngestKey -string "$HONEYCOMB_KEY" "$honeycomb"

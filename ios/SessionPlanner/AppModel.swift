@@ -300,7 +300,7 @@ final class AppModel {
     /// Records, once per launch, that a free stretch's list wasn't ranked because the phone
     /// can't run the model (`ModelOutcome.unavailable` and why). Asks no model.
     func recordModelNotAsked(_ suggestions: [Suggestion], in gap: Gap) async {
-        guard !recordedUnavailable, !suggestions.isEmpty, !ModelStep.willAsk(suggestions, ranker: onDeviceModel) else { return }
+        guard eventSharing == .allowed, !recordedUnavailable, !suggestions.isEmpty, !ModelStep.willAsk(suggestions, ranker: onDeviceModel) else { return }
         recordedUnavailable = true
         let ranked = await ModelStep.rank(suggestions, sessionsInBlock: snapshot?.sessionsStarting(in: gap) ?? 0,
                                           picks: [], ranker: onDeviceModel)
