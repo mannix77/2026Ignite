@@ -44,6 +44,24 @@ extension Gap {
     }
 }
 
+/// A list of suggestions and the stretch it was worked out for. While an open stretch moves on
+/// with the minute and its list reloads, the old list is not shown, so nothing that no longer
+/// fits can be opened from it.
+public struct GapSuggestions: Equatable, Sendable {
+    public let gap: Gap
+    public let suggestions: [Suggestion]
+
+    public init(gap: Gap, suggestions: [Suggestion]) {
+        self.gap = gap
+        self.suggestions = suggestions
+    }
+
+    /// The list if it was worked out for `current`; nil while `current`'s own list loads.
+    public func list(for current: Gap) -> [Suggestion]? {
+        gap == current ? suggestions : nil
+    }
+}
+
 extension Wording {
     /// "Free 10:00 – 10:30 AM": the label of a free stretch on the calendar.
     public static func gap(_ gap: Gap) -> String {

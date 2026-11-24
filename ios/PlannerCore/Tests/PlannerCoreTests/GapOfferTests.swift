@@ -232,3 +232,25 @@ final class CurrentGapTests: XCTestCase {
         XCTAssertNil(otherDay.current(in: plan.offeredGaps(on: "2026-12-02", now: ("2026-12-02", 660))))
     }
 }
+
+final class GapSuggestionsTests: XCTestCase {
+    func testAListIsShownOnlyForTheStretchItWasWorkedOutFor() {
+        let at11 = Gap(date: "2026-12-02", start: 660, end: 720, before: .at("MGM Grand"), after: .at("MGM Grand"),
+                       lineFrom: 660, lineUpAfter: true)
+        var at1101 = at11
+        at1101.start = 661
+        at1101.lineFrom = 661
+        let found = [Suggestion(session: session("s"), score: 1, shared: [], seat: .walkUp, isFavorite: false,
+                                isRepeatOfFavorite: false)]
+        let loaded = GapSuggestions(gap: at11, suggestions: found)
+        XCTAssertEqual(loaded.list(for: at11), found)
+        // A minute later the same stretch has moved on: its list is still loading, the old one is hidden.
+        XCTAssertNil(loaded.list(for: at1101))
+        // Only the line moving on is enough to hide it too.
+        var lineOnly = at11
+        lineOnly.lineFrom = 661
+        XCTAssertNil(loaded.list(for: lineOnly))
+        // An empty list for the current stretch is an answer ("Nothing fits"), not "still loading".
+        XCTAssertEqual(GapSuggestions(gap: at11, suggestions: []).list(for: at11), [])
+    }
+}

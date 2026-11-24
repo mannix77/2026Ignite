@@ -254,11 +254,11 @@ private struct GapSheet: View {
     @Environment(\.dismiss) private var dismiss
     let gap: Gap
     /// The list and the stretch it was worked out for.
-    @State private var loaded: (gap: Gap, suggestions: [Suggestion])?
+    @State private var loaded: GapSuggestions?
 
     var body: some View {
         // Shown only for the stretch as it is now: while a newer one loads, the old list goes.
-        let suggestions = loaded.flatMap { $0.gap == gap ? $0.suggestions : nil }
+        let suggestions = loaded?.list(for: gap)
         NavigationStack {
             Group {
                 if let suggestions, suggestions.isEmpty {
@@ -286,7 +286,7 @@ private struct GapSheet: View {
             let found = await model.suggestions(in: gap)
             // A newer stretch has replaced this one: its own task sets the list.
             guard !Task.isCancelled else { return }
-            loaded = (gap, found)
+            loaded = GapSuggestions(gap: gap, suggestions: found)
         }
         // Reserving one of these (from its page) changes the calendar: this stretch may no
         // longer be free, so the list closes rather than offer what no longer fits.
