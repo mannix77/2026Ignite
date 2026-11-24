@@ -39,7 +39,7 @@ own screens, is still "Session Planner". Apple expects the two to be recognisabl
 (guideline 2.3.8); if a reviewer objects, either rename the app record or change the display
 name in the project (`INFOPLIST_KEY_CFBundleDisplayName`) and upload a new build.
 
-## Version information (1.0)
+## Version information (1.1)
 
 **Promotional text (170)**
 
@@ -56,8 +56,16 @@ A CALENDAR, NOT A LIST
 • Sessions that overlap sit side by side, so a clash is obvious.
 • Favorites stay out of the way until you ask for them, then appear as one marker per hour that opens the list.
 
+• Swipe left or right to move between days; the selected day is easy to spot in light and dark mode.
+
+FILL A GAP IN YOUR DAY
+• Free stretches of 30 minutes or more show on the calendar. Tap one to see the sessions you could still make there, most like the ones you picked first, with what they share with your picks and whether there is a seat to reserve or a walk-up line.
+
 KNOW WHEN A WALK IS TOO TIGHT
 • The app warns you when two sessions in different venues are less than 30 minutes apart.
+
+YOUR SESSIONS IN APPLE CALENDAR (OPTIONAL)
+• Turn on "Add reserved sessions to Calendar" in Settings and your reserved sessions go into a calendar of their own, kept up to date as your schedule changes, next to your other events and alerts. It is off until you turn it on, and the app only ever changes the events it made.
 
 FIND AND CHANGE SESSIONS
 • Search the whole catalog by code, title, speaker or topic.
@@ -71,6 +79,7 @@ PRIVATE BY DESIGN
 • You sign in on AWS's own page. The app never sees your password.
 • Your sign-in is kept in the iPhone's keychain, on this device only.
 • No analytics, no ads, no tracking, and no server of the developer's.
+• Readable at every text size, including the largest accessibility sizes.
 
 TRY IT FIRST
 • No Builder ID? Choose "Try the sample conference" to explore every screen with made-up sessions.
@@ -87,9 +96,16 @@ No AWS or re:Invent trademark is used in the name, subtitle or keywords on purpo
 rejects other companies' trademarks there (guideline 2.3.7). They appear only in the
 description, descriptively, with the trademark line.
 
-**What's New**
+**What's New (1.1)**
 
-First release.
+```
+• Fill a gap: free stretches on the calendar now show the sessions you could still make there, most like your picks first.
+• Apple Calendar: optionally add your reserved sessions to a calendar of their own, kept up to date as your schedule changes.
+• Swipe left or right to change day.
+• The selected day stands out clearly, and the hours stay readable at the largest text sizes.
+```
+
+(1.0: First release.)
 
 ## Screenshots
 
@@ -122,6 +138,8 @@ carry an alpha channel, which App Store Connect refuses: flatten them before upl
 ## App Privacy ("nutrition label")
 
 Answer **"No, we do not collect data from this app."** The result is "Data Not Collected".
+Unchanged in 1.1: the Apple Calendar copy is written on the phone into the user's own Calendar
+account and is never sent to the developer.
 
 Why that is accurate: the developer has no server and receives nothing. The app sends the
 user's requests straight to AWS, on the user's instruction, using the user's own sign-in.
@@ -143,7 +161,7 @@ not ask.
 | Sign-in required | **No** (see notes: every feature can be reviewed without an account; whether Apple accepts that in place of a demo account is its call, see "No test account" under risks) |
 | Contact first name, last name, phone, email | **YOU** |
 
-**Notes for the reviewer** (paste as is)
+**Notes for the reviewer** (paste as is; the APPLE CALENDAR paragraph is new in 1.1)
 
 ```
 Session Planner shows an attendee's AWS re:Invent schedule as a calendar.
@@ -167,6 +185,15 @@ distributed to attendees as long as it signs them in on their own device, which 
 The app opens AWS's own sign-in page in a system authentication sheet, never sees the password,
 and stores the resulting token in the keychain.
 
+APPLE CALENDAR (new in 1.1)
+Settings > "Add reserved sessions to Calendar" is off by default. When turned on it asks for
+Calendar access and writes the signed-in attendee's reserved sessions into a calendar of their
+own, kept up to date. Full access (not write-only) is needed because the app must find its own
+events again to move or remove them when a session changes or is cancelled; it never changes
+any other event. The setting needs a signed-in attendee, so it is disabled in the sample
+conference and cannot be exercised without a registered account; the usage text is shown
+before access is requested.
+
 The app is independent. It is not affiliated with, sponsored by or endorsed by Amazon Web
 Services, and says so on its first screen and in Settings. It has no analytics, ads, tracking
 or server of its own.
@@ -186,6 +213,10 @@ or server of its own.
 - **Trademarks (2.3.7, 5.2.1).** Kept out of the name, subtitle, keywords and icon.
 - **Sign in with Apple (4.8).** Not required: the app offers a single sign-in that is the
   service's own account system, with no third-party social login offered by the app itself.
+- **Calendar permission without a way to try it (5.1.1, 2.1), new in 1.1.** The reviewer can
+  see the permission text but cannot turn the feature on without a registered account. The
+  notes explain this. If Apple asks to see it working, the options are a screen recording made
+  on a signed-in phone, or allowing the setting in the sample conference (a code change).
 - **Usefulness outside the event (4.2).** The app is for one event's attendees. The sample
   conference shows the full function; say so if asked.
 
@@ -217,7 +248,8 @@ it has already seen for the same version.
 
 ## After approval
 
-- The version string is `1.0`. Use `1.0.1` and up for fixes.
+- The version string is `1.1` (build 3) for the second release; `1.0` (builds 1–2) was the
+  first. Use `1.1.1` and up for fixes, and raise the build number for every upload.
 - re:Invent 2026 runs 30 November to 4 December 2026. Review usually takes one to three days
   but can take longer, and is not guaranteed before the event. TestFlight internal testing
   (your own team's Apple IDs) needs no review and is the dependable route for that week.
