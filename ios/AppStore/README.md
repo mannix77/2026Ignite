@@ -39,9 +39,9 @@ own screens, is still "Session Planner". Apple expects the two to be recognisabl
 (guideline 2.3.8); if a reviewer objects, either rename the app record or change the display
 name in the project (`INFOPLIST_KEY_CFBundleDisplayName`) and upload a new build.
 
-## Version information (1.1.1)
+## Version information (1.2)
 
-The promotional text, description and keywords are unchanged from 1.1.
+Submitted for review on 2026-11-24 with build 7. The promotional text and keywords are unchanged from 1.1. The description changes for 1.2: it adds Apple Intelligence, session preferences and walk-ins, and "No analytics" gives way to the optional diagnostics line. Version 1.1.1 was never created in App Store Connect, so 1.2 follows 1.1 there and its What's New includes 1.1.1's fix.
 
 **Promotional text (170)**
 
@@ -56,12 +56,14 @@ Sign in once with your AWS Builder ID and the app shows what the conference site
 A CALENDAR, NOT A LIST
 • Each day is a timeline with your reserved and invited sessions as blocks.
 • Sessions that overlap sit side by side, so a clash is obvious.
-• Favorites stay out of the way until you ask for them, then appear as one marker per hour that opens the list.
-
+• Each reserved seat shows when to be there, 10 minutes before it starts.
+• Favorites stay out of the way until you ask for them, then appear as one marker per hour that opens the list. A favorite you can't reserve can go on your calendar as a walk-in.
 • Swipe left or right to move between days; the selected day is easy to spot in light and dark mode.
 
 FILL A GAP IN YOUR DAY
-• Free stretches of 30 minutes or more show on the calendar. Tap one to see the sessions you could still make there, most like the ones you picked first, with what they share with your picks and whether there is a seat to reserve or a walk-up line.
+• Free stretches of 30 minutes or more show on the calendar. Tap one to see the sessions you could still make there, allowing for the walk and the time you set to get in line, most like the ones you picked first, with whether there is a seat to reserve or a walk-up line.
+• On an iPhone with Apple Intelligence, the on-device model puts the best of them first, with a one-line reason for each.
+• In Settings, choose the levels and formats you prefer to move them up, and the formats you skip to leave them out.
 
 KNOW WHEN A WALK IS TOO TIGHT
 • The app warns you when two sessions in different venues are less than 30 minutes apart.
@@ -80,7 +82,8 @@ WORKS WITHOUT A CONNECTION
 PRIVATE BY DESIGN
 • You sign in on AWS's own page. The app never sees your password.
 • Your sign-in is kept in the iPhone's keychain, on this device only.
-• No analytics, no ads, no tracking, and no server of the developer's.
+• No ads, no tracking, and no server of the developer's.
+• Diagnostics are off unless you choose to share them: then what Apple Intelligence was given and its answer are sent to a diagnostics service, with no sign-in, name or email. Change it any time in Settings.
 • Readable at every text size, including the largest accessibility sizes.
 
 TRY IT FIRST
@@ -98,7 +101,19 @@ No AWS or re:Invent trademark is used in the name, subtitle or keywords on purpo
 rejects other companies' trademarks there (guideline 2.3.7). They appear only in the
 description, descriptively, with the trademark line.
 
-**What's New (1.1.1)**
+**What's New (1.2)**
+
+```
+• Apple Intelligence: on iPhones that have it, the sessions that fit a free stretch are ranked on the device, best first, with a one-line reason for each.
+• Session preferences: choose the levels and formats you prefer, and the formats you skip.
+• Suggestions leave time to get in line, not just to walk; set how long in Settings.
+• Walk-ins: put a favorite you can't reserve on your calendar, and see when to be at each reserved seat.
+• Full sessions are marked full, and the calendar shows how recently it updated.
+• On the day itself, free stretches start at the current time.
+• Optional diagnostics: share how suggestions work, only if you choose to.
+```
+
+**What's New (1.1.1)** (built as build 4 and in TestFlight, never submitted)
 
 ```
 • On the day itself, free stretches start at the current time, so every session offered is one you can still make.
@@ -255,7 +270,7 @@ not ask.
 | Sign-in required | **No** to try the sample conference. The "Add reserved sessions to Calendar" setting requires a registered attendee account. Apple decides whether to accept the sample in place of a demo account (see "No test account" and "Calendar permission" under risks). |
 | Contact first name, last name, phone, email | **YOU** |
 
-**Notes for the reviewer** (paste as is; the APPLE CALENDAR paragraph is new in 1.1)
+**Notes for the reviewer** (paste as is; APPLE INTELLIGENCE and DIAGNOSTICS are new in 1.2, APPLE CALENDAR in 1.1)
 
 ```
 Session Planner shows an attendee's AWS re:Invent schedule as a calendar.
@@ -268,6 +283,12 @@ them (tap "Free 9:00 – 11:00 AM" on Tue 9), search and filters, session detail
 a favorite, reserving a seat (try ARC420 to see a refused clash, SEC220 to see a success) and
 cancelling a reservation. The "Add reserved sessions to Calendar" setting is disabled in the
 sample conference (see APPLE CALENDAR below).
+
+APPLE INTELLIGENCE (new in 1.2)
+On an iPhone with Apple Intelligence turned on, opening a free stretch (in the sample conference
+too) asks Apple's on-device model to rank the sessions that fit; the ones it ranks move to the
+top with a one-line reason each. Without Apple Intelligence the list keeps its usual order. It
+runs on the device and changes nothing on the conference site.
 
 ABOUT SIGN-IN
 "Sign in with AWS Builder ID" is for people registered for the event. A Builder ID that is not
@@ -296,12 +317,12 @@ Share. With Share, each time Apple Intelligence ranks the suggestions for a free
 app sends Honeycomb (a diagnostics service) the text Apple Intelligence was given (catalog
 sessions and a short profile of interests and preferences), its answer, the outcome, duration and
 counts, with the app version and a random install id: no sign-in, name, email, personal time or
-typed text. Settings >
-Diagnostics changes the answer and resets the install id. It is described in the privacy policy.
+typed text. Settings > Diagnostics changes the answer and resets the install id. It is described
+in the privacy policy.
 
 The app is independent. It is not affiliated with, sponsored by or endorsed by Amazon Web
-Services, and says so on its first screen and in Settings. It has no ads, tracking or server of
-its own.
+Services, and says so on its first screen and in Settings. It has no ads, tracking or server
+of its own.
 ```
 
 ## Risks to expect in review
