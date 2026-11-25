@@ -92,12 +92,28 @@ struct SessionDetailView: View {
                         Text("This gives up the seat on the conference site. You may not get it back.")
                     }
                 } else if session.isReservable == true, commitment != .invited {
+                    let open = Wording.canReserve(session)
                     Button {
                         confirmReserve = true
                     } label: {
-                        Label("Reserve a seat", systemImage: "checkmark.seal")
+                        if open {
+                            Label("Reserve a seat", systemImage: "checkmark.seal")
+                        } else {
+                            // Plainly not pressable: grey, struck-through icon, and why.
+                            HStack {
+                                Label("Reserve a seat", systemImage: "xmark.seal")
+                                Spacer()
+                                Text(Wording.seats(session, commitment: commitment) ?? "Full")
+                                    .font(.subheadline.bold())
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 2)
+                                    .background(.quaternary, in: Capsule())
+                            }
+                            .foregroundStyle(.tertiary)
+                        }
                     }
-                    .disabled(!Wording.canReserve(session))
+                    .disabled(!open)
+                    .accessibilityHint(open ? "" : "No seats left to reserve")
                     .confirmationDialog("Reserve a seat in \(session.code)?", isPresented: $confirmReserve, titleVisibility: .visible) {
                         Button("Reserve") { run { await model.reserve(session) } }
                     } message: {
