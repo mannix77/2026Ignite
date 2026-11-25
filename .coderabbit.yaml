@@ -24,7 +24,7 @@ reviews:
         A guard's threshold must not be adjustable by the data it checks.
         Untrusted records are skipped and counted, never fatal; a mostly-junk answer must be refused and the last good calendar kept.
         Logic that decides what the user sees belongs in PlannerCore, where it is tested, not in a SwiftUI view or AppModel.
-        Tokens stay in the keychain; nothing is sent anywhere but the AWS Events API and its sign-in endpoints.
+        Tokens stay in the keychain; nothing is sent anywhere but the AWS Events API and its sign-in endpoints, with one exception (owner's decision, #193/#201): the opt-in Honeycomb events in EventLog, sent to api.honeycomb.io only from a build with an ingest key, only on the live conference, and only after the attendee chose Share; privacy.html must describe exactly what they hold.
     - path: ".github/workflows/**"
       instructions: |
         pages.yml must publish only ios/AppStore/support.html and ios/AppStore/privacy.html, at those paths: the App Store listing links to them, and archive/ holds personal selections that must not be published.

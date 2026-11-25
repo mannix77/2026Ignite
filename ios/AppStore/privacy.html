@@ -14,21 +14,35 @@
 </head>
 <body>
 <h1>Session Planner: Privacy Policy</h1>
-<p class="date">Effective 23 November 2026</p>
+<p class="date">Effective 24 November 2026</p>
 
 <p>Session Planner is an independent iPhone app that shows your AWS re:Invent schedule as a calendar. It is not affiliated with, sponsored by or endorsed by Amazon Web Services.</p>
 
 <h2>What the developer collects</h2>
-<p>Nothing. The app has no analytics, no advertising, no tracking and no server of its own. The developer never receives your sign-in, your schedule, or any information about how you use the app.</p>
+<p>Nothing, unless you choose to share how suggestions work (below). The app has no advertising, no tracking and no server of its own. The developer never receives your sign-in or your schedule.</p>
 
 <h2>Signing in</h2>
 <p>You sign in on Amazon Web Services' own sign-in page, shown in a private browser sheet. The app never sees your password. When sign-in finishes, AWS gives the app a token that lets it read and change your event schedule. The token is kept in this iPhone's keychain, is not synced to iCloud, and is not copied to any other device or service.</p>
 
 <h2>What the app sends, and to whom</h2>
-<p>The app talks only to the AWS Events service (<code>api.awsevents.com</code> and <code>oauth.awsevents.com</code>). It asks for the session catalog and your schedule, and it sends the changes you make yourself: adding or removing a favorite, reserving a seat, or cancelling a reservation. How AWS handles that information is covered by the <a href="https://aws.amazon.com/privacy/">AWS Privacy Notice</a>.</p>
+<p>The app talks to the AWS Events service (<code>api.awsevents.com</code> and <code>oauth.awsevents.com</code>), and to Honeycomb (<code>api.honeycomb.io</code>) only if you agree to share how suggestions work (above). It asks for the session catalog and your schedule, and it sends the changes you make yourself: adding or removing a favorite, reserving a seat, or cancelling a reservation. How AWS handles that information is covered by the <a href="https://aws.amazon.com/privacy/">AWS Privacy Notice</a>.</p>
+
+<h2>Sharing how suggestions work (optional)</h2>
+<p>From version 1.2, on an iPhone with Apple Intelligence, the app's suggestions for a free stretch can be ranked by Apple's on-device model. To find out where that goes wrong or is slow, the app can send a record of each ranking to <a href="https://www.honeycomb.io/privacy">Honeycomb</a>, a diagnostics service the developer uses. <strong>It sends nothing unless you agree.</strong> The first time you open the app it asks; until you answer, and if you choose "Don't share", nothing is sent. You can change your answer at any time in the app's Settings, under Diagnostics, with "Share how suggestions work".</p>
+<p><strong>What is sent</strong>, for each ranking as it happens:</p>
+<ul>
+<li><strong>What Apple Intelligence was given</strong>, word for word: its instructions; the sessions that fit that free time, as listed in the public conference catalog (code, title, format, level, venue, time, topics and the start of the description); and a short summary of you, made on the phone: the levels and formats you prefer (from your settings, or from the sessions you picked), the formats you skip, up to 15 topics and AWS services that your reserved and favorite sessions share, each with how many of those sessions it appears in, and how many sessions you have reserved that day.</li>
+<li><strong>Its answer</strong>, word for word: the sessions it ranked and its one-line reason for each.</li>
+<li>Whether it worked or how it failed (for example, Apple Intelligence off, or the model timed out), how long it took, and counts (sessions in the time slot, sent and ranked, the model's token counts).</li>
+<li>The app's version and build, and a random install id. The same install id goes with every record from this install, so the records from one iPhone can be seen together; it is never joined with your AWS account, name or email.</li>
+</ul>
+<p>When a ranked free stretch stays open on screen, a short record is sent again each minute, without the text and answer. A phone without Apple Intelligence sends one record per launch saying so.</p>
+<p><strong>What is never sent</strong>: your sign-in or anything from the keychain, your name or email, your AWS identity, your personal time, your list of reserved or favorite sessions, or anything you type. (A session you favorited can be among the sessions that fit the free time, listed like any other and not marked as yours.) The install id is a random number made by the app, not tied to your AWS account; "Reset install ID" in Settings replaces it, and choosing "Don't share" deletes it.</p>
+<p><strong>Why</strong>: only to see what Apple Intelligence was given and what it answered, whether the ranking works and how fast, so it can be improved. Not for advertising, not to track you, not sold or shared with anyone else.</p>
+<p><strong>How long</strong>: Honeycomb deletes these records after at most 90 days (its current retention is 60 days). Records that can't be sent are dropped, not kept on the phone. The records carry no name, account or contact details, so the developer can't tell whose iPhone an install id belongs to. To have records deleted early, ask at the contact address below; "Reset install ID" in Settings starts a new id, so later records can't be tied to earlier ones.</p>
 
 <h2>What is kept on your iPhone</h2>
-<p>A copy of the session catalog and your schedule is saved on the phone so the calendar opens without a connection. Three settings are saved as well: whether favorites are shown, whether you are using the sample conference, and whether your reserved sessions are added to Calendar.</p>
+<p>A copy of the session catalog and your schedule is saved on the phone so the calendar opens without a connection. Your settings are saved as well, such as whether favorites are shown, whether you are using the sample conference, whether your reserved sessions are added to Calendar, your answer about sharing how suggestions work and, if you agreed, the random install id.</p>
 
 <h2>Apple Calendar</h2>
 <p>If you turn on "Add reserved sessions to Calendar" in the app's Settings, the app asks for access to Calendar and writes your reserved sessions into a calendar of their own, named for the conference, on this iPhone. It keeps a small file on the phone listing the events it made, and marks each of those events, so it can update or remove only those: it never changes or deletes any other event. To find one of its events again (for example after you move it to another calendar), the app may look through the events within a day of that session to find its mark; it does not keep or send anything about the others. The app itself sends this calendar to no one, the developer included. It is created in the Calendar account your iPhone adds new events to, such as iCloud, Google or Exchange; if that account doesn't allow a new calendar, in iCloud, and failing that on this iPhone only. Whichever account holds it syncs it like any of your other calendars, under its own privacy terms. Turning the setting off stops the updates; delete the calendar in the Calendar app to remove the events.</p>
@@ -40,7 +54,7 @@
 <p>The sample conference is made-up data stored inside the app. Using it sends nothing anywhere.</p>
 
 <h2>Children</h2>
-<p>The app is not directed at children and collects no information from anyone.</p>
+<p>The app is not directed at children. It collects no personal information from anyone.</p>
 
 <h2>Changes and contact</h2>
 <p>If this policy changes, the new version will be posted on this page with a new date. Questions can be raised at <a href="https://github.com/mannix77/2026Ignite/issues">github.com/mannix77/2026Ignite/issues</a>.</p>

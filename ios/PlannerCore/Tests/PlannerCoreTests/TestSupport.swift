@@ -167,3 +167,26 @@ func runningInHour(_ sessions: [Session], date: String, hour: Int) -> [Session] 
 let modelInstructions = "You help an attendee at AWS re:Invent choose which of the sessions below to go to. "
     + "Rank them from most to least worth attending for them, using what the profile says about them, "
     + "and give each a short reason, said to them as \"you\". Use only the listed sessions by code."
+
+/// A task's value, or nil after `seconds` (the test fails then and the task is cancelled), so
+/// a test waiting on a task can't hang (rule 12).
+func finished<T: Sendable>(_ task: Task<T, Never>, within seconds: TimeInterval = 10,
+                        file: StaticString = #filePath, line: UInt = #line) async -> T? {
+    let slot = TaskSlot<T>()
+    let done = XCTestExpectation(description: "task finished")
+    Task { slot.set(await task.value); done.fulfill() }
+    guard await XCTWaiter().fulfillment(of: [done], timeout: seconds) == .completed, let value = slot.value else {
+        task.cancel()
+        XCTFail("the task didn't finish within \(seconds) seconds", file: file, line: line)
+        return nil
+    }
+    return value
+}
+
+/// Holds one task's value across tasks, for `finished(_:within:)`.
+final class TaskSlot<T: Sendable>: @unchecked Sendable {
+    private let lock = NSLock()
+    private var stored: T?
+    func set(_ value: T) { lock.withLock { stored = value } }
+    var value: T? { lock.withLock { stored } }
+}

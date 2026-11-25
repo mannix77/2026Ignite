@@ -320,8 +320,24 @@ struct SettingsScreen: View {
                     }
                 }
 
+                if model.canShareEvents {
+                    Section {
+                        Toggle("Share how suggestions work", isOn: Binding(
+                            get: { model.eventSharing == .allowed },
+                            set: { model.setEventSharing($0) }))
+                        Button("Reset install ID") { model.resetInstallID() }
+                            .disabled(model.eventSharing != .allowed)
+                    } header: {
+                        Text("Diagnostics")
+                    } footer: {
+                        Text(EventSharingText.footer)
+                    }
+                }
+
                 Section("Privacy") {
-                    Text("Your sign-in is kept in this phone's keychain and your schedule is saved only on this phone. The app talks only to the AWS Events service. It has no analytics, no ads and no server of its own.")
+                    Text(model.eventSharing == .allowed && model.canShareEvents
+                         ? "Your sign-in is kept in this phone's keychain and your schedule is saved only on this phone. The app talks to the AWS Events service, and sends Honeycomb each Apple Intelligence ranking, as you chose under Diagnostics. It has no ads and no server of its own."
+                         : "Your sign-in is kept in this phone's keychain and your schedule is saved only on this phone. The app talks only to the AWS Events service. It has no analytics, no ads and no server of its own.")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                 }

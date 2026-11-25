@@ -8,6 +8,8 @@ ios/PlannerCore/.build/
 ios/**/xcuserdata/
 ios/build/
 ios/DerivedData/
+# The Honeycomb ingest key, written by ios/AppStore/archive.sh only while it builds.
+ios/SessionPlanner/Honeycomb.plist
 
 # Leftovers from the retired web planner that may still sit in old checkouts.
 # .local-data/ can hold a dump of the owner's real schedule; never commit it.

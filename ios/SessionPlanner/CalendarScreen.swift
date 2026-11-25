@@ -344,7 +344,10 @@ private struct GapSheet: View {
             }
             loaded = GapSuggestions(gap: gap, suggestions: found)
             // Then the on-device model's turn, where the phone has one.
-            guard model.willRankWithModel(found) else { return }
+            guard model.willRankWithModel(found) else {
+                await model.recordModelNotAsked(found, in: gap)
+                return
+            }
             ranking = gap
             let result = await model.modelRanking(of: found, in: gap)
             if ranking == gap { ranking = nil }

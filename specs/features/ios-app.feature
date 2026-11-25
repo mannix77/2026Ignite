@@ -834,7 +834,8 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
     window) then goes to the on-device model with his profile. The sessions it ranks move to
     the top in its order, each with its one-line reason in place of what it shares with his
     picks, and every other session follows in the usual order. Without Apple Intelligence, or
-    when the model fails in any way, the usual list stays as it is. Nothing leaves the phone,
+    when the model fails in any way, the usual list stays as it is. The prompt and the answer
+    leave the phone only in the record below, and only if he agreed to share it,
     nothing is reserved or favorited, and he types nothing (no question yet).
 
     Example: The model's order
@@ -922,3 +923,81 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       Then each request records its outcome, why the model was unavailable if it was, the
         prompt's measures, the model's own token counts when it gives them, how many sessions
         it placed and how many of its entries were ignored, but not the prompt or the reasons
+
+
+  Rule: He decides whether the model's records go to Honeycomb
+    The app sends nothing to anyone but AWS unless he says yes. A build made with a Honeycomb
+    ingest key asks once, the first time he opens it, whether to share how suggestions work;
+    he can change his answer in Settings at any time. Until he says yes, and after he says no,
+    nothing is sent. With his yes, each record of a request to the model ("What is recorded")
+    goes to the app's Honeycomb dataset as one event, as it happens, with the app's version
+    and build and a random install id he can reset. When the model was asked, the event also
+    carries the exact text it was given and its answer as it wrote it (owner's decision,
+    2026-11-24: to see what the model saw and said); a remembered answer doesn't repeat them.
+    No event carries his sign-in, anything from the keychain, his name or email, anything he
+    types or his personal time. Every event is sent (no sampling); one that can't be sent is dropped,
+    never retried or kept. Honeycomb keeps events for at most 90 days (its own fixed
+    retention is 60).
+
+    Example: First open asks
+      Given a build with a Honeycomb ingest key, opened for the first time
+      Then it asks whether to share how suggestions work, before anything is sent
+      And when he hasn't answered, nothing is sent
+      But a build without a key doesn't ask, and sends nothing
+
+    Example: Yes sends one event per request
+      Given he said yes
+      When the model ranks a free stretch's list
+      Then one event goes to "https://api.honeycomb.io/1/events/<dataset>" with the ingest key in
+        the "X-Honeycomb-Team" header
+      And it holds the outcome, the prompt's measures, the model's token counts, how many it
+        placed and ignored, whether it was remembered, how long the model step took, the
+        app's version and build, and his install id
+      And the text the model was given, exactly as given, and its answer, each code and reason
+        as it wrote them
+      And nothing else
+
+    Example: What the model saw and said
+      Given the model times out or refuses
+      Then the event holds the text it was given, and no answer
+      And when the list shows from the model's remembered answer, the event holds neither
+      And when the prompt didn't fit, or the list closed before the model was handed the
+        prompt, the event holds the prompt's measures but not its text
+      And a text or answer over 32,000 bytes is cut to 32,000 at a character, so the event
+        stays within Honeycomb's limit
+
+    Example: A phone without Apple Intelligence
+      Given he said yes and the phone can't run the model
+      When he opens free stretches
+      Then one event per launch says the model was unavailable, and why
+      And the model isn't asked
+
+    Example: No sends nothing
+      Given he said no, or changed his answer to no in Settings
+      When the model ranks a free stretch's list
+      Then nothing is sent
+      And an event already waiting to go when he says no isn't sent either: his answer and
+        install id are read as each event goes
+      But changing it back to yes sends the next request's event
+
+    Example: The sample conference sends nothing
+      Given he said yes and is looking at the sample conference
+      When the model ranks a free stretch's list, or can't run
+      Then nothing is sent
+
+    Example: Nothing personal beyond what the model saw
+      Given his profile has interests and the model gave reasons
+      When the request's event is sent
+      Then the session titles, his interests and the reasons appear only in the model's text and
+        answer, and no other field holds them
+      And the event holds none of his sign-in or keychain contents
+
+    Example: A new install id
+      Given he said yes and his events carry install id "A"
+      When he resets the install id in Settings
+      Then the next event carries a new random id, not "A"
+
+    Example: An event that can't be sent
+      Given he said yes
+      When Honeycomb refuses the event or can't be reached
+      Then the suggestions are shown as usual, and the event is dropped, not retried

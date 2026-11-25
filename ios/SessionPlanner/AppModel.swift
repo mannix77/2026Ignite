@@ -126,6 +126,42 @@ final class AppModel {
         didSet { UserDefaults.standard.set(preferences.saved, forKey: "sessionPreferences") }
     }
 
+    /// The build's Honeycomb ingest key and dataset, from the `Honeycomb.plist` that
+    /// `archive.sh` puts in a release build when given a key. A build without it sends nothing.
+    static let honeycomb = HoneycombConfig(file: Bundle.main.url(forResource: "Honeycomb", withExtension: "plist")
+        .flatMap { NSDictionary(contentsOf: $0) as? [String: Any] })
+    /// Whether he agreed to share how suggestions work with Honeycomb (#193): asked on first
+    /// open, changed in Settings. Not answered, or no, sends nothing.
+    private(set) var eventSharing = EventSharing(saved: UserDefaults.standard.object(forKey: "eventSharing")) {
+        didSet { UserDefaults.standard.set(eventSharing.saved, forKey: "eventSharing") }
+    }
+    /// The random id his events carry, made when first needed; never his AWS identity.
+    @ObservationIgnored private var installID = InstallID.usable(UserDefaults.standard.object(forKey: "installID")) {
+        didSet { UserDefaults.standard.set(installID, forKey: "installID") }
+    }
+    @ObservationIgnored private let eventLog = EventLog(config: AppModel.honeycomb, transport: URLSessionTransport())
+    @ObservationIgnored private let appBuild = AppBuild(
+        version: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "",
+        build: Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "")
+
+    /// His answer, install id and mode as they are now, for an event about to be sent.
+    private var eventConsent: EventConsent {
+        EventConsent(sharing: eventSharing, installID: installID, live: mode == .live)
+    }
+
+    /// Whether to ask him now, on opening the app.
+    var asksToShareEvents: Bool { EventLog.asksOnLaunch(eventSharing, config: AppModel.honeycomb) }
+    /// Whether this build can send to Honeycomb at all.
+    var canShareEvents: Bool { AppModel.honeycomb != nil }
+
+    /// His answer. Saying no also forgets the install id, so a later yes starts a new one.
+    func setEventSharing(_ allowed: Bool) {
+        (eventSharing, installID) = EventSharing.answer(allowed, installID: installID)
+    }
+
+    /// A new random install id: his next events can't be tied to the earlier ones.
+    func resetInstallID() { installID = InstallID.make() }
+
     private let tokens = TokenStore()
     private let store = SnapshotStore()
     private var saveVersion = 0
@@ -258,8 +294,23 @@ final class AppModel {
         let ranked = ModelStep.remembered(suggestions, sessionsInBlock: snapshot.sessionsStarting(in: gap), picks: snapshot.picks,
                                           preferences: preferences, reservedToday: snapshot.reservedCount(on: gap.date),
                                           ranker: onDeviceModel)
-        if let ranked { AppModel.log(ranked.run) }
+        if let ranked { log(ranked, duration: nil, startedLive: mode == .live) }
         return ranked
+    }
+
+    /// Whether a request the model wasn't asked about, because the phone can't run it, has been
+    /// recorded since launch: once is enough to count such phones.
+    @ObservationIgnored private var recordedUnavailable = false
+
+    /// Records, once per launch, that a free stretch's list wasn't ranked because the phone
+    /// can't run the model (`ModelOutcome.unavailable` and why). Asks no model.
+    func recordModelNotAsked(_ suggestions: [Suggestion], in gap: Gap) async {
+        guard eventSharing == .allowed, mode == .live, !recordedUnavailable, !suggestions.isEmpty, !ModelStep.willAsk(suggestions, ranker: onDeviceModel) else { return }
+        recordedUnavailable = true
+        let startedLive = mode == .live
+        let ranked = await ModelStep.rank(suggestions, sessionsInBlock: snapshot?.sessionsStarting(in: gap) ?? 0,
+                                          picks: [], ranker: onDeviceModel)
+        log(ranked, duration: nil, startedLive: startedLive)
     }
 
     /// `suggestions` for `gap` after the on-device model's turn (`ModelStep`): what it ranks
@@ -269,19 +320,38 @@ final class AppModel {
         let snapshot = snapshot
         let preferences = preferences
         let ranker = onDeviceModel
+        let clock = ContinuousClock()
+        let started = clock.now
+        // Sent only if the request began on the live conference, whatever the mode is by the end.
+        let startedLive = mode == .live
         let work = Task.detached(priority: .userInitiated) {
             await ModelStep.rank(suggestions, sessionsInBlock: snapshot?.sessionsStarting(in: gap) ?? 0,
                                  picks: snapshot?.picks ?? [], preferences: preferences,
                                  reservedToday: snapshot?.reservedCount(on: gap.date) ?? 0, ranker: ranker)
         }
         let ranked = await withTaskCancellationHandler { await work.value } onCancel: { work.cancel() }
-        AppModel.log(ranked.run)
+        log(ranked, duration: clock.now - started, startedLive: startedLive)
         return ranked
     }
 
-    /// One line per request to the model, on the phone only: its outcome and counts, never the
-    /// prompt or the reasons (#193; Honeycomb comes in a later step).
-    private static func log(_ run: ModelRun) {
+    /// One line per request to the model on the phone, and one event to Honeycomb when he
+    /// agreed (`EventLog`): its outcome, counts and timing, and for Honeycomb also the text the
+    /// model was given and its answer. The phone's own log line never holds those.
+    /// `startedLive`: the request began on the live conference; one begun on the sample sends
+    /// nothing even if he signed in meanwhile.
+    private func log(_ ranked: RankedSuggestions, duration: Duration?, startedLive: Bool) {
+        let run = ranked.run
+        if startedLive, eventSharing == .allowed, mode == .live {
+            installID = InstallID.forSending(installID)
+            let eventLog = eventLog, app = appBuild
+            // Read again as the event goes, so a "no" given meanwhile stops it.
+            let consent: @Sendable () async -> EventConsent = { [weak self] in
+                await self?.eventConsent ?? EventConsent(sharing: .notAsked, installID: nil, live: false)
+            }
+            Task.detached(priority: .utility) {
+                _ = await eventLog.send(ranked, duration: duration, app: app, consent: consent)
+            }
+        }
         let outcome = run.outcome.rawValue
         let unavailable = run.unavailableReason ?? "-"
         let p = run.prompt
