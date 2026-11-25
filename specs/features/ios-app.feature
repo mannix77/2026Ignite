@@ -176,8 +176,9 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
     The whole catalog (about 2,900 sessions, 12 pages) is downloaded at sign-in and then at
     most once every 24 hours. His schedule (reserved seats, favorites, invitations) is one small
     request: while the calendar is open it is read again every 5 minutes, and pulling down
-    reads it at once. The calendar always says when it last read his schedule from AWS and
-    that pulling down gets the latest.
+    reads it at once. The calendar always says when it last read his schedule from AWS, in
+    small text under the conference's name; the refresh button beside it, or pulling down,
+    gets the latest.
 
     Example: The one with the calendar open
       Given his schedule was last read 5 minutes ago and the catalog 3 hours ago

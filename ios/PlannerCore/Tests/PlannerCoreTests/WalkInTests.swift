@@ -142,4 +142,18 @@ final class WalkInTests: XCTestCase {
         let snapshot = plan([walkUp("dev", time: "12:00")], favorites: ["dev"])
         XCTAssertEqual(snapshot.commitments(walkIns: PlanSnapshot.savedWalkIns([" dev "])), ["dev": .walkIn])
     }
+
+    func testADayWithOnlyAWalkInIsABusyDay() {
+        // A walk-in is always a favorite, and every favorite's day is a busy day: the walk-in's
+        // day is busy whether or not it is on his calendar, so toggling it changes nothing.
+        let snapshot = plan([walkUp("dev", time: "12:00"), session("other", date: "2026-12-03", time: "09:00")],
+                            favorites: ["dev"])
+        XCTAssertEqual(snapshot.commitments(walkIns: ["dev"]), ["dev": .walkIn])
+        XCTAssertEqual(snapshot.days(committedOnly: true), ["2026-12-02"])
+        XCTAssertEqual(snapshot.days(), ["2026-12-02", "2026-12-03"])
+        // A walk-in that is no longer a favorite is gone, and its day with it.
+        let unfavorited = plan([walkUp("dev", time: "12:00"), session("other", date: "2026-12-03", time: "09:00")])
+        XCTAssertEqual(unfavorited.commitments(walkIns: ["dev"]), [:])
+        XCTAssertEqual(unfavorited.days(committedOnly: true), [])
+    }
 }
