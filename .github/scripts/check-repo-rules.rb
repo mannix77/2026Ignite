@@ -1,0 +1,194 @@
+# Checks three rules from CLAUDE.md ("What must not break") that a reviewer used to be the only
+# guard for. Run from anywhere in the repository: ruby .github/scripts/check-repo-rules.rb
+#
+# 1. Only pages.yml deploys to GitHub Pages, and its site holds exactly
+#    ios/AppStore/support.html and ios/AppStore/privacy.html, at those paths.
+# 2. Every action a workflow or a local action uses is pinned to a full commit SHA.
+# 3. No Apple signing team id is written into a tracked file.
+#
+# The checks are strict on purpose: a workflow shape they can't reproduce is refused with a message,
+# never waved through. Exits non-zero, naming each broken rule, if any check fails.
+
+require "yaml"
+require "tmpdir"
+require "fileutils"
+require "open3"
+require "find"
+
+ROOT = Dir.chdir(__dir__) { `git rev-parse --show-toplevel`.strip }
+abort "Not inside a git repository." if ROOT.empty?
+Dir.chdir(ROOT)
+
+failures = []
+
+# The files git tracks, as they are in the working tree (so a local run sees uncommitted edits).
+tracked = `git ls-files -z`.split("\0").select { |path| File.file?(path) }
+
+def load_yaml(path, failures)
+  YAML.safe_load(File.read(path), aliases: true)
+rescue Psych::Exception => e
+  failures << "YAML: #{path} could not be read: #{e.message}"
+  nil
+end
+
+workflows = tracked.grep(%r{\A\.github/workflows/[^/]+\.ya?ml\z}).sort
+local_actions = tracked.grep(%r{\A(?:.+/)?action\.ya?ml\z}).sort
+
+# --- 1. The Pages site holds exactly the two App Store pages --------------------------------------
+
+PAGES = ".github/workflows/pages.yml"
+PUBLISHED = ["ios/AppStore/privacy.html", "ios/AppStore/support.html"].freeze
+# The actions the Pages build job may use; any other action could put files in the site unseen.
+BUILD_ACTIONS = %w[actions/checkout actions/configure-pages actions/upload-pages-artifact].freeze
+# Step keys the check can reproduce when it runs the build job's shell steps.
+RUN_STEP_KEYS = %w[name id run].freeze
+
+def action_name(ref)
+  ref.to_s.split("@").first
+end
+
+def jobs_of(workflow)
+  jobs = workflow.is_a?(Hash) ? workflow["jobs"] : nil
+  jobs.is_a?(Hash) ? jobs : {}
+end
+
+# Only pages.yml may upload or deploy a Pages site: its build job uploads, its deploy job deploys.
+workflows.each do |path|
+  workflow = load_yaml(path, failures) or next
+  jobs_of(workflow).each do |job_name, job|
+    Array(job.is_a?(Hash) ? job["steps"] : nil).each do |step|
+      name = action_name(step.is_a?(Hash) ? step["uses"] : nil)
+      allowed =
+        case name
+        when "actions/upload-pages-artifact" then path == PAGES && job_name == "build"
+        when "actions/deploy-pages" then path == PAGES && job_name == "deploy"
+        else true
+        end
+      failures << "Pages: #{path} job #{job_name} uses #{name}; only pages.yml publishes the site" unless allowed
+    end
+  end
+end
+
+def pages_site_files(tracked, failures)
+  workflow = load_yaml(PAGES, failures) or return nil
+  build = jobs_of(workflow)["build"]
+  steps = build.is_a?(Hash) ? build["steps"] : nil
+  return "pages.yml has no build job steps" unless steps.is_a?(Array)
+  return "the build job sets defaults, which this check can't reproduce" if build.key?("defaults")
+
+  uploads = steps.select { |s| action_name(s["uses"]) == "actions/upload-pages-artifact" }
+  return "pages.yml must upload exactly one Pages artifact, found #{uploads.size}" unless uploads.size == 1
+  site = uploads.first.dig("with", "path").to_s
+
+  steps.each do |step|
+    if step["uses"]
+      name = action_name(step["uses"])
+      return "the build job uses #{name}; only #{BUILD_ACTIONS.join(", ")} are allowed" unless BUILD_ACTIONS.include?(name)
+    else
+      extra = step.keys - RUN_STEP_KEYS
+      return "build step #{step["name"].inspect} sets #{extra.join(", ")}, which this check can't reproduce" unless extra.empty?
+      return "build step #{step["name"].inspect} uses a ${{ }} expression, which this check can't reproduce" if step["run"].to_s.include?("${{")
+    end
+  end
+
+  # Run the build job's shell steps, in order, in a scratch copy of the tracked files, then list
+  # what landed in the site directory.
+  Dir.mktmpdir do |dir|
+    site_dir = File.expand_path(site, dir)
+    return "the Pages artifact path #{site.inspect} must be a directory inside the repository" unless site_dir.start_with?("#{dir}/")
+
+    tracked.each do |path|
+      FileUtils.mkdir_p(File.join(dir, File.dirname(path)))
+      FileUtils.cp(path, File.join(dir, path))
+    end
+    env = { "GITHUB_WORKSPACE" => dir, "RUNNER_TEMP" => Dir.mktmpdir }
+    steps.each do |step|
+      next unless step["run"]
+      out, status = Open3.capture2e(env, "bash", "-euo", "pipefail", "-c", step["run"], chdir: dir)
+      return "build step #{(step["name"] || step["run"]).inspect} failed:\n#{out}" unless status.success?
+    end
+    return "the build job leaves nothing at #{site.inspect}" unless File.directory?(site_dir)
+
+    # upload-pages-artifact follows symlinks when it packs the site, so a link could publish
+    # anything; refuse them outright rather than guess where they lead.
+    files = []
+    Find.find(site_dir) do |entry|
+      relative = entry.delete_prefix("#{site_dir}/")
+      return "the site holds a symlink, #{relative}; copy files in instead" if File.symlink?(entry)
+      files << relative if File.file?(entry)
+    end
+    files.sort
+  end
+end
+
+result = pages_site_files(tracked, failures)
+if result.is_a?(String)
+  failures << "Pages: #{result}"
+elsif result && result != PUBLISHED
+  failures << "Pages: the site must hold exactly #{PUBLISHED.join(" and ")}; pages.yml builds #{result.inspect}"
+end
+
+# --- 2. Every action is pinned to a commit SHA ----------------------------------------------------
+
+PINNED = %r{\A(?:\./.*|docker://.+@sha256:\h{64}|[^@\s]+@\h{40})\z}
+
+def action_refs(document, local_action)
+  steps =
+    if local_action
+      runs = document.is_a?(Hash) ? document["runs"] : nil
+      runs.is_a?(Hash) ? Array(runs["steps"]) : []
+    else
+      jobs_of(document).values.grep(Hash).flat_map do |job|
+        [job] + Array(job["steps"]) # a job-level uses: is a reusable workflow
+      end
+    end
+  steps.grep(Hash).map { |s| s["uses"] }.grep(String)
+end
+
+(workflows.map { |p| [p, false] } + local_actions.map { |p| [p, true] }).each do |path, local_action|
+  document = load_yaml(path, failures) or next
+  action_refs(document, local_action).each do |ref|
+    failures << "Pinning: #{path} uses #{ref}; pin it to a full commit SHA" unless ref.match?(PINNED)
+  end
+end
+
+# --- 3. No signing team id in the repository ------------------------------------------------------
+
+# A team id is ten capital letters or digits. Xcode writes one into the project as a build setting
+# (plain or per-SDK) and under TargetAttributes; plists, entitlements, JSON and shell scripts name it
+# under the keys below. The documented placeholder is allowed.
+TEAM_KEY = /(?:DEVELOPMENT_TEAM(?:\[[^\]\n]*\])?|DevelopmentTeam|teamID|team-identifier|\bTEAM)/
+TEAM_ID = /(?!ABCDE12345\b)[A-Z0-9]{10}\b/
+TEAM_PATTERNS = [
+  /#{TEAM_KEY}["']?[ \t]*[=:][ \t]*["']?#{TEAM_ID}/,         # KEY = ID, "KEY": "ID", KEY=ID
+  %r{<key>\s*[\w.-]*?#{TEAM_KEY}\s*</key>\s*<string>\s*#{TEAM_ID}}, # XML plist or entitlements
+  /\$\{TEAM:?-["']?#{TEAM_ID}/                               # a shell default, ${TEAM:-ID}
+].freeze
+
+def readable_text(path)
+  bytes = File.binread(path)
+  return [nil, "a binary plist, which can't be checked; commit it as XML"] if bytes.start_with?("bplist")
+  if bytes.start_with?("\xFF\xFE".b) || bytes.start_with?("\xFE\xFF".b)
+    encoding = bytes.start_with?("\xFF\xFE".b) ? "UTF-16LE" : "UTF-16BE"
+    return [bytes.byteslice(2..-1).force_encoding(encoding).encode("UTF-8", invalid: :replace, undef: :replace), nil]
+  end
+  # Everything else is matched byte for byte, binary files included: the patterns are plain ASCII.
+  [bytes, nil]
+end
+
+tracked.each do |path|
+  text, problem = readable_text(path)
+  next failures << "Signing team: #{path} is #{problem}" if problem
+  TEAM_PATTERNS.each do |pattern|
+    next unless (match = text.match(pattern))
+    line = text.byteslice(0, match.pre_match.bytesize).count("\n") + 1
+    failures << "Signing team: #{path}:#{line} names a team id; pass it on the command line (TEAM=...) instead"
+  end
+end
+
+if failures.empty?
+  puts "Repository rules: all three checks pass."
+else
+  warn failures.uniq.map { |f| "FAIL #{f}" }.join("\n")
+  exit 1
+end

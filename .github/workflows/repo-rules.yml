@@ -1,0 +1,21 @@
+name: Repository rules
+
+# Checks three "What must not break" rules from CLAUDE.md on every change: pages.yml publishes only
+# the two App Store pages, every action is pinned to a commit SHA, and no signing team id is
+# committed. No path filter: any file can break the last rule.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  rules:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: Check the repository rules
+        run: ruby .github/scripts/check-repo-rules.rb
