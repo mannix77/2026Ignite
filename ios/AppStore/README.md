@@ -402,18 +402,20 @@ What lives in the repository:
 The workflows themselves live in App Store Connect, not in the repository. Set them up once.
 This needs the Account Holder or an Admin:
 
-1. **Connect.** In Xcode, open `ios/SessionPlanner.xcodeproj` and choose Product > Xcode Cloud >
-   Create Workflow. Pick the `SessionPlanner` product and the PersonalSessionManager app. When asked,
+1. **Connect.** In Xcode, open `ios/SessionPlanner.xcodeproj` and choose Integrate > Create
+   Workflow (or the Report navigator's Cloud tab > Get Started). Pick the `SessionPlanner` product and the PersonalSessionManager app. When asked,
    let Xcode Cloud reach GitHub, and install Apple's GitHub app on `mannix77/2026Ignite` only.
    Signing is managed in the cloud with the team in Xcode (your own, never the company team).
 2. **PR checks workflow.**
    - Start conditions: Pull Request Changes, target branch `main`; and Branch Changes, `main`.
    - Action: Build, platform iOS, scheme `SessionPlanner`. No post-actions.
 3. **TestFlight workflow.**
-   - Start condition: Tag Changes with a pattern no tag uses, such as `xcode-cloud-testflight/*`,
-     so it never starts by itself. Start it with Start Build in Xcode or App Store Connect.
-   - Action: Archive, platform iOS, scheme `SessionPlanner`, deployment preparation "TestFlight and
-     App Store".
+   - Start condition: Tag Changes, Custom Tags `xcode-cloud-testflight/*`, a pattern no tag uses,
+     so it never starts by itself (Xcode warns that no tag matches; that's intended). Remove the
+     default Branch Changes condition with the trash can on its page. Start it with Start Build.
+   - Tick Restrict Editing: the workflow holds the secret key.
+   - Action: Archive, platform iOS, scheme `SessionPlanner`, distribution preparation **App Store
+     Connect** (not "TestFlight (Internal Testing Only)", whose builds can't be submitted).
    - Post-action: TestFlight Internal Testing, group "Internal".
    - Environment > Environment Variables:
      - `HONEYCOMB_KEY`: the ingest key, with **Secret** ticked (masked in logs).
