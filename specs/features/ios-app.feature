@@ -810,7 +810,7 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
     Example: The code as it was shown
       Given a session sent with the code "AIM|301", which the prompt shows as "AIM/301"
       Then the model's "AIM/301" moves it, and "AIM|301" and "aim/301" don't: codes match
-        exactly as shown, only trimmed of spaces
+        exactly as shown, byte for byte, only trimmed of spaces
 
     Example: Two sessions sent with the same code
       Given two or three sessions sent with the code "AIM301"

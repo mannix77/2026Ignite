@@ -103,10 +103,13 @@ public final class RememberingRanker: SessionRanker, @unchecked Sendable {
         // between can't make a second caller start the same one again.
         let next: (answer: ModelAnswer?, task: Task<ModelAnswer, Error>?) = lock.withLock {
             if let answer = remembered(prompt) { return (answer, nil) }
-            if let request = running[prompt.text] {
+            // A request abandoned at its timeout isn't joined: its answer won't be trusted.
+            if let request = running[prompt.text], request.keep {
                 waiting += 1
                 return (nil, request.task)
             }
+            // A caller already stopped starts nothing new.
+            if Task.isCancelled { return (nil, nil) }
             let id = UUID()
             let model = model
             let task = Task { () throws -> ModelAnswer in
@@ -288,21 +291,21 @@ public enum ModelStep {
     }
 
     /// The sessions the model named, in its order, each once, with its reason. Only a session
-    /// it was sent can be named, by the code the prompt showed for it; the model's code is
-    /// only trimmed, as any identifier is. A code two sent sessions share names neither.
+    /// it was sent can be named, by the code the prompt showed for it, byte for byte (two
+    /// Unicode spellings Swift counts as equal are not); the model's code is only trimmed, as
+    /// any identifier is. A code two sent sessions share names neither.
     static func placement(_ picks: [ModelPick], prompt: ModelPrompt) -> Placement {
-        var byCode: [String: String] = [:]
-        var shown = Set<String>()
-        var shared = Set<String>()
+        var byCode: [[UInt8]: String] = [:]
+        var shown = Set<[UInt8]>()
         for (id, code) in zip(prompt.sentIDs, prompt.sentCodes) {
-            guard let code else { continue }
-            if shown.insert(code).inserted { byCode[code] = id } else { shared.insert(code); byCode[code] = nil }
+            guard let code = code.map({ Array($0.utf8) }) else { continue }
+            if shown.insert(code).inserted { byCode[code] = id } else { byCode[code] = nil }
         }
         var placed: [(id: String, reason: String?)] = []
         var seen = Set<String>()
-        var unknown = Set<String>()
+        var unknown = Set<[UInt8]>()
         for pick in picks {
-            guard let code = Identifier.clean(pick.code) else { unknown.insert(""); continue }
+            guard let code = Identifier.clean(pick.code).map({ Array($0.utf8) }) else { unknown.insert([]); continue }
             guard shown.contains(code) else { unknown.insert(code); continue }
             guard let id = byCode[code], seen.insert(id).inserted else { continue }
             // Shown as written, on one line: "|" only matters inside the prompt.

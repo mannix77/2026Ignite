@@ -111,27 +111,31 @@ private func rank(_ list: [Suggestion], with ranker: (any SessionRanker)?, sessi
     return ranked
 }
 
-/// `list` with the sessions coded `first` moved to the top in that order, each with its
-/// reason ("Because X" unless given), and the rest in their usual order: what a ranked list
-/// should be, written out from the fixture.
-private func expected(_ list: [Suggestion], first: [(code: String, reason: String?)]) -> [Suggestion] {
-    let moved = first.map { entry -> Suggestion in
-        var suggestion = list.first { $0.session.code == entry.code }!
-        suggestion.modelReason = entry.reason
+/// `list` in the literal `order` of codes (the k-th "S" is the k-th session coded S), each
+/// with the literal reason given for its code, or none: the expected list, written out.
+private func arranged(_ list: [Suggestion], _ order: [String], reasons: [String: String?] = [:],
+                      file: StaticString = #filePath, line: UInt = #line) -> [Suggestion] {
+    XCTAssertEqual(order.sorted(), list.map(\.session.code).sorted(), "the order names every session once", file: file, line: line)
+    var used = Set<String>()
+    return order.map { code in
+        var suggestion = list.first { $0.session.code == code && !used.contains($0.id) }!
+        used.insert(suggestion.id)
+        suggestion.modelReason = reasons[code] ?? nil
         return suggestion
     }
-    let ids = Set(moved.map(\.id))
-    return moved + list.filter { !ids.contains($0.id) }
 }
 
-private func expected(_ list: [Suggestion], first codes: [String]) -> [Suggestion] {
-    expected(list, first: codes.map { ($0, "Because \($0)") })
+/// The same, for a list coded with single letters, written as one string ("BACD…").
+private func arranged(_ list: [Suggestion], _ order: String, reasons: [String: String?] = [:],
+                      file: StaticString = #filePath, line: UInt = #line) -> [Suggestion] {
+    arranged(list, order.map(String.init), reasons: reasons, file: file, line: line)
 }
 
-/// Every field of a run but the prompt's measures.
+/// Every field of a run; the prompt's measures too when `prompt` is given.
 private func assertRun(_ run: ModelRun, _ outcome: ModelOutcome, placed: Int, ignored: Int, remembered: Bool = false,
                        promptTokens: Int? = nil, answerTokens: Int? = nil, unavailable: String? = nil,
-                       file: StaticString = #filePath, line: UInt = #line) {
+                       prompt: PromptMetrics?? = .none, file: StaticString = #filePath, line: UInt = #line) {
+    if case let .some(metrics) = prompt { XCTAssertEqual(run.prompt, metrics, "prompt measures", file: file, line: line) }
     XCTAssertEqual(run.outcome, outcome, "outcome", file: file, line: line)
     XCTAssertEqual(run.placed, placed, "placed", file: file, line: line)
     XCTAssertEqual(run.ignored, ignored, "ignored", file: file, line: line)
@@ -163,7 +167,7 @@ final class ModelRankingTests: XCTestCase {
         XCTAssertEqual(model.prompts.map(\.sentIDs), [list.prefix(12).map(\.id)])
         XCTAssertEqual(model.prompts.first?.sentCodes, ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"])
         XCTAssertEqual(codes(ranked.suggestions), ["L", "B", "A", "C", "D", "E", "F", "G", "H", "I", "J", "K", "M", "N"])
-        XCTAssertEqual(ranked.suggestions, expected(list, first: ["L", "B", "A"]))
+        XCTAssertEqual(ranked.suggestions, arranged(list, "LBACDEFGHIJKMN", reasons: ["L": "Because L", "B": "Because B", "A": "Because A"]))
         XCTAssertEqual(ranked.suggestions.map(Wording.reasons),
                        ["Because L", "Because B", "Because A"] + "CDEFGHIJKMN".map { "Shares Topic \($0)" })
         assertRun(ranked.run, .ok, placed: 3, ignored: 0)
@@ -178,7 +182,7 @@ final class ModelRankingTests: XCTestCase {
 
         // M was in the list but not sent.
         XCTAssertFalse(model.prompts.first?.sentIDs.contains(list[12].id) ?? true)
-        XCTAssertEqual(ranked.suggestions, expected(list, first: ["B", "C"]))
+        XCTAssertEqual(ranked.suggestions, arranged(list, "BCADEFGHIJKLMN", reasons: ["B": "Because B", "C": "Because C"]))
         assertRun(ranked.run, .ok, placed: 2, ignored: 2)
     }
 
@@ -186,7 +190,7 @@ final class ModelRankingTests: XCTestCase {
         let list = usualList()
         let ranked = await rank(list, with: FakeRanker(picks: [pick("B", "First"), pick("A"), pick("B", "Second")]))
 
-        XCTAssertEqual(ranked.suggestions, expected(list, first: [("B", "First"), ("A", "Because A")]))
+        XCTAssertEqual(ranked.suggestions, arranged(list, "BACDEFGHIJKLMN", reasons: ["B": "First", "A": "Because A"]))
         assertRun(ranked.run, .ok, placed: 2, ignored: 1)
     }
 
@@ -198,7 +202,7 @@ final class ModelRankingTests: XCTestCase {
         // Both were sent, so the model saw the code twice.
         XCTAssertEqual(model.prompts.map(\.sentIDs), [list.map(\.id)])
         XCTAssertEqual(model.prompts.first?.sentCodes, ["A", "AIM301", "AIM301", "B"])
-        XCTAssertEqual(ranked.suggestions, expected(list, first: ["B"]))
+        XCTAssertEqual(ranked.suggestions, arranged(list, ["B", "A", "AIM301", "AIM301"], reasons: ["B": "Because B"]))
         assertRun(ranked.run, .ok, placed: 1, ignored: 1)
     }
 
@@ -207,7 +211,7 @@ final class ModelRankingTests: XCTestCase {
         let model = FakeRanker(picks: [pick("S"), pick("B")])
         let ranked = await rank(list, with: model)
         XCTAssertEqual(model.prompts.map(\.sentIDs), [list.map(\.id)])
-        XCTAssertEqual(ranked.suggestions, expected(list, first: ["B"]))
+        XCTAssertEqual(ranked.suggestions, arranged(list, ["B", "S", "S", "S"], reasons: ["B": "Because B"]))
         assertRun(ranked.run, .ok, placed: 1, ignored: 1)
     }
 
@@ -215,7 +219,7 @@ final class ModelRankingTests: XCTestCase {
         // S was sent twice: naming it moves neither, but it isn't a code the model wasn't sent.
         let list = usualList(["S", "S", "B"])
         let ranked = await rank(list, with: FakeRanker(picks: [pick("S"), pick("B"), pick("X1")]))
-        XCTAssertEqual(ranked.suggestions, expected(list, first: ["B"]))
+        XCTAssertEqual(ranked.suggestions, arranged(list, ["B", "S", "S"], reasons: ["B": "Because B"]))
         assertRun(ranked.run, .ok, placed: 1, ignored: 2)
     }
 
@@ -238,11 +242,31 @@ final class ModelRankingTests: XCTestCase {
         XCTAssertEqual(ranked.suggestions, [aim, c, b, list[0]])
         assertRun(ranked.run, .ok, placed: 3, ignored: 2)
 
+        // In other letters, without the exact code beside it, the code moves nothing.
+        let lower = await rank(list, with: FakeRanker(picks: [pick("aim/301"), pick("C")]))
+        XCTAssertEqual(lower.suggestions, arranged(list, ["C", "A", " AIM|301\n", "B"], reasons: ["C": "Because C"]))
+        assertRun(lower.run, .ok, placed: 1, ignored: 1)
+
         // Written as the catalog has it, not as the prompt showed it, the code moves nothing.
         let piped = usualList(["A", "X|1", "C"])
         let catalogSpelling = await rank(piped, with: FakeRanker(picks: [pick("X|1"), pick("C")]))
-        XCTAssertEqual(catalogSpelling.suggestions, expected(piped, first: ["C"]))
+        XCTAssertEqual(catalogSpelling.suggestions, arranged(piped, ["C", "A", "X|1"], reasons: ["C": "Because C"]))
         assertRun(catalogSpelling.run, .ok, placed: 1, ignored: 1)
+    }
+
+    func testACodeMatchesOnlyInTheSameUnicodeSpelling() async {
+        let composed = "CAF\u{00C9}1"     // É as one character
+        let decomposed = "CAFE\u{0301}1"  // E and a combining accent
+        XCTAssertEqual(composed, decomposed)  // the same to Swift's String
+        XCTAssertNotEqual(Array(composed.utf8), Array(decomposed.utf8))
+        let list = usualList(["A", composed, "C"])
+        let other = await rank(list, with: FakeRanker(picks: [pick(decomposed), pick("C")]))
+        XCTAssertEqual(other.suggestions, arranged(list, ["C", "A", composed], reasons: ["C": "Because C"]))
+        assertRun(other.run, .ok, placed: 1, ignored: 1)
+        // The spelling the prompt showed moves it.
+        let same = await rank(list, with: FakeRanker(picks: [pick(composed), pick("C")]))
+        XCTAssertEqual(same.suggestions, arranged(list, [composed, "C", "A"], reasons: [composed: "Because \(composed)", "C": "Because C"]))
+        assertRun(same.run, .ok, placed: 2, ignored: 0)
     }
 
     func testAnAnswerThatIsMostlyWrongIsNotUsed() async {
@@ -254,7 +278,7 @@ final class ModelRankingTests: XCTestCase {
 
         // Half wrong is still used.
         let half = await rank(list, with: FakeRanker(picks: [pick("C"), pick("X1"), pick("B"), pick("X2")]))
-        XCTAssertEqual(half.suggestions, expected(list, first: ["C", "B"]))
+        XCTAssertEqual(half.suggestions, arranged(list, "CBADEFGHIJKLMN", reasons: ["C": "Because C", "B": "Because B"]))
         assertRun(half.run, .ok, placed: 2, ignored: 2)
     }
 
@@ -262,12 +286,12 @@ final class ModelRankingTests: XCTestCase {
         let list = usualList()
         // One session named three times: repeats are ignored, but they aren't wrong.
         let ranked = await rank(list, with: FakeRanker(picks: [pick("C"), pick("C"), pick("C")]))
-        XCTAssertEqual(ranked.suggestions, expected(list, first: ["C"]))
+        XCTAssertEqual(ranked.suggestions, arranged(list, "CABDEFGHIJKLMN", reasons: ["C": "Because C"]))
         assertRun(ranked.run, .ok, placed: 1, ignored: 2)
 
         // A code it wasn't sent, named twice, is one wrong code.
         let twice = await rank(list, with: FakeRanker(picks: [pick("B"), pick("X1"), pick("X1")]))
-        XCTAssertEqual(twice.suggestions, expected(list, first: ["B"]))
+        XCTAssertEqual(twice.suggestions, arranged(list, "BACDEFGHIJKLMN", reasons: ["B": "Because B"]))
         assertRun(twice.run, .ok, placed: 1, ignored: 2)
 
         // Two different codes it wasn't sent, against one it was, are mostly wrong.
@@ -292,14 +316,15 @@ final class ModelRankingTests: XCTestCase {
         let list = usualList()
         let ranked = await rank(list, with: FakeRanker(picks: [pick("A", long), pick("B", exact), pick("C", " \n ")]))
 
-        XCTAssertEqual(ranked.suggestions, expected(list, first: [("A", words + "…"), ("B", exact), ("C", nil)]))
+        XCTAssertEqual(ranked.suggestions, arranged(list, "ABCDEFGHIJKLMN", reasons: ["A": words + "…", "B": exact]))
         XCTAssertEqual(ranked.suggestions[0].modelReason?.count, 150)
         XCTAssertEqual(Wording.reasons(ranked.suggestions[2]), "Shares Topic C")
         assertRun(ranked.run, .ok, placed: 3, ignored: 0)
 
         // The reason is shown as written, on one line: a "|" stays.
         let piped = await rank(list, with: FakeRanker(picks: [pick("A", "Fast |\n cheap")]))
-        XCTAssertEqual(piped.suggestions, expected(list, first: [("A", "Fast | cheap")]))
+        XCTAssertEqual(piped.suggestions, arranged(list, "ABCDEFGHIJKLMN", reasons: ["A": "Fast | cheap"]))
+        assertRun(piped.run, .ok, placed: 1, ignored: 0)
     }
 
     func testWithoutAppleIntelligenceTheModelIsNotAsked() async {
@@ -319,8 +344,10 @@ final class ModelRankingTests: XCTestCase {
         XCTAssertNil(none.run.prompt)
 
         // The same list is ranked by a model that is available.
-        let available = await rank(list, with: FakeRanker(picks: [pick("B")]))
-        XCTAssertEqual(available.suggestions, expected(list, first: ["B"]))
+        let availableModel = FakeRanker(picks: [pick("B")])
+        let available = await rank(list, with: availableModel)
+        XCTAssertEqual(available.suggestions, arranged(list, "BACDEFGHIJKLMN", reasons: ["B": "Because B"]))
+        assertRun(available.run, .ok, placed: 1, ignored: 0, prompt: availableModel.prompts.first?.metrics)
     }
 
     func testEveryWayTheModelFailsKeepsTheUsualList() async {
@@ -359,10 +386,11 @@ final class ModelRankingTests: XCTestCase {
             while !returned.isSet { try Task.checkCancellation(); await Task.yield() }
             fired.set()
         }
-        returned.set()
-        XCTAssertEqual(ranked.suggestions, expected(list, first: ["B"]))
-        assertRun(ranked.run, .ok, placed: 1, ignored: 0)
+        // Checked before the timer is let go: it hadn't fired when the ranking returned.
         XCTAssertFalse(fired.isSet)
+        returned.set()
+        XCTAssertEqual(ranked.suggestions, arranged(list, "BACDEFGHIJKLMN", reasons: ["B": "Because B"]))
+        assertRun(ranked.run, .ok, placed: 1, ignored: 0)
     }
 
     func testTheTimeoutHoldsForAModelThatIgnoresBeingStopped() async {
@@ -422,7 +450,8 @@ final class ModelRankingTests: XCTestCase {
         // The same model is asked by a caller that isn't stopped.
         let asked = await rank(list, with: model)
         XCTAssertEqual(model.prompts.count, 1)
-        XCTAssertEqual(asked.suggestions, expected(list, first: ["B"]))
+        XCTAssertEqual(asked.suggestions, arranged(list, "BACDEFGHIJKLMN", reasons: ["B": "Because B"]))
+        assertRun(asked.run, .ok, placed: 1, ignored: 0, prompt: model.prompts.first?.metrics)
     }
 
     func testNothingToRankAsksNothing() async {
@@ -437,7 +466,8 @@ final class ModelRankingTests: XCTestCase {
         let one = usualList(["A"])
         let asked = await rank(one, with: model)
         XCTAssertEqual(model.prompts.map(\.sentIDs), [[one[0].id]])
-        XCTAssertEqual(asked.suggestions, expected(one, first: ["A"]))
+        XCTAssertEqual(asked.suggestions, arranged(one, "A", reasons: ["A": "Because A"]))
+        assertRun(asked.run, .ok, placed: 1, ignored: 0, prompt: model.prompts.first?.metrics)
     }
 
     func testAPromptWhoseFixedTextDoesNotFitIsNotSent() async {
@@ -460,7 +490,7 @@ final class ModelRankingTests: XCTestCase {
         let run = ranked.run
 
         // The reason reached the list, and the instructions the prompt.
-        XCTAssertEqual(ranked.suggestions, expected(list, first: [("B", "Secret reason")]))
+        XCTAssertEqual(ranked.suggestions, arranged(list, "BACDEFGHIJKLMN", reasons: ["B": "Secret reason"]))
         XCTAssertTrue(model.prompts.first?.text.hasPrefix(ModelPrompt.instructions) ?? false)
         assertRun(run, .ok, placed: 1, ignored: 1, promptTokens: 1234, answerTokens: 56)
         XCTAssertEqual(run.prompt, model.prompts.first?.metrics)
@@ -546,8 +576,8 @@ final class RememberingRankerTests: XCTestCase {
         let first = await rank(list, with: remembering)
         let again = await rank(list, with: remembering)
         XCTAssertEqual(model.prompts.map(\.sentIDs), [list.prefix(12).map(\.id)])
-        XCTAssertEqual(first.suggestions, expected(list, first: ["B"]))
-        XCTAssertEqual(again.suggestions, expected(list, first: ["B"]))
+        XCTAssertEqual(first.suggestions, arranged(list, "BACDEFGHIJKLMN", reasons: ["B": "Because B"]))
+        XCTAssertEqual(again.suggestions, arranged(list, "BACDEFGHIJKLMN", reasons: ["B": "Because B"]))
         // Recorded as remembered, with no tokens: the model didn't run.
         assertRun(first.run, .ok, placed: 1, ignored: 0, promptTokens: 9)
         assertRun(again.run, .ok, placed: 1, ignored: 0, remembered: true)
@@ -556,13 +586,14 @@ final class RememberingRankerTests: XCTestCase {
         let other = usualList(["B", "A"])
         let otherRanked = await rank(other, with: remembering)
         XCTAssertEqual(model.prompts.map(\.sentIDs), [list.prefix(12).map(\.id), other.map(\.id)])
-        XCTAssertEqual(otherRanked.suggestions, expected(other, first: ["B"]))
+        XCTAssertEqual(otherRanked.suggestions, arranged(other, "BA", reasons: ["B": "Because B"]))
         assertRun(otherRanked.run, .ok, placed: 1, ignored: 0, promptTokens: 9)
         // Only the last answer is kept: the first list is asked again too.
         let third = await rank(list, with: remembering)
         XCTAssertEqual(model.prompts.map(\.sentIDs).last, list.prefix(12).map(\.id))
         XCTAssertEqual(model.prompts.count, 3)
-        assertRun(third.run, .ok, placed: 1, ignored: 0, promptTokens: 9)
+        XCTAssertEqual(third.suggestions, arranged(list, "BACDEFGHIJKLMN", reasons: ["B": "Because B"]))
+        assertRun(third.run, .ok, placed: 1, ignored: 0, promptTokens: 9, prompt: model.prompts[2].metrics)
     }
 
     func testAnAnswerStillComingWhenTheCallerStopsIsKept() async {
@@ -587,7 +618,7 @@ final class RememberingRankerTests: XCTestCase {
         await waitUntil(self, "the answer is kept") { remembering.requestsRunning == 0 }
         let again = await rank(list, with: remembering)
         XCTAssertEqual(model.prompts.count, 1)
-        XCTAssertEqual(again.suggestions, expected(list, first: ["B"]))
+        XCTAssertEqual(again.suggestions, arranged(list, "BACDEFGHIJKLMN", reasons: ["B": "Because B"]))
         assertRun(again.run, .ok, placed: 1, ignored: 0, remembered: true)
     }
 
@@ -610,7 +641,7 @@ final class RememberingRankerTests: XCTestCase {
         XCTAssertNil(remembering.lastAnswer(for: model.prompts[0]))
         let again = await rank(list, with: remembering)
         XCTAssertEqual(model.prompts.count, 2)
-        XCTAssertEqual(again.suggestions, expected(list, first: ["B"]))
+        XCTAssertEqual(again.suggestions, arranged(list, "BACDEFGHIJKLMN", reasons: ["B": "Because B"]))
         assertRun(again.run, .ok, placed: 1, ignored: 0)
     }
 
@@ -625,7 +656,7 @@ final class RememberingRankerTests: XCTestCase {
         // The next ask goes to the model again.
         let again = await rank(list, with: remembering)
         XCTAssertEqual(model.prompts.count, 2)
-        XCTAssertEqual(again.suggestions, expected(list, first: ["B"]))
+        XCTAssertEqual(again.suggestions, arranged(list, "BACDEFGHIJKLMN", reasons: ["B": "Because B"]))
         assertRun(again.run, .ok, placed: 1, ignored: 0)
     }
 
@@ -646,8 +677,8 @@ final class RememberingRankerTests: XCTestCase {
         let a = await result(of: first, self)
         let b = await result(of: second, self)
         XCTAssertEqual(model.prompts.count, 1)
-        XCTAssertEqual(a?.suggestions, expected(list, first: ["B"]))
-        XCTAssertEqual(b?.suggestions, expected(list, first: ["B"]))
+        XCTAssertEqual(a?.suggestions, arranged(list, "BACDEFGHIJKLMN", reasons: ["B": "Because B"]))
+        XCTAssertEqual(b?.suggestions, arranged(list, "BACDEFGHIJKLMN", reasons: ["B": "Because B"]))
         if let a { assertRun(a.run, .ok, placed: 1, ignored: 0) }
         if let b { assertRun(b.run, .ok, placed: 1, ignored: 0) }
     }
@@ -674,7 +705,8 @@ final class RememberingRankerTests: XCTestCase {
         release.set()
         let results = [await result(of: a1, self), await result(of: b, self), await result(of: a2, self)]
         XCTAssertEqual(model.prompts.map(\.sentIDs), [one.prefix(12).map(\.id), two.map(\.id)])
-        XCTAssertEqual(results.map { $0?.suggestions }, [expected(one, first: ["B"]), expected(two, first: ["B"]), expected(one, first: ["B"])])
+        XCTAssertEqual(results.map { $0?.suggestions }, [arranged(one, "BACDEFGHIJKLMN", reasons: ["B": "Because B"]), arranged(two, "BA", reasons: ["B": "Because B"]),
+                                                       arranged(one, "BACDEFGHIJKLMN", reasons: ["B": "Because B"])])
         XCTAssertEqual(results.map { $0?.run.outcome }, [.ok, .ok, .ok])
     }
 
@@ -687,9 +719,9 @@ final class RememberingRankerTests: XCTestCase {
         }
         XCTAssertNil(remembered(list))
         let asked = await rank(list, with: remembering)
-        XCTAssertEqual(asked.suggestions, expected(list, first: ["B"]))
+        XCTAssertEqual(asked.suggestions, arranged(list, "BACDEFGHIJKLMN", reasons: ["B": "Because B"]))
         let kept = remembered(list)
-        XCTAssertEqual(kept?.suggestions, expected(list, first: ["B"]))
+        XCTAssertEqual(kept?.suggestions, arranged(list, "BACDEFGHIJKLMN", reasons: ["B": "Because B"]))
         if let kept { assertRun(kept.run, .ok, placed: 1, ignored: 0, remembered: true) }
         XCTAssertEqual(model.prompts.count, 1)
         // A different list has nothing remembered.
@@ -714,7 +746,7 @@ final class RememberingRankerTests: XCTestCase {
         let remembering = RememberingRanker(model)
         let list = usualList()
         let first = await rank(list, with: remembering)
-        XCTAssertEqual(first.suggestions, expected(list, first: ["B"]))
+        XCTAssertEqual(first.suggestions, arranged(list, "BACDEFGHIJKLMN", reasons: ["B": "Because B"]))
         let prompt = model.prompts[0]
         XCTAssertEqual(remembering.lastAnswer(for: prompt)?.picks, [pick("B")])
         remembering.abandon(prompt)
@@ -722,7 +754,56 @@ final class RememberingRankerTests: XCTestCase {
         // So the next ask goes to the model.
         let again = await rank(list, with: remembering)
         XCTAssertEqual(model.prompts.count, 2)
-        assertRun(again.run, .ok, placed: 1, ignored: 0)
+        XCTAssertEqual(again.suggestions, arranged(list, "BACDEFGHIJKLMN", reasons: ["B": "Because B"]))
+        assertRun(again.run, .ok, placed: 1, ignored: 0, prompt: model.prompts[1].metrics)
+    }
+
+    func testARetryAfterTheTimeoutDoesNotJoinTheAbandonedRequest() async {
+        let release = Flag()
+        let model = FakeRanker {
+            while !release.isSet { await Task.yield() }
+            return ModelAnswer(picks: [pick("B")])
+        }
+        let remembering = RememberingRanker(model)
+        let list = usualList()
+        // The first request times out once the model has the prompt, and keeps running.
+        let late = await rank(list, with: remembering) { _ in
+            while model.prompts.isEmpty { try Task.checkCancellation(); await Task.yield() }
+        }
+        assertRun(late.run, .timeout, placed: 0, ignored: 0)
+        XCTAssertEqual(remembering.requestsRunning, 1)
+        // A retry asks the model again rather than wait on the abandoned request.
+        let retry = Task { await ModelStep.rank(list, sessionsInBlock: 40, picks: [], ranker: remembering, sleep: untilCancelled) }
+        await waitUntil(self, "the retry asks the model") { model.prompts.count == 2 }
+        release.set()
+        let again = await result(of: retry, self)
+        XCTAssertEqual(again?.suggestions, arranged(list, "BACDEFGHIJKLMN", reasons: ["B": "Because B"]))
+        if let again { assertRun(again.run, .ok, placed: 1, ignored: 0, promptTokens: nil) }
+        // Only the retry's answer is kept.
+        await waitUntil(self, "both requests are done") { remembering.requestsRunning == 0 }
+        XCTAssertEqual(model.prompts.count, 2)
+        if let asked = model.prompts.last { XCTAssertEqual(remembering.lastAnswer(for: asked)?.picks, [pick("B")]) }
+    }
+
+    func testAStoppedCallerStartsNoNewRequest() async throws {
+        let model = FakeRanker(picks: [pick("B")])
+        let remembering = RememberingRanker(model)
+        let prompt = ModelPrompt.build(question: "", ranked: usualList().map(\.session), sessionsInBlock: 40, picks: [])
+        let started = Flag()
+        let stopped = Task { () -> Bool in
+            started.set()
+            while !Task.isCancelled { await Task.yield() }
+            do { _ = try await remembering.rank(prompt); return false } catch { return error is CancellationError }
+        }
+        await waitUntil(self, "the caller has started") { started.isSet }
+        stopped.cancel()
+        let threwCancellation = await result(of: stopped, self)
+        XCTAssertEqual(threwCancellation, true)
+        XCTAssertTrue(model.prompts.isEmpty)
+        // A caller that isn't stopped does start one.
+        let answer = try await remembering.rank(prompt)
+        XCTAssertEqual(answer.picks, [pick("B")])
+        XCTAssertEqual(model.prompts.map(\.text), [prompt.text])
     }
 
     func testItsAvailabilityIsTheModels() {
