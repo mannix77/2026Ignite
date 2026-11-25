@@ -310,6 +310,11 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
 
   Rule: Reserving and favoriting happen on the conference site
 
+    Example: The full one
+      Given the site shows a reservable session as full, or walk-up only
+      Then its "Reserve a seat" button is greyed out and can't be pressed
+      And one with seats, even very few, or with no band the app knows, can be reserved
+
     Example: The one that clashes with a seat he holds
       Given he holds a seat in "AIM442"
       When he reserves "PEX403-R", which overlaps it
@@ -472,9 +477,9 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
   Rule: What he chose in Settings moves sessions up or down the list
     The levels and formats he prefers, and the formats he skips (Session preferences in
     Settings), re-order the sessions that fit a gap. How alike a session is to his picks is
-    multiplied by 1.5 for a level he prefers and by 1.5 for a format he prefers, and halved
-    for a format he skips. Nothing is listed for a preference alone, and nothing is removed
-    for one: a session he skips the format of is still listed, lower down.
+    multiplied by 1.5 for a level he prefers and by 1.5 for a format he prefers. Nothing is
+    listed for a preference alone. A session in a format he skips is not listed at all, so it
+    never reaches Apple Intelligence either.
 
     Example: The level he prefers
       Given a session in the gap exactly as alike to his picks as one of them, at "300 – Advanced"
@@ -488,8 +493,9 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
 
     Example: The format he skips
       Given a session in the gap exactly as alike to his picks as one of them, a "Keynote"
+      And a chalk talk that is less alike
       When he skips keynotes in Settings
-      Then it is still listed, with a score of 0.5
+      Then the keynote is not listed, and the chalk talk still is
 
     Example: The preferred one overtakes
       Given a "Chalk talk" scoring 1 and a "Workshop" scoring 0.84 in the gap
@@ -500,17 +506,6 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       Given a "Workshop" in the gap that shares nothing with his picks
       When he prefers workshops
       Then it is not listed
-
-    Example: The skipped one that ties
-      Given a session like his reserved seat (2) in a format he skips, at 12:00
-      And one like his favorite (1), at 11:00
-      Then both score 1 and the earlier one comes first
-
-  Rule: He sets how long he allows to get in line
-    Gap suggestions allow 30 minutes in line for a session that can be reserved unless he
-    changes it in Settings, to any whole number of minutes from 1 to 60. A walk-up session
-    allows 5 minutes, or his time in line if that is shorter. A session the site doesn't say
-    can or can't be reserved is treated as one that can: the longer line is the safe guess.
 
     Example: The one who never changed it
       Given he has never changed the time in line

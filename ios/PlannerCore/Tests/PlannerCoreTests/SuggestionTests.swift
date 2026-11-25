@@ -574,23 +574,20 @@ final class PreferenceRankingTests: XCTestCase {
         XCTAssertEqual(both[0].score, 2.25, accuracy: 1e-12)
     }
 
-    func testAFormatHeSkipsIsHalvedButStillListed() {
+    func testAFormatHeSkipsIsLeftOut() {
         let plan = snapshot(filler(4) + [
             offered("pick", time: "09:00", topics: ["X"], level: "300 – Advanced", type: "Keynote"),
             offered("cand", topics: ["X"], level: "300 – Advanced", type: "Keynote"),
+            offered("talk", topics: ["X"], type: "Chalk talk"),
         ], favorites: ["pick"])
-        let plain = plan.suggestions(in: forumGap)
-        assertScores(plain, [1])
+        // Without the skip, the keynote is listed first.
+        XCTAssertEqual(ids(plan.suggestions(in: forumGap)), ["cand", "talk"])
+        // Skipped, it is gone and the chalk talk is still listed.
         let skipped = plan.suggestions(in: forumGap, preferences: preferring(skipping: ["Keynote"]))
-        XCTAssertEqual(ids(skipped), ["cand"])
-        XCTAssertEqual(skipped[0].score, 0.5, accuracy: 1e-12)
-        // Only the score changes: it says what it shares as before.
-        XCTAssertEqual(skipped[0].shared, plain[0].shared)
-        // X, the level and Keynote are each on 2 of the 6 sessions, so equal: topic, level, type.
-        XCTAssertEqual(skipped[0].shared, ["X", "300 – Advanced", "Keynote"])
-        // A preferred level and a skipped format together: 1.5 × 0.5.
+        XCTAssertEqual(ids(skipped), ["talk"])
+        // A preferred level doesn't bring it back.
         let mixed = plan.suggestions(in: forumGap, preferences: preferring(levels: ["300 – Advanced"], skipping: ["Keynote"]))
-        assertScores(mixed, [0.75])
+        XCTAssertEqual(ids(mixed), ["talk"])
     }
 
     func testAPreferredFormatCanOvertakeASessionMoreLikeHisPicks() {
@@ -627,24 +624,6 @@ final class PreferenceRankingTests: XCTestCase {
         XCTAssertEqual(ids(sharing.suggestions(in: forumGap)), ["workshop"])
     }
 
-    func testASkippedSessionThatTiesGoesByTime() {
-        // Like his reserved seat (2), skipped: 1. Like his favorite: 1. Equal, so the earlier first.
-        let plan = snapshot(filler(8) + [
-            offered("seat", time: "09:00", topics: ["SeatTopic"], type: "Keynote"),
-            offered("fav", time: "09:00", topics: ["FavTopic"]),
-            // The later one has the earlier code, so only time can put it second.
-            offered("likeSeat", code: "AAA100", time: "12:00", topics: ["SeatTopic"], type: "Keynote"),
-            offered("likeFav", code: "ZZZ100", time: "11:00", topics: ["FavTopic"]),
-        ], reserved: ["seat"], favorites: ["fav"])
-        let plain = plan.suggestions(in: forumGap)
-        XCTAssertEqual(ids(plain), ["likeSeat", "likeFav"])
-        XCTAssertEqual(plain[0].score, 2, accuracy: 1e-12)
-        let skipped = plan.suggestions(in: forumGap, preferences: preferring(skipping: ["Keynote"]))
-        XCTAssertEqual(ids(skipped), ["likeFav", "likeSeat"])
-        XCTAssertEqual(skipped[0].score, 1, accuracy: 1e-12)
-        XCTAssertEqual(skipped[1].score, 1, accuracy: 1e-12)
-    }
-
     func testTheSitesWritingOfALevelOrFormatIsMatchedAsCleaned() {
         // Padded and split across lines on the site, the same level and format.
         let plan = snapshot(filler(4) + [
@@ -655,8 +634,7 @@ final class PreferenceRankingTests: XCTestCase {
         assertScores(levels, [1.5])
         let formats = plan.suggestions(in: forumGap, preferences: preferring(formats: ["Chalk talk"]))
         assertScores(formats, [1.5])
-        let skipped = plan.suggestions(in: forumGap, preferences: preferring(skipping: ["Chalk talk"]))
-        assertScores(skipped, [0.5])
+        XCTAssertEqual(ids(plan.suggestions(in: forumGap, preferences: preferring(skipping: ["Chalk talk"]))), [])
     }
 
     func testOneSuggesterRanksForWhateverPreferencesItIsGiven() {
@@ -665,7 +643,7 @@ final class PreferenceRankingTests: XCTestCase {
                             favorites: ["pick"])
         let suggester = Suggester(plan)
         assertScores(suggester.suggestions(in: forumGap, preferences: preferring(formats: ["Workshop"])), [1.5])
-        assertScores(suggester.suggestions(in: forumGap, preferences: preferring(skipping: ["Workshop"])), [0.5])
+        XCTAssertEqual(ids(suggester.suggestions(in: forumGap, preferences: preferring(skipping: ["Workshop"]))), [])
         assertScores(suggester.suggestions(in: forumGap), [1])
     }
 }

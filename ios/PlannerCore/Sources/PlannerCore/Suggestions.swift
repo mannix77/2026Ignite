@@ -243,8 +243,7 @@ public struct Suggester: Sendable {
 
     /// Nothing he holds a seat in or is invited to is suggested, nor another run of it. A
     /// session sharing nothing with his picks is left out. The score is multiplied by what he
-    /// chose in Settings (`SessionPreferences.factor(for:)`), which re-orders but never adds or
-    /// removes a session. Equal scores put a session with a seat to reserve first, then
+    /// chose in Settings (`SessionPreferences.factor(for:)`), and a format he skips is left out. Equal scores put a session with a seat to reserve first, then
     /// earlier, then by code.
     public func suggestions(in gap: Gap, lineUp: LineUp = LineUp(),
                             preferences: SessionPreferences = SessionPreferences()) -> [Suggestion] {
@@ -253,6 +252,7 @@ public struct Suggester: Sendable {
         for session in sessions {
             // A reserved or invited session is in a held family, so this also leaves it out.
             guard !held.contains(session.family), !seen.contains(session.sessionId), session.isAllDaySession != true,
+                  !preferences.skips(session),
                   let time = session.sessionTime, time.hasValidDate, time.date == gap.date,
                   let start = time.startMinute else { continue }
             // A session listed with no length still takes the time the calendar draws it for.
@@ -313,18 +313,20 @@ public struct Suggester: Sendable {
 extension SessionPreferences {
     /// A level or format he prefers multiplies a session's score by this, each.
     static let preferredFactor = 1.5
-    /// A format he skips multiplies it by this: lower, but still listed (owner's decision, #193).
-    static let skippedFactor = 0.5
+    /// Whether `session` is in a format he skips in Settings: it is not suggested at all
+    /// (owner's decision, 24 Nov 2026, replacing #193's "lower, but still listed").
+    func skips(_ session: Session) -> Bool {
+        AttendeeProfile.key(session.type).map(skippedFormats.contains) ?? false
+    }
 
     /// What his choices in Settings multiply `session`'s score by: `preferredFactor` for a
-    /// level he prefers and again for a format he prefers, `skippedFactor` for a format he
-    /// skips. The site's level and format are cleaned as Settings stores them.
+    /// level he prefers and again for a format he prefers. The site's level and format are
+    /// cleaned as Settings stores them.
     func factor(for session: Session) -> Double {
         var factor = 1.0
         if let level = AttendeeProfile.key(session.level), levels.contains(level) { factor *= SessionPreferences.preferredFactor }
         if let format = AttendeeProfile.key(session.type) {
             if preferredFormats.contains(format) { factor *= SessionPreferences.preferredFactor }
-            if skippedFormats.contains(format) { factor *= SessionPreferences.skippedFactor }
         }
         return factor
     }
