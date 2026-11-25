@@ -160,7 +160,7 @@ extension PlanSnapshot {
     /// after a gap but not an invitation. Only the commitment that ends a gap counts: a seat
     /// starting just after an invitation that ends the gap is already a clash on his calendar.
     /// `index` is `sessionsByID`, passed in when the caller already has it built.
-    public func gaps(on date: String, index: [String: Session]? = nil) -> [Gap] {
+    public func gaps(on date: String, index: [String: Session]? = nil, commitments: [String: Commitment]? = nil) -> [Gap] {
         let known = index ?? sessionsByID
         var dayStart: Int?
         var dayEnd: Int?
@@ -176,7 +176,7 @@ extension PlanSnapshot {
         var gaps: [Gap] = []
         var free = dayStart
         var here = Place.open
-        for entry in agenda(on: date, includeFavorites: false, index: known).timed {
+        for entry in agenda(on: date, includeFavorites: false, index: known, commitments: commitments).timed {
             if entry.start > free {
                 gaps.append(Gap(date: date, start: free, end: entry.start, before: here, after: .at(entry.session.venue),
                                 lineFrom: here == .open ? nil : free, lineUpAfter: entry.commitment == .reserved))
@@ -217,10 +217,11 @@ public struct Suggester: Sendable {
 
     static let scoreResolution = 1e-9
 
-    public init(_ plan: PlanSnapshot) {
+    /// `commitments` is `plan.commitments(walkIns:)` when he has walk-ins on his calendar.
+    public init(_ plan: PlanSnapshot, commitments: [String: Commitment]? = nil) {
         sessions = plan.sessions
         let known = plan.sessionsByID
-        let marks = plan.commitmentsByID
+        let marks = commitments ?? plan.commitmentsByID
         self.marks = marks
         let weights = Suggester.traitWeights(plan.sessions)
         self.weights = weights

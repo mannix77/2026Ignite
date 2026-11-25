@@ -189,8 +189,8 @@ private struct DayPage: View {
     var body: some View {
         DayView(agenda: snapshot.agenda(on: day, includeFavorites: model.showFavorites,
                                         index: model.sessionsByID, commitments: model.commitmentsByID),
-                gaps: snapshot.offeredGaps(on: day, now: now, index: model.sessionsByID),
-                span: snapshot.offeredGaps(on: day, index: model.sessionsByID),
+                gaps: snapshot.offeredGaps(on: day, now: now, index: model.sessionsByID, commitments: model.commitmentsByID),
+                span: snapshot.offeredGaps(on: day, index: model.sessionsByID, commitments: model.commitmentsByID),
                 nowMinute: PlanSnapshot.minute(of: now, on: day))
             .refreshable { await model.refresh() }
     }
@@ -409,12 +409,12 @@ private struct Timeline: View {
 
     var body: some View {
         // Free stretches count too: the last one can run past his last commitment.
-        let starts = entries.map(\.start) + favorites.map { $0.hour * 60 } + span.map(\.start)
+        let starts = entries.map(\.arrival) + favorites.map { $0.hour * 60 } + span.map(\.start)
         let ends = entries.map(\.drawnEnd) + favorites.map { ($0.hour + 1) * 60 } + span.map(\.end)
         let first = max(0, (starts.min() ?? 480) / 60 - 1)
         let last = max(first + 1, ((ends.max() ?? 1080) + 59) / 60)
         let placements = Dictionary(uniqueKeysWithValues:
-            CalendarLayout.place(entries.map { (id: $0.id, start: $0.start, end: $0.drawnEnd) }).map { ($0.id, $0) })
+            CalendarLayout.place(entries.map { (id: $0.id, start: $0.arrival, end: $0.drawnEnd) }).map { ($0.id, $0) })
 
         GeometryReader { geometry in
             let lane = favorites.isEmpty ? 0 : laneWidth
@@ -440,6 +440,11 @@ private struct Timeline: View {
                 ForEach(entries) { entry in
                     let placement = placements[entry.id] ?? Placement(id: entry.id, column: 0, columns: 1)
                     let columnWidth = width / CGFloat(placement.columns)
+                    if entry.arrival < entry.start {
+                        ArrivalBand(entry: entry)
+                            .frame(width: max(0, columnWidth - 3), height: CGFloat(entry.start - entry.arrival) / 60 * hourHeight)
+                            .offset(x: gutter + CGFloat(placement.column) * columnWidth, y: y(entry.arrival, first))
+                    }
                     NavigationLink(value: entry.id) {
                         EntryBlock(entry: entry, narrow: placement.columns > 2)
                     }
@@ -572,13 +577,32 @@ private struct FavoriteBucketSheet: View {
     }
 }
 
+/// The minutes before a reserved seat when he must be there, in a lighter shade of its color.
+private struct ArrivalBand: View {
+    let entry: AgendaEntry
+
+    var body: some View {
+        let text = Wording.beThere(by: entry.arrival)
+        Text(text)
+            .font(.caption2.bold())
+            .lineLimit(1)
+            .minimumScaleFactor(0.6)
+            .padding(.horizontal, 6)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+            .foregroundStyle(entry.commitment.color)
+            .background(entry.commitment.color.opacity(0.22), in: UnevenRoundedRectangle(topLeadingRadius: 8, topTrailingRadius: 8))
+            .accessibilityLabel("\(text), \(entry.session.code)")
+    }
+}
+
 private struct EntryBlock: View {
     let entry: AgendaEntry
     let narrow: Bool
 
     var body: some View {
         let color = entry.commitment.color
-        let solid = entry.commitment != .favorite
+        // A walk-in is drawn like a seat, but tinted and dashed: there is no seat held for him.
+        let solid = entry.commitment == .reserved || entry.commitment == .invited
         VStack(alignment: .leading, spacing: 2) {
             Text(entry.session.code)
                 .font(.caption.bold())

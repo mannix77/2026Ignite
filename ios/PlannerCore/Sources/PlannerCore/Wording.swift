@@ -3,6 +3,9 @@ import Foundation
 /// The words the app shows. Kept here, away from the views, so they can be tested.
 public enum Wording {
     /// "3:00 PM" for minutes after midnight. Minutes past the end of the day wrap around.
+    /// The band before a reserved seat: "Be there by 9:50 AM".
+    public static func beThere(by minute: Int) -> String { "Be there by \(clock(minute))" }
+
     public static func clock(_ minutes: Int) -> String {
         let inDay = ((minutes % 1440) + 1440) % 1440
         let hour = inDay / 60

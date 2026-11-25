@@ -111,6 +111,7 @@ extension Commitment {
         switch self {
         case .reserved: "Reserved"
         case .invited: "Invited"
+        case .walkIn: "Walk-in"
         case .favorite: "Favorite"
         }
     }
@@ -119,6 +120,7 @@ extension Commitment {
         switch self {
         case .reserved: "checkmark.seal.fill"
         case .invited: "envelope.fill"
+        case .walkIn: "figure.walk"
         case .favorite: "star.fill"
         }
     }
@@ -127,6 +129,7 @@ extension Commitment {
         switch self {
         case .reserved: .accentColor
         case .invited: .purple
+        case .walkIn: .teal
         case .favorite: .orange
         }
     }

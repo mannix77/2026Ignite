@@ -344,6 +344,38 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       Then they see a calendar of made-up sessions
       And nothing is sent to the conference site
 
+  Rule: A session he can't reserve can still go on his calendar, as a walk-in
+    A favorite that can't be reserved can be put on his calendar. It is drawn as a block
+    like a reserved seat, but in its own color and with a dashed edge, labelled "Walk-in".
+    It counts as a commitment: it splits his free stretches, has its walks checked and is
+    not suggested again. The choice is kept on this iPhone; the site only knows it as a
+    favorite, and taking the favorite away takes it off the calendar.
+
+    Example: The walk-in on the calendar
+      Given "DEV301" can't be reserved and is one of his favorites
+      When he adds it to his calendar
+      Then it is drawn as a "Walk-in" block at its time, not in the favorites column
+      And a free stretch ends where it starts
+
+    Example: Only what can't be reserved
+      Given "AIM320" can be reserved and is one of his favorites
+      Then it can't be added as a walk-in, and stays a favorite
+
+    Example: The favorite taken away
+      Given "DEV301" is on his calendar as a walk-in
+      When it is no longer one of his favorites
+      Then it is no longer on his calendar
+
+  Rule: A reserved seat shows when he must be there
+    AWS holds a reserved seat until 10 minutes before the session starts; after that it goes
+    to the walk-in line. Every reserved session is drawn with a 10-minute band before it, in
+    a lighter shade of the reserved color, labelled with the time to be there.
+
+    Example: The seat at 10:00
+      Given he holds a seat in a session from 10:00 to 11:00
+      Then the calendar shows "Be there by 9:50 AM" from 9:50 to 10:00
+      And a walk-in or an invitation at 10:00 has no such band
+
   Rule: Favorites never crowd out what he has committed to
 
     Example: The one with nine favorites in the same hour

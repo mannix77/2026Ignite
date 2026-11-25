@@ -21,9 +21,9 @@ extension PlanSnapshot {
     /// that day he can't start lining up before now, even for the day's first sessions.
     /// Other days are not cut. `index` is `sessionsByID`, if the caller has it built.
     public func offeredGaps(on date: String, now: (date: String, minute: Int)? = nil,
-                            index: [String: Session]? = nil) -> [Gap] {
+                            index: [String: Session]? = nil, commitments: [String: Commitment]? = nil) -> [Gap] {
         let cut = now.flatMap { PlanSnapshot.minute(of: $0, on: date) }
-        return gaps(on: date, index: index).compactMap { whole in
+        return gaps(on: date, index: index, commitments: commitments).compactMap { whole in
             var gap = whole
             if let cut {
                 gap.start = max(gap.start, cut)

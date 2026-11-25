@@ -4,7 +4,9 @@ import Foundation
 public enum Commitment: Int, Comparable, Codable, Sendable {
     case reserved = 0
     case invited = 1
-    case favorite = 2
+    /// A favorite he can't reserve that he put on his calendar (kept on the phone only).
+    case walkIn = 2
+    case favorite = 3
 
     public static func < (a: Commitment, b: Commitment) -> Bool { a.rawValue < b.rawValue }
 }
@@ -23,6 +25,11 @@ public struct AgendaEntry: Identifiable, Equatable, Sendable {
     /// Shortest block the calendar draws, so a zero-length session is still visible.
     public static let minimumDrawnMinutes = 20
     public var drawnEnd: Int { max(end, start + AgendaEntry.minimumDrawnMinutes) }
+
+    /// AWS gives a reserved seat to the walk-in line if he isn't there this long before it starts.
+    public static let reservedArrivalMinutes = 10
+    /// When he must be there: `reservedArrivalMinutes` before a reserved seat, the start otherwise.
+    public var arrival: Int { commitment == .reserved ? start - AgendaEntry.reservedArrivalMinutes : start }
 }
 
 /// A change of venue between two commitments with too little time to make it.
@@ -126,13 +133,28 @@ public struct PlanSnapshot: Codable, Equatable, Sendable {
 
     /// Every session on the attendee's schedule with how firmly it is there. A reserved seat
     /// outranks an invitation, which outranks a favorite.
-    public var commitmentsByID: [String: Commitment] {
+    public var commitmentsByID: [String: Commitment] { commitments(walkIns: []) }
+
+    /// `commitmentsByID`, with the favorites in `walkIns` that `canBeWalkIn` as `.walkIn`.
+    /// An id that is no longer such a favorite is ignored.
+    public func commitments(walkIns: Set<String>) -> [String: Commitment] {
         var map: [String: Commitment] = [:]
-        for id in schedule.favorites { map[id] = .favorite }
+        let known = walkIns.isEmpty ? [:] : sessionsByID
+        for id in schedule.favorites {
+            map[id] = walkIns.contains(id) && known[id].map(PlanSnapshot.hasNoSeatToReserve) == true ? .walkIn : .favorite
+        }
         for session in schedule.invitedSessions { map[session.sessionId] = .invited }
         for id in schedule.reserved { map[id] = .reserved }
         return map
     }
+
+    /// Whether a session can go on his calendar as a walk-in: a favorite, not reserved or
+    /// invited, that the site doesn't offer a seat in.
+    public func canBeWalkIn(_ sessionID: String) -> Bool {
+        commitment(of: sessionID) == .favorite && sessionsByID[sessionID].map(PlanSnapshot.hasNoSeatToReserve) == true
+    }
+
+    static func hasNoSeatToReserve(_ session: Session) -> Bool { session.isReservable != true }
 
     /// The day to open on: today when the conference is on, otherwise the first day with
     /// something on his schedule, otherwise the first day of the catalog.

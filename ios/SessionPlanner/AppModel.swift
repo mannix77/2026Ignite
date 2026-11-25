@@ -106,6 +106,21 @@ final class AppModel {
     var lineUp = LineUp(saved: UserDefaults.standard.object(forKey: "lineUpMinutes")) {
         didSet { UserDefaults.standard.set(lineUp.minutes, forKey: "lineUpMinutes") }
     }
+    /// Favorites he can't reserve that he put on his calendar. Kept on the phone only: the site
+    /// knows them as favorites. Cleared on a new sign-in, like the calendar.
+    private(set) var walkIns = Set(UserDefaults.standard.stringArray(forKey: "walkIns") ?? []) {
+        didSet {
+            UserDefaults.standard.set(walkIns.sorted(), forKey: "walkIns")
+            commitmentsByID = snapshot?.commitments(walkIns: walkIns) ?? [:]
+            suggester = nil
+            snapshotVersion += 1
+        }
+    }
+
+    func setWalkIn(_ session: Session, _ on: Bool) {
+        if on { walkIns.insert(session.sessionId) } else { walkIns.remove(session.sessionId) }
+    }
+
     /// The levels and formats he looks for and the formats he skips (#197). Kept on the phone.
     var preferences = SessionPreferences(saved: UserDefaults.standard.data(forKey: "sessionPreferences")) {
         didSet { UserDefaults.standard.set(preferences.saved, forKey: "sessionPreferences") }
@@ -187,7 +202,7 @@ final class AppModel {
         snapshotVersion += 1
         let index = new?.sessionsByID ?? [:]
         sessionsByID = index
-        commitmentsByID = new?.commitmentsByID ?? [:]
+        commitmentsByID = new?.commitments(walkIns: walkIns) ?? [:]
         days = new?.days() ?? []
         committedDays = new?.days(committedOnly: true) ?? []
         unresolvedCount = new?.unresolvedIDs.count ?? 0
@@ -213,7 +228,8 @@ final class AppModel {
         let version = snapshotVersion
         let lineUp = lineUp
         let preferences = preferences
-        let ranker = await Task.detached(priority: .userInitiated) { built ?? Suggester(snapshot) }.value
+        let marks = commitmentsByID
+        let ranker = await Task.detached(priority: .userInitiated) { built ?? Suggester(snapshot, commitments: marks) }.value
         // Kept only if the calendar hasn't changed meanwhile; either way this answer is for the
         // calendar the gap came from.
         if suggester == nil, snapshotVersion == version { suggester = ranker }
@@ -294,6 +310,7 @@ final class AppModel {
             // sign-in that fetched it, one that survives (a crash here, a failed delete) is
             // still refused under the new sign-in's id.
             let departing = saveVersion
+            walkIns = []
             setSnapshot(nil)
             setBackend(nil)
             // Likewise the Calendar copy: it was the earlier attendee's choice, so it starts off,
@@ -323,6 +340,7 @@ final class AppModel {
         // revoking belongs to that sign-in and is not deleted.
         let departing = saveVersion
         setBackend(nil)
+        walkIns = []
         setSnapshot(nil)
         needsSignIn = false
         notice = nil
