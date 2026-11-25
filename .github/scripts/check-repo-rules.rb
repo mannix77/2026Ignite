@@ -143,12 +143,14 @@ def pages_site_files(tracked, failures)
       files << relative if File.file?(entry)
     end
     files.sort!
-    # Each address must serve its own page, not the other one's; a page that is itself a symlink
-    # could serve anything, so it is refused too.
-    linked = PUBLISHED.select { |p| File.symlink?(File.join(dir, p)) }
+    # Each address must serve its own page, not the other one's. The pages are compared with the
+    # repository's own files (the working directory is ROOT), which the replayed steps can't touch,
+    # not with the scratch copies they could have changed. A page that is itself a symlink could
+    # serve anything, so it is refused too.
+    linked = PUBLISHED.select { |p| File.symlink?(p) }
     return "the published pages must be real files, not symlinks: #{linked.join(", ")}" unless linked.empty?
     if files == PUBLISHED
-      swapped = PUBLISHED.reject { |p| File.binread(File.join(site_dir, p)) == File.binread(File.join(dir, p)) }
+      swapped = PUBLISHED.reject { |p| File.binread(File.join(site_dir, p)) == File.binread(p) }
       return "the site's #{swapped.join(" and ")} differ from the repository's; copy each page to its own address" unless swapped.empty?
     end
     files
