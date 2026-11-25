@@ -285,11 +285,13 @@ public enum ModelStep {
                             timeout: Duration = ModelStep.timeout,
                             sleep: @escaping @Sendable (Duration) async throws -> Void = { try await Task.sleep(for: $0) })
         async -> RankedSuggestions {
-        func unchanged(_ outcome: ModelOutcome, unavailable: String? = nil, prompt: ModelPrompt? = nil) -> RankedSuggestions {
+        /// `asked`: the model was given `prompt`, so the record carries its text.
+        func unchanged(_ outcome: ModelOutcome, unavailable: String? = nil, prompt: ModelPrompt? = nil,
+                       asked: Bool = false) -> RankedSuggestions {
             RankedSuggestions(suggestions: suggestions,
                               run: ModelRun(outcome: outcome, unavailableReason: unavailable, prompt: prompt?.metrics,
                                             modelPromptTokens: nil, modelAnswerTokens: nil, placed: 0, ignored: 0),
-                              promptText: prompt?.text)
+                              promptText: asked ? prompt?.text : nil)
         }
         guard let ranker else { return unchanged(.unavailable, unavailable: "unsupported") }
         if case let .unavailable(why) = ranker.availability { return unchanged(.unavailable, unavailable: why) }
@@ -302,7 +304,7 @@ public enum ModelStep {
 
         switch await answered(prompt, by: ranker, within: timeout, sleep: sleep) {
         case let .success(answer): return apply(answer, prompt: prompt, to: suggestions)
-        case let .failure(failed): return unchanged(failed.outcome, prompt: prompt)
+        case let .failure(failed): return unchanged(failed.outcome, prompt: prompt, asked: true)
         }
     }
 

@@ -114,7 +114,8 @@ public struct EventLog: Sendable {
     }
 
     /// Bytes of the model's text, and of its answer, sent at most: Honeycomb takes up to 64 KB
-    /// a string field, and the prompt's own budget keeps it near 12 KB.
+    /// a string field, and the prompt's own budget keeps it near 12 KB. An answer cut here is
+    /// no longer valid JSON; its 1,000-token reserve keeps it far below the limit.
     public static let textLimit = 32_000
 
     /// Sends the request's record as one event, with the text the model was given and its

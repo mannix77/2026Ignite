@@ -961,6 +961,8 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       Given the model times out or refuses
       Then the event holds the text it was given, and no answer
       And when the list shows from the model's remembered answer, the event holds neither
+      And when the prompt didn't fit, or the list closed before the model was asked, the event
+        holds the prompt's measures but not its text
       And a text or answer over 32,000 bytes is cut to 32,000 at a character, so the event
         stays within Honeycomb's limit
 

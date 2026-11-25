@@ -183,8 +183,8 @@ whether the answer was remembered. When the model was asked (not for a remembere
 (`[{"code":…,"reason":…}]`), each cut to 32,000 bytes (owner's decision, 2026-11-24). The prompt
 holds the instructions, the catalog sessions that fit the free time (code, title, format, level,
 venue, time, topics, abstract cut to 300 characters) and the profile: preferred levels and formats
-(from Settings or inferred from his picks), skipped formats, up to 15 interests (topics his picks
-share) and how many sessions he reserved that day. Not his list of reserved or favorite sessions (a favorite
+(from Settings or inferred from his picks), skipped formats, up to 15 interests (topics and AWS services
+his reserved and favorite sessions share, each with how many of them have it) and how many sessions he reserved that day. Not his list of reserved or favorite sessions (a favorite
 that fits the free time is listed like any other session, not marked), personal time, sign-in,
 name or email.
 
@@ -227,10 +227,14 @@ instruction, using the user's own sign-in.
 - **Early deletion**: Environments > (environment) > Manage Data > Datasets > `session-planner`
   > Delete (Team Owner, Deletion Protection off) deletes every event.
 - **How often the model is used**: in the dataset, a query with WHERE `name = suggest.model`,
-  `remembered = false`, `outcome` not in `unavailable`, `nothingToRank`, `promptTooLong`;
+  `remembered = false`, `outcome` not in `unavailable`, `nothingToRank`, `promptTooLong`
+  (a list closed before the model was asked is `cancelled` with no `model.prompt`; add
+  `model.prompt exists` to leave those out);
   VISUALIZE `COUNT` and `COUNT_DISTINCT(install_id)`; time granularity 1 day (or 1 hour). That is
   model calls per day and phones using it; GROUP BY `outcome` splits successes from failures, and
-  dropping the `remembered` filter adds how often a ranked list was looked at again. Each
+  dropping the `remembered` filter adds how often a ranked list was looked at again. A second list
+  asking the same prompt while the first is still waiting shares that request and also sends
+  `remembered = false`, so this slightly overcounts. Each
   `model.prompt` and `model.answer` is in the event's raw data (click a row, or GROUP BY
   `install_id` to follow one phone).
 - **Sampling**: none; every event is sent. A handful per attendee per day, plus one

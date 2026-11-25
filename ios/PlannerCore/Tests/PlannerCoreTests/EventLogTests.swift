@@ -257,13 +257,49 @@ final class EventLogTests: XCTestCase {
         XCTAssertEqual(ranked.run.outcome, .refused)
         let transport = ScriptedTransport([.respond(status: 200)])
 
-        _ = await EventLog(config: config, transport: transport)
+        let delivery = await EventLog(config: config, transport: transport)
             .send(ranked, duration: nil, sharing: .allowed, installID: installID, app: app)
 
+        XCTAssertEqual(delivery, .sent)
         let sent = try body(XCTUnwrap(transport.sent.first))
         XCTAssertEqual(sent["model.prompt"] as? String, try XCTUnwrap(model.prompts.first?.text))
         XCTAssertNil(sent["model.answer"])
         XCTAssertEqual(sent["outcome"] as? String, "refused")
+    }
+
+    /// A prompt the model was never given isn't sent as if it had been.
+    func testAPromptTooLongOrAListClosedFirstSendsNoText() async throws {
+        let (suggestions, picks) = secretList()
+        var tiny = PromptBudget()
+        tiny.window = 1100   // 100 tokens for the prompt: less than the instructions
+        let tooLongModel = RecordingRanker(answer: ModelAnswer(picks: []))
+        let tooLong = await ModelStep.rank(suggestions, sessionsInBlock: 3, picks: picks, ranker: tooLongModel, budget: tiny)
+        XCTAssertEqual(tooLong.run.outcome, .promptTooLong)
+
+        let closedModel = RecordingRanker(answer: ModelAnswer(picks: []))
+        let closing = Task { () -> RankedSuggestions in
+            while !Task.isCancelled { await Task.yield() }
+            return await ModelStep.rank(suggestions, sessionsInBlock: 3, picks: picks, ranker: closedModel)
+        }
+        closing.cancel()
+        let closed = await closing.value
+        XCTAssertEqual(closed.run.outcome, .cancelled)
+        XCTAssertTrue(tooLongModel.prompts.isEmpty)
+        XCTAssertTrue(closedModel.prompts.isEmpty)
+        let transport = ScriptedTransport([.respond(status: 200), .respond(status: 200)])
+        let log = EventLog(config: config, transport: transport)
+
+        _ = await log.send(tooLong, duration: nil, sharing: .allowed, installID: installID, app: app)
+        _ = await log.send(closed, duration: nil, sharing: .allowed, installID: installID, app: app)
+
+        XCTAssertEqual(transport.sent.count, 2)
+        for (request, outcome) in zip(transport.sent, ["promptTooLong", "cancelled"]) {
+            let sent = try body(request)
+            XCTAssertEqual(sent["outcome"] as? String, outcome)
+            XCTAssertNotNil(sent["prompt.estimated_tokens"], "the prompt's measures still go")
+            XCTAssertNil(sent["model.prompt"])
+            XCTAssertNil(sent["model.answer"])
+        }
     }
 
     func testAnUnavailableModelSendsNeitherTextNorAnswer() async throws {
@@ -283,26 +319,30 @@ final class EventLogTests: XCTestCase {
         XCTAssertTrue(model.prompts.isEmpty)
     }
 
+    /// Through the real paths: the model's own answer, then the same list from its memory.
     func testARememberedAnswerDoesntRepeatTheTextOrAnswer() async throws {
-        var remembered = fullRun
-        remembered.remembered = true
+        let (suggestions, picks) = secretList()
+        let model = RecordingRanker(answer: ModelAnswer(picks: [ModelPick(code: "OFF202", reason: "r")]))
+        let remembering = RememberingRanker(model)
+        let asked = await ModelStep.rank(suggestions, sessionsInBlock: 3, picks: picks, ranker: remembering)
+        let fromMemory = try XCTUnwrap(ModelStep.remembered(suggestions, sessionsInBlock: 3, picks: picks, ranker: remembering))
+        XCTAssertEqual(model.prompts.count, 1, "precondition: the model ran once")
+        XCTAssertTrue(fromMemory.run.remembered)
         let transport = ScriptedTransport([.respond(status: 200), .respond(status: 200)])
         let log = EventLog(config: config, transport: transport)
-        let picks = [ModelPick(code: "A", reason: "r")]
 
-        _ = await log.send(RankedSuggestions(suggestions: [], run: remembered, promptText: "the prompt", answer: picks),
-                           duration: nil, sharing: .allowed, installID: installID, app: app)
-        _ = await log.send(RankedSuggestions(suggestions: [], run: fullRun, promptText: "the prompt", answer: picks),
-                           duration: nil, sharing: .allowed, installID: installID, app: app)
+        _ = await log.send(asked, duration: nil, sharing: .allowed, installID: installID, app: app)
+        _ = await log.send(fromMemory, duration: nil, sharing: .allowed, installID: installID, app: app)
 
         XCTAssertEqual(transport.sent.count, 2)
         let first = try body(transport.sent[0])
-        XCTAssertEqual(first["remembered"] as? Bool, true)
-        XCTAssertNil(first["model.prompt"])
-        XCTAssertNil(first["model.answer"])
+        XCTAssertEqual(first["remembered"] as? Bool, false)
+        XCTAssertEqual(first["model.prompt"] as? String, try XCTUnwrap(model.prompts.first?.text))
+        XCTAssertEqual(first["model.answer"] as? String, #"[{"code":"OFF202","reason":"r"}]"#)
         let second = try body(transport.sent[1])
-        XCTAssertEqual(second["model.prompt"] as? String, "the prompt")
-        XCTAssertEqual(second["model.answer"] as? String, #"[{"code":"A","reason":"r"}]"#)
+        XCTAssertEqual(second["remembered"] as? Bool, true)
+        XCTAssertNil(second["model.prompt"])
+        XCTAssertNil(second["model.answer"])
     }
 
     func testTextOver32000BytesIsCutAtACharacter() async throws {
@@ -325,6 +365,24 @@ final class EventLogTests: XCTestCase {
 
         XCTAssertEqual(try body(transport.sent[1])["model.prompt"] as? String, String(repeating: "a", count: 31_999))
         XCTAssertEqual(try body(transport.sent[2])["model.prompt"] as? String, String(repeating: "a", count: 31_998) + "é")
+    }
+
+    /// The answer is cut too, and at a whole character: a 25-byte family emoji that would
+    /// cross the limit goes whole, not by its parts.
+    func testTheAnswerIsCutAtAWholeCharacter() async throws {
+        let family = "👨‍👩‍👧‍👦"
+        XCTAssertEqual(family.utf8.count, 25, "precondition")
+        // 23 bytes of JSON come before the reason; 31,993 + 25 would cross 32,000.
+        let reason = String(repeating: "a", count: 31_970) + family
+        let transport = ScriptedTransport([.respond(status: 200)])
+
+        _ = await EventLog(config: config, transport: transport)
+            .send(RankedSuggestions(suggestions: [], run: fullRun, answer: [ModelPick(code: "A", reason: reason)]),
+                  duration: nil, sharing: .allowed, installID: installID, app: app)
+
+        let sent = try XCTUnwrap(body(XCTUnwrap(transport.sent.first))["model.answer"] as? String)
+        XCTAssertEqual(sent, #"[{"code":"A","reason":""# + String(repeating: "a", count: 31_970))
+        XCTAssertEqual(sent.utf8.count, 31_993, "23 bytes of JSON before the reason, then 31,970")
     }
 
     func testARefusedOrUnreachableEventIsDroppedNotRetried() async {
