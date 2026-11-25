@@ -139,11 +139,11 @@ private func arranged(_ list: [Suggestion], _ order: String, reasons: [String: S
     arranged(list, order.map(String.init), reasons: reasons, file: file, line: line)
 }
 
-/// Every field of a run; the prompt's measures too when `prompt` is given.
+/// Every field of a run, the prompt's measures included (nil when no prompt was built).
 private func assertRun(_ run: ModelRun, _ outcome: ModelOutcome, placed: Int, ignored: Int, remembered: Bool = false,
                        promptTokens: Int? = nil, answerTokens: Int? = nil, unavailable: String? = nil,
-                       prompt: PromptMetrics?? = .none, file: StaticString = #filePath, line: UInt = #line) {
-    if case let .some(metrics) = prompt { XCTAssertEqual(run.prompt, metrics, "prompt measures", file: file, line: line) }
+                       prompt: PromptMetrics?, file: StaticString = #filePath, line: UInt = #line) {
+    XCTAssertEqual(run.prompt, prompt, "prompt measures", file: file, line: line)
     XCTAssertEqual(run.outcome, outcome, "outcome", file: file, line: line)
     XCTAssertEqual(run.placed, placed, "placed", file: file, line: line)
     XCTAssertEqual(run.ignored, ignored, "ignored", file: file, line: line)
@@ -151,6 +151,12 @@ private func assertRun(_ run: ModelRun, _ outcome: ModelOutcome, placed: Int, ig
     XCTAssertEqual(run.modelPromptTokens, promptTokens, "prompt tokens", file: file, line: line)
     XCTAssertEqual(run.modelAnswerTokens, answerTokens, "answer tokens", file: file, line: line)
     XCTAssertEqual(run.unavailableReason, unavailable, "unavailable", file: file, line: line)
+}
+
+/// The measures of the prompt built for `list` (`ModelPrompt.build`, tested on its own in
+/// `ModelPromptTests`), as `ModelStep.rank` builds it in these tests.
+private func measures(_ list: [Suggestion], sessionsInBlock: Int = 40, budget: PromptBudget = PromptBudget()) -> PromptMetrics {
+    ModelPrompt.build(question: "", ranked: list.map(\.session), sessionsInBlock: sessionsInBlock, picks: [], budget: budget).metrics
 }
 
 /// A model whose answers come from `answers` in turn, the last one repeating.
@@ -178,7 +184,7 @@ final class ModelRankingTests: XCTestCase {
         XCTAssertEqual(ranked.suggestions, arranged(list, "LBACDEFGHIJKMN", reasons: ["L": "Because L", "B": "Because B", "A": "Because A"]))
         XCTAssertEqual(ranked.suggestions.map(Wording.reasons),
                        ["Because L", "Because B", "Because A"] + "CDEFGHIJKMN".map { "Shares Topic \($0)" })
-        assertRun(ranked.run, .ok, placed: 3, ignored: 0)
+        assertRun(ranked.run, .ok, placed: 3, ignored: 0, prompt: measures(list))
         XCTAssertEqual(ranked.run.prompt, model.prompts.first?.metrics)
         XCTAssertEqual(Wording.modelHeader(ranked.run), "Top 3 ranked by Apple Intelligence")
     }
@@ -191,7 +197,7 @@ final class ModelRankingTests: XCTestCase {
         // M was in the list but not sent.
         XCTAssertFalse(model.prompts.first?.sentIDs.contains(list[12].id) ?? true)
         XCTAssertEqual(ranked.suggestions, arranged(list, "BCADEFGHIJKLMN", reasons: ["B": "Because B", "C": "Because C"]))
-        assertRun(ranked.run, .ok, placed: 2, ignored: 2)
+        assertRun(ranked.run, .ok, placed: 2, ignored: 2, prompt: measures(list))
     }
 
     func testASessionNamedTwiceMovesOnce() async {
@@ -199,7 +205,7 @@ final class ModelRankingTests: XCTestCase {
         let ranked = await rank(list, with: FakeRanker(picks: [pick("B", "First"), pick("A"), pick("B", "Second")]))
 
         XCTAssertEqual(ranked.suggestions, arranged(list, "BACDEFGHIJKLMN", reasons: ["B": "First", "A": "Because A"]))
-        assertRun(ranked.run, .ok, placed: 2, ignored: 1)
+        assertRun(ranked.run, .ok, placed: 2, ignored: 1, prompt: measures(list))
     }
 
     func testACodeTwoSentSessionsShareMovesNeither() async {
@@ -211,7 +217,7 @@ final class ModelRankingTests: XCTestCase {
         XCTAssertEqual(model.prompts.map(\.sentIDs), [list.map(\.id)])
         XCTAssertEqual(model.prompts.first?.sentCodes, ["A", "AIM301", "AIM301", "B"])
         XCTAssertEqual(ranked.suggestions, arranged(list, ["B", "A", "AIM301", "AIM301"], reasons: ["B": "Because B"]))
-        assertRun(ranked.run, .ok, placed: 1, ignored: 1)
+        assertRun(ranked.run, .ok, placed: 1, ignored: 1, prompt: measures(list))
     }
 
     func testACodeThreeSentSessionsShareMovesNoneOfThem() async {
@@ -220,7 +226,7 @@ final class ModelRankingTests: XCTestCase {
         let ranked = await rank(list, with: model)
         XCTAssertEqual(model.prompts.map(\.sentIDs), [list.map(\.id)])
         XCTAssertEqual(ranked.suggestions, arranged(list, ["B", "S", "S", "S"], reasons: ["B": "Because B"]))
-        assertRun(ranked.run, .ok, placed: 1, ignored: 1)
+        assertRun(ranked.run, .ok, placed: 1, ignored: 1, prompt: measures(list))
     }
 
     func testASharedCodeIsIgnoredButNotWrong() async {
@@ -228,7 +234,7 @@ final class ModelRankingTests: XCTestCase {
         let list = usualList(["S", "S", "B"])
         let ranked = await rank(list, with: FakeRanker(picks: [pick("S"), pick("B"), pick("X1")]))
         XCTAssertEqual(ranked.suggestions, arranged(list, ["B", "S", "S"], reasons: ["B": "Because B"]))
-        assertRun(ranked.run, .ok, placed: 1, ignored: 2)
+        assertRun(ranked.run, .ok, placed: 1, ignored: 2, prompt: measures(list))
     }
 
     func testTheCodeIsMatchedAsThePromptShowedIt() async {
@@ -248,18 +254,18 @@ final class ModelRankingTests: XCTestCase {
         var b = list[2]
         b.modelReason = "Because B"
         XCTAssertEqual(ranked.suggestions, [aim, c, b, list[0]])
-        assertRun(ranked.run, .ok, placed: 3, ignored: 2)
+        assertRun(ranked.run, .ok, placed: 3, ignored: 2, prompt: measures(list))
 
         // In other letters, without the exact code beside it, the code moves nothing.
         let lower = await rank(list, with: FakeRanker(picks: [pick("aim/301"), pick("C")]))
         XCTAssertEqual(lower.suggestions, arranged(list, ["C", "A", " AIM|301\n", "B"], reasons: ["C": "Because C"]))
-        assertRun(lower.run, .ok, placed: 1, ignored: 1)
+        assertRun(lower.run, .ok, placed: 1, ignored: 1, prompt: measures(list))
 
         // Written as the catalog has it, not as the prompt showed it, the code moves nothing.
         let piped = usualList(["A", "X|1", "C"])
         let catalogSpelling = await rank(piped, with: FakeRanker(picks: [pick("X|1"), pick("C")]))
         XCTAssertEqual(catalogSpelling.suggestions, arranged(piped, ["C", "A", "X|1"], reasons: ["C": "Because C"]))
-        assertRun(catalogSpelling.run, .ok, placed: 1, ignored: 1)
+        assertRun(catalogSpelling.run, .ok, placed: 1, ignored: 1, prompt: measures(piped))
     }
 
     func testACodeMatchesOnlyInTheSameUnicodeSpelling() async {
@@ -270,24 +276,24 @@ final class ModelRankingTests: XCTestCase {
         let list = usualList(["A", composed, "C"])
         let other = await rank(list, with: FakeRanker(picks: [pick(decomposed), pick("C")]))
         XCTAssertEqual(other.suggestions, arranged(list, ["C", "A", composed], reasons: ["C": "Because C"]))
-        assertRun(other.run, .ok, placed: 1, ignored: 1)
+        assertRun(other.run, .ok, placed: 1, ignored: 1, prompt: measures(list))
         // The spelling the prompt showed moves it.
         let same = await rank(list, with: FakeRanker(picks: [pick(composed), pick("C")]))
         XCTAssertEqual(same.suggestions, arranged(list, [composed, "C", "A"], reasons: [composed: "Because \(composed)", "C": "Because C"]))
-        assertRun(same.run, .ok, placed: 2, ignored: 0)
+        assertRun(same.run, .ok, placed: 2, ignored: 0, prompt: measures(list))
     }
 
     func testAnAnswerThatIsMostlyWrongIsNotUsed() async {
         let list = usualList()
         let wrong = await rank(list, with: FakeRanker(picks: [pick("C"), pick("X1"), pick("B"), pick("X2"), pick("X3")]))
         XCTAssertEqual(wrong.suggestions, list)
-        assertRun(wrong.run, .unusable, placed: 0, ignored: 3)
+        assertRun(wrong.run, .unusable, placed: 0, ignored: 3, prompt: measures(list))
         XCTAssertNil(Wording.modelHeader(wrong.run))
 
         // Half wrong is still used.
         let half = await rank(list, with: FakeRanker(picks: [pick("C"), pick("X1"), pick("B"), pick("X2")]))
         XCTAssertEqual(half.suggestions, arranged(list, "CBADEFGHIJKLMN", reasons: ["C": "Because C", "B": "Because B"]))
-        assertRun(half.run, .ok, placed: 2, ignored: 2)
+        assertRun(half.run, .ok, placed: 2, ignored: 2, prompt: measures(list))
     }
 
     func testRepeatsAreNotCountedAsWrong() async {
@@ -295,24 +301,24 @@ final class ModelRankingTests: XCTestCase {
         // One session named three times: repeats are ignored, but they aren't wrong.
         let ranked = await rank(list, with: FakeRanker(picks: [pick("C"), pick("C"), pick("C")]))
         XCTAssertEqual(ranked.suggestions, arranged(list, "CABDEFGHIJKLMN", reasons: ["C": "Because C"]))
-        assertRun(ranked.run, .ok, placed: 1, ignored: 2)
+        assertRun(ranked.run, .ok, placed: 1, ignored: 2, prompt: measures(list))
 
         // A code it wasn't sent, named twice, is one wrong code.
         let twice = await rank(list, with: FakeRanker(picks: [pick("B"), pick("X1"), pick("X1")]))
         XCTAssertEqual(twice.suggestions, arranged(list, "BACDEFGHIJKLMN", reasons: ["B": "Because B"]))
-        assertRun(twice.run, .ok, placed: 1, ignored: 2)
+        assertRun(twice.run, .ok, placed: 1, ignored: 2, prompt: measures(list))
 
         // Two different codes it wasn't sent, against one it was, are mostly wrong.
         let wrong = await rank(list, with: FakeRanker(picks: [pick("B"), pick("X1"), pick("X2")]))
         XCTAssertEqual(wrong.suggestions, list)
-        assertRun(wrong.run, .unusable, placed: 0, ignored: 2)
+        assertRun(wrong.run, .unusable, placed: 0, ignored: 2, prompt: measures(list))
     }
 
     func testAnEmptyAnswerIsNotUsed() async {
         let list = usualList()
         let ranked = await rank(list, with: FakeRanker(picks: []))
         XCTAssertEqual(ranked.suggestions, list)
-        assertRun(ranked.run, .unusable, placed: 0, ignored: 0)
+        assertRun(ranked.run, .unusable, placed: 0, ignored: 0, prompt: measures(list))
     }
 
     func testALongReasonIsCutAtAWordAndAnEmptyOneShowsWhatItShares() async {
@@ -327,12 +333,12 @@ final class ModelRankingTests: XCTestCase {
         XCTAssertEqual(ranked.suggestions, arranged(list, "ABCDEFGHIJKLMN", reasons: ["A": words + "…", "B": exact]))
         XCTAssertEqual(ranked.suggestions[0].modelReason?.count, 150)
         XCTAssertEqual(Wording.reasons(ranked.suggestions[2]), "Shares Topic C")
-        assertRun(ranked.run, .ok, placed: 3, ignored: 0)
+        assertRun(ranked.run, .ok, placed: 3, ignored: 0, prompt: measures(list))
 
         // The reason is shown as written, on one line: a "|" stays.
         let piped = await rank(list, with: FakeRanker(picks: [pick("A", "Fast |\n cheap")]))
         XCTAssertEqual(piped.suggestions, arranged(list, "ABCDEFGHIJKLMN", reasons: ["A": "Fast | cheap"]))
-        assertRun(piped.run, .ok, placed: 1, ignored: 0)
+        assertRun(piped.run, .ok, placed: 1, ignored: 0, prompt: measures(list))
     }
 
     func testWithoutAppleIntelligenceTheModelIsNotAsked() async {
@@ -342,13 +348,13 @@ final class ModelRankingTests: XCTestCase {
 
         XCTAssertTrue(model.prompts.isEmpty)
         XCTAssertEqual(ranked.suggestions, list)
-        assertRun(ranked.run, .unavailable, placed: 0, ignored: 0, unavailable: "modelNotReady")
+        assertRun(ranked.run, .unavailable, placed: 0, ignored: 0, unavailable: "modelNotReady", prompt: nil)
         XCTAssertNil(ranked.run.prompt)
 
         // An iOS without the framework has no model at all.
         let none = await rank(list, with: nil)
         XCTAssertEqual(none.suggestions, list)
-        assertRun(none.run, .unavailable, placed: 0, ignored: 0, unavailable: "unsupported")
+        assertRun(none.run, .unavailable, placed: 0, ignored: 0, unavailable: "unsupported", prompt: nil)
         XCTAssertNil(none.run.prompt)
 
         // The same list is ranked by a model that is available.
@@ -369,7 +375,7 @@ final class ModelRankingTests: XCTestCase {
             let ranked = await rank(list, with: model)
             XCTAssertEqual(model.prompts.map(\.sentIDs), [list.prefix(12).map(\.id)], "\(outcome)")
             XCTAssertEqual(ranked.suggestions, list, "\(outcome)")
-            assertRun(ranked.run, outcome, placed: 0, ignored: 0)
+            assertRun(ranked.run, outcome, placed: 0, ignored: 0, prompt: measures(list))
             XCTAssertEqual(ranked.run.prompt, model.prompts.first?.metrics, "\(outcome)")
         }
     }
@@ -380,7 +386,7 @@ final class ModelRankingTests: XCTestCase {
         // The timer fires at once; the model never answers.
         let late = await rank(list, with: silentModel()) { asked.append($0) }
         XCTAssertEqual(late.suggestions, list)
-        assertRun(late.run, .timeout, placed: 0, ignored: 0)
+        assertRun(late.run, .timeout, placed: 0, ignored: 0, prompt: measures(list))
         XCTAssertEqual(asked.all, [.seconds(20)])
     }
 
@@ -398,7 +404,7 @@ final class ModelRankingTests: XCTestCase {
         XCTAssertFalse(fired.isSet)
         returned.set()
         XCTAssertEqual(ranked.suggestions, arranged(list, "BACDEFGHIJKLMN", reasons: ["B": "Because B"]))
-        assertRun(ranked.run, .ok, placed: 1, ignored: 0)
+        assertRun(ranked.run, .ok, placed: 1, ignored: 0, prompt: measures(list))
     }
 
     func testTheTimeoutHoldsForAModelThatIgnoresBeingStopped() async {
@@ -421,7 +427,7 @@ final class ModelRankingTests: XCTestCase {
         XCTAssertTrue(started.isSet)
         XCTAssertFalse(finished.isSet)
         XCTAssertEqual(ranked.suggestions, list)
-        assertRun(ranked.run, .timeout, placed: 0, ignored: 0)
+        assertRun(ranked.run, .timeout, placed: 0, ignored: 0, prompt: measures(list))
         // The model is then let go, and finishes.
         release.set()
         await waitUntil(self, "the model finishes") { finished.isSet }
@@ -436,7 +442,7 @@ final class ModelRankingTests: XCTestCase {
         task.cancel()
         let ranked = await result(of: task, self)
         XCTAssertEqual(ranked?.suggestions, list)
-        if let ranked { assertRun(ranked.run, .cancelled, placed: 0, ignored: 0) }
+        if let ranked { assertRun(ranked.run, .cancelled, placed: 0, ignored: 0, prompt: measures(list)) }
         XCTAssertEqual(model.prompts.count, 1)
     }
 
@@ -453,7 +459,7 @@ final class ModelRankingTests: XCTestCase {
         task.cancel()
         let ranked = await result(of: task, self)
         XCTAssertEqual(ranked?.suggestions, list)
-        if let ranked { assertRun(ranked.run, .cancelled, placed: 0, ignored: 0) }
+        if let ranked { assertRun(ranked.run, .cancelled, placed: 0, ignored: 0, prompt: measures(list)) }
         XCTAssertTrue(model.prompts.isEmpty)
         // The same model is asked by a caller that isn't stopped.
         let asked = await rank(list, with: model)
@@ -467,7 +473,7 @@ final class ModelRankingTests: XCTestCase {
         let ranked = await rank([], with: model)
         XCTAssertTrue(model.prompts.isEmpty)
         XCTAssertEqual(ranked.suggestions, [])
-        assertRun(ranked.run, .nothingToRank, placed: 0, ignored: 0)
+        assertRun(ranked.run, .nothingToRank, placed: 0, ignored: 0, prompt: nil)
         XCTAssertNil(ranked.run.prompt)
 
         // The same model is asked when there is something.
@@ -486,7 +492,7 @@ final class ModelRankingTests: XCTestCase {
         let ranked = await rank(list, with: model, budget: tiny)
         XCTAssertTrue(model.prompts.isEmpty)
         XCTAssertEqual(ranked.suggestions, list)
-        assertRun(ranked.run, .promptTooLong, placed: 0, ignored: 0)
+        assertRun(ranked.run, .promptTooLong, placed: 0, ignored: 0, prompt: measures(list, budget: tiny))
         XCTAssertEqual(ranked.run.prompt?.sessionsSent, 0)
         XCTAssertEqual(ranked.run.prompt?.sessionsLeftOut, 14)
     }
@@ -500,7 +506,7 @@ final class ModelRankingTests: XCTestCase {
         // The reason reached the list, and the instructions the prompt.
         XCTAssertEqual(ranked.suggestions, arranged(list, "BACDEFGHIJKLMN", reasons: ["B": "Secret reason"]))
         XCTAssertTrue(model.prompts.first?.text.hasPrefix(ModelPrompt.instructions) ?? false)
-        assertRun(run, .ok, placed: 1, ignored: 1, promptTokens: 1234, answerTokens: 56)
+        assertRun(run, .ok, placed: 1, ignored: 1, promptTokens: 1234, answerTokens: 56, prompt: measures(list, sessionsInBlock: 77))
         XCTAssertEqual(run.prompt, model.prompts.first?.metrics)
         XCTAssertEqual(run.prompt?.sessionsInBlock, 77)
         XCTAssertEqual(run.prompt?.sessionsSent, 12)
@@ -587,15 +593,15 @@ final class RememberingRankerTests: XCTestCase {
         XCTAssertEqual(first.suggestions, arranged(list, "BACDEFGHIJKLMN", reasons: ["B": "Because B"]))
         XCTAssertEqual(again.suggestions, arranged(list, "BACDEFGHIJKLMN", reasons: ["B": "Because B"]))
         // Recorded as remembered, with no tokens: the model didn't run.
-        assertRun(first.run, .ok, placed: 1, ignored: 0, promptTokens: 9)
-        assertRun(again.run, .ok, placed: 1, ignored: 0, remembered: true)
+        assertRun(first.run, .ok, placed: 1, ignored: 0, promptTokens: 9, prompt: measures(list))
+        assertRun(again.run, .ok, placed: 1, ignored: 0, remembered: true, prompt: measures(list))
 
         // Another list is another prompt: asked again.
         let other = usualList(["B", "A"])
         let otherRanked = await rank(other, with: remembering)
         XCTAssertEqual(model.prompts.map(\.sentIDs), [list.prefix(12).map(\.id), other.map(\.id)])
         XCTAssertEqual(otherRanked.suggestions, arranged(other, "BA", reasons: ["B": "Because B"]))
-        assertRun(otherRanked.run, .ok, placed: 1, ignored: 0, promptTokens: 9)
+        assertRun(otherRanked.run, .ok, placed: 1, ignored: 0, promptTokens: 9, prompt: measures(other))
         // Only the last answer is kept: the first list is asked again too.
         let third = await rank(list, with: remembering)
         XCTAssertEqual(model.prompts.map(\.sentIDs).last, list.prefix(12).map(\.id))
@@ -627,7 +633,7 @@ final class RememberingRankerTests: XCTestCase {
         let again = await rank(list, with: remembering)
         XCTAssertEqual(model.prompts.count, 1)
         XCTAssertEqual(again.suggestions, arranged(list, "BACDEFGHIJKLMN", reasons: ["B": "Because B"]))
-        assertRun(again.run, .ok, placed: 1, ignored: 0, remembered: true)
+        assertRun(again.run, .ok, placed: 1, ignored: 0, remembered: true, prompt: measures(list))
     }
 
     func testAnAnswerAfterTheTimeoutIsNotKept() async {
@@ -642,7 +648,7 @@ final class RememberingRankerTests: XCTestCase {
         let late = await rank(list, with: remembering) { _ in
             while model.prompts.isEmpty { try Task.checkCancellation(); await Task.yield() }
         }
-        assertRun(late.run, .timeout, placed: 0, ignored: 0)
+        assertRun(late.run, .timeout, placed: 0, ignored: 0, prompt: measures(list))
         // Its answer comes after all, and is not kept: the next ask goes to the model.
         release.set()
         await waitUntil(self, "the late answer is in") { remembering.requestsInFlight == 0 }
@@ -650,7 +656,7 @@ final class RememberingRankerTests: XCTestCase {
         let again = await rank(list, with: remembering)
         XCTAssertEqual(model.prompts.count, 2)
         XCTAssertEqual(again.suggestions, arranged(list, "BACDEFGHIJKLMN", reasons: ["B": "Because B"]))
-        assertRun(again.run, .ok, placed: 1, ignored: 0)
+        assertRun(again.run, .ok, placed: 1, ignored: 0, prompt: measures(list))
     }
 
     func testAnUnusableAnswerIsNotKept() async {
@@ -659,13 +665,13 @@ final class RememberingRankerTests: XCTestCase {
         let list = usualList()
         let first = await rank(list, with: remembering)
         XCTAssertEqual(first.suggestions, list)
-        assertRun(first.run, .unusable, placed: 0, ignored: 2)
+        assertRun(first.run, .unusable, placed: 0, ignored: 2, prompt: measures(list))
         XCTAssertNil(ModelStep.remembered(list, sessionsInBlock: 40, picks: [], ranker: remembering))
         // The next ask goes to the model again.
         let again = await rank(list, with: remembering)
         XCTAssertEqual(model.prompts.count, 2)
         XCTAssertEqual(again.suggestions, arranged(list, "BACDEFGHIJKLMN", reasons: ["B": "Because B"]))
-        assertRun(again.run, .ok, placed: 1, ignored: 0)
+        assertRun(again.run, .ok, placed: 1, ignored: 0, prompt: measures(list))
     }
 
     func testTwoListsAskingAtOnceShareOneRequest() async {
@@ -691,8 +697,8 @@ final class RememberingRankerTests: XCTestCase {
         XCTAssertEqual(model.prompts.count, 1)
         XCTAssertEqual(a?.suggestions, arranged(list, "BACDEFGHIJKLMN", reasons: ["B": "Because B"]))
         XCTAssertEqual(b?.suggestions, arranged(list, "BACDEFGHIJKLMN", reasons: ["B": "Because B"]))
-        if let a { assertRun(a.run, .ok, placed: 1, ignored: 0) }
-        if let b { assertRun(b.run, .ok, placed: 1, ignored: 0) }
+        if let a { assertRun(a.run, .ok, placed: 1, ignored: 0, prompt: measures(list)) }
+        if let b { assertRun(b.run, .ok, placed: 1, ignored: 0, prompt: measures(list)) }
     }
 
     func testAnotherPromptDoesNotTakeOverARunningOne() async {
@@ -734,7 +740,7 @@ final class RememberingRankerTests: XCTestCase {
         XCTAssertEqual(asked.suggestions, arranged(list, "BACDEFGHIJKLMN", reasons: ["B": "Because B"]))
         let kept = remembered(list)
         XCTAssertEqual(kept?.suggestions, arranged(list, "BACDEFGHIJKLMN", reasons: ["B": "Because B"]))
-        if let kept { assertRun(kept.run, .ok, placed: 1, ignored: 0, remembered: true) }
+        if let kept { assertRun(kept.run, .ok, placed: 1, ignored: 0, remembered: true, prompt: measures(list)) }
         XCTAssertEqual(model.prompts.count, 1)
         // A different list has nothing remembered.
         XCTAssertNil(remembered(usualList(["B", "A"])))
@@ -748,8 +754,8 @@ final class RememberingRankerTests: XCTestCase {
         let again = await rank(list, with: remembering)
         XCTAssertEqual(first.suggestions, list)
         XCTAssertEqual(again.suggestions, list)
-        assertRun(first.run, .refused, placed: 0, ignored: 0)
-        assertRun(again.run, .refused, placed: 0, ignored: 0)
+        assertRun(first.run, .refused, placed: 0, ignored: 0, prompt: measures(list))
+        assertRun(again.run, .refused, placed: 0, ignored: 0, prompt: measures(list))
         XCTAssertEqual(model.prompts.map(\.sentIDs), Array(repeating: list.prefix(12).map(\.id), count: 2))
     }
 
@@ -802,7 +808,7 @@ final class RememberingRankerTests: XCTestCase {
             let late = await rank(list, with: remembering) { _ in
                 while model.prompts.isEmpty { try Task.checkCancellation(); await Task.yield() }
             }
-            assertRun(late.run, .timeout, placed: 0, ignored: 0)
+            assertRun(late.run, .timeout, placed: 0, ignored: 0, prompt: measures(list))
             // A retry asks the model again rather than wait on the abandoned request.
             let retried = Task { await ModelStep.rank(list, sessionsInBlock: 40, picks: [], ranker: remembering, sleep: untilCancelled) }
             await waitUntil(self, "the retry asks the model") { model.prompts.count == 2 }
@@ -906,7 +912,7 @@ final class RememberingRankerTests: XCTestCase {
         let again = await rank(second, with: remembering)
         XCTAssertEqual(model.prompts.count, 2)
         XCTAssertEqual(again.suggestions, arranged(second, [decomposed, "A"], reasons: [decomposed: "Because \(decomposed)"]))
-        assertRun(again.run, .ok, placed: 1, ignored: 0)
+        assertRun(again.run, .ok, placed: 1, ignored: 0, prompt: measures(second))
     }
 
     func testAStoppedCallerStartsNoNewRequest() async throws {
@@ -928,6 +934,44 @@ final class RememberingRankerTests: XCTestCase {
         let answer = try await remembering.rank(prompt)
         XCTAssertEqual(answer.picks, [pick("B")])
         XCTAssertEqual(model.prompts.map(\.text), [prompt.text])
+    }
+
+    func testAClosedTicketStartsNoRequestButAStartedOneRuns() async throws {
+        let model = FakeRanker(picks: [pick("B")])
+        let remembering = RememberingRanker(model)
+        let prompt = ModelPrompt.build(question: "", ranked: usualList().map(\.session), sessionsInBlock: 40, picks: [])
+        // Closed first (the caller was stopped), the ticket starts nothing.
+        let closed = ModelRequestTicket()
+        closed.close()
+        let refused: Bool = await ModelStep.$ticket.withValue(closed) {
+            do { _ = try await remembering.rank(prompt); return false } catch { return error is CancellationError }
+        }
+        XCTAssertTrue(refused)
+        XCTAssertTrue(model.prompts.isEmpty)
+        // Started first, the request runs, and closing the ticket afterwards changes nothing.
+        let open = ModelRequestTicket()
+        let answer = try await ModelStep.$ticket.withValue(open) { try await remembering.rank(prompt) }
+        open.close()
+        XCTAssertEqual(answer.picks, [pick("B")])
+        XCTAssertEqual(model.prompts.map(\.text), [prompt.text])
+        XCTAssertEqual(remembering.lastAnswer(for: prompt)?.picks, [pick("B")])
+    }
+
+    func testStoppingARankingClosesItsTicket() async {
+        let model = silentModel()
+        let ticket = ModelRequestTicket()
+        let list = usualList()
+        let task = Task {
+            await ModelStep.$ticket.withValue(ticket) {
+                await ModelStep.rank(list, sessionsInBlock: 40, picks: [], ranker: model, sleep: untilCancelled)
+            }
+        }
+        await waitUntil(self, "the model has the prompt") { !model.prompts.isEmpty }
+        XCTAssertFalse(ticket.isClosed)
+        task.cancel()
+        let ranked = await result(of: task, self)
+        XCTAssertEqual(ranked?.run.outcome, .cancelled)
+        XCTAssertTrue(ticket.isClosed)
     }
 
     func testItsAvailabilityIsTheModels() {

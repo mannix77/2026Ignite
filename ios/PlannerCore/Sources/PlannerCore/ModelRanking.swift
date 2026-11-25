@@ -118,8 +118,9 @@ public final class RememberingRanker: SessionRanker, @unchecked Sendable {
                 ticket?.request = request.id
                 return (nil, request.task)
             }
-            // A caller already stopped starts nothing new.
-            if Task.isCancelled { return (nil, nil) }
+            // A caller already stopped starts nothing new: its task is cancelled, or its ticket
+            // was closed when the ranking gave up on it.
+            if Task.isCancelled || ticket?.mayStart() == false { return (nil, nil) }
             let id = UUID()
             // Recorded before the request starts, so a timeout can never come before it.
             ticket?.request = id
@@ -172,10 +173,21 @@ public final class RememberingRanker: SessionRanker, @unchecked Sendable {
 final class ModelRequestTicket: @unchecked Sendable {
     private let lock = NSLock()
     private var joined: UUID?
+    private var closed = false
     var request: UUID? {
         get { lock.withLock { joined } }
         set { lock.withLock { joined = newValue } }
     }
+
+    /// Whether its caller was stopped.
+    var isClosed: Bool { lock.withLock { closed } }
+
+    /// Its caller was stopped: no new request may start for it from now on.
+    func close() { lock.withLock { closed = true } }
+
+    /// Whether a new request may start for its caller. Checked under the same lock as
+    /// `close`, so whichever comes first decides: a request started before the close runs on.
+    func mayStart() -> Bool { lock.withLock { !closed } }
 }
 
 /// What became of one request to the model, for the logs.
@@ -375,6 +387,7 @@ public enum ModelStep {
     private static func race(_ prompt: ModelPrompt, by ranker: any SessionRanker, within timeout: Duration,
                              sleep: @escaping @Sendable (Duration) async throws -> Void) async -> Result<ModelAnswer, ModelOutcomeError> {
         let race = Race<Result<ModelAnswer, ModelOutcomeError>>()
+        let ticket = ModelStep.ticket
         let result = await withTaskCancellationHandler {
             await withCheckedContinuation { continuation in
                 race.start(continuation)
@@ -387,6 +400,8 @@ public enum ModelStep {
                 }
             }
         } onCancel: {
+            // Closed first, so no request starts for this caller once it has been stopped.
+            ticket?.close()
             race.finish(.failure(ModelOutcomeError(.cancelled)))
         }
         if case let .failure(failed) = result, failed.outcome == .timeout { ranker.abandon(prompt) }
@@ -442,8 +457,9 @@ final class Race<Value: Sendable>: @unchecked Sendable {
             return (continuation, tasks)
         }
         guard let decided = winner else { return }
-        decided.waiting?.resume(returning: value)
+        // The losers are stopped before the caller goes on.
         decided.losers.forEach { $0.cancel() }
+        decided.waiting?.resume(returning: value)
     }
 }
 
