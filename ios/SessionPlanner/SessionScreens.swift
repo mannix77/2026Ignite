@@ -113,7 +113,7 @@ struct SessionDetailView: View {
                         }
                     }
                     .disabled(!open)
-                    .accessibilityHint(open ? "" : "No seats left to reserve")
+                    .accessibilityHint(Wording.reserveHint(session) ?? "")
                     .confirmationDialog("Reserve a seat in \(session.code)?", isPresented: $confirmReserve, titleVisibility: .visible) {
                         Button("Reserve") { run { await model.reserve(session) } }
                     } message: {

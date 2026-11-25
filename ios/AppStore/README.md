@@ -421,10 +421,12 @@ This needs the Account Holder or an Admin:
      - `HONEYCOMB_KEY`: the ingest key, with **Secret** ticked (masked in logs).
      - `HONEYCOMB_DATASET`: `session-planner`.
 4. **Build number.** In App Store Connect: the app > Xcode Cloud > Settings > Build Number >
-   Edit Next Build Number. Set it to **7**. Builds 5 and 6 already exist for 1.2, and Xcode Cloud
-   otherwise starts at 1. From then on Xcode Cloud numbers each build itself, so `BUILD=` isn't
-   needed. The version (1.2) still comes from the project. If you also build with `archive.sh`,
-   pass a `BUILD=` above Xcode Cloud's latest number for that version, or the upload is refused.
+   Edit Next Build Number. Set it one above the latest build uploaded for the version: **8** for
+   1.2, whose builds 5, 6 and 7 already exist (7 is the one submitted). Xcode Cloud otherwise
+   starts at 1, and App Store Connect refuses a version and build already used. From then on
+   Xcode Cloud numbers each build itself, so `BUILD=` isn't needed. The version (1.2) still
+   comes from the project. If you also build with `archive.sh`, pass a `BUILD=` above Xcode
+   Cloud's latest number for that version, or the upload is refused.
 5. **Check.** Start the TestFlight workflow once. The archive log should say "Honeycomb key
    included", and the build should appear under TestFlight with the next number.
 

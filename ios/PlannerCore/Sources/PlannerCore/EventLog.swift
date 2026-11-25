@@ -47,6 +47,8 @@ public struct HoneycombConfig: Equatable, Sendable {
         self.init(key: file?["IngestKey"], dataset: file?["Dataset"])
     }
 
+    /// `ios/AppStore/archive.sh` and `ios/ci_scripts/ci_pre_xcodebuild.sh` check the same rule
+    /// before writing `Honeycomb.plist`; change them with it.
     private static let datasetCharacters = CharacterSet(charactersIn:
         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._-")
 
