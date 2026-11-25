@@ -184,7 +184,8 @@ whether the answer was remembered. When the model was asked (not for a remembere
 holds the instructions, the catalog sessions that fit the free time (code, title, format, level,
 venue, time, topics, abstract cut to 300 characters) and the profile: preferred levels and formats
 (from Settings or inferred from his picks), skipped formats, up to 15 interests (topics his picks
-share) and how many sessions he reserved that day. No titles of his picks, personal time, sign-in,
+share) and how many sessions he reserved that day. Not his list of reserved or favorite sessions (a favorite
+that fits the free time is listed like any other session, not marked), personal time, sign-in,
 name or email.
 
 Why these answers:
