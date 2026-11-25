@@ -296,7 +296,11 @@ private struct GapSheet: View {
                             }
                         } header: {
                             if let header = Wording.rankingHeader(for: gap, ranking: ranking, ranked: ranked) {
-                                Label(header, systemImage: "apple.intelligence")
+                                Label {
+                                    Text(header)
+                                } icon: {
+                                    ModelWorkingIcon(working: ranking == gap)
+                                }
                             }
                         }
                     }
@@ -604,5 +608,19 @@ private struct EntryBlock: View {
         .contentShape(Rectangle())
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("\(entry.commitment.label): \(entry.session.code), \(entry.session.title), \(Wording.timeRange(start: entry.start, end: entry.end))")
+    }
+}
+
+/// The Apple Intelligence mark beside the ranking header; it spins while the model is ranking.
+private struct ModelWorkingIcon: View {
+    let working: Bool
+
+    var body: some View {
+        let image = Image(systemName: "apple.intelligence")
+        if #available(iOS 18, *) {
+            image.symbolEffect(.rotate, options: .repeat(.continuous), isActive: working)
+        } else {
+            image.symbolEffect(.pulse, options: .repeating, isActive: working)
+        }
     }
 }
