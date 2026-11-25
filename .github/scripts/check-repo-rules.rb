@@ -22,7 +22,8 @@ Dir.chdir(ROOT)
 failures = []
 
 # The files git tracks, as they are in the working tree (so a local run sees uncommitted edits).
-tracked = `git ls-files -z`.split("\0").select { |path| File.file?(path) }
+# Symlinks are kept as links, so the Pages replay sees them as the real checkout would.
+tracked = `git ls-files -z`.split("\0").select { |path| File.symlink?(path) || File.file?(path) }
 
 def load_yaml(path, failures)
   YAML.safe_load(File.read(path), aliases: true)
@@ -40,8 +41,10 @@ PAGES = ".github/workflows/pages.yml"
 PUBLISHED = ["ios/AppStore/privacy.html", "ios/AppStore/support.html"].freeze
 # The actions the Pages build job may use; any other action could put files in the site unseen.
 BUILD_ACTIONS = %w[actions/checkout actions/configure-pages actions/upload-pages-artifact].freeze
-# Step keys the check can reproduce when it runs the build job's shell steps.
+# Step keys the check can reproduce: shell steps it replays, and action steps it reads.
 RUN_STEP_KEYS = %w[name id run].freeze
+ACTION_STEP_KEYS = %w[name id uses with].freeze
+PAGES_ACTIONS = %w[actions/upload-pages-artifact actions/deploy-pages].freeze
 
 def action_name(ref)
   ref.to_s.split("@").first
@@ -69,21 +72,39 @@ workflows.each do |path|
   end
 end
 
+# A local composite action runs its steps wherever it is called, so it may not wrap a Pages action.
+local_actions.each do |path|
+  document = load_yaml(path, failures) or next
+  runs = document.is_a?(Hash) ? document["runs"] : nil
+  Array(runs.is_a?(Hash) ? runs["steps"] : nil).grep(Hash).each do |step|
+    name = action_name(step["uses"])
+    failures << "Pages: #{path} uses #{name}; only pages.yml publishes the site" if PAGES_ACTIONS.include?(name)
+  end
+end
+
 def pages_site_files(tracked, failures)
   workflow = load_yaml(PAGES, failures) or return nil
   build = jobs_of(workflow)["build"]
   steps = build.is_a?(Hash) ? build["steps"] : nil
-  return "pages.yml has no build job steps" unless steps.is_a?(Array)
-  return "the build job sets defaults, which this check can't reproduce" if build.key?("defaults")
+  return "pages.yml has no build job steps" unless steps.is_a?(Array) && steps.all? { |s| s.is_a?(Hash) }
+  %w[defaults env].each do |key|
+    return "pages.yml sets #{key} for the whole workflow, which this check can't reproduce" if workflow.key?(key)
+    return "the build job sets #{key}, which this check can't reproduce" if build.key?(key)
+  end
 
   uploads = steps.select { |s| action_name(s["uses"]) == "actions/upload-pages-artifact" }
   return "pages.yml must upload exactly one Pages artifact, found #{uploads.size}" unless uploads.size == 1
-  site = uploads.first.dig("with", "path").to_s
+  # The site is checked as it stands after the last step, so nothing may run after the upload.
+  return "the Pages upload must be the build job's last step" unless steps.last.equal?(uploads.first)
+  inputs = uploads.first["with"].is_a?(Hash) ? uploads.first["with"] : {}
+  site = inputs.key?("path") ? inputs["path"].to_s : "_site/" # the action's own default
 
   steps.each do |step|
     if step["uses"]
       name = action_name(step["uses"])
       return "the build job uses #{name}; only #{BUILD_ACTIONS.join(", ")} are allowed" unless BUILD_ACTIONS.include?(name)
+      extra = step.keys - ACTION_STEP_KEYS
+      return "build step #{name} sets #{extra.join(", ")}, which this check can't reproduce" unless extra.empty?
     else
       extra = step.keys - RUN_STEP_KEYS
       return "build step #{step["name"].inspect} sets #{extra.join(", ")}, which this check can't reproduce" unless extra.empty?
@@ -99,7 +120,11 @@ def pages_site_files(tracked, failures)
 
     tracked.each do |path|
       FileUtils.mkdir_p(File.join(dir, File.dirname(path)))
-      FileUtils.cp(path, File.join(dir, path))
+      if File.symlink?(path)
+        File.symlink(File.readlink(path), File.join(dir, path))
+      else
+        FileUtils.cp(path, File.join(dir, path))
+      end
     end
     env = { "GITHUB_WORKSPACE" => dir, "RUNNER_TEMP" => Dir.mktmpdir }
     steps.each do |step|
@@ -117,7 +142,16 @@ def pages_site_files(tracked, failures)
       return "the site holds a symlink, #{relative}; copy files in instead" if File.symlink?(entry)
       files << relative if File.file?(entry)
     end
-    files.sort
+    files.sort!
+    # Each address must serve its own page, not the other one's; a page that is itself a symlink
+    # could serve anything, so it is refused too.
+    linked = PUBLISHED.select { |p| File.symlink?(File.join(dir, p)) }
+    return "the published pages must be real files, not symlinks: #{linked.join(", ")}" unless linked.empty?
+    if files == PUBLISHED
+      swapped = PUBLISHED.reject { |p| File.binread(File.join(site_dir, p)) == File.binread(File.join(dir, p)) }
+      return "the site's #{swapped.join(" and ")} differ from the repository's; copy each page to its own address" unless swapped.empty?
+    end
+    files
   end
 end
 
@@ -161,7 +195,8 @@ TEAM_KEY = /(?:DEVELOPMENT_TEAM(?:\[[^\]\n]*\])?|DevelopmentTeam|teamID|team-ide
 TEAM_ID = /(?!ABCDE12345\b)[A-Z0-9]{10}\b/
 TEAM_PATTERNS = [
   /#{TEAM_KEY}["']?[ \t]*[=:][ \t]*["']?#{TEAM_ID}/,         # KEY = ID, "KEY": "ID", KEY=ID
-  %r{<key>\s*[\w.-]*?#{TEAM_KEY}\s*</key>\s*<string>\s*#{TEAM_ID}}, # XML plist or entitlements
+  # XML plist or entitlements; XML comments may sit between the key and its value.
+  %r{<key>\s*[\w.-]*?#{TEAM_KEY}\s*</key>(?:\s|<!--.*?-->)*<string>\s*(?:<!\[CDATA\[\s*)?#{TEAM_ID}}m,
   /\$\{TEAM:?-["']?#{TEAM_ID}/                               # a shell default, ${TEAM:-ID}
 ].freeze
 
@@ -177,6 +212,7 @@ def readable_text(path)
 end
 
 tracked.each do |path|
+  next if File.symlink?(path) # its target, if tracked, is scanned in its own right
   text, problem = readable_text(path)
   next failures << "Signing team: #{path} is #{problem}" if problem
   TEAM_PATTERNS.each do |pattern|
