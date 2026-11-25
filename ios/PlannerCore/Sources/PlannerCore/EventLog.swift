@@ -79,6 +79,20 @@ public enum InstallID {
     public static func forSending(_ saved: Any?) -> String { usable(saved) ?? make() }
 }
 
+/// What decides whether an event goes, as it is at the moment of sending: his answer, the
+/// install id, and whether the app is on the live conference (the sample sends nothing).
+public struct EventConsent: Equatable, Sendable {
+    public var sharing: EventSharing
+    public var installID: String?
+    public var live: Bool
+
+    public init(sharing: EventSharing, installID: String?, live: Bool) {
+        self.sharing = sharing
+        self.installID = installID
+        self.live = live
+    }
+}
+
 /// What became of one event.
 public enum EventDelivery: Equatable, Sendable {
     /// Not sent: he hasn't said yes, the build has no key, or there is no usable install id.
@@ -117,6 +131,16 @@ public struct EventLog: Sendable {
     /// a string field, and the prompt's own budget keeps it near 12 KB. An answer cut here is
     /// no longer valid JSON; its 1,000-token reserve keeps it far below the limit.
     public static let textLimit = 32_000
+
+    /// Sends the request's record as one event, with the text the model was given and its
+    /// answer (not again for a remembered answer). `consent` is read once, right before the
+    /// event is built and sent, so a "no" or a new install id given meanwhile is honoured.
+    public func send(_ ranked: RankedSuggestions, duration: Duration?, app: AppBuild,
+                     consent: @Sendable () async -> EventConsent) async -> EventDelivery {
+        let now = await consent()
+        guard now.live, let id = now.installID else { return .notSent }
+        return await send(ranked, duration: duration, sharing: now.sharing, installID: id, app: app)
+    }
 
     /// Sends the request's record as one event, with the text the model was given and its
     /// answer (not again for a remembered answer).

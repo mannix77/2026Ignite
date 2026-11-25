@@ -157,18 +157,19 @@ exception needs the user to choose it each time, which this doesn't), so the lab
 "Data Not Collected". Answer in App Store Connect, App Privacy:
 
 1. "Do you or your third-party partners collect data from this app?" **Yes.**
-2. Data types, tick exactly these four:
+2. Data types, tick exactly these five:
+   - **Identifiers > Device ID** (the random install id)
    - **User Content > Other User Content** (the profile summary and the model's answer)
    - **Usage Data > Product Interaction**
    - **Diagnostics > Performance Data**
    - **Diagnostics > Other Diagnostic Data**
-3. For each of the four:
+3. For each of the five:
    - Purposes: **Analytics** only.
-   - "Is this data linked to the user's identity?" **No.**
+   - "Is this data linked to the user's identity?" **Yes.**
    - "Is this data used for tracking purposes?" **No.**
 
-The result: "Data Not Linked to You: User Content, Usage Data, Diagnostics". Nothing under "Data Used to
-Track You" or "Data Linked to You".
+The result: "Data Linked to You: Identifiers, User Content, Usage Data, Diagnostics". Nothing under
+"Data Used to Track You".
 
 What an event really holds (`EventLog.fields` in `ios/PlannerCore/Sources/PlannerCore/EventLog.swift`,
 asserted field by field in `EventLogTests`): the event name `suggest.model`, the app's version and
@@ -192,18 +193,15 @@ Why these answers:
 - Duration is Performance Data; outcomes and failure reasons are Other Diagnostic Data; counts of
   what the ranking did each time a free stretch is opened are Product Interaction. The profile
   summary (his preferences and interests) and the model's answer about him are Other User Content.
-- **Identifiers: not ticked.** The install id is a random UUID the app makes, not a device-level
-  id (Apple's "Device ID" is the advertising identifier or similar) and not an account id: it is
-  never joined with the AWS sign-in, the user can reset it, and saying no deletes it. If Apple
-  review disagrees, the cautious answer is to add **Identifiers > Device ID**, Analytics, not
-  linked, not tracking.
-- **Not linked**: the developer can't connect an event to a person; no account, name, email or
-  AWS identity is sent. The profile summary is coarse (levels, formats, topic names, a count), and
-  the sessions in the prompt are the public catalog's. **Not tracking**: nothing is combined with other companies' data or used
-  for advertising.
+- **Identifiers > Device ID, and linked** (owner's decision, 2026-11-25, after CodeRabbit's review
+  of #201): the install id is saved on the phone and sent with every event until reset or "Don't
+  share", so all of one install's events are tied together through that device, which Apple's
+  definitions count as an identifier and as linked. It is still never joined with the AWS sign-in,
+  a name or an email, and the user can reset it.
+- **Not tracking**: nothing is combined with other companies' data or used for advertising.
 
-The bundled privacy manifest (`PrivacyInfo.xcprivacy`) declares the same four types, not linked,
-not tracking, purpose Analytics, plus UserDefaults for the app's own settings.
+The bundled privacy manifest (`PrivacyInfo.xcprivacy`) declares the same five types, linked, not
+tracking, purpose Analytics, plus UserDefaults for the app's own settings.
 
 Up to 1.1.1 the answer was "No, we do not collect data from this app" ("Data Not Collected"):
 the developer has no server, and the app sends the user's requests straight to AWS on the user's

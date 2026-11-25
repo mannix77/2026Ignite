@@ -26,6 +26,21 @@ private final class RecordingRanker: SessionRanker, @unchecked Sendable {
     }
 }
 
+/// Hands out scripted consents in order, and counts the asks.
+private final class ConsentScript: @unchecked Sendable {
+    private let lock = NSLock()
+    private var left: [EventConsent]
+    private var count = 0
+    init(_ consents: [EventConsent]) { left = consents }
+    func next() -> EventConsent {
+        lock.withLock {
+            count += 1
+            return left.isEmpty ? EventConsent(sharing: .notAsked, installID: nil, live: false) : left.removeFirst()
+        }
+    }
+    var asked: Int { lock.withLock { count } }
+}
+
 /// Three offered sessions and four picks, every title, abstract and interest marked SECRET.
 private func secretList() -> (suggestions: [Suggestion], picks: [Session]) {
     var picks = (1...4).map { session("SECRET-ID-p\($0)", code: "PCK10\($0)") }
@@ -106,8 +121,10 @@ final class EventLogTests: XCTestCase {
     }
 
     func testTheBuildFileGivesTheConfig() {
-        XCTAssertEqual(HoneycombConfig(file: ["IngestKey": "hcxik_abc", "Dataset": "session-planner"]),
-                       HoneycombConfig(key: "hcxik_abc", dataset: "session-planner"))
+        let read = HoneycombConfig(file: ["IngestKey": "hcxik_abc", "Dataset": "session-planner"])
+        XCTAssertEqual(read?.key, "hcxik_abc")
+        XCTAssertEqual(read?.dataset, "session-planner")
+        XCTAssertEqual(read?.url.absoluteString, "https://api.honeycomb.io/1/events/session-planner")
         XCTAssertNil(HoneycombConfig(file: nil))
         XCTAssertNil(HoneycombConfig(file: ["IngestKey": "", "Dataset": "session-planner"]))
     }
@@ -282,7 +299,8 @@ final class EventLogTests: XCTestCase {
             return await ModelStep.rank(suggestions, sessionsInBlock: 3, picks: picks, ranker: closedModel)
         }
         closing.cancel()
-        let closed = await closing.value
+        let closedValue = await finished(closing)
+        let closed = try XCTUnwrap(closedValue)
         XCTAssertEqual(closed.run.outcome, .cancelled)
         XCTAssertTrue(tooLongModel.prompts.isEmpty)
         XCTAssertTrue(closedModel.prompts.isEmpty)
@@ -422,6 +440,92 @@ final class EventLogTests: XCTestCase {
         XCTAssertEqual(EventLog.milliseconds(.zero), 0)
     }
 
+    // MARK: Asked or not
+
+    /// The prompt counts as given only once the ranker is called: a request stopped before the
+    /// model's task asks it records no text (CodeRabbit on #201).
+    func testARequestStoppedBeforeTheModelIsAskedIsNotMarkedGiven() async throws {
+        let (suggestions, picks) = secretList()
+        let prompt = ModelPrompt.build(question: "", ranked: suggestions.map(\.session), sessionsInBlock: 3, picks: picks)
+        let model = RecordingRanker(answer: ModelAnswer(picks: []))
+        let handed = ModelStep.Handed()
+        let stopped = Task { () -> Bool in
+            while !Task.isCancelled { await Task.yield() }
+            let result = await ModelStep.answered(prompt, by: model, within: .seconds(20), handed: handed,
+                                                  sleep: { _ in try await Task.sleep(for: .seconds(3600)) })
+            if case let .failure(failed) = result { return failed.outcome == ModelOutcome.cancelled }
+            return false
+        }
+        stopped.cancel()
+        let stoppedValue = await finished(stopped)
+        let wasCancelled = try XCTUnwrap(stoppedValue)
+        XCTAssertTrue(wasCancelled)
+        XCTAssertFalse(handed.value)
+        XCTAssertTrue(model.prompts.isEmpty, "the model wasn't asked")
+
+        // The model's own task, stopped before it starts, asks nothing either.
+        let early = ModelStep.Handed()
+        let earlyModel = RecordingRanker(answer: ModelAnswer(picks: []))
+        let earlyTask = Task { () -> Bool in
+            while !Task.isCancelled { await Task.yield() }
+            if case let .failure(failed) = await ModelStep.outcome(of: prompt, by: earlyModel, handed: early) {
+                return failed.outcome == ModelOutcome.cancelled
+            }
+            return false
+        }
+        earlyTask.cancel()
+        let earlyValue = await finished(earlyTask)
+        XCTAssertEqual(earlyValue, true)
+        XCTAssertFalse(early.value)
+        XCTAssertTrue(earlyModel.prompts.isEmpty)
+
+        let asked = ModelStep.Handed()
+        let refusing = RecordingRanker(failing: ModelFailure.refused)
+        _ = await ModelStep.answered(prompt, by: refusing, within: .seconds(20), handed: asked,
+                                     sleep: { _ in try await Task.sleep(for: .seconds(3600)) })
+        XCTAssertTrue(asked.value)
+        XCTAssertEqual(refusing.prompts.count, 1)
+    }
+
+    // MARK: Consent and mode at the moment of sending
+
+    /// What decides is the consent as it is when the event goes out, not when it was queued.
+    func testConsentIsReadWhenTheEventIsSent() async throws {
+        let transport = ScriptedTransport([.respond(status: 200)])
+        let log = EventLog(config: config, transport: transport)
+        let ranked = RankedSuggestions(suggestions: [], run: fullRun, promptText: "the prompt")
+        let answers = ConsentScript([EventConsent(sharing: .declined, installID: installID, live: true),
+                                     EventConsent(sharing: .allowed, installID: "11111111-2222-3333-4444-555555555555", live: true)])
+
+        let declined = await log.send(ranked, duration: nil, app: app, consent: { answers.next() })
+        XCTAssertEqual(declined, .notSent)
+        XCTAssertEqual(transport.sent.count, 0)
+
+        let allowed = await log.send(ranked, duration: nil, app: app, consent: { answers.next() })
+        XCTAssertEqual(allowed, .sent)
+        XCTAssertEqual(transport.sent.count, 1)
+        XCTAssertEqual(try body(transport.sent[0])["install_id"] as? String, "11111111-2222-3333-4444-555555555555",
+                       "the install id as it is at sending, e.g. just reset")
+        XCTAssertEqual(answers.asked, 2, "asked once per event")
+    }
+
+    /// The sample conference sends nothing anywhere, even with his yes.
+    func testTheSampleConferenceSendsNothing() async {
+        let transport = ScriptedTransport([.respond(status: 200)])
+        let log = EventLog(config: config, transport: transport)
+        let ranked = RankedSuggestions(suggestions: [], run: fullRun)
+
+        let sample = await log.send(ranked, duration: nil, app: app,
+                                    consent: { EventConsent(sharing: .allowed, installID: installID, live: false) })
+        XCTAssertEqual(sample, .notSent)
+        XCTAssertEqual(transport.sent.count, 0)
+
+        let live = await log.send(ranked, duration: nil, app: app,
+                                  consent: { EventConsent(sharing: .allowed, installID: installID, live: true) })
+        XCTAssertEqual(live, .sent)
+        XCTAssertEqual(transport.sent.count, 1)
+    }
+
     // MARK: Install id
 
     func testYesKeepsHisInstallIDAndNoForgetsIt() {
@@ -439,10 +543,10 @@ final class EventLogTests: XCTestCase {
     func testAnEventUsesTheSavedIDOrANewOne() {
         XCTAssertEqual(InstallID.forSending(installID), installID)
         let made = InstallID.forSending(nil)
-        XCTAssertEqual(InstallID.usable(made), made)
+        XCTAssertEqual(UUID(uuidString: made)?.uuidString, made, "a UUID in its usual form")
         XCTAssertNotEqual(made, installID)
         let replaced = InstallID.forSending("his-email@example.com")
-        XCTAssertEqual(InstallID.usable(replaced), replaced)
+        XCTAssertEqual(UUID(uuidString: replaced)?.uuidString, replaced, "a UUID in its usual form")
         XCTAssertNotEqual(replaced, "his-email@example.com")
     }
 
@@ -454,8 +558,8 @@ final class EventLogTests: XCTestCase {
         XCTAssertNil(InstallID.usable(42))
         let first = InstallID.make()
         let second = InstallID.make()
-        XCTAssertEqual(InstallID.usable(first), first)
-        XCTAssertEqual(InstallID.usable(second), second)
+        XCTAssertEqual(UUID(uuidString: first)?.uuidString, first, "a UUID in its usual form")
+        XCTAssertEqual(UUID(uuidString: second)?.uuidString, second, "a UUID in its usual form")
         XCTAssertNotEqual(first, second)
     }
 }

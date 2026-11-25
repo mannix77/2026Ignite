@@ -144,6 +144,11 @@ final class AppModel {
         version: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "",
         build: Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "")
 
+    /// His answer, install id and mode as they are now, for an event about to be sent.
+    private var eventConsent: EventConsent {
+        EventConsent(sharing: eventSharing, installID: installID, live: mode == .live)
+    }
+
     /// Whether to ask him now, on opening the app.
     var asksToShareEvents: Bool { EventLog.asksOnLaunch(eventSharing, config: AppModel.honeycomb) }
     /// Whether this build can send to Honeycomb at all.
@@ -300,7 +305,7 @@ final class AppModel {
     /// Records, once per launch, that a free stretch's list wasn't ranked because the phone
     /// can't run the model (`ModelOutcome.unavailable` and why). Asks no model.
     func recordModelNotAsked(_ suggestions: [Suggestion], in gap: Gap) async {
-        guard eventSharing == .allowed, !recordedUnavailable, !suggestions.isEmpty, !ModelStep.willAsk(suggestions, ranker: onDeviceModel) else { return }
+        guard eventSharing == .allowed, mode == .live, !recordedUnavailable, !suggestions.isEmpty, !ModelStep.willAsk(suggestions, ranker: onDeviceModel) else { return }
         recordedUnavailable = true
         let ranked = await ModelStep.rank(suggestions, sessionsInBlock: snapshot?.sessionsStarting(in: gap) ?? 0,
                                           picks: [], ranker: onDeviceModel)
@@ -331,12 +336,14 @@ final class AppModel {
     /// model was given and its answer. The phone's own log line never holds those.
     private func log(_ ranked: RankedSuggestions, duration: Duration?) {
         let run = ranked.run
-        if eventSharing == .allowed {
-            let id = InstallID.forSending(installID)
-            installID = id
-            let eventLog = eventLog, sharing = eventSharing, app = appBuild
-            Task.detached(priority: .utility) {
-                _ = await eventLog.send(ranked, duration: duration, sharing: sharing, installID: id, app: app)
+        if eventSharing == .allowed, mode == .live {
+            installID = InstallID.forSending(installID)
+            let eventLog = eventLog, app = appBuild
+            Task.detached(priority: .utility) { [weak self] in
+                // Read again as the event goes, so a "no" given meanwhile stops it.
+                _ = await eventLog.send(ranked, duration: duration, app: app) {
+                    await MainActor.run { self?.eventConsent } ?? EventConsent(sharing: .notAsked, installID: nil, live: false)
+                }
             }
         }
         let outcome = run.outcome.rawValue

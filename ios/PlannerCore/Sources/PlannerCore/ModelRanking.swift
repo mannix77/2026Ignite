@@ -302,9 +302,10 @@ public enum ModelStep {
         // A list already closed asks nothing.
         guard !Task.isCancelled else { return unchanged(.cancelled, prompt: prompt) }
 
-        switch await answered(prompt, by: ranker, within: timeout, sleep: sleep) {
+        let handed = Handed()
+        switch await answered(prompt, by: ranker, within: timeout, handed: handed, sleep: sleep) {
         case let .success(answer): return apply(answer, prompt: prompt, to: suggestions)
-        case let .failure(failed): return unchanged(failed.outcome, prompt: prompt, asked: true)
+        case let .failure(failed): return unchanged(failed.outcome, prompt: prompt, asked: handed.value)
         }
     }
 
@@ -410,23 +411,33 @@ public enum ModelStep {
     /// gives `.cancelled` at once, and once it has, the model isn't started. At the timeout,
     /// `ranker` is told to abandon the prompt.
     static func answered(_ prompt: ModelPrompt, by ranker: any SessionRanker, within timeout: Duration,
+                         handed: Handed? = nil,
                          sleep: @escaping @Sendable (Duration) async throws -> Void) async -> Result<ModelAnswer, ModelOutcomeError> {
         // The caller's ticket, inherited by the tasks below, records the request it joins.
         let ticket = ModelStep.ticket ?? ModelRequestTicket()
         return await ModelStep.$ticket.withValue(ticket) {
-            await race(prompt, by: ranker, within: timeout, sleep: sleep)
+            await race(prompt, by: ranker, within: timeout, handed: handed, sleep: sleep)
         }
+    }
+
+    /// Set when the prompt is handed to the ranker, so a request stopped before that records
+    /// no prompt text (#201).
+    final class Handed: @unchecked Sendable {
+        private let lock = NSLock()
+        private var handed = false
+        func set() { lock.withLock { handed = true } }
+        var value: Bool { lock.withLock { handed } }
     }
 
     /// `answered`, with the caller's ticket set.
     private static func race(_ prompt: ModelPrompt, by ranker: any SessionRanker, within timeout: Duration,
-                             sleep: @escaping @Sendable (Duration) async throws -> Void) async -> Result<ModelAnswer, ModelOutcomeError> {
+                             handed: Handed?, sleep: @escaping @Sendable (Duration) async throws -> Void) async -> Result<ModelAnswer, ModelOutcomeError> {
         let race = Race<Result<ModelAnswer, ModelOutcomeError>>()
         let ticket = ModelStep.ticket
         let result = await withTaskCancellationHandler {
             await withCheckedContinuation { continuation in
                 race.start(continuation)
-                race.launch { Task { race.finish(await outcome(of: prompt, by: ranker)) } }
+                race.launch { Task { race.finish(await outcome(of: prompt, by: ranker, handed: handed)) } }
                 race.launch {
                     Task {
                         // A timer that fails (cancelled) decides nothing.
@@ -449,7 +460,11 @@ public enum ModelStep {
     }
 
     /// What the model's answer, or the way it failed, stands for.
-    static func outcome(of prompt: ModelPrompt, by ranker: any SessionRanker) async -> Result<ModelAnswer, ModelOutcomeError> {
+    /// A task already stopped asks nothing; otherwise `handed` is set as the prompt is handed over.
+    static func outcome(of prompt: ModelPrompt, by ranker: any SessionRanker,
+                        handed: Handed? = nil) async -> Result<ModelAnswer, ModelOutcomeError> {
+        guard !Task.isCancelled else { return .failure(ModelOutcomeError(.cancelled)) }
+        handed?.set()
         do { return .success(try await ranker.rank(prompt)) } catch let failure as ModelFailure {
             switch failure {
             case .refused: return .failure(ModelOutcomeError(.refused))
