@@ -254,6 +254,10 @@ public struct ModelRun: Equatable, Sendable {
 public struct RankedSuggestions: Equatable, Sendable {
     public var suggestions: [Suggestion]
     public var run: ModelRun
+    /// The text the model was given, when a prompt was built; for Honeycomb only, with his yes.
+    public var promptText: String? = nil
+    /// The model's answer as it wrote it, codes and reasons, when it gave one.
+    public var answer: [ModelPick]? = nil
 }
 
 /// The model's turn on a free stretch's list (#193): the top of the list goes to it, and what
@@ -284,7 +288,8 @@ public enum ModelStep {
         func unchanged(_ outcome: ModelOutcome, unavailable: String? = nil, prompt: ModelPrompt? = nil) -> RankedSuggestions {
             RankedSuggestions(suggestions: suggestions,
                               run: ModelRun(outcome: outcome, unavailableReason: unavailable, prompt: prompt?.metrics,
-                                            modelPromptTokens: nil, modelAnswerTokens: nil, placed: 0, ignored: 0))
+                                            modelPromptTokens: nil, modelAnswerTokens: nil, placed: 0, ignored: 0),
+                              promptText: prompt?.text)
         }
         guard let ranker else { return unchanged(.unavailable, unavailable: "unsupported") }
         if case let .unavailable(why) = ranker.availability { return unchanged(.unavailable, unavailable: why) }
@@ -309,7 +314,10 @@ public enum ModelStep {
                      modelPromptTokens: answer.promptTokens, modelAnswerTokens: answer.answerTokens,
                      placed: placed, ignored: answer.picks.count - found.placed.count, remembered: answer.remembered)
         }
-        guard found.isUsable else { return RankedSuggestions(suggestions: suggestions, run: run(.unusable, placed: 0)) }
+        guard found.isUsable else {
+            return RankedSuggestions(suggestions: suggestions, run: run(.unusable, placed: 0), promptText: prompt.text,
+                                     answer: answer.picks)
+        }
         let byID = Dictionary(suggestions.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
         let placed = found.placed.compactMap { entry -> Suggestion? in
             guard var suggestion = byID[entry.id] else { return nil }
@@ -318,7 +326,7 @@ public enum ModelStep {
         }
         let first = Set(placed.map(\.id))
         return RankedSuggestions(suggestions: placed + suggestions.filter { !first.contains($0.id) },
-                                 run: run(.ok, placed: placed.count))
+                                 run: run(.ok, placed: placed.count), promptText: prompt.text, answer: answer.picks)
     }
 
     /// Whether `rank` will ask the model about `suggestions`: there are some, and the phone

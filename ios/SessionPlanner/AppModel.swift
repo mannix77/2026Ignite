@@ -289,7 +289,7 @@ final class AppModel {
         let ranked = ModelStep.remembered(suggestions, sessionsInBlock: snapshot.sessionsStarting(in: gap), picks: snapshot.picks,
                                           preferences: preferences, reservedToday: snapshot.reservedCount(on: gap.date),
                                           ranker: onDeviceModel)
-        if let ranked { log(ranked.run, duration: nil) }
+        if let ranked { log(ranked, duration: nil) }
         return ranked
     }
 
@@ -304,7 +304,7 @@ final class AppModel {
         recordedUnavailable = true
         let ranked = await ModelStep.rank(suggestions, sessionsInBlock: snapshot?.sessionsStarting(in: gap) ?? 0,
                                           picks: [], ranker: onDeviceModel)
-        log(ranked.run, duration: nil)
+        log(ranked, duration: nil)
     }
 
     /// `suggestions` for `gap` after the on-device model's turn (`ModelStep`): what it ranks
@@ -322,19 +322,21 @@ final class AppModel {
                                  reservedToday: snapshot?.reservedCount(on: gap.date) ?? 0, ranker: ranker)
         }
         let ranked = await withTaskCancellationHandler { await work.value } onCancel: { work.cancel() }
-        log(ranked.run, duration: clock.now - started)
+        log(ranked, duration: clock.now - started)
         return ranked
     }
 
     /// One line per request to the model on the phone, and one event to Honeycomb when he
-    /// agreed (`EventLog`): its outcome, counts and timing, never the prompt or the reasons.
-    private func log(_ run: ModelRun, duration: Duration?) {
+    /// agreed (`EventLog`): its outcome, counts and timing, and for Honeycomb also the text the
+    /// model was given and its answer. The phone's own log line never holds those.
+    private func log(_ ranked: RankedSuggestions, duration: Duration?) {
+        let run = ranked.run
         if eventSharing == .allowed {
             let id = InstallID.forSending(installID)
             installID = id
             let eventLog = eventLog, sharing = eventSharing, app = appBuild
             Task.detached(priority: .utility) {
-                _ = await eventLog.send(run, duration: duration, sharing: sharing, installID: id, app: app)
+                _ = await eventLog.send(ranked, duration: duration, sharing: sharing, installID: id, app: app)
             }
         }
         let outcome = run.outcome.rawValue

@@ -157,16 +157,17 @@ exception needs the user to choose it each time, which this doesn't), so the lab
 "Data Not Collected". Answer in App Store Connect, App Privacy:
 
 1. "Do you or your third-party partners collect data from this app?" **Yes.**
-2. Data types, tick exactly these three:
+2. Data types, tick exactly these four:
+   - **User Content > Other User Content** (the profile summary and the model's answer)
    - **Usage Data > Product Interaction**
    - **Diagnostics > Performance Data**
    - **Diagnostics > Other Diagnostic Data**
-3. For each of the three:
+3. For each of the four:
    - Purposes: **Analytics** only.
    - "Is this data linked to the user's identity?" **No.**
    - "Is this data used for tracking purposes?" **No.**
 
-The result: "Data Not Linked to You: Usage Data, Diagnostics". Nothing under "Data Used to
+The result: "Data Not Linked to You: User Content, Usage Data, Diagnostics". Nothing under "Data Used to
 Track You" or "Data Linked to You".
 
 What an event really holds (`EventLog.fields` in `ios/PlannerCore/Sources/PlannerCore/EventLog.swift`,
@@ -177,22 +178,30 @@ reserve and headroom, sessions in the time slot, sent, left out and abstracts cu
 token count and number of interests, whether levels and formats came from Settings, were inferred
 or were absent, whether there were skipped formats and reserved sessions that day (yes/no), the
 model's own token counts, how many sessions it placed and how many entries were ignored, and
-whether the answer was remembered. No session codes, titles, prompt text, reasons, interests,
-schedule, personal time, sign-in, name or email.
+whether the answer was remembered. When the model was asked (not for a remembered answer), also
+`model.prompt`, the exact text it was given, and `model.answer`, its answer as JSON
+(`[{"code":…,"reason":…}]`), each cut to 32,000 bytes (owner's decision, 2026-11-24). The prompt
+holds the instructions, the catalog sessions that fit the free time (code, title, format, level,
+venue, time, topics, abstract cut to 300 characters) and the profile: preferred levels and formats
+(from Settings or inferred from his picks), skipped formats, up to 15 interests (topics his picks
+share) and how many sessions he reserved that day. No titles of his picks, personal time, sign-in,
+name or email.
 
 Why these answers:
 - Duration is Performance Data; outcomes and failure reasons are Other Diagnostic Data; counts of
-  what the ranking did each time a free stretch is opened are Product Interaction.
+  what the ranking did each time a free stretch is opened are Product Interaction. The profile
+  summary (his preferences and interests) and the model's answer about him are Other User Content.
 - **Identifiers: not ticked.** The install id is a random UUID the app makes, not a device-level
   id (Apple's "Device ID" is the advertising identifier or similar) and not an account id: it is
   never joined with the AWS sign-in, the user can reset it, and saying no deletes it. If Apple
   review disagrees, the cautious answer is to add **Identifiers > Device ID**, Analytics, not
   linked, not tracking.
 - **Not linked**: the developer can't connect an event to a person; no account, name, email or
-  AWS identity is sent. **Not tracking**: nothing is combined with other companies' data or used
+  AWS identity is sent. The profile summary is coarse (levels, formats, topic names, a count), and
+  the sessions in the prompt are the public catalog's. **Not tracking**: nothing is combined with other companies' data or used
   for advertising.
 
-The bundled privacy manifest (`PrivacyInfo.xcprivacy`) declares the same three types, not linked,
+The bundled privacy manifest (`PrivacyInfo.xcprivacy`) declares the same four types, not linked,
 not tracking, purpose Analytics, plus UserDefaults for the app's own settings.
 
 Up to 1.1.1 the answer was "No, we do not collect data from this app" ("Data Not Collected"):
@@ -216,6 +225,13 @@ instruction, using the user's own sign-in.
   period can only be arranged through Honeycomb Support.
 - **Early deletion**: Environments > (environment) > Manage Data > Datasets > `session-planner`
   > Delete (Team Owner, Deletion Protection off) deletes every event.
+- **How often the model is used**: in the dataset, a query with WHERE `name = suggest.model`,
+  `remembered = false`, `outcome` not in `unavailable`, `nothingToRank`, `promptTooLong`;
+  VISUALIZE `COUNT` and `COUNT_DISTINCT(install_id)`; time granularity 1 day (or 1 hour). That is
+  model calls per day and phones using it; GROUP BY `outcome` splits successes from failures, and
+  dropping the `remembered` filter adds how often a ranked list was looked at again. Each
+  `model.prompt` and `model.answer` is in the event's raw data (click a row, or GROUP BY
+  `install_id` to follow one phone).
 - **Sampling**: none; every event is sent. A handful per attendee per day, plus one
   `remembered=true` event a minute while a ranked free stretch stays open (filter on
   `remembered = false` to count model calls). A phone that can't run the model sends one
@@ -274,8 +290,10 @@ before access is requested.
 DIAGNOSTICS (new in 1.2)
 On first open the app asks "Share how suggestions work?". Nothing is sent unless you choose
 Share. With Share, each time Apple Intelligence ranks the suggestions for a free stretch, the
-app sends Honeycomb (a diagnostics service) the outcome, its duration and counts, with the app
-version and a random install id: no sign-in, name, schedule, sessions or typed text. Settings >
+app sends Honeycomb (a diagnostics service) the text Apple Intelligence was given (catalog
+sessions and a short profile of interests and preferences), its answer, the outcome, duration and
+counts, with the app version and a random install id: no sign-in, name, email, personal time or
+typed text. Settings >
 Diagnostics changes the answer and resets the install id. It is described in the privacy policy.
 
 The app is independent. It is not affiliated with, sponsored by or endorsed by Amazon Web

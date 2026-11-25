@@ -834,8 +834,8 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
     window) then goes to the on-device model with his profile. The sessions it ranks move to
     the top in its order, each with its one-line reason in place of what it shares with his
     picks, and every other session follows in the usual order. Without Apple Intelligence, or
-    when the model fails in any way, the usual list stays as it is. Nothing of the prompt or
-    the answer leaves the phone (only the record below, and only if he agreed to share it),
+    when the model fails in any way, the usual list stays as it is. The prompt and the answer
+    leave the phone only in the record below, and only if he agreed to share it,
     nothing is reserved or favorited, and he types nothing (no question yet).
 
     Example: The model's order
@@ -931,9 +931,11 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
     he can change his answer in Settings at any time. Until he says yes, and after he says no,
     nothing is sent. With his yes, each record of a request to the model ("What is recorded")
     goes to the app's Honeycomb dataset as one event, as it happens, with the app's version
-    and build and a random install id he can reset. No event carries his sign-in, anything
-    from the keychain, his name or email, anything he types, his personal time, the prompt or
-    the model's answer. Every event is sent (no sampling); one that can't be sent is dropped,
+    and build and a random install id he can reset. When the model was asked, the event also
+    carries the exact text it was given and its answer as it wrote it (owner's decision,
+    2026-11-24: to see what the model saw and said); a remembered answer doesn't repeat them.
+    No event carries his sign-in, anything from the keychain, his name or email, anything he
+    types or his personal time. Every event is sent (no sampling); one that can't be sent is dropped,
     never retried or kept. Honeycomb keeps events for at most 90 days (its own fixed
     retention is 60).
 
@@ -951,7 +953,16 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       And it holds the outcome, the prompt's measures, the model's token counts, how many it
         placed and ignored, whether it was remembered, how long the model step took, the
         app's version and build, and his install id
+      And the text the model was given, exactly as given, and its answer, each code and reason
+        as it wrote them
       And nothing else
+
+    Example: What the model saw and said
+      Given the model times out or refuses
+      Then the event holds the text it was given, and no answer
+      And when the list shows from the model's remembered answer, the event holds neither
+      And a text or answer over 32,000 bytes is cut to 32,000 at a character, so the event
+        stays within Honeycomb's limit
 
     Example: A phone without Apple Intelligence
       Given he said yes and the phone can't run the model
@@ -965,11 +976,12 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       Then nothing is sent
       But changing it back to yes sends the next request's event
 
-    Example: Nothing personal in an event
-      Given his schedule holds personal time, his profile has interests and the model gave reasons
+    Example: Nothing personal beyond what the model saw
+      Given his profile has interests and the model gave reasons
       When the request's event is sent
-      Then the event holds none of his sign-in, the prompt, the reasons, the interests, the
-        session titles or his personal time
+      Then the session titles, his interests and the reasons appear only in the model's text and
+        answer, and no other field holds them
+      And the event holds none of his sign-in or keychain contents
 
     Example: A new install id
       Given he said yes and his events carry install id "A"

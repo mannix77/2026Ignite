@@ -336,7 +336,7 @@ struct SettingsScreen: View {
 
                 Section("Privacy") {
                     Text(model.eventSharing == .allowed && model.canShareEvents
-                         ? "Your sign-in is kept in this phone's keychain and your schedule is saved only on this phone. The app talks to the AWS Events service, and sends Honeycomb how suggestions work, as you chose under Diagnostics. It has no ads and no server of its own."
+                         ? "Your sign-in is kept in this phone's keychain and your schedule is saved only on this phone. The app talks to the AWS Events service, and sends Honeycomb each Apple Intelligence ranking, as you chose under Diagnostics. It has no ads and no server of its own."
                          : "Your sign-in is kept in this phone's keychain and your schedule is saved only on this phone. The app talks only to the AWS Events service. It has no analytics, no ads and no server of its own.")
                         .font(.footnote)
                         .foregroundStyle(.secondary)

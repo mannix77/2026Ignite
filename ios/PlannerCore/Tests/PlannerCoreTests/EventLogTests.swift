@@ -1,11 +1,48 @@
 import XCTest
 @testable import PlannerCore
 
-/// A model with one fixed answer, for building a real `ModelRun`.
-private struct FixedRanker: SessionRanker {
-    var availability: ModelAvailability = .available
-    var answer: ModelAnswer
-    func rank(_ prompt: ModelPrompt) async throws -> ModelAnswer { answer }
+/// A model with one fixed answer, or one failure, that records every prompt it is given.
+private final class RecordingRanker: SessionRanker, @unchecked Sendable {
+    let availability: ModelAvailability
+    private let result: Result<ModelAnswer, Error>
+    private let lock = NSLock()
+    private var given: [ModelPrompt] = []
+
+    init(_ availability: ModelAvailability = .available, answer: ModelAnswer) {
+        self.availability = availability
+        result = .success(answer)
+    }
+
+    init(failing error: Error) {
+        availability = .available
+        result = .failure(error)
+    }
+
+    var prompts: [ModelPrompt] { lock.withLock { given } }
+
+    func rank(_ prompt: ModelPrompt) async throws -> ModelAnswer {
+        lock.withLock { given.append(prompt) }
+        return try result.get()
+    }
+}
+
+/// Three offered sessions and four picks, every title, abstract and interest marked SECRET.
+private func secretList() -> (suggestions: [Suggestion], picks: [Session]) {
+    var picks = (1...4).map { session("SECRET-ID-p\($0)", code: "PCK10\($0)") }
+    for index in picks.indices {
+        picks[index].title = "SECRET-PICK-TITLE \(index)"
+        picks[index].topics = ["SECRET-INTEREST"]
+        picks[index].type = "Chalk talk"
+    }
+    var offered = (1...3).map { session("SECRET-ID-s\($0)", code: "OFF20\($0)") }
+    for index in offered.indices {
+        offered[index].title = "SECRET-SESSION-TITLE \(index)"
+        offered[index].abstract = "SECRET-ABSTRACT about vectors"
+        offered[index].topics = ["SECRET-INTEREST"]
+    }
+    let suggestions = offered.map { Suggestion(session: $0, score: 1, shared: ["SECRET-INTEREST"], seat: .walkUp, isFavorite: false,
+                                               isRepeatOfFavorite: false) }
+    return (suggestions, picks)
 }
 
 private let config = HoneycombConfig(key: "hcxik_test0123456789", dataset: "session-planner")!
@@ -175,48 +212,119 @@ final class EventLogTests: XCTestCase {
         XCTAssertEqual(transport.sent.count, 1)
     }
 
-    /// Rule 11: what the real sender is handed, after the real model step, holds nothing of the
-    /// prompt, the answer, his picks or his profile.
-    func testNothingOfThePromptTheAnswerOrHisProfileIsSent() async throws {
-        var picks = (1...4).map { session("SECRET-ID-p\($0)", code: "PCK10\($0)") }
-        for index in picks.indices {
-            picks[index].title = "SECRET-PICK-TITLE \(index)"
-            picks[index].topics = ["SECRET-INTEREST"]
-            picks[index].type = "Chalk talk"
-        }
-        var offered = (1...3).map { session("SECRET-ID-s\($0)", code: "OFF20\($0)") }
-        for index in offered.indices {
-            offered[index].title = "SECRET-SESSION-TITLE \(index)"
-            offered[index].abstract = "SECRET-ABSTRACT about vectors"
-            offered[index].topics = ["SECRET-INTEREST"]
-        }
-        let suggestions = offered.map { Suggestion(session: $0, score: 1, shared: ["SECRET-INTEREST"], seat: .walkUp, isFavorite: false,
-                                                       isRepeatOfFavorite: false) }
-        let answer = ModelAnswer(picks: [ModelPick(code: "OFF202", reason: "SECRET-REASON from the model")],
-                                 promptTokens: 900, answerTokens: 40)
-        let ranked = await ModelStep.rank(suggestions, sessionsInBlock: 3, picks: picks, ranker: FixedRanker(answer: answer))
+    /// Rule 11: after the real model step, the event the real sender is handed carries the
+    /// exact text the model was given and its answer as written, and no other field holds
+    /// anything of the prompt, the answer, his picks or his profile.
+    func testTheModelsTextAndAnswerGoOnlyInTheirOwnFields() async throws {
+        let (suggestions, picks) = secretList()
+        let model = RecordingRanker(answer: ModelAnswer(picks: [ModelPick(code: "OFF202", reason: "SECRET-REASON from the model"),
+                                                                ModelPick(code: "XYZ999", reason: "SECRET \"quoted\" / slash")],
+                                                        promptTokens: 900, answerTokens: 40))
+        let ranked = await ModelStep.rank(suggestions, sessionsInBlock: 3, picks: picks, ranker: model)
         XCTAssertEqual(ranked.run.outcome, .ok, "precondition: the model's answer was used")
-        XCTAssertEqual(ranked.suggestions.first?.modelReason, "SECRET-REASON from the model")
         XCTAssertEqual(ranked.run.prompt?.profile.interestsNamed, 1, "precondition: his interest was in the prompt")
+        let given = try XCTUnwrap(model.prompts.first?.text)
+        XCTAssertTrue(given.contains("SECRET-SESSION-TITLE"), "precondition: the prompt names the sessions")
         let transport = ScriptedTransport([.respond(status: 200)])
 
         let delivery = await EventLog(config: config, transport: transport)
-            .send(ranked.run, duration: .milliseconds(5), sharing: .allowed, installID: installID, app: app)
+            .send(ranked, duration: .milliseconds(5), sharing: .allowed, installID: installID, app: app)
 
         XCTAssertEqual(delivery, .sent)
-        let request = try XCTUnwrap(transport.sent.first)
-        let text = String(decoding: try XCTUnwrap(request.httpBody), as: UTF8.self)
-        for secret in ["SECRET", "OFF20", "PCK10", "vectors", "Chalk talk"] {
-            XCTAssertFalse(text.contains(secret), "\(secret) was sent: \(text)")
+        var sent = try body(XCTUnwrap(transport.sent.first))
+        XCTAssertEqual(sent.removeValue(forKey: "model.prompt") as? String, given)
+        XCTAssertEqual(sent.removeValue(forKey: "model.answer") as? String,
+                       #"[{"code":"OFF202","reason":"SECRET-REASON from the model"},{"code":"XYZ999","reason":"SECRET \"quoted\" / slash"}]"#)
+        let rest = String(decoding: try JSONSerialization.data(withJSONObject: sent), as: UTF8.self)
+        for secret in ["SECRET", "OFF20", "PCK10", "XYZ999", "vectors", "Chalk talk"] {
+            XCTAssertFalse(rest.contains(secret), "\(secret) was sent outside the model's fields: \(rest)")
         }
-        XCTAssertEqual(Set(try body(request).keys), [
+        XCTAssertEqual(Set(sent.keys), [
             "name", "app.version", "app.build", "install_id", "outcome", "remembered", "placed", "ignored",
             "duration_ms", "model.prompt_tokens", "model.answer_tokens", "prompt.estimated_tokens", "prompt.window",
             "prompt.answer_reserve", "prompt.headroom", "prompt.sessions_in_block", "prompt.sessions_sent",
             "prompt.sessions_left_out", "prompt.abstracts_cut", "prompt.profile_tokens", "profile.interests_named",
             "profile.levels", "profile.formats", "profile.skips", "profile.reserved_today",
         ])
-        XCTAssertEqual(try body(request)["placed"] as? Int, 1)
+        XCTAssertEqual(sent["placed"] as? Int, 1)
+        XCTAssertEqual(sent["ignored"] as? Int, 1)
+    }
+
+    func testAFailedModelSendsTheTextItWasGivenAndNoAnswer() async throws {
+        let (suggestions, picks) = secretList()
+        let model = RecordingRanker(failing: ModelFailure.refused)
+        let ranked = await ModelStep.rank(suggestions, sessionsInBlock: 3, picks: picks, ranker: model)
+        XCTAssertEqual(ranked.run.outcome, .refused)
+        let transport = ScriptedTransport([.respond(status: 200)])
+
+        _ = await EventLog(config: config, transport: transport)
+            .send(ranked, duration: nil, sharing: .allowed, installID: installID, app: app)
+
+        let sent = try body(XCTUnwrap(transport.sent.first))
+        XCTAssertEqual(sent["model.prompt"] as? String, try XCTUnwrap(model.prompts.first?.text))
+        XCTAssertNil(sent["model.answer"])
+        XCTAssertEqual(sent["outcome"] as? String, "refused")
+    }
+
+    func testAnUnavailableModelSendsNeitherTextNorAnswer() async throws {
+        let (suggestions, picks) = secretList()
+        let model = RecordingRanker(.unavailable("modelNotReady"), answer: ModelAnswer(picks: []))
+        let ranked = await ModelStep.rank(suggestions, sessionsInBlock: 3, picks: picks, ranker: model)
+        let transport = ScriptedTransport([.respond(status: 200)])
+
+        _ = await EventLog(config: config, transport: transport)
+            .send(ranked, duration: nil, sharing: .allowed, installID: installID, app: app)
+
+        let sent = try body(XCTUnwrap(transport.sent.first))
+        XCTAssertEqual(sent["outcome"] as? String, "unavailable")
+        XCTAssertEqual(sent["unavailable_reason"] as? String, "modelNotReady")
+        XCTAssertNil(sent["model.prompt"])
+        XCTAssertNil(sent["model.answer"])
+        XCTAssertTrue(model.prompts.isEmpty)
+    }
+
+    func testARememberedAnswerDoesntRepeatTheTextOrAnswer() async throws {
+        var remembered = fullRun
+        remembered.remembered = true
+        let transport = ScriptedTransport([.respond(status: 200), .respond(status: 200)])
+        let log = EventLog(config: config, transport: transport)
+        let picks = [ModelPick(code: "A", reason: "r")]
+
+        _ = await log.send(RankedSuggestions(suggestions: [], run: remembered, promptText: "the prompt", answer: picks),
+                           duration: nil, sharing: .allowed, installID: installID, app: app)
+        _ = await log.send(RankedSuggestions(suggestions: [], run: fullRun, promptText: "the prompt", answer: picks),
+                           duration: nil, sharing: .allowed, installID: installID, app: app)
+
+        XCTAssertEqual(transport.sent.count, 2)
+        let first = try body(transport.sent[0])
+        XCTAssertEqual(first["remembered"] as? Bool, true)
+        XCTAssertNil(first["model.prompt"])
+        XCTAssertNil(first["model.answer"])
+        let second = try body(transport.sent[1])
+        XCTAssertEqual(second["model.prompt"] as? String, "the prompt")
+        XCTAssertEqual(second["model.answer"] as? String, #"[{"code":"A","reason":"r"}]"#)
+    }
+
+    func testTextOver32000BytesIsCutAtACharacter() async throws {
+        let transport = ScriptedTransport([.respond(status: 200), .respond(status: 200), .respond(status: 200)])
+        let log = EventLog(config: config, transport: transport)
+        let exact = String(repeating: "a", count: 32_000)
+        // An "é" ending exactly at byte 32,000 stays; the "b" after it goes.
+        let fills = String(repeating: "a", count: 31_998) + "éb"
+        // 31,999 bytes then a 2-byte "é": 32,001 bytes, so the "é" goes whole.
+        let over = String(repeating: "a", count: 31_999) + "é"
+
+        _ = await log.send(RankedSuggestions(suggestions: [], run: fullRun, promptText: exact),
+                           duration: nil, sharing: .allowed, installID: installID, app: app)
+        _ = await log.send(RankedSuggestions(suggestions: [], run: fullRun, promptText: over),
+                           duration: nil, sharing: .allowed, installID: installID, app: app)
+
+        XCTAssertEqual(try body(transport.sent[0])["model.prompt"] as? String, exact)
+        _ = await log.send(RankedSuggestions(suggestions: [], run: fullRun, promptText: fills),
+                           duration: nil, sharing: .allowed, installID: installID, app: app)
+
+        XCTAssertEqual(try body(transport.sent[1])["model.prompt"] as? String, String(repeating: "a", count: 31_999))
+        XCTAssertEqual(try body(transport.sent[2])["model.prompt"] as? String, String(repeating: "a", count: 31_998) + "é")
     }
 
     func testARefusedOrUnreachableEventIsDroppedNotRetried() async {

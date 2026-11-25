@@ -91,7 +91,9 @@ public enum EventDelivery: Equatable, Sendable {
 }
 
 /// Sends the model's records to Honeycomb, one event per request, only with his yes (#193).
-/// Every event is sent (no sampling); one that fails is dropped, never retried or kept.
+/// Every event is sent (no sampling); one that fails is dropped, never retried or kept. When
+/// the model was asked, the event carries the text it was given and its answer (owner's
+/// decision, 2026-11-24).
 public struct EventLog: Sendable {
     /// Seconds a request is given before it is dropped.
     public static let requestTimeout: TimeInterval = 10
@@ -111,13 +113,29 @@ public struct EventLog: Sendable {
         config != nil && sharing == .notAsked
     }
 
+    /// Bytes of the model's text, and of its answer, sent at most: Honeycomb takes up to 64 KB
+    /// a string field, and the prompt's own budget keeps it near 12 KB.
+    public static let textLimit = 32_000
+
+    /// Sends the request's record as one event, with the text the model was given and its
+    /// answer (not again for a remembered answer).
+    public func send(_ ranked: RankedSuggestions, duration: Duration?, sharing: EventSharing, installID: String,
+                     app: AppBuild) async -> EventDelivery {
+        await send(ranked.run, prompt: ranked.promptText, answer: ranked.answer, duration: duration, sharing: sharing,
+                   installID: installID, app: app)
+    }
+
     /// Sends `run` as one event, when he said yes and the build has a key. `duration` is how
     /// long the model step took, when it was timed.
-    public func send(_ run: ModelRun, duration: Duration?, sharing: EventSharing, installID: String,
-                     app: AppBuild) async -> EventDelivery {
-        guard sharing == .allowed, let config, let id = InstallID.usable(installID),
-              let body = try? JSONSerialization.data(withJSONObject: EventLog.fields(run, duration: duration, installID: id, app: app),
-                                                     options: [.sortedKeys])
+    public func send(_ run: ModelRun, prompt: String? = nil, answer: [ModelPick]? = nil, duration: Duration?,
+                     sharing: EventSharing, installID: String, app: AppBuild) async -> EventDelivery {
+        guard sharing == .allowed, let config, let id = InstallID.usable(installID) else { return .notSent }
+        var fields = EventLog.fields(run, duration: duration, installID: id, app: app)
+        if !run.remembered {
+            fields["model.prompt"] = prompt.map { EventLog.cut($0, to: EventLog.textLimit) }
+            fields["model.answer"] = answer.flatMap(EventLog.answerText).map { EventLog.cut($0, to: EventLog.textLimit) }
+        }
+        guard let body = try? JSONSerialization.data(withJSONObject: fields, options: [.sortedKeys])
         else { return .notSent }
         var request = URLRequest(url: config.url, timeoutInterval: EventLog.requestTimeout)
         request.httpMethod = "POST"
@@ -132,8 +150,9 @@ public struct EventLog: Sendable {
         }
     }
 
-    /// The event's fields: outcomes, counts and timings only. Never the prompt, the reasons,
-    /// his picks, his profile's text, his sign-in or anything he typed.
+    /// The event's measured fields: outcomes, counts and timings. The model's text and answer
+    /// are added by `send`, in fields of their own; nothing here holds his sign-in, anything
+    /// he typed, or any text of the prompt or answer.
     static func fields(_ run: ModelRun, duration: Duration?, installID: String, app: AppBuild) -> [String: Any] {
         var fields: [String: Any] = [
             "name": modelEvent, "app.version": app.version, "app.build": app.build, "install_id": installID,
@@ -160,6 +179,28 @@ public struct EventLog: Sendable {
             fields["profile.reserved_today"] = prompt.profile.reservedToday
         }
         return fields
+    }
+
+    /// The answer as JSON text: `[{"code":…,"reason":…}]`, in the model's order.
+    static func answerText(_ picks: [ModelPick]) -> String? {
+        let entries = picks.map { ["code": $0.code, "reason": $0.reason] }
+        guard let data = try? JSONSerialization.data(withJSONObject: entries, options: [.sortedKeys, .withoutEscapingSlashes])
+        else { return nil }
+        return String(decoding: data, as: UTF8.self)
+    }
+
+    /// `text` within `limit` UTF-8 bytes, cut before the character that would cross it.
+    static func cut(_ text: String, to limit: Int) -> String {
+        guard text.utf8.count > limit else { return text }
+        var bytes = 0
+        var end = text.startIndex
+        for index in text.indices {
+            let next = text[index].utf8.count
+            guard bytes + next <= limit else { break }
+            bytes += next
+            end = text.index(after: index)
+        }
+        return String(text[..<end])
     }
 
     static func milliseconds(_ duration: Duration) -> Int {
