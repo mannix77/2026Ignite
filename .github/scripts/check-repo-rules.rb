@@ -112,6 +112,15 @@ def pages_site_files(tracked, failures)
     end
   end
 
+  # Snapshot the two pages before any step runs: a replayed step could change files anywhere, the
+  # checkout included, so the expected bytes are fixed now. A page that is itself a symlink could
+  # serve anything, so it is refused.
+  linked = PUBLISHED.select { |p| File.symlink?(p) }
+  return "the published pages must be real files, not symlinks: #{linked.join(", ")}" unless linked.empty?
+  missing = PUBLISHED.reject { |p| File.file?(p) }
+  return "the published pages are missing from the repository: #{missing.join(", ")}" unless missing.empty?
+  expected = PUBLISHED.map { |p| [p, File.binread(p)] }.to_h.freeze
+
   # Run the build job's shell steps, in order, in a scratch copy of the tracked files, then list
   # what landed in the site directory.
   Dir.mktmpdir do |dir|
@@ -143,14 +152,10 @@ def pages_site_files(tracked, failures)
       files << relative if File.file?(entry)
     end
     files.sort!
-    # Each address must serve its own page, not the other one's. The pages are compared with the
-    # repository's own files (the working directory is ROOT), which the replayed steps can't touch,
-    # not with the scratch copies they could have changed. A page that is itself a symlink could
-    # serve anything, so it is refused too.
-    linked = PUBLISHED.select { |p| File.symlink?(p) }
-    return "the published pages must be real files, not symlinks: #{linked.join(", ")}" unless linked.empty?
+    # Each address must serve its own page, not the other one's: compare with the snapshot taken
+    # before the replay, not with any file a step could have changed.
     if files == PUBLISHED
-      swapped = PUBLISHED.reject { |p| File.binread(File.join(site_dir, p)) == File.binread(p) }
+      swapped = PUBLISHED.reject { |p| File.binread(File.join(site_dir, p)) == expected[p] }
       return "the site's #{swapped.join(" and ")} differ from the repository's; copy each page to its own address" unless swapped.empty?
     end
     files
