@@ -375,6 +375,57 @@ it has already seen for the same version.
 From 1.2, add `HONEYCOMB_KEY=...` (and `HONEYCOMB_DATASET=...` if not `session-planner`) to a
 release build that should be able to send diagnostics (see "Honeycomb setup").
 
+## Xcode Cloud
+
+Xcode Cloud builds the app on Apple's machines, as an alternative to `archive.sh` on a Mac. The
+membership includes 25 compute hours a month, and unused hours don't carry over. A release
+archive takes minutes, so the free hours are plenty. It runs two workflows:
+
+| Workflow | Starts | Does | Uploads |
+| --- | --- | --- | --- |
+| **PR checks** | every pull request to `main`, and every push to `main` | Build (iOS, scheme `SessionPlanner`), then `swift test` on PlannerCore | nothing |
+| **TestFlight** | only by hand (Start Build) | Archive with the Honeycomb key, then internal TestFlight | to TestFlight, when the owner starts it |
+
+Uploading stays the owner's decision each time (`CLAUDE.md`): the TestFlight workflow never
+starts on its own, and submitting for review is still done in App Store Connect. GitHub
+Actions (`.github/workflows/ios-tests.yml`) keeps running as before.
+
+What lives in the repository:
+- `ios/SessionPlanner.xcodeproj/xcshareddata/xcschemes/SessionPlanner.xcscheme`: the shared
+  scheme. Xcode Cloud builds only shared schemes.
+- `ios/ci_scripts/ci_pre_xcodebuild.sh`: for an archive, writes `ios/SessionPlanner/Honeycomb.plist`
+  from the workflow's secret `HONEYCOMB_KEY`, as `archive.sh` does. Without the key the build
+  neither asks nor sends. It refuses a key with a space or control character in it.
+- `ios/ci_scripts/ci_post_xcodebuild.sh`: after a successful Build action, runs
+  `swift test --package-path ios/PlannerCore`. After an archive, it removes the key file.
+
+The workflows themselves live in App Store Connect, not in the repository. Set them up once.
+This needs the Account Holder or an Admin:
+
+1. **Connect.** In Xcode, open `ios/SessionPlanner.xcodeproj` and choose Product > Xcode Cloud >
+   Create Workflow. Pick the `SessionPlanner` product and the PersonalSessionManager app. When asked,
+   let Xcode Cloud reach GitHub, and install Apple's GitHub app on `mannix77/2026Ignite` only.
+   Signing is managed in the cloud with the team in Xcode (your own, never the company team).
+2. **PR checks workflow.**
+   - Start conditions: Pull Request Changes, target branch `main`; and Branch Changes, `main`.
+   - Action: Build, platform iOS, scheme `SessionPlanner`. No post-actions.
+3. **TestFlight workflow.**
+   - Start condition: Tag Changes with a pattern no tag uses, such as `xcode-cloud-testflight/*`,
+     so it never starts by itself. Start it with Start Build in Xcode or App Store Connect.
+   - Action: Archive, platform iOS, scheme `SessionPlanner`, deployment preparation "TestFlight and
+     App Store".
+   - Post-action: TestFlight Internal Testing, group "Internal".
+   - Environment > Environment Variables:
+     - `HONEYCOMB_KEY`: the ingest key, with **Secret** ticked (masked in logs).
+     - `HONEYCOMB_DATASET`: `session-planner`.
+4. **Build number.** In App Store Connect: the app > Xcode Cloud > Settings > Build Number >
+   Edit Next Build Number. Set it to **7**. Builds 5 and 6 already exist for 1.2, and Xcode Cloud
+   otherwise starts at 1. From then on Xcode Cloud numbers each build itself, so `BUILD=` isn't
+   needed. The version (1.2) still comes from the project. If you also build with `archive.sh`,
+   pass a `BUILD=` above Xcode Cloud's latest number for that version, or the upload is refused.
+5. **Check.** Start the TestFlight workflow once. The archive log should say "Honeycomb key
+   included", and the build should appear under TestFlight with the next number.
+
 ## After approval
 
 - The version string is `1.1.1` (build 4) for the third release; `1.1` (build 3) was the
