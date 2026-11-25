@@ -294,7 +294,7 @@ final class AppModel {
         let ranked = ModelStep.remembered(suggestions, sessionsInBlock: snapshot.sessionsStarting(in: gap), picks: snapshot.picks,
                                           preferences: preferences, reservedToday: snapshot.reservedCount(on: gap.date),
                                           ranker: onDeviceModel)
-        if let ranked { log(ranked, duration: nil) }
+        if let ranked { log(ranked, duration: nil, startedLive: mode == .live) }
         return ranked
     }
 
@@ -307,9 +307,10 @@ final class AppModel {
     func recordModelNotAsked(_ suggestions: [Suggestion], in gap: Gap) async {
         guard eventSharing == .allowed, mode == .live, !recordedUnavailable, !suggestions.isEmpty, !ModelStep.willAsk(suggestions, ranker: onDeviceModel) else { return }
         recordedUnavailable = true
+        let startedLive = mode == .live
         let ranked = await ModelStep.rank(suggestions, sessionsInBlock: snapshot?.sessionsStarting(in: gap) ?? 0,
                                           picks: [], ranker: onDeviceModel)
-        log(ranked, duration: nil)
+        log(ranked, duration: nil, startedLive: startedLive)
     }
 
     /// `suggestions` for `gap` after the on-device model's turn (`ModelStep`): what it ranks
@@ -321,29 +322,34 @@ final class AppModel {
         let ranker = onDeviceModel
         let clock = ContinuousClock()
         let started = clock.now
+        // Sent only if the request began on the live conference, whatever the mode is by the end.
+        let startedLive = mode == .live
         let work = Task.detached(priority: .userInitiated) {
             await ModelStep.rank(suggestions, sessionsInBlock: snapshot?.sessionsStarting(in: gap) ?? 0,
                                  picks: snapshot?.picks ?? [], preferences: preferences,
                                  reservedToday: snapshot?.reservedCount(on: gap.date) ?? 0, ranker: ranker)
         }
         let ranked = await withTaskCancellationHandler { await work.value } onCancel: { work.cancel() }
-        log(ranked, duration: clock.now - started)
+        log(ranked, duration: clock.now - started, startedLive: startedLive)
         return ranked
     }
 
     /// One line per request to the model on the phone, and one event to Honeycomb when he
     /// agreed (`EventLog`): its outcome, counts and timing, and for Honeycomb also the text the
     /// model was given and its answer. The phone's own log line never holds those.
-    private func log(_ ranked: RankedSuggestions, duration: Duration?) {
+    /// `startedLive`: the request began on the live conference; one begun on the sample sends
+    /// nothing even if he signed in meanwhile.
+    private func log(_ ranked: RankedSuggestions, duration: Duration?, startedLive: Bool) {
         let run = ranked.run
-        if eventSharing == .allowed, mode == .live {
+        if startedLive, eventSharing == .allowed, mode == .live {
             installID = InstallID.forSending(installID)
             let eventLog = eventLog, app = appBuild
-            Task.detached(priority: .utility) { [weak self] in
-                // Read again as the event goes, so a "no" given meanwhile stops it.
-                _ = await eventLog.send(ranked, duration: duration, app: app) {
-                    await MainActor.run { self?.eventConsent } ?? EventConsent(sharing: .notAsked, installID: nil, live: false)
-                }
+            // Read again as the event goes, so a "no" given meanwhile stops it.
+            let consent: @Sendable () async -> EventConsent = { [weak self] in
+                await self?.eventConsent ?? EventConsent(sharing: .notAsked, installID: nil, live: false)
+            }
+            Task.detached(priority: .utility) {
+                _ = await eventLog.send(ranked, duration: duration, app: app, consent: consent)
             }
         }
         let outcome = run.outcome.rawValue
