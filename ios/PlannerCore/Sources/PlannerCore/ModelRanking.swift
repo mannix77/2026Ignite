@@ -67,16 +67,23 @@ public final class RememberingRanker: SessionRanker, @unchecked Sendable {
         var keep: Bool
     }
 
+    /// A prompt as remembered: its text byte for byte, so two Unicode spellings Swift counts
+    /// as equal are two prompts.
+    private typealias Key = [UInt8]
+    private static func key(_ prompt: ModelPrompt) -> Key { Array(prompt.text.utf8) }
+
     private let model: any SessionRanker
     private let lock = NSLock()
-    private var last: (prompt: String, answer: ModelAnswer)?
-    private var running: [String: Running] = [:]
+    private var last: (key: Key, answer: ModelAnswer, request: UUID)?
+    private var running: [Key: Running] = [:]
     private var waiting = 0
+    private var inFlight = 0
 
     /// Callers waiting on a request now: for tests that need two to be waiting at once.
     var callersWaiting: Int { lock.withLock { waiting } }
-    /// Requests to the model not yet finished: for tests that wait for one to finish.
-    var requestsRunning: Int { lock.withLock { running.count } }
+    /// Requests whose model call hasn't returned and been handled yet, abandoned ones
+    /// included: for tests that wait for one to finish.
+    var requestsInFlight: Int { lock.withLock { inFlight } }
 
     public init(_ model: any SessionRanker) { self.model = model }
 
@@ -85,12 +92,12 @@ public final class RememberingRanker: SessionRanker, @unchecked Sendable {
     /// The last answer, if it was for this prompt: marked remembered, with no tokens, since
     /// the model doesn't run for it.
     public func lastAnswer(for prompt: ModelPrompt) -> ModelAnswer? {
-        lock.withLock { remembered(prompt) }
+        lock.withLock { remembered(RememberingRanker.key(prompt)) }
     }
 
     /// `lastAnswer`, with the lock held.
-    private func remembered(_ prompt: ModelPrompt) -> ModelAnswer? {
-        guard let last, last.prompt == prompt.text else { return nil }
+    private func remembered(_ key: Key) -> ModelAnswer? {
+        guard let last, last.key == key else { return nil }
         var answer = last.answer
         answer.remembered = true
         answer.promptTokens = nil
@@ -99,36 +106,45 @@ public final class RememberingRanker: SessionRanker, @unchecked Sendable {
     }
 
     public func rank(_ prompt: ModelPrompt) async throws -> ModelAnswer {
+        let key = RememberingRanker.key(prompt)
+        let ticket = ModelStep.ticket
         // The memory and the running requests are read together, so a request finishing in
         // between can't make a second caller start the same one again.
         let next: (answer: ModelAnswer?, task: Task<ModelAnswer, Error>?) = lock.withLock {
-            if let answer = remembered(prompt) { return (answer, nil) }
+            if let answer = remembered(key) { return (answer, nil) }
             // A request abandoned at its timeout isn't joined: its answer won't be trusted.
-            if let request = running[prompt.text], request.keep {
+            if let request = running[key], request.keep {
                 waiting += 1
+                ticket?.request = request.id
                 return (nil, request.task)
             }
             // A caller already stopped starts nothing new.
             if Task.isCancelled { return (nil, nil) }
             let id = UUID()
+            // Recorded before the request starts, so a timeout can never come before it.
+            ticket?.request = id
             let model = model
             let task = Task { () throws -> ModelAnswer in
                 do {
                     let answer = try await model.rank(prompt)
                     self.lock.withLock {
-                        let request = self.running[prompt.text]
-                        if request?.id == id {
-                            self.running[prompt.text] = nil
-                            if request?.keep == true, ModelStep.isUsable(answer, for: prompt) { self.last = (prompt.text, answer) }
-                        }
+                        self.inFlight -= 1
+                        let request = self.running[key]
+                        guard request?.id == id else { return }
+                        self.running[key] = nil
+                        if request?.keep == true, ModelStep.isUsable(answer, for: prompt) { self.last = (key, answer, id) }
                     }
                     return answer
                 } catch {
-                    self.lock.withLock { if self.running[prompt.text]?.id == id { self.running[prompt.text] = nil } }
+                    self.lock.withLock {
+                        self.inFlight -= 1
+                        if self.running[key]?.id == id { self.running[key] = nil }
+                    }
                     throw error
                 }
             }
-            running[prompt.text] = Running(id: id, task: task, keep: true)
+            running[key] = Running(id: id, task: task, keep: true)
+            inFlight += 1
             waiting += 1
             return (nil, task)
         }
@@ -138,11 +154,27 @@ public final class RememberingRanker: SessionRanker, @unchecked Sendable {
         return try await task.value
     }
 
+    /// Abandons the request the current caller joined (`ModelStep.ticket`), and forgets its
+    /// answer if it was already kept. A caller with no request abandons nothing: a newer
+    /// request for the same prompt, started by a retry, is never touched.
     public func abandon(_ prompt: ModelPrompt) {
+        guard let id = ModelStep.ticket?.request else { return }
+        let key = RememberingRanker.key(prompt)
         lock.withLock {
-            running[prompt.text]?.keep = false
-            if last?.prompt == prompt.text { last = nil }
+            if running[key]?.id == id { running[key]?.keep = false }
+            if last?.request == id { last = nil }
         }
+    }
+}
+
+/// Which model request one caller of `ModelStep.rank` joined, so that its timeout abandons
+/// that request and no other (`ModelStep.ticket`).
+final class ModelRequestTicket: @unchecked Sendable {
+    private let lock = NSLock()
+    private var joined: UUID?
+    var request: UUID? {
+        get { lock.withLock { joined } }
+        set { lock.withLock { joined = newValue } }
     }
 }
 
@@ -191,6 +223,10 @@ public struct RankedSuggestions: Equatable, Sendable {
 /// it ranks moves to the top with its reasons. Whatever goes wrong, the list comes back as it
 /// was.
 public enum ModelStep {
+    /// The current caller's ticket: set around one request, and inherited by the tasks it
+    /// starts, so `RememberingRanker` can record which request the caller joined.
+    @TaskLocal static var ticket: ModelRequestTicket?
+
     /// How long the model is given to answer.
     public static let timeout: Duration = .seconds(20)
     /// Characters of a reason shown at most.
@@ -328,6 +364,16 @@ public enum ModelStep {
     /// `ranker` is told to abandon the prompt.
     static func answered(_ prompt: ModelPrompt, by ranker: any SessionRanker, within timeout: Duration,
                          sleep: @escaping @Sendable (Duration) async throws -> Void) async -> Result<ModelAnswer, ModelOutcomeError> {
+        // The caller's ticket, inherited by the tasks below, records the request it joins.
+        let ticket = ModelStep.ticket ?? ModelRequestTicket()
+        return await ModelStep.$ticket.withValue(ticket) {
+            await race(prompt, by: ranker, within: timeout, sleep: sleep)
+        }
+    }
+
+    /// `answered`, with the caller's ticket set.
+    private static func race(_ prompt: ModelPrompt, by ranker: any SessionRanker, within timeout: Duration,
+                             sleep: @escaping @Sendable (Duration) async throws -> Void) async -> Result<ModelAnswer, ModelOutcomeError> {
         let race = Race<Result<ModelAnswer, ModelOutcomeError>>()
         let result = await withTaskCancellationHandler {
             await withCheckedContinuation { continuation in
