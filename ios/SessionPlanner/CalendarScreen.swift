@@ -72,13 +72,15 @@ struct CalendarScreen: View {
                     VStack(spacing: 0) {
                         Text(model.event.name).font(.headline).lineLimit(1)
                         if let snapshot = model.snapshot {
-                            // The actual time: the timeline's tick is the start of the minute,
-                            // which can be earlier than an update made within it.
-                            Text(Wording.calendarStatus(refreshing: model.isRefreshing, fetchedAt: snapshot.fetchedAt,
-                                                        now: Date(), sample: model.mode == .demo))
-                                .font(.caption2)
-                                .foregroundStyle(.secondary)
-                                .lineLimit(1)
+                            // Redrawn every minute. The actual time: the tick is the start of the
+                            // minute, which can be earlier than an update made within it.
+                            TimelineView(.everyMinute) { _ in
+                                Text(Wording.calendarStatus(refreshing: model.isRefreshing, fetchedAt: snapshot.fetchedAt,
+                                                            now: Date(), sample: model.mode == .demo))
+                                    .font(.caption2)
+                                    .foregroundStyle(.secondary)
+                                    .lineLimit(1)
+                            }
                         }
                     }
                     .accessibilityElement(children: .combine)
@@ -93,10 +95,14 @@ struct CalendarScreen: View {
                     if model.isRefreshing {
                         ProgressView()
                     } else {
-                        Button {
-                            Task { await model.refresh() }
-                        } label: {
-                            Label("Update", systemImage: "arrow.clockwise")
+                        TimelineView(.everyMinute) { _ in
+                            Button {
+                                Task { await model.refresh() }
+                            } label: {
+                                Label("Update", systemImage: "arrow.clockwise")
+                            }
+                            // Warmer every 5 minutes since the last update, fully orange at an hour.
+                            .tint(Wording.staleness(model.snapshot?.fetchedAt ?? Date(), now: Date()).refreshTint)
                         }
                     }
                 }
@@ -653,4 +659,10 @@ private struct ModelWorkingIcon: View {
             image.symbolEffect(.pulse, options: .repeating, isActive: working)
         }
     }
+}
+
+extension Double {
+    /// The refresh button's color for a staleness level: the usual accent at 0, then orange
+    /// from faint to full.
+    var refreshTint: Color { self == 0 ? .accentColor : Color.orange.opacity(0.3 + 0.7 * self) }
 }

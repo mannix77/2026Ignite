@@ -38,6 +38,20 @@ final class WordingTests: XCTestCase {
         XCTAssertEqual(utc.minute, 7 * 60 + 30)
     }
 
+    func testTheRefreshButtonWarmsEveryFiveMinutesUntilAnHour() {
+        let fetched = Date(timeIntervalSince1970: 1_800_000_000)
+        func level(_ seconds: TimeInterval) -> Double { Wording.staleness(fetched, now: fetched + seconds) }
+        XCTAssertEqual(level(-5), 0)
+        XCTAssertEqual(level(0), 0)
+        XCTAssertEqual(level(299), 0)
+        XCTAssertEqual(level(300), 1.0 / 12, accuracy: 1e-12)
+        XCTAssertEqual(level(599), 1.0 / 12, accuracy: 1e-12)
+        XCTAssertEqual(level(600), 2.0 / 12, accuracy: 1e-12)
+        XCTAssertEqual(level(3599), 11.0 / 12, accuracy: 1e-12)
+        XCTAssertEqual(level(3600), 1)
+        XCTAssertEqual(level(86400), 1)
+    }
+
     func testAHeldSeatIsNotCalledFull() {
         let full = Session(sessionId: "a", title: "T", isReservable: true, seatAvailability: "unavailable")
         XCTAssertEqual(Wording.seats(full, commitment: .reserved), "You hold a seat")

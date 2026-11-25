@@ -68,6 +68,14 @@ public enum Wording {
         return sample ? "Sample, updated \(age)" : "Updated \(age)"
     }
 
+    /// How strongly the refresh button is tinted for the calendar's age: 0 under 5 minutes,
+    /// a twelfth more for every whole 5 minutes, and 1 from an hour on. A phone clock earlier
+    /// than the update gives 0.
+    public static func staleness(_ fetchedAt: Date, now: Date) -> Double {
+        let steps = Int(max(0, now.timeIntervalSince(fetchedAt)) / 300)
+        return Double(min(steps, 12)) / 12
+    }
+
     /// The calendar's status line: what is happening while it updates, and how fresh it is
     /// otherwise (`lastUpdated`).
     public static func calendarStatus(refreshing: Bool, fetchedAt: Date, now: Date, sample: Bool) -> String {

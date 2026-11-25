@@ -287,6 +287,13 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       Then it says "59 min ago", then "1 hr ago"
       And a day after it says "1 day ago"
 
+    Example: The refresh button warms as the calendar ages
+      Given his schedule was last read under 5 minutes ago
+      Then the refresh button has its usual color
+      And it turns a step more orange every 5 minutes, 12 steps in all
+      And from 60 minutes on it is fully orange
+      And with a phone clock earlier than the update it keeps its usual color
+
     Example: The one whose phone clock reads earlier than the update
       Then it says "Updated from AWS" without an age it can't know
 
