@@ -218,6 +218,32 @@ def readable_text(path)
   [bytes, nil]
 end
 
+# An XML plist is also read with a parser, so a value split by a comment, CDATA or a character
+# reference (<string>ZZZZZ<!-- -->99999</string>) is seen as the parser sees it.
+PLIST_TEAM_KEY = /\A\s*[\w.-]*?#{TEAM_KEY}\s*\z/
+PLIST_TEAM_VALUE = /\A\s*#{TEAM_ID}\s*\z/
+# A file that is an XML plist: an optional UTF-8 byte-order mark, XML declaration and comments,
+# then the plist doctype or root element.
+XML_PLIST_START = /\A(?:\xEF\xBB\xBF)?\s*(?:<\?xml[^>]*>\s*)?(?:<!--.*?-->\s*)*(?:<!DOCTYPE\s+plist|<plist[\s>])/nm
+
+def plist_team_keys(text)
+  require "rexml/document"
+  document = REXML::Document.new(text.dup.force_encoding("UTF-8"))
+  found = []
+  REXML::XPath.each(document, "//dict") do |dict|
+    children = dict.elements.to_a
+    children.each_with_index do |child, i|
+      next unless child.name == "key" && child.texts.map(&:value).join.match?(PLIST_TEAM_KEY)
+      value = children[i + 1] or next
+      strings = value.name == "array" ? value.elements.to_a : [value]
+      found << child.texts.map(&:value).join.strip if strings.any? { |s| s.texts.map(&:value).join.match?(PLIST_TEAM_VALUE) }
+    end
+  end
+  [found, nil]
+rescue REXML::ParseException => e
+  [[], e.message.lines.first.to_s.strip]
+end
+
 tracked.each do |path|
   next if File.symlink?(path) # its target, if tracked, is scanned in its own right
   text, problem = readable_text(path)
@@ -226,6 +252,12 @@ tracked.each do |path|
     next unless (match = text.match(pattern))
     line = text.byteslice(0, match.pre_match.bytesize).count("\n") + 1
     failures << "Signing team: #{path}:#{line} names a team id; pass it on the command line (TEAM=...) instead"
+  end
+  next unless text.b.match?(XML_PLIST_START)
+  keys, error = plist_team_keys(text)
+  failures << "Signing team: #{path} is a plist that can't be parsed, so it can't be checked: #{error}" if error
+  keys.uniq.each do |key|
+    failures << "Signing team: #{path} names a team id under #{key}; pass it on the command line (TEAM=...) instead"
   end
 end
 
