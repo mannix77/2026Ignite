@@ -88,6 +88,25 @@ final class WordingTests: XCTestCase {
         XCTAssertTrue(Wording.canReserve(session(nil)))
     }
 
+    func testVoiceOverSaysWhyASessionCantBeReserved() {
+        func session(_ band: String?) -> Session {
+            Session(sessionId: "a", title: "T", isReservable: true, seatAvailability: band)
+        }
+        XCTAssertEqual(Wording.reserveHint(session("unavailable")), "No seats left to reserve")
+        XCTAssertEqual(Wording.reserveHint(session("walkUp")), "Walk-up only, no seats to reserve")
+        // A button that can be pressed has no hint; checked against canReserve so the two agree.
+        for band in ["available", "limited", "veryLimited", "someNewBand", nil] as [String?] {
+            XCTAssertTrue(Wording.canReserve(session(band)), "\(band ?? "nil")")
+            XCTAssertNil(Wording.reserveHint(session(band)), "\(band ?? "nil")")
+        }
+        // A session that takes no reservations has no Reserve button, so no hint, even when full.
+        for reservable in [false, nil] as [Bool?] {
+            let walkIn = Session(sessionId: "w", title: "T", isReservable: reservable, seatAvailability: "unavailable")
+            XCTAssertFalse(Wording.canReserve(walkIn))
+            XCTAssertNil(Wording.reserveHint(walkIn), "\(String(describing: reservable))")
+        }
+    }
+
     func testAClashNamesTheSessionsItClashesWith() {
         let codes = ["aim": "AIM442"]
         let clash = BulkFailure(sessionId: "pex", code: "scheduleConflict", conflictsWith: ["aim", "mystery"])

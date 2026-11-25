@@ -93,14 +93,21 @@ public enum Wording {
         }
     }
 
-    /// What to say about seats. A seat the attendee holds reads "unavailable" on the site, so
-    /// the reservation is checked first.
     /// Whether "Reserve a seat" can be pressed: not when the site shows the session full or
     /// walk-up only. A band the app doesn't know, or none, leaves the answer to the site.
     public static func canReserve(_ session: Session) -> Bool {
         session.isReservable == true && !["unavailable", "walkUp"].contains(session.seatAvailability ?? "")
     }
 
+    /// What VoiceOver says about a "Reserve a seat" button that can't be pressed. Nil for one that
+    /// can, and for a session that takes no reservations, which has no such button.
+    public static func reserveHint(_ session: Session) -> String? {
+        guard session.isReservable == true, !canReserve(session) else { return nil }
+        return session.seatAvailability == "walkUp" ? "Walk-up only, no seats to reserve" : "No seats left to reserve"
+    }
+
+    /// What to say about seats. A seat the attendee holds reads "unavailable" on the site, so
+    /// the reservation is checked first.
     public static func seats(_ session: Session, commitment: Commitment?) -> String? {
         if commitment == .reserved { return "You hold a seat" }
         if commitment == .invited { return "By invitation" }

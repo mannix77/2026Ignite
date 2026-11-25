@@ -44,11 +44,20 @@ if [ -n "${HONEYCOMB_KEY:-}" ]; then
     case "$HONEYCOMB_KEY" in
         *[[:space:]]*|*[[:cntrl:]]*) echo "HONEYCOMB_KEY holds a space or control character; the app would refuse it." >&2; exit 1 ;;
     esac
+    # It also refuses a dataset of anything but ASCII letters, digits, ".", "_" and "-", or of
+    # dots alone (HoneycombConfig in EventLog.swift; it trims spaces first, this script refuses them).
+    dataset="${HONEYCOMB_DATASET:-session-planner}"
+    case "$dataset" in
+        *[!abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._-]*)
+            echo "HONEYCOMB_DATASET may hold only ASCII letters, digits, \".\", \"_\" and \"-\", with no spaces." >&2; exit 1 ;;
+        *[!.]*) ;;
+        *) echo "HONEYCOMB_DATASET is dots alone; the app would refuse it." >&2; exit 1 ;;
+    esac
     trap 'rm -f "$honeycomb"' EXIT
     plutil -create xml1 "$honeycomb"
     plutil -insert IngestKey -string "$HONEYCOMB_KEY" "$honeycomb"
-    plutil -insert Dataset -string "${HONEYCOMB_DATASET:-session-planner}" "$honeycomb"
-    echo "Honeycomb key included (dataset ${HONEYCOMB_DATASET:-session-planner})."
+    plutil -insert Dataset -string "$dataset" "$honeycomb"
+    echo "Honeycomb key included (dataset $dataset)."
 else
     echo "No HONEYCOMB_KEY: this build sends nothing to Honeycomb."
 fi

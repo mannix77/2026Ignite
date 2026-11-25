@@ -325,6 +325,13 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       Then its "Reserve a seat" button is greyed out and can't be pressed
       And one with seats, even very few, or with no band the app knows, can be reserved
 
+    Example: VoiceOver says why it can't be reserved
+      Given the site shows a reservable session as full
+      Then VoiceOver hears "No seats left to reserve"
+      But for one that is walk-up only it hears "Walk-up only, no seats to reserve"
+      And a button that can be pressed has no such hint
+      And a session that takes no reservations shows no Reserve button, so has no hint
+
     Example: The one that clashes with a seat he holds
       Given he holds a seat in "AIM442"
       When he reserves "PEX403-R", which overlaps it
@@ -728,7 +735,9 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
     inferred when at least 3 picks share one and it is at least 20% of them. What he skips
     comes only from Settings, and a format he skips is never inferred as one he chooses. The
     model is told to rank by what the profile says. The profile stays within 400 estimated
-    tokens whatever the catalog holds, and never leaves the phone. Preferences belong to the
+    tokens whatever the catalog holds, and stays on the phone, except inside the exact text
+    given to the model, which goes to Honeycomb only after he said yes to sharing (see "He
+    decides whether the model's records go to Honeycomb"). Preferences belong to the
     phone, not the sign-in (the phone isn't shared), and can be reset.
 
     Example: Levels and formats from his picks

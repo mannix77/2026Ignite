@@ -6,7 +6,8 @@ import FoundationModels
 
 /// Apple's on-device model, where the phone has it (#193). Everything about what it is sent and
 /// what is done with its answer is in `ModelStep` in PlannerCore, which is tested; this only
-/// hands the prompt over and reads the answer back. Nothing leaves the phone.
+/// hands the prompt over and reads the answer back. The model runs on the phone; the prompt and
+/// answer leave it only in the opt-in Honeycomb event (`EventLog`), after the attendee chose Share.
 enum AppleIntelligence {
     /// The model on iOS 26 and later; nil before, where the framework doesn't exist.
     static func ranker() -> (any SessionRanker)? {
