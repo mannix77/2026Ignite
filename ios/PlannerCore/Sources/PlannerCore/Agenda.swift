@@ -156,6 +156,12 @@ public struct PlanSnapshot: Codable, Equatable, Sendable {
 
     static func hasNoSeatToReserve(_ session: Session) -> Bool { session.isReservable != true }
 
+    /// The walk-ins saved on the phone, read as far as they can be: each id is cleaned
+    /// (`Identifier.clean`), and an entry that isn't text or is blank is dropped, not the list.
+    public static func savedWalkIns(_ saved: Any?) -> Set<String> {
+        Set(((saved as? [Any]) ?? []).compactMap { Identifier.clean($0 as? String) })
+    }
+
     /// The walk-in button the session page shows, given his commitments (walk-ins
     /// included): none for a session with a seat to reserve, one he holds or is invited to,
     /// or one the catalog doesn't have.

@@ -108,7 +108,7 @@ final class AppModel {
     }
     /// Favorites he can't reserve that he put on his calendar. Kept on the phone only: the site
     /// knows them as favorites. Cleared on a new sign-in, like the calendar.
-    private(set) var walkIns = Set(UserDefaults.standard.stringArray(forKey: "walkIns") ?? []) {
+    private(set) var walkIns = PlanSnapshot.savedWalkIns(UserDefaults.standard.array(forKey: "walkIns")) {
         didSet {
             UserDefaults.standard.set(walkIns.sorted(), forKey: "walkIns")
             commitmentsByID = snapshot?.commitments(walkIns: walkIns) ?? [:]

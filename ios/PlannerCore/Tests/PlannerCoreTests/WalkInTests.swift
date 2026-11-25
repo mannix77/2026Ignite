@@ -132,4 +132,14 @@ final class WalkInTests: XCTestCase {
         XCTAssertNil(action("invite"))                    // invited
         XCTAssertNil(action("missing"))                   // not in the catalog
     }
+
+    func testSavedWalkInsAreReadAsFarAsTheyCanBe() {
+        XCTAssertEqual(PlanSnapshot.savedWalkIns([" dev ", "", "  \n", 5, "aim", "dev"]), ["dev", "aim"])
+        XCTAssertEqual(PlanSnapshot.savedWalkIns(["dev"]), ["dev"])
+        XCTAssertEqual(PlanSnapshot.savedWalkIns(nil), [])
+        XCTAssertEqual(PlanSnapshot.savedWalkIns("dev"), [])
+        // Read back, a cleaned id is a walk-in by exact key.
+        let snapshot = plan([walkUp("dev", time: "12:00")], favorites: ["dev"])
+        XCTAssertEqual(snapshot.commitments(walkIns: PlanSnapshot.savedWalkIns([" dev "])), ["dev": .walkIn])
+    }
 }

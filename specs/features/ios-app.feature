@@ -370,6 +370,10 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       Given "AIM320" can be reserved and is one of his favorites
       Then it can't be added as a walk-in, and stays a favorite
 
+    Example: The walk-ins saved on the phone
+      Given the phone's saved walk-ins are " dev ", a blank, and something that isn't text
+      Then the app opens with "dev" as a walk-in, and the rest is dropped
+
     Example: The favorite taken away
       Given "DEV301" is on his calendar as a walk-in
       When it is no longer one of his favorites
