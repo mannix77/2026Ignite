@@ -51,6 +51,20 @@ final class WordingTests: XCTestCase {
         XCTAssertNil(Wording.seats(unknown, commitment: nil))
     }
 
+    func testAFullSessionCantBeReserved() {
+        func session(_ band: String?) -> Session {
+            Session(sessionId: "a", title: "T", isReservable: true, seatAvailability: band)
+        }
+        XCTAssertFalse(Wording.canReserve(session("unavailable")))
+        XCTAssertFalse(Wording.canReserve(session("walkUp")))
+        XCTAssertTrue(Wording.canReserve(session("available")))
+        XCTAssertTrue(Wording.canReserve(session("limited")))
+        XCTAssertTrue(Wording.canReserve(session("veryLimited")))
+        // A band the app doesn't know, or none, leaves the choice to the site.
+        XCTAssertTrue(Wording.canReserve(session("someNewBand")))
+        XCTAssertTrue(Wording.canReserve(session(nil)))
+    }
+
     func testAClashNamesTheSessionsItClashesWith() {
         let codes = ["aim": "AIM442"]
         let clash = BulkFailure(sessionId: "pex", code: "scheduleConflict", conflictsWith: ["aim", "mystery"])

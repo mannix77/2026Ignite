@@ -72,6 +72,7 @@ struct SessionDetailView: View {
                     } label: {
                         Label("Reserve a seat", systemImage: "checkmark.seal")
                     }
+                    .disabled(!Wording.canReserve(session))
                     .confirmationDialog("Reserve a seat in \(session.code)?", isPresented: $confirmReserve, titleVisibility: .visible) {
                         Button("Reserve") { run { await model.reserve(session) } }
                     } message: {
