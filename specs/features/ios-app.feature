@@ -176,8 +176,9 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
     The whole catalog (about 2,900 sessions, 12 pages) is downloaded at sign-in and then at
     most once every 24 hours. His schedule (reserved seats, favorites, invitations) is one small
     request: while the calendar is open it is read again every 5 minutes, and pulling down
-    reads it at once. The calendar always says when it last read his schedule from AWS and
-    that pulling down gets the latest.
+    reads it at once. The calendar always says when it last read his schedule from AWS, in
+    small text under the conference's name; the refresh button beside it, or pulling down,
+    gets the latest.
 
     Example: The one with the calendar open
       Given his schedule was last read 5 minutes ago and the catalog 3 hours ago
@@ -273,11 +274,13 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
 
     Example: The one who checks how fresh it is
       Given his schedule was last read from AWS 12 minutes ago
-      Then the calendar says "Updated from AWS 12 min ago. Pull down for the latest."
+      Then the calendar says "Updated 12 min ago"
+      And it says so in small text under the conference's name at the top, not in a line of
+      its own, and doesn't tell him to pull down: the refresh button beside it does that
 
     Example: The one just updated
       Given his schedule was read 59 seconds ago
-      Then it says "Updated from AWS just now. Pull down for the latest."
+      Then it says "Updated just now"
       But at 60 seconds it says "1 min ago"
 
     Example: The one left for hours
@@ -285,16 +288,23 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       Then it says "59 min ago", then "1 hr ago"
       And a day after it says "1 day ago"
 
+    Example: The refresh button warms as the calendar ages
+      Given his schedule was last read under 5 minutes ago
+      Then the refresh button has its usual color
+      And it turns a step more orange every 5 minutes, 12 steps in all
+      And from 60 minutes on it is fully orange
+      And with a phone clock earlier than the update it keeps its usual color
+
     Example: The one whose phone clock reads earlier than the update
-      Then it says "Updated from AWS. Pull down for the latest." without an age it can't know
+      Then it says "Updated from AWS" without an age it can't know
 
     Example: The one trying the sample conference
       Given he is trying the sample conference
-      Then the calendar says "Sample conference, updated just now. Pull down for the latest."
+      Then the calendar says "Sample, updated just now"
 
     Example: The one watching it update
       While his schedule is being read
-      Then the calendar says "Updating from AWS…", or "Updating the sample conference…" for the sample
+      Then the calendar says "Updating from AWS…", or "Updating the sample…" for the sample
 
     Example: The one with a calendar saved by the earlier version
       Given a calendar saved before the catalog's own download time was kept
@@ -309,6 +319,11 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       Then the app waits 2 seconds and carries on
 
   Rule: Reserving and favoriting happen on the conference site
+
+    Example: The full one
+      Given the site shows a reservable session as full, or walk-up only
+      Then its "Reserve a seat" button is greyed out and can't be pressed
+      And one with seats, even very few, or with no band the app knows, can be reserved
 
     Example: The one that clashes with a seat he holds
       Given he holds a seat in "AIM442"
@@ -338,6 +353,42 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       When they choose the sample conference
       Then they see a calendar of made-up sessions
       And nothing is sent to the conference site
+
+  Rule: A session he can't reserve can still go on his calendar, as a walk-in
+    A favorite that can't be reserved can be put on his calendar. It is drawn as a block
+    like a reserved seat, but in its own color and with a dashed edge, labelled "Walk-in".
+    It counts as a commitment: it splits his free stretches, has its walks checked and is
+    not suggested again. The choice is kept on this iPhone; the site only knows it as a
+    favorite, and taking the favorite away takes it off the calendar.
+
+    Example: The walk-in on the calendar
+      Given "DEV301" can't be reserved and is one of his favorites
+      When he adds it to his calendar
+      Then it is drawn as a "Walk-in" block at its time, not in the favorites column
+      And a free stretch ends where it starts
+
+    Example: Only what can't be reserved
+      Given "AIM320" can be reserved and is one of his favorites
+      Then it can't be added as a walk-in, and stays a favorite
+
+    Example: The walk-ins saved on the phone
+      Given the phone's saved walk-ins are " dev ", a blank, and something that isn't text
+      Then the app opens with "dev" as a walk-in, and the rest is dropped
+
+    Example: The favorite taken away
+      Given "DEV301" is on his calendar as a walk-in
+      When it is no longer one of his favorites
+      Then it is no longer on his calendar
+
+  Rule: A reserved seat shows when he must be there
+    AWS holds a reserved seat until 10 minutes before the session starts; after that it goes
+    to the walk-in line. Every reserved session is drawn with a 10-minute band before it, in
+    a lighter shade of the reserved color, labelled with the time to be there.
+
+    Example: The seat at 10:00
+      Given he holds a seat in a session from 10:00 to 11:00
+      Then the calendar shows "Be there by 9:50 AM" from 9:50 to 10:00
+      And a walk-in or an invitation at 10:00 has no such band
 
   Rule: Favorites never crowd out what he has committed to
 
@@ -472,9 +523,9 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
   Rule: What he chose in Settings moves sessions up or down the list
     The levels and formats he prefers, and the formats he skips (Session preferences in
     Settings), re-order the sessions that fit a gap. How alike a session is to his picks is
-    multiplied by 1.5 for a level he prefers and by 1.5 for a format he prefers, and halved
-    for a format he skips. Nothing is listed for a preference alone, and nothing is removed
-    for one: a session he skips the format of is still listed, lower down.
+    multiplied by 1.5 for a level he prefers and by 1.5 for a format he prefers. Nothing is
+    listed for a preference alone. A session in a format he skips is not listed at all, so it
+    never reaches Apple Intelligence either.
 
     Example: The level he prefers
       Given a session in the gap exactly as alike to his picks as one of them, at "300 – Advanced"
@@ -488,8 +539,9 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
 
     Example: The format he skips
       Given a session in the gap exactly as alike to his picks as one of them, a "Keynote"
+      And a chalk talk that is less alike
       When he skips keynotes in Settings
-      Then it is still listed, with a score of 0.5
+      Then the keynote is not listed, and the chalk talk still is
 
     Example: The preferred one overtakes
       Given a "Chalk talk" scoring 1 and a "Workshop" scoring 0.84 in the gap
@@ -500,17 +552,6 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       Given a "Workshop" in the gap that shares nothing with his picks
       When he prefers workshops
       Then it is not listed
-
-    Example: The skipped one that ties
-      Given a session like his reserved seat (2) in a format he skips, at 12:00
-      And one like his favorite (1), at 11:00
-      Then both score 1 and the earlier one comes first
-
-  Rule: He sets how long he allows to get in line
-    Gap suggestions allow 30 minutes in line for a session that can be reserved unless he
-    changes it in Settings, to any whole number of minutes from 1 to 60. A walk-up session
-    allows 5 minutes, or his time in line if that is shorter. A session the site doesn't say
-    can or can't be reserved is treated as one that can: the longer line is the safe guess.
 
     Example: The one who never changed it
       Given he has never changed the time in line
@@ -527,6 +568,12 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
     Example: The line shorter than a walk-up's
       Given he sets the time in line to 3 minutes
       Then a walk-up session allows 3 minutes, not 5
+
+    Example: The short line before a reserved seat
+      Given he sets the time in line to 3 minutes
+      And a reserved session starts at 16:00 at "Caesars Forum" after a free stretch
+      Then a session at "Wynn/Encore" ending at 15:30 is listed and one ending at 15:31 is not,
+        since he must be at the seat by its arrival time, 10 minutes before it starts
 
     Example: The limits
       Then he can set 1 and 60 minutes but not 0 or 61
@@ -780,3 +827,98 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
         and for levels, formats, skips and reserved today whether each was there and where
         it came from, but not their text
 
+
+  Rule: Apple Intelligence ranks the top of a free stretch's list
+    The sessions that fit a free stretch show at once in their usual order. When the phone
+    has Apple Intelligence, the top of that list (at most 12, as many as fit the model's
+    window) then goes to the on-device model with his profile. The sessions it ranks move to
+    the top in its order, each with its one-line reason in place of what it shares with his
+    picks, and every other session follows in the usual order. Without Apple Intelligence, or
+    when the model fails in any way, the usual list stays as it is. Nothing leaves the phone,
+    nothing is reserved or favorited, and he types nothing (no question yet).
+
+    Example: The model's order
+      Given 14 sessions fit a free stretch, A to N in the usual order
+      When the model ranks L, B and A, with a reason for each
+      Then the list reads L, B, A, then C to K, M and N in the usual order
+      And L, B and A show the model's reasons, and the rest what they share with his picks
+      And the list is headed "Top 3 ranked by Apple Intelligence"
+
+    Example: The reasons speak to him
+      Given the model is asked to rank the sessions that fit a free stretch
+      Then its instructions ask for each reason to speak to the attendee as "you"
+      So a reason reads "Relates to your work on data pipelines", not "their"
+
+    Example: Only what was sent can move
+      Given the model ranks "XYZ999", which wasn't sent, then B and C
+      And then M, which was in the list but not sent
+      Then B and C come first, M keeps its usual place, and nothing is shown for "XYZ999"
+
+    Example: A session named twice
+      Given the model ranks B, A and B again
+      Then B comes first and A second, once each
+      And a session named three times still counts as one right answer, not two wrong ones
+
+    Example: The code as it was shown
+      Given a session sent with the code "AIM|301", which the prompt shows as "AIM/301"
+      Then the model's "AIM/301" moves it, and "AIM|301" and "aim/301" don't: codes match
+        exactly as shown, byte for byte, only trimmed of spaces
+
+    Example: Two sessions sent with the same code
+      Given two or three sessions sent with the code "AIM301"
+      When the model ranks "AIM301"
+      Then none of them moves, since it can't be told which one it meant
+      But it was sent, so it doesn't count as wrong
+
+    Example: The answer that is mostly wrong
+      Given the model names 2 sessions that were sent and 3 that weren't
+      Then the usual list is shown, without the model's reasons
+      But with 2 that were sent and 2 that weren't, the 2 it named go first
+      And only codes it wasn't sent count as wrong, each once, not a session named again
+
+    Example: The long and the empty reason
+      Given the model gives a reason of 151 characters
+      Then it is cut at a word to at most 150, ending with "…", and one of 150 is shown whole
+      And a session ranked with an empty reason moves up and shows what it shares with his picks
+      And a reason is shown on one line as written, a "|" included
+
+    Example: No Apple Intelligence
+      Given the phone can't run the model (not eligible, Apple Intelligence off, or the model
+        still downloading)
+      Then the usual list is shown and the model isn't asked
+
+    Example: The model fails
+      Given the model refuses, runs out of room, hits its guardrails, times out on its own,
+        or fails otherwise
+      Then the usual list stays, without the model's reasons
+      And the outcome says which
+
+    Example: The model that takes too long
+      Given the model hasn't answered after 20 seconds
+      Then the usual list stays and the outcome is a timeout
+      But an answer that comes first is used
+
+    Example: Nothing to rank
+      Given no session fits the stretch
+      Then the model isn't asked
+
+    Example: The stretch that moves on with the minute
+      Given the model has ranked an open stretch
+      When the minute moves on and the same prompt would be sent
+      Then the ranked list shows straight away from its last answer, and it isn't asked again
+      And the request is recorded as remembered, with no tokens
+      But when the prompt changes (other sessions, or his profile, such as a new reservation
+        that day), it is asked
+      And it is asked again after a failure, an answer that wasn't used, or one that came
+        after the 20 seconds were up
+      And what it remembers is forgotten when he signs out or another sign-in starts
+
+    Example: The list closed while the model works
+      Given he closes the list, or the minute moves on, while the model is working
+      Then the request is recorded as stopped, not as a failure
+      And the model's answer, when it comes, is kept for the next time the same prompt is sent
+
+    Example: What is recorded
+      Then each request records its outcome, why the model was unavailable if it was, the
+        prompt's measures, the model's own token counts when it gives them, how many sessions
+        it placed and how many of its entries were ignored, but not the prompt or the reasons

@@ -55,6 +55,31 @@ struct SessionDetailView: View {
                         Label(isFavorite ? "Remove from favorites" : "Add to favorites", systemImage: isFavorite ? "star.slash" : "star")
                     }
                 }
+                switch model.walkInAction(for: sessionID) {
+                case .remove?:
+                    Button {
+                        model.setWalkIn(session, false)
+                    } label: {
+                        Label("Take off my calendar", systemImage: "calendar.badge.minus")
+                    }
+                case .add?:
+                    Button {
+                        model.setWalkIn(session, true)
+                    } label: {
+                        Label("Add to my calendar as a walk-in", systemImage: "calendar.badge.plus")
+                    }
+                case .favoriteAndAdd?:
+                    Button {
+                        run {
+                            await model.setFavorite(session, true)
+                            if model.snapshot?.canBeWalkIn(sessionID) == true { model.setWalkIn(session, true) }
+                        }
+                    } label: {
+                        Label("Favorite and add to my calendar", systemImage: "calendar.badge.plus")
+                    }
+                case nil:
+                    EmptyView()
+                }
                 if commitment == .reserved {
                     Button(role: .destructive) {
                         confirmCancel = true
@@ -72,6 +97,7 @@ struct SessionDetailView: View {
                     } label: {
                         Label("Reserve a seat", systemImage: "checkmark.seal")
                     }
+                    .disabled(!Wording.canReserve(session))
                     .confirmationDialog("Reserve a seat in \(session.code)?", isPresented: $confirmReserve, titleVisibility: .visible) {
                         Button("Reserve") { run { await model.reserve(session) } }
                     } message: {
@@ -252,7 +278,7 @@ struct SettingsScreen: View {
                 } header: {
                     Text("Session preferences")
                 } footer: {
-                    Text("What you look for in a session. Suggestions for a free stretch rank these higher and the formats you skip lower. Left as Any, your reserved sessions and favorites decide. Kept on this iPhone until you reset them.")
+                    Text("What you look for in a session. Suggestions for a free stretch rank these higher and leave out the formats you skip. Left as Any, your reserved sessions and favorites decide. Kept on this iPhone until you reset them.")
                 }
 
                 Section {

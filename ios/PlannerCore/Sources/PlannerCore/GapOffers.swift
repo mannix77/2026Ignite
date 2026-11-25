@@ -21,9 +21,9 @@ extension PlanSnapshot {
     /// that day he can't start lining up before now, even for the day's first sessions.
     /// Other days are not cut. `index` is `sessionsByID`, if the caller has it built.
     public func offeredGaps(on date: String, now: (date: String, minute: Int)? = nil,
-                            index: [String: Session]? = nil) -> [Gap] {
+                            index: [String: Session]? = nil, commitments: [String: Commitment]? = nil) -> [Gap] {
         let cut = now.flatMap { PlanSnapshot.minute(of: $0, on: date) }
-        return gaps(on: date, index: index).compactMap { whole in
+        return gaps(on: date, index: index, commitments: commitments).compactMap { whole in
             var gap = whole
             if let cut {
                 gap.start = max(gap.start, cut)
@@ -84,10 +84,26 @@ extension Wording {
         return parts.joined(separator: " · ")
     }
 
-    /// "Shares Agentic AI, Amazon Bedrock": why a session was suggested. Nil when it shares
-    /// nothing to name.
+    /// Why a session was suggested: the on-device model's reason when it ranked it, otherwise
+    /// "Shares Agentic AI, Amazon Bedrock". Nil when there is neither.
     public static func reasons(_ suggestion: Suggestion) -> String? {
-        suggestion.shared.isEmpty ? nil : "Shares \(suggestion.shared.joined(separator: ", "))"
+        if let reason = suggestion.modelReason { return reason }
+        return suggestion.shared.isEmpty ? nil : "Shares \(suggestion.shared.joined(separator: ", "))"
+    }
+
+    /// Over a free stretch's list: "Ranking with Apple Intelligence…" while the model ranks
+    /// this stretch (`ranking`), otherwise the header of its answer for this stretch
+    /// (`ranked`); nil when neither is for it.
+    public static func rankingHeader(for gap: Gap, ranking: Gap?, ranked: (gap: Gap, run: ModelRun)?) -> String? {
+        if ranking == gap { return "Ranking with Apple Intelligence…" }
+        guard let ranked, ranked.gap == gap else { return nil }
+        return modelHeader(ranked.run)
+    }
+
+    /// "Top 3 ranked by Apple Intelligence": over a list the model ranked; nil otherwise.
+    public static func modelHeader(_ run: ModelRun) -> String? {
+        guard run.outcome == .ok, run.placed > 0 else { return nil }
+        return run.placed == 1 ? "Top session ranked by Apple Intelligence" : "Top \(run.placed) ranked by Apple Intelligence"
     }
 }
 

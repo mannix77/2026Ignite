@@ -38,6 +38,29 @@ final class WordingTests: XCTestCase {
         XCTAssertEqual(utc.minute, 7 * 60 + 30)
     }
 
+    func testTheRefreshButtonWarmsEveryFiveMinutesUntilAnHour() {
+        let fetched = Date(timeIntervalSince1970: 1_800_000_000)
+        func level(_ seconds: TimeInterval) -> Double { Wording.staleness(fetched, now: fetched + seconds) }
+        XCTAssertEqual(level(-5), 0)
+        XCTAssertEqual(level(0), 0)
+        XCTAssertEqual(level(299), 0)
+        XCTAssertEqual(level(300), 1.0 / 12, accuracy: 1e-12)
+        XCTAssertEqual(level(599), 1.0 / 12, accuracy: 1e-12)
+        XCTAssertEqual(level(600), 2.0 / 12, accuracy: 1e-12)
+        // Each 5-minute step, just before and at it.
+        let steps: [(seconds: TimeInterval, before: Double, at: Double)] = [
+            (900, 2, 3), (1200, 3, 4), (1500, 4, 5), (1800, 5, 6), (2100, 6, 7),
+            (2400, 7, 8), (2700, 8, 9), (3000, 9, 10), (3300, 10, 11),
+        ]
+        for step in steps {
+            XCTAssertEqual(level(step.seconds - 1), step.before / 12, accuracy: 1e-12, "\(step.seconds - 1) s")
+            XCTAssertEqual(level(step.seconds), step.at / 12, accuracy: 1e-12, "\(step.seconds) s")
+        }
+        XCTAssertEqual(level(3599), 11.0 / 12, accuracy: 1e-12)
+        XCTAssertEqual(level(3600), 1)
+        XCTAssertEqual(level(86400), 1)
+    }
+
     func testAHeldSeatIsNotCalledFull() {
         let full = Session(sessionId: "a", title: "T", isReservable: true, seatAvailability: "unavailable")
         XCTAssertEqual(Wording.seats(full, commitment: .reserved), "You hold a seat")
@@ -49,6 +72,20 @@ final class WordingTests: XCTestCase {
         XCTAssertEqual(Wording.seats(walkIn, commitment: .favorite), "Walk-in, no reservation")
         let unknown = Session(sessionId: "d", title: "T", isReservable: true, seatAvailability: "someNewBand")
         XCTAssertNil(Wording.seats(unknown, commitment: nil))
+    }
+
+    func testAFullSessionCantBeReserved() {
+        func session(_ band: String?) -> Session {
+            Session(sessionId: "a", title: "T", isReservable: true, seatAvailability: band)
+        }
+        XCTAssertFalse(Wording.canReserve(session("unavailable")))
+        XCTAssertFalse(Wording.canReserve(session("walkUp")))
+        XCTAssertTrue(Wording.canReserve(session("available")))
+        XCTAssertTrue(Wording.canReserve(session("limited")))
+        XCTAssertTrue(Wording.canReserve(session("veryLimited")))
+        // A band the app doesn't know, or none, leaves the choice to the site.
+        XCTAssertTrue(Wording.canReserve(session("someNewBand")))
+        XCTAssertTrue(Wording.canReserve(session(nil)))
     }
 
     func testAClashNamesTheSessionsItClashesWith() {
@@ -83,39 +120,39 @@ final class WordingTests: XCTestCase {
     }
 
     func testLastUpdatedSaysHowLongAgoAndHowToUpdate() {
-        XCTAssertEqual(freshness(after: 12 * 60), "Updated from AWS 12 min ago. Pull down for the latest.")
-        XCTAssertEqual(freshness(after: 0), "Updated from AWS just now. Pull down for the latest.")
-        XCTAssertEqual(freshness(after: 2 * 3600), "Updated from AWS 2 hr ago. Pull down for the latest.")
+        XCTAssertEqual(freshness(after: 12 * 60), "Updated 12 min ago")
+        XCTAssertEqual(freshness(after: 0), "Updated just now")
+        XCTAssertEqual(freshness(after: 2 * 3600), "Updated 2 hr ago")
     }
 
     func testLastUpdatedThresholds() {
-        XCTAssertEqual(freshness(after: 59), "Updated from AWS just now. Pull down for the latest.")
-        XCTAssertEqual(freshness(after: 60), "Updated from AWS 1 min ago. Pull down for the latest.")
-        XCTAssertEqual(freshness(after: 3599), "Updated from AWS 59 min ago. Pull down for the latest.")
-        XCTAssertEqual(freshness(after: 3600), "Updated from AWS 1 hr ago. Pull down for the latest.")
-        XCTAssertEqual(freshness(after: 86399), "Updated from AWS 23 hr ago. Pull down for the latest.")
-        XCTAssertEqual(freshness(after: 86400), "Updated from AWS 1 day ago. Pull down for the latest.")
-        XCTAssertEqual(freshness(after: 2 * 86400 + 5), "Updated from AWS 2 days ago. Pull down for the latest.")
+        XCTAssertEqual(freshness(after: 59), "Updated just now")
+        XCTAssertEqual(freshness(after: 60), "Updated 1 min ago")
+        XCTAssertEqual(freshness(after: 3599), "Updated 59 min ago")
+        XCTAssertEqual(freshness(after: 3600), "Updated 1 hr ago")
+        XCTAssertEqual(freshness(after: 86399), "Updated 23 hr ago")
+        XCTAssertEqual(freshness(after: 86400), "Updated 1 day ago")
+        XCTAssertEqual(freshness(after: 2 * 86400 + 5), "Updated 2 days ago")
     }
 
     func testLastUpdatedWithTheClockMovedBackGivesNoAge() {
-        XCTAssertEqual(freshness(after: -1800), "Updated from AWS. Pull down for the latest.")
-        XCTAssertEqual(freshness(after: -1), "Updated from AWS. Pull down for the latest.")
+        XCTAssertEqual(freshness(after: -1800), "Updated from AWS")
+        XCTAssertEqual(freshness(after: -1), "Updated from AWS")
     }
 
     func testLastUpdatedForTheSampleConference() {
-        XCTAssertEqual(freshness(after: 0, sample: true), "Sample conference, updated just now. Pull down for the latest.")
-        XCTAssertEqual(freshness(after: -5, sample: true), "Sample conference. Pull down for the latest.")
+        XCTAssertEqual(freshness(after: 0, sample: true), "Sample, updated just now")
+        XCTAssertEqual(freshness(after: -5, sample: true), "Sample conference")
     }
 
     func testTheCalendarSaysWhenItIsUpdating() {
         XCTAssertEqual(Wording.calendarStatus(refreshing: true, fetchedAt: updated, now: updated, sample: false),
                        "Updating from AWS…")
         XCTAssertEqual(Wording.calendarStatus(refreshing: true, fetchedAt: updated, now: updated, sample: true),
-                       "Updating the sample conference…")
+                       "Updating the sample…")
         XCTAssertEqual(Wording.calendarStatus(refreshing: false, fetchedAt: updated, now: updated.addingTimeInterval(720), sample: false),
-                       "Updated from AWS 12 min ago. Pull down for the latest.")
+                       "Updated 12 min ago")
         XCTAssertEqual(Wording.calendarStatus(refreshing: false, fetchedAt: updated, now: updated, sample: true),
-                       "Sample conference, updated just now. Pull down for the latest.")
+                       "Sample, updated just now")
     }
 }

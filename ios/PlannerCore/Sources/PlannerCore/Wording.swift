@@ -3,6 +3,9 @@ import Foundation
 /// The words the app shows. Kept here, away from the views, so they can be tested.
 public enum Wording {
     /// "3:00 PM" for minutes after midnight. Minutes past the end of the day wrap around.
+    /// The band before a reserved seat: "Be there by 9:50 AM".
+    public static func beThere(by minute: Int) -> String { "Be there by \(clock(minute))" }
+
     public static func clock(_ minutes: Int) -> String {
         let inDay = ((minutes % 1440) + 1440) % 1440
         let hour = inDay / 60
@@ -46,8 +49,8 @@ public enum Wording {
         return (String(format: "%04d-%02d-%02d", c.year ?? 0, c.month ?? 0, c.day ?? 0), (c.hour ?? 0) * 60 + (c.minute ?? 0))
     }
 
-    /// The calendar's line on how fresh it is: "Updated from AWS 12 min ago. Pull down for the
-    /// latest." Under a minute is "just now"; whole minutes, hours, then days, rounded down. A
+    /// The calendar's subtitle on how fresh it is: "Updated 12 min ago". The refresh button
+    /// beside it says how to get the latest, so the line doesn't. Under a minute is "just now"; whole minutes, hours, then days, rounded down. A
     /// phone clock that reads earlier than the update leaves the age out rather than guess it.
     public static func lastUpdated(_ fetchedAt: Date, now: Date, sample: Bool) -> String {
         let seconds = now.timeIntervalSince(fetchedAt)
@@ -61,16 +64,23 @@ public enum Wording {
             let days = Int(seconds / 86400)
             age = days == 1 ? "1 day ago" : "\(days) days ago"
         }
-        let source = sample ? "Sample conference" : "Updated from AWS"
-        let joined = age.map { sample ? "\(source), updated \($0)" : "\(source) \($0)" } ?? source
-        return joined + ". Pull down for the latest."
+        guard let age else { return sample ? "Sample conference" : "Updated from AWS" }
+        return sample ? "Sample, updated \(age)" : "Updated \(age)"
+    }
+
+    /// How strongly the refresh button is tinted for the calendar's age: 0 under 5 minutes,
+    /// a twelfth more for every whole 5 minutes, and 1 from an hour on. A phone clock earlier
+    /// than the update gives 0.
+    public static func staleness(_ fetchedAt: Date, now: Date) -> Double {
+        let steps = Int(max(0, now.timeIntervalSince(fetchedAt)) / 300)
+        return Double(min(steps, 12)) / 12
     }
 
     /// The calendar's status line: what is happening while it updates, and how fresh it is
     /// otherwise (`lastUpdated`).
     public static func calendarStatus(refreshing: Bool, fetchedAt: Date, now: Date, sample: Bool) -> String {
         guard refreshing else { return lastUpdated(fetchedAt, now: now, sample: sample) }
-        return sample ? "Updating the sample conference…" : "Updating from AWS…"
+        return sample ? "Updating the sample…" : "Updating from AWS…"
     }
 
     /// A Settings row's value for a list he chooses from: `none` when empty, the one name, or
@@ -85,6 +95,12 @@ public enum Wording {
 
     /// What to say about seats. A seat the attendee holds reads "unavailable" on the site, so
     /// the reservation is checked first.
+    /// Whether "Reserve a seat" can be pressed: not when the site shows the session full or
+    /// walk-up only. A band the app doesn't know, or none, leaves the answer to the site.
+    public static func canReserve(_ session: Session) -> Bool {
+        session.isReservable == true && !["unavailable", "walkUp"].contains(session.seatAvailability ?? "")
+    }
+
     public static func seats(_ session: Session, commitment: Commitment?) -> String? {
         if commitment == .reserved { return "You hold a seat" }
         if commitment == .invited { return "By invitation" }

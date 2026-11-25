@@ -1,6 +1,9 @@
 import Foundation
 import Observation
+import os
 import PlannerCore
+
+private let modelLog = Logger(subsystem: "SessionPlanner", category: "model")
 
 /// The conference the app talks to.
 struct EventInfo {
@@ -103,6 +106,21 @@ final class AppModel {
     var lineUp = LineUp(saved: UserDefaults.standard.object(forKey: "lineUpMinutes")) {
         didSet { UserDefaults.standard.set(lineUp.minutes, forKey: "lineUpMinutes") }
     }
+    /// Favorites he can't reserve that he put on his calendar. Kept on the phone only: the site
+    /// knows them as favorites. Cleared on a new sign-in, like the calendar.
+    private(set) var walkIns = PlanSnapshot.savedWalkIns(UserDefaults.standard.array(forKey: "walkIns")) {
+        didSet {
+            UserDefaults.standard.set(walkIns.sorted(), forKey: "walkIns")
+            commitmentsByID = snapshot?.commitments(walkIns: walkIns) ?? [:]
+            suggester = nil
+            snapshotVersion += 1
+        }
+    }
+
+    func setWalkIn(_ session: Session, _ on: Bool) {
+        if on { walkIns.insert(session.sessionId) } else { walkIns.remove(session.sessionId) }
+    }
+
     /// The levels and formats he looks for and the formats he skips (#197). Kept on the phone.
     var preferences = SessionPreferences(saved: UserDefaults.standard.data(forKey: "sessionPreferences")) {
         didSet { UserDefaults.standard.set(preferences.saved, forKey: "sessionPreferences") }
@@ -167,6 +185,10 @@ final class AppModel {
         isRefreshing = false
         lastAutomaticAttempt = nil
         catalogLastTried = nil
+        // What the model remembers belongs to the calendar it ranked: a new sign-in, the sample
+        // conference or signing out start with nothing. A request still running for the old
+        // one can only fill the ranker dropped here.
+        onDeviceModel = AppleIntelligence.ranker().map(RememberingRanker.init)
     }
 
     private func setMode(_ new: Mode) {
@@ -180,7 +202,7 @@ final class AppModel {
         snapshotVersion += 1
         let index = new?.sessionsByID ?? [:]
         sessionsByID = index
-        commitmentsByID = new?.commitmentsByID ?? [:]
+        commitmentsByID = new?.commitments(walkIns: walkIns) ?? [:]
         days = new?.days() ?? []
         committedDays = new?.days(committedOnly: true) ?? []
         unresolvedCount = new?.unresolvedIDs.count ?? 0
@@ -189,6 +211,11 @@ final class AppModel {
     // MARK: What the screens show
 
     func commitment(of sessionID: String) -> Commitment? { commitmentsByID[sessionID] }
+
+    /// The walk-in button the session's page shows (`PlanSnapshot.walkInAction`).
+    func walkInAction(for sessionID: String) -> WalkInAction? {
+        snapshot?.walkInAction(for: sessionID, commitments: commitmentsByID)
+    }
 
     /// Built from the calendar the first time a gap is opened, and dropped when the calendar
     /// changes, so every gap is ranked against the same picks.
@@ -206,13 +233,60 @@ final class AppModel {
         let version = snapshotVersion
         let lineUp = lineUp
         let preferences = preferences
-        let ranker = await Task.detached(priority: .userInitiated) { built ?? Suggester(snapshot) }.value
+        let marks = commitmentsByID
+        let ranker = await Task.detached(priority: .userInitiated) { built ?? Suggester(snapshot, commitments: marks) }.value
         // Kept only if the calendar hasn't changed meanwhile; either way this answer is for the
         // calendar the gap came from.
         if suggester == nil, snapshotVersion == version { suggester = ranker }
         return await Task.detached(priority: .userInitiated) {
             ranker.suggestions(in: gap, lineUp: lineUp, preferences: preferences)
         }.value
+    }
+
+    /// Apple's on-device model where the phone has it, answering a prompt it has just answered
+    /// from its last answer (an open stretch reloads every minute). Replaced whenever the
+    /// sign-in changes (`setBackend`).
+    @ObservationIgnored private var onDeviceModel: RememberingRanker? = AppleIntelligence.ranker().map(RememberingRanker.init)
+
+    /// Whether the on-device model will be asked about `suggestions` (`ModelStep.willAsk`).
+    func willRankWithModel(_ suggestions: [Suggestion]) -> Bool { ModelStep.willAsk(suggestions, ranker: onDeviceModel) }
+
+    /// `suggestions` as the on-device model last ranked them, at once, when it has already
+    /// answered for this list (an open stretch reloading on the minute); nil otherwise.
+    func rememberedRanking(of suggestions: [Suggestion], in gap: Gap) -> RankedSuggestions? {
+        guard let onDeviceModel, let snapshot else { return nil }
+        let ranked = ModelStep.remembered(suggestions, sessionsInBlock: snapshot.sessionsStarting(in: gap), picks: snapshot.picks,
+                                          preferences: preferences, reservedToday: snapshot.reservedCount(on: gap.date),
+                                          ranker: onDeviceModel)
+        if let ranked { AppModel.log(ranked.run) }
+        return ranked
+    }
+
+    /// `suggestions` for `gap` after the on-device model's turn (`ModelStep`): what it ranks
+    /// first, with its reasons, then the rest; or the list as it was. Run off the main actor,
+    /// and stopped when the screen asking for it goes away.
+    func modelRanking(of suggestions: [Suggestion], in gap: Gap) async -> RankedSuggestions {
+        let snapshot = snapshot
+        let preferences = preferences
+        let ranker = onDeviceModel
+        let work = Task.detached(priority: .userInitiated) {
+            await ModelStep.rank(suggestions, sessionsInBlock: snapshot?.sessionsStarting(in: gap) ?? 0,
+                                 picks: snapshot?.picks ?? [], preferences: preferences,
+                                 reservedToday: snapshot?.reservedCount(on: gap.date) ?? 0, ranker: ranker)
+        }
+        let ranked = await withTaskCancellationHandler { await work.value } onCancel: { work.cancel() }
+        AppModel.log(ranked.run)
+        return ranked
+    }
+
+    /// One line per request to the model, on the phone only: its outcome and counts, never the
+    /// prompt or the reasons (#193; Honeycomb comes in a later step).
+    private static func log(_ run: ModelRun) {
+        let outcome = run.outcome.rawValue
+        let unavailable = run.unavailableReason ?? "-"
+        let p = run.prompt
+        let profile = p.map { "interests=\($0.profile.interestsNamed) levels=\($0.profile.levels?.rawValue ?? "-") formats=\($0.profile.formats?.rawValue ?? "-") skips=\($0.profile.skips) reservedToday=\($0.profile.reservedToday)" } ?? "-"
+        modelLog.info("model outcome=\(outcome, privacy: .public) unavailable=\(unavailable, privacy: .public) estimated=\(p?.estimatedTokens ?? -1) window=\(p?.window ?? -1) answerReserve=\(p?.answerReserve ?? -1) headroom=\(p?.headroom ?? -1) promptTokens=\(run.modelPromptTokens ?? -1) answerTokens=\(run.modelAnswerTokens ?? -1) inBlock=\(p?.sessionsInBlock ?? -1) sent=\(p?.sessionsSent ?? -1) leftOut=\(p?.sessionsLeftOut ?? -1) abstractsCut=\(p?.abstractsCut ?? -1) profileTokens=\(p?.profileTokens ?? -1) \(profile, privacy: .public) placed=\(run.placed) ignored=\(run.ignored) remembered=\(run.remembered)")
     }
 
     func sessions(matching filter: SessionFilter, search: String) -> [Session] {
@@ -241,6 +315,7 @@ final class AppModel {
             // sign-in that fetched it, one that survives (a crash here, a failed delete) is
             // still refused under the new sign-in's id.
             let departing = saveVersion
+            walkIns = []
             setSnapshot(nil)
             setBackend(nil)
             // Likewise the Calendar copy: it was the earlier attendee's choice, so it starts off,
@@ -270,6 +345,7 @@ final class AppModel {
         // revoking belongs to that sign-in and is not deleted.
         let departing = saveVersion
         setBackend(nil)
+        walkIns = []
         setSnapshot(nil)
         needsSignIn = false
         notice = nil

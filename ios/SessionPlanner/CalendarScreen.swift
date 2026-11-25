@@ -34,16 +34,6 @@ struct CalendarScreen: View {
                                 withAnimation { selectedDay = picked }
                             }
                             Divider()
-                            // The actual time: the timeline's tick is the start of the minute,
-                            // which can be earlier than an update made within it.
-                            Text(Wording.calendarStatus(refreshing: model.isRefreshing, fetchedAt: snapshot.fetchedAt,
-                                                        now: Date(), sample: model.mode == .demo))
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                                .multilineTextAlignment(.center)
-                                .frame(maxWidth: .infinity)
-                                .padding(.horizontal)
-                                .padding(.vertical, 4)
                             TabView(selection: Binding(get: { day }, set: { selectedDay = $0 })) {
                                 ForEach(days, id: \.self) { page in
                                     DayPage(snapshot: snapshot, day: page, now: now)
@@ -77,6 +67,24 @@ struct CalendarScreen: View {
             .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(for: String.self) { SessionDetailView(sessionID: $0) }
             .toolbar {
+                // The title, with how fresh the calendar is in small type beneath it.
+                ToolbarItem(placement: .principal) {
+                    VStack(spacing: 0) {
+                        Text(model.event.name).font(.headline).lineLimit(1)
+                        if let snapshot = model.snapshot {
+                            // Redrawn every minute. The actual time: the tick is the start of the
+                            // minute, which can be earlier than an update made within it.
+                            TimelineView(.everyMinute) { _ in
+                                Text(Wording.calendarStatus(refreshing: model.isRefreshing, fetchedAt: snapshot.fetchedAt,
+                                                            now: Date(), sample: model.mode == .demo))
+                                    .font(.caption2)
+                                    .foregroundStyle(.secondary)
+                                    .lineLimit(1)
+                            }
+                        }
+                    }
+                    .accessibilityElement(children: .combine)
+                }
                 ToolbarItem(placement: .topBarLeading) {
                     Toggle(isOn: $model.showFavorites) {
                         Label("Show favorites", systemImage: model.showFavorites ? "star.fill" : "star")
@@ -87,10 +95,14 @@ struct CalendarScreen: View {
                     if model.isRefreshing {
                         ProgressView()
                     } else {
-                        Button {
-                            Task { await model.refresh() }
-                        } label: {
-                            Label("Update", systemImage: "arrow.clockwise")
+                        TimelineView(.everyMinute) { _ in
+                            Button {
+                                Task { await model.refresh() }
+                            } label: {
+                                Label("Update", systemImage: "arrow.clockwise")
+                            }
+                            // Warmer every 5 minutes since the last update, fully orange at an hour.
+                            .tint(Wording.staleness(model.snapshot?.fetchedAt ?? Date(), now: Date()).refreshTint)
                         }
                     }
                 }
@@ -189,8 +201,8 @@ private struct DayPage: View {
     var body: some View {
         DayView(agenda: snapshot.agenda(on: day, includeFavorites: model.showFavorites,
                                         index: model.sessionsByID, commitments: model.commitmentsByID),
-                gaps: snapshot.offeredGaps(on: day, now: now, index: model.sessionsByID),
-                span: snapshot.offeredGaps(on: day, index: model.sessionsByID),
+                gaps: snapshot.offeredGaps(on: day, now: now, index: model.sessionsByID, commitments: model.commitmentsByID),
+                span: snapshot.offeredGaps(on: day, index: model.sessionsByID, commitments: model.commitmentsByID),
                 nowMinute: PlanSnapshot.minute(of: now, on: day))
             .refreshable { await model.refresh() }
     }
@@ -273,6 +285,10 @@ private struct GapSheet: View {
     let gap: Gap
     /// The list and the stretch it was worked out for.
     @State private var loaded: GapSuggestions?
+    /// The on-device model's last answer, and the stretch it ranked.
+    @State private var ranked: (gap: Gap, run: ModelRun)?
+    /// The stretch the on-device model is ranking now.
+    @State private var ranking: Gap?
 
     var body: some View {
         // Shown only for the stretch as it is now: while a newer one loads, the old list goes.
@@ -283,9 +299,21 @@ private struct GapSheet: View {
                     ContentUnavailableView("Nothing fits", systemImage: "calendar.badge.clock",
                                            description: Text("No session in this time is like your picks and leaves time for the walks and the line."))
                 } else if let suggestions {
-                    List(suggestions) { suggestion in
-                        NavigationLink(value: suggestion.id) {
-                            SuggestionRow(suggestion: suggestion)
+                    List {
+                        Section {
+                            ForEach(suggestions) { suggestion in
+                                NavigationLink(value: suggestion.id) {
+                                    SuggestionRow(suggestion: suggestion)
+                                }
+                            }
+                        } header: {
+                            if let header = Wording.rankingHeader(for: gap, ranking: ranking, ranked: ranked) {
+                                Label {
+                                    Text(header)
+                                } icon: {
+                                    ModelWorkingIcon(working: ranking == gap)
+                                }
+                            }
                         }
                     }
                     .listStyle(.plain)
@@ -301,10 +329,28 @@ private struct GapSheet: View {
             }
         }
         .task(id: gap) {
+            let version = model.snapshotVersion
             let found = await model.suggestions(in: gap)
-            // A newer stretch has replaced this one: its own task sets the list.
-            guard !Task.isCancelled else { return }
+            // A newer stretch has replaced this one: its own task sets the list. A list worked
+            // out from a calendar since replaced isn't ranked against the new one's picks (the
+            // sheet is closing).
+            guard !Task.isCancelled, model.snapshotVersion == version else { return }
+            // What the on-device model already ranked shows at once, so a stretch reloading on
+            // the minute doesn't fall back to the usual order and back again.
+            if let remembered = model.rememberedRanking(of: found, in: gap) {
+                loaded = GapSuggestions(gap: gap, suggestions: remembered.suggestions)
+                ranked = (gap, remembered.run)
+                return
+            }
             loaded = GapSuggestions(gap: gap, suggestions: found)
+            // Then the on-device model's turn, where the phone has one.
+            guard model.willRankWithModel(found) else { return }
+            ranking = gap
+            let result = await model.modelRanking(of: found, in: gap)
+            if ranking == gap { ranking = nil }
+            guard !Task.isCancelled, model.snapshotVersion == version else { return }
+            loaded = GapSuggestions(gap: gap, suggestions: result.suggestions)
+            ranked = (gap, result.run)
         }
         // Reserving one of these (from its page) changes the calendar: this stretch may no
         // longer be free, so the list closes rather than offer what no longer fits.
@@ -375,12 +421,12 @@ private struct Timeline: View {
 
     var body: some View {
         // Free stretches count too: the last one can run past his last commitment.
-        let starts = entries.map(\.start) + favorites.map { $0.hour * 60 } + span.map(\.start)
+        let starts = entries.map(\.arrival) + favorites.map { $0.hour * 60 } + span.map(\.start)
         let ends = entries.map(\.drawnEnd) + favorites.map { ($0.hour + 1) * 60 } + span.map(\.end)
         let first = max(0, (starts.min() ?? 480) / 60 - 1)
         let last = max(first + 1, ((ends.max() ?? 1080) + 59) / 60)
         let placements = Dictionary(uniqueKeysWithValues:
-            CalendarLayout.place(entries.map { (id: $0.id, start: $0.start, end: $0.drawnEnd) }).map { ($0.id, $0) })
+            CalendarLayout.place(entries.map { (id: $0.id, start: $0.arrival, end: $0.drawnEnd) }).map { ($0.id, $0) })
 
         GeometryReader { geometry in
             let lane = favorites.isEmpty ? 0 : laneWidth
@@ -406,6 +452,11 @@ private struct Timeline: View {
                 ForEach(entries) { entry in
                     let placement = placements[entry.id] ?? Placement(id: entry.id, column: 0, columns: 1)
                     let columnWidth = width / CGFloat(placement.columns)
+                    if entry.arrival < entry.start {
+                        ArrivalBand(entry: entry)
+                            .frame(width: max(0, columnWidth - 3), height: CGFloat(entry.start - entry.arrival) / 60 * hourHeight)
+                            .offset(x: gutter + CGFloat(placement.column) * columnWidth, y: y(entry.arrival, first))
+                    }
                     NavigationLink(value: entry.id) {
                         EntryBlock(entry: entry, narrow: placement.columns > 2)
                     }
@@ -538,13 +589,32 @@ private struct FavoriteBucketSheet: View {
     }
 }
 
+/// The minutes before a reserved seat when he must be there, in a lighter shade of its color.
+private struct ArrivalBand: View {
+    let entry: AgendaEntry
+
+    var body: some View {
+        let text = Wording.beThere(by: entry.arrival)
+        Text(text)
+            .font(.caption2.bold())
+            .lineLimit(1)
+            .minimumScaleFactor(0.6)
+            .padding(.horizontal, 6)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+            .foregroundStyle(entry.commitment.color)
+            .background(entry.commitment.color.opacity(0.22), in: UnevenRoundedRectangle(topLeadingRadius: 8, topTrailingRadius: 8))
+            .accessibilityLabel("\(text), \(entry.session.code)")
+    }
+}
+
 private struct EntryBlock: View {
     let entry: AgendaEntry
     let narrow: Bool
 
     var body: some View {
         let color = entry.commitment.color
-        let solid = entry.commitment != .favorite
+        // A walk-in is drawn like a seat, but tinted and dashed: there is no seat held for him.
+        let solid = entry.commitment == .reserved || entry.commitment == .invited
         VStack(alignment: .leading, spacing: 2) {
             Text(entry.session.code)
                 .font(.caption.bold())
@@ -575,4 +645,24 @@ private struct EntryBlock: View {
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("\(entry.commitment.label): \(entry.session.code), \(entry.session.title), \(Wording.timeRange(start: entry.start, end: entry.end))")
     }
+}
+
+/// The Apple Intelligence mark beside the ranking header; it spins while the model is ranking.
+private struct ModelWorkingIcon: View {
+    let working: Bool
+
+    var body: some View {
+        let image = Image(systemName: "apple.intelligence")
+        if #available(iOS 18, *) {
+            image.symbolEffect(.rotate, options: .repeat(.continuous), isActive: working)
+        } else {
+            image.symbolEffect(.pulse, options: .repeating, isActive: working)
+        }
+    }
+}
+
+extension Double {
+    /// The refresh button's color for a staleness level: the usual accent at 0, then orange
+    /// from faint to full.
+    var refreshTint: Color { self == 0 ? .accentColor : Color.orange.opacity(0.3 + 0.7 * self) }
 }
