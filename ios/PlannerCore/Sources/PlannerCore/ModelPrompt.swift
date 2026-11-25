@@ -80,8 +80,8 @@ public struct ModelPrompt: Equatable, Sendable {
 
     static let instructions = """
         You help an attendee at AWS re:Invent choose which of the sessions below to go to. Rank \
-        them from most to least worth attending for this attendee, using what the profile says \
-        about them, and give one short reason for each. Use only the sessions listed, by their codes.
+        them from most to least worth attending for them, using what the profile says about \
+        them, and give each a short reason, said to them as "you". Use only the listed sessions by code.
         """
 
     /// `ranked` is the pre-filter's order, best first; `sessionsInBlock` how many sessions the

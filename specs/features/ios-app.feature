@@ -797,6 +797,11 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       And L, B and A show the model's reasons, and the rest what they share with his picks
       And the list is headed "Top 3 ranked by Apple Intelligence"
 
+    Example: The reasons speak to him
+      Given the model is asked to rank the sessions that fit a free stretch
+      Then its instructions ask for each reason to speak to the attendee as "you"
+      So a reason reads "Relates to your work on data pipelines", not "their"
+
     Example: Only what was sent can move
       Given the model ranks "XYZ999", which wasn't sent, then B and C
       And then M, which was in the list but not sent

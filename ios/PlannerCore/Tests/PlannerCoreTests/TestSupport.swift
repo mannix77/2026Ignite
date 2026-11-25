@@ -165,5 +165,5 @@ func runningInHour(_ sessions: [Session], date: String, hour: Int) -> [Session] 
 /// The on-device model's instructions, written out (rule 5): tests build expected prompts
 /// from this, never from `ModelPrompt.instructions`, so a change to the wording fails them.
 let modelInstructions = "You help an attendee at AWS re:Invent choose which of the sessions below to go to. "
-    + "Rank them from most to least worth attending for this attendee, using what the profile says about them, "
-    + "and give one short reason for each. Use only the sessions listed, by their codes."
+    + "Rank them from most to least worth attending for them, using what the profile says about them, "
+    + "and give each a short reason, said to them as \"you\". Use only the listed sessions by code."
