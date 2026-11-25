@@ -212,6 +212,11 @@ final class AppModel {
 
     func commitment(of sessionID: String) -> Commitment? { commitmentsByID[sessionID] }
 
+    /// The walk-in button the session's page shows (`PlanSnapshot.walkInAction`).
+    func walkInAction(for sessionID: String) -> WalkInAction? {
+        snapshot?.walkInAction(for: sessionID, commitments: commitmentsByID)
+    }
+
     /// Built from the calendar the first time a gap is opened, and dropped when the calendar
     /// changes, so every gap is ranked against the same picks.
     @ObservationIgnored private var suggester: Suggester?

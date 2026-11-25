@@ -156,6 +156,19 @@ public struct PlanSnapshot: Codable, Equatable, Sendable {
 
     static func hasNoSeatToReserve(_ session: Session) -> Bool { session.isReservable != true }
 
+    /// The walk-in button the session page shows, given his commitments (walk-ins
+    /// included): none for a session with a seat to reserve, one he holds or is invited to,
+    /// or one the catalog doesn't have.
+    public func walkInAction(for sessionID: String, commitments: [String: Commitment]) -> WalkInAction? {
+        guard let session = sessionsByID[sessionID], PlanSnapshot.hasNoSeatToReserve(session) else { return nil }
+        switch commitments[sessionID] {
+        case .walkIn?: return .remove
+        case .favorite?: return .add
+        case nil: return .favoriteAndAdd
+        default: return nil
+        }
+    }
+
     /// The day to open on: today when the conference is on, otherwise the first day with
     /// something on his schedule, otherwise the first day of the catalog.
     public func defaultDay(today: String) -> String? {
@@ -398,4 +411,14 @@ public enum Sync {
         }
         return catalog
     }
+}
+
+/// The walk-in button a session page shows.
+public enum WalkInAction: Equatable, Sendable {
+    /// "Add to my calendar as a walk-in": a favorite without a seat to reserve.
+    case add
+    /// "Take off my calendar": already a walk-in.
+    case remove
+    /// "Favorite and add to my calendar": not on his schedule, without a seat to reserve.
+    case favoriteAndAdd
 }

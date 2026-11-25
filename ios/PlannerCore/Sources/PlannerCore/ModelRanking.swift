@@ -63,6 +63,9 @@ public final class RememberingRanker: SessionRanker, @unchecked Sendable {
     private struct Running {
         var id: UUID
         var task: Task<ModelAnswer, Error>
+        /// The ticket the model is called with, so a ranker it wraps can be told to abandon
+        /// what this request asked of it.
+        var inner: ModelRequestTicket
         /// False once the request was abandoned at its timeout.
         var keep: Bool
     }
@@ -74,7 +77,7 @@ public final class RememberingRanker: SessionRanker, @unchecked Sendable {
 
     private let model: any SessionRanker
     private let lock = NSLock()
-    private var last: (key: Key, answer: ModelAnswer, request: UUID)?
+    private var last: (key: Key, answer: ModelAnswer, request: UUID, inner: ModelRequestTicket)?
     private var running: [Key: Running] = [:]
     private var waiting = 0
     private var inFlight = 0
@@ -125,9 +128,10 @@ public final class RememberingRanker: SessionRanker, @unchecked Sendable {
             let id = UUID()
             guard !Task.isCancelled, ticket?.claim(id) ?? true else { return (nil, nil) }
             let model = model
-            // The model is called with no ticket of its own: a ranker it wraps can't take the
-            // caller's.
-            let task = ModelStep.$ticket.withValue(nil) { Task { () throws -> ModelAnswer in
+            // The model is called with a ticket of its own: a ranker it wraps can't take the
+            // caller's, and can be told to abandon what it was asked.
+            let inner = ModelRequestTicket()
+            let task = ModelStep.$ticket.withValue(inner) { Task { () throws -> ModelAnswer in
                 do {
                     let answer = try await model.rank(prompt)
                     self.lock.withLock {
@@ -135,7 +139,7 @@ public final class RememberingRanker: SessionRanker, @unchecked Sendable {
                         let request = self.running[key]
                         guard request?.id == id else { return }
                         self.running[key] = nil
-                        if request?.keep == true, ModelStep.isUsable(answer, for: prompt) { self.last = (key, answer, id) }
+                        if request?.keep == true, ModelStep.isUsable(answer, for: prompt) { self.last = (key, answer, id, inner) }
                     }
                     return answer
                 } catch {
@@ -146,7 +150,7 @@ public final class RememberingRanker: SessionRanker, @unchecked Sendable {
                     throw error
                 }
             } }
-            running[key] = Running(id: id, task: task, keep: true)
+            running[key] = Running(id: id, task: task, inner: inner, keep: true)
             inFlight += 1
             waiting += 1
             return (nil, task)
@@ -163,10 +167,20 @@ public final class RememberingRanker: SessionRanker, @unchecked Sendable {
     public func abandon(_ prompt: ModelPrompt) {
         guard let id = ModelStep.ticket?.request else { return }
         let key = RememberingRanker.key(prompt)
-        lock.withLock {
-            if running[key]?.id == id { running[key]?.keep = false }
-            if last?.request == id { last = nil }
+        let inner: ModelRequestTicket? = lock.withLock {
+            var asked: ModelRequestTicket?
+            if running[key]?.id == id {
+                running[key]?.keep = false
+                asked = running[key]?.inner
+            }
+            if last?.request == id {
+                asked = asked ?? last?.inner
+                last = nil
+            }
+            return asked
         }
+        // What it asked of the model is abandoned there too: a wrapped ranker mustn't keep it.
+        if let inner { ModelStep.$ticket.withValue(inner) { model.abandon(prompt) } }
     }
 }
 

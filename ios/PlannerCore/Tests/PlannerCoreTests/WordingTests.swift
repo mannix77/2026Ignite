@@ -47,6 +47,15 @@ final class WordingTests: XCTestCase {
         XCTAssertEqual(level(300), 1.0 / 12, accuracy: 1e-12)
         XCTAssertEqual(level(599), 1.0 / 12, accuracy: 1e-12)
         XCTAssertEqual(level(600), 2.0 / 12, accuracy: 1e-12)
+        // Each 5-minute step, just before and at it.
+        let steps: [(seconds: TimeInterval, before: Double, at: Double)] = [
+            (900, 2, 3), (1200, 3, 4), (1500, 4, 5), (1800, 5, 6), (2100, 6, 7),
+            (2400, 7, 8), (2700, 8, 9), (3000, 9, 10), (3300, 10, 11),
+        ]
+        for step in steps {
+            XCTAssertEqual(level(step.seconds - 1), step.before / 12, accuracy: 1e-12, "\(step.seconds - 1) s")
+            XCTAssertEqual(level(step.seconds), step.at / 12, accuracy: 1e-12, "\(step.seconds) s")
+        }
         XCTAssertEqual(level(3599), 11.0 / 12, accuracy: 1e-12)
         XCTAssertEqual(level(3600), 1)
         XCTAssertEqual(level(86400), 1)

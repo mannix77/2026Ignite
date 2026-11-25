@@ -55,15 +55,20 @@ struct SessionDetailView: View {
                         Label(isFavorite ? "Remove from favorites" : "Add to favorites", systemImage: isFavorite ? "star.slash" : "star")
                     }
                 }
-                if commitment == .walkIn || model.snapshot?.canBeWalkIn(sessionID) == true {
-                    let isWalkIn = commitment == .walkIn
+                switch model.walkInAction(for: sessionID) {
+                case .remove?:
                     Button {
-                        model.setWalkIn(session, !isWalkIn)
+                        model.setWalkIn(session, false)
                     } label: {
-                        Label(isWalkIn ? "Take off my calendar" : "Add to my calendar as a walk-in",
-                              systemImage: isWalkIn ? "calendar.badge.minus" : "calendar.badge.plus")
+                        Label("Take off my calendar", systemImage: "calendar.badge.minus")
                     }
-                } else if session.isReservable != true, commitment == nil {
+                case .add?:
+                    Button {
+                        model.setWalkIn(session, true)
+                    } label: {
+                        Label("Add to my calendar as a walk-in", systemImage: "calendar.badge.plus")
+                    }
+                case .favoriteAndAdd?:
                     Button {
                         run {
                             await model.setFavorite(session, true)
@@ -72,6 +77,8 @@ struct SessionDetailView: View {
                     } label: {
                         Label("Favorite and add to my calendar", systemImage: "calendar.badge.plus")
                     }
+                case nil:
+                    EmptyView()
                 }
                 if commitment == .reserved {
                     Button(role: .destructive) {

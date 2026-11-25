@@ -564,6 +564,12 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       Given he sets the time in line to 3 minutes
       Then a walk-up session allows 3 minutes, not 5
 
+    Example: The short line before a reserved seat
+      Given he sets the time in line to 3 minutes
+      And a reserved session starts at 16:00 at "Caesars Forum" after a free stretch
+      Then a session at "Wynn/Encore" ending at 15:30 is listed and one ending at 15:31 is not,
+        since he must be at the seat by its arrival time, 10 minutes before it starts
+
     Example: The limits
       Then he can set 1 and 60 minutes but not 0 or 61
       And a saved value outside that range is read as the nearest limit, and an unreadable one as 30

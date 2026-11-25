@@ -56,6 +56,18 @@ final class WalkInTests: XCTestCase {
                        ["aim": .favorite, "dev": .walkIn, "unknown": .favorite, "seat": .reserved])
     }
 
+    func testAReservedOrInvitedSessionIsNeverAWalkIn() {
+        // Without a seat to reserve and favorited, it can be a walk-in...
+        let favorite = plan([walkUp("held", time: "12:00")], favorites: ["held"])
+        XCTAssertTrue(favorite.canBeWalkIn("held"))
+        // ...but not once he holds it, or is invited to it, as well.
+        let reserved = plan([walkUp("held", time: "12:00")], reserved: ["held"], favorites: ["held"])
+        XCTAssertFalse(reserved.canBeWalkIn("held"))
+        let invitedSession = walkUp("held", time: "12:00")
+        let invited = plan([invitedSession], favorites: ["held"], invited: [invitedSession])
+        XCTAssertFalse(invited.canBeWalkIn("held"))
+    }
+
     func testAWalkInIsGoneOnceItIsNoLongerAFavorite() {
         let favorited = plan([walkUp("dev", time: "12:00")], favorites: ["dev"])
         XCTAssertEqual(favorited.commitments(walkIns: ["dev"]), ["dev": .walkIn])
@@ -101,5 +113,23 @@ final class WalkInTests: XCTestCase {
         XCTAssertEqual(day.commitments.map(\.arrival), [590, 600, 600])
         XCTAssertEqual(AgendaEntry.reservedArrivalMinutes, 10)
         XCTAssertEqual(Wording.beThere(by: 590), "Be there by 9:50 AM")
+    }
+
+    func testWhichWalkInActionTheSessionPageOffers() {
+        let walkUp1 = walkUp("open", time: "12:00"), fav = walkUp("fav", time: "12:00"), inn = walkUp("in", time: "13:00")
+        let seat = reservable("seat", time: "09:00"), aim = reservable("aim", time: "14:00"), favSeat = reservable("favSeat", time: "15:00")
+        let invite = walkUp("invite", time: "16:00")
+        let snapshot = plan([walkUp1, fav, inn, seat, aim, favSeat, invite], reserved: ["seat"], favorites: ["fav", "in", "favSeat"],
+                            invited: [invite])
+        let marks = snapshot.commitments(walkIns: ["in"])
+        func action(_ id: String) -> WalkInAction? { snapshot.walkInAction(for: id, commitments: marks) }
+        XCTAssertEqual(action("open"), .favoriteAndAdd)   // nothing yet, no seat to reserve
+        XCTAssertEqual(action("fav"), .add)               // a favorite without a seat
+        XCTAssertEqual(action("in"), .remove)             // already a walk-in
+        XCTAssertNil(action("seat"))                      // reserved
+        XCTAssertNil(action("aim"))                       // nothing yet, but a seat to reserve
+        XCTAssertNil(action("favSeat"))                   // a favorite with a seat to reserve
+        XCTAssertNil(action("invite"))                    // invited
+        XCTAssertNil(action("missing"))                   // not in the catalog
     }
 }

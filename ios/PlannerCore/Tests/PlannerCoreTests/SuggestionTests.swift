@@ -226,6 +226,23 @@ final class SuggestionTests: XCTestCase {
         XCTAssertEqual(Set(ids(plan.suggestions(in: forumGap))), ["onTime", "backInTime"])
     }
 
+    func testTheSeatAfterTheGapIsReachedByItsArrivalTimeEvenWithAShortLine() {
+        // The calendar asks him to be at a reserved seat 10 minutes before it starts. With 3
+        // minutes in line set, back out by 16:00 - 10 - 20 = 15:30, not 16:00 - 3 - 20 = 15:37.
+        let plan = snapshot(filler(4) + [
+            offered("pick", time: "09:00", topics: ["Rare"]),
+            offered("backInTime", time: "14:30", venue: "Wynn/Encore", topics: ["Rare"], reservable: true),
+            offered("backLate", time: "14:31", venue: "Wynn/Encore", topics: ["Rare"], reservable: true),
+            offered("byTheLine", time: "14:37", venue: "Wynn/Encore", topics: ["Rare"], reservable: true),
+        ], favorites: ["pick"])
+        XCTAssertEqual(AgendaEntry.reservedArrivalMinutes, 10)
+        XCTAssertEqual(Set(ids(plan.suggestions(in: forumGap, lineUp: LineUp(minutes: 3)))), ["backInTime"])
+        // A longer line still counts in full: 30 minutes leaves none of them.
+        XCTAssertEqual(Set(ids(plan.suggestions(in: forumGap, lineUp: LineUp(minutes: 30)))), [])
+        // And at exactly 10 the two agree: 15:30.
+        XCTAssertEqual(Set(ids(plan.suggestions(in: forumGap, lineUp: LineUp(minutes: 10)))), ["backInTime"])
+    }
+
     func testHisTimeInLineIsUsedBeforeTheSessionAndBeforeTheSeatAfterIt() {
         // With 10 minutes in line: in by 10:00 + 20 + 10 = 10:30, out by 16:00 - 10 - 20 = 15:30.
         let plan = snapshot(filler(4) + [

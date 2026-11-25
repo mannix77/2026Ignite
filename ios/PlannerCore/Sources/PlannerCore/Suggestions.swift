@@ -261,7 +261,9 @@ public struct Suggester: Sendable {
             // In the gap after the walk, and in line in time for this session; then back in
             // line in time for a reserved seat after the gap.
             let inLine = gap.lineFrom.map { $0 + lineUp.minutes(for: session) } ?? gap.start
-            let lineOut = gap.lineUpAfter ? lineUp.minutes : 0
+            // Before a reserved seat after the gap he lines up for his time in line, and is
+            // there at least by the seat's arrival time on the calendar.
+            let lineOut = gap.lineUpAfter ? max(lineUp.minutes, AgendaEntry.reservedArrivalMinutes) : 0
             guard start >= max(gap.start, inLine) + gap.before.walk(to: session.venue),
                   end + gap.after.walk(to: session.venue) + lineOut <= gap.end else { continue }
 

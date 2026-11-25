@@ -1047,6 +1047,49 @@ final class RememberingRankerTests: XCTestCase {
         XCTAssertNil(outer.lastAnswer(for: asked))
     }
 
+    func testAnAbandonedAnswerIsNotKeptByAWrappedRankerEither() async {
+        let release = Flag()
+        let model = FakeRanker {
+            while !release.isSet { await Task.yield() }
+            return ModelAnswer(picks: [pick("B")])
+        }
+        let inner = RememberingRanker(model)
+        let outer = RememberingRanker(inner)
+        let list = usualList()
+        let late = await rank(list, with: outer) { _ in
+            while model.prompts.isEmpty { try Task.checkCancellation(); await Task.yield() }
+        }
+        assertRun(late.run, .timeout, placed: 0, ignored: 0, prompt: measures(list))
+        release.set()
+        await waitUntil(self, "both layers are done") { outer.requestsInFlight == 0 && inner.requestsInFlight == 0 }
+        guard let asked = model.prompt(0) else { return }
+        XCTAssertNil(outer.lastAnswer(for: asked))
+        XCTAssertNil(inner.lastAnswer(for: asked))
+        // So a retry reaches the model.
+        let again = await rank(list, with: outer)
+        XCTAssertEqual(model.prompts.count, 2)
+        XCTAssertEqual(again.suggestions, arranged(list, "BACDEFGHIJKLMN", reasons: ["B": "Because B"]))
+        assertRun(again.run, .ok, placed: 1, ignored: 0, prompt: measures(list))
+    }
+
+    func testAbandoningAKeptAnswerForgetsItInAWrappedRankerToo() async {
+        let model = FakeRanker(picks: [pick("B")])
+        let inner = RememberingRanker(model)
+        let outer = RememberingRanker(inner)
+        let list = usualList()
+        let mine = ModelRequestTicket()
+        let first = await ModelStep.$ticket.withValue(mine) { await rank(list, with: outer) }
+        assertRun(first.run, .ok, placed: 1, ignored: 0, prompt: measures(list))
+        await waitUntil(self, "both layers are done") { outer.requestsInFlight == 0 && inner.requestsInFlight == 0 }
+        guard let asked = model.prompt(0) else { return }
+        // Precondition: both layers kept it.
+        XCTAssertEqual(outer.lastAnswer(for: asked)?.picks, [pick("B")])
+        XCTAssertEqual(inner.lastAnswer(for: asked)?.picks, [pick("B")])
+        ModelStep.$ticket.withValue(mine) { outer.abandon(asked) }
+        XCTAssertNil(outer.lastAnswer(for: asked))
+        XCTAssertNil(inner.lastAnswer(for: asked))
+    }
+
     func testItsAvailabilityIsTheModels() {
         XCTAssertEqual(RememberingRanker(FakeRanker(.unavailable("modelNotReady")) { ModelAnswer(picks: []) }).availability,
                        .unavailable("modelNotReady"))
