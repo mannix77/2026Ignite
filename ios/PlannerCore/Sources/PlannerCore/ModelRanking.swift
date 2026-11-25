@@ -114,18 +114,20 @@ public final class RememberingRanker: SessionRanker, @unchecked Sendable {
             if let answer = remembered(key) { return (answer, nil) }
             // A request abandoned at its timeout isn't joined: its answer won't be trusted.
             if let request = running[key], request.keep {
+                // A caller whose ranking already gave up joins nothing.
+                guard ticket?.claim(request.id) ?? true else { return (nil, nil) }
                 waiting += 1
-                ticket?.request = request.id
                 return (nil, request.task)
             }
             // A caller already stopped starts nothing new: its task is cancelled, or its ticket
-            // was closed when the ranking gave up on it.
-            if Task.isCancelled || ticket?.mayStart() == false { return (nil, nil) }
+            // was closed when the ranking gave up on it (cancelled or timed out). The claim is
+            // the moment the request starts, made before it does.
             let id = UUID()
-            // Recorded before the request starts, so a timeout can never come before it.
-            ticket?.request = id
+            guard !Task.isCancelled, ticket?.claim(id) ?? true else { return (nil, nil) }
             let model = model
-            let task = Task { () throws -> ModelAnswer in
+            // The model is called with no ticket of its own: a ranker it wraps can't take the
+            // caller's.
+            let task = ModelStep.$ticket.withValue(nil) { Task { () throws -> ModelAnswer in
                 do {
                     let answer = try await model.rank(prompt)
                     self.lock.withLock {
@@ -143,7 +145,7 @@ public final class RememberingRanker: SessionRanker, @unchecked Sendable {
                     }
                     throw error
                 }
-            }
+            } }
             running[key] = Running(id: id, task: task, keep: true)
             inFlight += 1
             waiting += 1
@@ -182,12 +184,21 @@ final class ModelRequestTicket: @unchecked Sendable {
     /// Whether its caller was stopped.
     var isClosed: Bool { lock.withLock { closed } }
 
-    /// Its caller was stopped: no new request may start for it from now on.
+    /// Its caller was stopped or timed out: no request may be started or joined for it from
+    /// now on.
     func close() { lock.withLock { closed = true } }
 
-    /// Whether a new request may start for its caller. Checked under the same lock as
-    /// `close`, so whichever comes first decides: a request started before the close runs on.
-    func mayStart() -> Bool { lock.withLock { !closed } }
+    /// Records `request` as the one its caller joins or starts, unless the ticket was closed
+    /// first. Checked under the same lock as `close`, so whichever comes first decides: a
+    /// request claimed before the close runs on (and is the one a timeout abandons); after
+    /// it, nothing is started or joined.
+    func claim(_ request: UUID) -> Bool {
+        lock.withLock {
+            guard !closed else { return false }
+            joined = request
+            return true
+        }
+    }
 }
 
 /// What became of one request to the model, for the logs.
@@ -395,7 +406,12 @@ public enum ModelStep {
                 race.launch {
                     Task {
                         // A timer that fails (cancelled) decides nothing.
-                        do { try await sleep(timeout); race.finish(.failure(ModelOutcomeError(.timeout))) } catch {}
+                        do {
+                            try await sleep(timeout)
+                            // Closed first, so this caller starts or joins nothing from now on.
+                            ticket?.close()
+                            race.finish(.failure(ModelOutcomeError(.timeout)))
+                        } catch {}
                     }
                 }
             }

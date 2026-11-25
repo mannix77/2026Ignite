@@ -23,6 +23,16 @@ private final class FakeRanker: SessionRanker, @unchecked Sendable {
 
     var prompts: [ModelPrompt] { lock.withLock { sent } }
 
+    /// The `index`th prompt it was sent, or a test failure (not a crash) when there isn't one.
+    func prompt(_ index: Int, file: StaticString = #filePath, line: UInt = #line) -> ModelPrompt? {
+        let all = prompts
+        guard all.indices.contains(index) else {
+            XCTFail("the model was sent \(all.count) prompts, not \(index + 1)", file: file, line: line)
+            return nil
+        }
+        return all[index]
+    }
+
     func rank(_ prompt: ModelPrompt) async throws -> ModelAnswer {
         lock.withLock { sent.append(prompt) }
         return try await answer()
@@ -607,7 +617,7 @@ final class RememberingRankerTests: XCTestCase {
         XCTAssertEqual(model.prompts.map(\.sentIDs).last, list.prefix(12).map(\.id))
         XCTAssertEqual(model.prompts.count, 3)
         XCTAssertEqual(third.suggestions, arranged(list, "BACDEFGHIJKLMN", reasons: ["B": "Because B"]))
-        assertRun(third.run, .ok, placed: 1, ignored: 0, promptTokens: 9, prompt: model.prompts[2].metrics)
+        assertRun(third.run, .ok, placed: 1, ignored: 0, promptTokens: 9, prompt: model.prompt(2)?.metrics)
     }
 
     func testAnAnswerStillComingWhenTheCallerStopsIsKept() async {
@@ -652,7 +662,8 @@ final class RememberingRankerTests: XCTestCase {
         // Its answer comes after all, and is not kept: the next ask goes to the model.
         release.set()
         await waitUntil(self, "the late answer is in") { remembering.requestsInFlight == 0 }
-        XCTAssertNil(remembering.lastAnswer(for: model.prompts[0]))
+        guard let asked = model.prompt(0) else { return }
+        XCTAssertNil(remembering.lastAnswer(for: asked))
         let again = await rank(list, with: remembering)
         XCTAssertEqual(model.prompts.count, 2)
         XCTAssertEqual(again.suggestions, arranged(list, "BACDEFGHIJKLMN", reasons: ["B": "Because B"]))
@@ -688,12 +699,13 @@ final class RememberingRankerTests: XCTestCase {
         // Both are waiting before the model answers, so neither is served from memory.
         await waitUntil(self, "both lists are waiting") { remembering.callersWaiting == 2 }
         // Abandoning without a request of one's own touches no running request.
-        remembering.abandon(model.prompts[0])
+        guard let asked = model.prompt(0) else { release.set(); return }
+        remembering.abandon(asked)
         release.set()
         let a = await result(of: first, self)
         let b = await result(of: second, self)
         await waitUntil(self, "the request is handled") { remembering.requestsInFlight == 0 }
-        XCTAssertEqual(remembering.lastAnswer(for: model.prompts[0])?.picks, [pick("B")])
+        XCTAssertEqual(remembering.lastAnswer(for: asked)?.picks, [pick("B")])
         XCTAssertEqual(model.prompts.count, 1)
         XCTAssertEqual(a?.suggestions, arranged(list, "BACDEFGHIJKLMN", reasons: ["B": "Because B"]))
         XCTAssertEqual(b?.suggestions, arranged(list, "BACDEFGHIJKLMN", reasons: ["B": "Because B"]))
@@ -766,7 +778,7 @@ final class RememberingRankerTests: XCTestCase {
         let mine = ModelRequestTicket()
         let first = await ModelStep.$ticket.withValue(mine) { await rank(list, with: remembering) }
         XCTAssertEqual(first.suggestions, arranged(list, "BACDEFGHIJKLMN", reasons: ["B": "Because B"]))
-        let prompt = model.prompts[0]
+        guard let prompt = model.prompt(0) else { return }
         XCTAssertNotNil(mine.request)
         // A caller that joined another request for the same prompt, or none, forgets nothing.
         let other = ModelRequestTicket()
@@ -782,7 +794,7 @@ final class RememberingRankerTests: XCTestCase {
         let again = await rank(list, with: remembering)
         XCTAssertEqual(model.prompts.count, 2)
         XCTAssertEqual(again.suggestions, arranged(list, "BACDEFGHIJKLMN", reasons: ["B": "Because B"]))
-        assertRun(again.run, .ok, placed: 1, ignored: 0, prompt: model.prompts[1].metrics)
+        assertRun(again.run, .ok, placed: 1, ignored: 0, prompt: model.prompt(1)?.metrics)
     }
 
     /// A model whose first request answers B when `old` is set and later ones answer C when
@@ -801,6 +813,8 @@ final class RememberingRankerTests: XCTestCase {
     func testARetryAfterTheTimeoutDoesNotJoinTheAbandonedRequest() async {
         for retryFirst in [true, false] {
             let old = Flag(), retry = Flag(), finished = Counter()
+            // An early return mustn't leave the fake model spinning.
+            defer { old.set(); retry.set() }
             let model = twoRequests(old: old, retry: retry, finished: finished)
             let remembering = RememberingRanker(model)
             let list = usualList()
@@ -810,22 +824,23 @@ final class RememberingRankerTests: XCTestCase {
             }
             assertRun(late.run, .timeout, placed: 0, ignored: 0, prompt: measures(list))
             // A retry asks the model again rather than wait on the abandoned request.
-            let retried = Task { await ModelStep.rank(list, sessionsInBlock: 40, picks: [], ranker: remembering, sleep: untilCancelled) }
+            let retrying = Task { await ModelStep.rank(list, sessionsInBlock: 40, picks: [], ranker: remembering, sleep: untilCancelled) }
             await waitUntil(self, "the retry asks the model") { model.prompts.count == 2 }
+            guard let abandoned = model.prompt(0), let retried = model.prompt(1) else { continue }
             if !retryFirst {
                 // The abandoned request answers first, and isn't kept.
                 old.set()
                 await waitUntil(self, "the abandoned request returns") { finished.value == 1 }
                 await waitUntil(self, "its answer is handled") { remembering.requestsInFlight == 1 }
-                XCTAssertNil(remembering.lastAnswer(for: model.prompts[0]), "retryFirst: \(retryFirst)")
+                XCTAssertNil(remembering.lastAnswer(for: abandoned), "retryFirst: \(retryFirst)")
             }
             retry.set()
-            let again = await result(of: retried, self)
+            let again = await result(of: retrying, self)
             XCTAssertEqual(again?.suggestions, arranged(list, "CABDEFGHIJKLMN", reasons: ["C": "Because C"]), "retryFirst: \(retryFirst)")
             old.set()
             await waitUntil(self, "both requests are handled") { remembering.requestsInFlight == 0 }
             // Only the retry's answer is kept, whichever finished last.
-            XCTAssertEqual(remembering.lastAnswer(for: model.prompts[1])?.picks, [pick("C")], "retryFirst: \(retryFirst)")
+            XCTAssertEqual(remembering.lastAnswer(for: retried)?.picks, [pick("C")], "retryFirst: \(retryFirst)")
             XCTAssertEqual(model.prompts.count, 2)
         }
     }
@@ -864,7 +879,8 @@ final class RememberingRankerTests: XCTestCase {
         XCTAssertEqual(again?.suggestions, arranged(list, "CABDEFGHIJKLMN", reasons: ["C": "Because C"]))
         old.set()
         await waitUntil(self, "both requests are handled") { remembering.requestsInFlight == 0 }
-        XCTAssertEqual(remembering.lastAnswer(for: model.prompts[1])?.picks, [pick("C")])
+        guard let retriedPrompt = model.prompt(1) else { return }
+        XCTAssertEqual(remembering.lastAnswer(for: retriedPrompt)?.picks, [pick("C")])
     }
 
     func testACallerThatJoinedAbandonsTheRequestItJoined() async {
@@ -894,7 +910,8 @@ final class RememberingRankerTests: XCTestCase {
         // The request B joined is abandoned: its answer, when it comes, isn't kept.
         release.set()
         await waitUntil(self, "the request is handled") { remembering.requestsInFlight == 0 }
-        XCTAssertNil(remembering.lastAnswer(for: model.prompts[0]))
+        guard let joined = model.prompt(0) else { return }
+        XCTAssertNil(remembering.lastAnswer(for: joined))
         XCTAssertEqual(model.prompts.count, 1)
     }
 
@@ -908,9 +925,16 @@ final class RememberingRankerTests: XCTestCase {
         let ranked = await rank(first, with: remembering)
         XCTAssertEqual(ranked.suggestions, arranged(first, [composed, "A"], reasons: [composed: "Because \(composed)"]))
         // Equal to Swift, but another prompt byte for byte: the model is asked again.
-        XCTAssertEqual(model.prompts[0].text, ModelPrompt.build(question: "", ranked: second.map(\.session), sessionsInBlock: 40, picks: []).text)
         let again = await rank(second, with: remembering)
         XCTAssertEqual(model.prompts.count, 2)
+        guard let firstSent = model.prompt(0), let secondSent = model.prompt(1) else { return }
+        let composedBytes = Array("\nCAF\u{00C9}1 | ".utf8), decomposedBytes = Array("\nCAFE\u{0301}1 | ".utf8)
+        XCTAssertNotNil(Array(firstSent.text.utf8).firstRange(of: composedBytes))
+        XCTAssertNil(Array(firstSent.text.utf8).firstRange(of: decomposedBytes))
+        XCTAssertNotNil(Array(secondSent.text.utf8).firstRange(of: decomposedBytes))
+        XCTAssertNil(Array(secondSent.text.utf8).firstRange(of: composedBytes))
+        XCTAssertEqual(firstSent.text, secondSent.text)            // the same to Swift
+        XCTAssertNotEqual(Array(firstSent.text.utf8), Array(secondSent.text.utf8))
         XCTAssertEqual(again.suggestions, arranged(second, [decomposed, "A"], reasons: [decomposed: "Because \(decomposed)"]))
         assertRun(again.run, .ok, placed: 1, ignored: 0, prompt: measures(second))
     }
@@ -972,6 +996,55 @@ final class RememberingRankerTests: XCTestCase {
         let ranked = await result(of: task, self)
         XCTAssertEqual(ranked?.run.outcome, .cancelled)
         XCTAssertTrue(ticket.isClosed)
+    }
+
+    func testATimeoutClosesTheTicket() async {
+        let model = silentModel()
+        let ticket = ModelRequestTicket()
+        let list = usualList()
+        let late = await ModelStep.$ticket.withValue(ticket) {
+            await rank(list, with: model) { _ in
+                while model.prompts.isEmpty { try Task.checkCancellation(); await Task.yield() }
+            }
+        }
+        assertRun(late.run, .timeout, placed: 0, ignored: 0, prompt: measures(list))
+        XCTAssertTrue(ticket.isClosed)
+        // And a closed ticket claims nothing more.
+        XCTAssertFalse(ticket.claim(UUID()))
+    }
+
+    func testAClaimBeforeTheCloseStandsAndOneAfterItDoesNot() {
+        let ticket = ModelRequestTicket()
+        let first = UUID()
+        XCTAssertTrue(ticket.claim(first))
+        ticket.close()
+        XCTAssertEqual(ticket.request, first)
+        XCTAssertFalse(ticket.claim(UUID()))
+        XCTAssertEqual(ticket.request, first)
+    }
+
+    func testAWrappedRankerDoesNotTakeTheOuterRequestsTicket() async {
+        let release = Flag()
+        let model = FakeRanker {
+            while !release.isSet { await Task.yield() }
+            return ModelAnswer(picks: [pick("B")])
+        }
+        let outer = RememberingRanker(RememberingRanker(model))
+        let list = usualList()
+        let ticket = ModelRequestTicket()
+        let late = await ModelStep.$ticket.withValue(ticket) {
+            await rank(list, with: outer) { _ in
+                while model.prompts.isEmpty { try Task.checkCancellation(); await Task.yield() }
+            }
+        }
+        assertRun(late.run, .timeout, placed: 0, ignored: 0, prompt: measures(list))
+        let claimed = ticket.request
+        release.set()
+        await waitUntil(self, "the outer request is handled") { outer.requestsInFlight == 0 }
+        // The outer request was the one abandoned: its late answer isn't kept.
+        guard let asked = model.prompt(0) else { return }
+        XCTAssertNotNil(claimed)
+        XCTAssertNil(outer.lastAnswer(for: asked))
     }
 
     func testItsAvailabilityIsTheModels() {
