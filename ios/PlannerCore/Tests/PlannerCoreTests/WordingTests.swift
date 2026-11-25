@@ -97,39 +97,39 @@ final class WordingTests: XCTestCase {
     }
 
     func testLastUpdatedSaysHowLongAgoAndHowToUpdate() {
-        XCTAssertEqual(freshness(after: 12 * 60), "Updated from AWS 12 min ago. Pull down for the latest.")
-        XCTAssertEqual(freshness(after: 0), "Updated from AWS just now. Pull down for the latest.")
-        XCTAssertEqual(freshness(after: 2 * 3600), "Updated from AWS 2 hr ago. Pull down for the latest.")
+        XCTAssertEqual(freshness(after: 12 * 60), "Updated 12 min ago")
+        XCTAssertEqual(freshness(after: 0), "Updated just now")
+        XCTAssertEqual(freshness(after: 2 * 3600), "Updated 2 hr ago")
     }
 
     func testLastUpdatedThresholds() {
-        XCTAssertEqual(freshness(after: 59), "Updated from AWS just now. Pull down for the latest.")
-        XCTAssertEqual(freshness(after: 60), "Updated from AWS 1 min ago. Pull down for the latest.")
-        XCTAssertEqual(freshness(after: 3599), "Updated from AWS 59 min ago. Pull down for the latest.")
-        XCTAssertEqual(freshness(after: 3600), "Updated from AWS 1 hr ago. Pull down for the latest.")
-        XCTAssertEqual(freshness(after: 86399), "Updated from AWS 23 hr ago. Pull down for the latest.")
-        XCTAssertEqual(freshness(after: 86400), "Updated from AWS 1 day ago. Pull down for the latest.")
-        XCTAssertEqual(freshness(after: 2 * 86400 + 5), "Updated from AWS 2 days ago. Pull down for the latest.")
+        XCTAssertEqual(freshness(after: 59), "Updated just now")
+        XCTAssertEqual(freshness(after: 60), "Updated 1 min ago")
+        XCTAssertEqual(freshness(after: 3599), "Updated 59 min ago")
+        XCTAssertEqual(freshness(after: 3600), "Updated 1 hr ago")
+        XCTAssertEqual(freshness(after: 86399), "Updated 23 hr ago")
+        XCTAssertEqual(freshness(after: 86400), "Updated 1 day ago")
+        XCTAssertEqual(freshness(after: 2 * 86400 + 5), "Updated 2 days ago")
     }
 
     func testLastUpdatedWithTheClockMovedBackGivesNoAge() {
-        XCTAssertEqual(freshness(after: -1800), "Updated from AWS. Pull down for the latest.")
-        XCTAssertEqual(freshness(after: -1), "Updated from AWS. Pull down for the latest.")
+        XCTAssertEqual(freshness(after: -1800), "Updated from AWS")
+        XCTAssertEqual(freshness(after: -1), "Updated from AWS")
     }
 
     func testLastUpdatedForTheSampleConference() {
-        XCTAssertEqual(freshness(after: 0, sample: true), "Sample conference, updated just now. Pull down for the latest.")
-        XCTAssertEqual(freshness(after: -5, sample: true), "Sample conference. Pull down for the latest.")
+        XCTAssertEqual(freshness(after: 0, sample: true), "Sample, updated just now")
+        XCTAssertEqual(freshness(after: -5, sample: true), "Sample conference")
     }
 
     func testTheCalendarSaysWhenItIsUpdating() {
         XCTAssertEqual(Wording.calendarStatus(refreshing: true, fetchedAt: updated, now: updated, sample: false),
                        "Updating from AWS…")
         XCTAssertEqual(Wording.calendarStatus(refreshing: true, fetchedAt: updated, now: updated, sample: true),
-                       "Updating the sample conference…")
+                       "Updating the sample…")
         XCTAssertEqual(Wording.calendarStatus(refreshing: false, fetchedAt: updated, now: updated.addingTimeInterval(720), sample: false),
-                       "Updated from AWS 12 min ago. Pull down for the latest.")
+                       "Updated 12 min ago")
         XCTAssertEqual(Wording.calendarStatus(refreshing: false, fetchedAt: updated, now: updated, sample: true),
-                       "Sample conference, updated just now. Pull down for the latest.")
+                       "Sample, updated just now")
     }
 }

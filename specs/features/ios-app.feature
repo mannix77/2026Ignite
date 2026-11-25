@@ -273,11 +273,13 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
 
     Example: The one who checks how fresh it is
       Given his schedule was last read from AWS 12 minutes ago
-      Then the calendar says "Updated from AWS 12 min ago. Pull down for the latest."
+      Then the calendar says "Updated 12 min ago"
+      And it says so in small text under the conference's name at the top, not in a line of
+      its own, and doesn't tell him to pull down: the refresh button beside it does that
 
     Example: The one just updated
       Given his schedule was read 59 seconds ago
-      Then it says "Updated from AWS just now. Pull down for the latest."
+      Then it says "Updated just now"
       But at 60 seconds it says "1 min ago"
 
     Example: The one left for hours
@@ -286,15 +288,15 @@ Feature: An iPhone app that signs in to the conference and shows my calendar
       And a day after it says "1 day ago"
 
     Example: The one whose phone clock reads earlier than the update
-      Then it says "Updated from AWS. Pull down for the latest." without an age it can't know
+      Then it says "Updated from AWS" without an age it can't know
 
     Example: The one trying the sample conference
       Given he is trying the sample conference
-      Then the calendar says "Sample conference, updated just now. Pull down for the latest."
+      Then the calendar says "Sample, updated just now"
 
     Example: The one watching it update
       While his schedule is being read
-      Then the calendar says "Updating from AWS…", or "Updating the sample conference…" for the sample
+      Then the calendar says "Updating from AWS…", or "Updating the sample…" for the sample
 
     Example: The one with a calendar saved by the earlier version
       Given a calendar saved before the catalog's own download time was kept

@@ -34,16 +34,6 @@ struct CalendarScreen: View {
                                 withAnimation { selectedDay = picked }
                             }
                             Divider()
-                            // The actual time: the timeline's tick is the start of the minute,
-                            // which can be earlier than an update made within it.
-                            Text(Wording.calendarStatus(refreshing: model.isRefreshing, fetchedAt: snapshot.fetchedAt,
-                                                        now: Date(), sample: model.mode == .demo))
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                                .multilineTextAlignment(.center)
-                                .frame(maxWidth: .infinity)
-                                .padding(.horizontal)
-                                .padding(.vertical, 4)
                             TabView(selection: Binding(get: { day }, set: { selectedDay = $0 })) {
                                 ForEach(days, id: \.self) { page in
                                     DayPage(snapshot: snapshot, day: page, now: now)
@@ -77,6 +67,22 @@ struct CalendarScreen: View {
             .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(for: String.self) { SessionDetailView(sessionID: $0) }
             .toolbar {
+                // The title, with how fresh the calendar is in small type beneath it.
+                ToolbarItem(placement: .principal) {
+                    VStack(spacing: 0) {
+                        Text(model.event.name).font(.headline).lineLimit(1)
+                        if let snapshot = model.snapshot {
+                            // The actual time: the timeline's tick is the start of the minute,
+                            // which can be earlier than an update made within it.
+                            Text(Wording.calendarStatus(refreshing: model.isRefreshing, fetchedAt: snapshot.fetchedAt,
+                                                        now: Date(), sample: model.mode == .demo))
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
+                                .lineLimit(1)
+                        }
+                    }
+                    .accessibilityElement(children: .combine)
+                }
                 ToolbarItem(placement: .topBarLeading) {
                     Toggle(isOn: $model.showFavorites) {
                         Label("Show favorites", systemImage: model.showFavorites ? "star.fill" : "star")
