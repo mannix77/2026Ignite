@@ -43,10 +43,18 @@ the practices the repo settled on, mostly learned from CodeRabbit reviews during
   off the site.
 - **The signing team stays out of the repository.** It is passed on the command line
   (`TEAM=... ios/AppStore/archive.sh`); this repo is public.
+- **Every action a workflow uses is pinned to a full commit SHA.**
 - **Uploading a build or submitting for review is the owner's decision**, every time.
 - **Real reserve, cancel and favorite calls change the owner's actual conference schedule.**
   Never exercise them against the live API without asking; tests use canned responses.
 - **`archive/` is a reference record**, not app data. Nothing reads it; don't "tidy" it.
+
+The page addresses, the signing team and the pinning are also checked on every change by
+`.github/scripts/check-repo-rules.rb` (the "Repository rules" workflow): only `pages.yml` may
+deploy, and its site must hold exactly the two pages; every action is pinned; no tracked file
+names a team id under the keys Xcode, plists, JSON and shell scripts use. It refuses a workflow
+shape it can't reproduce rather than guess, so extend the script when it does. Run it with `ruby`
+before pushing a change to a workflow, the Xcode project or a plist.
 
 ## Tests that can't pass for the wrong reason
 
@@ -125,7 +133,9 @@ the change ourselves, and send it to CodeRabbit once.
      reason" and the path instructions in `.coderabbit.yaml` open, and check every new test
      against the rules by number. When one instance of a problem turns up, list the others in
      the same file yourself (rule 6).
-   - Run the `/code-review` skill on the diff.
+   - Run Claude Code's built-in `code-review` skill on the diff (it looks for correctness
+     bugs). Not `mattpocock-skills:code-review`, a different review that shares the bare name;
+     the bare name resolves to the built-in.
    - Give the diff to a fresh reviewer that has none of the session's context (a subagent
      started with the files and the rules here, never with your conclusions), and have it probe
      the code with inputs of its own. It finds what the author's context hides.
