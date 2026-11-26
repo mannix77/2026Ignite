@@ -222,9 +222,11 @@ end
 # reference (<string>ZZZZZ<!-- -->99999</string>) is seen as the parser sees it.
 PLIST_TEAM_KEY = /\A\s*[\w.-]*?#{TEAM_KEY}\s*\z/
 PLIST_TEAM_VALUE = /\A\s*#{TEAM_ID}\s*\z/
-# A file that is an XML plist: an optional UTF-8 byte-order mark, XML declaration and comments,
-# then the plist doctype or root element.
-XML_PLIST_START = /\A(?:\xEF\xBB\xBF)?\s*(?:<\?xml[^>]*>\s*)?(?:<!--.*?-->\s*)*(?:<!DOCTYPE\s+plist|<plist[\s>])/nm
+# Any file that starts with markup is parsed, whatever its prolog (declaration, processing
+# instructions, comments, doctype), and every <dict> in it is checked. One that can't be parsed is
+# refused only if it holds plist markup; an HTML page, say, is left to the byte scan.
+XML_START = /\A(?:\xEF\xBB\xBF)?\s*</n
+PLIST_MARKUP = /<(?:plist|dict)[\s>\/]/n
 
 def plist_team_keys(text)
   require "rexml/document"
@@ -253,9 +255,11 @@ tracked.each do |path|
     line = text.byteslice(0, match.pre_match.bytesize).count("\n") + 1
     failures << "Signing team: #{path}:#{line} names a team id; pass it on the command line (TEAM=...) instead"
   end
-  next unless text.b.match?(XML_PLIST_START)
+  next unless text.b.match?(XML_START)
   keys, error = plist_team_keys(text)
-  failures << "Signing team: #{path} is a plist that can't be parsed, so it can't be checked: #{error}" if error
+  if error && text.b.match?(PLIST_MARKUP)
+    failures << "Signing team: #{path} is a plist that can't be parsed, so it can't be checked: #{error}"
+  end
   keys.uniq.each do |key|
     failures << "Signing team: #{path} names a team id under #{key}; pass it on the command line (TEAM=...) instead"
   end
